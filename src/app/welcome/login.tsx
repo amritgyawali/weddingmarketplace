@@ -16,6 +16,7 @@ import { completeLogin } from '@/services/auth';
 import { useSession } from '@/store/useSession';
 import { useRoleFonts } from '@/theme/fonts';
 import { RoleThemeProvider, useRoleTheme } from '@/theme/RoleTheme';
+import { isNepalMobile } from '@/utils/format';
 
 function LoginForm() {
   const t = useRoleTheme();
@@ -31,8 +32,8 @@ function LoginForm() {
   const light = t.role !== 'freelancer';
 
   const sendOtp = async () => {
-    if (!/^[6-9]\d{9}$/.test(phone)) {
-      setError('Enter a valid 10-digit mobile number');
+    if (!isNepalMobile(phone)) {
+      setError('Enter a valid Nepali mobile number (98XXXXXXXX)');
       triggerHaptic('medium');
       return;
     }
@@ -54,6 +55,10 @@ function LoginForm() {
     await new Promise((r) => setTimeout(r, 500));
     setBusy(false);
     const existing = findAccount(phone, t.role);
+    if (existing?.suspended) {
+      setError('This account is suspended. Contact Vivah support to restore access.');
+      return;
+    }
     if (existing) completeLogin(existing);
     else router.push({ pathname: '/welcome/setup', params: { phone } });
   };
@@ -94,7 +99,7 @@ function LoginForm() {
                     setPhone(v.replace(/\D/g, '').slice(0, 10));
                     setError(null);
                   }}
-                  placeholder="98765 43210"
+                  placeholder="98XXXXXXXX"
                   placeholderTextColor={t.c.subtle}
                   keyboardType="phone-pad"
                   autoFocus

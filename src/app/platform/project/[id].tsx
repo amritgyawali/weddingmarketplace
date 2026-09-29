@@ -4,7 +4,7 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { Linking, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 
-import { Avatar, Card, ChoiceChips, EmptyBlock, KButton, KeyValue, KField, ProgressBar, Segmented, StackHeader, StatusPill } from '@/components/kit';
+import { Avatar, Card, ChoiceChips, EmptyBlock, KButton, KeyValue, KField, Segmented, StackHeader, StatusPill } from '@/components/kit';
 import { Sheet } from '@/components/ui/Sheet';
 import { Text } from '@/components/ui/Text';
 import { toast } from '@/components/ui/Toast';

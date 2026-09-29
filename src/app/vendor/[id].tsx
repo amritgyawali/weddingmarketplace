@@ -156,7 +156,7 @@ export default function VendorDetailScreen() {
             reviews={vendor.reviews}
             rating={vendor.rating}
             count={vendor.reviewCount}
-            onWrite={() => router.push({ pathname: '/write-review', params: { name: vendor.name } })}
+            onWrite={() => router.push({ pathname: '/write-review', params: { providerId: vendor.id, name: vendor.name } })}
           />
         </Section>
 

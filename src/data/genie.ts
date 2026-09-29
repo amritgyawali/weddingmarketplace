@@ -6,8 +6,8 @@ export const GENIE_PACKAGES: GeniePackage[] = [
     id: 'single',
     title: 'Single Wedding Service',
     subtitle: 'Ideal for venue booking or single wedding service',
-    price: 249,
-    mrp: 500,
+    price: 499,
+    mrp: 999,
     features: [
       'Tailored suggestions for venues or vendors (based on your selection), customized to your budget & preferred location (One city)',
       'Expert price negotiations to ensure the best deals',
@@ -18,8 +18,8 @@ export const GENIE_PACKAGES: GeniePackage[] = [
     id: 'city',
     title: 'City Wedding Package',
     subtitle: 'Ideal for hometown or local wedding planning.',
-    price: 399,
-    mrp: 2999,
+    price: 999,
+    mrp: 4999,
     popular: true,
     features: [
       'Venue shortlisting & availability coordination',
@@ -35,8 +35,8 @@ export const GENIE_PACKAGES: GeniePackage[] = [
     id: 'destination',
     title: 'Destination Wedding Package',
     subtitle: 'Perfect for planning your destination wedding with expert guidance.',
-    price: 999,
-    mrp: 4999,
+    price: 2499,
+    mrp: 7999,
     features: [
       'Everything in City Wedding Package',
       'Destination & city selection support',
@@ -50,9 +50,9 @@ export const GENIE_PACKAGES: GeniePackage[] = [
     id: 'signature',
     title: 'Genie Signature Plan',
     subtitle:
-      "Ideal for NRIs or couples planning from another city who want Genie's expert planning support plus on-ground assistance.",
-    price: 19999,
-    mrp: 35000,
+      "Ideal for couples abroad (NRNs) or planning from another city who want Genie's expert planning support plus on-ground assistance.",
+    price: 29999,
+    mrp: 49999,
     features: [
       'Everything in Destination Wedding Package',
       'On-Ground Venue Visits: Genie personally visits your top 3 shortlisted venues',

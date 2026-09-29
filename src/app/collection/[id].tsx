@@ -6,12 +6,13 @@ import type { CollectionId, VenueType } from '@/types';
 
 /** Venue sub-categories from the Vendors tab map onto venue-type filters. */
 const SUBCATEGORY_TYPES: Record<string, VenueType[]> = {
+  'party-palaces': ['Party Palace'],
   'banquet-halls': ['Banquet Hall'],
-  lawns: ['Lawn', 'Farmhouse'],
+  hotels: ['Hotel'],
   resorts: ['Resort'],
-  'small-halls': ['Banquet Hall', 'Kalyana Mandapam'],
-  'kalyana-mandapams': ['Kalyana Mandapam'],
-  '4-star': ['4 Star Hotel', '5 Star Hotel'],
+  gardens: ['Garden', 'Farmhouse'],
+  heritage: ['Heritage Courtyard'],
+  lakeside: ['Lakeside Venue'],
 };
 
 export default function CollectionScreen() {

@@ -1,38 +1,126 @@
 import { Ionicons } from '@expo/vector-icons';
+import { Image } from 'expo-image';
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { Avatar, Card, ChoiceChips, KButton, KField, ListRow, SectionTitle, StatusPill } from '@/components/kit';
+import { Avatar, Card, ChoiceChips, KButton, KField, ListRow, ProgressBar, SectionTitle, StatusPill } from '@/components/kit';
+import { Sheet } from '@/components/ui/Sheet';
 import { Text } from '@/components/ui/Text';
 import { Toggle } from '@/components/ui/Toggle';
 import { toast } from '@/components/ui/Toast';
+import { photos } from '@/constants/images';
+import { reliabilityScore } from '@/data/freelancers';
 import { FREELANCE_SKILLS } from '@/data/skills';
-import { useFreelancerWorkspace } from '@/hooks/useWorkspace';
+import { myApplication, useFreelancerWorkspace } from '@/hooks/useWorkspace';
 import { logout } from '@/services/auth';
+import { useDb, useUnreadMessageCount } from '@/store/useDb';
 import { useAccount, useSession } from '@/store/useSession';
 import { useRoleTheme } from '@/theme/RoleTheme';
+import type { Equipment } from '@/types/platform';
 import { confirm } from '@/utils/confirm';
+import { formatMoney, formatPhone, formatShortDate } from '@/utils/format';
 
+const LANGUAGES = ['Nepali', 'English', 'Hindi', 'Newari', 'Maithili', 'Bhojpuri', 'Tamang', 'Gurung', 'Tharu', 'Magar'];
+const RADII = [10, 25, 50, 100, 200];
+const EQUIPMENT_KINDS: { id: Equipment['kind']; label: string }[] = [
+  { id: 'camera', label: 'Camera' },
+  { id: 'lens', label: 'Lens' },
+  { id: 'flash', label: 'Flash' },
+  { id: 'drone', label: 'Drone' },
+  { id: 'gimbal', label: 'Gimbal' },
+  { id: 'light', label: 'Lighting' },
+  { id: 'audio', label: 'Audio' },
+  { id: 'kit', label: 'Kit' },
+  { id: 'vehicle', label: 'Vehicle' },
+  { id: 'other', label: 'Other' },
+];
+const KIND_ICON: Record<Equipment['kind'], keyof typeof Ionicons.glyphMap> = {
+  camera: 'camera',
+  lens: 'aperture',
+  flash: 'flash',
+  drone: 'airplane',
+  gimbal: 'videocam',
+  light: 'bulb',
+  audio: 'mic',
+  kit: 'briefcase',
+  vehicle: 'car',
+  other: 'cube',
+};
+
+/** Crew profile: skills, kit, rates, travel, languages, reliability, reviews and portfolio. */
 export default function FreelancerProfile() {
   const t = useRoleTheme();
   const insets = useSafeAreaInsets();
   const account = useAccount();
   const updateAccount = useSession((s) => s.updateAccount);
-  const { payouts, applied } = useFreelancerWorkspace(account);
+  const verification = useDb((s) => s.verifications.find((v) => v.subjectId === account.id));
+  const portfolio = useDb((s) => s.portfolio);
+  const unread = useUnreadMessageCount(account);
+  const { payables, assignments, standalone, reviews } = useFreelancerWorkspace(account);
   const [editing, setEditing] = useState(false);
-  const [rate, setRate] = useState(String(account.dayRate ?? ''));
-  const [bio, setBio] = useState(account.bio ?? '');
+  const [draft, setDraft] = useState({ headline: '', bio: '', dayRate: '', hourlyRate: '', eventRate: '', experienceYears: '' });
+  const [kitOpen, setKitOpen] = useState(false);
+  const [kitKind, setKitKind] = useState<Equipment['kind']>('camera');
+  const [kitName, setKitName] = useState('');
 
-  const jobsDone = applied.filter((g) => g.applications.some((a) => a.freelancerId === account.id && a.status === 'completed')).length;
-  const earned = payouts.filter((p) => p.status === 'paid').reduce((s, p) => s + p.amount, 0);
+  const mine = assignments.map((x) => x.assignment);
+  const completed = mine.filter((a) => a.status === 'COMPLETED').length + standalone.filter((g) => myApplication(g, account.id)?.status === 'completed').length;
+  const released = mine.filter((a) => a.status === 'EMERGENCY_REPLACEMENT').length;
+  const noShows = mine.filter((a) => a.status === 'NO_SHOW').length;
+  const late = mine.filter((a) => (a.lateMinutes ?? 0) > 10).length;
+  const total = Math.max(1, mine.length);
+  const rating = reviews.length ? reviews.reduce((s, r) => s + r.overall, 0) / reviews.length : account.rating ?? 4.8;
+  const reliability = reliabilityScore({ cancellationRate: released / total, rating, responseRate: 0.96, completed: completed + 12, lateArrivals: late, noShows });
+  const earned = payables.filter((p) => p.status === 'PAID').reduce((s, p) => s + p.amount, 0);
+  const work = portfolio.filter((p) => p.providerId === account.id).sort((a, b) => a.order - b.order);
+  const status = verification?.status ?? (account.verified ? 'VERIFIED' : 'UNVERIFIED');
+  const checklist = [
+    { done: (account.skills ?? []).length > 0, label: 'Skills' },
+    { done: !!account.bio, label: 'Bio' },
+    { done: (account.equipment ?? []).length > 0, label: 'Equipment' },
+    { done: work.length >= 6, label: '6+ portfolio items' },
+    { done: status === 'VERIFIED', label: 'Verified ID' },
+    { done: !!account.payoutMethod, label: 'Payout method' },
+  ];
+  const strength = checklist.filter((c) => c.done).length / checklist.length;
 
+  const startEdit = () => {
+    setDraft({
+      headline: account.headline ?? '',
+      bio: account.bio ?? '',
+      dayRate: String(account.dayRate ?? ''),
+      hourlyRate: String(account.hourlyRate ?? ''),
+      eventRate: String(account.eventRate ?? ''),
+      experienceYears: String(account.experienceYears ?? ''),
+    });
+    setEditing(true);
+  };
+  const num = (v: string) => v.replace(/\D/g, '');
+  const save = () => {
+    updateAccount(account.id, {
+      headline: draft.headline.trim() || undefined,
+      bio: draft.bio.trim(),
+      dayRate: Number(draft.dayRate) || account.dayRate,
+      hourlyRate: Number(draft.hourlyRate) || undefined,
+      eventRate: Number(draft.eventRate) || undefined,
+      experienceYears: Number(draft.experienceYears) || undefined,
+    });
+    setEditing(false);
+    toast('Profile updated');
+  };
   const toggleSkill = (s: string) => {
     const skills = account.skills ?? [];
     const next = skills.includes(s) ? skills.filter((x) => x !== s) : [...skills, s];
     if (next.length) updateAccount(account.id, { skills: next });
+    else toast('Keep at least one skill');
   };
+  const toggleLanguage = (l: string) => {
+    const langs = account.languages ?? ['Nepali'];
+    updateAccount(account.id, { languages: langs.includes(l) ? langs.filter((x) => x !== l) : [...langs, l] });
+  };
+  const removeKit = (i: number) => updateAccount(account.id, { equipment: (account.equipment ?? []).filter((_, j) => j !== i) });
 
   return (
     <ScrollView style={{ flex: 1, backgroundColor: t.c.bg }} contentContainerStyle={{ paddingTop: insets.top + 20, paddingHorizontal: 16, gap: 16, paddingBottom: 130 }}>
@@ -41,28 +129,26 @@ export default function FreelancerProfile() {
         <Text size={24} weight="bold" color={t.c.textStrong} style={{ marginTop: 10 }}>
           {account.name}
         </Text>
-        <Text size={14} color={t.c.muted}>
-          {(account.skills ?? []).join(' · ')} · {account.city}
+        <Text size={14} color={t.c.muted} align="center">
+          {account.headline || (account.skills ?? []).join(' · ')} · {account.city}
         </Text>
         <View style={styles.row}>
-          <StatusPill status={account.verified ? 'approved' : 'pending'} label={account.verified ? 'Verified pro' : 'Verification pending'} />
-          <View style={styles.row}>
-            <Ionicons name="star" size={14} color={t.c.primary} />
-            <Text size={14} weight="bold" color={t.c.textStrong}>
-              {(account.rating ?? 5).toFixed(1)}
-            </Text>
-          </View>
+          <StatusPill status={status} label={status === 'VERIFIED' ? 'Verified pro' : status === 'UNDER_REVIEW' ? 'Verification in review' : 'Not verified'} />
+          <Ionicons name="star" size={14} color={t.c.primary} />
+          <Text size={14} weight="bold" color={t.c.textStrong}>
+            {rating.toFixed(1)} ({reviews.length})
+          </Text>
         </View>
       </View>
 
       <View style={styles.stats}>
         {[
-          { label: 'Jobs done', value: String(jobsDone) },
-          { label: 'Earned', value: `₹${Math.round(earned / 1000)}K` },
-          { label: 'Day rate', value: `₹${((account.dayRate ?? 0) / 1000).toFixed(1)}K` },
+          { label: 'Jobs done', value: String(completed) },
+          { label: 'Reliability', value: `${reliability}` },
+          { label: 'Earned', value: formatMoney(earned).replace('NPR ', '') },
         ].map((s) => (
           <Card key={s.label} style={styles.stat}>
-            <Text size={20} weight="bold" color={t.c.primary}>
+            <Text size={19} weight="bold" color={t.c.primary}>
               {s.value}
             </Text>
             <Text size={12} color={t.c.muted}>
@@ -72,16 +158,93 @@ export default function FreelancerProfile() {
         ))}
       </View>
 
-      <Card style={styles.availability}>
+      <Card style={{ gap: 10 }}>
+        <View style={styles.between}>
+          <Text size={15} weight="bold" color={t.c.textStrong}>
+            Profile strength
+          </Text>
+          <Text size={13} weight="bold" color={t.c.primary}>
+            {Math.round(strength * 100)}%
+          </Text>
+        </View>
+        <ProgressBar value={strength} />
+        <View style={styles.wrap}>
+          {checklist.map((c) => (
+            <View key={c.label} style={styles.check}>
+              <Ionicons name={c.done ? 'checkmark-circle' : 'ellipse-outline'} size={15} color={c.done ? t.c.success : t.c.muted} />
+              <Text size={12} color={c.done ? t.c.text : t.c.muted}>
+                {c.label}
+              </Text>
+            </View>
+          ))}
+        </View>
+        <Text size={12} color={t.c.muted}>
+          Reliability counts on-time arrivals, completed jobs and releases. {released ? `${released} release(s) and ` : ''}{late ? `${late} late arrival(s) ` : ''}{released || late ? 'are lowering it.' : 'Keep it up — top crew get emergency invites first.'}
+        </Text>
+      </Card>
+
+      <Card style={styles.between}>
         <View style={{ flex: 1 }}>
           <Text size={16} weight="bold" color={t.c.textStrong}>
             Available for gigs
           </Text>
           <Text size={12} color={t.c.muted}>
-            Vendors can find and invite you when this is on
+            Organisers can find and invite you when this is on
           </Text>
         </View>
         <Toggle value={account.available ?? true} onValueChange={(v) => updateAccount(account.id, { available: v })} accessibilityLabel="Available for gigs" />
+      </Card>
+
+      <Card style={{ gap: 12 }}>
+        <SectionTitle title="About & rates" action={editing ? undefined : 'Edit'} onAction={startEdit} />
+        {editing ? (
+          <>
+            <KField label="Headline" value={draft.headline} onChangeText={(v) => setDraft((d) => ({ ...d, headline: v }))} placeholder="Candid wedding photographer — 6 yrs" />
+            <KField label="Bio" value={draft.bio} onChangeText={(v) => setDraft((d) => ({ ...d, bio: v }))} multiline />
+            <View style={styles.row}>
+              <View style={{ flex: 1 }}>
+                <KField label="Day rate" value={draft.dayRate} onChangeText={(v) => setDraft((d) => ({ ...d, dayRate: num(v) }))} keyboardType="number-pad" prefix="NPR" />
+              </View>
+              <View style={{ flex: 1 }}>
+                <KField label="Per event" value={draft.eventRate} onChangeText={(v) => setDraft((d) => ({ ...d, eventRate: num(v) }))} keyboardType="number-pad" prefix="NPR" />
+              </View>
+            </View>
+            <View style={styles.row}>
+              <View style={{ flex: 1 }}>
+                <KField label="Hourly" value={draft.hourlyRate} onChangeText={(v) => setDraft((d) => ({ ...d, hourlyRate: num(v) }))} keyboardType="number-pad" prefix="NPR" />
+              </View>
+              <View style={{ flex: 1 }}>
+                <KField label="Years of experience" value={draft.experienceYears} onChangeText={(v) => setDraft((d) => ({ ...d, experienceYears: num(v) }))} keyboardType="number-pad" />
+              </View>
+            </View>
+            <View style={styles.row}>
+              <KButton label="Cancel" variant="ghost" size="sm" style={{ flex: 1 }} onPress={() => setEditing(false)} />
+              <KButton label="Save" size="sm" style={{ flex: 1 }} onPress={save} />
+            </View>
+          </>
+        ) : (
+          <>
+            <Text size={14} color={t.c.text} lineHeight={21}>
+              {account.bio || 'Tell organisers about your experience, style and the weddings you’ve worked.'}
+            </Text>
+            <View style={styles.wrap}>
+              {[
+                `${formatMoney(account.dayRate ?? 0)}/day`,
+                account.eventRate ? `${formatMoney(account.eventRate)}/event` : null,
+                account.hourlyRate ? `${formatMoney(account.hourlyRate)}/hr` : null,
+                account.experienceYears ? `${account.experienceYears} yrs experience` : null,
+              ]
+                .filter(Boolean)
+                .map((x) => (
+                  <View key={x} style={[styles.tag, { backgroundColor: t.c.soft }]}>
+                    <Text size={12} weight="semibold" color={t.c.primary}>
+                      {x}
+                    </Text>
+                  </View>
+                ))}
+            </View>
+          </>
+        )}
       </Card>
 
       <Card style={{ gap: 12 }}>
@@ -90,50 +253,126 @@ export default function FreelancerProfile() {
       </Card>
 
       <Card style={{ gap: 12 }}>
-        <SectionTitle title="About & rate" action={editing ? undefined : 'Edit'} onAction={() => setEditing(true)} />
-        {editing ? (
-          <>
-            <KField label="Day rate" value={rate} onChangeText={(v) => setRate(v.replace(/\D/g, ''))} keyboardType="number-pad" prefix="NPR" />
-            <KField label="Bio" value={bio} onChangeText={setBio} multiline />
-            <KButton
-              label="Save"
-              size="sm"
-              onPress={() => {
-                updateAccount(account.id, { dayRate: Number(rate) || account.dayRate, bio: bio.trim() });
-                setEditing(false);
-                toast('Profile updated');
-              }}
-            />
-          </>
-        ) : (
-          <Text size={14} color={t.c.text} lineHeight={21}>
-            {account.bio || 'Tell vendors about your experience, style and equipment.'}
+        <SectionTitle title="Equipment" action="Add" onAction={() => setKitOpen(true)} />
+        {(account.equipment ?? []).length === 0 ? (
+          <Text size={13} color={t.c.muted}>
+            Organisers filter by kit — list your camera bodies, lenses, lights and drone.
           </Text>
+        ) : (
+          (account.equipment ?? []).map((e, i) => (
+            <View key={`${e.name}-${i}`} style={styles.row}>
+              <Ionicons name={KIND_ICON[e.kind]} size={18} color={t.c.primary} />
+              <Text size={14} color={t.c.text} style={{ flex: 1 }}>
+                {e.name}
+              </Text>
+              <Pressable onPress={() => removeKit(i)} accessibilityLabel={`Remove ${e.name}`} hitSlop={10}>
+                <Ionicons name="close-circle" size={18} color={t.c.muted} />
+              </Pressable>
+            </View>
+          ))
+        )}
+        <View style={styles.between}>
+          <Text size={14} color={t.c.text}>
+            I have my own vehicle
+          </Text>
+          <Toggle value={account.ownVehicle ?? false} onValueChange={(v) => updateAccount(account.id, { ownVehicle: v })} accessibilityLabel="Own vehicle" />
+        </View>
+      </Card>
+
+      <Card style={{ gap: 12 }}>
+        <SectionTitle title="Travel & languages" />
+        <Text size={13} color={t.c.muted}>
+          I’ll travel up to
+        </Text>
+        <ChoiceChips options={RADII.map((r) => `${r} km`)} selected={[`${account.travelRadiusKm ?? 25} km`]} onToggle={(v) => updateAccount(account.id, { travelRadiusKm: Number(v.replace(/\D/g, '')) })} />
+        <Text size={13} color={t.c.muted}>
+          Languages
+        </Text>
+        <ChoiceChips options={LANGUAGES} selected={account.languages ?? ['Nepali']} onToggle={toggleLanguage} />
+      </Card>
+
+      <Card style={{ gap: 12 }}>
+        <SectionTitle title="Portfolio" action="Manage" onAction={() => router.push('/freelancer/portfolio')} />
+        {work.length === 0 ? (
+          <KButton label="Add your best work" icon="images-outline" variant="secondary" onPress={() => router.push('/freelancer/portfolio')} />
+        ) : (
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 8 }}>
+            {work.slice(0, 10).map((p) => (
+              <Image key={p.id} source={p.uri ? { uri: p.uri } : photos[p.image!]} style={styles.thumb} contentFit="cover" />
+            ))}
+          </ScrollView>
+        )}
+      </Card>
+
+      <Card style={{ gap: 12 }}>
+        <SectionTitle title={`Reviews (${reviews.length})`} />
+        {reviews.length === 0 ? (
+          <Text size={13} color={t.c.muted}>
+            Organisers review you after each completed job.
+          </Text>
+        ) : (
+          reviews.slice(0, 5).map((r) => (
+            <View key={r.id} style={{ gap: 4 }}>
+              <View style={styles.row}>
+                <Ionicons name="star" size={13} color={t.c.primary} />
+                <Text size={13} weight="bold" color={t.c.textStrong}>
+                  {r.overall.toFixed(1)}
+                </Text>
+                <Text size={12} color={t.c.muted} style={{ flex: 1 }}>
+                  {r.authorName} · {formatShortDate(r.at)}
+                </Text>
+              </View>
+              <Text size={13} color={t.c.text} lineHeight={19}>
+                {r.text}
+              </Text>
+              <Text size={11} color={t.c.subtle}>
+                {Object.entries(r.criteria)
+                  .map(([k, v]) => `${k} ${v}`)
+                  .join(' · ')}
+              </Text>
+            </View>
+          ))
         )}
       </Card>
 
       <Card padded={false} style={{ overflow: 'hidden' }}>
+        <ListRow icon="chatbubbles-outline" title="Messages" subtitle={unread ? `${unread} unread` : 'Organiser and team chats'} onPress={() => router.push('/freelancer/inbox')} />
+        <ListRow icon="shield-checkmark-outline" title="Verification" subtitle={status === 'VERIFIED' ? `Verified${verification?.expiresAt ? ` · renews ${formatShortDate(verification.expiresAt)}` : ''}` : 'Upload citizenship & portfolio'} onPress={() => router.push('/freelancer/verification')} />
         <ListRow icon="notifications-outline" title="Notifications" onPress={() => router.push('/notifications')} />
-        <ListRow icon="call-outline" title="Phone" subtitle={`+977 ${account.phone}`} />
-        <ListRow icon="shield-checkmark-outline" title="KYC & payouts" subtitle="Bank account linked · weekly payouts" />
+        <ListRow icon="settings-outline" title="Settings" subtitle="Notifications, language, privacy" onPress={() => router.push('/freelancer/settings')} />
+        <ListRow icon="call-outline" title="Phone" subtitle={formatPhone(account.phone)} />
       </Card>
 
-      <KButton
-        label="Log out"
-        variant="danger"
-        icon="log-out-outline"
-        onPress={() =>
-          confirm('Log out?', 'You can sign back in with your mobile number.', 'Log out', logout)
-        }
-      />
+      <KButton label="Log out" variant="danger" icon="log-out-outline" onPress={() => confirm('Log out?', 'You can sign back in with your mobile number.', 'Log out', logout)} />
+
+      <Sheet visible={kitOpen} onClose={() => setKitOpen(false)} title="Add equipment">
+        <View style={{ paddingHorizontal: 20, gap: 14 }}>
+          <ChoiceChips options={EQUIPMENT_KINDS.map((k) => k.label)} selected={[EQUIPMENT_KINDS.find((k) => k.id === kitKind)!.label]} onToggle={(v) => setKitKind(EQUIPMENT_KINDS.find((k) => k.label === v)!.id)} />
+          <KField label="Model" value={kitName} onChangeText={setKitName} placeholder="e.g. Sony A7 IV, 24-70mm f/2.8 GM" />
+          <KButton
+            label="Add"
+            disabled={!kitName.trim()}
+            onPress={() => {
+              updateAccount(account.id, { equipment: [...(account.equipment ?? []), { kind: kitKind, name: kitName.trim() }] });
+              setKitName('');
+              setKitOpen(false);
+              toast('Equipment added');
+            }}
+          />
+        </View>
+      </Sheet>
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   center: { alignItems: 'center', gap: 4 },
-  row: { flexDirection: 'row', alignItems: 'center', gap: 8, marginTop: 6 },
+  row: { flexDirection: 'row', alignItems: 'center', gap: 8 },
+  between: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 12 },
   stats: { flexDirection: 'row', gap: 10 },
   stat: { flex: 1, alignItems: 'center', gap: 2, padding: 14 },
-  availability: { flexDirection: 'row', alignItems: 'center', gap: 12 },
+  wrap: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
+  check: { flexDirection: 'row', alignItems: 'center', gap: 4 },
+  tag: { borderRadius: 999, paddingHorizontal: 10, paddingVertical: 4 },
+  thumb: { width: 96, height: 96, borderRadius: 14 },
 });

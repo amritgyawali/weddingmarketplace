@@ -6,7 +6,7 @@ import { findVenue } from '@/data/venues';
 import type { Account, AppNotification, Lead, LeadStatus, PlatformSettings, Quotation } from '@/types/platform';
 import { addDays, uid } from '@/utils/format';
 
-import { type Actor, type GetDb, now, ownersOf, type SetDb, today } from './helpers';
+import { accountById, type Actor, type GetDb, now, ownersOf, type SetDb, today } from './helpers';
 
 export interface CoreActions {
   notify: (to: string, title: string, body: string, href?: string, kind?: AppNotification['kind']) => void;
@@ -60,8 +60,11 @@ function autoQuoteFor(lead: Lead, existingNumbers: string[]): Quotation {
 }
 
 export const coreActions = (set: SetDb, get: GetDb): CoreActions => ({
-  notify: (to, title, body, href, kind) =>
-    set((s) => ({ notifications: [{ id: uid('n'), to, title, body, href, kind, at: now(), read: false }, ...s.notifications].slice(0, 300) })),
+  notify: (to, title, body, href, kind) => {
+    // Muted kinds are still recorded but arrive already read (no badge). Emergencies always ring.
+    const muted = !!kind && kind !== 'emergency' && !!accountById(to)?.prefs?.muted.includes(kind);
+    set((s) => ({ notifications: [{ id: uid('n'), to, title, body, href, kind, at: now(), read: muted }, ...s.notifications].slice(0, 300) }));
+  },
 
   markNotificationsRead: (account) =>
     set((s) => ({ notifications: s.notifications.map((n) => (n.to === account.id || n.to === account.role ? { ...n, read: true } : n)) })),

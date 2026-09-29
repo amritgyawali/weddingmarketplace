@@ -35,7 +35,7 @@ export function useStartConversation() {
   };
 }
 
-/** Full-width venue card from the "Bangalore • Venues" listing. */
+/** Full-width venue card from the "Kathmandu • Venues" listing. */
 export const VenueCard = memo(function VenueCard({
   venue,
   destinationPricing,

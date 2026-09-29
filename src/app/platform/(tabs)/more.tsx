@@ -92,6 +92,7 @@ export default function PlatformMore() {
           <SectionTitle title="System" />
           <Card padded={false} style={{ overflow: 'hidden' }}>
             <ListRow icon="notifications-outline" title="Notifications" onPress={() => router.push('/notifications')} />
+            <ListRow icon="settings-outline" title="Settings" onPress={() => router.push('/platform/settings')} />
             <ListRow
               icon="refresh-outline"
               title="Reset demo data"

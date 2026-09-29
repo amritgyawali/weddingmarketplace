@@ -178,7 +178,7 @@ export default function VenueDetailScreen() {
             reviews={venue.reviews}
             rating={venue.rating}
             count={venue.reviewCount}
-            onWrite={() => router.push({ pathname: '/write-review', params: { name: venue.name } })}
+            onWrite={() => router.push({ pathname: '/write-review', params: { providerId: venue.id, name: venue.name } })}
           />
         </Section>
 

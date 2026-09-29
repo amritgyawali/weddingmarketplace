@@ -4,7 +4,7 @@ import { router, useLocalSearchParams, type Href } from 'expo-router';
 import { useState } from 'react';
 import { Linking, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 
-import { Avatar, Card, ChoiceChips, KButton, KField, ProgressBar, Segmented, StatusPill } from '@/components/kit';
+import { Avatar, Card, ChoiceChips, KButton, KField, Segmented, StatusPill } from '@/components/kit';
 import { triggerHaptic } from '@/components/ui/PressableScale';
 import { ScreenHeader } from '@/components/ui/ScreenHeader';
 import { Sheet } from '@/components/ui/Sheet';

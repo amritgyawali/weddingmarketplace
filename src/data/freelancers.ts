@@ -116,11 +116,16 @@ export const FREELANCER_DIRECTORY: FreelancerProfile[] = PEOPLE.map(([name, city
     responseRate,
     lateArrivals,
     noShows,
-    reliability: Math.round(Math.max(0, Math.min(100, 40 * (1 - cancellationRate) + 20 * (rating / 5) + 10 * responseRate + 10 * Math.min(1, completed / 40) + 20 - lateArrivals * 2 - noShows * 10))),
+    reliability: reliabilityScore({ cancellationRate, rating, responseRate, completed, lateArrivals, noShows }),
     verification: i % 9 === 4 ? 'UNDER_REVIEW' : 'VERIFIED',
     available: r.next() > 0.12,
     portfolio: [],
   };
 });
+
+/** 0–100 reliability: cancellations, rating, responsiveness, experience, punctuality and no-shows. */
+export function reliabilityScore(x: { cancellationRate: number; rating: number; responseRate: number; completed: number; lateArrivals: number; noShows: number }) {
+  return Math.round(Math.max(0, Math.min(100, 40 * (1 - x.cancellationRate) + 20 * (x.rating / 5) + 10 * x.responseRate + 10 * Math.min(1, x.completed / 40) + 20 - x.lateArrivals * 2 - x.noShows * 10)));
+}
 
 export const findFreelancer = (id: string) => FREELANCER_DIRECTORY.find((f) => f.id === id);

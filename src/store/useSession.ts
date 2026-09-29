@@ -23,6 +23,8 @@ interface SessionState {
   login: (accountId: string) => void;
   register: (input: Omit<Account, 'id' | 'createdAt' | 'verified'>) => Account;
   updateAccount: (id: string, patch: Partial<Account>) => void;
+  /** Removes the account from this device and signs out (right to erasure). */
+  deleteAccount: (id: string) => void;
   logout: () => void;
 }
 
@@ -65,6 +67,9 @@ export const useSession = create<SessionState>()(
 
       updateAccount: (id, patch) =>
         set((s) => ({ accounts: s.accounts.map((a) => (a.id === id ? { ...a, ...patch } : a)) })),
+
+      deleteAccount: (id) =>
+        set((s) => ({ accounts: s.accounts.filter((a) => a.id !== id), session: s.session?.accountId === id ? null : s.session, lastAccountId: s.lastAccountId === id ? null : s.lastAccountId })),
 
       logout: () => set({ session: null }),
     }),

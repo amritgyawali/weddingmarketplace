@@ -31,7 +31,7 @@ export interface AssistantContext {
 export const POPULAR_SUGGESTIONS = [
   'Plan my dream destination wedding',
   'Show me the best wedding venues',
-  'Suggest top photographer in Delhi',
+  'Suggest top photographer in Kathmandu',
 ];
 
 type Intent =
@@ -86,15 +86,12 @@ const detectIntent = (text: string): Intent => {
 };
 
 const CITY_ALIASES: Record<string, string> = {
-  delhi: 'Delhi NCR',
-  'new delhi': 'Delhi NCR',
-  gurgaon: 'Delhi NCR',
-  gurugram: 'Delhi NCR',
-  noida: 'Delhi NCR',
-  bengaluru: 'Bangalore',
-  bombay: 'Mumbai',
-  calcutta: 'Kolkata',
-  madras: 'Chennai',
+  ktm: 'Kathmandu',
+  patan: 'Lalitpur',
+  bharatpur: 'Chitwan',
+  lakeside: 'Pokhara',
+  pkr: 'Pokhara',
+  janakpurdham: 'Janakpur',
 };
 
 const detectCity = (text: string): string | null => {
@@ -144,11 +141,11 @@ function reply(message: string, ctx: AssistantContext): AssistantReply {
         text:
           'A destination wedding, how exciting! ✨ Here’s how I would plan it:\n\n' +
           '1. Fix the guest count (destination weddings work best under 250 guests).\n' +
-          '2. Pick the vibe — palace (Udaipur, Jaipur), beach (Goa) or hills (Mussoorie, Nagarkot).\n' +
+          '2. Pick the vibe — lakeside (Pokhara, Begnas), hills (Nagarkot, Dhulikhel, Bandipur) or jungle (Sauraha).\n' +
           '3. Block rooms 9–12 months ahead and book a planner who knows the location.\n\n' +
           'These top-rated destination venues are a great place to start:',
         venues,
-        suggestions: ['Show venues in Udaipur', 'Suggest a wedding budget', 'Talk to a Genie expert'],
+        suggestions: ['Show venues in Pokhara', 'Suggest a wedding budget', 'Talk to a Genie expert'],
         action: { label: 'Explore Destination Venues', href: '/collection/destination' },
       };
     }
@@ -163,7 +160,7 @@ function reply(message: string, ctx: AssistantContext): AssistantReply {
       if (!venues.length) {
         return {
           text: `I couldn't find venues ${cityLabel(city)}${budget ? ` under ${formatMoneyCompact(budget)}` : ''} yet. Try another city or a slightly higher budget?`,
-          suggestions: ['Show me the best wedding venues', 'Budget venues in Bangalore'],
+          suggestions: ['Show me the best wedding venues', 'Budget venues in Kathmandu'],
         };
       }
       return {
@@ -192,7 +189,7 @@ function reply(message: string, ctx: AssistantContext): AssistantReply {
       if (!vendors.length) {
         return {
           text: `Hmm, I don't have ${meta.label} listed ${cityLabel(city)} right now. Want me to check nearby cities?`,
-          suggestions: [`Show ${meta.label} in Delhi`, `Show ${meta.label} in Mumbai`],
+          suggestions: [`Show ${meta.label} in Kathmandu`, `Show ${meta.label} in Pokhara`],
         };
       }
       return {
@@ -241,7 +238,7 @@ function reply(message: string, ctx: AssistantContext): AssistantReply {
     case 'genie': {
       const city = GENIE_PACKAGES.find((p) => p.id === 'city')!;
       return {
-        text: `Want a human expert? Our Genie planners shortlist venues & vendors, negotiate prices and stay with you till the wedding day. Packages start at just ₹${GENIE_PACKAGES[0].price} — the most popular is the ${city.title} at ₹${city.price}.`,
+        text: `Want a human expert? Our Genie planners shortlist venues & vendors, negotiate prices and stay with you till the wedding day. Packages start at just NPR ${GENIE_PACKAGES[0].price} — the most popular is the ${city.title} at NPR ${city.price}.`,
         action: { label: 'View Genie packages', href: '/genie' },
         suggestions: ['What does Genie include?', 'Show me the best wedding venues'],
       };
@@ -256,7 +253,7 @@ function reply(message: string, ctx: AssistantContext): AssistantReply {
         };
       }
       return {
-        text: `I can help with venues, vendors, budgets, checklists and destination weddings. Try asking something like "Photographers in Mumbai under 1 lakh" or "Plan my dream destination wedding".`,
+        text: `I can help with venues, vendors, budgets, checklists and destination weddings. Try asking something like "Photographers in Pokhara under 1 lakh" or "Plan my dream destination wedding".`,
         suggestions: POPULAR_SUGGESTIONS,
       };
   }

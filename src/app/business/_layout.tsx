@@ -35,6 +35,7 @@ export default function BusinessLayout() {
         <Stack.Screen name="verification" />
         <Stack.Screen name="inbox/index" />
         <Stack.Screen name="inbox/[id]" />
+        <Stack.Screen name="settings" />
       </Stack>
     </RoleThemeProvider>
   );

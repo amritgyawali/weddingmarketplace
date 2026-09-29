@@ -1054,6 +1054,8 @@ function buildGigs(): Gig[] {
       projectId: 'prj_1017',
       eventId: 'ev_1017_wed',
       bookingId: 'bk_1017_photo',
+      crewId: 'cr_bk_1017_photo_0',
+      replacesAssignmentId: 'as_1017_dipak',
       city: 'Pokhara',
       location: 'Lakeside, Pokhara',
       date: day(0),
@@ -1603,7 +1605,7 @@ export function buildSeedData(): DbData {
           ['3 photographers', '3 videographers', 'Drone', 'Pre-wedding shoot', 'Same-day edit', '2 albums'],
         ][i],
         excluded: ['Travel outside the valley', 'Raw footage'],
-        crew: [{ Photographer: 1, Videographer: 1 }, { Photographer: 2, Videographer: 2, 'Drone Operator': 1 }, { Photographer: 3, Videographer: 3, 'Drone Operator': 1, Editor: 1 }][i],
+        crew: ([{ Photographer: 1, Videographer: 1 }, { Photographer: 2, Videographer: 2, 'Drone Operator': 1 }, { Photographer: 3, Videographer: 3, 'Drone Operator': 1, Editor: 1 }] as Record<string, number>[])[i],
         hours: [8, 12, 16][i],
         deliverables: [
           [{ title: 'Edited photos', qty: 300 }, { title: 'Highlight video', qty: 1 }],

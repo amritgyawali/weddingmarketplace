@@ -38,9 +38,9 @@ function Row({ icon, title, subtitle, onPress }: { icon: IconName; title: string
 
 const INVITE_TEMPLATES: { id: string; title: string; image: PhotoKey; price: string }[] = [
   { id: 'royal', title: 'Royal Marigold', image: 'decorMandapNight', price: 'Free' },
-  { id: 'pastel', title: 'Pastel Garden', image: 'decorMandapFloral', price: '₹499' },
-  { id: 'beach', title: 'Sunset Beach', image: 'venueDestinationBeach', price: '₹799' },
-  { id: 'video', title: 'Cinematic Video Invite', image: 'ideaCoupleGardenWalk', price: '₹1,999' },
+  { id: 'pastel', title: 'Pastel Garden', image: 'decorMandapFloral', price: 'NPR 499' },
+  { id: 'beach', title: 'Sunset Beach', image: 'venueDestinationBeach', price: 'NPR 799' },
+  { id: 'video', title: 'Cinematic Video Invite', image: 'ideaCoupleGardenWalk', price: 'NPR 1,999' },
 ];
 
 const PROMOTIONS: { title: string; code: string; detail: string }[] = [
@@ -50,10 +50,10 @@ const PROMOTIONS: { title: string; code: string; detail: string }[] = [
 ];
 
 const SHOP: { title: string; image: PhotoKey; price: string }[] = [
-  { title: 'Bridal Jewellery Sets', image: 'makeupBridePortrait', price: 'From ₹4,999' },
-  { title: 'Wedding Favours & Hampers', image: 'ideaReceptionToast', price: 'From ₹299' },
-  { title: 'Mehendi Ceremony Decor Kit', image: 'mehndiHands', price: 'From ₹2,499' },
-  { title: 'Mandap Floral Packages', image: 'decorMandapFloral', price: 'From ₹24,999' },
+  { title: 'Bridal Jewellery Sets', image: 'makeupBridePortrait', price: 'From NPR 7,999' },
+  { title: 'Wedding Favours & Hampers', image: 'ideaReceptionToast', price: 'From NPR 450' },
+  { title: 'Mehendi Ceremony Decor Kit', image: 'mehndiHands', price: 'From NPR 3,999' },
+  { title: 'Mandap & Jagge Floral Packages', image: 'decorMandapFloral', price: 'From NPR 39,999' },
 ];
 
 export default function InfoScreen() {

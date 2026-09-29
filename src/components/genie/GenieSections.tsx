@@ -81,10 +81,10 @@ export function PackageCard({ pkg, active, onBuy }: { pkg: GeniePackage; active?
         </Text>
         <View style={{ alignItems: 'flex-end' }}>
           <Text size={21} weight="bold" color={colors.primary}>
-            ₹ {formatNumber(pkg.price)}/-
+            NPR {formatNumber(pkg.price)}
           </Text>
           <Text size={15} color={colors.textMuted} style={{ textDecorationLine: 'line-through', marginTop: 2 }}>
-            ₹ {formatNumber(pkg.mrp)}/-
+            NPR {formatNumber(pkg.mrp)}
           </Text>
         </View>
       </View>

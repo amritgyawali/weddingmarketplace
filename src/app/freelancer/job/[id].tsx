@@ -42,7 +42,7 @@ export default function FreelancerJob() {
   const days = daysUntil(gig.date);
   const event = project?.events.find((e) => e.id === gig.eventId);
   const onSite = !!app?.checkInAt && !app?.checkOutAt;
-  const canCheckIn = app?.status === 'hired' && !app.checkInAt && days <= 0;
+  const canCheckIn = (app?.status === 'hired' || app?.status === 'confirmed') && !app.checkInAt && days <= 0;
 
   return (
     <View style={{ flex: 1, backgroundColor: t.c.bg }}>
@@ -66,7 +66,7 @@ export default function FreelancerJob() {
           </View>
         </Card>
 
-        {app?.status === 'hired' && (
+        {(app?.status === 'hired' || app?.status === 'confirmed' || app?.status === 'checked_in') && (
           <View style={{ gap: 8 }}>
             {!app.checkInAt ? (
               <KButton

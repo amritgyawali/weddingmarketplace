@@ -25,6 +25,17 @@ export interface Equipment {
   name: string;
 }
 
+export interface AccountPrefs {
+  /** Notification kinds the user muted (no badge; still listed). */
+  muted: NonNullable<AppNotification['kind']>[];
+  channels: { push: boolean; sms: boolean; whatsapp: boolean; email: boolean };
+  language: 'en' | 'ne';
+  /** How dates are shown: Gregorian (AD), Bikram Sambat (BS) or both. */
+  calendar: 'AD' | 'BS' | 'both';
+  showProfileToVendors: boolean;
+  marketing: boolean;
+}
+
 export interface Account {
   id: string;
   role: UserRole;
@@ -56,6 +67,10 @@ export interface Account {
   languages?: string[];
   experienceYears?: number;
   ownVehicle?: boolean;
+  /** Where payouts land (freelancers and providers). */
+  payoutMethod?: { kind: 'esewa' | 'khalti' | 'bank'; detail: string };
+  /** Notification, language and privacy preferences (every role). */
+  prefs?: AccountPrefs;
   /** platform */
   team?: PlatformTeam;
   staffRole?: StaffRole;
@@ -837,6 +852,8 @@ export interface ReviewRecord {
   criteria: Record<string, number>;
   text: string;
   photos: PhotoKey[];
+  /** Photos the reviewer uploaded (Cloudinary URLs in production). */
+  photoUris?: string[];
   verifiedBooking: boolean;
   status: 'published' | 'pending' | 'flagged' | 'removed';
   flagReason?: string;

@@ -12,7 +12,7 @@
       "supportsTablet": false,
       "bundleIdentifier": "com.vivah.marketplace",
       "infoPlist": {
-        "NSLocationWhenInUseUsageDescription": "Vivah uses your location to show wedding venues and vendors in your city."
+        "NSLocationWhenInUseUsageDescription": "Vivah uses your location to show nearby venues and vendors, and to confirm crew check-in at the venue."
       }
     },
     "android": {
@@ -50,7 +50,20 @@
         }
       ],
       "expo-font",
-      "expo-sharing"
+      "expo-sharing",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Vivah uses your photos for your portfolio, reviews, wedding website and proof of completed work.",
+          "cameraPermission": "Vivah uses the camera for check-in proof photos and portfolio uploads."
+        }
+      ],
+      [
+        "expo-contacts",
+        {
+          "contactsPermission": "Vivah lets you pick guests from your contacts. Only the names and numbers you select are added."
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true,

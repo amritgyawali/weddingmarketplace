@@ -110,6 +110,7 @@ export default function BusinessAccount() {
             <ListRow key={tool.title} icon={tool.icon} title={tool.title} subtitle={tool.subtitle} trailing={tool.badge ? <StatusPill status="pending" label={String(tool.badge)} /> : undefined} onPress={() => router.push(tool.href)} />
           ))}
           <ListRow icon="notifications-outline" title="Notifications" onPress={() => router.push('/notifications')} />
+          <ListRow icon="settings-outline" title="Settings" subtitle="Notifications, language, privacy" onPress={() => router.push('/business/settings')} />
           <ListRow icon="help-buoy-outline" title="Vendor success team" subtitle="partners@vivah.com.np · 01-5970000" />
         </Card>
 

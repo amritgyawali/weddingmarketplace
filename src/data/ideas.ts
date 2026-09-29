@@ -120,14 +120,14 @@ export const STORIES: Story[] = [
 export const REAL_WEDDINGS: RealWedding[] = [
   {
     id: 'rw-1',
-    couple: 'Ananya & Rohan',
-    city: 'Udaipur',
-    venue: 'Lake Palace Pichola Retreat',
-    theme: 'Royal Rajasthani',
+    couple: 'Anusha & Rohan',
+    city: 'Pokhara',
+    venue: 'Fewa Lakeside Resort',
+    theme: 'Lakeside Royal',
     cover: 'decorMandapNight',
     gallery: ['ideaCeremonyHands', 'ideaBrideParasol', 'venueOutdoorMandap', 'ideaReceptionToast'],
     story:
-      'Ananya and Rohan met at a college fest and knew they wanted a wedding that felt like a royal homecoming. Three days of lakeside celebrations, a marigold-drenched mandap and a sangeet that went on till sunrise!',
+      'Ananya and Rohan met at a college fest and knew they wanted a wedding that felt like a royal homecoming. Three days of lakeside celebrations, a marigold-drenched mandap facing Machhapuchhre and a mehendi night that went on till sunrise!',
     vendors: [
       { role: 'Photographer', name: 'Stardust Frames' },
       { role: 'Decor', name: 'Petals & Kesar' },
@@ -136,14 +136,14 @@ export const REAL_WEDDINGS: RealWedding[] = [
   },
   {
     id: 'rw-2',
-    couple: 'Priya & Karthik',
-    city: 'Goa',
-    venue: 'Cliffside Cove Retreat',
-    theme: 'Boho Beach',
+    couple: 'Prisha & Kiran',
+    city: 'Nagarkot',
+    venue: 'Himalayan Cliffside Retreat',
+    theme: 'Boho Hills',
     cover: 'venueCliffside',
     gallery: ['venueDestinationBeach', 'ideaCoupleGardenWalk', 'decorMandapFloral', 'venueResortSunset'],
     story:
-      'A barefoot beach wedding with pastel florals, a sunset ceremony by the sea and a cocktail night under the stars.',
+      'A hilltop wedding with pastel florals, a sunrise ceremony facing the Himalaya and a bonfire reception under the stars.',
     vendors: [
       { role: 'Planner', name: 'Lotus Weddings & Events' },
       { role: 'Photographer', name: 'Golden Hour Studio' },
@@ -152,15 +152,15 @@ export const REAL_WEDDINGS: RealWedding[] = [
   {
     id: 'rw-3',
     couple: 'Sneha & Arjun',
-    city: 'Bangalore',
-    venue: 'Windflower Meadows Resort and Spa',
+    city: 'Lalitpur',
+    venue: 'Godavari Garden Resort',
     theme: 'Garden Pastels',
     cover: 'ideaCoupleGardenWalk',
     gallery: ['venueLawn', 'venueGardenPavilion', 'makeupBridePortrait', 'mehndiHands'],
     story:
       'An intimate garden wedding with 200 guests, pastel outfits, a live folk band and a menu featuring dishes from both families’ hometowns.',
     vendors: [
-      { role: 'Venue', name: 'Windflower Meadows Resort and Spa' },
+      { role: 'Venue', name: 'Godavari Garden Resort' },
       { role: 'Mehendi', name: "Isha's Mehendi Art" },
     ],
   },
@@ -171,6 +171,6 @@ export const POPULAR_SEARCHES = [
   'Engagement gown',
   'Pre wedding shoot ideas',
   'Bridal entry songs',
-  'Photographers in Mumbai',
-  'Bridal Makeup in Delhi',
+  'Photographers in Pokhara',
+  'Bridal Makeup in Kathmandu',
 ];

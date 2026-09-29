@@ -93,7 +93,7 @@ export function useCustomerWorkspace(accountId: string) {
 }
 
 /** The applicant record for this freelancer on a gig, if any. */
-export const myApplication = (gig: { applications: { freelancerId: string }[] }, accountId: string) => gig.applications.find((a) => a.freelancerId === accountId);
+export const myApplication = <A extends { freelancerId: string }>(gig: { applications: A[] }, accountId: string): A | undefined => gig.applications.find((a) => a.freelancerId === accountId);
 
 export function findAssignment(projects: Project[], assignmentId: string): AssignmentRef | null {
   for (const project of projects)

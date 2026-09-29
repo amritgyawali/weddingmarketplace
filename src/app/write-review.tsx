@@ -1,115 +1,166 @@
+import { Ionicons } from '@expo/vector-icons';
+import { Image } from 'expo-image';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, View } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { Button } from '@/components/ui/Button';
-import { Field } from '@/components/ui/Field';
-import { StarInput } from '@/components/ui/Rating';
+import { Card, KField, StatusPill } from '@/components/kit';
 import { ScreenHeader } from '@/components/ui/ScreenHeader';
 import { Text } from '@/components/ui/Text';
 import { toast } from '@/components/ui/Toast';
-import { colors, GUTTER, radius } from '@/constants/theme';
-import { useAppStore } from '@/store/useAppStore';
+import { ReviewComposer } from '@/components/work/ReviewComposer';
+import { photos } from '@/constants/images';
+import { colors } from '@/constants/theme';
+import { findProvider, PROVIDERS } from '@/data/providers';
+import { serviceName } from '@/data/services';
+import { useCustomerWorkspace } from '@/hooks/useWorkspace';
+import { useDb } from '@/store/useDb';
+import { useAccount } from '@/store/useSession';
 import { formatShortDate } from '@/utils/format';
 
-const LABELS = ['', 'Poor', 'Fair', 'Good', 'Very good', 'Excellent'];
-const MIN_LENGTH = 30;
+interface Target {
+  providerId: string;
+  name: string;
+  serviceId: string;
+  bookingId?: string;
+}
 
+/** Category-specific reviews tied to real bookings (verified badge), with photos and moderation. */
 export default function WriteReviewScreen() {
-  const params = useLocalSearchParams<{ name?: string }>();
-  const insets = useSafeAreaInsets();
-  const addReview = useAppStore((s) => s.addReview);
-  const past = useAppStore((s) => s.reviews);
-  const [target, setTarget] = useState(params.name ?? '');
-  const [rating, setRating] = useState(0);
-  const [text, setText] = useState('');
-  const [touched, setTouched] = useState(false);
+  const params = useLocalSearchParams<{ providerId?: string; bookingId?: string; name?: string }>();
+  const account = useAccount();
+  const { project } = useCustomerWorkspace(account.id);
+  const reviews = useDb((s) => s.reviews);
+  const submitReview = useDb((s) => s.submitReview);
+  const [q, setQ] = useState(params.name ?? '');
+  const [target, setTarget] = useState<Target | null>(() => {
+    const b = project?.bookings.find((x) => x.id === params.bookingId);
+    const p = findProvider(b?.providerId ?? params.providerId ?? '');
+    return p ? { providerId: p.id, name: p.name, serviceId: p.serviceId, bookingId: b?.id } : null;
+  });
 
-  const errors = {
-    target: target.trim().length < 2 ? 'Enter the venue or vendor name' : null,
-    rating: rating === 0 ? 'Tap a star to rate' : null,
-    text: text.trim().length < MIN_LENGTH ? `Write at least ${MIN_LENGTH} characters (${text.trim().length}/${MIN_LENGTH})` : null,
-  };
-  const valid = !errors.target && !errors.rating && !errors.text;
+  const mine = reviews.filter((r) => r.authorId === account.id);
+  const reviewed = new Set(mine.map((r) => r.bookingId ?? r.targetId));
+  const due = (project?.bookings ?? []).filter((b) => b.status !== 'CANCELLED' && !reviewed.has(b.id) && (b.status === 'COMPLETED' || b.eventIds.some((id) => project?.events.find((e) => e.id === id && e.date && e.date <= new Date().toISOString().slice(0, 10)))));
+  const matches = q.trim().length >= 2 ? PROVIDERS.filter((p) => p.name.toLowerCase().includes(q.trim().toLowerCase())).slice(0, 8) : [];
 
-  const submit = () => {
-    setTouched(true);
-    if (!valid) return;
-    addReview({ targetName: target.trim(), rating, text: text.trim() });
-    toast('Thanks! Your review has been submitted');
-    router.back();
-  };
+  if (target) {
+    return (
+      <View style={styles.root}>
+        <ScreenHeader title="Write a review" subtitle={`${target.name} · ${serviceName(target.serviceId)}`} />
+        <KeyboardAvoidingView style={{ flex: 1, paddingHorizontal: 16, paddingTop: 12 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+          <ReviewComposer
+            serviceId={target.serviceId}
+            targetName={target.name}
+            onSubmit={(r) => {
+              const saved = submitReview({
+                targetKind: 'provider',
+                targetId: target.providerId,
+                targetName: target.name,
+                projectId: target.bookingId ? project?.id : undefined,
+                bookingId: target.bookingId,
+                authorId: account.id,
+                authorName: account.name,
+                authorRole: 'customer',
+                overall: r.overall,
+                criteria: r.criteria,
+                text: r.text,
+                photos: [],
+                photoUris: r.photoUris,
+              });
+              toast(saved.status === 'published' ? 'Thanks! Your review is live 💐' : 'Thanks! Your review is with our team for a quick check', 'star');
+              router.back();
+            }}
+          />
+        </KeyboardAvoidingView>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.root}>
-      <ScreenHeader title="Write a Review" />
-      <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-        <ScrollView contentContainerStyle={styles.body} keyboardShouldPersistTaps="handled">
-          <Text size={15} color={colors.textBody} lineHeight={22}>
-            Your review helps thousands of couples hire their wedding team with confidence.
-          </Text>
-          <Field
-            label="Venue / vendor you hired"
-            value={target}
-            onChangeText={setTarget}
-            placeholder="e.g. Golden Hour Studio"
-            error={touched ? errors.target : null}
-          />
-          <View style={styles.stars}>
-            <StarInput value={rating} onChange={setRating} />
-            <Text size={15} weight="semibold" color={rating ? colors.primary : colors.textMuted}>
-              {rating ? LABELS[rating] : 'Tap to rate'}
+      <ScreenHeader title="Write a review" />
+      <ScrollView contentContainerStyle={{ padding: 16, gap: 14, paddingBottom: 40 }} keyboardShouldPersistTaps="handled">
+        <Text size={15} color={colors.textBody} lineHeight={22}>
+          Your review helps couples across Nepal hire their wedding team with confidence. Reviews of vendors you booked through Vivah get a ✓ Verified badge.
+        </Text>
+        {due.length > 0 && (
+          <>
+            <Text size={16} weight="bold" color={colors.heading}>
+              Waiting for your review
             </Text>
-            {touched && errors.rating && (
-              <Text size={12} color={colors.danger}>
-                {errors.rating}
+            {due.map((b) => {
+              const p = findProvider(b.providerId);
+              return (
+                <Card key={b.id} onPress={() => setTarget({ providerId: b.providerId, name: b.providerName, serviceId: b.serviceId, bookingId: b.id })} style={styles.row}>
+                  {p && <Image source={photos[p.image]} style={styles.thumb} contentFit="cover" />}
+                  <View style={{ flex: 1 }}>
+                    <Text size={15} weight="bold" color={colors.textStrong}>
+                      {b.providerName}
+                    </Text>
+                    <Text size={12} color={colors.textMuted}>
+                      {serviceName(b.serviceId)} · verified booking
+                    </Text>
+                  </View>
+                  <Ionicons name="star-outline" size={22} color={colors.primary} />
+                </Card>
+              );
+            })}
+          </>
+        )}
+        <Text size={16} weight="bold" color={colors.heading}>
+          Review another vendor
+        </Text>
+        <KField placeholder="Search venue or vendor name" value={q} onChangeText={setQ} />
+        {matches.map((p) => (
+          <Card key={p.id} onPress={() => setTarget({ providerId: p.id, name: p.name, serviceId: p.serviceId })} style={styles.row}>
+            <Image source={photos[p.image]} style={styles.thumb} contentFit="cover" />
+            <View style={{ flex: 1 }}>
+              <Text size={14} weight="semibold" color={colors.textStrong}>
+                {p.name}
               </Text>
-            )}
-          </View>
-          <Field
-            label="Your experience"
-            value={text}
-            onChangeText={setText}
-            placeholder="What did you love? What could be better?"
-            multiline
-            maxLength={1500}
-            error={touched ? errors.text : null}
-          />
-
-          {past.length > 0 && (
-            <View style={{ gap: 10, marginTop: 10 }}>
-              <Text size={17} weight="bold" color={colors.heading}>
-                Your reviews
+              <Text size={12} color={colors.textMuted}>
+                {serviceName(p.serviceId)} · {p.city}
               </Text>
-              {past.map((r) => (
-                <View key={r.id} style={styles.past}>
-                  <Text size={15} weight="semibold" color={colors.heading}>
-                    {r.targetName} · {'★'.repeat(r.rating)}
-                  </Text>
-                  <Text size={13} color={colors.textBody} numberOfLines={2}>
-                    {r.text}
-                  </Text>
-                  <Text size={11} color={colors.textSubtle}>
-                    {formatShortDate(r.createdAt)}
-                  </Text>
-                </View>
-              ))}
             </View>
-          )}
-        </ScrollView>
-        <View style={[styles.footer, { paddingBottom: Math.max(insets.bottom, 14) }]}>
-          <Button label="Submit Review" size="lg" onPress={submit} />
-        </View>
-      </KeyboardAvoidingView>
+          </Card>
+        ))}
+        {mine.length > 0 && (
+          <>
+            <Text size={16} weight="bold" color={colors.heading} style={{ marginTop: 8 }}>
+              Your reviews
+            </Text>
+            {mine.map((r) => (
+              <Card key={r.id} style={{ gap: 4 }}>
+                <View style={styles.row}>
+                  <Text size={14} weight="bold" color={colors.textStrong} style={{ flex: 1 }}>
+                    {r.targetName}
+                  </Text>
+                  <StatusPill status={r.status} />
+                </View>
+                <Text size={12} color={colors.textMuted}>
+                  {'★'.repeat(Math.round(r.overall))} {r.overall.toFixed(1)} · {formatShortDate(r.at)}
+                  {r.verifiedBooking ? ' · ✓ Verified' : ''}
+                </Text>
+                <Text size={13} color={colors.textBody}>
+                  {r.text}
+                </Text>
+                {r.reply && (
+                  <Text size={12} color={colors.textMuted}>
+                    ↳ Reply: {r.reply.text}
+                  </Text>
+                )}
+              </Card>
+            ))}
+          </>
+        )}
+      </ScrollView>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  root: { flex: 1, backgroundColor: colors.white },
-  body: { padding: GUTTER, gap: 20 },
-  stars: { alignItems: 'center', gap: 8, paddingVertical: 8 },
-  past: { padding: 14, borderRadius: radius.md, backgroundColor: colors.bgSoft, gap: 4 },
-  footer: { paddingHorizontal: GUTTER, paddingTop: 12, borderTopWidth: StyleSheet.hairlineWidth, borderTopColor: colors.hairline },
+  root: { flex: 1, backgroundColor: colors.bgSoft },
+  row: { flexDirection: 'row', alignItems: 'center', gap: 12 },
+  thumb: { width: 48, height: 48, borderRadius: 10 },
 });

@@ -164,7 +164,6 @@ export function ThreadView({ thread }: { thread: Thread }) {
     sendMessage(thread.id, me, body, kind, meta);
     if (kind === 'text') setText('');
     setMenu(false);
-    setTimeout(() => listRef.current?.scrollToEnd({ animated: true }), 80);
   };
 
   const pickPhoto = async () => {

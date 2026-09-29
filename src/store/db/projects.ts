@@ -34,7 +34,7 @@ import type {
 } from '@/types/platform';
 import { addDays, daysUntil, formatMoney, formatShortDate, shortCode, uid } from '@/utils/format';
 
-import { accountById, bookingDates, currentActor, firstDate, type GetDb, mapBooking, mapProject, now, ownersOf, type SetDb, SYSTEM, today } from './helpers';
+import { accountById, bookingDates, currentActor, type GetDb, mapBooking, mapProject, now, ownersOf, type SetDb, SYSTEM, today } from './helpers';
 
 export interface ProjectActions {
   submitPlan: (customer: Account, input: PlanInput) => Project;

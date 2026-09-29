@@ -16,10 +16,17 @@ import { completeLogin, onAccountCreated } from '@/services/auth';
 import { useSession } from '@/store/useSession';
 import { useRoleFonts } from '@/theme/fonts';
 import { RoleThemeProvider, useRoleTheme } from '@/theme/RoleTheme';
-import type { Account, PlatformTeam } from '@/types/platform';
+import { formatPhone } from '@/utils/format';
+import type { Account, PlatformTeam, StaffRole } from '@/types/platform';
 
-const TEAMS: PlatformTeam[] = ['Genie Planning', 'Wedding Operations', 'Vendor Success', 'Admin'];
-const CITY_OPTIONS = [...ONBOARDING_CITIES, 'Udaipur', 'Goa'];
+const TEAMS: { team: PlatformTeam; role: StaffRole }[] = [
+  { team: 'Wedding Coordination', role: 'coordinator' },
+  { team: 'Wedding Operations', role: 'coordinator' },
+  { team: 'Vendor Success', role: 'support' },
+  { team: 'Finance', role: 'finance' },
+  { team: 'Admin', role: 'admin' },
+];
+const CITY_OPTIONS = [...ONBOARDING_CITIES];
 
 function SetupForm({ phone }: { phone: string }) {
   const t = useRoleTheme();
@@ -27,7 +34,7 @@ function SetupForm({ phone }: { phone: string }) {
   const register = useSession((s) => s.register);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
-  const [city, setCity] = useState<string>('Bangalore');
+  const [city, setCity] = useState<string>('Kathmandu');
   // vendor
   const [businessName, setBusinessName] = useState('');
   const [categoryId, setCategoryId] = useState('venues');
@@ -37,8 +44,11 @@ function SetupForm({ phone }: { phone: string }) {
   const [skills, setSkills] = useState<string[]>([]);
   const [dayRate, setDayRate] = useState('');
   const [bio, setBio] = useState('');
+  const [radius, setRadius] = useState('25 km');
+  // vendor + freelancer
+  const [panVat, setPanVat] = useState('');
   // platform
-  const [team, setTeam] = useState<PlatformTeam>('Genie Planning');
+  const [team, setTeam] = useState<PlatformTeam>('Wedding Coordination');
   const [accessCode, setAccessCode] = useState('');
   const [errors, setErrors] = useState<Record<string, string | null>>({});
 
@@ -60,6 +70,7 @@ function SetupForm({ phone }: { phone: string }) {
       business: t.role === 'vendor' && !claimed && businessName.trim().length < 3 ? 'Enter your business name or claim a listing' : null,
       skills: t.role === 'freelancer' && !skills.length ? 'Pick at least one skill' : null,
       rate: t.role === 'freelancer' && !(Number(dayRate) > 0) ? 'Enter your day rate' : null,
+      pan: t.role === 'vendor' && panVat && !/^\d{9}$/.test(panVat) ? 'PAN/VAT numbers have 9 digits' : null,
       code: t.role === 'platform' && accessCode.trim().toUpperCase() !== PLATFORM_ACCESS_CODE ? 'Invalid team access code' : null,
     };
     setErrors(next);
@@ -79,11 +90,12 @@ function SetupForm({ phone }: { phone: string }) {
             categoryId,
             listingKind: claimed?.kind ?? (categoryId === 'venues' ? 'venue' : 'vendor'),
             listingId: claimed?.id ?? `own_${Date.now().toString(36)}`,
+            panVat: panVat || undefined,
           }
         : t.role === 'freelancer'
-          ? { skills, dayRate: Number(dayRate), bio: bio.trim(), available: true, rating: 5 }
+          ? { skills, dayRate: Number(dayRate), bio: bio.trim(), available: true, rating: 5, travelRadiusKm: Number(radius.replace(/\D/g, '')), languages: ['Nepali'] }
           : t.role === 'platform'
-            ? { team }
+            ? { team, staffRole: TEAMS.find((x) => x.team === team)!.role }
             : {};
     const account = register({ ...base, ...extra });
     onAccountCreated(account);
@@ -92,7 +104,7 @@ function SetupForm({ phone }: { phone: string }) {
 
   return (
     <View style={{ flex: 1, backgroundColor: t.c.bg }}>
-      <StackHeader title="Create your account" subtitle={`${t.label} · +977 ${phone}`} />
+      <StackHeader title="Create your account" subtitle={`${t.label} · ${formatPhone(phone)}`} />
       <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
         <ScrollView contentContainerStyle={{ padding: 18, gap: 16, paddingBottom: insets.bottom + 110 }} keyboardShouldPersistTaps="handled">
           <KField label={t.role === 'vendor' ? 'Owner / manager name' : 'Full name'} value={name} onChangeText={setName} placeholder="Your name" autoComplete="name" error={errors.name} />
@@ -150,6 +162,7 @@ function SetupForm({ phone }: { phone: string }) {
                 )}
               </Card>
               {!claimed && <KField label="…or register a new business" value={businessName} onChangeText={setBusinessName} placeholder="Business name" error={errors.business} />}
+              <KField label="PAN / VAT number (optional)" value={panVat} onChangeText={(v) => setPanVat(v.replace(/\D/g, '').slice(0, 9))} keyboardType="number-pad" placeholder="9-digit PAN" error={errors.pan} />
             </>
           )}
 
@@ -168,6 +181,12 @@ function SetupForm({ phone }: { phone: string }) {
               </View>
               <KField label="Day rate" value={dayRate} onChangeText={(v) => setDayRate(v.replace(/\D/g, ''))} keyboardType="number-pad" prefix="NPR" placeholder="8000" error={errors.rate} />
               <KField label="Short bio" value={bio} onChangeText={setBio} multiline placeholder="Experience, style, equipment…" />
+              <View style={{ gap: 6 }}>
+                <Text size={13} weight="semibold" color={t.c.muted}>
+                  How far will you travel?
+                </Text>
+                <ChoiceChips options={['10 km', '25 km', '50 km', '100 km', '200 km']} selected={[radius]} onToggle={setRadius} />
+              </View>
             </>
           )}
 
@@ -177,7 +196,7 @@ function SetupForm({ phone }: { phone: string }) {
                 <Text size={13} weight="semibold" color={t.c.muted}>
                   Team
                 </Text>
-                <ChoiceChips options={TEAMS} selected={[team]} onToggle={(v) => setTeam(v as PlatformTeam)} />
+                <ChoiceChips options={TEAMS.map((x) => x.team)} selected={[team]} onToggle={(v) => setTeam(v as PlatformTeam)} />
               </View>
               <KField
                 label="Team access code"

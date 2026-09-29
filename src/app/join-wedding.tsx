@@ -11,6 +11,8 @@ import { ScreenHeader } from '@/components/ui/ScreenHeader';
 import { Text } from '@/components/ui/Text';
 import { colors, fonts, GUTTER, inputReset, radius } from '@/constants/theme';
 import { useAppStore } from '@/store/useAppStore';
+import { useDb } from '@/store/useDb';
+import { useAccount, useSession } from '@/store/useSession';
 
 const CODE_PATTERN = /^[A-Z0-9]{6}$/;
 
@@ -18,6 +20,10 @@ const CODE_PATTERN = /^[A-Z0-9]{6}$/;
 export default function JoinWeddingScreen() {
   const insets = useSafeAreaInsets();
   const joinWedding = useAppStore((s) => s.joinWedding);
+  const joinWithCode = useDb((s) => s.joinWithCode);
+  const role = useSession((s) => s.session?.role ?? null);
+  const account = useAccount();
+  const [title, setTitle] = useState<string | null>(null);
   const joined = useAppStore((s) => s.joinedWeddings);
   const hasOnboarded = useAppStore((s) => s.hasOnboarded);
   const [code, setCode] = useState('');
@@ -31,6 +37,17 @@ export default function JoinWeddingScreen() {
       triggerHaptic('medium');
       return;
     }
+    if (role === 'customer') {
+      // Signed in: join the couple's live project straight away.
+      const project = joinWithCode(normalized, account);
+      if (!project) {
+        setError('No wedding found for that code. Check with the couple and try again.');
+        triggerHaptic('medium');
+        return;
+      }
+      setTitle(project.title);
+    }
+    // Signed out: remember the code; it is redeemed after sign-in.
     joinWedding(normalized);
     triggerHaptic('success');
     setSuccess(true);
@@ -46,7 +63,9 @@ export default function JoinWeddingScreen() {
           You’re in!
         </Text>
         <Text size={15} color={colors.textBody} align="center" style={{ maxWidth: 300 }}>
-          You’ve joined the wedding with code {code.trim().toUpperCase()}. You’ll see shared checklists and updates once the couple approves.
+          {title
+            ? `You’ve joined ${title}. You’ll now see the shared plan, checklist, guests and updates in My Wedding.`
+            : `Code ${code.trim().toUpperCase()} saved. Sign in with your mobile number and you’ll be added to the wedding automatically.`}
         </Text>
         <Button
           label={hasOnboarded ? 'Done' : 'Continue'}
@@ -54,7 +73,8 @@ export default function JoinWeddingScreen() {
           style={{ alignSelf: 'stretch', marginTop: 20 }}
           onPress={() => {
             router.back();
-            if (!hasOnboarded) router.push('/onboarding/role');
+            if (title) router.push('/my-wedding');
+            else if (role === 'customer' && !hasOnboarded) router.push('/onboarding/role');
           }}
         />
       </View>

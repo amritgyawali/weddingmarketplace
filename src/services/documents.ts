@@ -98,3 +98,17 @@ export function runSheetHtml(project: Project, event: ProjectEvent) {
     .join('');
   return page(`Run sheet · ${project.title} · ${event.name}`, `<p>${event.date ? formatShortDate(event.date) : ''} · ${esc(event.venue)} · ${event.guests} guests</p><table><tr><th>Time</th><th>Cue</th><th>Owner</th><th>Status</th></tr>${rows}</table><h2>Providers & crew</h2><table>${crew}</table>`);
 }
+
+/** Printable invitation card (A5) — its own design, without the Vivah letterhead. */
+export function invitationHtml(opts: { names: string; message: string; accent: string; background: string; events: ProjectEvent[]; footer?: string }) {
+  const events = opts.events
+    .map((e) => `<div class="ev"><b>${esc(e.name)}</b><br/>${e.date ? formatLongDate(e.date) : 'Date to be announced'} · ${esc(e.startTime)}<br/><span>${esc(e.venue)}, ${esc(e.city)}</span></div>`)
+    .join('');
+  return `<!doctype html><html><head><meta charset="utf-8"/><title>${esc(opts.names)}</title><style>
+  @page{size:A5;margin:0} body{margin:0;font-family:Georgia,'Times New Roman',serif;background:${opts.background};color:#2b2118}
+  .card{margin:24px;padding:36px 28px;border:2px solid ${opts.accent};border-radius:18px;text-align:center;min-height:90vh}
+  .om{font-size:28px;color:${opts.accent}} h1{font-size:34px;color:${opts.accent};margin:14px 0} p{white-space:pre-line;font-size:15px;line-height:1.6}
+  .ev{margin:14px auto;padding:10px;border-top:1px solid ${opts.accent}33;max-width:320px;font-size:14px} .ev span{color:#6b5b4b}
+  .foot{margin-top:22px;font-size:12px;color:#6b5b4b}
+  </style></head><body><div class="card"><div class="om">ॐ श्री गणेशाय नमः</div><h1>${esc(opts.names)}</h1><p>${esc(opts.message)}</p>${events}${opts.footer ? `<div class="foot">${esc(opts.footer)}</div>` : ''}</div></body></html>`;
+}
