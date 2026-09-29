@@ -16,7 +16,7 @@ import { Text } from '@/components/ui/Text';
 import { colors, GUTTER, radius } from '@/constants/theme';
 import { useSimilarVenues, useVenue } from '@/hooks/queries';
 import { NotFoundError } from '@/services/api';
-import { formatINR } from '@/utils/format';
+import { formatMoney } from '@/utils/format';
 
 export default function VenueDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -121,10 +121,10 @@ export default function VenueDetailScreen() {
 
         <Section title="Pricing">
           <View style={styles.tiles}>
-            <InfoTile icon="leaf-outline" label="Veg per plate" value={formatINR(venue.vegPerPlate)} />
-            <InfoTile icon="restaurant-outline" label="Non-veg per plate" value={formatINR(venue.nonVegPerPlate)} />
-            <InfoTile icon="key-outline" label="Rental cost / function" value={formatINR(venue.rentalCost)} />
-            <InfoTile icon="airplane-outline" label="Destination (2 days)" value={formatINR(venue.destinationPackage)} />
+            <InfoTile icon="leaf-outline" label="Veg per plate" value={formatMoney(venue.vegPerPlate)} />
+            <InfoTile icon="restaurant-outline" label="Non-veg per plate" value={formatMoney(venue.nonVegPerPlate)} />
+            <InfoTile icon="key-outline" label="Rental cost / function" value={formatMoney(venue.rentalCost)} />
+            <InfoTile icon="airplane-outline" label="Destination (2 days)" value={formatMoney(venue.destinationPackage)} />
           </View>
         </Section>
 
@@ -178,7 +178,7 @@ export default function VenueDetailScreen() {
             reviews={venue.reviews}
             rating={venue.rating}
             count={venue.reviewCount}
-            onWrite={() => router.push({ pathname: '/write-review', params: { name: venue.name } })}
+            onWrite={() => router.push({ pathname: '/write-review', params: { providerId: venue.id, name: venue.name } })}
           />
         </Section>
 
@@ -196,7 +196,7 @@ export default function VenueDetailScreen() {
         )}
       </ScrollView>
 
-      <StickyCta priceLabel="Starting at" price={formatINR(venue.vegPerPlate)} unit="per plate" cta="Check Availability" onPress={enquire} />
+      <StickyCta priceLabel="Starting at" price={formatMoney(venue.vegPerPlate)} unit="per plate" cta="Check Availability" onPress={enquire} />
     </View>
   );
 }

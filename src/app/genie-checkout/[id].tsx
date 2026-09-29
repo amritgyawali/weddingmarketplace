@@ -13,23 +13,26 @@ import { ScreenHeader } from '@/components/ui/ScreenHeader';
 import { Text } from '@/components/ui/Text';
 import { BRAND } from '@/constants/brand';
 import { colors, GUTTER, radius } from '@/constants/theme';
+import { ALL_CITIES } from '@/data/cities';
 import { GENIE_PACKAGES } from '@/data/genie';
 import { useAppStore } from '@/store/useAppStore';
 import { useDb } from '@/store/useDb';
 import { useAccount } from '@/store/useSession';
-import { formatINR } from '@/utils/format';
+import { formatMoney, isNepalMobile } from '@/utils/format';
 
 const COUPONS: Record<string, number> = { SHUBH10: 0.1, FIRSTWED: 0.15 };
-const GST = 0.18;
+const VAT = 0.13;
 const METHODS = [
-  { id: 'upi', label: 'UPI (GPay, PhonePe, Paytm)', icon: 'phone-portrait-outline' },
-  { id: 'card', label: 'Credit / Debit Card', icon: 'card-outline' },
-  { id: 'netbanking', label: 'Net Banking', icon: 'business-outline' },
+  { id: 'esewa', label: 'eSewa', icon: 'wallet-outline' },
+  { id: 'khalti', label: 'Khalti', icon: 'wallet-outline' },
+  { id: 'fonepay', label: 'Fonepay QR (any bank app)', icon: 'qr-code-outline' },
+  { id: 'connect_ips', label: 'ConnectIPS', icon: 'business-outline' },
+  { id: 'card', label: 'Visa / Mastercard', icon: 'card-outline' },
 ] as const;
 
 /**
  * Checkout for Genie packages. Payment is simulated — plug a gateway SDK
- * (e.g. Razorpay / Stripe) into `pay()` and confirm the order server-side.
+ * (eSewa / Khalti / Fonepay) into `pay()` and confirm the order server-side.
  */
 export default function GenieCheckoutScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -51,7 +54,7 @@ export default function GenieCheckoutScreen() {
   const [coupon, setCoupon] = useState('');
   const [applied, setApplied] = useState<string | null>(null);
   const [couponError, setCouponError] = useState<string | null>(null);
-  const [method, setMethod] = useState<(typeof METHODS)[number]['id']>('upi');
+  const [method, setMethod] = useState<(typeof METHODS)[number]['id']>('esewa');
   const [errors, setErrors] = useState<Record<string, string | null>>({});
   const [paying, setPaying] = useState(false);
   const [done, setDone] = useState(false);
@@ -67,7 +70,7 @@ export default function GenieCheckoutScreen() {
 
   const discount = applied ? Math.round(pkg.price * COUPONS[applied]) : 0;
   const subtotal = pkg.price - discount;
-  const tax = Math.round(subtotal * GST);
+  const tax = Math.round(subtotal * VAT);
   const total = subtotal + tax;
 
   const applyCoupon = () => {
@@ -85,7 +88,7 @@ export default function GenieCheckoutScreen() {
   const pay = async () => {
     const next = {
       name: name.trim().length < 2 ? 'Please enter your name' : null,
-      phone: !/^\+?\d{10,13}$/.test(phone.replace(/[\s-]/g, '')) ? 'Enter a valid mobile number' : null,
+      phone: !isNepalMobile(phone) ? 'Enter a valid mobile number' : null,
       email: email && !/^\S+@\S+\.\S+$/.test(email) ? 'Enter a valid email' : null,
     };
     setErrors(next);
@@ -103,7 +106,7 @@ export default function GenieCheckoutScreen() {
     await new Promise((r) => setTimeout(r, 1600));
     setBookingStatus(booking.id, 'confirmed');
     // Hand the wedding to the platform's Genie planners.
-    const project = ensureProject(account, { weddingDate, city: city === 'All Cities' ? account.city : city, managedBy: 'platform', geniePackageId: pkg.id });
+    const project = ensureProject(account, { weddingDate, city: city === ALL_CITIES ? account.city : city, managedBy: 'platform', geniePackageId: pkg.id });
     notify('platform', `New Genie client: ${name.trim()}`, `${pkg.title} · ${project.code}`, `/platform/project/${project.id}`);
     triggerHaptic('success');
     setPaying(false);
@@ -120,7 +123,7 @@ export default function GenieCheckoutScreen() {
           Welcome to Genie!
         </Text>
         <Text size={15} color={colors.textBody} align="center" style={{ maxWidth: 310 }}>
-          Payment of {formatINR(total)} received for the {pkg.title}. Your personal Genie will call you on {phone} within 24 hours.
+          Payment of {formatMoney(total)} received for the {pkg.title}. Your personal Genie will call you on {phone} within 24 hours.
         </Text>
         <View style={{ alignSelf: 'stretch', gap: 12, marginTop: 20 }}>
           <Button label="Open My Wedding" size="lg" onPress={() => router.replace({ pathname: '/my-wedding', params: { tab: 'plan' } })} />
@@ -183,17 +186,17 @@ export default function GenieCheckoutScreen() {
           ))}
 
           <View style={styles.bill}>
-            <BillRow label="Package price" value={formatINR(pkg.mrp)} strike />
-            <BillRow label="Offer price" value={formatINR(pkg.price)} />
-            {!!discount && <BillRow label={`Coupon ${applied}`} value={`− ${formatINR(discount)}`} accent />}
-            <BillRow label="GST (18%)" value={formatINR(tax)} />
+            <BillRow label="Package price" value={formatMoney(pkg.mrp)} strike />
+            <BillRow label="Offer price" value={formatMoney(pkg.price)} />
+            {!!discount && <BillRow label={`Coupon ${applied}`} value={`− ${formatMoney(discount)}`} accent />}
+            <BillRow label="VAT (13%)" value={formatMoney(tax)} />
             <View style={styles.billDivider} />
-            <BillRow label="Total payable" value={formatINR(total)} bold />
+            <BillRow label="Total payable" value={formatMoney(total)} bold />
           </View>
         </ScrollView>
 
         <View style={[styles.footer, { paddingBottom: Math.max(insets.bottom, 14) }]}>
-          <Button label={paying ? 'Processing…' : `Pay ${formatINR(total)}`} onPress={pay} loading={paying} size="lg" />
+          <Button label={paying ? 'Processing…' : `Pay ${formatMoney(total)}`} onPress={pay} loading={paying} size="lg" />
           <View style={styles.secure}>
             <Ionicons name="lock-closed" size={12} color={colors.textMuted} />
             <Text size={12} color={colors.textMuted}>

@@ -15,7 +15,7 @@ export function GenieBanner() {
   return (
     <PressableScale
       onPress={() => router.navigate('/genie')}
-      accessibilityLabel={`${BRAND.genieService}. Plans from ₹249`}
+      accessibilityLabel={`${BRAND.genieService}. Plans from NPR 2,999`}
       style={[styles.card, shadows.card]}>
       <Image source={photos.virtualPlanningCouple} style={StyleSheet.absoluteFill} contentFit="cover" contentPosition="left" />
       <LinearGradient
@@ -33,7 +33,7 @@ export function GenieBanner() {
           Let an expert plan{'\n'}your wedding
         </Text>
         <Text size={13} color={colors.textBody}>
-          Plans from just ₹249
+          Plans from just NPR 2,999
         </Text>
         <View style={styles.cta}>
           <Text size={13} weight="bold" color={colors.white}>

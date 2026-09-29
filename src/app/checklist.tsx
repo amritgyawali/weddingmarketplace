@@ -1,21 +1,29 @@
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useState } from 'react';
-import { Pressable, SectionList, StyleSheet, View } from 'react-native';
+import { Pressable, ScrollView, SectionList, StyleSheet, View } from 'react-native';
 
 import { ProgressRing } from '@/components/home/ChecklistCard';
+import { KButton, Segmented } from '@/components/kit';
 import { Chip } from '@/components/ui/Chip';
 import { triggerHaptic } from '@/components/ui/PressableScale';
 import { ScreenHeader } from '@/components/ui/ScreenHeader';
 import { Text } from '@/components/ui/Text';
+import { toast } from '@/components/ui/Toast';
+import { TaskBoard } from '@/components/work/TaskBoard';
 import { colors, gradients, GUTTER, radius } from '@/constants/theme';
 import { CHECKLIST, CHECKLIST_PHASES, CHECKLIST_TOTAL } from '@/data/checklist';
+import { useCustomerWorkspace } from '@/hooks/useWorkspace';
 import { useAppStore } from '@/store/useAppStore';
+import { useDb } from '@/store/useDb';
+import { useAccount } from '@/store/useSession';
+import { confirm } from '@/utils/confirm';
 import { daysUntil } from '@/utils/format';
 
 type Filter = 'all' | 'pending' | 'done';
 
-export default function ChecklistScreen() {
+/** Generic month-by-month planning guide (works before a project exists). */
+function PlanningGuide() {
   const completed = useAppStore((s) => s.completedTasks);
   const toggleTask = useAppStore((s) => s.toggleTask);
   const weddingDate = useAppStore((s) => s.weddingDate);
@@ -42,7 +50,6 @@ export default function ChecklistScreen() {
 
   return (
     <View style={styles.root}>
-      <ScreenHeader title="Wedding Checklist" />
       <SectionList
         sections={sections}
         keyExtractor={(t) => t.id}
@@ -126,6 +133,53 @@ export default function ChecklistScreen() {
           );
         }}
       />
+    </View>
+  );
+}
+
+/** Our wedding's shared task list (from the project) plus the general planning guide. */
+export default function ChecklistScreen() {
+  const account = useAccount();
+  const { project } = useCustomerWorkspace(account.id);
+  const regenerate = useDb((s) => s.regenerateChecklist);
+  const [tab, setTab] = useState<'tasks' | 'guide'>(project ? 'tasks' : 'guide');
+  const open = project?.tasks.filter((x) => x.visibility === 'shared' && x.status !== 'COMPLETED' && x.status !== 'CANCELLED').length ?? 0;
+
+  return (
+    <View style={styles.root}>
+      <ScreenHeader title="Checklist" subtitle={project ? `${project.title} · ${open} open` : undefined} />
+      {project && (
+        <View style={{ paddingVertical: 10 }}>
+          <Segmented
+            options={[
+              { id: 'tasks', label: 'Our tasks' },
+              { id: 'guide', label: 'Planning guide' },
+            ]}
+            value={tab}
+            onChange={setTab}
+            counts={{ tasks: open || undefined }}
+          />
+        </View>
+      )}
+      {tab === 'tasks' && project ? (
+        <ScrollView contentContainerStyle={{ padding: 16, gap: 12, paddingBottom: 60 }}>
+          <TaskBoard project={project} mode="customer" />
+          <KButton
+            label="Refresh suggested tasks"
+            icon="sparkles-outline"
+            variant="ghost"
+            size="sm"
+            onPress={() =>
+              confirm('Refresh suggested tasks?', 'Adds tasks for newly requested services and dates. Your own tasks and progress are kept.', 'Refresh', () => {
+                regenerate(project.id);
+                toast('Checklist updated', 'checkbox');
+              })
+            }
+          />
+        </ScrollView>
+      ) : (
+        <PlanningGuide />
+      )}
     </View>
   );
 }

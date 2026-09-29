@@ -7,7 +7,7 @@ import { RoleThemeProvider } from '@/theme/RoleTheme';
 
 const t = ROLE_THEMES.platform;
 
-/** Vivah operations console — planners, approvals, quotations and the live control room. */
+/** Vivah operations console — coordinators, matching, quotes, crew, finance and trust. */
 export default function PlatformLayout() {
   const fontsReady = useRoleFonts('platform');
   if (!fontsReady) return null;
@@ -23,8 +23,19 @@ export default function PlatformLayout() {
         <Stack.Screen name="gigs" />
         <Stack.Screen name="gig/new" options={{ presentation: 'modal' }} />
         <Stack.Screen name="gig/[id]" />
-        <Stack.Screen name="payouts" />
+        <Stack.Screen name="approvals" />
+        <Stack.Screen name="finance" />
         <Stack.Screen name="users" />
+        <Stack.Screen name="providers" />
+        <Stack.Screen name="provider/[id]" />
+        <Stack.Screen name="freelancers" />
+        <Stack.Screen name="analytics" />
+        <Stack.Screen name="marketplace" />
+        <Stack.Screen name="audit" />
+        <Stack.Screen name="calendar" />
+        <Stack.Screen name="inbox/index" />
+        <Stack.Screen name="inbox/[id]" />
+        <Stack.Screen name="settings" />
       </Stack>
     </RoleThemeProvider>
   );

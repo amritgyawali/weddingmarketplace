@@ -90,6 +90,21 @@ export default function RootLayout() {
             <Stack.Screen name="profile" />
             <Stack.Screen name="edit-profile" />
             <Stack.Screen name="my-wedding" />
+            <Stack.Screen name="plan" options={{ presentation: 'modal', animation: 'slide_from_bottom' }} />
+            <Stack.Screen name="plan-submitted" options={{ animation: 'fade', gestureEnabled: false }} />
+            <Stack.Screen name="guests" />
+            <Stack.Screen name="seating" />
+            <Stack.Screen name="budget" />
+            <Stack.Screen name="website" />
+            <Stack.Screen name="invitations" />
+            <Stack.Screen name="registry" />
+            <Stack.Screen name="boards" />
+            <Stack.Screen name="compare" />
+            <Stack.Screen name="deals" />
+            <Stack.Screen name="contracts" />
+            <Stack.Screen name="contract/[id]" />
+            <Stack.Screen name="calendar" />
+            <Stack.Screen name="settings" />
             <Stack.Screen name="quote/[id]" />
             <Stack.Screen name="venue/[id]" />
             <Stack.Screen name="vendor/[id]" />
@@ -128,6 +143,9 @@ export default function RootLayout() {
             <Stack.Screen name="select-city" options={{ animation: 'slide_from_bottom' }} />
             <Stack.Screen name="join-wedding" options={{ presentation: 'modal', animation: 'slide_from_bottom' }} />
           </Stack.Protected>
+          {/* Public pages opened from invitation links and QR codes — no sign-in needed. */}
+          <Stack.Screen name="w/[slug]" options={{ animation: 'fade' }} />
+          <Stack.Screen name="rsvp/[code]" options={{ animation: 'fade' }} />
           <Stack.Screen name="+not-found" />
         </Stack>
         <ToastHost />

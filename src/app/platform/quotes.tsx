@@ -7,7 +7,7 @@ import { Text } from '@/components/ui/Text';
 import { quoteTotals } from '@/services/quotes';
 import { useDb } from '@/store/useDb';
 import { useRoleTheme } from '@/theme/RoleTheme';
-import { formatINR, formatShortDate } from '@/utils/format';
+import { formatMoney, formatShortDate } from '@/utils/format';
 
 type Filter = 'all' | 'open' | 'revision' | 'accepted' | 'genie';
 
@@ -60,7 +60,7 @@ export default function AllQuotes() {
                 {item.city} · event {formatShortDate(item.eventDate)}
               </Text>
               <Text size={15} weight="bold" color={t.c.textStrong}>
-                {formatINR(quoteTotals(item).total)}
+                {formatMoney(quoteTotals(item).total)}
               </Text>
             </View>
           </Card>

@@ -17,7 +17,7 @@ import { useDebounce } from '@/hooks/useDebounce';
 import { useSearch } from '@/hooks/queries';
 import { useAppStore } from '@/store/useAppStore';
 import type { SearchResult } from '@/types';
-import { formatINR } from '@/utils/format';
+import { formatMoney } from '@/utils/format';
 
 const SECTION_TITLES: Record<SearchResult['kind'], string> = {
   category: 'Categories',
@@ -47,7 +47,7 @@ function ResultRow({ result }: { result: SearchResult }) {
     case 'venue':
       image = photos[result.item.images[0]];
       title = result.item.name;
-      subtitle = `${result.item.type} · ${result.item.city} · ${formatINR(result.item.vegPerPlate)}/plate`;
+      subtitle = `${result.item.type} · ${result.item.city} · ${formatMoney(result.item.vegPerPlate)}/plate`;
       break;
     case 'vendor':
       image = photos[result.item.images[0]];

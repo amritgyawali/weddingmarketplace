@@ -9,8 +9,11 @@ import type { Account } from '@/types/platform';
  */
 export function completeLogin(account: Account) {
   if (account.role === 'customer') {
+    // Redeem invite codes entered before signing in (family joining a wedding).
+    const pending = useAppStore.getState().joinedWeddings;
+    const joined = pending.map((code) => useDb.getState().joinWithCode(code, account)).find(Boolean) ?? undefined;
     // The demo couple already has a wedding project, so skip the questionnaire.
-    const project = useDb.getState().projects.find((p) => p.customerId === account.id);
+    const project = useDb.getState().projects.find((p) => p.customerId === account.id) ?? joined;
     useAppStore.getState().bindOwner(
       account,
       project

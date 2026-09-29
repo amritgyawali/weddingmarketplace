@@ -13,7 +13,7 @@ import { myApplication } from '@/hooks/useWorkspace';
 import { useDb } from '@/store/useDb';
 import { useAccount } from '@/store/useSession';
 import { useRoleTheme } from '@/theme/RoleTheme';
-import { daysUntil, formatINR, formatLongDate, formatTime } from '@/utils/format';
+import { daysUntil, formatMoney, formatLongDate, formatTime } from '@/utils/format';
 
 /** Hired-job view: on-site check-in/out, the live run sheet and issue reporting. */
 export default function FreelancerJob() {
@@ -42,7 +42,7 @@ export default function FreelancerJob() {
   const days = daysUntil(gig.date);
   const event = project?.events.find((e) => e.id === gig.eventId);
   const onSite = !!app?.checkInAt && !app?.checkOutAt;
-  const canCheckIn = app?.status === 'hired' && !app.checkInAt && days <= 0;
+  const canCheckIn = (app?.status === 'hired' || app?.status === 'confirmed') && !app.checkInAt && days <= 0;
 
   return (
     <View style={{ flex: 1, backgroundColor: t.c.bg }}>
@@ -66,7 +66,7 @@ export default function FreelancerJob() {
           </View>
         </Card>
 
-        {app?.status === 'hired' && (
+        {(app?.status === 'hired' || app?.status === 'confirmed' || app?.status === 'checked_in') && (
           <View style={{ gap: 8 }}>
             {!app.checkInAt ? (
               <KButton
@@ -100,7 +100,7 @@ export default function FreelancerJob() {
         )}
 
         <Card style={{ gap: 4 }}>
-          <KeyValue label="Pay" value={formatINR(app?.expectedPay ?? gig.pay)} />
+          <KeyValue label="Pay" value={formatMoney(app?.expectedPay ?? gig.pay)} />
           <KeyValue label="Duration" value={`${gig.hours} hours`} />
           {project && <KeyValue label="Wedding" value={`${project.title} (${project.code})`} />}
           {event && <KeyValue label="Function" value={`${event.name} · ${event.venue}`} />}

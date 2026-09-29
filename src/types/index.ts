@@ -7,20 +7,22 @@ export type CityGroup = 'metro' | 'popular' | 'state' | 'international';
 export interface City {
   id: string;
   name: string;
+  /** Province for Nepali cities. */
   state?: string;
   group: CityGroup;
+  lat?: number;
+  lng?: number;
 }
 
 export type VenueType =
-  | 'Resort'
+  | 'Party Palace'
   | 'Banquet Hall'
-  | 'Lawn'
-  | '5 Star Hotel'
-  | '4 Star Hotel'
-  | 'Heritage Palace'
-  | 'Farmhouse'
-  | 'Kalyana Mandapam'
-  | 'Beach Venue';
+  | 'Hotel'
+  | 'Resort'
+  | 'Garden'
+  | 'Heritage Courtyard'
+  | 'Lakeside Venue'
+  | 'Farmhouse';
 
 export interface Review {
   id: string;
@@ -79,6 +81,9 @@ export interface VendorPackage {
   price: number;
   unit: string;
   includes: string[];
+  /** Crew included, e.g. { Photographer: 2, Videographer: 2 }. */
+  crew?: Record<string, number>;
+  hours?: number;
 }
 
 export interface Vendor {
@@ -100,6 +105,12 @@ export interface Vendor {
   packages: VendorPackage[];
   reviews: Review[];
   phone: string;
+  languages?: string[];
+  teamSize?: number;
+  serviceAreas?: string[];
+  travels?: boolean;
+  instantBook?: boolean;
+  styles?: string[];
 }
 
 export type IdeaCategory =

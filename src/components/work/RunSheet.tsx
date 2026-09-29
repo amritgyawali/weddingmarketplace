@@ -10,7 +10,7 @@ import { useDb } from '@/store/useDb';
 import { statusLabel, statusTone } from '@/theme/roles';
 import { useRoleTheme } from '@/theme/RoleTheme';
 import type { Project, RunItem, RunStatus, WeddingEvent } from '@/types/platform';
-import { formatLongDate, uid } from '@/utils/format';
+import { formatClock, formatLongDate } from '@/utils/format';
 
 const RUN_STATUSES: RunStatus[] = ['pending', 'in_progress', 'done', 'delayed'];
 
@@ -108,26 +108,14 @@ export function RunSheet({ project, event, editable, compact }: { project: Proje
 export function EventCard({ project, event, canControl, canEditRun }: { project: Project; event: WeddingEvent; canControl: boolean; canEditRun: boolean }) {
   const t = useRoleTheme();
   const setEventStatus = useDb((s) => s.setEventStatus);
-  const updateProject = useDb((s) => s.updateProject);
+  const addRunItem = useDb((s) => s.addRunItem);
   const [open, setOpen] = useState(event.status === 'live');
   const [adding, setAdding] = useState(false);
   const [draft, setDraft] = useState({ time: '', title: '', owner: '' });
 
   const addItem = () => {
     if (!draft.title.trim() || !/^\d{1,2}:\d{2}$/.test(draft.time)) return;
-    updateProject(project.id, (p) => ({
-      ...p,
-      events: p.events.map((e) =>
-        e.id === event.id
-          ? {
-              ...e,
-              runSheet: [...e.runSheet, { id: uid('ri'), time: draft.time.padStart(5, '0'), title: draft.title.trim(), owner: draft.owner.trim() || 'Coordinator', status: 'pending' as const }].sort((a, b) =>
-                a.time.localeCompare(b.time),
-              ),
-            }
-          : e,
-      ),
-    }));
+    addRunItem(project.id, event.id, { time: draft.time.padStart(5, '0'), title: draft.title.trim(), owner: draft.owner.trim() || 'Coordinator' });
     setDraft({ time: '', title: '', owner: '' });
     setAdding(false);
   };
@@ -143,7 +131,7 @@ export function EventCard({ project, event, canControl, canEditRun }: { project:
             <StatusPill status={event.status} label={event.status === 'live' ? '● LIVE' : undefined} />
           </View>
           <Text size={13} color={t.c.muted}>
-            {formatLongDate(event.date)} · {event.startTime} · {event.venue} · {event.guests} guests
+            {event.date ? formatLongDate(event.date) : 'Date to be confirmed'} · {formatClock(event.startTime)} · {event.venue} · {event.guests} guests
           </Text>
         </View>
         <Ionicons name={open ? 'chevron-up' : 'chevron-down'} size={18} color={t.c.muted} />

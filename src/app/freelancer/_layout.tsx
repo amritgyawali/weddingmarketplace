@@ -19,6 +19,12 @@ export default function FreelancerLayout() {
         <Stack.Screen name="(tabs)" />
         <Stack.Screen name="gig/[id]" />
         <Stack.Screen name="job/[id]" />
+        <Stack.Screen name="assignment/[id]" />
+        <Stack.Screen name="portfolio" />
+        <Stack.Screen name="verification" />
+        <Stack.Screen name="inbox/index" />
+        <Stack.Screen name="inbox/[id]" />
+        <Stack.Screen name="settings" />
       </Stack>
     </RoleThemeProvider>
   );

@@ -8,9 +8,9 @@ export const BRAND = {
   genieTagline: 'Virtual Planning Service',
   assistantName: 'Wedika',
   assistantTitle: 'Wedika AI',
-  assistantSubtitle: 'Indian Wedding Assistant',
-  supportPhone: '+911800000000',
-  supportWhatsApp: '911800000000',
+  assistantSubtitle: 'Nepali Wedding Assistant',
+  supportPhone: '+9779801000000',
+  supportWhatsApp: '9779801000000',
   supportEmail: 'support@vivah.app',
   reviewCount: '200,000',
 } as const;

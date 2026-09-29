@@ -14,7 +14,7 @@ import { photos } from '@/constants/images';
 import { colors, GUTTER, radius, shadows } from '@/constants/theme';
 import { useAppStore } from '@/store/useAppStore';
 import type { Booking, BookingStatus } from '@/types';
-import { formatINR, formatLongDate, formatShortDate } from '@/utils/format';
+import { formatMoney, formatLongDate, formatShortDate } from '@/utils/format';
 import { confirm } from '@/utils/confirm';
 
 const STATUS: Record<BookingStatus, { label: string; color: string; bg: string }> = {
@@ -79,7 +79,7 @@ function BookingCard({ booking }: { booking: Booking }) {
           <View style={styles.metaItem}>
             <Ionicons name="receipt-outline" size={15} color={colors.textMuted} />
             <Text size={13} color={colors.textBody}>
-              Paid {formatINR(booking.amount)}
+              Paid {formatMoney(booking.amount)}
             </Text>
           </View>
         )}

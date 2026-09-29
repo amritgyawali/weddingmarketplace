@@ -16,7 +16,7 @@ import type { City } from '@/types';
 
 /** Map reverse-geocoded names onto the cities we serve. */
 function matchCity(parts: (string | null | undefined)[]): City | undefined {
-  const aliases: Record<string, string> = { bengaluru: 'Bangalore', 'new delhi': 'Delhi NCR', delhi: 'Delhi NCR', gurugram: 'Delhi NCR', noida: 'Delhi NCR' };
+  const aliases: Record<string, string> = { kathmandu: 'Kathmandu', patan: 'Lalitpur', lalitpur: 'Lalitpur', bhaktapur: 'Bhaktapur', bharatpur: 'Chitwan', chitwan: 'Chitwan', lekhnath: 'Pokhara', 'biratnagar': 'Biratnagar', 'birgunj': 'Birgunj', 'janakpurdham': 'Janakpur' };
   for (const raw of parts) {
     if (!raw) continue;
     const p = raw.toLowerCase();

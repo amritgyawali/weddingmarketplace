@@ -10,7 +10,7 @@ import { Text } from '@/components/ui/Text';
 import { colors, GUTTER, radius } from '@/constants/theme';
 import { useAppStore } from '@/store/useAppStore';
 import type { Venue } from '@/types';
-import { formatINR } from '@/utils/format';
+import { formatMoney } from '@/utils/format';
 
 import { ImageCarousel } from './ImageCarousel';
 import { ShortlistButton } from './ShortlistButton';
@@ -35,7 +35,7 @@ export function useStartConversation() {
   };
 }
 
-/** Full-width venue card from the "Bangalore • Venues" listing. */
+/** Full-width venue card from the "Kathmandu • Venues" listing. */
 export const VenueCard = memo(function VenueCard({
   venue,
   destinationPricing,
@@ -76,7 +76,7 @@ export const VenueCard = memo(function VenueCard({
         </Text>
         <View style={styles.priceRow}>
           <Text size={20} weight="bold" color={colors.textStrong}>
-            {formatINR(price.value)}
+            {formatMoney(price.value)}
           </Text>
           <Text size={13} color={colors.textBody}>
             {price.unit}

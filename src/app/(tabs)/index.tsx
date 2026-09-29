@@ -56,7 +56,7 @@ export default function ForYouScreen() {
   const photographers = useFeaturedVendors(city, 'photographers');
   const makeup = useFeaturedVendors(city, 'makeup');
   const realWeddings = useRealWeddings();
-  const cityLabel = city === ALL_CITIES ? 'across India' : `in ${city}`;
+  const cityLabel = city === ALL_CITIES ? 'across Nepal' : `in ${city}`;
 
   const onRefresh = async () => {
     setRefreshing(true);

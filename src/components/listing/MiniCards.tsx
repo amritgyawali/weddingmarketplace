@@ -9,7 +9,7 @@ import { Text } from '@/components/ui/Text';
 import { photos, type PhotoKey } from '@/constants/images';
 import { colors, radius } from '@/constants/theme';
 import type { Vendor, Venue } from '@/types';
-import { formatINR } from '@/utils/format';
+import { formatMoney } from '@/utils/format';
 
 import { ShortlistButton } from './ShortlistButton';
 
@@ -71,7 +71,7 @@ export function VenueMiniCard({ venue, width = 205 }: { venue: Venue; width?: nu
       </View>
       <Text size={13} color={colors.textBody}>
         <Text size={14} weight="bold" color={colors.textStrong}>
-          {formatINR(venue.vegPerPlate)}
+          {formatMoney(venue.vegPerPlate)}
         </Text>{' '}
         per plate
       </Text>
@@ -103,7 +103,7 @@ export function VendorMiniCard({ vendor, width = 170 }: { vendor: Vendor; width?
       <Text size={13} color={colors.textBody} numberOfLines={1}>
         From{' '}
         <Text size={14} weight="bold" color={colors.textStrong}>
-          {formatINR(vendor.startingPrice)}
+          {formatMoney(vendor.startingPrice)}
         </Text>
       </Text>
     </MiniCard>

@@ -28,7 +28,7 @@ export function VenueCollections({ city }: { city: string }) {
   return (
     <View style={styles.band}>
       <Text weight="semibold" size={19} color={colors.heading} style={styles.title} numberOfLines={1}>
-        Venues Collections {city === ALL_CITIES ? 'across India' : `in ${city}`}
+        Venues Collections {city === ALL_CITIES ? 'across Nepal' : `in ${city}`}
       </Text>
       <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.row} decelerationRate="fast" snapToInterval={170}>
         {isLoading

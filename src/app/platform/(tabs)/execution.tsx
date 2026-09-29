@@ -18,16 +18,38 @@ export default function ControlRoom() {
   const resolveIncident = useDb((s) => s.resolveIncident);
 
   const all = projects.flatMap((p) => p.events.map((e) => ({ event: e, project: p })));
-  const active = all.filter(({ event }) => event.status === 'live' || (daysUntil(event.date) === 0 && event.status !== 'done'));
+  const active = all.filter(({ event }) => event.status === 'live' || (!!event.date && daysUntil(event.date) === 0 && event.status === 'planned'));
   const next = all
-    .filter(({ event }) => event.status === 'planned' && daysUntil(event.date) > 0 && daysUntil(event.date) <= 7)
-    .sort((a, b) => a.event.date.localeCompare(b.event.date));
+    .filter(({ event }) => event.status === 'planned' && !!event.date && daysUntil(event.date) > 0 && daysUntil(event.date) <= 7)
+    .sort((a, b) => (a.event.date ?? '').localeCompare(b.event.date ?? ''));
+  const emergencies = gigs.filter((g) => g.emergency && g.status === 'open');
   const incidents = projects.flatMap((p) => p.incidents.filter((i) => i.status === 'open').map((i) => ({ incident: i, project: p })));
 
   return (
     <View style={{ flex: 1, backgroundColor: t.c.bg }}>
       <RoleHeader eyebrow="WEDDING EXECUTION" title="Control room" subtitle={`${active.length} active today · ${incidents.length} open incidents`} />
       <ScrollView contentContainerStyle={{ padding: 14, gap: 14, paddingBottom: 30 }}>
+        {emergencies.length > 0 && (
+          <View>
+            <SectionTitle title="🚨 Emergency replacements" />
+            <View style={{ gap: 10 }}>
+              {emergencies.map((g) => (
+                <Card key={g.id} onPress={() => router.push({ pathname: '/platform/gig/[id]', params: { id: g.id } })} style={[styles.incident, { borderLeftColor: t.c.danger }]}>
+                  <View style={{ flex: 1, gap: 3 }}>
+                    <Text size={14} weight="bold" color={t.c.textStrong}>
+                      {g.title}
+                    </Text>
+                    <Text size={12} color={t.c.muted}>
+                      {g.applications.length} applied · {g.invited?.length ?? 0} invited · {g.startTime}
+                    </Text>
+                  </View>
+                  <Ionicons name="chevron-forward" size={18} color={t.c.danger} />
+                </Card>
+              ))}
+            </View>
+          </View>
+        )}
+
         {incidents.length > 0 && (
           <View>
             <SectionTitle title="Open incidents" />
@@ -61,8 +83,8 @@ export default function ControlRoom() {
               {active.map(({ event, project }) => {
                 const done = event.runSheet.filter((r) => r.status === 'done').length;
                 const delayed = event.runSheet.filter((r) => r.status === 'delayed').length;
-                const crew = gigs.filter((g) => g.eventId === event.id).flatMap((g) => g.applications.filter((a) => a.status === 'hired' || a.status === 'completed'));
-                const onSite = crew.filter((a) => a.checkInAt && !a.checkOutAt).length;
+                const crew = project.bookings.flatMap((b) => b.assignments.filter((a) => a.eventId === event.id && !['CANCELLED', 'EMERGENCY_REPLACEMENT', 'NO_SHOW'].includes(a.status)));
+                const onSite = crew.filter((a) => a.status === 'CHECKED_IN' || a.status === 'IN_PROGRESS').length;
                 return (
                   <Card key={event.id} style={{ gap: 12, borderColor: event.status === 'live' ? t.c.danger : t.c.border }}>
                     <View style={styles.row}>
@@ -138,11 +160,11 @@ export default function ControlRoom() {
                       {project.title} — {event.name}
                     </Text>
                     <Text size={12} color={t.c.muted}>
-                      {formatShortDate(event.date)} · {event.startTime} · {project.city}
+                      {event.date ? formatShortDate(event.date) : 'TBC'} · {event.startTime} · {project.city}
                     </Text>
                   </View>
                   <Text size={12} weight="bold" color={t.c.primary}>
-                    in {daysUntil(event.date)}d
+                    in {event.date ? daysUntil(event.date) : '?'}d
                   </Text>
                 </View>
               ))
