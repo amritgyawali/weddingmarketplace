@@ -12,7 +12,7 @@ import { myApplication } from '@/hooks/useWorkspace';
 import { useDb } from '@/store/useDb';
 import { useAccount } from '@/store/useSession';
 import { useRoleTheme } from '@/theme/RoleTheme';
-import { formatINR, formatLongDate } from '@/utils/format';
+import { formatMoney, formatLongDate } from '@/utils/format';
 
 export default function FreelancerGigDetail() {
   const t = useRoleTheme();
@@ -60,7 +60,7 @@ export default function FreelancerGigDetail() {
             <KeyValue label="Date" value={formatLongDate(gig.date)} />
             <KeyValue label="Reporting time" value={`${gig.startTime} · ${gig.hours} hours`} />
             <KeyValue label="Location" value={gig.city} />
-            <KeyValue label="Pay" value={`${formatINR(gig.pay)} per person`} />
+            <KeyValue label="Pay" value={`${formatMoney(gig.pay)} per person`} />
             <KeyValue label="Openings" value={`${gig.slots - hired} of ${gig.slots}`} />
           </Card>
           {!!gig.description && (
@@ -90,7 +90,7 @@ export default function FreelancerGigDetail() {
                   You applied for this gig
                 </Text>
                 <Text size={12} color={t.c.muted}>
-                  Asking {formatINR(application.expectedPay)}
+                  Asking {formatMoney(application.expectedPay)}
                 </Text>
               </View>
               <StatusPill status={application.status} />
@@ -106,7 +106,7 @@ export default function FreelancerGigDetail() {
                 </Text>
               )}
               <KField label="Message to the organiser" value={message} onChangeText={setMessage} multiline placeholder="Your experience with similar weddings, availability, kit…" />
-              <KField label="Your rate for this gig" value={pay} onChangeText={(v) => setPay(v.replace(/\D/g, ''))} keyboardType="number-pad" prefix="₹" placeholder={String(gig.pay)} />
+              <KField label="Your rate for this gig" value={pay} onChangeText={(v) => setPay(v.replace(/\D/g, ''))} keyboardType="number-pad" prefix="NPR" placeholder={String(gig.pay)} />
             </Card>
           ) : (
             <Card>
@@ -118,7 +118,7 @@ export default function FreelancerGigDetail() {
         </ScrollView>
         {!application && gig.status === 'open' && (
           <View style={[styles.footer, { backgroundColor: t.c.surface, borderTopColor: t.c.border, paddingBottom: Math.max(insets.bottom, 14) }]}>
-            <KButton label={`Apply · ${formatINR(Number(pay) || gig.pay)}`} icon="flash" size="lg" onPress={apply} />
+            <KButton label={`Apply · ${formatMoney(Number(pay) || gig.pay)}`} icon="flash" size="lg" onPress={apply} />
           </View>
         )}
       </KeyboardAvoidingView>

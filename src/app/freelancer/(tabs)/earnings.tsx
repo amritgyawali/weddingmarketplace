@@ -8,7 +8,7 @@ import { Text } from '@/components/ui/Text';
 import { useFreelancerWorkspace } from '@/hooks/useWorkspace';
 import { useAccount } from '@/store/useSession';
 import { useRoleTheme } from '@/theme/RoleTheme';
-import { formatINR, formatINRCompact, formatShortDate } from '@/utils/format';
+import { formatMoney, formatMoneyCompact, formatShortDate } from '@/utils/format';
 
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
@@ -47,19 +47,19 @@ export default function Earnings() {
           TOTAL PAID OUT
         </Text>
         <Text size={40} weight="bold" color={t.c.onPrimary} lineHeight={46}>
-          {formatINR(paid)}
+          {formatMoney(paid)}
         </Text>
         <View style={styles.balanceRow}>
           <View style={styles.pill}>
             <Ionicons name="time-outline" size={14} color={t.c.onPrimary} />
             <Text size={12} weight="bold" color={t.c.onPrimary}>
-              {formatINR(pending)} pending
+              {formatMoney(pending)} pending
             </Text>
           </View>
           <View style={styles.pill}>
             <Ionicons name="calendar-outline" size={14} color={t.c.onPrimary} />
             <Text size={12} weight="bold" color={t.c.onPrimary}>
-              {formatINRCompact(upcomingValue)} booked ahead
+              {formatMoneyCompact(upcomingValue)} booked ahead
             </Text>
           </View>
         </View>
@@ -69,7 +69,7 @@ export default function Earnings() {
         <Text size={15} weight="bold" color={t.c.textStrong}>
           Monthly earnings
         </Text>
-        <BarChart data={chart} format={formatINRCompact} />
+        <BarChart data={chart} format={formatMoneyCompact} />
       </Card>
 
       <View>
@@ -95,7 +95,7 @@ export default function Earnings() {
                   </View>
                   <View style={{ alignItems: 'flex-end', gap: 4 }}>
                     <Text size={15} weight="bold" color={t.c.textStrong}>
-                      {formatINR(p.amount)}
+                      {formatMoney(p.amount)}
                     </Text>
                     <StatusPill status={p.status} />
                   </View>

@@ -13,7 +13,7 @@ import { myApplication } from '@/hooks/useWorkspace';
 import { useDb } from '@/store/useDb';
 import { useAccount } from '@/store/useSession';
 import { useRoleTheme } from '@/theme/RoleTheme';
-import { daysUntil, formatINR, formatLongDate, formatTime } from '@/utils/format';
+import { daysUntil, formatMoney, formatLongDate, formatTime } from '@/utils/format';
 
 /** Hired-job view: on-site check-in/out, the live run sheet and issue reporting. */
 export default function FreelancerJob() {
@@ -100,7 +100,7 @@ export default function FreelancerJob() {
         )}
 
         <Card style={{ gap: 4 }}>
-          <KeyValue label="Pay" value={formatINR(app?.expectedPay ?? gig.pay)} />
+          <KeyValue label="Pay" value={formatMoney(app?.expectedPay ?? gig.pay)} />
           <KeyValue label="Duration" value={`${gig.hours} hours`} />
           {project && <KeyValue label="Wedding" value={`${project.title} (${project.code})`} />}
           {event && <KeyValue label="Function" value={`${event.name} · ${event.venue}`} />}

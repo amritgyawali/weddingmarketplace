@@ -6,159 +6,130 @@ type Seed = [name: string, type: VenueType, locality: string];
 
 /** Fictional venues grouped by city; attributes are generated deterministically. */
 const SEEDS: Record<string, Seed[]> = {
-  Bangalore: [
-    ['Windflower Meadows Resort and Spa', 'Resort', 'Devanahalli'],
-    ['The Banyan Grove Retreat', 'Resort', 'Kanakapura Road'],
-    ['Royal Orchid Convention Centre', 'Banquet Hall', 'Yelahanka'],
-    ['Silver Oak Farmhouse', 'Farmhouse', 'Sarjapur Road'],
-    ['The Grand Aurum Hotel', '5 Star Hotel', 'MG Road'],
-    ['Marigold Lawns', 'Lawn', 'Whitefield'],
-    ['Sandalwood Kalyana Mantapa', 'Kalyana Mandapam', 'Jayanagar'],
-  ],
-  'Delhi NCR': [
-    ['The Lotus Courtyard', 'Farmhouse', 'Chattarpur'],
-    ['Emerald Greens', 'Lawn', 'Mehrauli'],
-    ['Imperial Crest Hotel', '5 Star Hotel', 'Aerocity'],
-    ['Sapphire Banquets', 'Banquet Hall', 'Rajouri Garden'],
-    ['Aravali Rose Resort', 'Resort', 'Gurgaon'],
-    ['The Ivory Pavilion', '4 Star Hotel', 'Noida'],
-  ],
-  Mumbai: [
-    ['Seabreeze Grand', '5 Star Hotel', 'Juhu'],
-    ['Palm Crest Resort', 'Resort', 'Lonavala'],
-    ['The Pearl Banquets', 'Banquet Hall', 'Andheri'],
-    ['Lakeside Lawns Powai', 'Lawn', 'Powai'],
-    ['Harbour Lights Hotel', '4 Star Hotel', 'Navi Mumbai'],
-    ['Monsoon Valley Retreat', 'Resort', 'Karjat'],
-  ],
-  Hyderabad: [
-    ['Nizam Heritage Palace', 'Heritage Palace', 'Falaknuma'],
-    ['Deccan Pearl Convention', 'Banquet Hall', 'Gachibowli'],
-    ['Golconda Gardens', 'Lawn', 'Shamshabad'],
-    ['Charminar Grand Hotel', '5 Star Hotel', 'Banjara Hills'],
-    ['Kompally Green Farms', 'Farmhouse', 'Kompally'],
-  ],
-  Chennai: [
-    ['Coromandel Beach Resort', 'Beach Venue', 'ECR'],
-    ['Lakshmi Kalyana Mandapam', 'Kalyana Mandapam', 'T Nagar'],
-    ['Marina Crown Hotel', '5 Star Hotel', 'Guindy'],
-    ['Jasmine Gardens', 'Lawn', 'OMR'],
-  ],
-  Kolkata: [
-    ['The Raj Bari', 'Heritage Palace', 'Alipore'],
-    ['Hooghly Riverside Lawns', 'Lawn', 'Rajarhat'],
-    ['Victoria Grand Banquets', 'Banquet Hall', 'Salt Lake'],
-    ['Bengal Tiger Resort', 'Resort', 'EM Bypass'],
-  ],
-  Jaipur: [
-    ['Amber Fort View Palace', 'Heritage Palace', 'Amer Road'],
-    ['The Pink Haveli', 'Heritage Palace', 'Old City'],
-    ['Rajputana Royal Resort', 'Resort', 'Delhi Road'],
-    ['Sheesh Mahal Gardens', 'Lawn', 'Ajmer Road'],
-    ['Jaipur Regency Hotel', '5 Star Hotel', 'Tonk Road'],
-  ],
-  Pune: [
-    ['Sahyadri Hills Resort', 'Resort', 'Hinjewadi'],
-    ['Koregaon Crown Hotel', '4 Star Hotel', 'Koregaon Park'],
-    ['Deccan Lawns', 'Lawn', 'Baner'],
-    ['Shaniwar Banquets', 'Banquet Hall', 'Kharadi'],
-  ],
-  Lucknow: [
-    ['Awadh Heritage Kothi', 'Heritage Palace', 'Hazratganj'],
-    ['Gomti Riverside Lawns', 'Lawn', 'Gomti Nagar'],
-    ['Nawab Grand Banquets', 'Banquet Hall', 'Faizabad Road'],
-  ],
-  Udaipur: [
-    ['Lake Palace Pichola Retreat', 'Heritage Palace', 'Lake Pichola'],
-    ['Aravalli Sunset Resort', 'Resort', 'Badi Lake'],
-    ['Fateh Sagar Garden Palace', 'Heritage Palace', 'Fateh Sagar'],
-    ['Mewar Grand Hotel', '5 Star Hotel', 'Sukhadia Circle'],
-  ],
-  Goa: [
-    ['Candolim Sands Beach Resort', 'Beach Venue', 'Candolim'],
-    ['Cliffside Cove Retreat', 'Beach Venue', 'Morjim'],
-    ['Palm Grove Villa Estate', 'Resort', 'South Goa'],
-    ['The Tidewater Hotel', '5 Star Hotel', 'Calangute'],
-  ],
   Kathmandu: [
-    ['Himalayan Heritage Durbar', 'Heritage Palace', 'Durbar Marg'],
-    ['Nagarkot Cloudline Resort', 'Resort', 'Nagarkot'],
-    ['Lazimpat Grand Hotel', '5 Star Hotel', 'Lazimpat'],
+    ['Everest Grand Party Palace', 'Party Palace', 'Tinkune'],
+    ['Himalayan Heritage Durbar', 'Heritage Courtyard', 'Durbar Marg'],
+    ['Rhododendron Banquet', 'Banquet Hall', 'New Baneshwor'],
+    ['Kathmandu Crown Hotel', 'Hotel', 'Lazimpat'],
+    ['Bhrikuti Party Palace', 'Party Palace', 'Kalanki'],
+    ['Sagarmatha Convention Hall', 'Banquet Hall', 'Sinamangal'],
+    ['Sundarijal Green Garden', 'Garden', 'Sundarijal'],
+    ['Budhanilkantha Heights Resort', 'Resort', 'Budhanilkantha'],
+    ['Maharajgunj Royal Banquet', 'Banquet Hall', 'Maharajgunj'],
   ],
+  Lalitpur: [
+    ['Patan Courtyard Heritage', 'Heritage Courtyard', 'Mangal Bazar'],
+    ['Jhamsikhel Garden Palace', 'Party Palace', 'Jhamsikhel'],
+    ['Godawari Pine Resort', 'Resort', 'Godawari'],
+    ['Kumaripati Banquet', 'Banquet Hall', 'Kumaripati'],
+    ['Bhaisepati Farmhouse', 'Farmhouse', 'Bhaisepati'],
+  ],
+  Bhaktapur: [
+    ['Nyatapola Heritage Venue', 'Heritage Courtyard', 'Taumadhi'],
+    ['Suryabinayak Party Palace', 'Party Palace', 'Suryabinayak'],
+    ['Changunarayan Hill Garden', 'Garden', 'Changu'],
+  ],
+  Pokhara: [
+    ['Phewa Lakeside Pavilion', 'Lakeside Venue', 'Lakeside'],
+    ['Sarangkot Sunrise Resort', 'Resort', 'Sarangkot'],
+    ['Begnas Lake Retreat', 'Lakeside Venue', 'Begnas'],
+    ['Machhapuchhre View Party Palace', 'Party Palace', 'Chipledhunga'],
+    ['Pokhara Grand Hotel', 'Hotel', 'Damside'],
+  ],
+  Chitwan: [
+    ['Rapti Riverside Resort', 'Resort', 'Sauraha'],
+    ['Narayani Banquet', 'Banquet Hall', 'Bharatpur'],
+    ['Chitwan Green Party Palace', 'Party Palace', 'Narayangarh'],
+  ],
+  Butwal: [
+    ['Tinau Party Palace', 'Party Palace', 'Traffic Chowk'],
+    ['Siddhartha Garden Banquet', 'Garden', 'Devinagar'],
+  ],
+  Biratnagar: [
+    ['Koshi Grand Banquet', 'Banquet Hall', 'Main Road'],
+    ['Morang Party Palace', 'Party Palace', 'Tinpaini'],
+  ],
+  Dharan: [['Bijayapur Hills Resort', 'Resort', 'Bijayapur']],
+  Birgunj: [['Gahawa Party Palace', 'Party Palace', 'Gahawa']],
+  Nepalgunj: [['Bheri Banquet', 'Banquet Hall', 'Surkhet Road']],
+  Janakpur: [['Mithila Heritage Hall', 'Heritage Courtyard', 'Janaki Mandir']],
+  Dhangadhi: [['Seti Party Palace', 'Party Palace', 'Chauraha']],
+  Nagarkot: [['Nagarkot Cloudline Resort', 'Resort', 'Nagarkot']],
+  Dhulikhel: [['Dhulikhel Horizon Resort', 'Resort', 'Dhulikhel']],
 };
 
 const IMAGE_SETS: Record<VenueType, PhotoKey[]> = {
+  'Party Palace': ['venueLuxuryStage', 'decorMandapNight', 'ideaReceptionToast', 'venueOutdoorMandap'],
+  'Banquet Hall': ['venueLuxuryStage', 'ideaReceptionToast', 'decorMandapNight', 'venueGardenPavilion'],
+  Hotel: ['venueLuxuryStage', 'ideaReceptionToast', 'venueResortSunset', 'decorMandapNight'],
   Resort: ['venueResortSunset', 'venueGardenPavilion', 'venueLawn', 'decorMandapFloral'],
-  'Banquet Hall': ['venueLuxuryStage', 'decorMandapNight', 'ideaReceptionToast', 'venueOutdoorMandap'],
-  Lawn: ['venueLawn', 'venueGardenEstate', 'decorMandapFloral', 'venueOutdoorMandap'],
-  '5 Star Hotel': ['venueLuxuryStage', 'ideaReceptionToast', 'venueResortSunset', 'decorMandapNight'],
-  '4 Star Hotel': ['ideaReceptionToast', 'venueLuxuryStage', 'venueGardenPavilion', 'decorMandapNight'],
-  'Heritage Palace': ['decorMandapNight', 'venueOutdoorMandap', 'ideaBrideParasol', 'venueLuxuryStage'],
+  Garden: ['venueLawn', 'venueGardenEstate', 'decorMandapFloral', 'venueOutdoorMandap'],
+  'Heritage Courtyard': ['decorMandapNight', 'venueOutdoorMandap', 'ideaBrideParasol', 'ideaCeremonyHands'],
+  'Lakeside Venue': ['venueDestinationBeach', 'venueCliffside', 'venueResortSunset', 'decorMandapFloral'],
   Farmhouse: ['venueGardenPavilion', 'venueGardenEstate', 'venueLawn', 'decorMandapFloral'],
-  'Kalyana Mandapam': ['venueOutdoorMandap', 'ideaCeremonyHands', 'decorMandapNight', 'venueLuxuryStage'],
-  'Beach Venue': ['venueDestinationBeach', 'venueCliffside', 'venueResortSunset', 'decorMandapFloral'],
 };
 
+/** Venue rental per function in NPR. */
 const PRICE_BANDS: Record<VenueType, [number, number]> = {
-  Resort: [4_00_000, 15_00_000],
-  'Banquet Hall': [1_50_000, 5_00_000],
-  Lawn: [1_00_000, 4_50_000],
-  '5 Star Hotel': [6_00_000, 20_00_000],
-  '4 Star Hotel': [3_00_000, 8_00_000],
-  'Heritage Palace': [8_00_000, 35_00_000],
-  Farmhouse: [2_00_000, 7_00_000],
-  'Kalyana Mandapam': [80_000, 3_00_000],
-  'Beach Venue': [5_00_000, 18_00_000],
+  'Party Palace': [50_000, 300_000],
+  'Banquet Hall': [80_000, 400_000],
+  Hotel: [250_000, 1_200_000],
+  Resort: [200_000, 900_000],
+  Garden: [60_000, 350_000],
+  'Heritage Courtyard': [250_000, 1_000_000],
+  'Lakeside Venue': [150_000, 700_000],
+  Farmhouse: [80_000, 350_000],
 };
 
 const AMENITIES = [
-  'Valet parking',
+  'Parking for 200+ cars',
   'In-house decor',
   'In-house catering',
   'Outside caterers allowed',
   'Outside decorators allowed',
-  'Alcohol allowed',
-  'DJ allowed till 11 PM',
+  'Bar license',
+  'Music allowed till 10 PM',
   'Bridal changing room',
   'Guest rooms',
-  'Swimming pool',
-  'Power backup',
+  'Generator backup',
   'Wheelchair accessible',
-  'Fire pit & sangeet stage',
-  'Mandap setup included',
+  'Jagge / mandap setup included',
+  'Panche Baja welcome area',
+  'Separate dining hall',
+  'Mountain view',
 ];
 
 const REVIEWERS = [
-  'Ananya & Rohan',
-  'Priya & Karthik',
-  'Sneha & Arjun',
-  'Meera & Vikram',
-  'Ishita & Kabir',
-  'Divya & Aditya',
-  'Kavya & Siddharth',
-  'Riya & Nikhil',
-  'Pooja & Aman',
-  'Neha & Varun',
+  'Aakriti & Sujan',
+  'Pratiksha & Bibek',
+  'Srijana & Nabin',
+  'Anisha & Rojan',
+  'Sarina & Prabin',
+  'Rashmi & Kiran',
+  'Shristi & Aayush',
+  'Nikita & Suman',
+  'Bipana & Roshan',
+  'Samjhana & Dipesh',
 ];
 
 const REVIEW_TEXTS = [
-  'The venue looked magical in the evening. The banquet team was extremely co-operative and handled 600 guests without a hitch.',
-  'Food was the highlight of our wedding — every guest still talks about the live counters. Great value for money.',
-  'Beautiful lawns and a very professional events manager. The mandap setup was done exactly as we had discussed.',
-  'Rooms were clean and the staff went out of their way to help our families. Would highly recommend for destination weddings.',
-  'Smooth coordination from booking to the reception night. Parking was a little tight, but everything else was perfect.',
-  'Stunning property with lots of spaces for each function. Our haldi by the pool was a dream!',
+  'The hall looked magical in the evening and the team handled 600 guests without a hitch. Janti welcome was beautifully organised.',
+  'Food was the highlight of our wedding — every guest still talks about the Newari bhoj counter. Great value for money.',
+  'Beautiful garden and a very professional events manager. The jagge was set up exactly as we had discussed with our pandit.',
+  'Rooms were clean and the staff went out of their way to help our families from outside the valley. Highly recommended.',
+  'Smooth coordination from booking to the reception night. Parking was a little tight during the janti, everything else was perfect.',
+  'Stunning mountain view and lots of spaces for each function. Our mehendi on the lawn was a dream!',
 ];
 
 const COLLECTION_RULES: Record<CollectionId, (v: Pick<Venue, 'type' | 'rentalCost'>) => boolean> = {
-  luxury: (v) => v.rentalCost >= 8_00_000 || v.type === '5 Star Hotel',
-  budget: (v) => v.rentalCost <= 3_50_000,
-  destination: (v) => v.type === 'Resort' || v.type === 'Beach Venue' || v.type === 'Heritage Palace',
-  heritage: (v) => v.type === 'Heritage Palace',
-  garden: (v) => v.type === 'Lawn' || v.type === 'Farmhouse',
+  luxury: (v) => v.rentalCost >= 500_000 || v.type === 'Hotel',
+  budget: (v) => v.rentalCost <= 150_000,
+  destination: (v) => v.type === 'Resort' || v.type === 'Lakeside Venue',
+  heritage: (v) => v.type === 'Heritage Courtyard',
+  garden: (v) => v.type === 'Garden' || v.type === 'Farmhouse' || v.type === 'Lakeside Venue',
 };
 
-const collectionsFor = (v: Pick<Venue, 'type' | 'rentalCost'>) =>
+export const collectionsFor = (v: Pick<Venue, 'type' | 'rentalCost'>) =>
   (Object.keys(COLLECTION_RULES) as CollectionId[]).filter((c) => COLLECTION_RULES[c](v));
 
 const slug = (s: string) =>
@@ -183,14 +154,16 @@ function buildReviews(seedKey: string, count: number): Review[] {
   });
 }
 
+const HAS_ROOMS: VenueType[] = ['Hotel', 'Resort', 'Lakeside Venue', 'Heritage Courtyard'];
+
 function buildVenue(city: string, [name, type, locality]: Seed, index: number): Venue {
   const id = slug(`${name}-${city}`);
   const r = seeded(id);
   const [lo, hi] = PRICE_BANDS[type];
-  const rentalCost = r.roundTo(lo + r.next() * (hi - lo), 50_000);
-  const minCap = r.pick([50, 75, 100, 150, 200]);
-  const maxCap = r.pick([300, 500, 750, 1000, 1500, 2000]);
-  const veg = r.roundTo(r.int(900, 3200), 50);
+  const rentalCost = r.roundTo(lo + r.next() * (hi - lo), 10_000);
+  const minCap = r.pick([50, 100, 150, 200, 300]);
+  const maxCap = r.pick([300, 500, 800, 1000, 1500, 2500]);
+  const veg = r.roundTo(r.int(850, 2200), 50);
   const images = r.pickMany(IMAGE_SETS[type], 4);
   const collections = collectionsFor({ type, rentalCost });
   const reviewCount = r.int(3, 180);
@@ -205,39 +178,34 @@ function buildVenue(city: string, [name, type, locality]: Seed, index: number): 
     reviewCount,
     rentalCost,
     vegPerPlate: veg,
-    nonVegPerPlate: veg + r.roundTo(r.int(200, 700), 50),
-    destinationPackage: r.roundTo(rentalCost * (1.8 + r.next()), 1_00_000),
-    capacity: { min: minCap, max: maxCap },
-    rooms: type === 'Banquet Hall' || type === 'Lawn' || type === 'Kalyana Mandapam' ? 0 : r.int(20, 180),
+    nonVegPerPlate: veg + r.roundTo(r.int(200, 600), 50),
+    destinationPackage: r.roundTo(rentalCost * (1.8 + r.next()), 50_000),
+    capacity: { min: minCap, max: Math.max(maxCap, minCap * 2) },
+    rooms: HAS_ROOMS.includes(type) ? r.int(20, 150) : 0,
     featured: index < 2 || r.next() > 0.7,
     collections,
     images,
     about: `${name} is a ${type.toLowerCase()} in ${locality}, ${city}, loved for its ${r.pick([
-      'sprawling manicured lawns',
-      'grand pillarless ballroom',
+      'grand pillarless hall',
+      'manicured gardens',
       'lake-facing terraces',
-      'heritage architecture',
-      'sunset views',
-    ])} and ${r.pick([
-      'warm hospitality',
-      'award-winning cuisine',
-      'flexible décor options',
-      'dedicated wedding concierge',
-    ])}. It hosts ${minCap} to ${maxCap} guests across multiple indoor and outdoor spaces, making it ideal for mehendi, sangeet, pheras and reception on one property.`,
+      'Newari woodwork and courtyards',
+      'Himalayan views',
+    ])} and ${r.pick(['warm hospitality', 'famous wedding bhoj', 'flexible décor options', 'dedicated wedding manager'])}. It hosts ${minCap} to ${maxCap} guests across indoor and outdoor spaces — ideal for mehendi, janti welcome, swayambar, the wedding rituals and reception on one property.`,
     amenities: r.pickMany(AMENITIES, 7),
     spaces: [
-      { name: 'Grand Lawn', type: 'Outdoor', capacity: `${Math.round(maxCap * 0.6)} Seating | ${maxCap} Floating` },
-      { name: 'Crystal Ballroom', type: 'Indoor', capacity: `${Math.round(maxCap * 0.3)} Seating | ${Math.round(maxCap * 0.5)} Floating` },
-      { name: 'Poolside Deck', type: 'Outdoor', capacity: `${minCap} Seating | ${minCap * 2} Floating` },
+      { name: 'Main Hall', type: 'Indoor', capacity: `${Math.round(maxCap * 0.6)} Seating | ${maxCap} Floating` },
+      { name: 'Garden', type: 'Outdoor', capacity: `${Math.round(maxCap * 0.4)} Seating | ${Math.round(maxCap * 0.7)} Floating` },
+      { name: 'Mandap Courtyard', type: 'Outdoor', capacity: `${minCap} Seating | ${minCap * 2} Floating` },
     ],
     policies: [
-      'Booking amount: 25% of the total at confirmation',
-      'Cancellation: non-refundable within 60 days of the event',
-      'Music allowed till 11 PM in outdoor spaces',
-      'Taxes extra as applicable',
+      'Booking advance: 30% of the total at confirmation',
+      'Cancellation: non-refundable within 45 days of the event',
+      'Music allowed till 10 PM in outdoor spaces',
+      '13% VAT and 10% service charge extra where applicable',
     ],
     reviews: buildReviews(id, Math.min(reviewCount, 6)),
-    phone: `+91 9${r.int(100000000, 999999999)}`,
+    phone: `+977 98${r.int(10_000_000, 99_999_999)}`,
   };
 }
 
@@ -245,17 +213,19 @@ export const VENUES: Venue[] = Object.entries(SEEDS).flatMap(([city, seeds]) =>
   seeds.map((seed, i) => buildVenue(city, seed, i)),
 );
 
-/** Pin the hero venue to match the reference listing screen. */
+/** Pin the hero venue so the demo always opens on a strong listing. */
 const hero = VENUES[0];
 Object.assign(hero, {
   rating: 4.8,
-  reviewCount: 5,
-  rentalCost: 12_00_000,
-  capacity: { min: 75, max: 1000 },
+  reviewCount: 126,
+  rentalCost: 180_000,
+  capacity: { min: 200, max: 1500 },
   featured: true,
   sponsored: true,
-  images: ['venueResortSunset', 'venueLawn', 'venueGardenPavilion', 'decorMandapFloral'] as PhotoKey[],
+  images: ['venueLuxuryStage', 'decorMandapNight', 'venueGardenPavilion', 'decorMandapFloral'] as PhotoKey[],
 });
 hero.collections = collectionsFor(hero);
 
 export const VENUE_TYPES = Object.keys(PRICE_BANDS) as VenueType[];
+
+export const findVenue = (id: string) => VENUES.find((v) => v.id === id);

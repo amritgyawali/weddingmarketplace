@@ -1,9 +1,8 @@
 import { useLocalSearchParams } from 'expo-router';
 import { ScrollView, View } from 'react-native';
 
-import { EmptyBlock, SectionTitle, StackHeader } from '@/components/kit';
-import { ApplicantsList } from '@/components/work/ApplicantsList';
-import { GigCard } from '@/components/work/GigCard';
+import { EmptyBlock, StackHeader } from '@/components/kit';
+import { GigManage } from '@/components/work/ApplicantsList';
 import { useDb } from '@/store/useDb';
 import { useRoleTheme } from '@/theme/RoleTheme';
 
@@ -23,13 +22,9 @@ export default function PlatformGigDetail() {
 
   return (
     <View style={{ flex: 1, backgroundColor: t.c.bg }}>
-      <StackHeader title="Gig staffing" subtitle={gig.title} />
-      <ScrollView contentContainerStyle={{ padding: 14, gap: 16, paddingBottom: 40 }}>
-        <GigCard gig={gig} showApplicants />
-        <View>
-          <SectionTitle title={`Applicants (${gig.applications.length})`} />
-          <ApplicantsList gig={gig} />
-        </View>
+      <StackHeader title={gig.emergency ? 'Emergency staffing' : 'Gig staffing'} subtitle={gig.title} />
+      <ScrollView contentContainerStyle={{ padding: 14, paddingBottom: 40 }}>
+        <GigManage gig={gig} />
       </ScrollView>
     </View>
   );

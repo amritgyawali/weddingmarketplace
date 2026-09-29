@@ -85,7 +85,7 @@ function LoginForm() {
               </Text>
               <View style={[styles.phone, { borderColor: error ? t.c.danger : t.c.border, backgroundColor: t.c.surface }]}>
                 <Text size={17} weight="semibold" color={t.c.textStrong}>
-                  🇮🇳 +91
+                  🇳🇵 +977
                 </Text>
                 <View style={[styles.vr, { backgroundColor: t.c.border }]} />
                 <TextInput
@@ -113,7 +113,7 @@ function LoginForm() {
           ) : (
             <Animated.View entering={FadeInDown.duration(300)} style={{ gap: 12 }}>
               <Text size={14} color={t.c.muted}>
-                Enter the 4-digit code sent to +91 {phone}
+                Enter the 4-digit code sent to +977 {phone}
               </Text>
               <TextInput
                 ref={otpRef}

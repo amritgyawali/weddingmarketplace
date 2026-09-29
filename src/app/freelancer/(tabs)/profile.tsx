@@ -93,7 +93,7 @@ export default function FreelancerProfile() {
         <SectionTitle title="About & rate" action={editing ? undefined : 'Edit'} onAction={() => setEditing(true)} />
         {editing ? (
           <>
-            <KField label="Day rate" value={rate} onChangeText={(v) => setRate(v.replace(/\D/g, ''))} keyboardType="number-pad" prefix="₹" />
+            <KField label="Day rate" value={rate} onChangeText={(v) => setRate(v.replace(/\D/g, ''))} keyboardType="number-pad" prefix="NPR" />
             <KField label="Bio" value={bio} onChangeText={setBio} multiline />
             <KButton
               label="Save"
@@ -114,7 +114,7 @@ export default function FreelancerProfile() {
 
       <Card padded={false} style={{ overflow: 'hidden' }}>
         <ListRow icon="notifications-outline" title="Notifications" onPress={() => router.push('/notifications')} />
-        <ListRow icon="call-outline" title="Phone" subtitle={`+91 ${account.phone}`} />
+        <ListRow icon="call-outline" title="Phone" subtitle={`+977 ${account.phone}`} />
         <ListRow icon="shield-checkmark-outline" title="KYC & payouts" subtitle="Bank account linked · weekly payouts" />
       </Card>
 

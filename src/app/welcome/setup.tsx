@@ -92,7 +92,7 @@ function SetupForm({ phone }: { phone: string }) {
 
   return (
     <View style={{ flex: 1, backgroundColor: t.c.bg }}>
-      <StackHeader title="Create your account" subtitle={`${t.label} · +91 ${phone}`} />
+      <StackHeader title="Create your account" subtitle={`${t.label} · +977 ${phone}`} />
       <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
         <ScrollView contentContainerStyle={{ padding: 18, gap: 16, paddingBottom: insets.bottom + 110 }} keyboardShouldPersistTaps="handled">
           <KField label={t.role === 'vendor' ? 'Owner / manager name' : 'Full name'} value={name} onChangeText={setName} placeholder="Your name" autoComplete="name" error={errors.name} />
@@ -166,7 +166,7 @@ function SetupForm({ phone }: { phone: string }) {
                   </Text>
                 )}
               </View>
-              <KField label="Day rate" value={dayRate} onChangeText={(v) => setDayRate(v.replace(/\D/g, ''))} keyboardType="number-pad" prefix="₹" placeholder="8000" error={errors.rate} />
+              <KField label="Day rate" value={dayRate} onChangeText={(v) => setDayRate(v.replace(/\D/g, ''))} keyboardType="number-pad" prefix="NPR" placeholder="8000" error={errors.rate} />
               <KField label="Short bio" value={bio} onChangeText={setBio} multiline placeholder="Experience, style, equipment…" />
             </>
           )}

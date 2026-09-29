@@ -176,53 +176,39 @@ export const ROLE_THEMES: Record<UserRole, RoleTheme> = {
   },
 };
 
+const TONES: Record<string, 'info' | 'muted' | 'warning' | 'danger' | 'success' | 'primary'> = {
+  // neutral / informational
+  new: 'info', open: 'info', applied: 'info', planned: 'info', upcoming: 'info', viewed: 'info', quoted: 'info', planning: 'info',
+  reviewing: 'info', matching: 'info', matching_providers: 'info', quote_prepared: 'info', invited: 'info', responded: 'info',
+  document_submitted: 'info', saved: 'info', suggested: 'info', proposed: 'info', available: 'info', meeting: 'info', accrued: 'info',
+  todo: 'muted', draft: 'muted', low: 'muted', not_started: 'muted', unverified: 'muted', archived: 'muted', superseded: 'muted', expired: 'muted',
+  withdrawn: 'muted', closed: 'muted', waived: 'muted', void: 'muted',
+  // attention
+  pending: 'warning', contacted: 'warning', sent: 'warning', shortlisted: 'warning', revision: 'warning', due: 'warning', doing: 'warning',
+  in_progress: 'warning', medium: 'warning', held: 'warning', tentative: 'warning', waiting: 'warning', needs_clarification: 'warning',
+  quote_sent: 'warning', customer_negotiating: 'warning', negotiating: 'warning', under_review: 'warning', ready_for_review: 'warning',
+  revision_requested: 'warning', partially_paid: 'warning', on_hold: 'warning', requested: 'warning', investigating: 'warning', maybe: 'warning',
+  flagged: 'warning', partially_signed: 'warning', quote_received: 'warning', assigned: 'warning', checked_in: 'primary',
+  // problems
+  live: 'danger', delayed: 'danger', lost: 'danger', declined: 'danger', rejected: 'danger', cancelled: 'danger', high: 'danger', urgent: 'danger',
+  execution: 'danger', overdue: 'danger', failed: 'danger', no_show: 'danger', emergency_replacement: 'danger', quote_rejected: 'danger',
+  suspended: 'danger', removed: 'danger', unavailable: 'danger', no: 'danger', booked_out: 'danger', dispute: 'danger',
+  // good
+  won: 'success', accepted: 'success', booked: 'success', hired: 'success', paid: 'success', done: 'success', completed: 'success',
+  approved: 'success', resolved: 'success', filled: 'success', confirmed: 'success', verified: 'success', delivered: 'success', ready: 'success',
+  succeeded: 'success', processed: 'success', yes: 'success', published: 'success', signed: 'success', selected: 'success',
+};
+
 /** Colour for any workflow status string, shared by every role's status pills. */
 export function statusTone(status: string, t: RoleTheme): { fg: string; bg: string } {
   const alpha = (hex: string) => `${hex}${t.dark ? '33' : '1A'}`;
-  const map: Record<string, string> = {
-    new: t.c.info,
-    open: t.c.info,
-    applied: t.c.info,
-    planned: t.c.info,
-    upcoming: t.c.info,
-    todo: t.c.muted,
-    draft: t.c.muted,
-    pending: t.c.warning,
-    contacted: t.c.warning,
-    sent: t.c.warning,
-    viewed: t.c.info,
-    shortlisted: t.c.warning,
-    revision: t.c.warning,
-    due: t.c.warning,
-    doing: t.c.warning,
-    in_progress: t.c.warning,
-    quoted: t.c.info,
-    live: t.c.danger,
-    delayed: t.c.danger,
-    lost: t.c.danger,
-    declined: t.c.danger,
-    rejected: t.c.danger,
-    cancelled: t.c.danger,
-    high: t.c.danger,
-    medium: t.c.warning,
-    low: t.c.muted,
-    won: t.c.success,
-    accepted: t.c.success,
-    booked: t.c.success,
-    hired: t.c.success,
-    paid: t.c.success,
-    done: t.c.success,
-    completed: t.c.success,
-    approved: t.c.success,
-    resolved: t.c.success,
-    filled: t.c.success,
-    execution: t.c.danger,
-    planning: t.c.info,
-    match: t.c.primary,
-  };
-  const fg = map[status] ?? t.c.muted;
+  const tone = TONES[status.toLowerCase()];
+  const fg = tone === 'info' ? t.c.info : tone === 'warning' ? t.c.warning : tone === 'danger' ? t.c.danger : tone === 'success' ? t.c.success : tone === 'primary' ? t.c.primary : t.c.muted;
   return { fg, bg: alpha(fg) };
 }
 
-export const statusLabel = (s: string) =>
-  s === 'in_progress' ? 'In progress' : s.charAt(0).toUpperCase() + s.slice(1).replace(/_/g, ' ');
+/** "QUOTE_SENT" / "in_progress" → "Quote sent" / "In progress". */
+export const statusLabel = (s: string) => {
+  const text = s.replace(/_/g, ' ').toLowerCase();
+  return text.charAt(0).toUpperCase() + text.slice(1);
+};

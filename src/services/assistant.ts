@@ -12,7 +12,7 @@ import { GENIE_PACKAGES } from '@/data/genie';
 import { VENDORS } from '@/data/vendors';
 import { VENUES } from '@/data/venues';
 import type { Vendor, Venue } from '@/types';
-import { formatINR, formatINRCompact } from '@/utils/format';
+import { formatMoney, formatMoneyCompact } from '@/utils/format';
 
 export interface AssistantReply {
   text: string;
@@ -114,7 +114,7 @@ const detectBudget = (text: string): number | null => {
   return n * 1_00_000;
 };
 
-const cityLabel = (city: string) => (city === ALL_CITIES ? 'across India' : `in ${city}`);
+const cityLabel = (city: string) => (city === ALL_CITIES ? 'across Nepal' : `in ${city}`);
 
 const inCity = (city: string, itemCity: string) => city === ALL_CITIES || city === itemCity;
 
@@ -162,12 +162,12 @@ function reply(message: string, ctx: AssistantContext): AssistantReply {
       venues = venues.sort((a, b) => b.rating - a.rating).slice(0, 6);
       if (!venues.length) {
         return {
-          text: `I couldn't find venues ${cityLabel(city)}${budget ? ` under ${formatINRCompact(budget)}` : ''} yet. Try another city or a slightly higher budget?`,
+          text: `I couldn't find venues ${cityLabel(city)}${budget ? ` under ${formatMoneyCompact(budget)}` : ''} yet. Try another city or a slightly higher budget?`,
           suggestions: ['Show me the best wedding venues', 'Budget venues in Bangalore'],
         };
       }
       return {
-        text: `Here are the highest-rated venues ${cityLabel(city)}${budget ? ` within ${formatINRCompact(budget)}` : ''}. Tap any card to see photos, pricing & availability.`,
+        text: `Here are the highest-rated venues ${cityLabel(city)}${budget ? ` within ${formatMoneyCompact(budget)}` : ''}. Tap any card to see photos, pricing & availability.`,
         venues,
         suggestions: ['Show luxury venues', 'Venues under 5 lakh', 'Plan my dream destination wedding'],
         action: { label: 'See all venues', href: '/venues' },
@@ -220,8 +220,8 @@ function reply(message: string, ctx: AssistantContext): AssistantReply {
       ];
       return {
         text:
-          `Here's a practical split for a ${formatINR(total)} wedding:\n\n` +
-          split.map(([label, pct]) => `• ${label}: ${formatINRCompact(total * pct)} (${Math.round(pct * 100)}%)`).join('\n') +
+          `Here's a practical split for a ${formatMoney(total)} wedding:\n\n` +
+          split.map(([label, pct]) => `• ${label}: ${formatMoneyCompact(total * pct)} (${Math.round(pct * 100)}%)`).join('\n') +
           '\n\nLock the venue first — it decides your date, guest count and catering costs.',
         suggestions: ['Venues under 5 lakh', 'Show me the best wedding venues', 'What should I book first?'],
       };

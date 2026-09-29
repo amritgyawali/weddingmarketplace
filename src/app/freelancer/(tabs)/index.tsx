@@ -14,7 +14,7 @@ import { myApplication, useFreelancerWorkspace } from '@/hooks/useWorkspace';
 import { useInbox } from '@/store/useDb';
 import { useAccount } from '@/store/useSession';
 import { useRoleTheme } from '@/theme/RoleTheme';
-import { daysUntil, formatINR } from '@/utils/format';
+import { daysUntil, formatMoney } from '@/utils/format';
 
 export default function DiscoverGigs() {
   const t = useRoleTheme();
@@ -62,7 +62,7 @@ export default function DiscoverGigs() {
                 {today.title}
               </Text>
               <Text size={13} color={t.c.onPrimary}>
-                {today.startTime} · {today.city} · {formatINR(today.pay)}
+                {today.startTime} · {today.city} · {formatMoney(today.pay)}
               </Text>
             </View>
             <View style={[styles.go, { backgroundColor: t.c.onPrimary }]}>

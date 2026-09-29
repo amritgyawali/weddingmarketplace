@@ -1,23 +1,38 @@
-import { StyleSheet, View } from 'react-native';
+import { useState } from 'react';
+import { Pressable, StyleSheet, View } from 'react-native';
 
 import { Card, Divider, KeyValue, StatusPill } from '@/components/kit';
 import { Text } from '@/components/ui/Text';
-import { lineTotal, quoteTotals } from '@/services/quotes';
+import { diffVersions, lineTotal, quoteTotals } from '@/services/quotes';
 import { useRoleTheme } from '@/theme/RoleTheme';
-import type { Quotation } from '@/types/platform';
-import { formatINR, formatLongDate } from '@/utils/format';
+import type { Quotation, QuoteVersion } from '@/types/platform';
+import { formatLongDate, formatMoney, formatShortDate } from '@/utils/format';
 
-/** Printable quotation layout shared by every role. */
-export function QuoteDocument({ quote }: { quote: Quotation }) {
+type Snapshot = Pick<QuoteVersion, 'items' | 'discount' | 'serviceFee' | 'taxRate' | 'notes' | 'terms' | 'validUntil' | 'schedule'> & { version: number; response?: QuoteVersion['response']; changeSummary?: string; sentAt?: string };
+
+const current = (q: Quotation): Snapshot => ({ version: q.version, items: q.items, discount: q.discount, serviceFee: q.serviceFee, taxRate: q.taxRate, notes: q.notes, terms: q.terms, validUntil: q.validUntil, schedule: q.schedule });
+
+/**
+ * Printable quotation shared by every role. Sent versions are frozen, so the
+ * version chips let anyone compare V1 → V2 → V3. Internal costs never render.
+ */
+export function QuoteDocument({ quote, showVersions = true }: { quote: Quotation; showVersions?: boolean }) {
   const t = useRoleTheme();
-  const totals = quoteTotals(quote);
+  const versions: Snapshot[] = quote.versions.length ? quote.versions : [current(quote)];
+  const draftIsNew = quote.status === 'draft' && !quote.versions.some((v) => v.version === quote.version);
+  const all = draftIsNew ? [...versions, current(quote)] : versions;
+  const [selected, setSelected] = useState(all[all.length - 1].version);
+  const v = all.find((x) => x.version === selected) ?? all[all.length - 1];
+  const prev = all.find((x) => x.version === v.version - 1);
+  const totals = quoteTotals(v);
+  const changes = prev ? diffVersions({ ...prev, total: quoteTotals(prev).total }, { ...v, total: totals.total }) : [];
 
   return (
     <Card style={{ gap: 14 }}>
       <View style={styles.head}>
         <View style={{ flex: 1 }}>
           <Text size={12} weight="bold" color={t.c.primary} tracking={0.8}>
-            QUOTATION
+            QUOTATION{quote.title ? ` · ${quote.title.toUpperCase()}` : ''}
           </Text>
           <Text size={20} weight="bold" color={t.c.textStrong}>
             {quote.number}
@@ -29,10 +44,38 @@ export function QuoteDocument({ quote }: { quote: Quotation }) {
         <StatusPill status={quote.status} />
       </View>
 
+      {showVersions && all.length > 1 && (
+        <View style={styles.versions}>
+          {all.map((x) => {
+            const on = x.version === selected;
+            return (
+              <Pressable key={x.version} onPress={() => setSelected(x.version)} style={[styles.version, { borderColor: on ? t.c.primary : t.c.border, backgroundColor: on ? t.c.soft : 'transparent' }]} accessibilityRole="tab" accessibilityState={{ selected: on }}>
+                <Text size={12} weight="bold" color={on ? t.c.primary : t.c.text}>
+                  V{x.version}
+                  {x.version === quote.acceptedVersion ? ' ✓' : x.sentAt ? '' : ' (draft)'}
+                </Text>
+              </Pressable>
+            );
+          })}
+        </View>
+      )}
+      {changes.length > 0 && (
+        <View style={[styles.changes, { backgroundColor: t.c.surfaceAlt }]}>
+          <Text size={11} weight="bold" color={t.c.muted}>
+            CHANGES FROM V{prev!.version}
+          </Text>
+          {changes.map((c) => (
+            <Text key={c} size={12} color={t.c.text}>
+              • {c}
+            </Text>
+          ))}
+        </View>
+      )}
+
       <View style={[styles.meta, { backgroundColor: t.c.surfaceAlt }]}>
         <View style={{ flex: 1 }}>
           <Text size={11} weight="bold" color={t.c.muted}>
-            BILL TO
+            PREPARED FOR
           </Text>
           <Text size={15} weight="semibold" color={t.c.textStrong}>
             {quote.customerName}
@@ -49,21 +92,13 @@ export function QuoteDocument({ quote }: { quote: Quotation }) {
             {formatLongDate(quote.eventDate)}
           </Text>
           <Text size={12} color={t.c.muted}>
-            Valid till {formatLongDate(quote.validUntil)}
+            Valid till {formatShortDate(v.validUntil)}
           </Text>
         </View>
       </View>
 
       <View>
-        <View style={styles.tableHead}>
-          <Text size={11} weight="bold" color={t.c.muted} style={{ flex: 1 }}>
-            ITEM
-          </Text>
-          <Text size={11} weight="bold" color={t.c.muted} style={{ width: 90, textAlign: 'right' }}>
-            AMOUNT
-          </Text>
-        </View>
-        {quote.items.map((i) => (
+        {v.items.map((i) => (
           <View key={i.id} style={[styles.item, { borderBottomColor: t.c.border }]}>
             <View style={{ flex: 1 }}>
               <Text size={14} weight="semibold" color={t.c.textStrong}>
@@ -75,31 +110,53 @@ export function QuoteDocument({ quote }: { quote: Quotation }) {
                 </Text>
               )}
               <Text size={12} color={t.c.muted}>
-                {i.qty} × {formatINR(i.rate)}
+                {i.qty} {i.unit ?? '×'} {formatMoney(i.rate)}
               </Text>
             </View>
-            <Text size={14} weight="semibold" color={t.c.textStrong} style={{ width: 100, textAlign: 'right' }}>
-              {formatINR(lineTotal(i))}
+            <Text size={14} weight="semibold" color={t.c.textStrong} style={{ width: 110, textAlign: 'right' }}>
+              {formatMoney(lineTotal(i))}
             </Text>
           </View>
         ))}
       </View>
 
       <View>
-        <KeyValue label="Subtotal" value={formatINR(totals.subtotal)} />
-        {totals.discount > 0 && <KeyValue label="Discount" value={`− ${formatINR(totals.discount)}`} />}
-        <KeyValue label={`GST (${Math.round(quote.taxRate * 100)}%)`} value={formatINR(totals.tax)} />
+        <KeyValue label="Subtotal" value={formatMoney(totals.subtotal)} />
+        {totals.discount > 0 && <KeyValue label="Package discount" value={`− ${formatMoney(totals.discount)}`} />}
+        {totals.serviceFee > 0 && <KeyValue label="Coordination & service fee" value={formatMoney(totals.serviceFee)} />}
+        {v.taxRate > 0 && <KeyValue label={`VAT (${Math.round(v.taxRate * 100)}%)`} value={formatMoney(totals.tax)} />}
         <Divider style={{ marginVertical: 6 }} />
-        <KeyValue label="Total" value={formatINR(totals.total)} strong />
+        <KeyValue label="Total" value={formatMoney(totals.total)} strong />
       </View>
 
-      {!!quote.notes && (
+      {v.schedule.length > 0 && (
+        <View style={{ gap: 6 }}>
+          <Text size={12} weight="bold" color={t.c.muted}>
+            PAYMENT SCHEDULE
+          </Text>
+          {v.schedule.map((s) => (
+            <View key={s.label} style={styles.scheduleRow}>
+              <Text size={13} color={t.c.text} style={{ flex: 1 }}>
+                {s.label}
+              </Text>
+              <Text size={12} color={t.c.muted}>
+                {s.percent}%
+              </Text>
+              <Text size={13} weight="semibold" color={t.c.textStrong} style={{ width: 110, textAlign: 'right' }}>
+                {formatMoney(Math.round((totals.total * s.percent) / 100))}
+              </Text>
+            </View>
+          ))}
+        </View>
+      )}
+
+      {!!v.notes && (
         <View style={{ gap: 4 }}>
           <Text size={12} weight="bold" color={t.c.muted}>
             NOTES
           </Text>
           <Text size={13} color={t.c.text} lineHeight={19}>
-            {quote.notes}
+            {v.notes}
           </Text>
         </View>
       )}
@@ -108,17 +165,19 @@ export function QuoteDocument({ quote }: { quote: Quotation }) {
           TERMS
         </Text>
         <Text size={12} color={t.c.muted} lineHeight={18}>
-          {quote.terms}
+          {v.terms}
         </Text>
       </View>
-      {quote.status === 'revision' && !!quote.revisionNote && (
-        <View style={[styles.revision, { borderColor: t.c.warning }]}>
-          <Text size={12} weight="bold" color={t.c.warning}>
-            CHANGES REQUESTED
+      {v.response && (
+        <View style={[styles.response, { borderColor: v.response.action === 'accept' ? t.c.success : v.response.action === 'decline' ? t.c.danger : t.c.warning }]}>
+          <Text size={12} weight="bold" color={v.response.action === 'accept' ? t.c.success : v.response.action === 'decline' ? t.c.danger : t.c.warning}>
+            {v.response.action === 'accept' ? 'ACCEPTED' : v.response.action === 'decline' ? 'DECLINED' : 'CHANGES REQUESTED'} · {formatShortDate(v.response.at)}
           </Text>
-          <Text size={13} color={t.c.text}>
-            “{quote.revisionNote}”
-          </Text>
+          {!!v.response.note && (
+            <Text size={13} color={t.c.text}>
+              “{v.response.note}”
+            </Text>
+          )}
         </View>
       )}
     </Card>
@@ -127,8 +186,11 @@ export function QuoteDocument({ quote }: { quote: Quotation }) {
 
 const styles = StyleSheet.create({
   head: { flexDirection: 'row', alignItems: 'flex-start', gap: 12 },
+  versions: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
+  version: { borderWidth: 1.2, borderRadius: 999, paddingHorizontal: 12, paddingVertical: 5 },
+  changes: { borderRadius: 10, padding: 10, gap: 3 },
   meta: { flexDirection: 'row', gap: 12, padding: 12, borderRadius: 10 },
-  tableHead: { flexDirection: 'row', paddingBottom: 6 },
   item: { flexDirection: 'row', gap: 10, paddingVertical: 10, borderBottomWidth: StyleSheet.hairlineWidth },
-  revision: { borderWidth: 1, borderStyle: 'dashed', borderRadius: 10, padding: 10, gap: 4 },
+  scheduleRow: { flexDirection: 'row', alignItems: 'center', gap: 10 },
+  response: { borderWidth: 1, borderStyle: 'dashed', borderRadius: 10, padding: 10, gap: 4 },
 });

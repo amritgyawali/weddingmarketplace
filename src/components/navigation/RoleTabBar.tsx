@@ -1,4 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
+import { router, type Href } from 'expo-router';
 import type { BottomTabBarProps } from 'expo-router/tabs';
 import type { ComponentProps } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
@@ -7,6 +8,8 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { triggerHaptic } from '@/components/ui/PressableScale';
 import { Text } from '@/components/ui/Text';
+import { BRAND } from '@/constants/brand';
+import { useLayout } from '@/hooks/useLayout';
 import { useRoleTheme } from '@/theme/RoleTheme';
 
 type IconName = ComponentProps<typeof Ionicons>['name'];
@@ -19,15 +22,23 @@ export interface RoleTab {
   badge?: number;
 }
 
+export interface SidebarLink {
+  label: string;
+  icon: IconName;
+  href: Href;
+  badge?: number;
+}
+
 /**
  * One tab bar, three personalities:
  * vendor — white bar, active tab expands into a teal pill;
  * freelancer — floating dark capsule with amber active circle;
  * platform — navy console rail with a top indicator.
  */
-export function RoleTabBar({ state, navigation, tabs }: BottomTabBarProps & { tabs: RoleTab[] }) {
+export function RoleTabBar({ state, navigation, tabs, links = [] }: BottomTabBarProps & { tabs: RoleTab[]; links?: SidebarLink[] }) {
   const t = useRoleTheme();
   const insets = useSafeAreaInsets();
+  const { wide } = useLayout();
 
   const press = (routeName: string, key: string, focused: boolean) => {
     const event = navigation.emit({ type: 'tabPress', target: key, canPreventDefault: true });
@@ -40,6 +51,62 @@ export function RoleTabBar({ state, navigation, tabs }: BottomTabBarProps & { ta
   const items = state.routes
     .map((route, index) => ({ route, index, tab: tabs.find((x) => x.name === route.name) }))
     .filter((x): x is typeof x & { tab: RoleTab } => !!x.tab);
+
+  // Desktop / tablet web: a persistent sidebar with the tabs plus deep links.
+  if (wide) {
+    const dark = t.role === 'platform' || t.role === 'freelancer';
+    const fg = dark ? '#FFFFFF' : t.c.textStrong;
+    const muted = dark ? 'rgba(255,255,255,0.6)' : t.c.muted;
+    return (
+      <View style={[styles.sidebar, { backgroundColor: dark ? t.c.header : t.c.surface, borderRightColor: t.c.border, paddingTop: insets.top + 18 }]}>
+        <Text size={20} weight="extrabold" color={dark ? '#FFFFFF' : t.c.primary} style={{ paddingHorizontal: 18 }}>
+          {BRAND.name}
+        </Text>
+        <Text size={11} weight="bold" color={muted} style={{ paddingHorizontal: 18, marginBottom: 14 }}>
+          {t.label.toUpperCase()}
+        </Text>
+        {items.map(({ route, index, tab }) => {
+          const focused = state.index === index;
+          return (
+            <Pressable
+              key={route.key}
+              onPress={() => press(route.name, route.key, focused)}
+              accessibilityRole="tab"
+              accessibilityState={{ selected: focused }}
+              style={[styles.sideItem, focused && { backgroundColor: dark ? 'rgba(255,255,255,0.12)' : t.c.soft }]}>
+              <Ionicons name={focused ? tab.activeIcon : tab.icon} size={19} color={focused ? (dark ? '#FFFFFF' : t.c.primary) : muted} />
+              <Text size={14} weight={focused ? 'bold' : 'medium'} color={focused ? fg : muted} style={{ flex: 1 }}>
+                {tab.label}
+              </Text>
+              {!!tab.badge && (
+                <View style={styles.sideBadge}>
+                  <Text size={10} weight="bold" color="#FFFFFF" lineHeight={12}>
+                    {tab.badge > 99 ? '99+' : tab.badge}
+                  </Text>
+                </View>
+              )}
+            </Pressable>
+          );
+        })}
+        {links.length > 0 && <View style={[styles.sideDivider, { backgroundColor: dark ? 'rgba(255,255,255,0.12)' : t.c.border }]} />}
+        {links.map((l) => (
+          <Pressable key={l.label} onPress={() => router.push(l.href)} style={({ pressed }) => [styles.sideItem, pressed && { opacity: 0.7 }]}>
+            <Ionicons name={l.icon} size={18} color={muted} />
+            <Text size={13} weight="medium" color={muted} style={{ flex: 1 }}>
+              {l.label}
+            </Text>
+            {!!l.badge && (
+              <View style={styles.sideBadge}>
+                <Text size={10} weight="bold" color="#FFFFFF" lineHeight={12}>
+                  {l.badge}
+                </Text>
+              </View>
+            )}
+          </Pressable>
+        ))}
+      </View>
+    );
+  }
 
   if (t.role === 'freelancer') {
     return (
@@ -142,6 +209,10 @@ export function RoleTabBar({ state, navigation, tabs }: BottomTabBarProps & { ta
 }
 
 const styles = StyleSheet.create({
+  sidebar: { width: 232, borderRightWidth: StyleSheet.hairlineWidth, paddingBottom: 18, gap: 2 },
+  sideItem: { flexDirection: 'row', alignItems: 'center', gap: 12, marginHorizontal: 10, paddingHorizontal: 12, paddingVertical: 10, borderRadius: 10 },
+  sideBadge: { minWidth: 18, height: 18, borderRadius: 9, backgroundColor: '#EF4444', alignItems: 'center', justifyContent: 'center', paddingHorizontal: 4 },
+  sideDivider: { height: StyleSheet.hairlineWidth, marginVertical: 10, marginHorizontal: 18 },
   floatWrap: { position: 'absolute', left: 0, right: 0, bottom: 0, paddingHorizontal: 14 },
   float: { flexDirection: 'row', borderRadius: 28, borderWidth: 1, paddingVertical: 8, paddingHorizontal: 6 },
   floatItem: { flex: 1, alignItems: 'center', gap: 3 },

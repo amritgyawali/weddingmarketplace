@@ -9,7 +9,7 @@ import { colors } from '@/constants/theme';
 import { VENUE_TYPES } from '@/data/venues';
 import { DEFAULT_VENUE_FILTERS } from '@/services/api';
 import type { VenueFilters, VenueType } from '@/types';
-import { formatINRCompact } from '@/utils/format';
+import { formatMoneyCompact } from '@/utils/format';
 
 const SORTS: { id: VenueFilters['sort']; label: string }[] = [
   { id: 'popular', label: 'Popularity' },
@@ -89,7 +89,7 @@ export function VenueFilterSheet({
           {BUDGETS.map((b) => (
             <Chip
               key={b}
-              label={formatINRCompact(b)}
+              label={formatMoneyCompact(b)}
               selected={draft.maxBudget === b}
               onPress={() => setDraft((d) => ({ ...d, maxBudget: d.maxBudget === b ? null : b }))}
             />

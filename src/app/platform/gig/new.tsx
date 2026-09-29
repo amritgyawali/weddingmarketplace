@@ -19,12 +19,12 @@ export default function PlatformNewGig() {
     <View style={{ flex: 1, backgroundColor: t.c.bg }}>
       <StackHeader title="Post a crew gig" subtitle="Vivah Operations" />
       <GigForm
-        projects={projects.filter((p) => p.stage !== 'completed')}
+        projects={projects.filter((p) => !['COMPLETED', 'CLOSED', 'CANCELLED'].includes(p.status))}
         defaultCity={account.city}
         initialProjectId={projectId}
         onSubmit={(draft) => {
           const gig = postGig({ ...draft, postedById: 'platform', postedByName: 'Vivah Operations', postedByKind: 'platform' });
-          toast('Gig posted', 'megaphone');
+          toast(draft.emergency ? 'Emergency gig sent to nearby crew' : 'Gig posted', 'megaphone');
           router.replace({ pathname: '/platform/gig/[id]', params: { id: gig.id } });
         }}
       />

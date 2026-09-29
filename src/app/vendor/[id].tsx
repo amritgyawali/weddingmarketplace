@@ -17,7 +17,7 @@ import { colors, GUTTER, radius } from '@/constants/theme';
 import { findCategory, findSubcategory } from '@/data/categories';
 import { useFeaturedVendors, useVendor } from '@/hooks/queries';
 import { NotFoundError } from '@/services/api';
-import { formatINR } from '@/utils/format';
+import { formatMoney } from '@/utils/format';
 
 export default function VendorDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -115,7 +115,7 @@ export default function VendorDetailScreen() {
                       </Text>
                     </View>
                     <Text size={16} weight="bold" color={colors.textStrong}>
-                      {formatINR(p.price)}{' '}
+                      {formatMoney(p.price)}{' '}
                       <Text size={12} color={colors.textMuted}>
                         {p.unit}
                       </Text>
@@ -178,7 +178,7 @@ export default function VendorDetailScreen() {
 
       <StickyCta
         priceLabel={`${pkg.name} package`}
-        price={formatINR(pkg.price)}
+        price={formatMoney(pkg.price)}
         unit={pkg.unit}
         cta="Send Enquiry"
         onPress={() => router.push({ pathname: '/enquiry', params: { kind: 'vendor', id: vendor.id, pkg: pkg.name } })}

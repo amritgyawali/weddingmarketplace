@@ -7,7 +7,7 @@ import { RoleThemeProvider } from '@/theme/RoleTheme';
 
 const t = ROLE_THEMES.vendor;
 
-/** Vendor Pro — the business app for venues and wedding vendors. */
+/** Vivah for Business — venues, studios and wedding vendors. */
 export default function BusinessLayout() {
   const fontsReady = useRoleFonts('vendor');
   if (!fontsReady) return null;
@@ -19,10 +19,22 @@ export default function BusinessLayout() {
         <Stack.Screen name="(tabs)" />
         <Stack.Screen name="lead/[id]" />
         <Stack.Screen name="quote/[id]" />
-        <Stack.Screen name="project/[id]" />
+        <Stack.Screen name="quotes" />
+        <Stack.Screen name="booking/[id]" />
         <Stack.Screen name="gigs" />
         <Stack.Screen name="gig/new" options={{ presentation: 'modal' }} />
         <Stack.Screen name="gig/[id]" />
+        <Stack.Screen name="packages" />
+        <Stack.Screen name="portfolio" />
+        <Stack.Screen name="finance" />
+        <Stack.Screen name="analytics" />
+        <Stack.Screen name="promotions" />
+        <Stack.Screen name="reviews" />
+        <Stack.Screen name="team" />
+        <Stack.Screen name="customers" />
+        <Stack.Screen name="verification" />
+        <Stack.Screen name="inbox/index" />
+        <Stack.Screen name="inbox/[id]" />
       </Stack>
     </RoleThemeProvider>
   );

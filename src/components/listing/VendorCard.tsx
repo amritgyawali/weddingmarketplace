@@ -9,7 +9,7 @@ import { Rating } from '@/components/ui/Rating';
 import { Text } from '@/components/ui/Text';
 import { colors, GUTTER, radius } from '@/constants/theme';
 import type { Vendor } from '@/types';
-import { formatINR } from '@/utils/format';
+import { formatMoney } from '@/utils/format';
 
 import { ImageCarousel } from './ImageCarousel';
 import { ShortlistButton } from './ShortlistButton';
@@ -48,7 +48,7 @@ export const VendorCard = memo(function VendorCard({ vendor }: { vendor: Vendor 
         </Text>
         <View style={styles.priceRow}>
           <Text size={20} weight="bold" color={colors.textStrong}>
-            {formatINR(vendor.startingPrice)}
+            {formatMoney(vendor.startingPrice)}
           </Text>
           <Text size={13} color={colors.textBody}>
             {vendor.priceUnit}

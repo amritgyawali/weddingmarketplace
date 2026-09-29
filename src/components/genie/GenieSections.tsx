@@ -14,7 +14,7 @@ import { photos } from '@/constants/images';
 import { colors, GUTTER, radius, shadows } from '@/constants/theme';
 import { GENIE_FEATURES } from '@/data/genie';
 import type { Faq, GeniePackage, Testimonial } from '@/types';
-import { formatIndianNumber, formatShortDate } from '@/utils/format';
+import { formatNumber, formatShortDate } from '@/utils/format';
 
 const scriptFont = Platform.select({ ios: 'Georgia', android: 'serif', default: 'Georgia, serif' });
 
@@ -81,10 +81,10 @@ export function PackageCard({ pkg, active, onBuy }: { pkg: GeniePackage; active?
         </Text>
         <View style={{ alignItems: 'flex-end' }}>
           <Text size={21} weight="bold" color={colors.primary}>
-            ₹ {formatIndianNumber(pkg.price)}/-
+            ₹ {formatNumber(pkg.price)}/-
           </Text>
           <Text size={15} color={colors.textMuted} style={{ textDecorationLine: 'line-through', marginTop: 2 }}>
-            ₹ {formatIndianNumber(pkg.mrp)}/-
+            ₹ {formatNumber(pkg.mrp)}/-
           </Text>
         </View>
       </View>
