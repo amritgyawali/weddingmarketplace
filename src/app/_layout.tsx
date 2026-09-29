@@ -1,18 +1,137 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from 'expo-router';
+import {
+  Manrope_400Regular,
+  Manrope_500Medium,
+  Manrope_600SemiBold,
+  Manrope_700Bold,
+  Manrope_800ExtraBold,
+  useFonts,
+} from '@expo-google-fonts/manrope';
+import { focusManager, QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
-import { useColorScheme } from 'react-native';
+import { StatusBar } from 'expo-status-bar';
+import { useEffect, useState } from 'react';
+import { AppState, Platform } from 'react-native';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
-import { AnimatedSplashOverlay } from '@/components/animated-icon';
-import AppTabs from '@/components/app-tabs';
+import { ToastHost } from '@/components/ui/Toast';
+import { colors } from '@/constants/theme';
+import { useHydrated } from '@/hooks/useHydrated';
+import { useAppStore } from '@/store/useAppStore';
+import { useDb } from '@/store/useDb';
+import { useSession } from '@/store/useSession';
 
-SplashScreen.preventAutoHideAsync();
+SplashScreen.preventAutoHideAsync().catch(() => {});
+SplashScreen.setOptions({ duration: 350, fade: true });
 
-export default function TabLayout() {
-  const colorScheme = useColorScheme();
+export { ErrorBoundary } from 'expo-router';
+
+// Refetch stale queries when the app returns to the foreground.
+AppState.addEventListener('change', (status) => {
+  if (Platform.OS !== 'web') focusManager.setFocused(status === 'active');
+});
+
+export default function RootLayout() {
+  const [queryClient] = useState(
+    () =>
+      new QueryClient({
+        defaultOptions: {
+          queries: { staleTime: 5 * 60_000, gcTime: 30 * 60_000, retry: 1, refetchOnWindowFocus: false },
+        },
+      }),
+  );
+  const [fontsLoaded, fontError] = useFonts({
+    Manrope_400Regular,
+    Manrope_500Medium,
+    Manrope_600SemiBold,
+    Manrope_700Bold,
+    Manrope_800ExtraBold,
+  });
+  // All three persisted stores must be restored before routing decisions.
+  const appHydrated = useHydrated(useAppStore);
+  const sessionHydrated = useHydrated(useSession);
+  const dbHydrated = useHydrated(useDb);
+  const hydrated = appHydrated && sessionHydrated && dbHydrated;
+  const role = useSession((s) => s.session?.role ?? null);
+  const hasOnboarded = useAppStore((s) => s.hasOnboarded);
+  const ready = (fontsLoaded || !!fontError) && hydrated;
+
+  useEffect(() => {
+    if (ready) SplashScreen.hideAsync().catch(() => {});
+  }, [ready]);
+
+  if (!ready) return null;
+
+  const isCustomer = role === 'customer';
+
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <AnimatedSplashOverlay />
-      <AppTabs />
-    </ThemeProvider>
+    <GestureHandlerRootView style={{ flex: 1, backgroundColor: colors.white }}>
+      <QueryClientProvider client={queryClient}>
+        <StatusBar style={role === 'vendor' || role === 'platform' || role === 'freelancer' ? 'light' : 'dark'} />
+        <Stack
+          screenOptions={{
+            headerShown: false,
+            contentStyle: { backgroundColor: colors.white },
+            animation: Platform.OS === 'android' ? 'slide_from_right' : 'default',
+          }}>
+          {/* Signed out: welcome carousel → user type → OTP login → setup. */}
+          <Stack.Protected guard={!role}>
+            <Stack.Screen name="welcome" options={{ animation: 'fade' }} />
+          </Stack.Protected>
+
+          {/* Couples: questionnaire first, then the marketplace app. */}
+          <Stack.Protected guard={isCustomer && !hasOnboarded}>
+            <Stack.Screen name="onboarding" options={{ animation: 'fade' }} />
+          </Stack.Protected>
+          <Stack.Protected guard={isCustomer && hasOnboarded}>
+            <Stack.Screen name="(tabs)" options={{ animation: 'fade' }} />
+            <Stack.Screen name="assistant" options={{ animation: 'slide_from_bottom' }} />
+            <Stack.Screen name="search" options={{ animation: 'fade', presentation: 'transparentModal' }} />
+            <Stack.Screen name="profile" />
+            <Stack.Screen name="edit-profile" />
+            <Stack.Screen name="my-wedding" />
+            <Stack.Screen name="quote/[id]" />
+            <Stack.Screen name="venue/[id]" />
+            <Stack.Screen name="vendor/[id]" />
+            <Stack.Screen name="vendors/[category]" />
+            <Stack.Screen name="collection/[id]" />
+            <Stack.Screen name="idea/[id]" options={{ animation: 'fade', presentation: 'fullScreenModal' }} />
+            <Stack.Screen name="story/[id]" />
+            <Stack.Screen name="real-wedding/[id]" />
+            <Stack.Screen name="shortlist" />
+            <Stack.Screen name="checklist" />
+            <Stack.Screen name="inbox/index" />
+            <Stack.Screen name="inbox/[id]" />
+            <Stack.Screen name="bookings" />
+            <Stack.Screen name="enquiry" options={{ presentation: 'modal', animation: 'slide_from_bottom' }} />
+            <Stack.Screen name="genie-checkout/[id]" options={{ presentation: 'modal', animation: 'slide_from_bottom' }} />
+            <Stack.Screen name="write-review" options={{ presentation: 'modal', animation: 'slide_from_bottom' }} />
+            <Stack.Screen name="info/[slug]" />
+          </Stack.Protected>
+
+          {/* Each business role gets a completely separate app. */}
+          <Stack.Protected guard={role === 'vendor'}>
+            <Stack.Screen name="business" options={{ animation: 'fade' }} />
+          </Stack.Protected>
+          <Stack.Protected guard={role === 'freelancer'}>
+            <Stack.Screen name="freelancer" options={{ animation: 'fade' }} />
+          </Stack.Protected>
+          <Stack.Protected guard={role === 'platform'}>
+            <Stack.Screen name="platform" options={{ animation: 'fade' }} />
+          </Stack.Protected>
+
+          {/* Shared by every signed-in role. */}
+          <Stack.Protected guard={!!role}>
+            <Stack.Screen name="notifications" />
+          </Stack.Protected>
+          <Stack.Protected guard={!role || isCustomer}>
+            <Stack.Screen name="select-city" options={{ animation: 'slide_from_bottom' }} />
+            <Stack.Screen name="join-wedding" options={{ presentation: 'modal', animation: 'slide_from_bottom' }} />
+          </Stack.Protected>
+          <Stack.Screen name="+not-found" />
+        </Stack>
+        <ToastHost />
+      </QueryClientProvider>
+    </GestureHandlerRootView>
   );
 }

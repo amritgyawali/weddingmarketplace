@@ -1,26 +1,33 @@
 {
   "expo": {
-    "name": "wedding-app",
-    "slug": "wedding-app",
+    "name": "Vivah",
+    "slug": "vivah-wedding-marketplace",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "weddingapp",
-    "userInterfaceStyle": "automatic",
+    "scheme": "vivah",
+    "userInterfaceStyle": "light",
+    "backgroundColor": "#FFFFFF",
     "ios": {
-      "icon": "./assets/expo.icon"
+      "supportsTablet": false,
+      "bundleIdentifier": "com.vivah.marketplace",
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "Vivah uses your location to show wedding venues and vendors in your city."
+      }
     },
     "android": {
+      "package": "com.vivah.marketplace",
       "adaptiveIcon": {
-        "backgroundColor": "#E6F4FE",
+        "backgroundColor": "#E72E77",
         "foregroundImage": "./assets/images/android-icon-foreground.png",
         "backgroundImage": "./assets/images/android-icon-background.png",
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
+      "permissions": ["ACCESS_COARSE_LOCATION", "ACCESS_FINE_LOCATION"],
       "predictiveBackGestureEnabled": false
     },
     "web": {
-      "output": "static",
+      "output": "single",
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
@@ -28,11 +35,18 @@
       [
         "expo-splash-screen",
         {
-          "backgroundColor": "#208AEF",
+          "backgroundColor": "#E72E77",
           "image": "./assets/images/splash-icon.png",
-          "imageWidth": 76
+          "imageWidth": 120
         }
-      ]
+      ],
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "Vivah uses your location to show wedding venues and vendors in your city."
+        }
+      ],
+      "expo-font"
     ],
     "experiments": {
       "typedRoutes": true,

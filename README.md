@@ -1,56 +1,112 @@
-# Welcome to your Expo app 👋
+# Vivah — Wedding Platform (4 apps in one)
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A React Native + Expo (SDK 57) app that runs the whole wedding business in one system. Each
+user type signs in to its own app, with its own design, navigation and tools:
 
-## Get started
+| User type | App | Look |
+|---|---|---|
+| **Couple** (customer) | Marketplace: venues, vendors, ideas, Genie, Wedika AI, **My Wedding** (quotes, payments, run sheet) | Pink · Manrope · classic tab bar |
+| **Vendor** (venues & wedding businesses) | Vivah for Business: leads, **quotation builder**, projects, payments, hire freelancers | Teal · Plus Jakarta Sans · pill tab bar |
+| **Freelancer** (photographers, MUAs, crew) | Gig marketplace: discover gigs, apply, **on-site check-in/out**, earnings & payouts | Dark · amber · Space Grotesk · floating bar |
+| **Platform team** (Vivah ops / Genie planners) | Ops console: KPIs, **project management**, **wedding-day control room**, approvals, quotes, payouts | Navy · Inter · console rail |
 
-1. Install dependencies
+## One connected workflow
 
-   ```bash
-   npm install
-   ```
-
-2. Start the app
-
-   ```bash
-   npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
+```
+Couple enquiry ──► Vendor lead ──► Quotation (line items, GST, discount)
+      ▲                                   │
+      └──── accept / request changes ◄────┘
+                    │ accept
+                    ▼
+     Project (events, run sheet, tasks, payment milestones)
+                    │
+    Vendor / Platform post gigs ──► Freelancer applies ──► hired
+                    │
+     Wedding day: go live ─► run-sheet cues ─► crew check-in ─► incidents ─► payouts
+                    │
+     Platform sees everything: approvals, GMV, control room
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+Every step is an action in `src/store/useDb.ts` (the shared backend), so all four apps stay in sync.
 
-### Other setup steps
+## Run it
 
-- To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)
-- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
-- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
+```bash
+cd wedding-app
+npm install
+npx expo start          # scan the QR with Expo Go (SDK 57), or press a / i / w
+```
 
-## Learn more
+### Log in
 
-To learn more about developing your project with Expo, look at the following resources:
+1. On the welcome screen tap **Get Started**, then pick a user type.
+2. Enter any Indian mobile number. The OTP is **1234** (demo mode).
+3. New numbers go through the setup for that role. Returning numbers log straight in.
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+You can also tap **Explore with a demo account** on the login screen. These accounts come with
+data already filled in:
 
-## Join the community
+| Role | Demo account | Try |
+|---|---|---|
+| Couple | Ananya Sharma | My Wedding → review Petals & Kesar's quotation, pay a milestone |
+| Vendor | Windflower Meadows Resort and Spa | Leads → Isha Kapoor → create a quotation → send |
+| Freelancer | Riya Sharma | "You're working today" → check in → update the live run sheet |
+| Platform | Kavya Menon (access code `VIVAH2026` for new team accounts) | Control room → live wedding WED-1038 |
 
-Join our community of developers creating universal apps.
+To see a full cross-role flow, send an enquiry to *Windflower Meadows* as the couple. Then log in
+as the vendor, quote it, and log back in as the couple to accept it. The platform sees each step.
+**More → Reset demo data** in the platform app restores the seed data.
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+## Checks
+
+```bash
+npx tsc --noEmit        # type-check (typed routes are generated on `expo start`)
+npx expo lint
+npx expo-doctor
+```
+
+## Architecture
+
+```
+src/
+  app/
+    welcome/          user-type picker, OTP login, role-specific setup
+    onboarding/       couple questionnaire (role → date → city)
+    (tabs)/ …         couple marketplace (customer routes live at the root)
+    business/         vendor app      (Stack.Protected guard: role === 'vendor')
+    freelancer/       freelancer app  (guard: role === 'freelancer')
+    platform/         ops console     (guard: role === 'platform')
+    notifications.tsx shared by every role
+  components/
+    kit/              role-themed primitives (Card, KButton, KField, Segmented, KPI, charts, headers)
+    work/             shared workflow UI: QuoteEditor, QuoteDocument, ProjectWorkspace, RunSheet, GigForm…
+    navigation/       RoleTabBar (3 visual variants) + couple TabBar
+    ui/               base UI (Text reads the role theme's font & colours)
+  theme/              per-role palettes, fonts (lazy-loaded per role), RoleThemeProvider
+  store/
+    useSession.ts     accounts + session (mock OTP auth)
+    useDb.ts          shared backend: leads, quotes, projects, gigs, payouts, approvals, notifications
+    useAppStore.ts    couple's on-device data (shortlist, checklist, chats), bound to the signed-in couple
+  data/               catalogue (venues, vendors, ideas) + seed.ts demo dataset
+  services/           api.ts (catalogue queries), quotes.ts (quote maths), auth.ts, assistant.ts
+```
+
+**Routing and access.** The root layout switches between whole apps using
+`Stack.Protected` guards on `session.role`. Signing in or out redirects automatically.
+
+**Themes.** Each role app wraps itself in a `RoleThemeProvider`. Shared components such as
+`QuoteEditor` and `ProjectWorkspace` therefore take on that role's look without any changes.
+Only the active role's font is loaded.
+
+**Permissions.** `ProjectWorkspace` has three modes:
+- `platform` can do everything.
+- `vendor` can edit its own tasks and the run sheet, and can run events on self-managed weddings.
+- `customer` can pay milestones, complete its own tasks and follow the run sheet.
+
+**Production notes.** Everything is mocked on the device:
+- Auth uses an OTP gateway stub.
+- Payments are simulated (see `genie-checkout` and `payMilestone`).
+- The AI assistant is a local intent engine.
+
+Each store action maps one-to-one to an API endpoint. Swap the bodies of `useDb` and `useSession`
+for your backend (for example Supabase), and plug in Razorpay or Stripe for payments.
