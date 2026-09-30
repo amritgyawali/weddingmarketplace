@@ -65,7 +65,7 @@ Public pages need no sign-in: `/w/[slug]` (the couple's wedding website and regi
 
 **Routing.** Routing is **Expo Router**, with a `Stack.Protected` guard per role in `src/app/_layout.tsx`. A role must never be able to reach another role's app. Signed out, users go to `welcome/`. A couple that hasn't onboarded goes to `onboarding/` ("What are we celebrating?", then five questions shaped by the occasion: who, date, city, guests, budget, then a review card; a wedding asks exactly the questions it always did). "Build our plan" there calls `submitPlan` with the occasion, its functions and default services (for a wedding: Wedding + Reception, the six core services); "Just browse" only saves the answers to `useAppStore` (`guests`, `budget`), which prefill the full 8-step plan wizard later.
 
-**Demo sign-in.** Use any `98XXXXXXXX` number with OTP **1234**, or tap "Continue as …" on each login screen (one button per demo account of that role). New platform staff need the access code `VIVAH2026`.
+**Demo sign-in.** Use any `98XXXXXXXX` number with OTP **1234**, or tap "Continue as …" on each login screen (one button per demo account of that role). New platform staff need the access code `VIVAH2026`. Supabase builds (`EXPO_PUBLIC_BACKEND=supabase`) sign in by email code instead and have no demo buttons; see `docs/SETUP_SUPABASE.md`.
 
 | Demo account | Phone | What it shows |
 |---|---|---|
@@ -113,7 +113,9 @@ src/
   theme/ constants/    role themes/fonts, colours, images, brand
   types/platform.ts    the domain model (mirrors the SQL schema). types/persona.ts = When/Experience. types/index.ts = catalogue/legacy types
   utils/               format (money/dates/phone), confirm, links, random
-supabase/migrations/   0001 core schema · 0002 RLS · 0003 matching, reliability, risk · 0004 toolkits · 0005 personas · 0006 freelancer crafts · 0007–0008 customer occasions · 0009 platform RBAC · 0010 SQL defect fixes · 0011 core-loop RPCs
+supabase/migrations/   0001 core schema · 0002 RLS · 0003 matching, reliability, risk · 0004 toolkits · 0005 personas · 0006 freelancer crafts · 0007–0008 customer occasions · 0009 platform RBAC · 0010 SQL defect fixes · 0011 core-loop RPCs · 0012 auth, media, notifications · 0013 scheduled jobs
+supabase/functions/    Edge Functions (Deno, no dependencies): send-otp, media-sign, notify-fanout; pure logic in _shared/ (tested in Node by npm run test:functions)
+docs/SETUP_SUPABASE.md putting the app on a Supabase staging project, step by step
 src/backend/           Backend interface for the core loop: mock (the store) and supabase (the RPCs), chosen by EXPO_PUBLIC_BACKEND
 scripts/               check-personas.mjs + personaCheck.ts (registry check and persona matrix, §6a); ts-loader.mjs (Node imports of pure app modules)
 scripts/db/            PGlite harness: db-check (migrations apply, RLS everywhere), core-loop (the loop as each role, RLS on), parity (app money = SQL money)
@@ -295,7 +297,12 @@ Rules:
    - operations tools are filtered by permission; **Reset demo data** is for admins and super admins (`demo.reset`): sign in as Bikram (9800000006) to reset;
    - `0009_platform_rbac.sql` swaps the role-name RLS checks for `has_permission()` and adds `can_manage_project()`.
 12. **Backend (P5).** Money rules have two implementations that must agree: `src/services` (whole rupees, `roundMoney()` so binary floats don't drift) and the SQL helpers in 0011 (paisa, `vivah_rupees()`). Change both together and run `npm run test:parity`. New server-side use cases are RPCs (`rpc_*`, security definer, permission-checked, audited) listed in the header of 0011, with a check in `scripts/db/core-loop.mjs`; the internal `vivah_*` helpers stay closed to clients.
-13. **Registry check.** `npm run check:personas` fails on unknown capabilities, permissions, occasions or services, a service without capabilities or trade, a crew role in no craft or in two, or a fixture persona with fewer than three tools, and compares every fixture's visible tools (and, for staff, console routes) with `scripts/persona-matrix.json`. After an intended change run `npm run check:personas -- --update` and commit the new matrix.
+13. **Auth, media, notifications (P6).** With `EXPO_PUBLIC_BACKEND=supabase` every role signs in with a 6-digit **email** code (owner decision: no SMS in year one) through `src/backend/auth.ts` → `send-otp` (Upstash rate limits) → Supabase Auth; tokens live in SecureStore (localStorage on web) and refresh themselves. First sign-in goes to the same setup screens, which call `rpc_complete_signup`; staff also need the access code an admin set (`rpc_set_staff_access_code`, stored hashed) and wait for approval (`rpc_decide_staff_request`). The device keeps a mirror `Account` with the auth user's id (`accountFromMe`, `upsertAccount`) so the role apps work unchanged. The demo (`mock`) keeps phone + 1234 and the one-tap accounts.
+   - **Media:** portfolio uploads go to Cloudinary through `media-sign` (signature pins `vivah/<purpose>/<user id>` and the preset) and are recorded with `rpc_register_media`; Postgres stores the public id only. Show images through `cloudinaryUrl(publicId, 't_card')` and the named transformations (`scripts/cloudinary-setup.mjs`); never ad-hoc transformations.
+   - **Private files:** KYC, contracts and invoices go to the private `documents` bucket under `<user id>/…` (`src/backend/files.ts`), read through five-minute signed links.
+   - **Notifications:** a new `notifications` row calls `notify-fanout` (pg_net + Vault), which sends Expo push and Resend email by the user's preferences; muted kinds send nothing, `emergency` always rings. Remote push needs a development or store build (`src/backend/push.ts` skips Expo Go).
+   - **Jobs:** `0013_jobs.sql` (milestone status, payable readiness, lead SLA, payment reminders, cleanup), scheduled by pg_cron.
+14. **Registry check.** `npm run check:personas` fails on unknown capabilities, permissions, occasions or services, a service without capabilities or trade, a crew role in no craft or in two, or a fixture persona with fewer than three tools, and compares every fixture's visible tools (and, for staff, console routes) with `scripts/persona-matrix.json`. After an intended change run `npm run check:personas -- --update` and commit the new matrix.
 
 ## 7. Seed and demo contract (don't break the demo)
 
@@ -340,8 +347,9 @@ npx tsc --noEmit        # must be 0 errors (typed routes are generated by `npx e
 npx expo lint           # must be 0 errors / 0 warnings
 npm run check:personas  # registry check + persona matrix (Node 24+)
 npm run db:check        # when you touch SQL: every migration applies, RLS on every table
-npm run db:test         # the core loop against the SQL as each role, RLS on
+npm run db:test         # the core loop, sign-up, media, files, notifications and jobs against the SQL as each role, RLS on
 npm run test:parity     # money in src/services equals money in SQL
+npm run test:functions  # when you touch supabase/functions
 npx expo-doctor         # no new failures
 npx expo start          # app loads in Expo Go; press w for web
 ```

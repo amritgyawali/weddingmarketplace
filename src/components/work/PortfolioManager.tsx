@@ -4,6 +4,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 
+import { cloudMediaReady, uploadMedia } from '@/backend/media';
 import { ChoiceChips, EmptyBlock, KButton, KField, StackHeader } from '@/components/kit';
 import { Sheet } from '@/components/ui/Sheet';
 import { Text } from '@/components/ui/Text';
@@ -30,6 +31,7 @@ export function PortfolioManager() {
   const remove = useDb((s) => s.removePortfolioItem);
   const move = useDb((s) => s.movePortfolioItem);
   const [editing, setEditing] = useState<PortfolioItem | null>(null);
+  const [uploading, setUploading] = useState(0);
   const providerId = account.listingId ?? account.id;
   const items = all.filter((p) => p.providerId === providerId).sort((a, b) => a.order - b.order);
   const size = columns > 1 ? '23%' : '48%';
@@ -37,15 +39,34 @@ export function PortfolioManager() {
   const upload = async () => {
     const res = await ImagePicker.launchImageLibraryAsync({ mediaTypes: ['images', 'videos'], quality: 0.7, allowsMultipleSelection: true, selectionLimit: 10 });
     if (res.canceled) return;
-    res.assets.forEach((a) => add({ providerId, uri: a.uri, kind: a.type === 'video' ? 'video' : 'image', caption: '', tags: [], featured: false }));
-    toast(`${res.assets.length} item(s) added`, 'cloud-upload');
+    if (!cloudMediaReady()) {
+      // The demo keeps picked files on the device.
+      res.assets.forEach((a) => add({ providerId, uri: a.uri, kind: a.type === 'video' ? 'video' : 'image', caption: '', tags: [], featured: false }));
+      toast(`${res.assets.length} item(s) added`, 'cloud-upload');
+      return;
+    }
+    // Supabase builds: each file goes to Cloudinary through a signed upload, one at a time.
+    let done = 0;
+    let lastError: string | null = null;
+    setUploading(res.assets.length);
+    for (const a of res.assets) {
+      const up = await uploadMedia({ uri: a.uri, mimeType: a.mimeType, fileName: a.fileName, fileSize: a.fileSize }, 'portfolio');
+      setUploading((n) => n - 1);
+      if (!up.ok) {
+        lastError = up.error;
+        continue;
+      }
+      add({ providerId, uri: up.value.url, publicId: up.value.publicId, kind: up.value.kind, caption: '', tags: [], featured: false });
+      done++;
+    }
+    toast(lastError && !done ? lastError : `${done} of ${res.assets.length} uploaded${lastError ? ` · ${lastError}` : ''}`, lastError ? 'alert-circle' : 'cloud-upload');
   };
 
   return (
     <View style={{ flex: 1, backgroundColor: t.c.bg }}>
       <StackHeader title="Portfolio" subtitle={`${items.length} items · first item is your cover`} />
       <ScrollView contentContainerStyle={{ padding: 16, gap: 12, paddingBottom: 40 }}>
-        <KButton label="Upload photos / videos" icon="cloud-upload-outline" onPress={upload} />
+        <KButton label={uploading ? `Uploading ${uploading}…` : 'Upload photos / videos'} icon="cloud-upload-outline" loading={uploading > 0} onPress={upload} />
         {!items.length && <EmptyBlock icon="images-outline" title="Show your best work" message="Couples book 3× more when a portfolio has 12+ photos across rituals, portraits and decor." />}
         <View style={styles.grid}>
           {items.map((p, i) => (

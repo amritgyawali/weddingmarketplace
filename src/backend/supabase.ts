@@ -5,17 +5,18 @@
  * computes money and writes the audit log; this adapter only converts rupees
  * to paisa and app enums to SQL enums.
  *
- * RLS needs a signed-in user: until P6 wires Supabase Auth, pass the access
- * token with setAccessToken(); without one every call is refused.
+ * RLS needs a signed-in user: the token comes from the email sign-in in
+ * auth.ts (refreshed as needed); setAccessToken() overrides it for scripts.
  */
 import { ENV } from '@/constants/env';
 import type { PaymentMethod } from '@/types/platform';
 
+import { getAccessToken } from './auth';
 import { type Backend, failResult, okResult, type Result } from './types';
 
 let accessToken: string | null = null;
 
-/** The signed-in user's JWT (set by the auth layer in P6). */
+/** Overrides the signed-in user's JWT (scripts and tests). */
 export const setAccessToken = (token: string | null) => {
   accessToken = token;
 };
@@ -36,11 +37,12 @@ const paisa = (rupees: number) => Math.round(rupees * 100);
 /** Calls one RPC; a Postgres refusal comes back as its message. */
 export async function rpc<T>(fn: string, args: Record<string, unknown>): Promise<Result<T>> {
   if (!ENV.supabaseUrl || !ENV.supabasePublishableKey) return failResult('The Supabase backend isn’t configured (EXPO_PUBLIC_SUPABASE_URL and EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY)');
-  if (!accessToken) return failResult('Sign in again to continue');
+  const token = accessToken ?? (await getAccessToken());
+  if (!token) return failResult('Sign in again to continue');
   try {
     const res = await fetch(`${ENV.supabaseUrl}/rest/v1/rpc/${fn}`, {
       method: 'POST',
-      headers: { apikey: ENV.supabasePublishableKey, Authorization: `Bearer ${accessToken}`, 'Content-Type': 'application/json' },
+      headers: { apikey: ENV.supabasePublishableKey, Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
       body: JSON.stringify(args),
     });
     const text = await res.text();

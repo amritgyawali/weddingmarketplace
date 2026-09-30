@@ -1,9 +1,12 @@
 import { Ionicons } from '@expo/vector-icons';
-import { useLocalSearchParams } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { accountFromMe, completeSignup, roleOf } from '@/backend/account';
+import { signOut } from '@/backend/auth';
+import { registerForPush } from '@/backend/push';
 import { Card, ChoiceChips, KButton, KField, StackHeader } from '@/components/kit';
 import { CraftProfileForm, CraftTiles, draftForCraft, SkillPicker, type FreelancerPersonaDraft } from '@/components/persona/FreelancerPersona';
 import { draftForTrade, EssentialsForm, FormPicker, ServicePicker, TradeTiles, type VendorPersonaDraft } from '@/components/persona/VendorPersona';
@@ -18,7 +21,7 @@ import { completeLogin, onAccountCreated } from '@/services/auth';
 import { useSession } from '@/store/useSession';
 import { useRoleFonts } from '@/theme/fonts';
 import { RoleThemeProvider, useRoleTheme } from '@/theme/RoleTheme';
-import { formatPhone } from '@/utils/format';
+import { formatPhone, isNepalMobile } from '@/utils/format';
 import type { Account, PlatformTeam, StaffRole } from '@/types/platform';
 
 const TEAMS: { team: PlatformTeam; role: StaffRole }[] = [
@@ -32,10 +35,15 @@ const CITY_OPTIONS = [...ONBOARDING_CITIES];
 const VENDOR_STEPS = ['What does your business do?', 'Which services do you offer?', 'How is your business set up?', 'The essentials', 'Create your account'];
 const FREELANCER_STEPS = ['What’s your craft?', 'Your skills', 'Your craft profile', 'Create your account'];
 
-function SetupForm({ phone }: { phone: string }) {
+/** Sign-up details. `signInEmail` is set when the user signed in by email code (Supabase); the demo passes the phone. */
+function SetupForm({ phone, signInEmail }: { phone: string; signInEmail?: string }) {
   const t = useRoleTheme();
   const insets = useSafeAreaInsets();
   const register = useSession((s) => s.register);
+  const upsertAccount = useSession((s) => s.upsertAccount);
+  const [contactPhone, setContactPhone] = useState('');
+  const [busy, setBusy] = useState(false);
+  const [pending, setPending] = useState(false);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [city, setCity] = useState<string>('Kathmandu');
@@ -71,14 +79,17 @@ function SetupForm({ phone }: { phone: string }) {
           .slice(0, 6)
       : [];
 
-  const submit = () => {
+  const submit = async () => {
     const next: Record<string, string | null> = {
       name: name.trim().length < 2 ? 'Enter your full name' : null,
-      email: email && !/^\S+@\S+\.\S+$/.test(email) ? 'Enter a valid email' : null,
+      email: !signInEmail && email && !/^\S+@\S+\.\S+$/.test(email) ? 'Enter a valid email' : null,
+      phone: signInEmail && contactPhone && !isNepalMobile(contactPhone) ? 'Enter a valid Nepali mobile number (98XXXXXXXX)' : null,
       business: t.role === 'vendor' && !claimed && businessName.trim().length < 3 ? 'Enter your business name or claim a listing' : null,
       rate: t.role === 'freelancer' && !(Number(dayRate) > 0) ? `Enter your rate ${RATE_LABEL[craft.rate]}` : null,
       pan: t.role === 'vendor' && panVat && !/^\d{9}$/.test(panVat) ? 'PAN/VAT numbers have 9 digits' : null,
-      code: t.role === 'platform' && accessCode.trim().toUpperCase() !== PLATFORM_ACCESS_CODE ? 'Invalid team access code' : null,
+      // With Supabase the server checks the code an admin set; the demo checks its own.
+      code: t.role === 'platform' && (signInEmail ? !accessCode.trim() : accessCode.trim().toUpperCase() !== PLATFORM_ACCESS_CODE) ? (signInEmail ? 'Enter the team access code' : 'Invalid team access code') : null,
+      form: null,
     };
     setErrors(next);
     if (Object.values(next).some(Boolean)) return;
@@ -86,8 +97,8 @@ function SetupForm({ phone }: { phone: string }) {
     const base: Omit<Account, 'id' | 'createdAt' | 'verified'> = {
       role: t.role,
       name: name.trim(),
-      phone,
-      email: email.trim() || undefined,
+      phone: signInEmail ? contactPhone : phone,
+      email: signInEmail ?? (email.trim() || undefined),
       city,
     };
     const extra: Partial<Account> =
@@ -122,10 +133,48 @@ function SetupForm({ phone }: { phone: string }) {
           : t.role === 'platform'
             ? { team, staffRole: TEAMS.find((x) => x.team === team)!.role }
             : {};
+    if (signInEmail) {
+      // The server creates the profile and role rows; the device keeps a mirror with the same id.
+      setBusy(true);
+      const res = await completeSignup(t.role, { ...base, ...extra }, t.role === 'platform' ? accessCode : undefined);
+      setBusy(false);
+      if (!res.ok) return setErrors({ ...next, form: res.error });
+      const role = roleOf(res.value);
+      if (!role) {
+        setPending(true);
+        void signOut();
+        return;
+      }
+      const account: Account = { ...base, ...extra, ...accountFromMe(res.value, role) };
+      upsertAccount(account);
+      onAccountCreated(account);
+      completeLogin(account);
+      void registerForPush();
+      return;
+    }
     const account = register({ ...base, ...extra });
     onAccountCreated(account);
     completeLogin(account);
   };
+
+  if (pending) {
+    return (
+      <View style={{ flex: 1, backgroundColor: t.c.bg }}>
+        <StackHeader title="Almost there" subtitle={signInEmail} />
+        <View style={{ padding: 18, gap: 14 }}>
+          <Card style={{ gap: 8 }}>
+            <Text size={16} weight="semibold" color={t.c.textStrong}>
+              Thanks, {name.trim().split(' ')[0]}. An admin will approve your staff account.
+            </Text>
+            <Text size={14} color={t.c.muted}>
+              We’ll email you when it’s done. Then sign in with your email again and the operations console opens.
+            </Text>
+          </Card>
+          <KButton label="Back to the start" variant="secondary" onPress={() => router.replace('/welcome')} />
+        </View>
+      </View>
+    );
+  }
 
   return (
     <View style={{ flex: 1, backgroundColor: t.c.bg }}>
@@ -133,10 +182,10 @@ function SetupForm({ phone }: { phone: string }) {
         title={t.role === 'customer' ? 'What should we call you?' : t.role === 'vendor' ? VENDOR_STEPS[vstep] : t.role === 'freelancer' ? FREELANCER_STEPS[fstep] : 'Create your account'}
         subtitle={
           t.role === 'vendor'
-            ? `Step ${vstep + 1} of ${VENDOR_STEPS.length} · ${formatPhone(phone)}`
+            ? `Step ${vstep + 1} of ${VENDOR_STEPS.length} · ${(signInEmail ?? formatPhone(phone))}`
             : t.role === 'freelancer'
-              ? `Step ${fstep + 1} of ${FREELANCER_STEPS.length} · ${formatPhone(phone)}`
-              : `${t.label} · ${formatPhone(phone)}`
+              ? `Step ${fstep + 1} of ${FREELANCER_STEPS.length} · ${(signInEmail ?? formatPhone(phone))}`
+              : `${t.label} · ${(signInEmail ?? formatPhone(phone))}`
         }
       />
       <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
@@ -179,7 +228,11 @@ function SetupForm({ phone }: { phone: string }) {
           {((t.role !== 'vendor' && t.role !== 'freelancer') || (t.role === 'vendor' && vstep === 4) || (t.role === 'freelancer' && fstep === 3)) && (
           <>
           <KField label={t.role === 'vendor' ? 'Owner / manager name' : 'Full name'} value={name} onChangeText={setName} placeholder="Your name" autoComplete="name" error={errors.name} />
-          <KField label="Email (optional)" value={email} onChangeText={setEmail} keyboardType="email-address" autoCapitalize="none" placeholder="you@example.com" error={errors.email} />
+          {signInEmail ? (
+            <KField label="Mobile number (optional, for your coordinator)" value={contactPhone} onChangeText={(v) => setContactPhone(v.replace(/\D/g, '').slice(0, 10))} keyboardType="phone-pad" placeholder="98XXXXXXXX" error={errors.phone} />
+          ) : (
+            <KField label="Email (optional)" value={email} onChangeText={setEmail} keyboardType="email-address" autoCapitalize="none" placeholder="you@example.com" error={errors.email} />
+          )}
           {/* Couples answer the wedding city in onboarding, right after this. */}
           {t.role !== 'customer' && (
             <View style={{ gap: 6 }}>
@@ -284,6 +337,11 @@ function SetupForm({ phone }: { phone: string }) {
           )}
         </ScrollView>
         <View style={[styles.footer, { backgroundColor: t.c.surface, borderTopColor: t.c.border, paddingBottom: Math.max(insets.bottom, 14) }]}>
+          {!!errors.form && (
+            <Text size={13} color={t.c.danger} style={{ marginBottom: 8 }}>
+              {errors.form}
+            </Text>
+          )}
           {t.role === 'freelancer' && fstep < 3 ? (
             <View style={styles.footerRow}>
               {fstep > 0 && <KButton label="Back" variant="secondary" size="lg" style={{ flex: 1 }} onPress={() => setFstep((n) => n - 1)} />}
@@ -298,7 +356,7 @@ function SetupForm({ phone }: { phone: string }) {
             <View style={styles.footerRow}>
               {t.role === 'vendor' && <KButton label="Back" variant="secondary" size="lg" style={{ flex: 1 }} onPress={() => setVstep(3)} />}
               {t.role === 'freelancer' && <KButton label="Back" variant="secondary" size="lg" style={{ flex: 1 }} onPress={() => setFstep(2)} />}
-              <KButton label={t.role === 'customer' ? 'Continue' : 'Create account'} size="lg" style={{ flex: 2 }} onPress={submit} />
+              <KButton label={t.role === 'customer' ? 'Continue' : 'Create account'} size="lg" style={{ flex: 2 }} loading={busy} onPress={submit} />
             </View>
           )}
         </View>
@@ -308,13 +366,13 @@ function SetupForm({ phone }: { phone: string }) {
 }
 
 export default function SetupScreen() {
-  const { phone } = useLocalSearchParams<{ phone: string }>();
+  const { phone, email } = useLocalSearchParams<{ phone?: string; email?: string }>();
   const role = useSession((s) => s.selectedRole) ?? 'customer';
   const fontsReady = useRoleFonts('all');
   if (!fontsReady) return null;
   return (
     <RoleThemeProvider role={role}>
-      <SetupForm phone={phone ?? ''} />
+      <SetupForm phone={phone ?? ''} signInEmail={email || undefined} />
     </RoleThemeProvider>
   );
 }

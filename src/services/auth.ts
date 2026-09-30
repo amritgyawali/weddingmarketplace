@@ -1,3 +1,4 @@
+import { signOut, usesEmailSignIn } from '@/backend/auth';
 import { useAppStore } from '@/store/useAppStore';
 import { useDb } from '@/store/useDb';
 import { useSession } from '@/store/useSession';
@@ -34,5 +35,7 @@ export function onAccountCreated(account: Account) {
 }
 
 export function logout() {
+  // With the Supabase backend the tokens go too; the demo has none.
+  if (usesEmailSignIn()) void signOut();
   useSession.getState().logout();
 }

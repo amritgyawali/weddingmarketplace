@@ -19,7 +19,7 @@ export interface TrustActions {
   setVerificationCheck: (caseId: string, check: keyof VerificationCase['checks'], state: CheckState) => string | null;
   /** Vendor Success, admins (`provider.verify`). Returns an error to show, or null. */
   decideVerification: (caseId: string, status: VerificationStatus, note?: string) => string | null;
-  addVerificationDocument: (caseId: string, doc: { kind: string; name: string }) => void;
+  addVerificationDocument: (caseId: string, doc: { kind: string; name: string; path?: string }) => void;
   /** Admins (`user.suspend`). Returns an error to show, or null. */
   setAccountSuspended: (accountId: string, suspended: boolean, reason?: string) => string | null;
 }
