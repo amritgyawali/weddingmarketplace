@@ -53,7 +53,8 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "lint": "expo lint",
-    "check:personas": "node scripts/check-personas.mjs"
+    "check:personas": "node scripts/check-personas.mjs",
+    "env:vercel": "node scripts/env-vercel.mjs"
   },
   "private": true
 }
