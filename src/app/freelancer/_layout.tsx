@@ -25,6 +25,8 @@ export default function FreelancerLayout() {
         <Stack.Screen name="inbox/index" />
         <Stack.Screen name="inbox/[id]" />
         <Stack.Screen name="settings" />
+        <Stack.Screen name="tools" />
+        <Stack.Screen name="tool/[id]" />
       </Stack>
     </RoleThemeProvider>
   );

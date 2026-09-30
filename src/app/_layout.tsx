@@ -110,6 +110,8 @@ export default function RootLayout() {
             <Stack.Screen name="genie-checkout/[id]" options={{ presentation: 'modal', animation: 'slide_from_bottom' }} />
             <Stack.Screen name="write-review" options={{ presentation: 'modal', animation: 'slide_from_bottom' }} />
             <Stack.Screen name="info/[slug]" />
+            <Stack.Screen name="tools" />
+            <Stack.Screen name="tool/[id]" />
           </Stack.Protected>
 
           {/* Each business role gets a completely separate app. */}

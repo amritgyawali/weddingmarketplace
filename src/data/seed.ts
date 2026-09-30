@@ -10,6 +10,7 @@ import { FREELANCER_DIRECTORY } from '@/data/freelancers';
 import { IDEA_PHOTOS } from '@/data/ideas';
 import { PROVIDERS, type Provider } from '@/data/providers';
 import { SERVICE_BY_ID, crewPlanFor, defaultDetails } from '@/data/services';
+import { buildToolkitSeed } from '@/data/toolkitSeed';
 import { VENDORS } from '@/data/vendors';
 import { VENUES } from '@/data/venues';
 import { generateTasks } from '@/services/planner';
@@ -1680,6 +1681,7 @@ export function buildSeedData(): DbData {
         { id: 'bn2', title: 'Emergency cover included', subtitle: 'If a photographer falls sick, we replace them within hours', href: '/info/emergency', active: true },
       ],
     },
+    ...buildToolkitSeed(),
   };
 }
 

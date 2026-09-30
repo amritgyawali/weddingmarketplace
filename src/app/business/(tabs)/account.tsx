@@ -35,6 +35,7 @@ export default function BusinessAccount() {
 
   const tools: { icon: IconName; title: string; subtitle: string; href: Href; badge?: number }[] = [
     { icon: 'chatbubbles-outline', title: 'Messages', subtitle: 'Couples, coordinators and crew', href: '/business/inbox', badge: unread },
+    { icon: 'construct-outline', title: 'Business tools', subtitle: 'Expenses, VAT, roster, pricing and 16 more', href: '/business/tools' },
     { icon: 'document-text-outline', title: 'Quotations', subtitle: 'Drafts, sent, versions and wins', href: '/business/quotes' },
     { icon: 'pricetags-outline', title: 'Packages & services', subtitle: `${packages.filter((p) => p.providerId === account.listingId).length} packages · add-ons & inclusions`, href: '/business/packages' },
     { icon: 'images-outline', title: 'Portfolio', subtitle: `${portfolio.filter((p) => p.providerId === account.listingId).length} photos & videos`, href: '/business/portfolio' },

@@ -1096,3 +1096,6 @@ export interface PlatformSettings {
   featuredProviderIds: string[];
   banners: { id: string; title: string; subtitle: string; href: string; active: boolean }[];
 }
+
+// Role toolkits (generic tool records, settings and broadcasts)
+export * from './toolkit';
