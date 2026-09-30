@@ -11,7 +11,9 @@ import { triggerHaptic } from '@/components/ui/PressableScale';
 import { Text } from '@/components/ui/Text';
 import { photos } from '@/constants/images';
 import { colors } from '@/constants/theme';
-import { VENDOR_CATEGORIES } from '@/data/categories';
+import { categoriesFor } from '@/data/categories';
+import { SERVICES } from '@/data/services';
+import { useExperience } from '@/hooks/useExperience';
 import { selectShortlistCount, useAppStore } from '@/store/useAppStore';
 import type { VendorCategory } from '@/types';
 
@@ -83,6 +85,11 @@ function CategoryRow({ category, expanded, onToggle }: { category: VendorCategor
 export default function VendorsTab() {
   const [expanded, setExpanded] = useState<string | null>(null);
   const shortlistCount = useAppStore(selectShortlistCount);
+  const exp = useExperience();
+  const all = SERVICES.map((s) => s.id);
+  const services = exp.occasion?.services ?? all;
+  const categories = categoriesFor(services);
+  const filtered = services.length < all.length;
 
   return (
     <View style={styles.root}>
@@ -101,7 +108,12 @@ export default function VendorsTab() {
         }
       />
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 24 }}>
-        {VENDOR_CATEGORIES.map((c) => (
+        {filtered && (
+          <Text size={13} color={colors.textMuted} style={styles.note}>
+            Showing what fits your {exp.occasion?.label.toLowerCase()} plan. Search finds everything else.
+          </Text>
+        )}
+        {categories.map((c) => (
           <CategoryRow
             key={c.id}
             category={c}
@@ -116,6 +128,7 @@ export default function VendorsTab() {
 
 const styles = StyleSheet.create({
   root: { flex: 1, backgroundColor: colors.white },
+  note: { paddingHorizontal: 16, paddingTop: 10, paddingBottom: 4 },
   block: { borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: colors.border },
   row: { height: ROW_HEIGHT, flexDirection: 'row', alignItems: 'center', gap: 14, paddingHorizontal: 16 },
   text: { flex: 1, gap: 1 },

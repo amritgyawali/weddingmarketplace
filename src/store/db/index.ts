@@ -28,6 +28,20 @@ export type Db = DbData & CoreActions & QuoteActions & ProjectActions & FinanceA
 
 const DATA_KEYS = Object.keys(buildSeedData()) as (keyof DbData)[];
 
+/** Adds seed projects and tool records an older install doesn't have, and the nwaran function to the built-in newborn occasion. Nothing existing is changed. */
+function addSeedRecords(data: DbData): DbData {
+  const seed = buildSeedData();
+  const has = <T extends { id: string }>(list: T[] | undefined) => new Set((list ?? []).map((x) => x.id));
+  const projects = has(data.projects);
+  const entries = has(data.toolEntries);
+  return {
+    ...data,
+    projects: [...(data.projects ?? []), ...seed.projects.filter((p) => !projects.has(p.id))],
+    toolEntries: [...(data.toolEntries ?? []), ...seed.toolEntries.filter((e) => !entries.has(e.id))],
+    occasions: (data.occasions ?? seed.occasions).map((o) => (o.id === 'newborn' && o.builtIn && !o.eventTypes.includes('NWARAN') ? { ...o, eventTypes: [...o.eventTypes.slice(0, 1), 'NWARAN', ...o.eventTypes.slice(1)] } : o)),
+  };
+}
+
 export const useDb = create<Db>()(
   persist(
     (set, get) => ({
@@ -50,10 +64,11 @@ export const useDb = create<Db>()(
     {
       name: 'vivah-db',
       // v3: Nepal orchestration model (projects → requirements → bookings → crew).
-      version: 3,
+      // v4: adds the newborn demo project, the new demo tool records and the nwaran function (additive).
+      version: 4,
       storage: createJSONStorage(() => AsyncStorage),
       partialize: (s) => Object.fromEntries(DATA_KEYS.map((k) => [k, s[k]])) as unknown as DbData,
-      migrate: (persisted, version) => (version < 3 ? buildSeedData() : (persisted as DbData)) as Db,
+      migrate: (persisted, version) => (version < 3 ? buildSeedData() : version < 4 ? addSeedRecords(persisted as DbData) : (persisted as DbData)) as Db,
     },
   ),
 );

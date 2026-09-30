@@ -12,7 +12,7 @@ import type { When } from '@/types/persona';
 const ALL: When = {};
 
 export const TOOL_RULES = {
-  // ─── Couple (P3 switches the filtering on) ────────────────────────────────
+  // ─── Couple: filtered by the active occasion's planner modules ────────────
   'couple.sait': { capsAny: ['plan.sait'] },
   'couple.samagri': { capsAny: ['plan.samagri'] },
   'couple.weather': ALL,
@@ -33,6 +33,10 @@ export const TOOL_RULES = {
   'couple.whatif': ALL,
   'couple.savings': ALL,
   'couple.honeymoon': { capsAny: ['plan.honeymoon'] },
+  // Occasion tools (P3)
+  'couple.keepsakes': { capsAny: ['plan.keepsakes'] },
+  'couple.surprise': { capsAny: ['plan.surprise'] },
+  'couple.games': { capsAny: ['plan.games'] },
 
   // ─── Vendor ───────────────────────────────────────────────────────────────
   'vendor.replies': ALL,

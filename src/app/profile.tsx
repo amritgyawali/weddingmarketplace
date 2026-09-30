@@ -7,6 +7,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { BackButton } from '@/components/ui/IconButton';
 import { Text } from '@/components/ui/Text';
 import { colors, GUTTER } from '@/constants/theme';
+import { useExperience } from '@/hooks/useExperience';
 import { useCustomerWorkspace } from '@/hooks/useWorkspace';
 import { logout } from '@/services/auth';
 import { selectUnreadCount, useAppStore } from '@/store/useAppStore';
@@ -31,23 +32,27 @@ export default function ProfileMenuScreen() {
   const unread = useAppStore(selectUnreadCount);
   const bookings = useAppStore((s) => s.bookings.filter((b) => b.status !== 'cancelled').length);
   const account = useAccount();
-  const { quotes } = useCustomerWorkspace(account.id);
+  const { quotes, project } = useCustomerWorkspace(account.id);
+  const exp = useExperience();
+  const wedding = !project || exp.occasion?.id === 'wedding';
+  const has = (m: 'guests' | 'invitations' | 'website') => exp.caps.has(`plan.${m}`);
   const awaitingQuotes = quotes.filter((q) => q.status === 'sent' || q.status === 'viewed').length;
   const unreadNotifications = useInbox(account).filter((n) => !n.read).length;
 
   const icon = (name: IconName) => <Ionicons name={name} size={21} color={ICON} />;
   const sections: { title: string; items: MenuItem[] }[] = [
     {
-      title: 'Your wedding',
+      title: wedding ? 'Your wedding' : `Your ${exp.vocab.noun}`,
       items: [
-        { label: 'My Wedding', icon: icon('heart-outline'), href: '/my-wedding', badge: awaitingQuotes },
+        { label: wedding ? 'My Wedding' : exp.vocab.planTitle, icon: icon('heart-outline'), href: '/my-wedding', badge: awaitingQuotes },
         { label: 'Planning tools', icon: icon('construct-outline'), href: '/tools' },
-        { label: 'Guests & RSVP', icon: icon('people-outline'), href: '/guests' },
+        ...(has('guests') ? [{ label: 'Guests & RSVP', icon: icon('people-outline'), href: '/guests' as Href }] : []),
         { label: 'Budget', icon: icon('wallet-outline'), href: '/budget' },
         { label: 'Checklist', icon: icon('checkbox-outline'), href: '/checklist' },
-        { label: 'Invitations', icon: icon('mail-outline'), href: '/invitations' },
-        { label: 'Wedding website', icon: icon('globe-outline'), href: '/website' },
+        ...(has('invitations') ? [{ label: 'Invitations', icon: icon('mail-outline'), href: '/invitations' as Href }] : []),
+        ...(has('website') ? [{ label: wedding ? 'Wedding website' : 'Event page', icon: icon('globe-outline'), href: '/website' as Href }] : []),
         { label: 'Contracts', icon: icon('document-lock-outline'), href: '/contracts' },
+        { label: 'Plan another celebration', icon: icon('add-circle-outline'), href: '/celebrate' },
       ],
     },
     {

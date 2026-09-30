@@ -41,6 +41,8 @@ interface AppState {
   recentSearches: string[];
   joinedWeddings: string[];
   reviews: WrittenReview[];
+  /** The celebration the planner is working on when the couple has several (null = the newest). */
+  activeProjectId: string | null;
 }
 
 interface AppActions {
@@ -53,6 +55,8 @@ interface AppActions {
   saveWeddingBasics: (basics: Partial<Pick<AppState, 'role' | 'weddingDate' | 'city' | 'guests' | 'budget'>> & { partnerName?: string }) => void;
   completeOnboarding: () => void;
   resetOnboarding: () => void;
+  /** Switches the planner to another of the couple's celebrations. */
+  setActiveProject: (projectId: string | null) => void;
   updateProfile: (patch: Partial<Profile>) => void;
   toggleShortlist: (kind: 'venues' | 'vendors', id: string) => boolean;
   toggleLike: (photoId: string) => boolean;
@@ -88,6 +92,7 @@ const initialState: AppState = {
   recentSearches: [],
   joinedWeddings: [],
   reviews: [],
+  activeProjectId: null,
 };
 
 const VENDOR_REPLIES = [
@@ -128,6 +133,7 @@ export const useAppStore = create<AppStore>()(
         set((s) => ({ ...basics, profile: partnerName === undefined ? s.profile : { ...s.profile, partnerName } })),
       completeOnboarding: () => set({ hasOnboarded: true }),
       resetOnboarding: () => set({ hasOnboarded: false }),
+      setActiveProject: (activeProjectId) => set({ activeProjectId }),
       updateProfile: (patch) => set((s) => ({ profile: { ...s.profile, ...patch } })),
 
       toggleShortlist: (kind, id) => {

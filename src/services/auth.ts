@@ -17,7 +17,7 @@ export function completeLogin(account: Account) {
     useAppStore.getState().bindOwner(
       account,
       project
-        ? { hasOnboarded: true, role: 'bride', city: project.city, weddingDate: project.weddingDate }
+        ? { hasOnboarded: true, role: project.eventType === 'WEDDING' ? 'bride' : 'other', city: project.city, weddingDate: project.weddingDate }
         : { city: account.city },
     );
   }

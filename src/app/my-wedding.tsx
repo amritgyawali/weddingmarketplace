@@ -21,10 +21,13 @@ import { PaymentsPanel } from '@/components/work/Payments';
 import { CUSTOMER_STATUS, PipelineStepper } from '@/components/work/Pipeline';
 import { TaskBoard } from '@/components/work/TaskBoard';
 import { TimelineView } from '@/components/work/Timeline';
+import { CelebrationSwitcher } from '@/components/wedding/CelebrationSwitcher';
 import { CountdownCard, FunctionsStrip, MoneyCard, PeopleRow, Section, ServicesSummary, WeddingHero } from '@/components/wedding/WeddingParts';
 import { photos } from '@/constants/images';
 import { colors } from '@/constants/theme';
+import { type PlannerModule, planCap } from '@/data/capabilities';
 import { SERVICES, findService, serviceName } from '@/data/services';
+import { useExperience } from '@/hooks/useExperience';
 import { useLayout } from '@/hooks/useLayout';
 import { useCustomerWorkspace } from '@/hooks/useWorkspace';
 import { missingServices, nextBestAction } from '@/services/planner';
@@ -47,19 +50,21 @@ const TABS: { id: Tab; label: string }[] = [
   { id: 'team', label: 'Team' },
 ];
 
-const TOOLS: { icon: string; label: string; href: Href }[] = [
-  { icon: 'people', label: 'Guests & RSVP', href: '/guests' },
+/** Planner shortcuts; the ones tied to a module show only when the occasion has it. */
+const TOOLS: { icon: string; label: string; href: Href; module?: PlannerModule }[] = [
+  { icon: 'people', label: 'Guests & RSVP', href: '/guests', module: 'guests' },
   { icon: 'wallet', label: 'Budget', href: '/budget' },
-  { icon: 'grid', label: 'Seating', href: '/seating' },
-  { icon: 'globe', label: 'Website', href: '/website' },
-  { icon: 'mail', label: 'Invitations', href: '/invitations' },
-  { icon: 'gift', label: 'Registry', href: '/registry' },
+  { icon: 'grid', label: 'Seating', href: '/seating', module: 'seating' },
+  { icon: 'globe', label: 'Website', href: '/website', module: 'website' },
+  { icon: 'mail', label: 'Invitations', href: '/invitations', module: 'invitations' },
+  { icon: 'gift', label: 'Registry', href: '/registry', module: 'registry' },
   { icon: 'calendar', label: 'Calendar', href: '/calendar' },
   { icon: 'checkbox', label: 'Checklist', href: '/checklist' },
   { icon: 'document-lock', label: 'Contracts', href: '/contracts' },
   { icon: 'images', label: 'Mood boards', href: '/boards' },
   { icon: 'git-compare', label: 'Compare', href: '/compare' },
   { icon: 'pricetags', label: 'Deals', href: '/deals' },
+  { icon: 'construct', label: 'More tools', href: '/tools' },
 ];
 
 function CoordinatorCard({ project }: { project: Project }) {
@@ -107,6 +112,8 @@ function CoordinatorCard({ project }: { project: Project }) {
 
 function Overview({ project, setTab, wide }: { project: Project; setTab: (t: Tab) => void; wide: boolean }) {
   const quotes = useDb((s) => s.quotes);
+  const exp = useExperience();
+  const tools = TOOLS.filter((x) => !x.module || exp.caps.has(planCap(x.module))).map((x) => (x.module === 'website' && exp.occasion?.id !== 'wedding' ? { ...x, label: 'Event page' } : x));
   const status = CUSTOMER_STATUS[project.status];
   const action = nextBestAction(project, quotes);
   const risks = projectRisks(project).filter((r) => ['PAYMENT_OVERDUE', 'EVENT_WITHIN_48H', 'DELIVERABLE_OVERDUE'].includes(r.kind));
@@ -208,7 +215,7 @@ function Overview({ project, setTab, wide }: { project: Project; setTab: (t: Tab
 
       <Section title="Planning tools">
         <View style={styles.tools}>
-          {TOOLS.map((tool) => (
+          {tools.map((tool) => (
             <Pressable key={tool.label} onPress={() => router.push(tool.href)} style={({ pressed }) => [styles.tool, pressed && { backgroundColor: colors.bgSoft }]} accessibilityRole="button">
               <Ionicons name={`${tool.icon}-outline` as never} size={22} color={colors.textBody} />
               <Text size={12} color={colors.text} align="center" numberOfLines={1}>
@@ -473,7 +480,8 @@ export default function MyWedding() {
   const insets = useSafeAreaInsets();
   const { wide, contentWidth } = useLayout();
   const params = useLocalSearchParams<{ tab?: Tab }>();
-  const { project, isCollaborator } = useCustomerWorkspace(account.id);
+  const { project, projects, isCollaborator } = useCustomerWorkspace(account.id);
+  const exp = useExperience();
   const [tab, setTab] = useState<Tab>(params.tab ?? 'overview');
   const [tabsY, setTabsY] = useState(0);
   const [collapsed, setCollapsed] = useState(false);
@@ -507,12 +515,13 @@ export default function MyWedding() {
           shared={isCollaborator}
           onBack={back}
           actions={[
-            { icon: 'globe-outline', label: 'Wedding website', onPress: () => router.push('/website') },
+            ...(exp.caps.has('plan.website') ? [{ icon: 'globe-outline' as const, label: exp.occasion?.id === 'wedding' ? 'Wedding website' : 'Event page', onPress: () => router.push('/website') }] : []),
             { icon: 'calendar-outline', label: 'Calendar', onPress: () => router.push('/calendar') },
           ]}
         />
-        <View style={[styles.pad, page]}>
+        <View style={[styles.pad, page, { gap: 14 }]}>
           <CountdownCard project={project} onSetDate={() => changeTab('functions')} />
+          {!isCollaborator && (projects.length > 1 || exp.occasion?.id !== 'wedding') && <CelebrationSwitcher />}
         </View>
         <View style={styles.tabs} onLayout={(e) => setTabsY(e.nativeEvent.layout.y)}>
           <View style={page}>

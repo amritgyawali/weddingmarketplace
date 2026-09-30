@@ -1,4 +1,5 @@
 import { findProvider } from '@/data/providers';
+import { useAppStore } from '@/store/useAppStore';
 import { useDb } from '@/store/useDb';
 import type { Account, Assignment, Gig, Project, ServiceBooking } from '@/types/platform';
 import { daysUntil } from '@/utils/format';
@@ -77,13 +78,17 @@ export function useFreelancerWorkspace(account: Account) {
   };
 }
 
-/** The couple's project: their own, or one they joined as a collaborator. */
+/**
+ * The couple's active project: the celebration they picked in the switcher,
+ * else their newest own one, else one they joined as a collaborator.
+ */
 export function useCustomerWorkspace(accountId: string) {
   const projects = useDb((s) => s.projects);
   const quotes = useDb((s) => s.quotes);
+  const activeId = useAppStore((s) => s.activeProjectId);
   const own = projects.filter((p) => p.customerId === accountId).sort((a, b) => Number(a.status === 'CANCELLED') - Number(b.status === 'CANCELLED') || b.createdAt.localeCompare(a.createdAt));
   const joined = projects.filter((p) => p.collaborators.some((c) => c.accountId === accountId));
-  const project = own[0] ?? joined[0] ?? null;
+  const project = [...own, ...joined].find((p) => p.id === activeId) ?? own[0] ?? joined[0] ?? null;
   return {
     project,
     projects: [...own, ...joined],

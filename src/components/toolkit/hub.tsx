@@ -5,6 +5,7 @@ import { StyleSheet, View } from 'react-native';
 import { Card, EmptyBlock, KField, ListRow, SectionTitle, type IconName } from '@/components/kit';
 import { Text } from '@/components/ui/Text';
 import { toolRole, toolRule, type ToolId } from '@/data/access';
+import { BUILT_IN_OCCASIONS, type OccasionDef } from '@/data/occasions';
 import { SERVICE_BY_ID } from '@/data/services';
 import { SERVICE_CAPABILITIES, SERVICES_BY_CREW_ROLE } from '@/data/trades';
 import { useExperience } from '@/hooks/useExperience';
@@ -61,6 +62,12 @@ const unlockingServices = (id: string) => {
     .slice(0, 4);
 };
 
+/** Occasions whose plans include a couple tool. */
+const unlockingOccasions = (id: string, occasions: OccasionDef[]) => {
+  const caps = toolRule(id).capsAny ?? toolRule(id).capsAll ?? [];
+  return occasions.filter((o) => o.active && caps.some((c) => o.modules.some((m) => `plan.${m}` === c))).map((o) => o.label.toLowerCase());
+};
+
 /** Crew roles that would unlock a freelancer tool. */
 const unlockingSkills = (id: string) => {
   const caps = toolRule(id).capsAny ?? toolRule(id).capsAll ?? [];
@@ -107,7 +114,22 @@ export function ToolHub({ role, tools, title, subtitle }: { role: UserRole; tool
  */
 export function ToolRoute({ tools, visible, settingsHref }: { tools: ToolDef[]; visible?: ToolDef[]; settingsHref?: Href }) {
   const { id } = useLocalSearchParams<{ id: string }>();
+  const catalogue = useDb((s) => s.occasions);
   const def = tools.find((x) => x.id === id);
+  if (def && visible && !visible.some((x) => x.id === def.id) && toolRole(def.id) === 'customer') {
+    const plans = unlockingOccasions(def.id, catalogue.length ? catalogue : BUILT_IN_OCCASIONS);
+    return (
+      <ToolPage title={def.title}>
+        <EmptyBlock
+          icon="lock-closed-outline"
+          title={`${def.title} isn’t part of this plan`}
+          message={`${plans.length ? `It is for ${plans.join(', ')} plans. ` : ''}Switch to another celebration, or plan a new one, from your plan page.`}
+          action={settingsHref ? 'Open my plan' : 'All tools'}
+          onAction={() => (settingsHref ? router.push(settingsHref) : router.canGoBack() ? router.back() : undefined)}
+        />
+      </ToolPage>
+    );
+  }
   if (def && visible && !visible.some((x) => x.id === def.id)) {
     const crew = toolRole(def.id) === 'freelancer';
     const unlock = crew ? unlockingSkills(def.id) : unlockingServices(def.id);

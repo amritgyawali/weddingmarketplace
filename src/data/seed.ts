@@ -201,6 +201,16 @@ export const DEMO_ACCOUNTS: Account[] = [
     personaConfirmedAt: at(-120),
   },
   {
+    id: 'acc_customer_newborn',
+    role: 'customer',
+    name: 'Sarita Duwal',
+    phone: '9800000009',
+    email: 'sarita.duwal@example.com',
+    city: 'Bhaktapur',
+    createdAt: at(-30),
+    verified: true,
+  },
+  {
     id: 'acc_freelancer_dj',
     role: 'freelancer',
     name: 'Suman Tamang',
@@ -951,7 +961,48 @@ function buildPipeline(): Project[] {
     milestones: paid(buildMilestones(DEFAULT_SCHEDULE, 734_500, { confirmed: day(-26), event: day(30) }, 'qt_sneha'), [220_350]),
     createdAt: at(-28),
   });
-  return [pasni, brata, nikita, sneha];
+  // WP-1040 · the newborn demo family (Sarita Duwal): Aarohi's pasni in Bhaktapur.
+  const e1040 = { nwaran: 'ev_1040_nwaran', pasni: 'ev_1040_pasni' };
+  const aarohi = project({
+    id: 'prj_1040',
+    code: 'WP-1040',
+    title: 'Aarohi’s pasni',
+    customerId: 'acc_customer_newborn',
+    customerName: 'Sarita Duwal',
+    customerPhone: '9800000009',
+    eventType: 'PASNI',
+    occasion: 'newborn',
+    honourees: { kind: 'baby', names: ['Aarohi'], dob: day(-160) },
+    city: 'Bhaktapur',
+    area: 'Suryamadhi',
+    weddingDate: day(35),
+    guests: 150,
+    budget: 450_000,
+    status: 'MATCHING_PROVIDERS',
+    statusHistory: history(['NEW', -6], ['REVIEWING', -6], ['MATCHING_PROVIDERS', -4]),
+    managedBy: 'platform',
+    coordinatorId: SITA.id,
+    coordinatorName: SITA.name,
+    styles: { decoration: ['Newari', 'Traditional'] },
+    notes: 'Pasni at home in the courtyard with lunch for about 150. Hajurba’s purohit does the puja; we need photos, catering, a small decor setup and a cake for the cousins.',
+    inspiration: ['ideaCeremonyHands'],
+    events: [
+      ev(e1040.nwaran, 'NWARAN', day(-149), 'Home, Suryamadhi', 'Bhaktapur', 30, { status: 'done' }),
+      ev(e1040.pasni, 'PASNI', day(35), 'Home courtyard, Suryamadhi', 'Bhaktapur', 150),
+    ],
+    requirements: [
+      req('rq_1040_pandit', 'pandit', [e1040.pasni], 'OPEN', { budgetMax: 15_000 }),
+      req('rq_1040_photo', 'photography', [e1040.pasni], 'MATCHING', { budgetMin: 20_000, budgetMax: 35_000, styles: ['Candid'] }),
+      req('rq_1040_catering', 'catering', [e1040.pasni], 'MATCHING', { budgetMin: 700, budgetMax: 1_000 }),
+      req('rq_1040_decor', 'decoration', [e1040.pasni], 'OPEN', { budgetMax: 60_000, styles: ['Newari', 'Traditional'] }),
+      req('rq_1040_cake', 'cake', [e1040.pasni], 'OPEN', { budgetMax: 8_000 }),
+    ],
+    bookings: [],
+    tasks: markTasks(generateTasks(day(35), ['pandit', 'photography', 'catering', 'decoration', 'cake'], 'Sarita Duwal', SITA.name), 2),
+    milestones: [],
+    createdAt: at(-6),
+  });
+  return [pasni, brata, nikita, sneha, aarohi];
 }
 
 // Quotes that stand alone (vendor quotes, negotiations)

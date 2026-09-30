@@ -659,11 +659,13 @@
     "couple.rooms",
     "couple.savings",
     "couple.shots",
+    "couple.surprise",
     "couple.weather",
     "couple.whatif"
   ],
   "customer:baby_shower": [
     "couple.contacts",
+    "couple.games",
     "couple.gifts",
     "couple.kit",
     "couple.meetings",
@@ -681,6 +683,7 @@
     "couple.contacts",
     "couple.duties",
     "couple.gifts",
+    "couple.keepsakes",
     "couple.kit",
     "couple.meetings",
     "couple.menu",
@@ -717,6 +720,7 @@
   ],
   "customer:birthday": [
     "couple.contacts",
+    "couple.games",
     "couple.gifts",
     "couple.kit",
     "couple.meetings",
@@ -748,9 +752,11 @@
   "customer:other": [
     "couple.contacts",
     "couple.duties",
+    "couple.games",
     "couple.gifts",
     "couple.honeymoon",
     "couple.janti",
+    "couple.keepsakes",
     "couple.kit",
     "couple.meetings",
     "couple.menu",
@@ -763,6 +769,7 @@
     "couple.samagri",
     "couple.savings",
     "couple.shots",
+    "couple.surprise",
     "couple.tips",
     "couple.weather",
     "couple.whatif"

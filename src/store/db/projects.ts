@@ -4,6 +4,7 @@
  */
 import { contractSections } from '@/data/seed';
 import { EVENT_TYPE_BY_ID } from '@/data/events';
+import { findOccasion, occasionForEventType } from '@/data/occasions';
 import { findProvider } from '@/data/providers';
 import { crewPlanFor, findService, serviceName } from '@/data/services';
 import { rankFreelancers, rankProviders, type RankedProvider, toCandidate } from '@/services/matching';
@@ -174,9 +175,14 @@ export const projectActions = (set: SetDb, get: GetDb): ProjectActions => ({
     const settings = get().settings;
     const coordinator = settings.autoAssignCoordinator ? useSession.getState().accounts.find((a) => a.role === 'platform' && a.staffRole === 'coordinator') : undefined;
     const code = `WP-${1000 + get().projects.length + 31}`;
-    const title = input.partnerName
-      ? `${customer.name.split(' ')[0]} & ${input.partnerName.split(' ')[0]}`
-      : `${customer.name.split(' ')[0]}'s ${EVENT_TYPE_BY_ID[main?.type ?? 'WEDDING'].label.replace(/ \(.*\)$/, '')}`;
+    // The occasion comes from the input, else from the main function (weddings stay weddings).
+    const occasion = findOccasion(input.occasion, get().occasions) ?? occasionForEventType(main?.type ?? 'WEDDING', get().occasions);
+    const isWedding = occasion.id === 'wedding';
+    const title =
+      input.title?.trim().slice(0, 60) ||
+      (input.partnerName
+        ? `${customer.name.split(' ')[0]} & ${input.partnerName.split(' ')[0]}`
+        : `${customer.name.split(' ')[0]}'s ${EVENT_TYPE_BY_ID[main?.type ?? 'WEDDING'].label.replace(/ \(.*\)$/, '')}`);
     const project: Project = {
       id: uid('prj'),
       code,
@@ -186,6 +192,8 @@ export const projectActions = (set: SetDb, get: GetDb): ProjectActions => ({
       customerPhone: customer.phone,
       partnerName: input.partnerName,
       eventType: main?.type ?? 'WEDDING',
+      occasion: occasion.id,
+      honourees: input.honourees,
       city: input.city,
       area: input.area,
       venueSelected: input.venueSelected,
@@ -211,7 +219,7 @@ export const projectActions = (set: SetDb, get: GetDb): ProjectActions => ({
       milestones: [],
       incidents: [],
       collaborators: input.partnerName ? [{ id: uid('col'), name: input.partnerName, relation: 'Partner', permission: 'editor', inviteCode: shortCode() }] : [],
-      driveFolder: `Wedding Projects/${code}-${title.replace(/\W+/g, '-')}`,
+      driveFolder: `${isWedding ? 'Wedding' : 'Celebration'} Projects/${code}-${title.replace(/\W+/g, '-')}`,
       createdAt: now(),
       updatedAt: now(),
     };
@@ -219,18 +227,18 @@ export const projectActions = (set: SetDb, get: GetDb): ProjectActions => ({
     get().openThread({
       kind: 'project',
       projectId: project.id,
-      title: `${project.title} · Wedding team`,
+      title: `${project.title} · ${isWedding ? 'Wedding' : 'Planning'} team`,
       members: [{ id: customer.id, name: customer.name, role: 'customer' }, ...(coordinator ? [{ id: coordinator.id, name: coordinator.name, role: 'platform' as const }] : [])],
     });
     if (coordinator) {
       const thread = get().threads.find((t) => t.projectId === project.id && t.kind === 'project');
       if (thread)
-        get().sendMessage(thread.id, { id: coordinator.id, name: coordinator.name, role: 'platform' }, `Namaste ${customer.name.split(' ')[0]}! I'm ${coordinator.name.split(' ')[0]}, your wedding coordinator. I've received your requirements for ${project.requirements.length} services and I'm shortlisting the best providers now. I'll call you within 2 hours 🙏`, 'text', undefined, { silent: true });
-      get().notify(coordinator.id, `New wedding lead ${code}`, `${customer.name} · ${input.city} · ${input.guests} guests · ${requirements.length} services`, `/platform/project/${project.id}`, 'lead');
+        get().sendMessage(thread.id, { id: coordinator.id, name: coordinator.name, role: 'platform' }, `Namaste ${customer.name.split(' ')[0]}! I'm ${coordinator.name.split(' ')[0]}, your ${occasion.vocab.noun} coordinator. I've received your requirements for ${project.requirements.length} services and I'm shortlisting the best providers now. I'll call you within 2 hours 🙏`, 'text', undefined, { silent: true });
+      get().notify(coordinator.id, `New ${isWedding ? 'wedding' : occasion.label.toLowerCase()} lead ${code}`, `${customer.name} · ${input.city} · ${input.guests} guests · ${requirements.length} services`, `/platform/project/${project.id}`, 'lead');
     }
-    get().notify('platform', `New wedding lead ${code}`, `${customer.name} · ${input.city} · ${requirements.length} services`, `/platform/project/${project.id}`, 'lead');
+    get().notify('platform', `New ${isWedding ? 'wedding' : occasion.label.toLowerCase()} lead ${code}`, `${customer.name} · ${input.city} · ${requirements.length} services`, `/platform/project/${project.id}`, 'lead');
     get().notify(customer.id, 'Requirement received', coordinator ? `${coordinator.name} is your coordinator and will reach out shortly.` : 'A coordinator will be assigned within the hour.', '/my-wedding', 'system');
-    get().log({ id: customer.id, name: customer.name }, 'project.submit', 'project', project.id, `${requirements.length} services`);
+    get().log({ id: customer.id, name: customer.name }, 'project.submit', 'project', project.id, `${occasion.label} · ${requirements.length} services`);
     return project;
   },
 

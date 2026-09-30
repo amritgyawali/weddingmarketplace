@@ -190,6 +190,20 @@ export const EVENT_TYPES: EventTypeDef[] = [
     runSheet: [['22:00', 'After-party', 'DJ']],
   },
   {
+    id: 'NWARAN',
+    label: 'Nwaran (Naming ceremony)',
+    icon: 'happy',
+    start: '09:00',
+    guestShare: 0.5,
+    wedding: false,
+    suggestedServices: ['pandit', 'catering', 'photography'],
+    runSheet: [
+      ['09:00', 'Purification puja', 'Pandit'],
+      ['10:00', 'Naming and the baby’s first sun', 'Family'],
+      ['11:00', 'Blessings and lunch', 'Catering'],
+    ],
+  },
+  {
     id: 'PASNI',
     label: 'Pasni (Rice Feeding)',
     icon: 'happy',

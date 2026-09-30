@@ -14,7 +14,9 @@ import { photos } from '@/constants/images';
 import { colors } from '@/constants/theme';
 import { bsMonthLabel } from '@/data/events';
 import { findService, serviceName } from '@/data/services';
+import { occasionOf } from '@/services/experience';
 import { planningProgress } from '@/services/planner';
+import { useDb } from '@/store/useDb';
 import { paymentSummary } from '@/services/pricing';
 import type { Project, ProjectEvent, RequirementStatus } from '@/types/platform';
 import { daysUntil, formatLongDate, formatMoney, formatMoneyCompact, formatShortDate, fromISODate, pluralize } from '@/utils/format';
@@ -120,6 +122,8 @@ function Stat({ label, value, tone, last }: { label: string; value: string; tone
 
 /** Countdown, overall progress and the four numbers couples check most. */
 export function CountdownCard({ project, onSetDate }: { project: Project; onSetDate: () => void }) {
+  const occasions = useDb((s) => s.occasions);
+  const occasion = occasionOf(project, occasions);
   const main = mainEvent(project);
   const progress = planningProgress(project);
   const days = main?.date ? daysUntil(main.date) : null;
@@ -132,7 +136,7 @@ export function CountdownCard({ project, onSetDate }: { project: Project; onSetD
           {days === null ? (
             <>
               <Text size={12} color={colors.textMuted}>
-                Wedding date
+                {occasion.id === 'wedding' ? 'Wedding date' : `${main ? main.name : occasion.label} date`}
               </Text>
               <Text serif size={26} weight="bold" lineHeight={36} color={colors.heading}>
                 Not fixed yet
@@ -146,7 +150,7 @@ export function CountdownCard({ project, onSetDate }: { project: Project; onSetD
           ) : (
             <>
               <Text size={12} color={colors.textMuted}>
-                {days > 0 ? (days === 1 ? 'Day to go' : 'Days to go') : days === 0 ? 'The big day' : 'Days since the wedding'}
+                {days > 0 ? (days === 1 ? 'Day to go' : 'Days to go') : days === 0 ? 'The big day' : `Days since the ${occasion.id === 'wedding' ? 'wedding' : occasion.vocab.noun}`}
               </Text>
               <Text serif size={44} weight="bold" lineHeight={54} color={colors.heading}>
                 {days === 0 ? 'Today' : Math.abs(days)}

@@ -133,7 +133,7 @@ export const BUILT_IN_OCCASIONS: OccasionDef[] = [
     label: 'Newborn ceremony',
     blurb: 'Nwaran and pasni for the little one',
     icon: 'happy-outline',
-    eventTypes: ['PASNI', 'RELIGIOUS_CEREMONY'],
+    eventTypes: ['PASNI', 'NWARAN', 'RELIGIOUS_CEREMONY'],
     honourees: 'baby',
     defaultServices: ['pandit', 'photography', 'catering', 'decoration', 'cake'],
     services: ['pandit', 'venue', 'catering', 'cake', 'photography', 'videography', 'decoration', 'tent-stage', 'sound', 'invitation', 'gifts'],
