@@ -1,7 +1,12 @@
 import { Tabs } from 'expo-router';
 
 import { RoleTabBar, type RoleTab, type SidebarLink } from '@/components/navigation/RoleTabBar';
+import { toolHref, useVisibleTools } from '@/components/toolkit/hub';
+import { VENDOR_TOOLS } from '@/components/toolkit/vendor';
+import { VENDOR_LINK_RULES } from '@/data/access';
+import { useExperience } from '@/hooks/useExperience';
 import { useLayout } from '@/hooks/useLayout';
+import { allows } from '@/services/experience';
 import { useVendorWorkspace } from '@/hooks/useWorkspace';
 import { useUnreadMessageCount } from '@/store/useDb';
 import { useAccount } from '@/store/useSession';
@@ -12,6 +17,11 @@ export default function BusinessTabs() {
   const account = useAccount();
   const { leads, requests, payables } = useVendorWorkspace(account);
   const unread = useUnreadMessageCount(account);
+  const exp = useExperience();
+  const tools = useVisibleTools(VENDOR_TOOLS);
+  /** Trade tools get their own heading in the sidebar ("Catering: Menu, Tastings"). */
+  const GENERAL = ['Couples and enquiries', 'Sales and pricing', 'Money', 'Operations'];
+  const tradeLinks: SidebarLink[] = tools.filter((x) => !GENERAL.includes(x.group)).map((x) => ({ label: x.title, icon: x.icon, href: toolHref('vendor', x.id), section: x.group }));
 
   const tabs: RoleTab[] = [
     { name: 'index', label: 'Home', icon: 'grid-outline', activeIcon: 'grid' },
@@ -32,7 +42,9 @@ export default function BusinessTabs() {
     { label: 'Reviews', icon: 'star-outline', href: '/business/reviews' },
     { label: 'Team', icon: 'people-outline', href: '/business/team' },
     { label: 'Customers', icon: 'person-circle-outline', href: '/business/customers' },
-  ];
+    { label: 'Your services', icon: 'options-outline', href: '/business/services' },
+  ].filter((l) => allows(exp, VENDOR_LINK_RULES[String(l.href)])) as SidebarLink[];
+  links.push(...tradeLinks);
 
   return (
     <Tabs

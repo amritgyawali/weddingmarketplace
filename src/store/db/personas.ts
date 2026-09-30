@@ -1,19 +1,32 @@
 /** Personas: the occasion catalogue a super admin manages, and permission checks for store actions. */
 import { PLANNER_MODULES, type PlannerModule } from '@/data/capabilities';
+import { categoryForService } from '@/data/categories';
 import { EVENT_TYPE_BY_ID } from '@/data/events';
 import { occasionIdFor, PROTECTED_OCCASIONS, type OccasionDef } from '@/data/occasions';
 import type { Permission } from '@/data/permissions';
 import { SERVICE_BY_ID } from '@/data/services';
+import { BUSINESS_FORMS, type BusinessForm } from '@/data/trades';
 import { can, experienceFor } from '@/services/experience';
 import { useSession } from '@/store/useSession';
-import type { EventType } from '@/types/platform';
+import type { Account, EventType } from '@/types/platform';
 
 import { currentActor, type GetDb, now, type SetDb } from './helpers';
 
 /** Everything an admin can set on an occasion (id, built-in flag and timestamps are managed here). */
 export type OccasionInput = Omit<OccasionDef, 'id' | 'builtIn' | 'updatedAt' | 'order'> & { order?: number };
 
+/** What a vendor confirms in onboarding or Business → Your services. */
+export interface ProviderPersonaInput {
+  services: string[];
+  primaryService: string;
+  businessForm: BusinessForm;
+  teamSize?: number;
+  tradeProfile?: Account['tradeProfile'];
+}
+
 export interface PersonaActions {
+  /** Saves a vendor's services (primary + add-ons), business form and trade essentials. Returns an error to show, or null. */
+  setProviderPersona: (accountId: string, input: ProviderPersonaInput) => string | null;
   /** Adds an occasion (super admin). Returns the new occasion, or an error to show. */
   addOccasion: (input: OccasionInput) => { occasion?: OccasionDef; error?: string };
   /** Edits an occasion (super admin). Returns an error to show, or null. */
@@ -64,6 +77,31 @@ function cleanOccasion(input: OccasionInput): { value?: OccasionInput; error?: s
 }
 
 export const personaActions = (set: SetDb, get: GetDb): PersonaActions => ({
+  setProviderPersona: (accountId, input) => {
+    const session = useSession.getState();
+    const account = session.accounts.find((a) => a.id === accountId);
+    if (!account || account.role !== 'vendor') return 'This business account no longer exists';
+    const actorId = session.session?.accountId;
+    if (actorId !== accountId && !actorCan('provider.verify', get)) return 'You can only change your own services';
+    const services = [...new Set(input.services)].filter((id) => !!SERVICE_BY_ID[id]);
+    if (!services.length) return 'Pick at least one service';
+    if (!services.includes(input.primaryService)) return 'Your main service must be one of the services you offer';
+    if (!BUSINESS_FORMS.some((f) => f.id === input.businessForm)) return 'Pick how your business is set up';
+    const teamSize = input.teamSize === undefined ? undefined : Math.max(0, Math.round(input.teamSize));
+    if (teamSize !== undefined && !Number.isFinite(teamSize)) return 'Team size must be a number';
+    session.updateAccount(accountId, {
+      services: [input.primaryService, ...services.filter((s) => s !== input.primaryService)],
+      primaryService: input.primaryService,
+      businessForm: input.businessForm,
+      teamSize,
+      tradeProfile: input.tradeProfile ? { ...account.tradeProfile, ...input.tradeProfile } : account.tradeProfile,
+      categoryId: categoryForService(input.primaryService),
+      personaConfirmedAt: now(),
+    });
+    get().log(currentActor(), 'persona.update', 'account', accountId, `${input.primaryService} + ${services.length - 1} more · ${input.businessForm}`);
+    return null;
+  },
+
   addOccasion: (input) => {
     if (!actorCan('occasion.manage', get)) return { error: 'Only a super admin can add occasions' };
     const { value, error } = cleanOccasion(input);

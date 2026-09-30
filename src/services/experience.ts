@@ -14,7 +14,7 @@ import { permissionsFor, type Permission } from '@/data/permissions';
 import { findProvider } from '@/data/providers';
 import { SERVICE_BY_ID, SERVICES } from '@/data/services';
 import { CORE_CAPABILITIES, FORM_CAPABILITIES, SERVICE_CAPABILITIES, SERVICES_BY_CREW_ROLE, tradeOf, type BusinessForm, type TradeId } from '@/data/trades';
-import { toolRole, toolRule } from '@/data/access';
+import { type SetupStepDef, toolRole, toolRule, VENDOR_SETUP_STEPS } from '@/data/access';
 import type { Account, Equipment, Project } from '@/types/platform';
 import type { Experience, PersonaInput, RateModel, Vocabulary, When } from '@/types/persona';
 
@@ -210,3 +210,36 @@ export function allows(exp: Experience, when: When | undefined): boolean {
 
 /** Can this experience open a tool (right role app and the tool's rule passes)? */
 export const allowsTool = (exp: Experience, toolId: string) => toolRole(toolId) === exp.role && allows(exp, toolRule(toolId));
+
+/** Tools this persona sees: the ones its rules allow, plus any the owner already has records in. */
+export const visibleTools = <T extends { id: string }>(exp: Experience, tools: T[], used: ReadonlySet<string> = new Set()) => tools.filter((t) => allowsTool(exp, t.id) || used.has(t.id));
+
+/** A tool's title in this persona's words (site visits are "Tastings" for caterers, "Fittings" for fashion). */
+export const toolTitle = (exp: Experience, tool: { id: string; title: string }) => (tool.id === 'vendor.visits' ? exp.vocab.meetings : tool.title);
+
+/** What the vendor home's setup checklist needs to know. */
+export interface SetupFacts {
+  confirmed: boolean;
+  toolCounts: Record<string, number>;
+  portfolio: number;
+  packages: number;
+  verificationStarted: boolean;
+}
+
+/** The setup steps for this persona, with whether each is done. */
+export function setupSteps(exp: Experience, facts: SetupFacts): { step: SetupStepDef; done: boolean }[] {
+  return VENDOR_SETUP_STEPS.filter((step) => allows(exp, step.when)).map((step) => {
+    const target = step.target ?? 1;
+    const done =
+      step.id === 'services'
+        ? facts.confirmed
+        : step.id === 'portfolio'
+          ? facts.portfolio >= target
+          : step.id === 'packages'
+            ? facts.packages >= target
+            : step.id === 'verify'
+              ? facts.verificationStarted
+              : (facts.toolCounts[step.tool ?? ''] ?? 0) >= target;
+    return { step, done };
+  });
+}

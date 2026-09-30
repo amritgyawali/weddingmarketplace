@@ -55,6 +55,20 @@ export const TOOL_RULES = {
   'vendor.inventory': { capsAny: ['decor.rental_inventory', 'av.gear', 'media.camera', 'music.gear', 'space.halls'] },
   'vendor.suppliers': { capsAny: ['decor.suppliers', 'food.menu', 'space.halls'] },
   'vendor.halls': { capsAny: ['space.halls'] },
+  // Trade tools (P1)
+  'vendor.menu': { capsAny: ['food.menu', 'space.in_house_catering'] },
+  'vendor.tastings': { capsAny: ['food.tastings'] },
+  'vendor.themes': { capsAny: ['decor.themes'] },
+  'vendor.rentals': { capsAny: ['decor.rental_inventory'] },
+  'vendor.setup': { capsAny: ['decor.setup_teardown', 'av.gear'] },
+  'vendor.gallery': { capsAny: ['media.gallery', 'media.deliverables'] },
+  'vendor.shotlists': { capsAny: ['media.shot_list'] },
+  'vendor.trials': { capsAny: ['beauty.trials', 'beauty.looks'] },
+  'vendor.requests': { capsAny: ['music.requests'] },
+  'vendor.power': { capsAny: ['av.power_load'] },
+  'vendor.fleet': { capsAny: ['logistics.fleet'] },
+  'vendor.fittings': { capsAny: ['fashion.fittings'] },
+  'vendor.muhurta': { capsAny: ['rituals.muhurta', 'rituals.samagri'] },
 
   // ─── Freelancer (P2 switches the filtering on) ────────────────────────────
   'freelancer.week': ALL,
@@ -110,6 +124,40 @@ export const toolRole = (id: string): UserRole | undefined => TOOL_ROLE_PREFIX[i
 
 /** A tool's rule; unknown ids get a rule nobody passes. */
 export const toolRule = (id: string): When => (id in TOOL_RULES ? TOOL_RULES[id as ToolId] : { roles: [] });
+
+/** Vendor sidebar links and business-hub rows that not every business gets, keyed by route. */
+export const VENDOR_LINK_RULES: Record<string, When> = {
+  '/business/gigs': { capsAny: ['team.hire_crew'] },
+  '/business/team': { forms: ['venue', 'studio'] },
+};
+
+/** A step on the vendor home's setup checklist, shown until it is done. */
+export interface SetupStepDef {
+  id: string;
+  title: string;
+  subtitle: string;
+  when: When;
+  /** A tool whose entries complete the step, or a route to open. */
+  tool?: ToolId;
+  href?: string;
+  /** How many entries (or portfolio items / packages) complete it. */
+  target?: number;
+}
+
+export const VENDOR_SETUP_STEPS: SetupStepDef[] = [
+  { id: 'services', title: 'Confirm your services', subtitle: 'So we show you the right tools and send the right leads', when: {}, href: '/business/services' },
+  { id: 'halls', title: 'Add your halls', subtitle: 'Seated and floating capacity for each space', when: { capsAny: ['space.halls'] }, tool: 'vendor.halls', target: 1 },
+  { id: 'menu', title: 'Publish your menu', subtitle: 'Dishes and per-plate prices couples can compare', when: { capsAny: ['food.menu'] }, tool: 'vendor.menu', target: 5 },
+  { id: 'themes', title: 'Add your decor themes', subtitle: 'Price bands and what each theme includes', when: { capsAny: ['decor.themes'] }, tool: 'vendor.themes', target: 2 },
+  { id: 'looks', title: 'Build your looks book', subtitle: 'The bridal and party looks you offer', when: { capsAny: ['beauty.looks'] }, tool: 'vendor.trials', target: 2 },
+  { id: 'fleet', title: 'List your vehicles', subtitle: 'Seats, drivers and papers for each vehicle', when: { capsAny: ['logistics.fleet'] }, tool: 'vendor.fleet', target: 1 },
+  { id: 'gear', title: 'List your gear', subtitle: 'Sound, lights and power you bring', when: { capsAny: ['music.gear', 'av.gear'], not: { capsAny: ['decor.rental_inventory', 'media.camera', 'space.halls'] } }, tool: 'vendor.inventory', target: 3 },
+  { id: 'fittings', title: 'Set up fittings', subtitle: 'Measurements and alteration dates per client', when: { capsAny: ['fashion.fittings'] }, tool: 'vendor.fittings', target: 1 },
+  { id: 'muhurta', title: 'Add your ceremonies', subtitle: 'Muhurta slots and samagri lists', when: { capsAny: ['rituals.muhurta'] }, tool: 'vendor.muhurta', target: 1 },
+  { id: 'portfolio', title: 'Upload three portfolio albums', subtitle: 'Couples book what they can see', when: { capsAny: ['core.portfolio'] }, href: '/business/portfolio', target: 3 },
+  { id: 'packages', title: 'Create a package', subtitle: 'Basic, premium and luxury tiers compare best', when: {}, href: '/business/packages', target: 1 },
+  { id: 'verify', title: 'Get verified', subtitle: 'Submit PAN/VAT and ID for the Verified badge', when: {}, href: '/business/verification' },
+];
 
 /** Tool ids that are universal for their role on purpose (the registry check lists them). */
 export const UNIVERSAL_TOOLS = (Object.keys(TOOL_RULES) as ToolId[]).filter((id) => Object.keys(TOOL_RULES[id]).length === 0);

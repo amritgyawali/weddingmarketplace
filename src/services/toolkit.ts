@@ -362,3 +362,19 @@ export function netFlow(ins: { week: string; amount: number }[], outs: { week: s
 
 /** Simple percent change, or null when there is no base. */
 export const change = (current: number, previous: number) => (previous > 0 ? (current - previous) / previous : null);
+
+// ─── Power ──────────────────────────────────────────────────────────────────
+
+/** Standard diesel generator sizes hired in Nepal (kVA). */
+export const GENERATOR_SIZES = [5, 7.5, 10, 15, 20, 25, 30, 40, 50, 62.5, 75, 100, 125, 160, 200, 250];
+
+/**
+ * Generator for a connected load: kW at a 0.8 power factor, plus 25% headroom
+ * for start-up surges, rounded up to a size you can actually hire.
+ */
+export function generatorFor(watts: number) {
+  const kw = Math.max(0, watts) / 1000;
+  const kva = (kw / 0.8) * 1.25;
+  const size = GENERATOR_SIZES.find((s) => s >= kva) ?? Math.ceil(kva / 50) * 50;
+  return { kw: Math.round(kw * 10) / 10, kva: Math.round(kva * 10) / 10, size, amps: Math.round((watts / 230) * 10) / 10 };
+}

@@ -1,7 +1,8 @@
-import { ToolHub } from '@/components/toolkit/hub';
+import { ToolHub, useVisibleTools } from '@/components/toolkit/hub';
 import { VENDOR_TOOLS } from '@/components/toolkit/vendor';
 
-/** Extra business tools for vendors. */
+/** Business tools, picked for the services this vendor offers. */
 export default function BusinessTools() {
-  return <ToolHub role="vendor" tools={VENDOR_TOOLS} title="Business tools" subtitle="20 tools to run the business" />;
+  const tools = useVisibleTools(VENDOR_TOOLS);
+  return <ToolHub role="vendor" tools={tools} title="Business tools" subtitle={`${tools.length} tools for your business`} />;
 }

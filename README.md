@@ -67,7 +67,8 @@ Sign in with any Nepali mobile number (`98XXXXXXXX`); the OTP is **1234**. Each 
 |---|---|---|
 | Couple | Aakriti Shrestha (9800000001) | My Wedding WP-1021: quote v1 → v2, payments, guests, seating, website `/w/aakriti-weds-sujan` |
 | Vendor | Rajesh Pradhan, Everest Grand Party Palace (9800000002) | Leads → quote → booking → crew & payables |
-| Vendor | Anil Gurung, Wedding Story Nepal (9800000005) | Photography studio with packages, portfolio, gigs |
+| Vendor | Anil Gurung, Wedding Story Nepal (9800000005) | Photography studio with packages, portfolio, gigs, gallery delivery |
+| Vendor | Sunita Maharjan, Phoolbari Decor (9800000007) | Decor studio: themes, rentals, setup sheets and the setup checklist |
 | Freelancer | Raj Maharjan (9800000003) | Assignments, emergency gig in Pokhara, earnings |
 | Platform | Sita Karki, coordinator (9800000004) | Today → WP-1017 wedding live today with an emergency replacement |
 | Platform | Bikram Adhikari, super admin (9800000006) | Approvals, finance, users, audit, occasions (More → Occasions). New staff use access code `VIVAH2026`. |

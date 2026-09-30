@@ -16,6 +16,7 @@ const entry = ({ ago = 3, ...e }: Seed): ToolEntry => ({ ...e, createdAt: at(-ag
 const COUPLE = 'prj_1021';
 const VENDOR = 'acc_vendor_demo';
 const CREW = 'acc_freelancer_demo';
+const DECOR = 'acc_vendor_decor';
 const OPS = 'platform';
 
 export function buildToolkitSeed(): { toolEntries: ToolEntry[]; toolState: Record<string, ToolState>; broadcasts: Broadcast[] } {
@@ -51,6 +52,15 @@ export function buildToolkitSeed(): { toolEntries: ToolEntry[]; toolState: Recor
     { id: 'te_v_fu2', ownerId: VENDOR, tool: 'vendor.followups', title: 'Call about parking for 150 cars', refId: 'ld_bipana', date: day(-1), ago: 3 },
     { id: 'te_v_hall1', ownerId: VENDOR, tool: 'vendor.halls', title: 'Everest main hall', amount: 150_000, fields: { area: 6500, indoor: true }, note: 'Stage, AC, bridal room', ago: 60 },
     { id: 'te_v_hall2', ownerId: VENDOR, tool: 'vendor.halls', title: 'Garden lawn', amount: 90_000, fields: { area: 9000, indoor: false }, note: 'Mandap spot with Himalayan view', ago: 60 },
+
+    // Decor vendor (Phoolbari Decor): themes, rentals, a setup sheet and a design meeting.
+    { id: 'te_d_theme1', ownerId: DECOR, tool: 'vendor.themes', title: 'Marigold and brass', group: 'Traditional', amount: 85_000, fields: { priceTo: 180_000, includes: 'Marigold mandap with brass kalash\nEntrance toran\nStage backdrop\n30 table centrepieces', leadDays: 3 }, ago: 50 },
+    { id: 'te_d_theme2', ownerId: DECOR, tool: 'vendor.themes', title: 'Newari courtyard', group: 'Newari', amount: 120_000, fields: { priceTo: 240_000, includes: 'Carved-window backdrop\nPala diyo lighting\nRice-straw mats and dhaka drapes', leadDays: 5 }, ago: 45 },
+    { id: 'te_d_theme3', ownerId: DECOR, tool: 'vendor.themes', title: 'Pastel reception stage', group: 'Pastel', amount: 95_000, fields: { priceTo: 160_000, includes: 'Rose and hydrangea wall\nLED fairy canopy\nCouple sofa', leadDays: 2 }, ago: 30 },
+    { id: 'te_d_rent1', ownerId: DECOR, tool: 'vendor.rentals', title: 'Brass diyo stands', qty: 24, date: day(12), status: 'reserved', fields: { returnBy: day(13) }, ago: 5 },
+    { id: 'te_d_rent2', ownerId: DECOR, tool: 'vendor.rentals', title: 'Marigold garland frames', qty: 10, date: day(-3), status: 'out', fields: { returnBy: day(-1) }, note: 'Chased the venue twice', ago: 8 },
+    { id: 'te_d_setup1', ownerId: DECOR, tool: 'vendor.setup', title: 'Wedding mandap, Patan Durbar courtyard', date: day(12), time: '05:30', qty: 6, fields: { ready: '09:00', teardown: '20:00', vehicle: 'Tata 407, Ba 2 Kha 1182' }, ago: 4 },
+    { id: 'te_d_visit1', ownerId: DECOR, tool: 'vendor.visits', title: 'Rojina Shakya', refId: 'ld_decor_1', date: day(3), time: '15:00', status: 'scheduled', fields: { host: 'Sunita' }, ago: 0 },
 
     // Freelancer (Raj Maharjan): expenses, gear care, invoices, deliveries, certificates, network.
     { id: 'te_f_exp1', ownerId: CREW, tool: 'freelancer.expenses', title: 'Bike fuel to Bhaktapur', group: 'Travel and fuel', amount: 600, date: day(-6), fields: { km: 36 }, ago: 6 },

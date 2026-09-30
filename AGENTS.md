@@ -42,7 +42,7 @@ These product decisions are fixed. Do not reverse them without the owner's say-s
 | Role (`UserRole`) | App | Routes | Theme |
 |---|---|---|---|
 | `customer`, the couple | Marketplace + **My Wedding** planning tools | `src/app/(tabs)/…` and root screens (`my-wedding`, `plan`, `guests`, `seating`, `budget`, `website`, `invitations`, `registry`, `boards`, `compare`, `deals`, `contracts`, `calendar`, `checklist`, `quote/[id]` …) | sindoor crimson |
-| `vendor`: venues and businesses | Vivah for Business: leads CRM, quote builder, bookings, crew, calendar, packages, portfolio, finance, analytics, promotions, reviews, team, verification | `src/app/business/…` | pine green |
+| `vendor`: venues and businesses | Vivah for Business: leads CRM, quote builder, bookings, crew, calendar, packages, portfolio, finance, analytics, promotions, reviews, team, verification, plus trade tools picked by the business's services (§6a) | `src/app/business/…` | pine green |
 | `freelancer`: photographers, makeup artists, crew | Gig marketplace: gigs, invites, emergency gigs, assignments, GPS check-in/out, calendar and weekly rules, earnings, profile | `src/app/freelancer/…` | slate blue |
 | `platform`: staff (coordinator, admin, support, finance) | Operations console: today view, leads kanban, 12-tab project console, matching, quote builder, control room, emergency replacement, approvals, finance, users, providers, freelancers, analytics, marketplace, audit | `src/app/platform/…` | graphite |
 
@@ -65,7 +65,7 @@ Public pages need no sign-in: `/w/[slug]` (the couple's wedding website and regi
 
 **Routing.** Routing is **Expo Router**, with a `Stack.Protected` guard per role in `src/app/_layout.tsx`. A role must never be able to reach another role's app. Signed out, users go to `welcome/`. A couple that hasn't onboarded goes to `onboarding/` (one screen, five questions: who, date, city, guests, budget, then a review card). "Build our plan" there calls `submitPlan` with sensible defaults (Wedding + Reception, the six core services); "Just browse" only saves the answers to `useAppStore` (`guests`, `budget`), which prefill the full 8-step plan wizard later.
 
-**Demo sign-in.** Use any `98XXXXXXXX` number with OTP **1234**, or tap "Continue as …" on each login screen. New platform staff need the access code `VIVAH2026`.
+**Demo sign-in.** Use any `98XXXXXXXX` number with OTP **1234**, or tap "Continue as …" on each login screen (one button per demo account of that role). New platform staff need the access code `VIVAH2026`.
 
 | Demo account | Phone | What it shows |
 |---|---|---|
@@ -75,6 +75,7 @@ Public pages need no sign-in: `/w/[slug]` (the couple's wedding website and regi
 | Sita Karki, platform coordinator | 9800000004 | Coordination console |
 | Anil Gurung, vendor (Wedding Story Nepal) | 9800000005 | Photo studio |
 | Bikram Adhikari, platform super admin | 9800000006 | Admin console, occasion catalogue |
+| Sunita Maharjan, vendor (Phoolbari Decor, Lalitpur) | 9800000007 | Decor studio: themes, rentals, setup sheets, setup checklist |
 
 ## 3. Architecture map
 
@@ -265,7 +266,13 @@ Rules:
 5. **Hide, don't disable, and never dead-end.** A deep link to a hidden tool shows an empty state that explains why and how to add the service.
 6. **Server-enforced.** Store actions check permissions themselves (`actorCan()` in `store/db/personas.ts`); SQL mirrors it with `has_permission()`/`has_capability()` in `0005_personas.sql`.
 7. **Occasions are editable data.** Only `occasion.manage` (super admin) may add, edit or delete them (`addOccasion`/`updateOccasion`/`removeOccasion`, audited). `wedding` and `other` are fallbacks and can't be deleted or switched off; an occasion used by a project can't be deleted (switch it off instead).
-8. **Registry check.** `npm run check:personas` fails on unknown capabilities, permissions, occasions or services, a service without capabilities or trade, or a fixture persona with fewer than three tools, and compares every fixture's visible tools with `scripts/persona-matrix.json`. After an intended change run `npm run check:personas -- --update` and commit the new matrix.
+8. **Vendors (P1, live).** Sign-up asks the trade first (12 tiles), then the main service and add-ons from any trade, the business form and two or three trade essentials, then name, city, listing claim and PAN. Business → **Your services** (`/business/services`, `setProviderPersona`) edits the same later and records `personaConfirmedAt`. The business app then shows:
+   - tools filtered by `TOOL_RULES` through `useVisibleTools()` (tools the vendor already has records in stay visible); a deep link to a hidden tool explains which services unlock it;
+   - 13 trade tools in `components/toolkit/vendor/trades.tsx` (menu, tastings, themes, rentals, setup sheets, gallery delivery, couples' shot lists, trials and looks, song requests, power planner, fleet, fittings, muhurta), listed under a trade heading in the wide sidebar;
+   - "Hire crew" and "Team" only for venue and team businesses (`VENDOR_LINK_RULES`); "Site visits" renamed per trade (Tastings, Design meetings, Fittings…);
+   - a setup checklist on the home built from the trade (`VENDOR_SETUP_STEPS`), hidden when done;
+   - package editor limited to the vendor's services, with crew and delivery fields only where they apply.
+9. **Registry check.** `npm run check:personas` fails on unknown capabilities, permissions, occasions or services, a service without capabilities or trade, or a fixture persona with fewer than three tools, and compares every fixture's visible tools with `scripts/persona-matrix.json`. After an intended change run `npm run check:personas -- --update` and commit the new matrix.
 
 ## 7. Seed and demo contract (don't break the demo)
 
@@ -276,7 +283,7 @@ Rules:
 - WP-1017: live today, with the emergency replacement;
 - the other seeded projects cover every status;
 - the Everest Grand Party Palace venue and Wedding Story Nepal studio listings;
-- the demo accounts' persona fields (Everest: venue + catering, form venue; Wedding Story: five photo and film services, form studio; Raj: primary skill Photographer; Bikram: `super_admin`). `syncDemoAccounts()` in `useSession.ts` copies them onto older installs through the session `migrate`; bump the session `version` when you add a demo account or persona field.
+- the demo accounts' persona fields (Everest: venue + catering, form venue; Wedding Story: five photo and film services, form studio; Phoolbari Decor: decoration + florist + lighting, form studio, with the `phoolbari-decor-lalitpur` listing; Raj: primary skill Photographer; Bikram: `super_admin`). `syncDemoAccounts()` in `useSession.ts` copies them onto older installs through the session `migrate`; bump the session `version` when you add a demo account or persona field.
 
 Seed dates are **relative to today** (`day(n)`/`at(n)`); keep them relative.
 
