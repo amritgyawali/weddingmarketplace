@@ -326,10 +326,10 @@ export function PaymentsPanel({ project, mode }: { project: Project; mode: 'cust
             disabled={reason.trim().length < 5}
             onPress={() => {
               const p = payments.find((x) => x.id === refundFor);
-              if (p) requestRefund(p.id, p.amount - p.refunded, reason.trim());
+              const err = p ? requestRefund(p.id, p.amount - p.refunded, reason.trim()) : 'This payment no longer exists';
               setRefundFor(null);
               setReason('');
-              toast('Refund request sent', 'paper-plane');
+              toast(err ?? 'Refund request sent', err ? 'alert-circle' : 'paper-plane');
             }}
           />
         </View>

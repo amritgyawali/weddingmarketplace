@@ -1,33 +1,19 @@
 /**
- * Runs scripts/personaCheck.ts in plain Node (24+ strips TypeScript types) by
- * resolving the `@/…` alias and extensionless imports. Only pure modules
- * (data, services, types) may be reached from the check.
+ * Runs scripts/personaCheck.ts in plain Node (24+ strips TypeScript types)
+ * through ts-loader.mjs. Only pure modules (data, services, types) may be
+ * reached from the check.
  *
  *   npm run check:personas            compare against scripts/persona-matrix.json
  *   npm run check:personas -- --update rewrite the expected matrix
  */
-import { existsSync, readFileSync, statSync, writeFileSync } from 'node:fs';
-import { registerHooks } from 'node:module';
+import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
+import './ts-loader.mjs';
+
 const here = path.dirname(fileURLToPath(import.meta.url));
-const root = path.resolve(here, '..');
 const matrixFile = path.join(here, 'persona-matrix.json');
-
-const candidates = (base) => [base, `${base}.ts`, `${base}.tsx`, path.join(base, 'index.ts')];
-const isFile = (p) => existsSync(p) && statSync(p).isFile();
-
-registerHooks({
-  resolve(specifier, context, next) {
-    let base = null;
-    if (specifier.startsWith('file:')) base = fileURLToPath(specifier);
-    else if (specifier.startsWith('@/')) base = path.join(root, 'src', specifier.slice(2));
-    else if (/^\.\.?\//.test(specifier) && context.parentURL?.startsWith('file:')) base = path.resolve(path.dirname(fileURLToPath(context.parentURL)), specifier);
-    const found = base && candidates(base).find(isFile);
-    return found ? { url: pathToFileURL(found).href, format: /\.tsx?$/.test(found) ? 'module-typescript' : 'module', shortCircuit: true } : next(specifier, context);
-  },
-});
 
 const { runPersonaCheck } = await import(pathToFileURL(path.join(here, 'personaCheck.ts')).href);
 const { errors, notes, matrix } = runPersonaCheck();

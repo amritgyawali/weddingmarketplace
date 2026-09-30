@@ -17,7 +17,8 @@ export interface FinanceActions {
   releasePayable: (id: string, reference?: string) => string | null;
   holdPayable: (id: string, reason: string) => string | null;
   markPayableReady: (id: string) => void;
-  requestRefund: (paymentId: string, amount: number, reason: string) => void;
+  /** Open and processed refunds of a payment never exceed it. Returns an error to show, or null. */
+  requestRefund: (paymentId: string, amount: number, reason: string) => string | null;
   /** Finance and admins only (`refund.approve`). Returns an error to show, or null. */
   decideRefund: (id: string, approve: boolean) => string | null;
   raiseDispute: (input: Omit<Dispute, 'id' | 'at' | 'status' | 'log' | 'paymentFrozen'> & { freeze?: boolean }) => Dispute;
@@ -115,10 +116,17 @@ export const financeActions = (set: SetDb, get: GetDb): FinanceActions => ({
 
   requestRefund: (paymentId, amount, reason) => {
     const payment = get().payments.find((p) => p.id === paymentId);
-    if (!payment) return;
-    const refund: Refund = { id: uid('rf'), paymentId, projectId: payment.projectId, amount, reason, status: 'REQUESTED', requestedBy: currentActor().name, at: now() };
+    if (!payment) return 'This payment no longer exists';
+    const value = Math.round(amount);
+    if (!(value > 0)) return 'Enter an amount above zero';
+    if (!reason.trim()) return 'Give a reason for the refund';
+    // Mirrors cap_refunds() in 0010: requests still open count too, so the same money can't be asked for twice.
+    const taken = get().refunds.filter((r) => r.paymentId === paymentId && r.status !== 'REJECTED').reduce((s, r) => s + r.amount, 0);
+    if (taken + value > payment.amount) return `Refunds would exceed the payment: ${formatMoney(taken)} of ${formatMoney(payment.amount)} is already refunded or requested`;
+    const refund: Refund = { id: uid('rf'), paymentId, projectId: payment.projectId, amount: value, reason: reason.trim(), status: 'REQUESTED', requestedBy: currentActor().name, at: now() };
     set((s) => ({ refunds: [refund, ...s.refunds] }));
-    get().notify('platform', 'Refund requested', `${formatMoney(amount)} · ${reason}`, '/platform/finance?tab=refunds', 'payment');
+    get().notify('platform', 'Refund requested', `${formatMoney(value)} · ${reason.trim()}`, '/platform/finance?tab=refunds', 'payment');
+    return null;
   },
 
   decideRefund: (id, approve) => {

@@ -32,7 +32,7 @@ These product decisions are fixed. Do not reverse them without the owner's say-s
 | Places | Kathmandu valley (Kathmandu, Lalitpur, Bhaktapur, Kirtipur), Pokhara, Chitwan and other Nepal cities in `src/data/cities.ts`. |
 | Ceremonies | Nepali functions (Wedding, Reception, Mehendi, Haldi, Pasni, Bratabandha…), with Bikram Sambat months (Mangsir/Magh/Falgun/Baisakh are peak season). |
 | Payments | eSewa, Khalti, Fonepay QR, ConnectIPS, IME Pay, card, bank transfer, and cash (recorded by staff only). |
-| Backend | **An on-device mock backend** (zustand `useDb`, persisted to AsyncStorage) plus a **full Postgres/Supabase SQL schema** in `supabase/migrations/`. The SQL is **not deployed**. Never apply it to a Supabase project without asking the owner. |
+| Backend | **An on-device mock backend** (zustand `useDb`, persisted to AsyncStorage) plus a **full Postgres/Supabase SQL schema** in `supabase/migrations/`, with the core loop as RPCs (0011). `src/backend/` puts one interface in front of both (`backend()`, picked by `EXPO_PUBLIC_BACKEND`, default `mock`). The SQL is **not deployed**. Never apply it to a Supabase project without asking the owner; check it locally with `npm run db:check` / `db:test` / `test:parity` (an in-process Postgres, nothing leaves the machine). |
 | Runtime | **Everything must keep running in Expo Go (SDK 57).** Do not add libraries with custom native code; see §10. |
 | Admin console | The same Expo app, under the Platform role, is web-ready. Screens must also work as a wide dashboard via `npx expo start --web`. `useLayout()` switches to the sidebar layout at ≥ 960 px. There is no separate web project. |
 | Demo-ability | Every role has a one-tap demo account, and the seed tells a coherent story. Keep it working; see §7. |
@@ -113,8 +113,10 @@ src/
   theme/ constants/    role themes/fonts, colours, images, brand
   types/platform.ts    the domain model (mirrors the SQL schema). types/persona.ts = When/Experience. types/index.ts = catalogue/legacy types
   utils/               format (money/dates/phone), confirm, links, random
-supabase/migrations/   0001 core schema · 0002 RLS · 0003 matching, reliability, risk · 0004 toolkits · 0005 personas · 0006 freelancer crafts · 0007–0008 customer occasions · 0009 platform RBAC
-scripts/               check-personas.mjs + personaCheck.ts (registry check and persona matrix, §6a)
+supabase/migrations/   0001 core schema · 0002 RLS · 0003 matching, reliability, risk · 0004 toolkits · 0005 personas · 0006 freelancer crafts · 0007–0008 customer occasions · 0009 platform RBAC · 0010 SQL defect fixes · 0011 core-loop RPCs
+src/backend/           Backend interface for the core loop: mock (the store) and supabase (the RPCs), chosen by EXPO_PUBLIC_BACKEND
+scripts/               check-personas.mjs + personaCheck.ts (registry check and persona matrix, §6a); ts-loader.mjs (Node imports of pure app modules)
+scripts/db/            PGlite harness: db-check (migrations apply, RLS everywhere), core-loop (the loop as each role, RLS on), parity (app money = SQL money)
 docs/MASTER_PLAN.md    persona-driven experience and the zero-cost production stack (phases P0–P8)
 TEST_REPORT.md         last full test run + list of known defects (read before fixing bugs)
 ```
@@ -292,7 +294,8 @@ Rules:
    - weddings, leads, providers and freelancers lists have an occasion × trade × city segment filter (`services/segments.ts`, `SegmentFilter`);
    - operations tools are filtered by permission; **Reset demo data** is for admins and super admins (`demo.reset`): sign in as Bikram (9800000006) to reset;
    - `0009_platform_rbac.sql` swaps the role-name RLS checks for `has_permission()` and adds `can_manage_project()`.
-12. **Registry check.** `npm run check:personas` fails on unknown capabilities, permissions, occasions or services, a service without capabilities or trade, a crew role in no craft or in two, or a fixture persona with fewer than three tools, and compares every fixture's visible tools (and, for staff, console routes) with `scripts/persona-matrix.json`. After an intended change run `npm run check:personas -- --update` and commit the new matrix.
+12. **Backend (P5).** Money rules have two implementations that must agree: `src/services` (whole rupees, `roundMoney()` so binary floats don't drift) and the SQL helpers in 0011 (paisa, `vivah_rupees()`). Change both together and run `npm run test:parity`. New server-side use cases are RPCs (`rpc_*`, security definer, permission-checked, audited) listed in the header of 0011, with a check in `scripts/db/core-loop.mjs`; the internal `vivah_*` helpers stay closed to clients.
+13. **Registry check.** `npm run check:personas` fails on unknown capabilities, permissions, occasions or services, a service without capabilities or trade, a crew role in no craft or in two, or a fixture persona with fewer than three tools, and compares every fixture's visible tools (and, for staff, console routes) with `scripts/persona-matrix.json`. After an intended change run `npm run check:personas -- --update` and commit the new matrix.
 
 ## 7. Seed and demo contract (don't break the demo)
 
@@ -336,6 +339,9 @@ One design system for all four apps; only the accent colour changes per role (`s
 npx tsc --noEmit        # must be 0 errors (typed routes are generated by `npx expo start`)
 npx expo lint           # must be 0 errors / 0 warnings
 npm run check:personas  # registry check + persona matrix (Node 24+)
+npm run db:check        # when you touch SQL: every migration applies, RLS on every table
+npm run db:test         # the core loop against the SQL as each role, RLS on
+npm run test:parity     # money in src/services equals money in SQL
 npx expo-doctor         # no new failures
 npx expo start          # app loads in Expo Go; press w for web
 ```
@@ -376,25 +382,18 @@ The owner wants every piece of work on GitHub and reviewable as a pull request. 
 
 Fix these deliberately, with tests. Don't paper over them, and don't "fix" them as a side effect of an unrelated change.
 
-- **SQL, high:**
-  - `log_project_status()` and `block_calendar_for_assignment()` are not `security definer`. Under RLS, clients can't create projects, change status or let vendors assign freelancers.
-- **SQL, medium:**
-  - RLS lets couples update any column of their project and quote;
-  - collaborator permission (VIEWER) is not enforced;
-  - the quote freeze can be bypassed (un-send, delete, unfrozen VAT, notes and valid-until);
-  - there is no cap on refunds.
 - **App, medium:**
-  - repeat refund requests can refund a payment twice;
-  - `cancelBooking` doesn't reverse revenue or adjust milestones;
+  - `cancelBooking` on-device doesn't reverse revenue or adjust milestones (the SQL `rpc_cancel_booking` reverses the fee; milestones still need a decision on what the couple owes);
   - accommodation and security estimates and budgets use the guest count (`estimateFor`, `perUnitBudget`);
-  - freelancers can be double-booked on-device;
-  - the project code `WP-${1000 + projects.length + 31}` can collide with seeded codes.
+  - freelancers can be double-booked on-device (SQL prevents it with an exclusion constraint).
 - **App, low:**
   - seed data for WP-1051 disagrees (quote, milestones and booking);
   - the quote preview hides send errors;
   - store actions trust the UI for validation (overpay, RSVP headcount, negative gifts, duplicate slugs).
 
 When you fix one, remove it from this list and from `TEST_REPORT.md`.
+
+Fixed in P5 (30 Sep 2026), each with a check in `npm run db:test`: the non-definer trigger functions, couples rewriting project and quote columns, VIEWER collaborators writing, the quote-freeze bypasses, uncapped refunds (SQL and on-device), and colliding project codes. `0005_personas.sql` also failed to apply (a duplicate `team_size` column); `npm run db:check` now catches that class of error.
 
 ---
 

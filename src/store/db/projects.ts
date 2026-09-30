@@ -177,7 +177,8 @@ export const projectActions = (set: SetDb, get: GetDb): ProjectActions => ({
     const weddingDate = main?.date ?? addDays(today(), 120);
     const settings = get().settings;
     const coordinator = settings.autoAssignCoordinator ? useSession.getState().accounts.find((a) => a.role === 'platform' && a.staffRole === 'coordinator') : undefined;
-    const code = `WP-${1000 + get().projects.length + 31}`;
+    // The next free WP number after every existing one (counting projects could reuse a seeded code, §10).
+    const code = `WP-${Math.max(1000, ...get().projects.map((p) => Number(p.code.replace(/\D/g, '')) || 0)) + 1}`;
     // The occasion comes from the input, else from the main function (weddings stay weddings).
     const occasion = findOccasion(input.occasion, get().occasions) ?? occasionForEventType(main?.type ?? 'WEDDING', get().occasions);
     const isWedding = occasion.id === 'wedding';
