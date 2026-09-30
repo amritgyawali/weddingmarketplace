@@ -3,11 +3,13 @@ import { useState } from 'react';
 import { ActivityIndicator, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import QRCode from 'react-native-qrcode-svg';
 
+import { checkOnlinePayment, isOnlineGateway, onlinePaymentsReady, PAYMENT_STATE_TEXT, type PaymentState, SANDBOX_HINT, startOnlinePayment } from '@/backend/payments';
 import { Card, KButton, KField, ProgressBar, StatusPill } from '@/components/kit';
 import { triggerHaptic } from '@/components/ui/PressableScale';
 import { Sheet } from '@/components/ui/Sheet';
 import { Text } from '@/components/ui/Text';
 import { toast } from '@/components/ui/Toast';
+import { ENV } from '@/constants/env';
 import { receiptHtml } from '@/services/documents';
 import { sharePdf } from '@/services/exporters';
 import { milestoneStatus, paymentSummary } from '@/services/pricing';
@@ -28,13 +30,19 @@ export const PAYMENT_METHODS: { id: PaymentMethod; label: string; sub: string; c
   { id: 'cash', label: 'Cash (at office)', sub: 'Recorded by your coordinator', color: '#16A34A', icon: 'cash', staffOnly: true },
 ];
 
-/** Simulated Nepali payment gateways (eSewa, Khalti, Fonepay QR, ConnectIPS…). */
+/**
+ * Paying a milestone. The demo simulates the Nepali gateways (eSewa, Khalti,
+ * Fonepay QR, ConnectIPS…). With `online` (Supabase builds, couples) Khalti and
+ * eSewa are real: the gateway opens, and the payment counts only once
+ * payment-verify has confirmed it with the gateway (master plan §7.5).
+ */
 export function PaymentSheet({
   visible,
   title,
   amount,
   allowPartial,
   staff,
+  online,
   onClose,
   onPay,
 }: {
@@ -43,24 +51,65 @@ export function PaymentSheet({
   amount: number;
   allowPartial?: boolean;
   staff?: boolean;
+  /** Real Khalti and eSewa payments for this milestone. */
+  online?: { milestoneId: string };
   onClose: () => void;
   onPay: (method: PaymentMethod, amount: number) => void;
 }) {
   const t = useRoleTheme();
   const [method, setMethod] = useState<PaymentMethod | null>(null);
-  const [step, setStep] = useState<'choose' | 'confirm' | 'processing' | 'done'>('choose');
+  const [step, setStep] = useState<'choose' | 'confirm' | 'processing' | 'gateway' | 'done'>('choose');
   const [custom, setCustom] = useState('');
+  const [intent, setIntent] = useState<string | null>(null);
+  const [gatewayState, setGatewayState] = useState<PaymentState | null>(null);
+  const [receipt, setReceipt] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
   const payAmount = allowPartial && Number(custom) > 0 ? Math.min(amount, Number(custom)) : amount;
   const m = PAYMENT_METHODS.find((x) => x.id === method);
+  const methods = online ? PAYMENT_METHODS.filter((x) => isOnlineGateway(x.id)) : PAYMENT_METHODS.filter((x) => staff || !x.staffOnly);
 
   const close = () => {
     setStep('choose');
     setMethod(null);
     setCustom('');
+    setIntent(null);
+    setGatewayState(null);
+    setReceipt(null);
+    setError(null);
     onClose();
   };
 
+  const checkGateway = async () => {
+    if (!intent) return;
+    setError(null);
+    setStep('processing');
+    const out = await checkOnlinePayment(intent);
+    if (!out.ok) {
+      setError(out.error);
+      return setStep('gateway');
+    }
+    setGatewayState(out.value.status);
+    if (out.value.status === 'completed') {
+      setReceipt(out.value.receiptNo);
+      triggerHaptic('success');
+      return setStep('done');
+    }
+    setStep('gateway');
+  };
+
   const pay = async () => {
+    setError(null);
+    if (online && method && isOnlineGateway(method)) {
+      setStep('processing');
+      const started = await startOnlinePayment(online.milestoneId, method, payAmount < amount ? payAmount : undefined);
+      if (!started.ok) {
+        setError(started.error);
+        return setStep('confirm');
+      }
+      setIntent(started.value.intent);
+      setGatewayState(null);
+      return setStep('gateway');
+    }
     setStep('processing');
     await new Promise((r) => setTimeout(r, 1300));
     onPay(method!, payAmount);
@@ -82,7 +131,7 @@ export function PaymentSheet({
               </Text>
             </View>
             {allowPartial && <KField label="Pay a different amount (optional)" value={custom} onChangeText={(v) => setCustom(v.replace(/\D/g, ''))} keyboardType="number-pad" prefix="NPR" placeholder={String(amount)} />}
-            {PAYMENT_METHODS.filter((x) => staff || !x.staffOnly).map((x) => (
+            {methods.map((x) => (
               <Pressable
                 key={x.id}
                 onPress={() => {
@@ -106,6 +155,11 @@ export function PaymentSheet({
                 <Ionicons name="chevron-forward" size={18} color={t.c.subtle} />
               </Pressable>
             ))}
+            {online && (
+              <Text size={12} color={t.c.muted}>
+                Fonepay, ConnectIPS and cards are coming soon. For a bank transfer, ask your coordinator.
+              </Text>
+            )}
             <View style={styles.secure}>
               <Ionicons name="shield-checkmark" size={14} color={t.c.success} />
               <Text size={12} color={t.c.muted}>
@@ -142,9 +196,24 @@ export function PaymentSheet({
                 </Text>
               </Card>
             )}
-            {(method === 'esewa' || method === 'khalti' || method === 'ime_pay') && <KField label={`${m.label} ID / mobile`} placeholder="98XXXXXXXX" keyboardType="phone-pad" />}
+            {online && isOnlineGateway(m.id) && (
+              <Text size={13} color={t.c.muted}>
+                {m.label} opens to take the payment. Come back here when you’ve paid.
+                {ENV.paymentMode === 'sandbox' ? ` ${SANDBOX_HINT[m.id]}` : ''}
+              </Text>
+            )}
+            {error && (
+              <Text size={13} color={t.c.danger}>
+                {error}
+              </Text>
+            )}
+            {!online && (method === 'esewa' || method === 'khalti' || method === 'ime_pay') && <KField label={`${m.label} ID / mobile`} placeholder="98XXXXXXXX" keyboardType="phone-pad" />}
             {method === 'card' && <KField label="Card number" placeholder="4111 1111 1111 1111" keyboardType="number-pad" />}
-            <KButton label={method === 'bank_transfer' || method === 'fonepay' || method === 'cash' ? 'I’ve paid — confirm' : `Pay ${formatMoney(payAmount)}`} icon="lock-closed" onPress={pay} />
+            <KButton
+              label={online ? `Continue to ${m.label}` : method === 'bank_transfer' || method === 'fonepay' || method === 'cash' ? 'I’ve paid — confirm' : `Pay ${formatMoney(payAmount)}`}
+              icon={online ? 'open-outline' : 'lock-closed'}
+              onPress={pay}
+            />
             <KButton label="Choose another method" variant="ghost" size="sm" onPress={() => setStep('choose')} />
           </>
         )}
@@ -156,6 +225,24 @@ export function PaymentSheet({
             </Text>
           </View>
         )}
+        {step === 'gateway' && m && (
+          <View style={{ gap: 12, paddingVertical: 8 }}>
+            <Text size={16} weight="semibold" color={t.c.textStrong}>
+              {gatewayState ? PAYMENT_STATE_TEXT[gatewayState].title : `Finish paying in ${m.label}`}
+            </Text>
+            <Text size={13} color={t.c.muted}>
+              {gatewayState ? PAYMENT_STATE_TEXT[gatewayState].body : `When ${m.label} is done you’ll come back here. If you don’t, check the payment below; you won’t be charged twice.`}
+            </Text>
+            {error && (
+              <Text size={13} color={t.c.danger}>
+                {error}
+              </Text>
+            )}
+            <KButton label="Check payment" icon="refresh" onPress={checkGateway} />
+            {(gatewayState === 'failed' || gatewayState === 'cancelled' || gatewayState === 'expired') && <KButton label="Try again" variant="secondary" onPress={() => setStep('confirm')} />}
+            <KButton label="Close" variant="ghost" size="sm" onPress={close} />
+          </View>
+        )}
         {step === 'done' && (
           <View style={{ alignItems: 'center', gap: 10, paddingVertical: 16 }}>
             <Ionicons name="checkmark-circle" size={64} color={t.c.success} />
@@ -163,7 +250,7 @@ export function PaymentSheet({
               {formatMoney(payAmount)}
             </Text>
             <Text size={14} color={t.c.muted} align="center">
-              Paid via {m?.label}. Your receipt is saved under Files → Invoices.
+              {online ? `Paid via ${m?.label}. Receipt ${receipt ?? ''} is in your payments and your email.` : `Paid via ${m?.label}. Your receipt is saved under Files → Invoices.`}
             </Text>
             <KButton label="Done" onPress={close} style={{ alignSelf: 'stretch' }} />
           </View>
@@ -309,6 +396,7 @@ export function PaymentsPanel({ project, mode }: { project: Project; mode: 'cust
         amount={paying ? paying.amount - paying.paidAmount : 0}
         allowPartial
         staff={mode === 'platform'}
+        online={mode === 'customer' && onlinePaymentsReady() && paying ? { milestoneId: paying.id } : undefined}
         onClose={() => setPaying(null)}
         onPay={(method, amount) => {
           if (paying) payMilestone(project.id, paying.id, amount, method, mode === 'customer' ? account.name : project.customerName);

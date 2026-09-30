@@ -38,3 +38,12 @@ verify_jwt = true
 # Called by the database with a shared secret, not a user JWT.
 [functions.notify-fanout]
 verify_jwt = false
+
+# Starts a Khalti or eSewa payment for the signed-in couple (P7).
+[functions.payment-initiate]
+verify_jwt = true
+
+# Khalti and eSewa send the browser back here without a session; the app's
+# "check again" sends its JWT and the function checks ownership itself.
+[functions.payment-verify]
+verify_jwt = false

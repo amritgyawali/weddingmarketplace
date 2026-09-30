@@ -113,8 +113,8 @@ src/
   theme/ constants/    role themes/fonts, colours, images, brand
   types/platform.ts    the domain model (mirrors the SQL schema). types/persona.ts = When/Experience. types/index.ts = catalogue/legacy types
   utils/               format (money/dates/phone), confirm, links, random
-supabase/migrations/   0001 core schema · 0002 RLS · 0003 matching, reliability, risk · 0004 toolkits · 0005 personas · 0006 freelancer crafts · 0007–0008 customer occasions · 0009 platform RBAC · 0010 SQL defect fixes · 0011 core-loop RPCs · 0012 auth, media, notifications · 0013 scheduled jobs
-supabase/functions/    Edge Functions (Deno, no dependencies): send-otp, media-sign, notify-fanout; pure logic in _shared/ (tested in Node by npm run test:functions)
+supabase/migrations/   0001 core schema · 0002 RLS · 0003 matching, reliability, risk · 0004 toolkits · 0005 personas · 0006 freelancer crafts · 0007–0008 customer occasions · 0009 platform RBAC · 0010 SQL defect fixes · 0011 core-loop RPCs · 0012 auth, media, notifications · 0013 scheduled jobs · 0014 gateway payments
+supabase/functions/    Edge Functions (Deno, no dependencies): send-otp, media-sign, notify-fanout, payment-initiate, payment-verify; pure logic in _shared/ (tested in Node by npm run test:functions)
 docs/SETUP_SUPABASE.md putting the app on a Supabase staging project, step by step
 src/backend/           Backend interface for the core loop: mock (the store) and supabase (the RPCs), chosen by EXPO_PUBLIC_BACKEND
 scripts/               check-personas.mjs + personaCheck.ts (registry check and persona matrix, §6a); ts-loader.mjs (Node imports of pure app modules)
@@ -302,6 +302,7 @@ Rules:
    - **Private files:** KYC, contracts and invoices go to the private `documents` bucket under `<user id>/…` (`src/backend/files.ts`), read through five-minute signed links.
    - **Notifications:** a new `notifications` row calls `notify-fanout` (pg_net + Vault), which sends Expo push and Resend email by the user's preferences; muted kinds send nothing, `emergency` always rings. Remote push needs a development or store build (`src/backend/push.ts` skips Expo Go).
    - **Jobs:** `0013_jobs.sql` (milestone status, payable readiness, lead SLA, payment reminders, cleanup), scheduled by pg_cron.
+13a. **Gateway payments (P7).** Khalti and eSewa money is recorded **only** by `payment-verify` after the gateway's own lookup (Khalti `/epayment/lookup`, eSewa status API), never from a redirect's query or the app. `payment-initiate` calls `rpc_begin_payment` as the couple, which works out the amount from the milestone and makes a `payment_intents` row; `rpc_settle_payment` (service role only) locks the intent, so duplicate callbacks, refreshes and "check again" record one payment. Money a milestone can no longer take becomes `REFUND_DUE` and finance is told. In the app, `src/backend/payments.ts` opens the gateway and `/pay/result` checks the attempt again on return; the demo (`mock`) keeps its simulated gateways in `PaymentSheet`. Tests: `scripts/db/payments.mjs` (in `npm run db:test`) and the payment checks in `npm run test:functions`. Setup: `docs/SETUP_SUPABASE.md` §6.
 14. **Registry check.** `npm run check:personas` fails on unknown capabilities, permissions, occasions or services, a service without capabilities or trade, a crew role in no craft or in two, or a fixture persona with fewer than three tools, and compares every fixture's visible tools (and, for staff, console routes) with `scripts/persona-matrix.json`. After an intended change run `npm run check:personas -- --update` and commit the new matrix.
 
 ## 7. Seed and demo contract (don't break the demo)

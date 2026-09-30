@@ -57,4 +57,6 @@ export const LIMITS = {
   otpPerEmail: { limit: 3, windowSeconds: 600 },
   otpPerIp: { limit: 10, windowSeconds: 600 },
   uploadsPerUser: { limit: 60, windowSeconds: 3600 },
+  paymentsPerUser: { limit: 20, windowSeconds: 3600 },
+  paymentChecksPerIp: { limit: 120, windowSeconds: 600 },
 } satisfies Record<string, Limit>;
