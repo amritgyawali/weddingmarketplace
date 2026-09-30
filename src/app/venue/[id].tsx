@@ -8,7 +8,6 @@ import { VenueMiniCard } from '@/components/listing/MiniCards';
 import { useStartConversation } from '@/components/listing/VenueCard';
 import { Button } from '@/components/ui/Button';
 import { EmptyState, ErrorState } from '@/components/ui/EmptyState';
-import { CrownRibbon } from '@/components/ui/Icons';
 import { Rating } from '@/components/ui/Rating';
 import { ScreenHeader } from '@/components/ui/ScreenHeader';
 import { Skeleton } from '@/components/ui/Skeleton';
@@ -59,11 +58,6 @@ export default function VenueDetailScreen() {
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 30 }}>
         <View>
           <ImageCarousel images={venue.images} width={width} height={width * 0.8} dotsBottom={16} />
-          {venue.featured && (
-            <View style={styles.crown}>
-              <CrownRibbon size={30} />
-            </View>
-          )}
           <View style={styles.photoCount}>
             <Ionicons name="images-outline" size={14} color={colors.white} />
             <Text size={12} weight="semibold" color={colors.white}>
@@ -80,7 +74,7 @@ export default function VenueDetailScreen() {
             </Text>
             <Rating value={venue.rating} count={venue.reviewCount} />
           </View>
-          <Text size={24} weight="bold" color={colors.heading} lineHeight={30} style={{ marginTop: 6 }}>
+          <Text serif size={24} weight="bold" color={colors.heading} lineHeight={34} style={{ marginTop: 4 }}>
             {venue.name}
           </Text>
           <View style={styles.tags}>
@@ -112,7 +106,6 @@ export default function VenueDetailScreen() {
               label="Call"
               variant="outline"
               icon="call-outline"
-              color={colors.call}
               onPress={() => Linking.openURL(`tel:${venue.phone.replace(/\s/g, '')}`)}
               style={{ flex: 1 }}
             />
@@ -136,7 +129,7 @@ export default function VenueDetailScreen() {
           {venue.spaces.map((s) => (
             <View key={s.name} style={styles.space}>
               <View style={styles.spaceIcon}>
-                <Ionicons name={s.type === 'Indoor' ? 'home-outline' : 'sunny-outline'} size={18} color={colors.primary} />
+                <Ionicons name={s.type === 'Indoor' ? 'home-outline' : 'sunny-outline'} size={18} color={colors.textMuted} />
               </View>
               <View style={{ flex: 1 }}>
                 <Text size={15} weight="semibold" color={colors.heading}>
@@ -203,7 +196,6 @@ export default function VenueDetailScreen() {
 
 const styles = StyleSheet.create({
   root: { flex: 1, backgroundColor: colors.white },
-  crown: { position: 'absolute', top: 0, left: GUTTER + 50 },
   photoCount: {
     position: 'absolute',
     right: 14,
@@ -211,12 +203,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 5,
-    backgroundColor: 'rgba(0,0,0,0.55)',
-    borderRadius: radius.pill,
+    backgroundColor: 'rgba(20,16,12,0.6)',
+    borderRadius: radius.xs,
     paddingHorizontal: 10,
     paddingVertical: 5,
   },
-  head: { paddingHorizontal: GUTTER, paddingTop: 16, paddingBottom: 20, borderBottomWidth: 8, borderBottomColor: '#F4F4F5' },
+  head: { paddingHorizontal: GUTTER, paddingTop: 16, paddingBottom: 20, borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: colors.border },
   rowBetween: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
   tags: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginTop: 12 },
   tag: {
@@ -224,7 +216,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 5,
     backgroundColor: colors.bgMuted,
-    borderRadius: radius.pill,
+    borderRadius: radius.sm,
     paddingHorizontal: 10,
     paddingVertical: 5,
   },
@@ -235,11 +227,12 @@ const styles = StyleSheet.create({
     width: 38,
     height: 38,
     borderRadius: 19,
-    backgroundColor: colors.primarySoft,
+    borderWidth: 1,
+    borderColor: colors.border,
     alignItems: 'center',
     justifyContent: 'center',
   },
   amenities: { flexDirection: 'row', flexWrap: 'wrap', rowGap: 12 },
   amenity: { width: '50%', flexDirection: 'row', alignItems: 'center', gap: 8, paddingRight: 8 },
-  policies: { marginTop: 16, padding: 14, borderRadius: radius.md, backgroundColor: colors.bgSoft, gap: 4 },
+  policies: { marginTop: 16, padding: 14, borderRadius: radius.md, borderWidth: 1, borderColor: colors.border, gap: 4 },
 });

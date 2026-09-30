@@ -133,7 +133,7 @@ const styles = StyleSheet.create({
     gap: 10,
     height: 50,
     borderRadius: radius.md,
-    borderWidth: 1.2,
+    borderWidth: 1,
     borderColor: colors.border,
     paddingHorizontal: 14,
   },

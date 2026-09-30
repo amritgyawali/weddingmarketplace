@@ -38,12 +38,12 @@ export function BookingCard({ project, booking, mode, onPress }: { project: Proj
   return (
     <Card onPress={onPress} style={{ gap: 10 }} accessibilityLabel={`${serviceName(booking.serviceId)} by ${booking.providerName}`}>
       <View style={styles.row}>
-        <View style={[styles.icon, { backgroundColor: t.c.soft }]}>
+        <View style={[styles.icon, { borderWidth: 1, borderColor: t.c.border }]}>
           <Ionicons name={(def?.icon ?? 'briefcase-outline') as never} size={20} color={t.c.primary} />
         </View>
         <View style={{ flex: 1 }}>
-          <Text size={12} weight="bold" color={t.c.primary}>
-            {serviceName(booking.serviceId).toUpperCase()}
+          <Text size={12} weight="medium" color={t.c.muted}>
+            {serviceName(booking.serviceId)}
           </Text>
           <Text size={15} weight="bold" color={t.c.textStrong} numberOfLines={1}>
             {mode === 'vendor' ? project.title : booking.providerName}
@@ -108,8 +108,7 @@ function Money({ label, value, muted, tone }: { label: string; value: number; mu
   );
 }
 
-// ── Crew ─────────────────────────────────────────────────────────────────
-
+// Crew
 function AssignmentRow({ project, booking, a, mode }: { project: Project; booking: ServiceBooking; a: Assignment; mode: WorkMode }) {
   const t = useRoleTheme();
   const setStatus = useDb((s) => s.setAssignmentStatus);
@@ -369,8 +368,7 @@ export function CrewPanel({ project, booking, mode }: { project: Project; bookin
   );
 }
 
-// ── Deliverables ─────────────────────────────────────────────────────────
-
+// Deliverables
 function DeliverableRow({ project, booking, d, mode }: { project: Project; booking: ServiceBooking; d: Deliverable; mode: WorkMode }) {
   const t = useRoleTheme();
   const update = useDb((s) => s.updateDeliverable);
@@ -519,11 +517,11 @@ export function DeliverablesPanel({ project, booking, mode }: { project: Project
 const styles = StyleSheet.create({
   row: { flexDirection: 'row', alignItems: 'center', gap: 10 },
   rowBetween: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 10 },
-  icon: { width: 40, height: 40, borderRadius: 12, alignItems: 'center', justifyContent: 'center' },
+  icon: { width: 40, height: 40, borderRadius: 8, alignItems: 'center', justifyContent: 'center' },
   moneyRow: { flexDirection: 'row', gap: 10 },
-  assignment: { borderWidth: 1, borderRadius: 12, padding: 10, gap: 8 },
+  assignment: { borderWidth: 1, borderRadius: 8, padding: 10, gap: 8 },
   actionsRow: { flexDirection: 'row', gap: 8, alignItems: 'center' },
-  pick: { flexDirection: 'row', alignItems: 'center', gap: 10, borderWidth: 1, borderRadius: 12, padding: 10 },
-  deliverable: { borderWidth: 1, borderRadius: 12, padding: 12, gap: 8 },
+  pick: { flexDirection: 'row', alignItems: 'center', gap: 10, borderWidth: 1, borderRadius: 8, padding: 10 },
+  deliverable: { borderWidth: 1, borderRadius: 8, padding: 12, gap: 8 },
   inline: { flexDirection: 'row', alignItems: 'center', gap: 5 },
 });

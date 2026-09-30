@@ -47,8 +47,7 @@ const shift = (iso: string, days: number) => {
 };
 const today = () => toISODate(new Date());
 
-// ── Estimates & budget ───────────────────────────────────────────────────
-
+// Estimates & budget
 /** Typical total cost range for a service in NPR. */
 export function estimateRange(serviceId: string, guests: number, events = 1): [number, number] {
   const def = findService(serviceId);
@@ -112,8 +111,7 @@ export function perUnitBudget(serviceId: string, total: number, guests: number, 
   return [Math.round(unit * 0.75), unit];
 }
 
-// ── Project generation ───────────────────────────────────────────────────
-
+// Project generation
 export function runSheetFor(type: EventType): RunItem[] {
   return (EVENT_TYPE_BY_ID[type]?.runSheet ?? []).map(([time, title, owner], i) => ({ id: uid(`ri${i}`), time, title, owner, status: 'pending' }));
 }
@@ -261,8 +259,7 @@ export function buildTimeline(project: Project, opts: { internal?: boolean } = {
   return out.sort((a, b) => a.date.localeCompare(b.date));
 }
 
-// ── Guidance ─────────────────────────────────────────────────────────────
-
+// Guidance
 export interface NextAction {
   title: string;
   body: string;
@@ -314,8 +311,7 @@ export function savingTips(project: Project): string[] {
   return tips;
 }
 
-// ── Text generation ──────────────────────────────────────────────────────
-
+// Text generation
 export function invitationText(project: Project, tone: 'traditional' | 'modern' | 'nepali' = 'traditional'): string {
   const names = project.partnerName ? `${project.customerName.split(' ')[0]} & ${project.partnerName.split(' ')[0]}` : project.title;
   const main = project.events.find((e) => e.type === project.eventType) ?? project.events[0];

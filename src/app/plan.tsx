@@ -14,7 +14,7 @@ import { Text } from '@/components/ui/Text';
 import { photos, type PhotoKey } from '@/constants/images';
 import { colors } from '@/constants/theme';
 import { CITIES, ONBOARDING_CITIES } from '@/data/cities';
-import { EVENT_TYPE_BY_ID, EVENT_TYPES, GUEST_BANDS, bsMonthLabel, isPeakSeason } from '@/data/events';
+import { EVENT_TYPE_BY_ID, EVENT_TYPES, GUEST_BANDS, bandFor, bsMonthLabel, isPeakSeason } from '@/data/events';
 import { IDEA_PHOTOS } from '@/data/ideas';
 import { SERVICE_GROUPS, SERVICES, findService } from '@/data/services';
 import { allocateBudget, estimateTotal, perUnitBudget, type PlanInput } from '@/services/planner';
@@ -59,6 +59,9 @@ export default function PlanWizard() {
   const submitPlan = useDb((s) => s.submitPlan);
   const appCity = useAppStore((s) => s.city);
   const appDate = useAppStore((s) => s.weddingDate);
+  const appGuests = useAppStore((s) => s.guests);
+  const appBudget = useAppStore((s) => s.budget);
+  const appPartner = useAppStore((s) => s.profile.partnerName);
   const [step, setStep] = useState(0);
   const [eventTypes, setEventTypes] = useState<EventType[]>(['WEDDING']);
   const [city, setCity] = useState(CITIES.some((c) => c.name === appCity) && appCity !== 'All Nepal' ? appCity : account.city || 'Kathmandu');
@@ -67,15 +70,15 @@ export default function PlanWizard() {
   const [venue, setVenue] = useState('');
   const [dates, setDates] = useState<Partial<Record<EventType, string | null>>>({ WEDDING: appDate });
   const [dateFor, setDateFor] = useState<EventType>('WEDDING');
-  const [band, setBand] = useState<(typeof GUEST_BANDS)[number]['id']>('300-500');
+  const [band, setBand] = useState<(typeof GUEST_BANDS)[number]['id']>(appGuests ? bandFor(appGuests) : '300-500');
   const [exactGuests, setExactGuests] = useState('');
   const [services, setServices] = useState<string[]>(['venue', 'catering', 'photography', 'videography', 'decoration']);
   const [budgetMode, setBudgetMode] = useState<PlanInput['budgetMode']>('overall');
-  const [budget, setBudget] = useState('');
+  const [budget, setBudget] = useState(appBudget ? String(appBudget) : '');
   const [serviceBudgets, setServiceBudgets] = useState<Record<string, [number, number]>>({});
   const [styles_, setStyles] = useState<Record<string, string[]>>({});
   const [notes, setNotes] = useState('');
-  const [partner, setPartner] = useState('');
+  const [partner, setPartner] = useState(appPartner);
   const [inspiration, setInspiration] = useState<PhotoKey[]>([]);
   const [submitting, setSubmitting] = useState(false);
 
@@ -135,8 +138,8 @@ export default function PlanWizard() {
             {EVENT_TYPES.filter((e) => e.wedding).map((e) => (
               <OptionCard key={e.id} label={e.label} icon={e.icon} selected={eventTypes.includes(e.id)} onPress={() => toggleEvent(e.id)} />
             ))}
-            <Text size={13} weight="bold" color={colors.textMuted} style={{ marginTop: 8 }}>
-              OTHER CELEBRATIONS
+            <Text size={13} weight="medium" color={colors.textMuted} style={{ marginTop: 8 }}>
+              Other celebrations
             </Text>
             {EVENT_TYPES.filter((e) => !e.wedding).map((e) => (
               <OptionCard key={e.id} label={e.label} icon={e.icon} selected={eventTypes.includes(e.id)} onPress={() => toggleEvent(e.id)} />
@@ -197,8 +200,8 @@ export default function PlanWizard() {
             </Text>
             {SERVICE_GROUPS.map((g) => (
               <View key={g.id} style={{ gap: 8 }}>
-                <Text size={13} weight="bold" color={colors.textMuted}>
-                  {g.title.toUpperCase()}
+                <Text size={13} weight="medium" color={colors.textMuted}>
+                  {g.title}
                 </Text>
                 <View style={styles.serviceGrid}>
                   {SERVICES.filter((s) => s.group === g.id).map((s) => {
@@ -229,10 +232,10 @@ export default function PlanWizard() {
               What’s your budget?
             </Text>
             <View style={styles.estimate}>
-              <Text size={12} weight="bold" color={colors.primary}>
-                TYPICAL IN {city.toUpperCase()} FOR {guests} GUESTS
+              <Text size={12} weight="medium" color={colors.textMuted}>
+                Typical in {city} for {guests} guests
               </Text>
-              <Text size={20} weight="extrabold" color={colors.heading}>
+              <Text size={20} weight="bold" color={colors.heading}>
                 {formatMoneyRange(estLo, estHi)}
               </Text>
               <Text size={12} color={colors.textMuted}>
@@ -387,13 +390,13 @@ const styles = StyleSheet.create({
   root: { flex: 1, backgroundColor: colors.white },
   progress: { flexDirection: 'row', gap: 4, paddingHorizontal: 20, paddingVertical: 10 },
   progressSeg: { flex: 1, height: 4, borderRadius: 2 },
-  option: { flexDirection: 'row', alignItems: 'center', gap: 12, borderWidth: 1.5, borderRadius: 14, padding: 14 },
+  option: { flexDirection: 'row', alignItems: 'center', gap: 12, borderWidth: 1, borderRadius: 8, padding: 14 },
   serviceGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
-  serviceTile: { width: '31%', borderWidth: 1.5, borderRadius: 14, padding: 10, alignItems: 'center', gap: 6, minHeight: 84, justifyContent: 'center' },
-  estimate: { backgroundColor: colors.primaryTint, borderRadius: 14, padding: 14, gap: 2 },
+  serviceTile: { width: '31%', borderWidth: 1, borderRadius: 8, padding: 10, alignItems: 'center', gap: 6, minHeight: 84, justifyContent: 'center' },
+  estimate: { backgroundColor: colors.primaryTint, borderRadius: 8, padding: 14, gap: 2 },
   allocRow: { flexDirection: 'row', alignItems: 'center', gap: 8 },
-  inspo: { width: 92, height: 120, borderRadius: 12, borderWidth: 3 },
+  inspo: { width: 92, height: 120, borderRadius: 8, borderWidth: 3 },
   inspoCheck: { position: 'absolute', top: 6, right: 6 },
-  summary: { backgroundColor: colors.bgMuted, borderRadius: 12, padding: 12, gap: 4 },
+  summary: { backgroundColor: colors.bgMuted, borderRadius: 8, padding: 12, gap: 4 },
   footer: { position: 'absolute', left: 0, right: 0, bottom: 0, flexDirection: 'row', gap: 10, padding: 14, backgroundColor: colors.white, borderTopWidth: StyleSheet.hairlineWidth, borderTopColor: colors.hairline },
 });

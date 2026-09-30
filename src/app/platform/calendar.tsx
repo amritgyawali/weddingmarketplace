@@ -54,7 +54,7 @@ export default function OpsCalendar() {
               const ok = b && ['CONFIRMED', 'IN_PROGRESS', 'COMPLETED'].includes(b.status);
               return (
                 <Text key={r.id} size={12} color={ok ? t.c.success : b ? t.c.warning : t.c.danger}>
-                  {serviceName(r.serviceId)}: {ok ? `Confirmed · ${b!.providerName}` : b ? `Pending · ${b.providerName}` : 'Missing ⚠'}
+                  {serviceName(r.serviceId)}: {ok ? `Confirmed · ${b!.providerName}` : b ? `Pending · ${b.providerName}` : 'Missing'}
                 </Text>
               );
             })}

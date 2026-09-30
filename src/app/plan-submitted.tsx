@@ -1,43 +1,48 @@
 import { Ionicons } from '@expo/vector-icons';
-import { LinearGradient } from 'expo-linear-gradient';
 import { router, useLocalSearchParams } from 'expo-router';
 import { ScrollView, StyleSheet, View } from 'react-native';
-import Animated, { FadeInDown, ZoomIn } from 'react-native-reanimated';
+import Animated, { FadeIn, FadeInDown } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { Avatar, Card, KButton } from '@/components/kit';
+import { Avatar, Card, EmptyBlock, KButton } from '@/components/kit';
 import { Text } from '@/components/ui/Text';
-import { colors, gradients } from '@/constants/theme';
+import { colors } from '@/constants/theme';
 import { serviceName } from '@/data/services';
 import { estimateTotal } from '@/services/planner';
 import { useDb } from '@/store/useDb';
 import { formatMoneyRange } from '@/utils/format';
 
 const STEPS = [
-  { icon: 'call', title: 'Coordinator call', body: 'We confirm dates, guests and priorities with you.' },
-  { icon: 'git-compare', title: 'Matching providers', body: 'We check availability, reliability and prices for each service.' },
-  { icon: 'document-text', title: 'One quotation', body: 'You get a single package quote — accept or ask for changes.' },
-  { icon: 'shield-checkmark', title: 'We manage everything', body: 'Bookings, crew, payments, timeline and wedding-day execution.' },
+  { title: 'Your coordinator calls you', body: 'To confirm the dates, guest count and what matters most to you.' },
+  { title: 'We match providers', body: 'Availability, past reliability and price, checked for each service.' },
+  { title: 'You get one quotation', body: 'Accept it, or ask for changes and we send a revised version.' },
+  { title: 'We run the wedding', body: 'Bookings, crew, payments, the timeline and the day itself.' },
 ];
 
 export default function PlanSubmitted() {
   const insets = useSafeAreaInsets();
   const { id } = useLocalSearchParams<{ id: string }>();
   const project = useDb((s) => s.projects.find((p) => p.id === id));
-  if (!project) return null;
+  if (!project) {
+    return (
+      <View style={[styles.root, { paddingTop: insets.top + 40 }]}>
+        <EmptyBlock icon="document-text-outline" title="We couldn’t find that plan" message="It may have been removed. Your wedding page has everything you’ve sent us." action="Go to My Wedding" onAction={() => router.replace('/my-wedding')} />
+      </View>
+    );
+  }
   const [lo, hi] = estimateTotal(project.requirements.map((r) => r.serviceId), project.guests, project.events.length);
 
   return (
     <View style={styles.root}>
       <ScrollView contentContainerStyle={{ paddingTop: insets.top + 20, padding: 20, gap: 16, paddingBottom: insets.bottom + 30 }}>
-        <Animated.View entering={ZoomIn.springify()} style={{ alignItems: 'center', gap: 10 }}>
-          <LinearGradient colors={gradients.checklist} style={styles.badge}>
-            <Ionicons name="checkmark" size={46} color="#fff" />
-          </LinearGradient>
-          <Text size={24} weight="extrabold" color={colors.heading} align="center">
-            Requirement received!
+        <Animated.View entering={FadeIn.duration(300)} style={{ gap: 6 }}>
+          <View style={styles.badge}>
+            <Ionicons name="checkmark" size={26} color={colors.success} />
+          </View>
+          <Text serif size={26} weight="bold" color={colors.heading} lineHeight={36}>
+            We’ve got your plan
           </Text>
-          <Text size={14} color={colors.textMuted} align="center">
+          <Text size={14} color={colors.textMuted}>
             {project.code} · {project.title} · {project.requirements.length} services
           </Text>
         </Animated.View>
@@ -48,9 +53,9 @@ export default function PlanSubmitted() {
               <Avatar name={project.coordinatorName} size={52} />
               <View style={{ flex: 1 }}>
                 <Text size={12} color={colors.textMuted}>
-                  Your wedding coordinator
+                  Your coordinator
                 </Text>
-                <Text size={18} weight="bold" color={colors.heading}>
+                <Text size={17} weight="semibold" color={colors.heading}>
                   {project.coordinatorName}
                 </Text>
                 <Text size={13} color={colors.textMuted}>
@@ -63,10 +68,10 @@ export default function PlanSubmitted() {
 
         <Animated.View entering={FadeInDown.delay(250)}>
           <Card style={{ gap: 6 }}>
-            <Text size={12} weight="bold" color={colors.primary}>
-              ESTIMATED FOR YOUR REQUIREMENT
+            <Text size={12} weight="medium" color={colors.textMuted}>
+              Estimate for what you asked for
             </Text>
-            <Text size={20} weight="extrabold" color={colors.heading}>
+            <Text size={20} weight="semibold" color={colors.heading}>
               {formatMoneyRange(lo, hi)}
             </Text>
             <Text size={12} color={colors.textMuted}>
@@ -80,13 +85,18 @@ export default function PlanSubmitted() {
             What happens next
           </Text>
           {STEPS.map((s, i) => (
-            <View key={s.title} style={styles.row}>
-              <View style={styles.stepIcon}>
-                <Ionicons name={s.icon as never} size={18} color={colors.primary} />
+            <View key={s.title} style={styles.step}>
+              <View style={styles.stepRail}>
+                <View style={[styles.stepNum, i === 0 && { backgroundColor: colors.heading, borderColor: colors.heading }]}>
+                  <Text size={12} weight="semibold" color={i === 0 ? colors.white : colors.textMuted} lineHeight={15}>
+                    {i + 1}
+                  </Text>
+                </View>
+                {i < STEPS.length - 1 && <View style={styles.stepLine} />}
               </View>
-              <View style={{ flex: 1 }}>
+              <View style={{ flex: 1, paddingBottom: 16 }}>
                 <Text size={15} weight="semibold" color={colors.heading}>
-                  {i + 1}. {s.title}
+                  {s.title}
                 </Text>
                 <Text size={13} color={colors.textMuted}>
                   {s.body}
@@ -96,7 +106,7 @@ export default function PlanSubmitted() {
           ))}
         </Animated.View>
 
-        <KButton label="Go to My Wedding" icon="heart" size="lg" onPress={() => router.replace('/my-wedding')} />
+        <KButton label="Go to My Wedding" size="lg" onPress={() => router.replace('/my-wedding')} />
         <KButton label="Invite guests while you wait" variant="ghost" onPress={() => router.replace('/guests')} />
       </ScrollView>
     </View>
@@ -105,7 +115,10 @@ export default function PlanSubmitted() {
 
 const styles = StyleSheet.create({
   root: { flex: 1, backgroundColor: colors.bgSoft },
-  badge: { width: 96, height: 96, borderRadius: 48, alignItems: 'center', justifyContent: 'center' },
+  badge: { width: 44, height: 44, borderRadius: 22, borderWidth: 1.5, borderColor: colors.success, alignItems: 'center', justifyContent: 'center', marginBottom: 6 },
   row: { flexDirection: 'row', alignItems: 'center', gap: 12 },
-  stepIcon: { width: 40, height: 40, borderRadius: 20, backgroundColor: colors.primarySoft, alignItems: 'center', justifyContent: 'center' },
+  step: { flexDirection: 'row', gap: 12 },
+  stepRail: { alignItems: 'center', width: 24 },
+  stepNum: { width: 24, height: 24, borderRadius: 12, borderWidth: 1, borderColor: colors.border, backgroundColor: colors.white, alignItems: 'center', justifyContent: 'center' },
+  stepLine: { flex: 1, width: 1, backgroundColor: colors.border, marginVertical: 2 },
 });

@@ -47,7 +47,7 @@ export default function AllQuotes() {
         renderItem={({ item }) => (
           <Card onPress={() => router.push({ pathname: '/platform/quote/[id]', params: { id: item.id } })} style={{ gap: 6 }}>
             <View style={styles.row}>
-              <Text size={12} weight="bold" color={t.c.primary} style={{ flex: 1 }}>
+              <Text size={12} weight="medium" color={t.c.muted} style={{ flex: 1 }}>
                 {item.number} · {item.fromKind === 'platform' ? 'GENIE' : 'VENDOR'}
               </Text>
               <StatusPill status={item.status} />

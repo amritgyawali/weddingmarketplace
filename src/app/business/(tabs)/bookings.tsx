@@ -26,7 +26,7 @@ export default function BookingsTab() {
 
   return (
     <View style={{ flex: 1, backgroundColor: t.c.bg }}>
-      <RoleHeader eyebrow="BOOKINGS" title="Bookings" subtitle={`${bookings.length} total · ${formatMoneyCompact(value)} to you`} />
+      <RoleHeader title="Bookings" subtitle={`${bookings.length} total · ${formatMoneyCompact(value)} to you`} />
       <View style={{ paddingTop: 14 }}>
         <Segmented
           options={[

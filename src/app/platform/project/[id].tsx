@@ -62,8 +62,8 @@ function Summary({ project }: { project: Project }) {
     <Card style={{ gap: 12 }}>
       <View style={styles.rowBetween}>
         <View style={{ flex: 1 }}>
-          <Text size={12} weight="bold" color={t.c.primary}>
-            {project.code} · {EVENT_TYPE_BY_ID[project.eventType]?.label.toUpperCase()} · {project.source.replace('_', ' ').toUpperCase()}
+          <Text size={12} weight="medium" color={t.c.muted}>
+            {project.code} · {EVENT_TYPE_BY_ID[project.eventType]?.label} · {project.source.replace('_', ' ')}
           </Text>
           <Text size={20} weight="bold" color={t.c.textStrong}>
             {project.title}
@@ -344,7 +344,7 @@ function Services({ project }: { project: Project }) {
         return (
           <Card key={r.id} style={{ gap: 12 }}>
             <Pressable onPress={() => setEditing(r)} style={styles.rowBetween} accessibilityLabel={`Edit ${def?.name}`}>
-              <View style={[styles.icon, { backgroundColor: t.c.soft }]}>
+              <View style={[styles.icon, { borderWidth: 1, borderColor: t.c.border }]}>
                 <Ionicons name={(def?.icon ?? 'briefcase-outline') as never} size={20} color={t.c.primary} />
               </View>
               <View style={{ flex: 1 }}>
@@ -439,8 +439,8 @@ function QuoteTab({ project }: { project: Project }) {
       {list.map((q) => (
         <Card key={q.id} onPress={() => router.push({ pathname: '/platform/quote/[id]', params: { id: q.id } })} style={{ gap: 6 }}>
           <View style={styles.rowBetween}>
-            <Text size={12} weight="bold" color={t.c.primary}>
-              {q.number} · v{q.version} · {q.fromKind === 'platform' ? 'PACKAGE' : q.fromName.toUpperCase()}
+            <Text size={12} weight="medium" color={t.c.muted}>
+              {q.number} · v{q.version} · {q.fromKind === 'platform' ? 'Package' : q.fromName}
             </Text>
             <StatusPill status={q.status} />
           </View>
@@ -480,7 +480,7 @@ function CrewTab({ project }: { project: Project }) {
   return (
     <View style={{ gap: 14 }}>
       {projectGigs.filter((g) => g.status === 'open').map((g) => (
-        <Card key={g.id} onPress={() => router.push({ pathname: '/platform/gig/[id]', params: { id: g.id } })} style={[styles.rowBetween, g.emergency && { borderColor: t.c.danger, borderWidth: 1.5 }]}>
+        <Card key={g.id} onPress={() => router.push({ pathname: '/platform/gig/[id]', params: { id: g.id } })} style={[styles.rowBetween, g.emergency && { borderColor: t.c.danger, borderWidth: 1 }]}>
           <Ionicons name={g.emergency ? 'medkit' : 'megaphone-outline'} size={20} color={g.emergency ? t.c.danger : t.c.primary} />
           <View style={{ flex: 1 }}>
             <Text size={14} weight="bold" color={t.c.textStrong}>
@@ -535,8 +535,8 @@ function MoneyTab({ project }: { project: Project }) {
           </Card>
         ))}
       </View>
-      <Text size={13} weight="bold" color={t.c.muted}>
-        CUSTOMER PAYMENTS
+      <Text size={13} weight="medium" color={t.c.muted}>
+        Customer payments
       </Text>
       <PaymentsPanel project={project} mode="platform" />
       <Text size={13} weight="bold" color={t.c.muted}>
@@ -564,8 +564,8 @@ function MoneyTab({ project }: { project: Project }) {
           {(p.status === 'READY' || (p.status === 'ACCRUED' && releasable(p, project))) && <KButton label="Release payout" size="sm" variant="success" onPress={() => release(p.id)} />}
         </Card>
       ))}
-      <Text size={13} weight="bold" color={t.c.muted}>
-        PLATFORM REVENUE
+      <Text size={13} weight="medium" color={t.c.muted}>
+        Platform revenue
       </Text>
       {rev.map((r) => (
         <View key={r.id} style={styles.rowBetween}>
@@ -725,16 +725,16 @@ export default function PlatformProject() {
 const styles = StyleSheet.create({
   rowBetween: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 10 },
   people: { flexDirection: 'row', gap: 8, flexWrap: 'wrap' },
-  person: { flex: 1, minWidth: 220, flexDirection: 'row', alignItems: 'center', gap: 8, borderRadius: 12, padding: 8 },
+  person: { flex: 1, minWidth: 220, flexDirection: 'row', alignItems: 'center', gap: 8, borderRadius: 8, padding: 8 },
   kvGrid: { gap: 2 },
   quote: { borderLeftWidth: 3, borderRadius: 8, padding: 10 },
   inspo: { width: 70, height: 90, borderRadius: 8 },
   kpis: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
   kpi: { flex: 1, minWidth: 140, gap: 2, padding: 12 },
   actions: { flexDirection: 'row', gap: 8, alignItems: 'center' },
-  icon: { width: 40, height: 40, borderRadius: 12, alignItems: 'center', justifyContent: 'center' },
+  icon: { width: 40, height: 40, borderRadius: 8, alignItems: 'center', justifyContent: 'center' },
   chips: { flexDirection: 'row', flexWrap: 'wrap', gap: 6 },
-  chip: { borderRadius: 999, paddingHorizontal: 8, paddingVertical: 3 },
+  chip: { borderRadius: 6, paddingHorizontal: 8, paddingVertical: 3 },
   activity: { flexDirection: 'row', gap: 10 },
   dot: { width: 8, height: 8, borderRadius: 4, marginTop: 6 },
   wide: { flex: 1, flexDirection: 'row' },

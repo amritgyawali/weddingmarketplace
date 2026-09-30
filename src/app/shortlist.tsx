@@ -102,8 +102,8 @@ export default function ShortlistScreen() {
                 <Pressable onPress={() => router.push(p.kind === 'venue' ? { pathname: '/venue/[id]', params: { id: p.id } } : { pathname: '/vendor/[id]', params: { id: p.id } })} style={styles.row}>
                   <Image source={photos[p.image]} style={styles.image} contentFit="cover" />
                   <View style={{ flex: 1, gap: 2 }}>
-                    <Text size={11} weight="bold" color={colors.primary}>
-                      {serviceName(p.serviceId).toUpperCase()}
+                    <Text size={12} weight="medium" color={colors.textMuted}>
+                      {serviceName(p.serviceId)}
                     </Text>
                     <Text size={15} weight="bold" color={colors.textStrong} numberOfLines={1}>
                       {p.name}
@@ -191,7 +191,7 @@ export default function ShortlistScreen() {
 const styles = StyleSheet.create({
   root: { flex: 1, backgroundColor: colors.bgSoft },
   row: { flexDirection: 'row', alignItems: 'center', gap: 12, padding: 12 },
-  image: { width: 64, height: 64, borderRadius: 12 },
+  image: { width: 64, height: 64, borderRadius: 8 },
   actions: { flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 8, paddingVertical: 6, borderTopWidth: StyleSheet.hairlineWidth },
   action: { flexDirection: 'row', alignItems: 'center', gap: 4, padding: 6 },
   footer: { position: 'absolute', left: 0, right: 0, bottom: 0, flexDirection: 'row', gap: 10, padding: 14, paddingBottom: 26, backgroundColor: colors.white, borderTopWidth: StyleSheet.hairlineWidth, borderTopColor: colors.border },

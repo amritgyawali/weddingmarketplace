@@ -52,7 +52,7 @@ export function ThreadScreen({ customer }: { customer?: boolean }) {
 
   const menuButton = (
     <Pressable onPress={() => setMenu(true)} hitSlop={10} accessibilityLabel="Conversation options">
-      <Ionicons name="ellipsis-vertical" size={20} color={customer ? t.c.textStrong : '#FFFFFF'} />
+      <Ionicons name="ellipsis-vertical" size={20} color={t.c.textStrong} />
     </Pressable>
   );
   const subtitle = `${thread.kind === 'project' ? 'Project team' : thread.kind === 'service' ? 'Service chat' : thread.kind === 'direct' ? 'Direct enquiry' : thread.kind} · ${thread.members.length} members`;

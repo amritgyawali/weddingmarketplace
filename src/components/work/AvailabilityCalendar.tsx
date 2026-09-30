@@ -184,11 +184,11 @@ const styles = StyleSheet.create({
   week: { flexDirection: 'row' },
   grid: { flexDirection: 'row', flexWrap: 'wrap' },
   cell: { width: `${100 / 7}%`, aspectRatio: 1, padding: 2 },
-  day: { flex: 1, borderRadius: 10, alignItems: 'center', justifyContent: 'center', borderWidth: 1.5 },
+  day: { flex: 1, borderRadius: 10, alignItems: 'center', justifyContent: 'center', borderWidth: 1 },
   dot: { width: 5, height: 5, borderRadius: 3, marginTop: 2 },
   legend: { flexDirection: 'row', flexWrap: 'wrap', gap: 10 },
   legendItem: { flexDirection: 'row', alignItems: 'center', gap: 4 },
   legendDot: { width: 8, height: 8, borderRadius: 4 },
   actions: { flexDirection: 'row', gap: 8 },
-  ruleRow: { flexDirection: 'row', alignItems: 'center', borderWidth: 1, borderRadius: 12, padding: 12 },
+  ruleRow: { flexDirection: 'row', alignItems: 'center', borderWidth: 1, borderRadius: 8, padding: 12 },
 });

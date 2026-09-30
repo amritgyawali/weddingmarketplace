@@ -15,30 +15,29 @@ import {
 import Animated, { FadeIn, FadeInUp, useAnimatedStyle, withTiming } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { RingsMark } from '@/components/ui/Icons';
 import { PressableScale } from '@/components/ui/PressableScale';
 import { Text } from '@/components/ui/Text';
 import { BRAND } from '@/constants/brand';
 import { photos, type PhotoKey } from '@/constants/images';
-import { colors, gradients, shadows } from '@/constants/theme';
+import { colors, gradients } from '@/constants/theme';
 
 const SLIDES: { image: PhotoKey; credit: string; headline: string; focus: ImageContentPosition }[] = [
   {
     image: 'ideaCoupleGardenWalk',
     credit: 'Golden Hour Studio',
-    headline: 'Discover the best wedding venues & vendors in your city',
+    headline: 'Venues and vendors across Nepal, with prices shown up front.',
     focus: { left: '50%', top: '40%' },
   },
   {
     image: 'ideaCeremonyHands',
     credit: 'Stardust Frames',
-    headline: `Access over ${BRAND.reviewCount} reviews from newly wed couples to help you hire your Wedding team`,
+    headline: `Read ${BRAND.reviewCount} reviews from couples who booked before you.`,
     focus: { left: '55%', top: '50%' },
   },
   {
     image: 'ideaBrideParasol',
     credit: 'Candid Chronicles',
-    headline: 'Get inspired by real weddings, trending ideas & expert planning tools',
+    headline: 'One quotation, one payment plan, one coordinator for the whole wedding.',
     focus: { left: '50%', top: '45%' },
   },
 ];
@@ -47,9 +46,8 @@ const AUTOPLAY_MS = 4500;
 
 function Dot({ active }: { active: boolean }) {
   const style = useAnimatedStyle(() => ({
-    width: withTiming(active ? 8 : 7, { duration: 200 }),
-    height: withTiming(active ? 8 : 7, { duration: 200 }),
-    backgroundColor: withTiming(active ? colors.primary : 'rgba(255,255,255,0.65)', { duration: 200 }),
+    width: withTiming(active ? 22 : 10, { duration: 200 }),
+    backgroundColor: withTiming(active ? colors.white : 'rgba(255,255,255,0.45)', { duration: 200 }),
   }));
   return <Animated.View style={[styles.dot, style]} />;
 }
@@ -113,15 +111,17 @@ export default function WelcomeCarousel() {
       />
 
       <View pointerEvents="none" style={[styles.top, { paddingTop: insets.top + 14 }]}>
-        <Text size={14} color="rgba(255,255,255,0.75)">
-          Image credit: {slide.credit}
+        <Text serif size={24} weight="bold" color={colors.white} lineHeight={32}>
+          {BRAND.name}
         </Text>
-        <RingsMark size={30} color="rgba(255,255,255,0.8)" />
+        <Text size={12} color="rgba(255,255,255,0.7)">
+          Photo: {slide.credit}
+        </Text>
       </View>
 
       <View style={[styles.bottom, { paddingBottom: insets.bottom + 18 }]}>
         <Animated.View key={index} entering={FadeIn.duration(450)}>
-          <Text size={21} lineHeight={31} align="center" color={colors.white} style={styles.headline}>
+          <Text serif size={24} lineHeight={34} weight="bold" color={colors.white} style={styles.headline}>
             {slide.headline}
           </Text>
         </Animated.View>
@@ -132,21 +132,21 @@ export default function WelcomeCarousel() {
             onPress={() => router.push('/welcome/role')}
             style={styles.primary}
             accessibilityLabel="Get started">
-            <Text size={18} weight="semibold" color={colors.primary}>
-              Get Started
+            <Text size={16} weight="semibold" color={colors.white}>
+              Get started
             </Text>
           </PressableScale>
 
           <View style={styles.links}>
             <Pressable onPress={() => router.push('/welcome/role')} hitSlop={12} accessibilityRole="button">
-              <Text size={16} weight="semibold" color={colors.white}>
+              <Text size={15} weight="medium" color={colors.white}>
                 Log in
               </Text>
             </Pressable>
             <View style={styles.sep} />
             <Pressable onPress={() => router.push('/join-wedding')} hitSlop={12} accessibilityRole="button">
-              <Text size={16} weight="semibold" color={colors.white}>
-                Have an Invite Code?
+              <Text size={15} weight="medium" color={colors.white}>
+                I have an invite code
               </Text>
             </Pressable>
           </View>
@@ -171,22 +171,20 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: 22,
+    paddingHorizontal: 20,
   },
   bottom: { position: 'absolute', left: 0, right: 0, bottom: 0, paddingHorizontal: 20 },
-  headline: { paddingHorizontal: 16, marginBottom: 30, textShadowColor: 'rgba(0,0,0,0.35)', textShadowRadius: 8 },
-  actions: { alignItems: 'center', gap: 28 },
+  headline: { marginBottom: 22, maxWidth: 380 },
+  actions: { alignItems: 'stretch', gap: 18 },
   primary: {
-    alignSelf: 'stretch',
-    height: 52,
-    borderRadius: 26,
-    backgroundColor: colors.white,
+    height: 50,
+    borderRadius: 8,
+    backgroundColor: colors.primary,
     alignItems: 'center',
     justifyContent: 'center',
-    ...shadows.raised,
   },
-  links: { flexDirection: 'row', alignItems: 'center', gap: 16 },
-  sep: { width: 1, height: 16, backgroundColor: 'rgba(255,255,255,0.5)' },
-  dots: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 10, marginTop: 30 },
-  dot: { borderRadius: 4 },
+  links: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 14 },
+  sep: { width: 1, height: 14, backgroundColor: 'rgba(255,255,255,0.45)' },
+  dots: { flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: 26 },
+  dot: { height: 3, borderRadius: 2 },
 });

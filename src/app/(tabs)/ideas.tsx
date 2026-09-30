@@ -10,7 +10,6 @@ import { PhotoTile } from '@/components/ideas/PhotoTile';
 import { Button } from '@/components/ui/Button';
 import { Chip } from '@/components/ui/Chip';
 import { EmptyState } from '@/components/ui/EmptyState';
-import { GenieFab } from '@/components/ui/GenieFab';
 import { IconButton } from '@/components/ui/IconButton';
 import { PressableScale } from '@/components/ui/PressableScale';
 import { SearchBar } from '@/components/ui/SearchBar';
@@ -29,7 +28,7 @@ type Tab = 'photos' | 'stories' | 'real';
 const TABS: { id: Tab; label: string }[] = [
   { id: 'photos', label: 'Photos' },
   { id: 'stories', label: 'Stories' },
-  { id: 'real', label: 'Real\nWeddings' },
+  { id: 'real', label: 'Real weddings' },
 ];
 const GAP = 4;
 
@@ -48,7 +47,7 @@ function TopTabs({ value, onChange }: { value: Tab; onChange: (t: Tab) => void }
           accessibilityRole="tab"
           accessibilityState={{ selected: t.id === value }}
           style={styles.tab}>
-          <Text size={18} weight={t.id === value ? 'semibold' : 'medium'} color={t.id === value ? colors.primary : colors.textStrong} align="center" lineHeight={22}>
+          <Text size={15} weight={t.id === value ? 'semibold' : 'regular'} color={t.id === value ? colors.heading : colors.textMuted} align="center" lineHeight={20}>
             {t.label}
           </Text>
         </Pressable>
@@ -78,17 +77,17 @@ function PhotosPane() {
         numColumns={2}
         keyExtractor={(p) => p.id}
         columnWrapperStyle={{ gap: GAP }}
-        contentContainerStyle={{ gap: GAP, paddingBottom: 110 }}
+        contentContainerStyle={{ gap: GAP, paddingBottom: 30 }}
         keyboardDismissMode="on-drag"
         keyboardShouldPersistTaps="handled"
         renderItem={({ item }) => <PhotoTile photo={item} width={tileWidth} />}
         ListHeaderComponent={
           <View style={styles.searchRow}>
-            <SearchBar placeholder="Search Photos..." value={query} onChangeText={setQuery} style={{ flex: 1 }} height={44} />
+            <SearchBar placeholder="Mehendi, mandap, lehenga…" value={query} onChangeText={setQuery} style={{ flex: 1 }} height={42} />
             <PressableScale onPress={() => setFilterOpen(true)} accessibilityLabel="Filter photos" style={styles.filterBtn}>
-              <Ionicons name="options-outline" size={20} color={colors.text} />
-              <Text size={15} weight="medium" color={colors.text}>
-                Filter{filterCount ? ` (${filterCount})` : ''}
+              <Ionicons name="options-outline" size={18} color={colors.heading} />
+              <Text size={14} weight="medium" color={colors.heading}>
+                Filter{filterCount ? ` · ${filterCount}` : ''}
               </Text>
             </PressableScale>
           </View>
@@ -136,15 +135,15 @@ function StoriesPane() {
     <FlatList
       data={data}
       keyExtractor={(s) => s.id}
-      contentContainerStyle={{ padding: GUTTER, gap: 22, paddingBottom: 110 }}
+      contentContainerStyle={{ padding: GUTTER, gap: 24, paddingBottom: 30 }}
       ListEmptyComponent={isLoading ? <Skeleton height={260} borderRadius={radius.lg} /> : null}
       renderItem={({ item }) => (
-        <PressableScale onPress={() => router.push({ pathname: '/story/[id]', params: { id: item.id } })} accessibilityLabel={item.title} activeScale={0.98}>
+        <PressableScale onPress={() => router.push({ pathname: '/story/[id]', params: { id: item.id } })} accessibilityLabel={item.title}>
           <Image source={photos[item.image]} style={styles.storyImage} contentFit="cover" transition={200} />
-          <Text size={12} weight="bold" color={colors.primary} tracking={0.8} style={{ marginTop: 12 }}>
-            {item.category.toUpperCase()}
+          <Text size={13} weight="medium" color={colors.primary} style={{ marginTop: 10 }}>
+            {item.category}
           </Text>
-          <Text size={18} weight="bold" color={colors.heading} lineHeight={24} style={{ marginTop: 4 }}>
+          <Text serif size={19} weight="bold" color={colors.heading} lineHeight={27} style={{ marginTop: 2 }}>
             {item.title}
           </Text>
           <Text size={14} color={colors.textMuted} style={{ marginTop: 4 }} numberOfLines={2}>
@@ -165,17 +164,17 @@ function RealWeddingsPane() {
     <FlatList
       data={data}
       keyExtractor={(w) => w.id}
-      contentContainerStyle={{ padding: GUTTER, gap: 26, paddingBottom: 110 }}
+      contentContainerStyle={{ padding: GUTTER, gap: 28, paddingBottom: 30 }}
       ListEmptyComponent={isLoading ? <Skeleton height={300} borderRadius={radius.lg} /> : null}
       renderItem={({ item }) => (
-        <PressableScale onPress={() => router.push({ pathname: '/real-wedding/[id]', params: { id: item.id } })} accessibilityLabel={`${item.couple} wedding`} activeScale={0.98}>
+        <PressableScale onPress={() => router.push({ pathname: '/real-wedding/[id]', params: { id: item.id } })} accessibilityLabel={`${item.couple} wedding`}>
           <Image source={photos[item.cover]} style={styles.realCover} contentFit="cover" transition={200} />
           <View style={styles.thumbs}>
             {item.gallery.slice(0, 3).map((g, i) => (
               <Image key={`${g}${i}`} source={photos[g]} style={styles.thumb} contentFit="cover" />
             ))}
           </View>
-          <Text size={19} weight="bold" color={colors.heading} style={{ marginTop: 12 }}>
+          <Text serif size={19} weight="bold" color={colors.heading} lineHeight={27} style={{ marginTop: 10 }}>
             {item.couple}
           </Text>
           <Text size={14} color={colors.textMuted}>
@@ -201,13 +200,12 @@ export default function IdeasTab() {
   return (
     <View style={styles.root}>
       <View style={[styles.header, { paddingTop: insets.top + 8 }]}>
-        <View style={{ width: 84 }} />
-        <Text size={21} weight="semibold" color={colors.heading}>
+        <Text size={23} weight="bold" color={colors.heading}>
           Ideas
         </Text>
         <View style={styles.headerRight}>
-          <IconButton icon="search" size={38} accessibilityLabel="Search" onPress={() => router.push('/search')} />
-          <IconButton icon="heart" size={38} accessibilityLabel="Liked photos" onPress={() => router.push({ pathname: '/shortlist', params: { tab: 'photos' } })} />
+          <IconButton icon="search-outline" accessibilityLabel="Search" onPress={() => router.push('/search')} />
+          <IconButton icon="heart-outline" accessibilityLabel="Liked photos" onPress={() => router.push({ pathname: '/shortlist', params: { tab: 'photos' } })} />
         </View>
       </View>
       <TopTabs value={tab} onChange={setTab} />
@@ -216,7 +214,6 @@ export default function IdeasTab() {
         {tab === 'stories' && <StoriesPane />}
         {tab === 'real' && <RealWeddingsPane />}
       </View>
-      <GenieFab bottom={18} />
     </View>
   );
 }
@@ -227,22 +224,24 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: GUTTER - 4,
-    paddingBottom: 6,
+    paddingLeft: GUTTER,
+    paddingRight: GUTTER - 8,
+    paddingBottom: 4,
   },
-  headerRight: { flexDirection: 'row', gap: 10, width: 84, justifyContent: 'flex-end' },
-  tabs: { flexDirection: 'row', borderBottomWidth: 1, borderBottomColor: colors.hairline },
-  tab: { flex: 1, height: 64, alignItems: 'center', justifyContent: 'center' },
-  indicator: { position: 'absolute', bottom: -1, left: 0, height: 3, backgroundColor: colors.primary },
-  searchRow: { flexDirection: 'row', alignItems: 'center', gap: 10, paddingHorizontal: 14, paddingVertical: 16 },
+  headerRight: { flexDirection: 'row', gap: 2 },
+  tabs: { flexDirection: 'row', borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: colors.border },
+  tab: { flex: 1, height: 44, alignItems: 'center', justifyContent: 'center' },
+  indicator: { position: 'absolute', bottom: -1, left: 0, height: 2, backgroundColor: colors.heading },
+  searchRow: { flexDirection: 'row', alignItems: 'center', gap: 8, paddingHorizontal: GUTTER, paddingVertical: 12 },
   filterBtn: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
-    height: 44,
-    paddingHorizontal: 16,
-    borderRadius: 22,
-    backgroundColor: colors.bgMuted,
+    height: 42,
+    paddingHorizontal: 12,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: colors.border,
   },
   sheetBody: { paddingHorizontal: 20, gap: 18 },
   chipWrap: { flexDirection: 'row', flexWrap: 'wrap', gap: 10 },

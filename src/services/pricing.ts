@@ -65,8 +65,7 @@ export function splitBooking(model: PricingModel, rate: number, amounts: { custo
 /** Freelancer pay after the platform margin (model D). */
 export const freelancerNet = (clientPay: number, margin = 0.2) => ({ pay: Math.round(clientPay * (1 - margin)), margin: Math.round(clientPay * margin) });
 
-// ── Payment schedules ────────────────────────────────────────────────────
-
+// Payment schedules
 export const SCHEDULE_TEMPLATES: { id: string; label: string; steps: ScheduleStep[] }[] = [
   {
     id: '30-50-20',
@@ -164,8 +163,7 @@ export function paymentSummary(project: Pick<Project, 'milestones'>) {
   return { total, paid, outstanding: Math.max(0, total - paid), next, overdue };
 }
 
-// ── Payables ─────────────────────────────────────────────────────────────
-
+// Payables
 /**
  * Provider payables for a confirmed booking: 40% released before the event
  * (so vendors can buy materials) and 60% after the event is completed. Held

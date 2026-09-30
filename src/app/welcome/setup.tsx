@@ -104,17 +104,25 @@ function SetupForm({ phone }: { phone: string }) {
 
   return (
     <View style={{ flex: 1, backgroundColor: t.c.bg }}>
-      <StackHeader title="Create your account" subtitle={`${t.label} · ${formatPhone(phone)}`} />
+      <StackHeader title={t.role === 'customer' ? 'What should we call you?' : 'Create your account'} subtitle={`${t.label} · ${formatPhone(phone)}`} />
       <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
         <ScrollView contentContainerStyle={{ padding: 18, gap: 16, paddingBottom: insets.bottom + 110 }} keyboardShouldPersistTaps="handled">
           <KField label={t.role === 'vendor' ? 'Owner / manager name' : 'Full name'} value={name} onChangeText={setName} placeholder="Your name" autoComplete="name" error={errors.name} />
           <KField label="Email (optional)" value={email} onChangeText={setEmail} keyboardType="email-address" autoCapitalize="none" placeholder="you@example.com" error={errors.email} />
-          <View style={{ gap: 6 }}>
-            <Text size={13} weight="semibold" color={t.c.muted}>
-              {t.role === 'customer' ? 'Wedding city' : 'Based in'}
+          {/* Couples answer the wedding city in onboarding, right after this. */}
+          {t.role !== 'customer' && (
+            <View style={{ gap: 6 }}>
+              <Text size={13} weight="semibold" color={t.c.muted}>
+                Based in
+              </Text>
+              <ChoiceChips options={CITY_OPTIONS} selected={[city]} onToggle={(c) => { setCity(c); setClaimed(null); }} />
+            </View>
+          )}
+          {t.role === 'customer' && (
+            <Text size={13} color={t.c.muted}>
+              Next, five quick questions about the wedding. It takes under a minute.
             </Text>
-            <ChoiceChips options={CITY_OPTIONS} selected={[city]} onToggle={(c) => { setCity(c); setClaimed(null); }} />
-          </View>
+          )}
 
           {t.role === 'vendor' && (
             <>
@@ -219,7 +227,7 @@ function SetupForm({ phone }: { phone: string }) {
           )}
         </ScrollView>
         <View style={[styles.footer, { backgroundColor: t.c.surface, borderTopColor: t.c.border, paddingBottom: Math.max(insets.bottom, 14) }]}>
-          <KButton label="Create account" size="lg" onPress={submit} />
+          <KButton label={t.role === 'customer' ? 'Continue' : 'Create account'} size="lg" onPress={submit} />
         </View>
       </KeyboardAvoidingView>
     </View>
@@ -239,7 +247,7 @@ export default function SetupScreen() {
 }
 
 const styles = StyleSheet.create({
-  claim: { flexDirection: 'row', alignItems: 'center', gap: 10, borderWidth: 1.2, borderRadius: 12, padding: 10 },
-  note: { flexDirection: 'row', gap: 10, padding: 12, borderRadius: 12, alignItems: 'flex-start' },
+  claim: { flexDirection: 'row', alignItems: 'center', gap: 10, borderWidth: 1, borderRadius: 8, padding: 10 },
+  note: { flexDirection: 'row', gap: 10, padding: 12, borderRadius: 8, alignItems: 'flex-start' },
   footer: { position: 'absolute', left: 0, right: 0, bottom: 0, padding: 14, borderTopWidth: StyleSheet.hairlineWidth },
 });

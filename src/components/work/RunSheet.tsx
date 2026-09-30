@@ -128,7 +128,7 @@ export function EventCard({ project, event, canControl, canEditRun }: { project:
             <Text size={17} weight="bold" color={t.c.textStrong}>
               {event.name}
             </Text>
-            <StatusPill status={event.status} label={event.status === 'live' ? '● LIVE' : undefined} />
+            <StatusPill status={event.status} label={event.status === 'live' ? 'Live now' : undefined} />
           </View>
           <Text size={13} color={t.c.muted}>
             {event.date ? formatLongDate(event.date) : 'Date to be confirmed'} · {formatClock(event.startTime)} · {event.venue} · {event.guests} guests
@@ -186,7 +186,7 @@ const styles = StyleSheet.create({
   node: { width: 16, height: 16, borderRadius: 8, borderWidth: 2, alignItems: 'center', justifyContent: 'center', marginTop: 1 },
   line: { width: 2, flex: 1, marginVertical: 2 },
   meta: { flexDirection: 'row', alignItems: 'center', gap: 8, flexWrap: 'wrap', marginTop: 2 },
-  option: { flexDirection: 'row', alignItems: 'center', gap: 12, padding: 14, borderRadius: 12, borderWidth: 1.2 },
+  option: { flexDirection: 'row', alignItems: 'center', gap: 12, padding: 14, borderRadius: 8, borderWidth: 1 },
   dot: { width: 10, height: 10, borderRadius: 5 },
   eventHead: { flexDirection: 'row', alignItems: 'center', gap: 10 },
 });

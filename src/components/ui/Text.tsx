@@ -1,6 +1,6 @@
 import { Text as RNText, type TextProps as RNTextProps, type TextStyle } from 'react-native';
 
-import type { FontWeight } from '@/constants/theme';
+import { serif as serifFaces, type FontWeight } from '@/constants/theme';
 import { useRoleTheme } from '@/theme/RoleTheme';
 
 export interface TextProps extends RNTextProps {
@@ -11,13 +11,14 @@ export interface TextProps extends RNTextProps {
   lineHeight?: number;
   uppercase?: boolean;
   tracking?: number;
+  /** Set in Martel, the display serif. Use for a few headline lines only. */
+  serif?: boolean;
 }
 
 /**
- * App-wide text primitive. Font family and default colour come from the active
- * role theme (Manrope for couples, Jakarta for vendors, Space Grotesk for
- * freelancers, Inter for the platform). Custom fonts on Android ignore
- * `fontWeight`, so weight is expressed through the family name.
+ * App-wide text primitive. Every role sets UI text in Mukta; `serif` switches
+ * to Martel for display lines. Custom fonts on Android ignore `fontWeight`, so
+ * weight is expressed through the family name.
  */
 export function Text({
   weight = 'regular',
@@ -27,6 +28,7 @@ export function Text({
   lineHeight,
   uppercase,
   tracking,
+  serif,
   style,
   ...rest
 }: TextProps) {
@@ -38,11 +40,11 @@ export function Text({
       {...rest}
       style={[
         {
-          fontFamily: theme.fonts[weight],
+          fontFamily: serif ? serifFaces[weight] : theme.fonts[weight],
           fontSize: size,
           color: color ?? theme.c.text,
           textAlign: align,
-          lineHeight: lineHeight ?? Math.round(size * 1.35),
+          lineHeight: lineHeight ?? Math.round(size * (serif ? 1.3 : 1.38)),
           textTransform: uppercase ? 'uppercase' : undefined,
           letterSpacing: tracking,
         },

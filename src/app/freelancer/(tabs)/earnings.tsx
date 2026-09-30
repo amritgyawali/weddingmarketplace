@@ -1,5 +1,4 @@
 import { Ionicons } from '@expo/vector-icons';
-import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
@@ -83,39 +82,43 @@ export default function Earnings() {
   };
 
   return (
-    <ScrollView style={{ flex: 1, backgroundColor: t.c.bg }} contentContainerStyle={{ paddingTop: insets.top + 12, paddingHorizontal: 16, gap: 16, paddingBottom: 130 }}>
+    <ScrollView style={{ flex: 1, backgroundColor: t.c.bg }} contentContainerStyle={{ paddingTop: insets.top + 12, paddingHorizontal: 16, gap: 16, paddingBottom: 32 }}>
       <View style={styles.head}>
-        <Text size={28} weight="bold" color={t.c.textStrong} style={{ flex: 1 }}>
+        <Text size={23} weight="bold" color={t.c.textStrong} style={{ flex: 1 }}>
           Earnings
         </Text>
         <KButton label="Statement" icon="download-outline" variant="secondary" size="sm" onPress={statement} />
       </View>
 
-      <LinearGradient colors={t.gradient} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={styles.balance}>
-        <Text size={13} weight="bold" color={t.c.onPrimary} tracking={1}>
-          NEXT PAYOUT
+      <View style={[styles.balance, { backgroundColor: t.c.surface, borderColor: t.c.border }]}>
+        <Text size={13} color={t.c.muted}>
+          Next payout
         </Text>
-        <Text size={40} weight="bold" color={t.c.onPrimary} lineHeight={46}>
+        <Text size={34} weight="semibold" color={t.c.textStrong} lineHeight={42}>
           {formatMoney(sum(ready))}
         </Text>
-        <Text size={13} color={t.c.onPrimary}>
-          {ready.length ? `${ready.length} job${ready.length > 1 ? 's' : ''} approved · paid within 2 working days` : 'Nothing approved yet — check out after each job'}
+        <Text size={13} color={t.c.muted}>
+          {ready.length ? `${ready.length} job${ready.length > 1 ? 's' : ''} approved · paid within 2 working days` : 'Nothing approved yet. Check out after each job to get paid.'}
         </Text>
-        <View style={styles.balanceRow}>
-          <View style={styles.pill}>
-            <Ionicons name="time-outline" size={14} color={t.c.onPrimary} />
-            <Text size={12} weight="bold" color={t.c.onPrimary}>
-              {formatMoneyCompact(sum(accrued))} earned, releasing
+        <View style={[styles.balanceRow, { borderTopColor: t.c.border }]}>
+          <View style={{ flex: 1 }}>
+            <Text size={15} weight="semibold" color={t.c.textStrong}>
+              {formatMoneyCompact(sum(accrued))}
+            </Text>
+            <Text size={12} color={t.c.muted}>
+              Earned, being released
             </Text>
           </View>
-          <View style={styles.pill}>
-            <Ionicons name="calendar-outline" size={14} color={t.c.onPrimary} />
-            <Text size={12} weight="bold" color={t.c.onPrimary}>
-              {formatMoneyCompact(bookedAhead)} booked ahead
+          <View style={{ flex: 1 }}>
+            <Text size={15} weight="semibold" color={t.c.textStrong}>
+              {formatMoneyCompact(bookedAhead)}
+            </Text>
+            <Text size={12} color={t.c.muted}>
+              Booked ahead
             </Text>
           </View>
         </View>
-      </LinearGradient>
+      </View>
 
       {held.length > 0 && (
         <Card style={[styles.alert, { borderColor: t.c.warning }]}>
@@ -139,7 +142,7 @@ export default function Earnings() {
           { label: 'Avg per job', value: formatMoneyCompact(paid.length ? Math.round(sum(paid) / paid.length) : 0) },
         ].map((s) => (
           <Card key={s.label} style={styles.stat}>
-            <Text size={17} weight="bold" color={t.c.primary}>
+            <Text size={17} weight="semibold" color={t.c.textStrong}>
               {s.value}
             </Text>
             <Text size={11} color={t.c.muted}>
@@ -186,8 +189,8 @@ export default function Earnings() {
           <Card padded={false} style={{ overflow: 'hidden' }}>
             {list.map((p, i) => (
               <View key={p.id} style={[styles.row, i > 0 && { borderTopWidth: StyleSheet.hairlineWidth, borderTopColor: t.c.border }]}>
-                <View style={[styles.icon, { backgroundColor: t.c.soft }]}>
-                  <Ionicons name={p.status === 'PAID' ? 'arrow-down' : p.status === 'ON_HOLD' ? 'pause' : 'hourglass-outline'} size={18} color={t.c.primary} />
+                <View style={[styles.icon, { borderWidth: 1, borderColor: t.c.border }]}>
+                  <Ionicons name={p.status === 'PAID' ? 'arrow-down' : p.status === 'ON_HOLD' ? 'pause' : 'hourglass-outline'} size={17} color={t.c.muted} />
                 </View>
                 <View style={{ flex: 1 }}>
                   <Text size={14} weight="semibold" color={t.c.textStrong} numberOfLines={1}>
@@ -233,10 +236,9 @@ export default function Earnings() {
 
 const styles = StyleSheet.create({
   head: { flexDirection: 'row', alignItems: 'center', gap: 12 },
-  balance: { borderRadius: 24, padding: 20, gap: 6 },
-  balanceRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginTop: 8 },
-  pill: { flexDirection: 'row', alignItems: 'center', gap: 5, backgroundColor: 'rgba(0,0,0,0.12)', borderRadius: 999, paddingHorizontal: 10, paddingVertical: 5 },
-  alert: { flexDirection: 'row', alignItems: 'center', gap: 12, borderWidth: 1 },
+  balance: { borderRadius: 10, borderWidth: 1, padding: 16, gap: 2 },
+  balanceRow: { flexDirection: 'row', gap: 12, marginTop: 12, paddingTop: 12, borderTopWidth: StyleSheet.hairlineWidth },
+  alert: { flexDirection: 'row', alignItems: 'center', gap: 12, borderWidth: 1, borderLeftWidth: 3 },
   stats: { flexDirection: 'row', gap: 10 },
   stat: { flex: 1, alignItems: 'center', gap: 2, padding: 12 },
   row: { flexDirection: 'row', alignItems: 'center', gap: 12, padding: 14 },

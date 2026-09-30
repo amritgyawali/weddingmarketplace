@@ -87,7 +87,7 @@ export default function VendorBooking() {
         {tab === 'overview' && (
           <>
             {pending && (
-              <Card style={{ gap: 10, borderColor: t.c.primary, borderWidth: 1.5 }}>
+              <Card style={{ gap: 10, borderColor: t.c.primary, borderWidth: 1 }}>
                 <Text size={15} weight="bold" color={t.c.textStrong}>
                   {managed ? 'Vivah picked you for this wedding' : 'New booking'}
                 </Text>
@@ -97,14 +97,14 @@ export default function VendorBooking() {
                 <KField placeholder="Note (optional, e.g. reason for declining)" value={declineNote} onChangeText={setDeclineNote} />
                 <View style={styles.row}>
                   <KButton label="Decline" variant="danger" size="sm" style={{ flex: 1 }} onPress={() => { respond(project.id, booking.id, false, declineNote.trim() || 'Not available'); toast('Declined'); router.back(); }} />
-                  <KButton label="Accept booking" icon="checkmark" size="sm" style={{ flex: 1.4 }} onPress={() => { respond(project.id, booking.id, true, declineNote.trim() || undefined); toast('Availability confirmed ✅'); }} />
+                  <KButton label="Accept booking" icon="checkmark" size="sm" style={{ flex: 1.4 }} onPress={() => { respond(project.id, booking.id, true, declineNote.trim() || undefined); toast('Availability confirmed'); }} />
                 </View>
               </Card>
             )}
             <Card style={{ gap: 4 }}>
-              <Text size={12} weight="bold" color={t.c.primary}>
-                {def?.name.toUpperCase()}
-                {booking.packageName ? ` · ${booking.packageName.toUpperCase()} PACKAGE` : ''}
+              <Text size={12} weight="medium" color={t.c.muted}>
+                {def?.name}
+                {booking.packageName ? ` · ${booking.packageName} package` : ''}
               </Text>
               <KeyValue label="Customer" value={project.customerName} />
               {!managed && <KeyValue label="Phone" value={formatPhone(project.customerPhone)} />}
@@ -156,7 +156,7 @@ export default function VendorBooking() {
                     size="sm"
                     onPress={() => {
                       sign(contract.id, 'provider', account.name);
-                      toast('Contract signed ✍️');
+                      toast('Contract signed');
                     }}
                   />
                 )}
@@ -164,8 +164,8 @@ export default function VendorBooking() {
             )}
             {!!project.notes && (
               <Card style={{ gap: 4 }}>
-                <Text size={13} weight="bold" color={t.c.muted}>
-                  COUPLE’S NOTES
+                <Text size={13} weight="medium" color={t.c.muted}>
+                  Couple’s notes
                 </Text>
                 <Text size={13} color={t.c.text}>
                   {project.notes}

@@ -196,7 +196,7 @@ export function GigForm({ projects, defaultCity, initialProjectId, onSubmit }: {
 
 const styles = StyleSheet.create({
   row: { flexDirection: 'row', gap: 12 },
-  date: { flexDirection: 'row', alignItems: 'center', gap: 10, height: 48, borderRadius: 12, borderWidth: 1.2, paddingHorizontal: 14 },
-  emergency: { flexDirection: 'row', alignItems: 'center', gap: 12, borderWidth: 1.5, borderRadius: 12, padding: 12 },
+  date: { flexDirection: 'row', alignItems: 'center', gap: 10, height: 48, borderRadius: 8, borderWidth: 1, paddingHorizontal: 14 },
+  emergency: { flexDirection: 'row', alignItems: 'center', gap: 12, borderWidth: 1, borderRadius: 8, padding: 12 },
   footer: { position: 'absolute', left: 0, right: 0, bottom: 0, padding: 14, borderTopWidth: StyleSheet.hairlineWidth },
 });

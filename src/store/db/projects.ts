@@ -165,7 +165,7 @@ function activateBooking(set: SetDb, get: GetDb, projectId: string, bookingId: s
 }
 
 export const projectActions = (set: SetDb, get: GetDb): ProjectActions => ({
-  // ── Intake ───────────────────────────────────────────────────────────
+  // Intake
   submitPlan: (customer, input) => {
     const events = buildEvents(input);
     const requirements = buildRequirements(input, events);
@@ -229,7 +229,7 @@ export const projectActions = (set: SetDb, get: GetDb): ProjectActions => ({
       get().notify(coordinator.id, `New wedding lead ${code}`, `${customer.name} · ${input.city} · ${input.guests} guests · ${requirements.length} services`, `/platform/project/${project.id}`, 'lead');
     }
     get().notify('platform', `New wedding lead ${code}`, `${customer.name} · ${input.city} · ${requirements.length} services`, `/platform/project/${project.id}`, 'lead');
-    get().notify(customer.id, 'Requirement received 🎉', coordinator ? `${coordinator.name} is your coordinator and will reach out shortly.` : 'A coordinator will be assigned within the hour.', '/my-wedding', 'system');
+    get().notify(customer.id, 'Requirement received', coordinator ? `${coordinator.name} is your coordinator and will reach out shortly.` : 'A coordinator will be assigned within the hour.', '/my-wedding', 'system');
     get().log({ id: customer.id, name: customer.name }, 'project.submit', 'project', project.id, `${requirements.length} services`);
     return project;
   },
@@ -270,7 +270,7 @@ export const projectActions = (set: SetDb, get: GetDb): ProjectActions => ({
       NEEDS_CLARIFICATION: 'Your coordinator needs a few more details',
       MATCHING_PROVIDERS: 'We’re matching the best providers for you',
       QUOTE_SENT: 'Your quotation is ready',
-      CONFIRMED: 'Your wedding is confirmed 🎉',
+      CONFIRMED: 'Your wedding is confirmed',
       IN_PROGRESS: 'Your celebrations have begun!',
       COMPLETED: 'Congratulations! Your events are complete',
       CANCELLED: 'Your project was cancelled',
@@ -300,7 +300,7 @@ export const projectActions = (set: SetDb, get: GetDb): ProjectActions => ({
     get().log(currentActor(), 'project.assign', 'project', id, coordinator.name);
   },
 
-  // ── Events ───────────────────────────────────────────────────────────
+  // Events
   addEvent: (projectId, e) => {
     const def = EVENT_TYPE_BY_ID[e.type];
     const project = get().projects.find((p) => p.id === projectId);
@@ -358,7 +358,7 @@ export const projectActions = (set: SetDb, get: GetDb): ProjectActions => ({
     }));
     const project = get().projects.find((p) => p.id === projectId);
     const event = project?.events.find((e) => e.id === eventId);
-    if (project && event && status === 'live') get().notify(project.customerId, `${event.name} is live 🎊`, 'Follow the run sheet in My Wedding.', '/my-wedding', 'event');
+    if (project && event && status === 'live') get().notify(project.customerId, `${event.name} is live`, 'Follow the run sheet in My Wedding.', '/my-wedding', 'event');
     if (project && project.status === 'COMPLETED') {
       get().notify(project.customerId, 'How did we do?', 'Rate your providers and your coordinator — it takes a minute.', '/my-wedding?tab=services', 'review');
     }
@@ -394,7 +394,7 @@ export const projectActions = (set: SetDb, get: GetDb): ProjectActions => ({
   resolveIncident: (projectId, incidentId) =>
     set((s) => ({ projects: mapProject(s.projects, projectId, (p) => ({ ...p, incidents: p.incidents.map((i) => (i.id === incidentId ? { ...i, status: 'resolved' } : i)) })) })),
 
-  // ── Requirements & matching ─────────────────────────────────────────
+  // Requirements & matching
   addRequirement: (projectId, serviceId, eventIds) => {
     const project = get().projects.find((p) => p.id === projectId);
     if (!project || project.requirements.some((r) => r.serviceId === serviceId && r.status !== 'CANCELLED')) return;
@@ -463,7 +463,7 @@ export const projectActions = (set: SetDb, get: GetDb): ProjectActions => ({
       })),
     })),
 
-  // ── Bookings ─────────────────────────────────────────────────────────
+  // Bookings
   proposeBooking: (projectId, reqId, providerId, opts = {}) => {
     const project = get().projects.find((p) => p.id === projectId);
     const requirement = project?.requirements.find((r) => r.id === reqId);
@@ -533,7 +533,7 @@ export const projectActions = (set: SetDb, get: GetDb): ProjectActions => ({
       availability: accept ? s.availability : s.availability.filter((a) => a.refId !== bookingId),
     }));
     const to = project.coordinatorId ?? 'platform';
-    get().notify(to, accept ? `${b.providerName} is available ✅` : `${b.providerName} declined`, `${project.code} · ${serviceName(b.serviceId)}${note ? ` — ${note}` : ''}`, `/platform/project/${projectId}?tab=services`, 'booking');
+    get().notify(to, accept ? `${b.providerName} is available` : `${b.providerName} declined`, `${project.code} · ${serviceName(b.serviceId)}${note ? ` — ${note}` : ''}`, `/platform/project/${projectId}?tab=services`, 'booking');
     // Already part of an accepted quote → confirm straight away.
     if (accept && b.quoteId && get().quotes.find((q) => q.id === b.quoteId)?.status === 'accepted') activateBooking(set, get, projectId, bookingId);
   },
@@ -559,7 +559,7 @@ export const projectActions = (set: SetDb, get: GetDb): ProjectActions => ({
 
   updateBooking: (projectId, bookingId, patch) => set((s) => ({ projects: mapProject(s.projects, projectId, (p) => mapBooking(p, bookingId, (b) => ({ ...b, ...patch }))) })),
 
-  // ── Crew ─────────────────────────────────────────────────────────────
+  // Crew
   setCrew: (projectId, bookingId, crew) => set((s) => ({ projects: mapProject(s.projects, projectId, (p) => mapBooking(p, bookingId, (b) => ({ ...b, crew }))) })),
 
   assignWorker: (projectId, bookingId, crewId, worker, opts = {}) => {
@@ -601,7 +601,7 @@ export const projectActions = (set: SetDb, get: GetDb): ProjectActions => ({
       get().notify(worker.id, `You're assigned: ${assignment.role}`, `${project.title} · ${formatShortDate(assignment.date)} · ${formatMoney(pay)}`, `/freelancer/assignment/${assignment.id}`, 'gig');
     }
     if (opts.replacesId) {
-      get().notify(project.coordinatorId ?? 'platform', 'Replacement confirmed ✅', `${worker.name} replaces the ${assignment.role.toLowerCase()} for ${project.code}`, `/platform/project/${projectId}?tab=crew`, 'emergency');
+      get().notify(project.coordinatorId ?? 'platform', 'Replacement confirmed', `${worker.name} replaces the ${assignment.role.toLowerCase()} for ${project.code}`, `/platform/project/${projectId}?tab=crew`, 'emergency');
       set((s) => ({
         projects: mapProject(s.projects, projectId, (p) => ({
           ...p,
@@ -677,7 +677,7 @@ export const projectActions = (set: SetDb, get: GetDb): ProjectActions => ({
       projects: mapProject(s.projects, projectId, (p) => mapBooking(p, bookingId, (b) => ({ ...b, assignments: b.assignments.map((x) => (x.id === assignmentId ? { ...x, confirmedByProvider: true } : x)) }))),
       payables: s.payables.map((p) => (p.assignmentId === assignmentId && p.status === 'ACCRUED' ? { ...p, status: 'READY' } : p)),
     }));
-    if (accountById(a.workerId)) get().notify(a.workerId, 'Work confirmed ✅', `Your payout of ${formatMoney(a.pay)} is ready for release.`, '/freelancer/earnings', 'payment');
+    if (accountById(a.workerId)) get().notify(a.workerId, 'Work confirmed', `Your payout of ${formatMoney(a.pay)} is ready for release.`, '/freelancer/earnings', 'payment');
   },
 
   startEmergencyReplacement: (projectId, bookingId, assignmentId, reason, pay) => {
@@ -722,7 +722,7 @@ export const projectActions = (set: SetDb, get: GetDb): ProjectActions => ({
     return gig;
   },
 
-  // ── Deliverables ─────────────────────────────────────────────────────
+  // Deliverables
   addDeliverable: (projectId, bookingId, d) =>
     set((s) => ({
       projects: mapProject(s.projects, projectId, (p) =>
@@ -759,13 +759,13 @@ export const projectActions = (set: SetDb, get: GetDb): ProjectActions => ({
     if (patch.status === 'READY_FOR_REVIEW') get().notify(project.customerId, `${d.title} is ready for review`, `${b.providerName} delivered it — approve or request changes.`, '/my-wedding?tab=services', 'booking');
     if (patch.status === 'REVISION_REQUESTED' || patch.status === 'APPROVED') {
       const to = b.providerAccountId ?? project.coordinatorId ?? 'platform';
-      get().notify(to, patch.status === 'APPROVED' ? `${d.title} approved ✅` : `Changes requested: ${d.title}`, note ?? project.title, b.providerAccountId ? `/business/booking/${bookingId}` : `/platform/project/${projectId}`, 'booking');
+      get().notify(to, patch.status === 'APPROVED' ? `${d.title} approved` : `Changes requested: ${d.title}`, note ?? project.title, b.providerAccountId ? `/business/booking/${bookingId}` : `/platform/project/${projectId}`, 'booking');
       if (patch.status === 'APPROVED')
         set((s) => ({ payables: s.payables.map((x) => (x.bookingId === bookingId && x.release === 'on_delivery' && x.status === 'ACCRUED' ? { ...x, status: 'READY' } : x)) }));
     }
   },
 
-  // ── Tasks ────────────────────────────────────────────────────────────
+  // Tasks
   addTask: (projectId, task) => {
     const full: ProjectTask = { ...task, id: uid('tk'), createdAt: now() };
     set((s) => ({ projects: mapProject(s.projects, projectId, (p) => ({ ...p, tasks: [full, ...p.tasks] })) }));
@@ -794,7 +794,7 @@ export const projectActions = (set: SetDb, get: GetDb): ProjectActions => ({
     set((s) => ({ projects: mapProject(s.projects, projectId, (p) => ({ ...p, tasks: [...p.tasks, ...fresh] })) }));
   },
 
-  // ── Timeline ─────────────────────────────────────────────────────────
+  // Timeline
   addTimelineEntry: (projectId, entry) => {
     set((s) => ({ projects: mapProject(s.projects, projectId, (p) => ({ ...p, timeline: [...p.timeline, { ...entry, id: uid('tl'), done: entry.done ?? false }] })) }));
     const project = get().projects.find((p) => p.id === projectId);
@@ -806,7 +806,7 @@ export const projectActions = (set: SetDb, get: GetDb): ProjectActions => ({
   toggleTimelineEntry: (projectId, id) =>
     set((s) => ({ projects: mapProject(s.projects, projectId, (p) => ({ ...p, timeline: p.timeline.map((t) => (t.id === id ? { ...t, done: !t.done } : t)) })) })),
 
-  // ── Collaborators ────────────────────────────────────────────────────
+  // Collaborators
   inviteCollaborator: (projectId, c) => {
     const collaborator: Collaborator = { ...c, id: uid('col'), inviteCode: shortCode() };
     set((s) => ({ projects: mapProject(s.projects, projectId, (p) => ({ ...p, collaborators: [...p.collaborators, collaborator] })) }));

@@ -124,7 +124,7 @@ export const FAQS: Faq[] = [
 ];
 
 export const GENIE_FEATURES = [
-  { icon: 'search', label: 'Tailored\nVendor Picks' },
-  { icon: 'pricetag-outline', label: 'Best\nDeals' },
-  { icon: 'headset-outline', label: 'Expert Help &\nSupport' },
+  { icon: 'search', label: 'Venues and vendors picked for your budget' },
+  { icon: 'pricetag-outline', label: 'Prices negotiated for you' },
+  { icon: 'headset-outline', label: 'One planner to call, start to finish' },
 ] as const;

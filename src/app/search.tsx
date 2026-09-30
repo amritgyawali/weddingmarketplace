@@ -172,8 +172,8 @@ export default function SearchScreen() {
           stickySectionHeadersEnabled={false}
           contentContainerStyle={{ paddingBottom: insets.bottom + 30 }}
           renderSectionHeader={({ section }) => (
-            <Text size={13} weight="bold" color={colors.textMuted} tracking={0.8} style={styles.sectionTitle}>
-              {section.title.toUpperCase()}
+            <Text size={13} weight="medium" color={colors.textMuted} style={styles.sectionTitle}>
+              {section.title}
             </Text>
           )}
           renderItem={({ item }) => <ResultRow result={item} />}
@@ -197,7 +197,7 @@ const styles = StyleSheet.create({
     marginHorizontal: GUTTER - 10,
     height: 44,
     paddingHorizontal: 16,
-    borderRadius: radius.pill,
+    borderRadius: radius.sm,
     backgroundColor: colors.bgMuted,
   },
   input: { flex: 1, fontFamily: fonts.regular, fontSize: 17, color: colors.textStrong, paddingVertical: 0, height: '100%' },

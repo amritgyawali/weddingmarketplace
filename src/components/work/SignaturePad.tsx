@@ -68,7 +68,7 @@ export function SignatureImage({ path, height = 60 }: { path: string; height?: n
 }
 
 const styles = StyleSheet.create({
-  pad: { borderWidth: 1.2, borderRadius: 14, overflow: 'hidden' },
+  pad: { borderWidth: 1, borderRadius: 8, overflow: 'hidden' },
   hint: { position: 'absolute', top: '42%', alignSelf: 'center' },
   line: { position: 'absolute', left: 20, right: 20, bottom: 36, height: 1 },
   row: { flexDirection: 'row', gap: 8 },

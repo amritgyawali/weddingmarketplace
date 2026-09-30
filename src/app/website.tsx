@@ -99,7 +99,7 @@ function Builder({ project, readOnly }: { project: Project; readOnly: boolean })
     saveWebsite(next);
     setSite(next);
     setDirty(false);
-    toast(publish === true ? 'Website published 🎉' : publish === false ? 'Website unpublished' : 'Changes saved', 'globe');
+    toast(publish === true ? 'Website published' : publish === false ? 'Website unpublished' : 'Changes saved', 'globe');
   };
 
   return (
@@ -209,7 +209,7 @@ function Builder({ project, readOnly }: { project: Project; readOnly: boolean })
           {site.rsvpQuestions.map((q) => (
             <View key={q.id} style={toolStyles.between}>
               <Text size={14} color={t.c.text} style={{ flex: 1 }}>
-                {q.kind === 'song' ? '🎵 ' : ''}
+                {q.kind === 'song' ? 'Song request: ' : ''}
                 {q.q}
               </Text>
               {!readOnly && (
@@ -323,12 +323,12 @@ export default function WebsiteScreen() {
 }
 
 const styles = StyleSheet.create({
-  template: { width: 128, borderRadius: 14, borderWidth: 2, overflow: 'hidden', backgroundColor: colors.white },
+  template: { width: 128, borderRadius: 8, borderWidth: 2, overflow: 'hidden', backgroundColor: colors.white },
   templateImg: { width: '100%', height: 90 },
   swatch: { width: 34, height: 34, borderRadius: 17, borderWidth: 3 },
-  thumb: { width: 76, height: 76, borderRadius: 12, borderWidth: 2 },
+  thumb: { width: 76, height: 76, borderRadius: 8, borderWidth: 2 },
   check: { position: 'absolute', top: 4, right: 4 },
   toggleRow: { paddingHorizontal: 14, paddingVertical: 10 },
   footer: { position: 'absolute', left: 0, right: 0, bottom: 0, flexDirection: 'row', gap: 10, padding: 14, paddingBottom: 26, borderTopWidth: StyleSheet.hairlineWidth },
-  qr: { padding: 16, backgroundColor: '#fff', borderRadius: 16 },
+  qr: { padding: 16, backgroundColor: '#fff', borderRadius: 10 },
 });

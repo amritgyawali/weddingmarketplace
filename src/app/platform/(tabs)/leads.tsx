@@ -30,8 +30,8 @@ function LeadCard({ project }: { project: Project }) {
   return (
     <Card onPress={() => router.push({ pathname: '/platform/project/[id]', params: { id: project.id } })} style={{ gap: 6, padding: 12 }}>
       <View style={styles.rowBetween}>
-        <Text size={11} weight="bold" color={t.c.primary}>
-          {project.code} · {EVENT_TYPE_BY_ID[project.eventType]?.label.toUpperCase()}
+        <Text size={12} weight="medium" color={t.c.muted}>
+          {project.code} · {EVENT_TYPE_BY_ID[project.eventType]?.label}
         </Text>
         {risk && <Ionicons name="warning" size={14} color={t.c.danger} />}
       </View>
@@ -73,7 +73,7 @@ export default function LeadsPipeline() {
 
   return (
     <View style={{ flex: 1, backgroundColor: t.c.bg }}>
-      <RoleHeader eyebrow="LEAD PIPELINE" title="Leads" subtitle={`${list.filter((p) => COLUMNS.slice(0, 5).some((c) => c.statuses.includes(p.status))).length} open · ${lost} lost`} />
+      <RoleHeader title="Leads" subtitle={`${list.filter((p) => COLUMNS.slice(0, 5).some((c) => c.statuses.includes(p.status))).length} open · ${lost} lost`} />
       <View style={{ padding: 14, gap: 10 }}>
         <KField placeholder="Search couple, code or city" value={query} onChangeText={setQuery} />
         <ChoiceChips options={['All', 'Mine', 'Unassigned']} selected={[scope]} onToggle={(v) => setScope(v as typeof scope)} />
@@ -112,5 +112,5 @@ export default function LeadsPipeline() {
 const styles = StyleSheet.create({
   rowBetween: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 8 },
   board: { paddingHorizontal: 14, gap: 10, paddingBottom: 20 },
-  column: { width: 270, borderRadius: 14, padding: 10, gap: 10, maxHeight: 640 },
+  column: { width: 270, borderRadius: 8, padding: 10, gap: 10, maxHeight: 640 },
 });

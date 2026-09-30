@@ -28,6 +28,10 @@ interface AppState {
   role: Role | null;
   weddingDate: string | null;
   city: string;
+  /** Rough guest count from onboarding; prefills the plan wizard. */
+  guests: number | null;
+  /** Rough overall budget in NPR from onboarding (null = not sure yet). */
+  budget: number | null;
   profile: Profile;
   shortlist: { venues: string[]; vendors: string[] };
   likedPhotos: string[];
@@ -45,6 +49,8 @@ interface AppActions {
   setRole: (role: Role) => void;
   setWeddingDate: (date: string | null) => void;
   setCity: (city: string) => void;
+  /** Save the onboarding answers in one go. */
+  saveWeddingBasics: (basics: Partial<Pick<AppState, 'role' | 'weddingDate' | 'city' | 'guests' | 'budget'>> & { partnerName?: string }) => void;
   completeOnboarding: () => void;
   resetOnboarding: () => void;
   updateProfile: (patch: Partial<Profile>) => void;
@@ -71,6 +77,8 @@ const initialState: AppState = {
   role: null,
   weddingDate: null,
   city: ALL_CITIES,
+  guests: null,
+  budget: null,
   profile: { name: '', email: '', phone: '', partnerName: '' },
   shortlist: { venues: [], vendors: [] },
   likedPhotos: [],
@@ -116,6 +124,8 @@ export const useAppStore = create<AppStore>()(
       setRole: (role) => set({ role }),
       setWeddingDate: (weddingDate) => set({ weddingDate }),
       setCity: (city) => set({ city }),
+      saveWeddingBasics: ({ partnerName, ...basics }) =>
+        set((s) => ({ ...basics, profile: partnerName === undefined ? s.profile : { ...s.profile, partnerName } })),
       completeOnboarding: () => set({ hasOnboarded: true }),
       resetOnboarding: () => set({ hasOnboarded: false }),
       updateProfile: (patch) => set((s) => ({ profile: { ...s.profile, ...patch } })),

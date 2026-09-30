@@ -1,4 +1,3 @@
-import { Ionicons } from '@expo/vector-icons';
 import { ScrollView, StyleSheet, View } from 'react-native';
 
 import { Text } from '@/components/ui/Text';
@@ -69,20 +68,18 @@ export function PipelineStepper({ project, compact }: { project: Project; compac
           const current = project.status === s;
           const done = reached(s) && !current;
           const at = [...project.statusHistory].reverse().find((h) => h.status === s)?.at;
-          const color = current ? (terminal ? t.c.danger : t.c.primary) : done ? t.c.success : t.c.border;
+          const color = current ? (terminal ? t.c.danger : t.c.primary) : done ? t.c.textStrong : t.c.border;
           return (
             <View key={s} style={styles.step}>
               <View style={styles.nodeRow}>
-                <View style={[styles.node, { borderColor: color, backgroundColor: done || current ? color : 'transparent' }]}>
-                  {done && <Ionicons name="checkmark" size={11} color={t.dark ? '#000' : '#fff'} />}
-                </View>
-                {i < arr.length - 1 && <View style={[styles.bar, { backgroundColor: done ? t.c.success : t.c.border }]} />}
+                <View style={[styles.node, { borderColor: color, backgroundColor: done ? color : t.c.surface }, current && styles.nodeCurrent]} />
+                {i < arr.length - 1 && <View style={[styles.bar, { backgroundColor: done ? t.c.textStrong : t.c.border }]} />}
               </View>
-              <Text size={11} weight={current ? 'bold' : 'medium'} color={current ? t.c.textStrong : t.c.muted} numberOfLines={2} style={{ width: 78 }}>
+              <Text size={12} weight={current ? 'semibold' : 'regular'} color={current ? t.c.textStrong : done ? t.c.text : t.c.subtle} numberOfLines={2} lineHeight={15} style={{ width: 78 }}>
                 {STATUS_LABEL[s]}
               </Text>
               {at && (
-                <Text size={10} color={t.c.subtle}>
+                <Text size={11} color={t.c.subtle}>
                   {formatShortDate(at).slice(4)}
                 </Text>
               )}
@@ -91,10 +88,8 @@ export function PipelineStepper({ project, compact }: { project: Project; compac
         })}
       {terminal && (
         <View style={styles.step}>
-          <View style={[styles.node, { borderColor: t.c.danger, backgroundColor: t.c.danger }]}>
-            <Ionicons name="close" size={11} color="#fff" />
-          </View>
-          <Text size={11} weight="bold" color={t.c.danger} style={{ width: 78 }}>
+          <View style={[styles.node, { borderColor: t.c.danger, backgroundColor: t.c.danger }]} />
+          <Text size={12} weight="semibold" color={t.c.danger} style={{ width: 78 }}>
             {STATUS_LABEL[project.status]}
           </Text>
         </View>
@@ -136,7 +131,8 @@ export function nextStatuses(status: ProjectStatus): ProjectStatus[] {
 const styles = StyleSheet.create({
   row: { paddingVertical: 4, gap: 0 },
   step: { gap: 6, width: 86 },
-  nodeRow: { flexDirection: 'row', alignItems: 'center' },
-  node: { width: 18, height: 18, borderRadius: 9, borderWidth: 2, alignItems: 'center', justifyContent: 'center' },
-  bar: { flex: 1, height: 2, marginHorizontal: 2 },
+  nodeRow: { flexDirection: 'row', alignItems: 'center', height: 14 },
+  node: { width: 10, height: 10, borderRadius: 5, borderWidth: 1.5 },
+  nodeCurrent: { width: 14, height: 14, borderRadius: 7, borderWidth: 3 },
+  bar: { flex: 1, height: 1, marginHorizontal: 3 },
 });

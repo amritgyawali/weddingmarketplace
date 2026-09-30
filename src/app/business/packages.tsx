@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 
 import { Card, ChoiceChips, EmptyBlock, KButton, KField, StackHeader, StatusPill } from '@/components/kit';
 import { Sheet } from '@/components/ui/Sheet';
@@ -99,18 +99,19 @@ export default function Packages() {
         <KButton label="Create package" icon="add" onPress={() => setEditing(blank())} />
         {!mine.length && <EmptyBlock icon="pricetags-outline" title="No packages yet" message="Couples compare packages side by side — create Basic, Premium and Luxury tiers." />}
         {mine.map((p) => (
-          <Card key={p.id} onPress={() => setEditing(p)} style={{ gap: 8, opacity: p.active ? 1 : 0.6 }}>
+          <Card key={p.id} style={{ gap: 8, opacity: p.active ? 1 : 0.6 }}>
+            <Pressable onPress={() => setEditing(p)} accessibilityRole="button" accessibilityLabel={`Edit ${p.title}`} style={{ gap: 8 }}>
             <View style={styles.rowBetween}>
               <View style={{ flex: 1 }}>
-                <Text size={12} weight="bold" color={t.c.primary}>
-                  {findService(p.serviceId)?.name.toUpperCase()}
+                <Text size={12} weight="medium" color={t.c.muted}>
+                  {findService(p.serviceId)?.name}
                 </Text>
                 <Text size={16} weight="bold" color={t.c.textStrong}>
                   {p.title}
                 </Text>
               </View>
               <View style={{ alignItems: 'flex-end' }}>
-                <Text size={17} weight="extrabold" color={t.c.textStrong}>
+                <Text size={17} weight="bold" color={t.c.textStrong}>
                   {formatMoney(p.price)}
                 </Text>
                 <Text size={11} color={t.c.muted}>
@@ -124,13 +125,14 @@ export default function Packages() {
               </Text>
             )}
             <Text size={12} color={t.c.text}>
-              ✓ {p.included.join(' · ')}
+              Includes {p.included.join(', ')}
             </Text>
             {Object.keys(p.crew).length > 0 && (
               <Text size={12} color={t.c.muted}>
                 Crew: {Object.entries(p.crew).map(([r, n]) => `${n} ${r}`).join(', ')}
               </Text>
             )}
+            </Pressable>
             <View style={styles.rowBetween}>
               <View style={styles.row}>
                 {!!p.discountPct && <StatusPill status="confirmed" label={`${p.discountPct}% off`} />}

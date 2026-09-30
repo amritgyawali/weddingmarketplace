@@ -45,7 +45,7 @@ export default function VendorQuotes() {
           <Card onPress={() => router.push({ pathname: '/business/quote/[id]', params: { id: item.id } })} style={{ gap: 8 }} accessibilityLabel={`Quotation ${item.number}`}>
             <View style={styles.row}>
               <View style={{ flex: 1 }}>
-                <Text size={12} weight="bold" color={t.c.primary}>
+                <Text size={12} weight="medium" color={t.c.muted}>
                   {item.number} · v{item.version}
                 </Text>
                 <Text size={16} weight="bold" color={t.c.textStrong}>
@@ -58,7 +58,7 @@ export default function VendorQuotes() {
               <Text size={13} color={t.c.muted} style={{ flex: 1 }}>
                 {item.items.length} items · event {formatShortDate(item.eventDate)} · valid till {formatShortDate(item.validUntil)}
               </Text>
-              <Text size={17} weight="extrabold" color={t.c.textStrong}>
+              <Text size={17} weight="bold" color={t.c.textStrong}>
                 {formatMoney(quoteTotals(item).total)}
               </Text>
             </View>

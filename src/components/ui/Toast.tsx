@@ -42,8 +42,8 @@ export function ToastHost() {
   return (
     <View pointerEvents="none" style={[StyleSheet.absoluteFill, styles.host, { paddingBottom: insets.bottom + 90 }]}>
       <Animated.View key={key} entering={FadeInDown.duration(220)} exiting={FadeOutDown.duration(180)} style={styles.toast}>
-        <Ionicons name={icon} size={20} color={colors.white} />
-        <Text size={14} weight="semibold" color={colors.white}>
+        <Ionicons name={icon === 'sparkles' ? 'checkmark-circle' : icon} size={18} color={colors.white} />
+        <Text size={14} weight="medium" color={colors.white} style={{ flexShrink: 1 }}>
           {message}
         </Text>
       </Animated.View>
@@ -57,10 +57,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
-    backgroundColor: '#2B2B2E',
-    paddingHorizontal: 18,
-    paddingVertical: 12,
-    borderRadius: radius.pill,
+    backgroundColor: colors.heading,
+    paddingHorizontal: 16,
+    paddingVertical: 11,
+    borderRadius: radius.md,
+    maxWidth: 420,
+    marginHorizontal: 16,
     ...shadows.raised,
   },
 });

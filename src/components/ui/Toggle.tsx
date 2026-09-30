@@ -10,7 +10,7 @@ const TRACK_W = 52;
 const TRACK_H = 31;
 const KNOB = 27;
 
-/** iOS-style switch matching the "Destination Wedding Pricing" toggle. */
+/** On/off switch. */
 export function Toggle({
   value,
   onValueChange,
@@ -22,7 +22,7 @@ export function Toggle({
 }) {
   const t = useRoleTheme();
   const on = t.c.primary;
-  const off = t.dark ? t.c.surfaceAlt : '#E9E9EB';
+  const off = t.dark ? t.c.surfaceAlt : t.c.border;
   const progress = useSharedValue(value ? 1 : 0);
 
   useEffect(() => {

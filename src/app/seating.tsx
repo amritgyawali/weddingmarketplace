@@ -148,7 +148,7 @@ function Planner({ project, readOnly }: { project: Project; readOnly: boolean })
             { label: 'Unseated', value: unseated.reduce((s, g) => s + heads(g), 0) },
           ].map((s) => (
             <Card key={s.label} style={toolStyles.stat}>
-              <Text size={19} weight="bold" color={s.label === 'Unseated' && s.value ? t.c.warning : t.c.primary}>
+              <Text size={20} weight="semibold" color={s.label === 'Unseated' && s.value ? t.c.warning : t.c.textStrong}>
                 {s.value}
               </Text>
               <Text size={12} color={t.c.muted}>
@@ -288,7 +288,7 @@ function Planner({ project, readOnly }: { project: Project; readOnly: boolean })
             {unseated.length > 6 && <KField placeholder="Search guests" value={q} onChangeText={setQ} />}
             {unseated.length === 0 ? (
               <Text size={13} color={t.c.muted}>
-                {guests.length ? 'Everyone is seated 🎉' : 'Invite guests to this function from the guest list first.'}
+                {guests.length ? 'Everyone is seated.' : 'Invite guests to this function from the guest list first.'}
               </Text>
             ) : (
               unseated
@@ -302,7 +302,7 @@ function Planner({ project, readOnly }: { project: Project; readOnly: boolean })
                       <View style={{ flex: 1 }}>
                         <Text size={14} weight="semibold" color={t.c.textStrong}>
                           {g.name}
-                          {g.vip ? ' ⭐' : ''}
+                          {g.vip ? ' · VIP' : ''}
                         </Text>
                         <Text size={12} color={t.c.muted}>
                           {g.side} · {g.household ?? g.category} · {heads(g)} {heads(g) > 1 ? 'people' : 'person'}
@@ -355,6 +355,6 @@ export default function SeatingScreen() {
 }
 
 const styles = StyleSheet.create({
-  canvas: { width: '100%', borderWidth: 1, borderRadius: 16, backgroundColor: '#FBFAF7', overflow: 'hidden' },
+  canvas: { width: '100%', borderWidth: 1, borderRadius: 10, backgroundColor: '#FFFFFF', overflow: 'hidden' },
   el: { position: 'absolute', alignItems: 'center', justifyContent: 'center', paddingHorizontal: 2 },
 });

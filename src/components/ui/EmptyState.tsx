@@ -8,7 +8,7 @@ import { Button } from './Button';
 import { Text } from './Text';
 
 export function EmptyState({
-  icon = 'sparkles-outline',
+  icon = 'albums-outline',
   title,
   message,
   actionLabel,
@@ -22,10 +22,8 @@ export function EmptyState({
 }) {
   return (
     <View style={styles.wrap}>
-      <View style={styles.iconCircle}>
-        <Ionicons name={icon} size={30} color={colors.primary} />
-      </View>
-      <Text weight="bold" size={18} color={colors.heading} align="center">
+      <Ionicons name={icon} size={34} color={colors.textSubtle} style={{ marginBottom: 4 }} />
+      <Text weight="semibold" size={17} color={colors.heading} align="center">
         {title}
       </Text>
       {message && (
@@ -34,7 +32,7 @@ export function EmptyState({
         </Text>
       )}
       {actionLabel && onAction && (
-        <Button label={actionLabel} onPress={onAction} size="sm" style={{ marginTop: 8, paddingHorizontal: 24 }} />
+        <Button label={actionLabel} onPress={onAction} size="sm" variant="outline" style={{ marginTop: 8, paddingHorizontal: 20 }} />
       )}
     </View>
   );
@@ -44,8 +42,8 @@ export function ErrorState({ onRetry, message }: { onRetry?: () => void; message
   return (
     <EmptyState
       icon="cloud-offline-outline"
-      title="Something went wrong"
-      message={message ?? 'We could not load this right now. Please check your connection and try again.'}
+      title="Couldn't load this"
+      message={message ?? 'Check your connection, then try again.'}
       actionLabel={onRetry ? 'Try again' : undefined}
       onAction={onRetry}
     />
@@ -54,13 +52,4 @@ export function ErrorState({ onRetry, message }: { onRetry?: () => void; message
 
 const styles = StyleSheet.create({
   wrap: { alignItems: 'center', justifyContent: 'center', padding: 32, gap: 10 },
-  iconCircle: {
-    width: 68,
-    height: 68,
-    borderRadius: 34,
-    backgroundColor: colors.primarySoft,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 6,
-  },
 });

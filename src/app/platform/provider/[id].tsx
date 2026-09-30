@@ -57,7 +57,7 @@ export default function PlatformProvider() {
         <Card style={{ gap: 10 }}>
           <SectionTitle title="Internal reliability (not public)" />
           <View style={styles.score}>
-            <Text size={34} weight="extrabold" color={i.reliability >= 80 ? t.c.success : i.reliability >= 60 ? t.c.warning : t.c.danger}>
+            <Text size={34} weight="bold" color={i.reliability >= 80 ? t.c.success : i.reliability >= 60 ? t.c.warning : t.c.danger}>
               {i.reliability}
             </Text>
             <Text size={12} color={t.c.muted} style={{ flex: 1 }}>

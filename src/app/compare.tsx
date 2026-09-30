@@ -77,8 +77,8 @@ export default function CompareScreen() {
           <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.chips}>
             {services.map((sid) => (
               <View key={sid} style={styles.group}>
-                <Text size={11} weight="bold" color={colors.textMuted}>
-                  {serviceName(sid).toUpperCase()}
+                <Text size={12} weight="medium" color={colors.textMuted}>
+                  {serviceName(sid)}
                 </Text>
                 <View style={{ flexDirection: 'row', gap: 6 }}>
                   {saved
@@ -159,10 +159,10 @@ const styles = StyleSheet.create({
   root: { flex: 1, backgroundColor: colors.bgSoft },
   chips: { padding: 16, gap: 14 },
   group: { gap: 6 },
-  chip: { borderWidth: 1, borderRadius: 999, paddingHorizontal: 12, paddingVertical: 7, maxWidth: 180 },
+  chip: { borderWidth: 1, borderRadius: 6, paddingHorizontal: 12, paddingVertical: 7, maxWidth: 180 },
   row: { flexDirection: 'row', alignItems: 'stretch' },
   labelCol: { width: 110, paddingVertical: 10, paddingRight: 8, justifyContent: 'center' },
   col: { width: COL, paddingHorizontal: 8 },
   cell: { paddingVertical: 10, flexDirection: 'row', gap: 4, alignItems: 'flex-start' },
-  image: { width: COL - 16, height: 96, borderRadius: 12 },
+  image: { width: COL - 16, height: 96, borderRadius: 8 },
 });

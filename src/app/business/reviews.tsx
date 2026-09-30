@@ -35,7 +35,7 @@ export default function VendorReviews() {
           published.length ? (
             <Card style={{ gap: 10, marginBottom: 4 }}>
               <View style={styles.row}>
-                <Text size={36} weight="extrabold" color={t.c.primary}>
+                <Text serif size={34} weight="bold" color={t.c.textStrong} lineHeight={42}>
                   {summary.average.toFixed(1)}
                 </Text>
                 <View style={{ flex: 1, gap: 3 }}>
@@ -101,7 +101,7 @@ export default function VendorReviews() {
             </Text>
             {item.reply ? (
               <View style={[styles.reply, { backgroundColor: t.c.surfaceAlt }]}>
-                <Text size={12} weight="bold" color={t.c.primary}>
+                <Text size={12} weight="medium" color={t.c.muted}>
                   Your reply
                 </Text>
                 <Text size={13} color={t.c.text}>

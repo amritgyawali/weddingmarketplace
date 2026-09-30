@@ -1,6 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
 import * as Clipboard from 'expo-clipboard';
-import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
@@ -9,7 +8,7 @@ import { Card, ChoiceChips, EmptyBlock, KButton } from '@/components/kit';
 import { ScreenHeader } from '@/components/ui/ScreenHeader';
 import { Text } from '@/components/ui/Text';
 import { toast } from '@/components/ui/Toast';
-import { colors, gradients } from '@/constants/theme';
+import { colors } from '@/constants/theme';
 import { findProvider } from '@/data/providers';
 import { serviceName } from '@/data/services';
 import { useStartChat } from '@/hooks/useChat';
@@ -27,7 +26,7 @@ const KIND_LABEL: Record<Deal['kind'], string> = {
   promo_code: 'Promo codes',
 };
 
-const offer = (d: Deal) => (d.discountPct ? `${d.discountPct}% OFF` : d.discountAmount ? `${formatMoney(d.discountAmount)} OFF` : 'FREE EXTRA');
+const offer = (d: Deal) => (d.discountPct ? `${d.discountPct}% off` : d.discountAmount ? `${formatMoney(d.discountAmount)} off` : 'Free extra');
 
 /** Deals & offers: seasonal, last-minute (Mangsir/Poush), bundles, promo and referral codes. */
 export default function DealsScreen() {
@@ -43,7 +42,7 @@ export default function DealsScreen() {
     redeem(d.id);
     if (d.code) {
       await Clipboard.setStringAsync(d.code);
-      toast(`Code ${d.code} copied — apply it at checkout or share it with your coordinator`, 'pricetag');
+      toast(`Code ${d.code} copied. Use it at checkout or send it to your coordinator.`, 'pricetag');
       return;
     }
     const p = d.providerId ? findProvider(d.providerId) : undefined;
@@ -60,47 +59,43 @@ export default function DealsScreen() {
         {shown.map((d) => {
           const days = d.endsAt ? daysUntil(d.endsAt) : null;
           return d.featured ? (
-            <LinearGradient key={d.id} colors={gradients.checklist} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={styles.hero}>
-              <View style={styles.badge}>
-                <Text size={12} weight="extrabold" color={colors.primary}>
-                  {offer(d)}
-                </Text>
-              </View>
-              <Text size={19} weight="extrabold" color="#fff">
+            <View key={d.id} style={styles.hero}>
+              <Text serif size={26} weight="bold" color={colors.primary} lineHeight={34}>
+                {offer(d)}
+              </Text>
+              <Text size={17} weight="semibold" color={colors.heading}>
                 {d.title}
               </Text>
-              <Text size={13} color="rgba(255,255,255,0.92)">
+              <Text size={14} color={colors.textBody}>
                 {d.description}
               </Text>
-              <Text size={12} color="rgba(255,255,255,0.85)">
+              <Text size={12} color={colors.textMuted}>
                 {d.providerName ?? 'Vivah'}{d.serviceId ? ` · ${serviceName(d.serviceId)}` : ''}{days !== null ? ` · ends in ${days} day${days === 1 ? '' : 's'}` : ''} · used {d.redemptions}×
               </Text>
-              <View style={{ flexDirection: 'row', gap: 8 }}>
-                <KButton label={d.code ? `Copy ${d.code}` : 'Claim offer'} icon={d.code ? 'copy-outline' : 'chatbubble-outline'} size="sm" onPress={() => use(d)} style={{ backgroundColor: '#fff', borderColor: '#fff' }} />
-                {d.kind === 'referral' && d.code && <KButton label="Share" icon="share-social-outline" size="sm" variant="secondary" onPress={() => shareMessage(`Planning a wedding? Use my Vivah code ${d.code} — we both get ${offer(d).toLowerCase()} 🎉`)} />}
+              <View style={{ flexDirection: 'row', gap: 8, marginTop: 4 }}>
+                <KButton label={d.code ? `Copy ${d.code}` : 'Claim offer'} icon={d.code ? 'copy-outline' : 'chatbubble-outline'} size="sm" onPress={() => use(d)} />
+                {d.kind === 'referral' && d.code && <KButton label="Share" icon="share-social-outline" size="sm" variant="secondary" onPress={() => shareMessage(`Planning a wedding? Use my Vivah code ${d.code} — we both get ${offer(d).toLowerCase()}`)} />}
               </View>
-            </LinearGradient>
+            </View>
           ) : (
             <Card key={d.id} style={{ gap: 8 }}>
               <View style={styles.row}>
-                <View style={[styles.tag, { backgroundColor: colors.primarySoft }]}>
-                  <Text size={11} weight="extrabold" color={colors.primary}>
-                    {offer(d)}
-                  </Text>
-                </View>
-                <Text size={11} weight="bold" color={colors.textMuted}>
-                  {KIND_LABEL[d.kind].toUpperCase()}
+                <Text size={14} weight="bold" color={colors.primary}>
+                  {offer(d)}
+                </Text>
+                <Text size={12} weight="medium" color={colors.textMuted}>
+                  {KIND_LABEL[d.kind]}
                 </Text>
                 {days !== null && days <= 7 && (
                   <View style={styles.row}>
                     <Ionicons name="time-outline" size={12} color={colors.danger} />
-                    <Text size={11} weight="bold" color={colors.danger}>
+                    <Text size={12} weight="medium" color={colors.danger}>
                       {days}d left
                     </Text>
                   </View>
                 )}
               </View>
-              <Text size={16} weight="bold" color={colors.textStrong}>
+              <Text size={16} weight="semibold" color={colors.textStrong}>
                 {d.title}
               </Text>
               <Text size={13} color={colors.textMuted}>
@@ -123,8 +118,6 @@ export default function DealsScreen() {
 
 const styles = StyleSheet.create({
   root: { flex: 1, backgroundColor: colors.bgSoft },
-  hero: { borderRadius: 20, padding: 18, gap: 8 },
-  badge: { alignSelf: 'flex-start', backgroundColor: '#fff', borderRadius: 999, paddingHorizontal: 10, paddingVertical: 4 },
+  hero: { borderRadius: 10, padding: 16, gap: 4, backgroundColor: colors.white, borderWidth: 1, borderStyle: 'dashed', borderColor: colors.primary },
   row: { flexDirection: 'row', alignItems: 'center', gap: 8 },
-  tag: { borderRadius: 999, paddingHorizontal: 8, paddingVertical: 3 },
 });

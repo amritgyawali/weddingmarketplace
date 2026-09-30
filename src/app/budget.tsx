@@ -95,10 +95,10 @@ function Budget({ project, readOnly }: { project: Project; readOnly: boolean }) 
         <Card style={{ gap: 12 }}>
           <View style={toolStyles.between}>
             <View>
-              <Text size={12} weight="bold" color={t.c.muted} tracking={0.6}>
-                TOTAL BUDGET
+              <Text size={12} weight="medium" color={t.c.muted}>
+                Total budget
               </Text>
-              <Text size={28} weight="bold" color={t.c.textStrong}>
+              <Text size={26} weight="semibold" color={t.c.textStrong}>
                 {formatMoney(total)}
               </Text>
             </View>

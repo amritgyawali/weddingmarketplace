@@ -166,7 +166,7 @@ function GuestSheet({ project, guest, onClose }: { project: Project; guest: Gues
                       {inv.sentAt ? 'Invite sent' : 'Invite not sent'}
                       {inv.respondedAt ? ' · responded' : ''}
                       {inv.attending ? ` · ${inv.attending} attending` : ''}
-                      {inv.checkedInAt ? ' · checked in ✅' : ''}
+                      {inv.checkedInAt ? ' · checked in' : ''}
                     </Text>
                     {e.date === new Date().toISOString().slice(0, 10) && !inv.checkedInAt && <KButton label="Check in now" size="sm" variant="secondary" icon="qr-code-outline" onPress={() => checkIn(guest.id, e.id)} />}
                   </>
@@ -429,7 +429,7 @@ function GuestList({ project, readOnly }: { project: Project; readOnly: boolean 
                 { label: 'Declined', value: `${count('no')}`, sub: 'regrets' },
               ].map((s) => (
                 <Card key={s.label} style={toolStyles.stat}>
-                  <Text size={19} weight="bold" color={t.c.primary}>
+                  <Text size={20} weight="semibold" color={t.c.textStrong}>
                     {s.value}
                   </Text>
                   <Text size={12} weight="semibold" color={t.c.textStrong}>
@@ -546,7 +546,7 @@ export default function GuestsScreen() {
 
 const styles = StyleSheet.create({
   pill: { height: 36, borderRadius: 18, borderWidth: 1, paddingHorizontal: 14, justifyContent: 'center' },
-  rsvp: { flexDirection: 'row', alignItems: 'center', gap: 4, borderWidth: 1, borderRadius: 999, paddingHorizontal: 10, paddingVertical: 6 },
+  rsvp: { flexDirection: 'row', alignItems: 'center', gap: 4, borderWidth: 1, borderRadius: 6, paddingHorizontal: 10, paddingVertical: 6 },
   dot: { width: 8, height: 8, borderRadius: 4 },
-  stepper: { flex: 1, flexDirection: 'row', alignItems: 'center', gap: 10, borderWidth: 1, borderRadius: 12, paddingHorizontal: 12, height: 48 },
+  stepper: { flex: 1, flexDirection: 'row', alignItems: 'center', gap: 10, borderWidth: 1, borderRadius: 8, paddingHorizontal: 12, height: 48 },
 });

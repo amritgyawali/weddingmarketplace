@@ -9,7 +9,7 @@ import { useAppStore } from '@/store/useAppStore';
 import { useDb } from '@/store/useDb';
 import { useAccount } from '@/store/useSession';
 
-/** White round bookmark overlay used on venue & vendor imagery. */
+/** Round bookmark button laid over venue and vendor photos. */
 export function ShortlistButton({
   kind,
   id,
@@ -41,7 +41,7 @@ export function ShortlistButton({
         const nowSaved = toggleShortlist(account.id, id);
         if (inLocal !== nowSaved) toggleLocal(kind, id);
         triggerHaptic(nowSaved ? 'success' : 'light');
-        pop.set(withSequence(withSpring(1.3, { damping: 6 }), withSpring(1)));
+        pop.set(withSequence(withSpring(1.15, { damping: 12 }), withSpring(1)));
         toast(nowSaved ? 'Added to your shortlist' : 'Removed from shortlist', nowSaved ? 'bookmark' : 'bookmark-outline');
       }}
       style={[styles.btn, { width: size, height: size, borderRadius: size / 2 }, shadows.card, style]}>

@@ -1,5 +1,4 @@
 import { Ionicons } from '@expo/vector-icons';
-import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useRef, useState } from 'react';
@@ -7,7 +6,7 @@ import { KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { Card, KButton } from '@/components/kit';
+import { KButton } from '@/components/kit';
 import { triggerHaptic } from '@/components/ui/PressableScale';
 import { Text } from '@/components/ui/Text';
 import { inputReset } from '@/constants/theme';
@@ -29,7 +28,6 @@ function LoginForm() {
   const [busy, setBusy] = useState(false);
   const otpRef = useRef<TextInput>(null);
   const demo = DEMO_ACCOUNTS.find((a) => a.role === t.role)!;
-  const light = t.role !== 'freelancer';
 
   const sendOtp = async () => {
     if (!isNepalMobile(phone)) {
@@ -65,21 +63,21 @@ function LoginForm() {
 
   return (
     <View style={{ flex: 1, backgroundColor: t.c.bg }}>
-      <StatusBar style={light ? 'light' : 'light'} />
-      <LinearGradient colors={t.role === 'freelancer' ? ['#1A1F28', '#0C0F14'] : t.gradient} style={[styles.hero, { paddingTop: insets.top + 8 }]}>
+      <StatusBar style="dark" />
+      <View style={[styles.hero, { paddingTop: insets.top + 6 }]}>
         <Pressable onPress={() => router.back()} hitSlop={12} accessibilityLabel="Go back" style={styles.back}>
-          <Ionicons name="chevron-back" size={22} color="#FFFFFF" />
+          <Ionicons name="chevron-back" size={24} color={t.c.textStrong} />
         </Pressable>
-        <Text size={13} weight="bold" color={t.role === 'freelancer' ? t.c.primary : 'rgba(255,255,255,0.8)'} tracking={1}>
-          {t.label.toUpperCase()} LOGIN
+        <Text size={14} color={t.c.muted}>
+          {t.label}
         </Text>
-        <Text size={30} weight="bold" color="#FFFFFF" lineHeight={36}>
-          {step === 'phone' ? 'Welcome! Enter your\nmobile number' : 'Verify your\nnumber'}
+        <Text serif size={26} weight="bold" color={t.c.textStrong} lineHeight={36}>
+          {step === 'phone' ? 'Log in with your mobile number' : 'Enter the code we sent'}
         </Text>
-        <Text size={14} color="rgba(255,255,255,0.8)" style={{ marginTop: 6 }}>
-          {t.tagline}
+        <Text size={14} color={t.c.muted}>
+          {step === 'phone' ? 'We’ll text you a 4-digit code. No password needed.' : `Sent to +977 ${phone}`}
         </Text>
-      </LinearGradient>
+      </View>
 
       <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
         <ScrollView contentContainerStyle={{ padding: 20, gap: 16, paddingBottom: insets.bottom + 30 }} keyboardShouldPersistTaps="handled">
@@ -89,8 +87,8 @@ function LoginForm() {
                 Mobile number
               </Text>
               <View style={[styles.phone, { borderColor: error ? t.c.danger : t.c.border, backgroundColor: t.c.surface }]}>
-                <Text size={17} weight="semibold" color={t.c.textStrong}>
-                  🇳🇵 +977
+                <Text size={17} weight="medium" color={t.c.muted}>
+                  +977
                 </Text>
                 <View style={[styles.vr, { backgroundColor: t.c.border }]} />
                 <TextInput
@@ -117,9 +115,6 @@ function LoginForm() {
             </Animated.View>
           ) : (
             <Animated.View entering={FadeInDown.duration(300)} style={{ gap: 12 }}>
-              <Text size={14} color={t.c.muted}>
-                Enter the 4-digit code sent to +977 {phone}
-              </Text>
               <TextInput
                 ref={otpRef}
                 value={otp}
@@ -131,9 +126,9 @@ function LoginForm() {
                 }}
                 keyboardType="number-pad"
                 maxLength={4}
-                placeholder="• • • •"
+                placeholder="0000"
                 placeholderTextColor={t.c.subtle}
-                style={[styles.otp, inputReset, { color: t.c.textStrong, borderColor: error ? t.c.danger : t.c.primary, backgroundColor: t.c.surface, fontFamily: t.fonts.bold }]}
+                style={[styles.otp, inputReset, { color: t.c.textStrong, borderColor: error ? t.c.danger : t.c.border, backgroundColor: t.c.surface, fontFamily: t.fonts.semibold }]}
               />
               {!!error && (
                 <Text size={13} color={t.c.danger}>
@@ -143,23 +138,20 @@ function LoginForm() {
               <Text size={12} color={t.c.muted}>
                 Demo mode: the OTP is {DEMO_OTP}.
               </Text>
-              <KButton label="Verify & continue" size="lg" onPress={() => verify()} loading={busy} disabled={otp.length < 4} />
+              <KButton label="Continue" size="lg" onPress={() => verify()} loading={busy} disabled={otp.length < 4} />
               <KButton label="Change number" variant="ghost" size="sm" onPress={() => { setStep('phone'); setOtp(''); }} />
             </Animated.View>
           )}
 
-          <Card style={{ gap: 10, marginTop: 10 }}>
-            <View style={styles.demoRow}>
-              <Ionicons name="sparkles" size={18} color={t.c.primary} />
-              <Text size={15} weight="bold" color={t.c.textStrong}>
-                Explore with a demo account
-              </Text>
-            </View>
-            <Text size={13} color={t.c.muted}>
-              {demo.businessName ?? demo.name} · pre-filled with live projects, quotations and gigs.
+          <View style={[styles.demo, { borderTopColor: t.c.border }]}>
+            <Text size={14} weight="semibold" color={t.c.textStrong}>
+              Just looking around?
             </Text>
-            <KButton label={`Continue as ${demo.businessName ?? demo.name}`} variant="secondary" size="sm" onPress={() => completeLogin(demo)} />
-          </Card>
+            <Text size={13} color={t.c.muted}>
+              Use the demo account for {demo.businessName ?? demo.name}. It already has projects, quotations and gigs in it.
+            </Text>
+            <KButton label={`Continue as ${demo.businessName ?? demo.name}`} variant="secondary" size="sm" style={{ alignSelf: 'flex-start', marginTop: 6 }} onPress={() => completeLogin(demo)} />
+          </View>
         </ScrollView>
       </KeyboardAvoidingView>
     </View>
@@ -178,11 +170,11 @@ export default function LoginScreen() {
 }
 
 const styles = StyleSheet.create({
-  hero: { paddingHorizontal: 22, paddingBottom: 28, borderBottomLeftRadius: 28, borderBottomRightRadius: 28, gap: 4 },
-  back: { width: 40, height: 40, borderRadius: 20, backgroundColor: 'rgba(255,255,255,0.18)', alignItems: 'center', justifyContent: 'center', marginBottom: 18 },
-  phone: { flexDirection: 'row', alignItems: 'center', gap: 12, height: 58, borderRadius: 14, borderWidth: 1.5, paddingHorizontal: 16 },
-  vr: { width: 1, height: 26 },
-  phoneInput: { flex: 1, fontSize: 19, letterSpacing: 1, height: '100%' },
-  otp: { height: 64, borderRadius: 14, borderWidth: 1.5, textAlign: 'center', fontSize: 28, letterSpacing: 16 },
-  demoRow: { flexDirection: 'row', alignItems: 'center', gap: 8 },
+  hero: { paddingHorizontal: 20, paddingBottom: 8, gap: 2 },
+  back: { width: 36, height: 40, justifyContent: 'center', marginLeft: -6, marginBottom: 14 },
+  phone: { flexDirection: 'row', alignItems: 'center', gap: 12, height: 52, borderRadius: 8, borderWidth: 1, paddingHorizontal: 14 },
+  vr: { width: 1, height: 22 },
+  phoneInput: { flex: 1, fontSize: 18, letterSpacing: 0.5, height: '100%' },
+  otp: { height: 56, borderRadius: 8, borderWidth: 1, textAlign: 'center', fontSize: 26, letterSpacing: 14 },
+  demo: { gap: 2, marginTop: 18, paddingTop: 18, borderTopWidth: StyleSheet.hairlineWidth },
 });

@@ -1,5 +1,4 @@
 import { Ionicons } from '@expo/vector-icons';
-import { LinearGradient } from 'expo-linear-gradient';
 import { useState } from 'react';
 import { Pressable, ScrollView, SectionList, StyleSheet, View } from 'react-native';
 
@@ -11,7 +10,7 @@ import { ScreenHeader } from '@/components/ui/ScreenHeader';
 import { Text } from '@/components/ui/Text';
 import { toast } from '@/components/ui/Toast';
 import { TaskBoard } from '@/components/work/TaskBoard';
-import { colors, gradients, GUTTER, radius } from '@/constants/theme';
+import { colors, GUTTER, radius } from '@/constants/theme';
 import { CHECKLIST, CHECKLIST_PHASES, CHECKLIST_TOTAL } from '@/data/checklist';
 import { useCustomerWorkspace } from '@/hooks/useWorkspace';
 import { useAppStore } from '@/store/useAppStore';
@@ -57,25 +56,25 @@ function PlanningGuide() {
         contentContainerStyle={{ paddingBottom: 40 }}
         ListHeaderComponent={
           <View>
-            <LinearGradient colors={gradients.checklist} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={styles.hero}>
+            <View style={styles.hero}>
               <View style={{ flex: 1 }}>
-                <Text size={34} weight="bold" color={colors.white}>
+                <Text serif size={28} weight="bold" color={colors.heading} lineHeight={36}>
                   {done}
-                  <Text size={22} color="rgba(255,255,255,0.9)">
-                    /{CHECKLIST_TOTAL}
+                  <Text size={18} color={colors.textMuted}>
+                    {' '}of {CHECKLIST_TOTAL}
                   </Text>
                 </Text>
-                <Text size={17} color={colors.white}>
+                <Text size={15} color={colors.textBody}>
                   tasks done
                 </Text>
                 {days !== null && (
-                  <Text size={13} color="rgba(255,255,255,0.9)" style={{ marginTop: 8 }}>
-                    {days >= 0 ? `${days} days to your wedding` : 'Congratulations, newly weds! 💕'}
+                  <Text size={13} color={colors.textMuted} style={{ marginTop: 6 }}>
+                    {days >= 0 ? `${days} days to your wedding` : 'Married. Congratulations!'}
                   </Text>
                 )}
               </View>
-              <ProgressRing percent={percent} size={72} stroke={5} />
-            </LinearGradient>
+              <ProgressRing percent={percent} size={64} stroke={4} />
+            </View>
             <View style={styles.filters}>
               {(['all', 'pending', 'done'] as Filter[]).map((f) => (
                 <Chip key={f} label={f === 'all' ? 'All tasks' : f === 'pending' ? 'Pending' : 'Completed'} selected={filter === f} onPress={() => setFilter(f)} />
@@ -117,7 +116,7 @@ function PlanningGuide() {
               accessibilityRole="checkbox"
               accessibilityState={{ checked }}
               style={styles.task}>
-              <Ionicons name={checked ? 'checkmark-circle' : 'ellipse-outline'} size={24} color={checked ? colors.primary : colors.textSubtle} />
+              <Ionicons name={checked ? 'checkbox' : 'square-outline'} size={22} color={checked ? colors.success : colors.textSubtle} />
               <View style={{ flex: 1 }}>
                 <Text
                   size={15}
@@ -166,7 +165,7 @@ export default function ChecklistScreen() {
           <TaskBoard project={project} mode="customer" />
           <KButton
             label="Refresh suggested tasks"
-            icon="sparkles-outline"
+            icon="refresh-outline"
             variant="ghost"
             size="sm"
             onPress={() =>
@@ -190,7 +189,9 @@ const styles = StyleSheet.create({
     margin: GUTTER,
     marginBottom: 12,
     borderRadius: radius.lg,
-    padding: 20,
+    borderWidth: 1,
+    borderColor: colors.border,
+    padding: 16,
     flexDirection: 'row',
     alignItems: 'center',
   },
@@ -205,8 +206,8 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: colors.divider,
   },
-  miniTrack: { width: 60, height: 6, borderRadius: 3, backgroundColor: colors.hairline, overflow: 'hidden' },
-  miniFill: { height: 6, backgroundColor: colors.primary },
+  miniTrack: { width: 56, height: 3, borderRadius: 2, backgroundColor: colors.hairline, overflow: 'hidden' },
+  miniFill: { height: 3, backgroundColor: colors.primary },
   task: {
     flexDirection: 'row',
     alignItems: 'center',

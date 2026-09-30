@@ -58,8 +58,7 @@ export const at = (offset: number, hour = 10, minute = 0) => {
   return d.toISOString();
 };
 
-// ── Providers used across the demo ───────────────────────────────────────
-
+// Providers used across the demo
 const pick = (serviceId: string, city: string, n = 0): Provider => {
   const pool = PROVIDERS.filter((p) => p.serviceId === serviceId && p.city === city && p.verification === 'VERIFIED');
   return pool[n] ?? pool[0] ?? PROVIDERS.find((p) => p.serviceId === serviceId)!;
@@ -69,8 +68,7 @@ export const DEMO_VENUE = VENUES[0];
 export const DEMO_STUDIO = VENDORS.find((v) => v.id === 'wedding-story-nepal-kathmandu')!;
 const P = (id: string) => PROVIDERS.find((p) => p.id === id)!;
 
-// ── Accounts ─────────────────────────────────────────────────────────────
-
+// Accounts
 export const DEMO_ACCOUNTS: Account[] = [
   {
     id: 'acc_customer_demo',
@@ -173,8 +171,7 @@ export const PLATFORM_ACCESS_CODE = 'VIVAH2026';
 
 const SITA = { id: 'acc_platform_demo', name: 'Sita Karki' };
 
-// ── Builders ─────────────────────────────────────────────────────────────
-
+// Builders
 function runSheet(type: EventType, statuses: RunStatus[] = []): RunItem[] {
   return (EVENT_TYPE_BY_ID[type]?.runSheet ?? []).map(([time, title, owner], i) => ({
     id: `ri_${type}_${i}_${time.replace(':', '')}`,
@@ -359,8 +356,7 @@ function paid(ms: PaymentMilestone[], amounts: number[]): PaymentMilestone[] {
   });
 }
 
-// ── WP-1021 · Aakriti & Sujan (demo couple, confirmed, planning) ─────────
-
+// WP-1021 · Aakriti & Sujan (demo couple, confirmed, planning)
 const V1021 = { eng: 'ev_1021_eng', pre: 'ev_1021_pre', meh: 'ev_1021_meh', wed: 'ev_1021_wed', rec: 'ev_1021_rec' };
 const CATERER_KTM = pick('catering', 'Kathmandu');
 const VIDEO_KTM = pick('videography', 'Kathmandu');
@@ -520,8 +516,7 @@ function buildProject1021(): Project {
   });
 }
 
-// ── WP-1017 · Pratiksha & Bibek (wedding today, Pokhara) ────────────────
-
+// WP-1017 · Pratiksha & Bibek (wedding today, Pokhara)
 function buildProject1017(): Project {
   const e = { meh: 'ev_1017_meh', wed: 'ev_1017_wed', rec: 'ev_1017_rec' };
   const venue = pick('venue', 'Pokhara');
@@ -587,8 +582,7 @@ function buildProject1017(): Project {
   });
 }
 
-// ── WP-1030 · Srijana & Nabin (brand-new lead) ──────────────────────────
-
+// WP-1030 · Srijana & Nabin (brand-new lead)
 function buildProject1030(): Project {
   const e = { eng: 'ev_1030_eng', wed: 'ev_1030_wed', rec: 'ev_1030_rec' };
   return project({
@@ -633,8 +627,7 @@ function buildProject1030(): Project {
   });
 }
 
-// ── WP-1026 · Anisha & Rojan (quote sent) ───────────────────────────────
-
+// WP-1026 · Anisha & Rojan (quote sent)
 function buildProject1026(): { project: Project; quote: Quotation } {
   const e = { wed: 'ev_1026_wed', rec: 'ev_1026_rec' };
   const venue = pick('venue', 'Bhaktapur');
@@ -709,8 +702,7 @@ function buildProject1026(): { project: Project; quote: Quotation } {
   return { project: p, quote };
 }
 
-// ── WP-1009 · Sarina & Prabin (completed, deliverables) ─────────────────
-
+// WP-1009 · Sarina & Prabin (completed, deliverables)
 function buildProject1009(): Project {
   const e = { wed: 'ev_1009_wed', rec: 'ev_1009_rec' };
   const photo = booking({
@@ -769,8 +761,7 @@ function buildProject1009(): Project {
   });
 }
 
-// ── Smaller projects across the pipeline ─────────────────────────────────
-
+// Smaller projects across the pipeline
 function buildPipeline(): Project[] {
   const pasni = project({
     id: 'prj_1033',
@@ -893,8 +884,7 @@ function buildPipeline(): Project[] {
   return [pasni, brata, nikita, sneha];
 }
 
-// ── Quotes that stand alone (vendor quotes, negotiations) ───────────────
-
+// Quotes that stand alone (vendor quotes, negotiations)
 function buildOtherQuotes(): Quotation[] {
   const base = { taxRate: TAX_RATE, terms: DEFAULT_TERMS, schedule: DEFAULT_SCHEDULE, serviceFee: 0 };
   const nikitaV1 = {
@@ -1006,8 +996,7 @@ function buildLeads(): Lead[] {
   ];
 }
 
-// ── Gigs ────────────────────────────────────────────────────────────────
-
+// Gigs
 function buildGigs(): Gig[] {
   const g = (partial: Omit<Gig, 'applications' | 'createdAt' | 'status'> & Partial<Pick<Gig, 'applications' | 'status' | 'createdAt'>>): Gig => ({ status: 'open', applications: [], createdAt: at(-1), ...partial });
   const app = (id: string, name: string, skill: string, pay: number, status: Gig['applications'][number]['status'], message = '', extra = {}) => {
@@ -1121,8 +1110,7 @@ function buildGigs(): Gig[] {
   ];
 }
 
-// ── Couple tools for WP-1021 ────────────────────────────────────────────
-
+// Couple tools for WP-1021
 const GUEST_NAMES = [
   ['Ram Bahadur Shrestha', 'bride', 'Family', true],
   ['Gita Shrestha', 'bride', 'Family', true],
@@ -1340,8 +1328,7 @@ function buildThreads(): { threads: Thread[]; messages: Message[] } {
   return { threads, messages };
 }
 
-// ── Assemble ─────────────────────────────────────────────────────────────
-
+// Assemble
 export function buildSeedData(): DbData {
   const p1021 = buildProject1021();
   const p1017 = buildProject1017();
@@ -1467,7 +1454,7 @@ export function buildSeedData(): DbData {
       { id: 'n5', to: 'acc_freelancer_demo', title: 'New photography gig near you', body: 'Second shooter — engagement in Lalitpur · NPR 6,000', at: at(-1), read: false, href: '/freelancer/gig/gig_engage_lalitpur', kind: 'gig' },
       { id: 'n6', to: 'acc_freelancer_demo', title: 'Payout ready', body: 'NPR 8,000 for Sarina & Prabin is ready for release.', at: at(-2), read: false, href: '/freelancer/earnings', kind: 'payment' },
       { id: 'n7', to: 'platform', title: 'New wedding lead WP-1030', body: 'Srijana & Nabin · Lalitpur · 400 guests · 7 services', at: at(0, 8, 40), read: false, href: '/platform/project/prj_1030', kind: 'lead' },
-      { id: 'n8', to: 'platform', title: '🚨 Emergency at WP-1017', body: 'Photographer sick — replacement needed by 11:00 in Pokhara.', at: at(0, 6, 15), read: false, href: '/platform/project/prj_1017?tab=crew', kind: 'emergency' },
+      { id: 'n8', to: 'platform', title: 'Emergency at WP-1017', body: 'Photographer sick — replacement needed by 11:00 in Pokhara.', at: at(0, 6, 15), read: false, href: '/platform/project/prj_1017?tab=crew', kind: 'emergency' },
       { id: 'n9', to: 'platform', title: 'Revision requested on QT-2026-0012', body: 'Nikita & Suman want decoration under NPR 2.6 lakh.', at: at(-6), read: false, href: '/platform/quote/qt_1012', kind: 'quote' },
       { id: 'n10', to: 'acc_vendor_studio', title: 'Booking request: Anisha & Rojan', body: 'Photography crew for 2 functions in Bhaktapur. Accept or decline.', at: at(-3), read: false, href: '/business/booking/bk_1026_video', kind: 'booking' },
       { id: 'n11', to: 'acc_vendor_studio', title: 'Dispute opened on WP-1009', body: 'Album delay — final settlement is on hold.', at: at(-2), read: false, kind: 'payment' },

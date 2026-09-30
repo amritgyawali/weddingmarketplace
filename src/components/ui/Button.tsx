@@ -2,7 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import type { ComponentProps, ReactNode } from 'react';
 import { ActivityIndicator, StyleSheet, View, type StyleProp, type ViewStyle } from 'react-native';
 
-import { colors, radius, shadows } from '@/constants/theme';
+import { colors, radius } from '@/constants/theme';
 
 import { PressableScale } from './PressableScale';
 import { Text } from './Text';
@@ -22,8 +22,8 @@ export interface ButtonProps {
   color?: string;
 }
 
-const HEIGHT = { sm: 38, md: 46, lg: 54 } as const;
-const FONT = { sm: 14, md: 16, lg: 17 } as const;
+const HEIGHT = { sm: 36, md: 44, lg: 50 } as const;
+const FONT = { sm: 14, md: 15, lg: 16 } as const;
 
 export function Button({
   label,
@@ -40,8 +40,8 @@ export function Button({
   const tint = color ?? colors.primary;
   const palette: Record<Variant, { bg: string; fg: string; border?: string }> = {
     primary: { bg: tint, fg: colors.white },
-    outline: { bg: colors.white, fg: tint, border: tint },
-    white: { bg: colors.white, fg: tint },
+    outline: { bg: colors.white, fg: colors.heading, border: colors.border },
+    white: { bg: colors.white, fg: colors.heading },
     ghost: { bg: 'transparent', fg: tint },
     soft: { bg: colors.primarySoft, fg: tint },
   };
@@ -59,10 +59,8 @@ export function Button({
           height: HEIGHT[size],
           backgroundColor: p.bg,
           borderColor: p.border ?? 'transparent',
-          borderWidth: p.border ? 1.2 : 0,
+          borderWidth: p.border ? 1 : 0,
         },
-        variant === 'white' && shadows.card,
-        variant === 'primary' && shadows.pinkGlow,
         style,
       ]}>
       {loading ? (
@@ -70,7 +68,7 @@ export function Button({
       ) : (
         <View style={styles.row}>
           {leading}
-          {icon && <Ionicons name={icon} size={FONT[size] + 3} color={p.fg} />}
+          {icon && <Ionicons name={icon} size={FONT[size] + 2} color={p.fg} />}
           <Text weight="semibold" size={FONT[size]} color={p.fg}>
             {label}
           </Text>
@@ -82,10 +80,10 @@ export function Button({
 
 const styles = StyleSheet.create({
   base: {
-    borderRadius: radius.pill,
+    borderRadius: radius.md,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingHorizontal: 20,
+    paddingHorizontal: 18,
   },
   row: { flexDirection: 'row', alignItems: 'center', gap: 8 },
 });

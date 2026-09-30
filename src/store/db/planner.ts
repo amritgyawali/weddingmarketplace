@@ -75,7 +75,7 @@ export interface PlannerActions {
 const defaultInvite = (eventId: string): GuestInvite => ({ eventId, rsvp: 'pending', attending: 0 });
 
 export const plannerActions = (set: SetDb, get: GetDb): PlannerActions => ({
-  // ── Guests & RSVP ────────────────────────────────────────────────────
+  // Guests & RSVP
   addGuest: ({ eventIds = [], ...input }) => {
     const guest: Guest = { ...input, id: uid('gst'), code: shortCode(6), invites: eventIds.map(defaultInvite) };
     set((s) => ({ guests: [...s.guests, guest] }));
@@ -154,7 +154,7 @@ export const plannerActions = (set: SetDb, get: GetDb): PlannerActions => ({
 
   checkInGuest: (guestId, eventId) => get().setInvite(guestId, eventId, { checkedInAt: now() }),
 
-  // ── Seating ──────────────────────────────────────────────────────────
+  // Seating
   saveSeating: (layout) => set((s) => ({ seating: [...s.seating.filter((l) => l.eventId !== layout.eventId), layout] })),
 
   addSeatingElement: (projectId, eventId, el) =>
@@ -206,23 +206,23 @@ export const plannerActions = (set: SetDb, get: GetDb): PlannerActions => ({
     return seated;
   },
 
-  // ── Budget ───────────────────────────────────────────────────────────
+  // Budget
   addBudgetLine: (line) => set((s) => ({ budget: [...s.budget, { ...line, id: uid('bl') }] })),
   updateBudgetLine: (id, patch) => set((s) => ({ budget: s.budget.map((b) => (b.id === id ? { ...b, ...patch } : b)) })),
   removeBudgetLine: (id) => set((s) => ({ budget: s.budget.filter((b) => b.id !== id) })),
 
-  // ── Website ──────────────────────────────────────────────────────────
+  // Website
   saveWebsite: (site) => set((s) => ({ websites: [...s.websites.filter((w) => w.projectId !== site.projectId), { ...site, updatedAt: now() }] })),
   recordWebsiteView: (slug) => set((s) => ({ websites: s.websites.map((w) => (w.slug === slug ? { ...w, views: w.views + 1 } : w)) })),
 
-  // ── Registry ─────────────────────────────────────────────────────────
+  // Registry
   addRegistryItem: (item) => set((s) => ({ registry: [...s.registry, { ...item, id: uid('reg'), contributions: [] }] })),
   updateRegistryItem: (id, patch) => set((s) => ({ registry: s.registry.map((r) => (r.id === id ? { ...r, ...patch } : r)) })),
   removeRegistryItem: (id) => set((s) => ({ registry: s.registry.filter((r) => r.id !== id) })),
   markContributionThanked: (itemId, contributionId) =>
     set((s) => ({ registry: s.registry.map((r) => (r.id === itemId ? { ...r, contributions: r.contributions.map((c) => (c.id === contributionId ? { ...c, thanked: !c.thanked } : c)) } : r)) })),
 
-  // ── Inspiration boards ───────────────────────────────────────────────
+  // Inspiration boards
   addBoard: (projectId, name) => {
     const board: InspirationBoard = { id: uid('bd'), projectId, name: name.trim() || 'New board', items: [] };
     set((s) => ({ boards: [...s.boards, board] }));
@@ -233,7 +233,7 @@ export const plannerActions = (set: SetDb, get: GetDb): PlannerActions => ({
   renameBoard: (boardId, name) => set((s) => ({ boards: s.boards.map((b) => (b.id === boardId ? { ...b, name } : b)) })),
   deleteBoard: (boardId) => set((s) => ({ boards: s.boards.filter((b) => b.id !== boardId) })),
 
-  // ── Contracts ────────────────────────────────────────────────────────
+  // Contracts
   signContract: (contractId, party, name, path) => {
     set((s) => ({
       contracts: s.contracts.map((c) => {
@@ -246,13 +246,13 @@ export const plannerActions = (set: SetDb, get: GetDb): PlannerActions => ({
     const contract = get().contracts.find((c) => c.id === contractId);
     if (contract?.status === 'signed') {
       const project = get().projects.find((p) => p.id === contract.projectId);
-      if (project) get().notify(project.customerId, 'Contract fully signed ✍️', contract.title, '/contracts', 'booking');
+      if (project) get().notify(project.customerId, 'Contract fully signed', contract.title, '/contracts', 'booking');
     }
     get().log(currentActor(), 'contract.sign', 'contract', contractId, party);
   },
   saveContract: (contract) => set((s) => ({ contracts: s.contracts.some((c) => c.id === contract.id) ? s.contracts.map((c) => (c.id === contract.id ? contract : c)) : [contract, ...s.contracts] })),
 
-  // ── Shortlist ────────────────────────────────────────────────────────
+  // Shortlist
   toggleShortlist: (accountId, providerId) => {
     const list = get().shortlists[accountId] ?? [];
     const exists = list.some((e) => e.providerId === providerId);
@@ -263,7 +263,7 @@ export const plannerActions = (set: SetDb, get: GetDb): PlannerActions => ({
   updateShortlist: (accountId, providerId, patch) =>
     set((s) => ({ shortlists: { ...s.shortlists, [accountId]: (s.shortlists[accountId] ?? []).map((e) => (e.providerId === providerId ? { ...e, ...patch } : e)) } })),
 
-  // ── Business ─────────────────────────────────────────────────────────
+  // Business
   saveStaff: (member) => set((s) => ({ staff: s.staff.some((m) => m.id === member.id) ? s.staff.map((m) => (m.id === member.id ? member : m)) : [...s.staff, member] })),
   removeStaff: (id) => set((s) => ({ staff: s.staff.filter((m) => m.id !== id) })),
   saveDeal: (deal) => set((s) => ({ deals: s.deals.some((d) => d.id === deal.id) ? s.deals.map((d) => (d.id === deal.id ? deal : d)) : [deal, ...s.deals] })),

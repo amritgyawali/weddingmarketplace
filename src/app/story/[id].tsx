@@ -38,10 +38,10 @@ export default function StoryScreen() {
         <ScrollView contentContainerStyle={{ paddingBottom: 40 }}>
           <Image source={photos[story.image]} style={{ width, height: width * 0.66 }} contentFit="cover" />
           <View style={styles.body}>
-            <Text size={12} weight="bold" color={colors.primary} tracking={0.8}>
-              {story.category.toUpperCase()}
+            <Text size={12} weight="medium" color={colors.textMuted}>
+              {story.category}
             </Text>
-            <Text size={26} weight="bold" color={colors.heading} lineHeight={33}>
+            <Text serif size={24} weight="bold" color={colors.heading} lineHeight={34}>
               {story.title}
             </Text>
             <Text size={13} color={colors.textMuted}>

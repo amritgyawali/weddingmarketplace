@@ -59,7 +59,7 @@ export function PortfolioManager() {
               {i === 0 && (
                 <View style={[styles.cover, { backgroundColor: 'rgba(0,0,0,0.6)' }]}>
                   <Text size={10} weight="bold" color="#fff">
-                    COVER
+                    Cover
                   </Text>
                 </View>
               )}
@@ -97,7 +97,7 @@ export function PortfolioManager() {
 
 const styles = StyleSheet.create({
   grid: { flexDirection: 'row', flexWrap: 'wrap', gap: 10 },
-  image: { width: '100%', aspectRatio: 1, borderRadius: 12, marginBottom: 4 },
+  image: { width: '100%', aspectRatio: 1, borderRadius: 8, marginBottom: 4 },
   badge: { position: 'absolute', top: 6, right: 6, width: 22, height: 22, borderRadius: 11, alignItems: 'center', justifyContent: 'center' },
   cover: { position: 'absolute', top: 6, left: 6, borderRadius: 6, paddingHorizontal: 6, paddingVertical: 2 },
   arrows: { flexDirection: 'row', justifyContent: 'space-between' },

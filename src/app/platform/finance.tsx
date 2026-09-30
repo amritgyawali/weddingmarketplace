@@ -214,7 +214,7 @@ export default function Finance() {
         {tab === 'revenue' && (
           <>
             <Card style={{ gap: 10 }}>
-              <Text size={24} weight="extrabold" color={t.c.success}>
+              <Text size={24} weight="bold" color={t.c.success}>
                 {formatMoney(totalRev)}
               </Text>
               {byKind.map((x) => (

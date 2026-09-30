@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
   week: { flexDirection: 'row' },
   grid: { flexDirection: 'row', flexWrap: 'wrap' },
   cell: { width: `${100 / 7}%`, aspectRatio: 1, padding: 2 },
-  day: { flex: 1, borderRadius: 12, alignItems: 'center', justifyContent: 'center', borderWidth: 1.5 },
+  day: { flex: 1, borderRadius: 8, alignItems: 'center', justifyContent: 'center', borderWidth: 1 },
   dots: { flexDirection: 'row', gap: 2, height: 5, marginTop: 2 },
   dot: { width: 5, height: 5, borderRadius: 3 },
 });

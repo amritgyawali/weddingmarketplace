@@ -1,14 +1,12 @@
 import { Ionicons } from '@expo/vector-icons';
-import { LinearGradient } from 'expo-linear-gradient';
 import { StyleSheet, View } from 'react-native';
-import Animated, { FadeInDown } from 'react-native-reanimated';
+import Animated, { FadeIn } from 'react-native-reanimated';
 
-import { GenieLampIcon } from '@/components/ui/Icons';
 import { PressableScale } from '@/components/ui/PressableScale';
 import { Text } from '@/components/ui/Text';
-import { colors, gradients, shadows } from '@/constants/theme';
+import { colors, shadows } from '@/constants/theme';
 
-/** Floating pink "Filter | Genie" pill anchored above the tab bar. */
+/** Floating "Filters | Planner" button anchored above the tab bar. */
 export function FloatingFilterBar({
   count,
   onFilter,
@@ -21,27 +19,19 @@ export function FloatingFilterBar({
   bottom?: number;
 }) {
   return (
-    <Animated.View entering={FadeInDown.delay(250).springify()} style={[styles.wrap, { bottom }]} pointerEvents="box-none">
-      <View style={[styles.pill, shadows.pinkGlow]}>
-        <LinearGradient colors={gradients.filterBar} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} style={StyleSheet.absoluteFill} />
-        <PressableScale haptic onPress={onFilter} accessibilityLabel={`Filter, ${count} active`} style={styles.half}>
-          <Ionicons name="options-outline" size={22} color={colors.white} />
-          <Text size={17} weight="medium" color={colors.white}>
-            Filter
+    <Animated.View entering={FadeIn.delay(200)} style={[styles.wrap, { bottom }]} pointerEvents="box-none">
+      <View style={styles.bar}>
+        <PressableScale haptic onPress={onFilter} accessibilityLabel={`Filters, ${count} active`} style={styles.half}>
+          <Ionicons name="options-outline" size={19} color={colors.white} />
+          <Text size={15} weight="medium" color={colors.white}>
+            Filters{count > 0 ? ` · ${count}` : ''}
           </Text>
-          {count > 0 && (
-            <View style={styles.count}>
-              <Text size={12} weight="bold" color={colors.textStrong} lineHeight={15}>
-                {count}
-              </Text>
-            </View>
-          )}
         </PressableScale>
         <View style={styles.divider} />
-        <PressableScale haptic onPress={onGenie} accessibilityLabel="Genie" style={styles.half}>
-          <GenieLampIcon size={26} color={colors.white} />
-          <Text size={17} weight="medium" color={colors.white}>
-            Genie
+        <PressableScale haptic onPress={onGenie} accessibilityLabel="Get a planner" style={styles.half}>
+          <Ionicons name="call-outline" size={18} color={colors.white} />
+          <Text size={15} weight="medium" color={colors.white}>
+            Get a planner
           </Text>
         </PressableScale>
       </View>
@@ -51,17 +41,15 @@ export function FloatingFilterBar({
 
 const styles = StyleSheet.create({
   wrap: { position: 'absolute', left: 0, right: 0, alignItems: 'center' },
-  pill: {
+  bar: {
     flexDirection: 'row',
     alignItems: 'center',
-    height: 50,
-    borderRadius: 25,
-    overflow: 'hidden',
-    paddingHorizontal: 10,
-    borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.25)',
+    height: 44,
+    borderRadius: 8,
+    backgroundColor: colors.heading,
+    paddingHorizontal: 4,
+    ...shadows.fab,
   },
-  half: { flexDirection: 'row', alignItems: 'center', gap: 10, paddingHorizontal: 18, height: '100%' },
-  divider: { width: 1.5, height: 26, backgroundColor: 'rgba(255,255,255,0.7)' },
-  count: { minWidth: 18, height: 20, borderRadius: 3, backgroundColor: colors.white, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 4 },
+  half: { flexDirection: 'row', alignItems: 'center', gap: 8, paddingHorizontal: 14, height: '100%' },
+  divider: { width: StyleSheet.hairlineWidth, height: 20, backgroundColor: 'rgba(255,255,255,0.4)' },
 });

@@ -17,14 +17,14 @@ export const KField = forwardRef<TextInput, TextInputProps & { label?: string; e
   return (
     <View style={{ gap: 6 }}>
       {label && (
-        <Text size={13} weight="semibold" color={t.c.muted}>
+        <Text size={13} weight="medium" color={t.c.text}>
           {label}
         </Text>
       )}
       <View
         style={[
           styles.field,
-          { backgroundColor: t.dark ? t.c.surfaceAlt : t.c.surface, borderColor: error ? t.c.danger : t.c.border, borderRadius: t.role === 'platform' ? 10 : 12 },
+          { backgroundColor: t.dark ? t.c.surfaceAlt : t.c.surface, borderColor: error ? t.c.danger : t.c.border, borderRadius: t.role === 'platform' ? 6 : 8 },
           multiline && { alignItems: 'flex-start', minHeight: 96 },
         ]}>
         {prefix && (
@@ -54,7 +54,7 @@ export const KField = forwardRef<TextInput, TextInputProps & { label?: string; e
   );
 });
 
-/** Pill-style segmented control; scrolls horizontally when it overflows. */
+/** Underlined tab strip; scrolls horizontally when it overflows. */
 export function Segmented<T extends string>({
   options,
   value,
@@ -68,7 +68,7 @@ export function Segmented<T extends string>({
 }) {
   const t = useRoleTheme();
   return (
-    <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ flexGrow: 0 }} contentContainerStyle={styles.segRow}>
+    <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ flexGrow: 0 }} contentContainerStyle={[styles.segRow, { borderBottomColor: t.c.border }]}>
       {options.map((o) => {
         const active = o.id === value;
         const count = counts?.[o.id];
@@ -81,23 +81,14 @@ export function Segmented<T extends string>({
             }}
             accessibilityRole="tab"
             accessibilityState={{ selected: active }}
-            style={[
-              styles.seg,
-              {
-                backgroundColor: active ? t.c.primary : t.c.surface,
-                borderColor: active ? t.c.primary : t.c.border,
-                borderRadius: t.role === 'platform' ? 8 : 999,
-              },
-            ]}>
-            <Text size={13} weight="semibold" color={active ? t.c.onPrimary : t.c.text}>
+            style={[styles.seg, { borderBottomColor: active ? t.c.primary : 'transparent' }]}>
+            <Text size={14} weight={active ? 'semibold' : 'regular'} color={active ? t.c.textStrong : t.c.muted}>
               {o.label}
             </Text>
             {count !== undefined && (
-              <View style={[styles.segCount, { backgroundColor: active ? 'rgba(255,255,255,0.25)' : t.c.surfaceAlt }]}>
-                <Text size={11} weight="bold" color={active ? t.c.onPrimary : t.c.muted} lineHeight={14}>
-                  {count}
-                </Text>
-              </View>
+              <Text size={13} color={t.c.subtle}>
+                {count}
+              </Text>
             )}
           </Pressable>
         );
@@ -130,9 +121,9 @@ export function ChoiceChips({
             }}
             accessibilityRole="checkbox"
             accessibilityState={{ checked: on }}
-            style={[styles.chip, { borderColor: on ? t.c.primary : t.c.border, backgroundColor: on ? t.c.soft : t.c.surface }]}>
-            {on && <Ionicons name="checkmark" size={14} color={t.c.primary} />}
-            <Text size={13} weight="semibold" color={on ? t.c.primary : t.c.text}>
+            style={[styles.chip, { borderColor: on ? t.c.textStrong : t.c.border, backgroundColor: on ? t.c.textStrong : t.c.surface }]}>
+            {on && <Ionicons name="checkmark" size={14} color={t.c.surface} />}
+            <Text size={14} weight={on ? 'semibold' : 'regular'} color={on ? t.c.surface : t.c.text}>
               {o}
             </Text>
           </Pressable>
@@ -169,8 +160,8 @@ export function ListRow({
       style={({ pressed }) => [styles.row, pressed && { backgroundColor: t.c.surfaceAlt }]}>
       {leading ??
         (icon && (
-          <View style={[styles.rowIcon, { backgroundColor: t.c.soft }]}>
-            <Ionicons name={icon} size={19} color={t.c.primary} />
+          <View style={styles.rowIcon}>
+            <Ionicons name={icon} size={21} color={t.c.muted} />
           </View>
         ))}
       <View style={{ flex: 1, gap: 2 }}>
@@ -202,11 +193,11 @@ export function Fab({ icon = 'add', label, onPress, bottom = 20 }: { icon?: Icon
       accessibilityLabel={label ?? 'Create'}
       style={({ pressed }) => [
         styles.fab,
-        { bottom, backgroundColor: t.c.primary, opacity: pressed ? 0.9 : 1, paddingHorizontal: label ? 18 : 0, width: label ? undefined : 56 },
+        { bottom, backgroundColor: t.c.primary, opacity: pressed ? 0.85 : 1, paddingHorizontal: label ? 18 : 0, width: label ? undefined : 54, borderRadius: label ? 10 : 27 },
       ]}>
-      <Ionicons name={icon} size={24} color={t.c.onPrimary} />
+      <Ionicons name={icon} size={22} color={t.c.onPrimary} />
       {label && (
-        <Text size={15} weight="bold" color={t.c.onPrimary}>
+        <Text size={15} weight="semibold" color={t.c.onPrimary}>
           {label}
         </Text>
       )}
@@ -215,27 +206,25 @@ export function Fab({ icon = 'add', label, onPress, bottom = 20 }: { icon?: Icon
 }
 
 const styles = StyleSheet.create({
-  field: { flexDirection: 'row', alignItems: 'center', gap: 8, borderWidth: 1.2, paddingHorizontal: 14 },
-  segRow: { gap: 8, paddingHorizontal: 16 },
-  seg: { flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 14, height: 36, borderWidth: 1 },
-  segCount: { minWidth: 20, height: 18, borderRadius: 9, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 5 },
+  field: { flexDirection: 'row', alignItems: 'center', gap: 8, borderWidth: 1, paddingHorizontal: 12 },
+  segRow: { gap: 20, paddingHorizontal: 16, borderBottomWidth: StyleSheet.hairlineWidth, flexGrow: 1 },
+  seg: { flexDirection: 'row', alignItems: 'center', gap: 5, height: 40, borderBottomWidth: 2, marginBottom: -StyleSheet.hairlineWidth },
   chips: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
-  chip: { flexDirection: 'row', alignItems: 'center', gap: 5, borderWidth: 1.2, borderRadius: 999, paddingHorizontal: 12, paddingVertical: 7 },
+  chip: { flexDirection: 'row', alignItems: 'center', gap: 4, borderWidth: 1, borderRadius: 6, paddingHorizontal: 11, paddingVertical: 6 },
   row: { flexDirection: 'row', alignItems: 'center', gap: 12, paddingHorizontal: 16, paddingVertical: 12 },
-  rowIcon: { width: 40, height: 40, borderRadius: 12, alignItems: 'center', justifyContent: 'center' },
+  rowIcon: { width: 28, alignItems: 'center', justifyContent: 'center' },
   fab: {
     position: 'absolute',
-    right: 18,
-    height: 56,
-    borderRadius: 28,
+    right: 16,
+    height: 54,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     gap: 8,
-    shadowColor: '#000',
-    shadowOpacity: 0.25,
-    shadowRadius: 10,
-    shadowOffset: { width: 0, height: 5 },
-    elevation: 6,
+    shadowColor: '#1F1C19',
+    shadowOpacity: 0.18,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 3 },
+    elevation: 4,
   },
 });

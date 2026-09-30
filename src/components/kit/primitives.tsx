@@ -32,12 +32,11 @@ export function Card({
       borderColor: t.c.border,
       padding: padded ? 16 : 0,
     },
-    !t.dark && styles.cardShadow,
     style,
   ];
   if (!onPress) return <View style={base}>{children}</View>;
   return (
-    <PressableScale onPress={onPress} activeScale={0.985} accessibilityLabel={accessibilityLabel} style={base}>
+    <PressableScale onPress={onPress} accessibilityLabel={accessibilityLabel} style={base}>
       {children}
     </PressableScale>
   );
@@ -67,13 +66,13 @@ export function KButton({
   const t = useRoleTheme();
   const palette: Record<ButtonVariant, { bg: string; fg: string; border: string }> = {
     primary: { bg: t.c.primary, fg: t.c.onPrimary, border: t.c.primary },
-    secondary: { bg: t.c.surface, fg: t.c.primary, border: t.c.primary },
+    secondary: { bg: t.c.surface, fg: t.c.textStrong, border: t.c.border },
     ghost: { bg: 'transparent', fg: t.c.primary, border: 'transparent' },
-    danger: { bg: t.dark ? '#3A1D1D' : '#FEF2F2', fg: t.c.danger, border: t.c.danger },
+    danger: { bg: t.c.surface, fg: t.c.danger, border: t.c.border },
     success: { bg: t.c.success, fg: '#FFFFFF', border: t.c.success },
   };
   const p = palette[variant];
-  const height = size === 'sm' ? 36 : size === 'lg' ? 52 : 44;
+  const height = size === 'sm' ? 34 : size === 'lg' ? 50 : 42;
   return (
     <PressableScale
       haptic
@@ -82,15 +81,15 @@ export function KButton({
       accessibilityLabel={label}
       style={[
         styles.button,
-        { height, backgroundColor: p.bg, borderColor: p.border, borderRadius: t.role === 'platform' ? 10 : height / 2 },
+        { height, backgroundColor: p.bg, borderColor: p.border, borderRadius: t.role === 'platform' ? 6 : 8 },
         style,
       ]}>
       {loading ? (
         <ActivityIndicator color={p.fg} />
       ) : (
         <>
-          {icon && <Ionicons name={icon} size={size === 'sm' ? 16 : 18} color={p.fg} />}
-          <Text size={size === 'sm' ? 13 : 15} weight="semibold" color={p.fg}>
+          {icon && <Ionicons name={icon === 'sparkles-outline' || icon === 'sparkles' ? 'add' : icon} size={size === 'sm' ? 16 : 18} color={p.fg} />}
+          <Text size={size === 'sm' ? 14 : 15} weight="semibold" color={p.fg}>
             {label}
           </Text>
         </>
@@ -104,15 +103,15 @@ export function StatusPill({ status, label }: { status: string; label?: string }
   const tone = statusTone(status, t);
   return (
     <View style={[styles.pill, { backgroundColor: tone.bg }]}>
-      <View style={[styles.dot, { backgroundColor: tone.fg }]} />
-      <Text size={11} weight="bold" color={tone.fg} lineHeight={14}>
+      <Text size={12} weight="semibold" color={tone.fg} lineHeight={16}>
         {label ?? statusLabel(status)}
       </Text>
     </View>
   );
 }
 
-const AVATAR_COLORS = ['#0EA5E9', '#8B5CF6', '#F97316', '#10B981', '#E11D48', '#6366F1', '#14B8A6', '#D97706'];
+/** Muted, earthy initials colours (brass, pine, clay, slate, plum, moss). */
+const AVATAR_COLORS = ['#8A6A2F', '#2E5E50', '#9A4A34', '#44566E', '#6C3F5E', '#566B3A'];
 
 export function Avatar({ name, size = 40 }: { name: string; size?: number }) {
   const initials = name
@@ -123,15 +122,15 @@ export function Avatar({ name, size = 40 }: { name: string; size?: number }) {
     .join('');
   const color = AVATAR_COLORS[[...name].reduce((sum, ch) => sum + ch.charCodeAt(0), 0) % AVATAR_COLORS.length];
   return (
-    <View style={{ width: size, height: size, borderRadius: size / 2, backgroundColor: `${color}26`, alignItems: 'center', justifyContent: 'center' }}>
-      <Text size={size * 0.38} weight="bold" color={color}>
+    <View style={{ width: size, height: size, borderRadius: size / 2, backgroundColor: `${color}1F`, alignItems: 'center', justifyContent: 'center' }}>
+      <Text size={size * 0.38} weight="semibold" color={color}>
         {initials}
       </Text>
     </View>
   );
 }
 
-export function ProgressBar({ value, color, height = 6 }: { value: number; color?: string; height?: number }) {
+export function ProgressBar({ value, color, height = 4 }: { value: number; color?: string; height?: number }) {
   const t = useRoleTheme();
   return (
     <View style={{ height, borderRadius: height / 2, backgroundColor: t.c.surfaceAlt, overflow: 'hidden' }}>
@@ -144,12 +143,12 @@ export function SectionTitle({ title, action, onAction }: { title: string; actio
   const t = useRoleTheme();
   return (
     <View style={styles.sectionTitle}>
-      <Text size={17} weight="bold" color={t.c.textStrong}>
+      <Text size={16} weight="bold" color={t.c.textStrong}>
         {title}
       </Text>
       {action && onAction && (
         <Pressable onPress={onAction} hitSlop={10}>
-          <Text size={13} weight="semibold" color={t.c.primary}>
+          <Text size={14} weight="medium" color={t.c.primary}>
             {action}
           </Text>
         </Pressable>
@@ -162,10 +161,8 @@ export function EmptyBlock({ icon = 'file-tray-outline', title, message, action,
   const t = useRoleTheme();
   return (
     <View style={styles.empty}>
-      <View style={[styles.emptyIcon, { backgroundColor: t.c.soft }]}>
-        <Ionicons name={icon} size={28} color={t.c.primary} />
-      </View>
-      <Text size={17} weight="bold" color={t.c.textStrong} align="center">
+      <Ionicons name={icon} size={30} color={t.c.subtle} style={{ marginBottom: 2 }} />
+      <Text size={16} weight="semibold" color={t.c.textStrong} align="center">
         {title}
       </Text>
       {message && (
@@ -173,7 +170,7 @@ export function EmptyBlock({ icon = 'file-tray-outline', title, message, action,
           {message}
         </Text>
       )}
-      {action && onAction && <KButton label={action} onPress={onAction} size="sm" style={{ marginTop: 8, paddingHorizontal: 20 }} />}
+      {action && onAction && <KButton label={action} onPress={onAction} size="sm" variant="secondary" style={{ marginTop: 8, paddingHorizontal: 16 }} />}
     </View>
   );
 }
@@ -199,18 +196,9 @@ export function KeyValue({ label, value, strong }: { label: string; value: strin
 }
 
 const styles = StyleSheet.create({
-  cardShadow: {
-    shadowColor: '#0F172A',
-    shadowOpacity: 0.05,
-    shadowRadius: 10,
-    shadowOffset: { width: 0, height: 3 },
-    elevation: 1,
-  },
-  button: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, paddingHorizontal: 18, borderWidth: 1.2 },
-  pill: { flexDirection: 'row', alignItems: 'center', gap: 5, alignSelf: 'flex-start', borderRadius: 999, paddingHorizontal: 8, paddingVertical: 3 },
-  dot: { width: 6, height: 6, borderRadius: 3 },
-  sectionTitle: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 },
-  empty: { alignItems: 'center', padding: 28, gap: 8 },
-  emptyIcon: { width: 60, height: 60, borderRadius: 30, alignItems: 'center', justifyContent: 'center', marginBottom: 4 },
+  button: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6, paddingHorizontal: 16, borderWidth: 1 },
+  pill: { flexDirection: 'row', alignItems: 'center', alignSelf: 'flex-start', borderRadius: 4, paddingHorizontal: 6, paddingVertical: 1 },
+  sectionTitle: { flexDirection: 'row', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 10 },
+  empty: { alignItems: 'center', padding: 28, gap: 6 },
   kv: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', gap: 12, paddingVertical: 4 },
 });

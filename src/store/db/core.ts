@@ -78,7 +78,7 @@ export const coreActions = (set: SetDb, get: GetDb): CoreActions => ({
 
   resetDemo: () => set(buildSeedData()),
 
-  // ── Provider CRM leads ─────────────────────────────────────────────
+  // Provider CRM leads
   createLead: (input) => {
     const lead: Lead = { ...input, id: uid('ld'), status: 'new', priority: input.priority ?? 'medium', history: [{ status: 'new', at: now() }], createdAt: now() };
     set((s) => ({ leads: [lead, ...s.leads] }));

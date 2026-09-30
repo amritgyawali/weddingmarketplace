@@ -100,7 +100,7 @@ export const trustActions = (set: SetDb, get: GetDb): TrustActions => ({
       useSession.getState().updateAccount(account.id, { verified: status === 'VERIFIED', suspended: status === 'SUSPENDED' ? true : account.suspended });
       get().notify(
         account.id,
-        status === 'VERIFIED' ? 'You’re verified ✅' : status === 'SUSPENDED' ? 'Account suspended' : 'Verification needs attention',
+        status === 'VERIFIED' ? 'You’re verified' : status === 'SUSPENDED' ? 'Account suspended' : 'Verification needs attention',
         status === 'VERIFIED' ? 'The Verified badge now shows on your profile and you rank higher in matching.' : (note ?? 'Please re-upload your documents and resubmit.'),
         account.role === 'vendor' ? '/business/verification' : '/freelancer/profile',
         'system',

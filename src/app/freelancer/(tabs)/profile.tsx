@@ -123,21 +123,23 @@ export default function FreelancerProfile() {
   const removeKit = (i: number) => updateAccount(account.id, { equipment: (account.equipment ?? []).filter((_, j) => j !== i) });
 
   return (
-    <ScrollView style={{ flex: 1, backgroundColor: t.c.bg }} contentContainerStyle={{ paddingTop: insets.top + 20, paddingHorizontal: 16, gap: 16, paddingBottom: 130 }}>
-      <View style={styles.center}>
-        <Avatar name={account.name} size={84} />
-        <Text size={24} weight="bold" color={t.c.textStrong} style={{ marginTop: 10 }}>
-          {account.name}
-        </Text>
-        <Text size={14} color={t.c.muted} align="center">
-          {account.headline || (account.skills ?? []).join(' · ')} · {account.city}
-        </Text>
-        <View style={styles.row}>
-          <StatusPill status={status} label={status === 'VERIFIED' ? 'Verified pro' : status === 'UNDER_REVIEW' ? 'Verification in review' : 'Not verified'} />
-          <Ionicons name="star" size={14} color={t.c.primary} />
-          <Text size={14} weight="bold" color={t.c.textStrong}>
-            {rating.toFixed(1)} ({reviews.length})
+    <ScrollView style={{ flex: 1, backgroundColor: t.c.bg }} contentContainerStyle={{ paddingTop: insets.top + 20, paddingHorizontal: 16, gap: 16, paddingBottom: 32 }}>
+      <View style={styles.headerRow}>
+        <Avatar name={account.name} size={64} />
+        <View style={{ flex: 1, gap: 2 }}>
+          <Text size={21} weight="bold" color={t.c.textStrong}>
+            {account.name}
           </Text>
+          <Text size={14} color={t.c.muted}>
+            {account.headline || (account.skills ?? []).join(' · ')} · {account.city}
+          </Text>
+          <View style={styles.row}>
+            <StatusPill status={status} label={status === 'VERIFIED' ? 'Verified' : status === 'UNDER_REVIEW' ? 'Verification in review' : 'Not verified'} />
+            <Ionicons name="star" size={13} color="#C98410" />
+            <Text size={13} weight="medium" color={t.c.textStrong}>
+              {rating.toFixed(1)} ({reviews.length})
+            </Text>
+          </View>
         </View>
       </View>
 
@@ -148,7 +150,7 @@ export default function FreelancerProfile() {
           { label: 'Earned', value: formatMoney(earned).replace('NPR ', '') },
         ].map((s) => (
           <Card key={s.label} style={styles.stat}>
-            <Text size={19} weight="bold" color={t.c.primary}>
+            <Text size={19} weight="semibold" color={t.c.textStrong}>
               {s.value}
             </Text>
             <Text size={12} color={t.c.muted}>
@@ -163,7 +165,7 @@ export default function FreelancerProfile() {
           <Text size={15} weight="bold" color={t.c.textStrong}>
             Profile strength
           </Text>
-          <Text size={13} weight="bold" color={t.c.primary}>
+          <Text size={13} weight="semibold" color={t.c.textStrong}>
             {Math.round(strength * 100)}%
           </Text>
         </View>
@@ -236,8 +238,8 @@ export default function FreelancerProfile() {
               ]
                 .filter(Boolean)
                 .map((x) => (
-                  <View key={x} style={[styles.tag, { backgroundColor: t.c.soft }]}>
-                    <Text size={12} weight="semibold" color={t.c.primary}>
+                  <View key={x} style={[styles.tag, { borderWidth: 1, borderColor: t.c.border }]}>
+                    <Text size={12} weight="medium" color={t.c.text}>
                       {x}
                     </Text>
                   </View>
@@ -366,13 +368,13 @@ export default function FreelancerProfile() {
 }
 
 const styles = StyleSheet.create({
-  center: { alignItems: 'center', gap: 4 },
-  row: { flexDirection: 'row', alignItems: 'center', gap: 8 },
+  headerRow: { flexDirection: 'row', alignItems: 'center', gap: 14 },
+  row: { flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: 2 },
   between: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 12 },
   stats: { flexDirection: 'row', gap: 10 },
-  stat: { flex: 1, alignItems: 'center', gap: 2, padding: 14 },
+  stat: { flex: 1, gap: 0, paddingVertical: 10, paddingHorizontal: 12 },
   wrap: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
   check: { flexDirection: 'row', alignItems: 'center', gap: 4 },
-  tag: { borderRadius: 999, paddingHorizontal: 10, paddingVertical: 4 },
-  thumb: { width: 96, height: 96, borderRadius: 14 },
+  tag: { borderRadius: 6, paddingHorizontal: 10, paddingVertical: 4 },
+  thumb: { width: 96, height: 96, borderRadius: 8 },
 });

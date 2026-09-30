@@ -108,7 +108,7 @@ export default function MarketplaceSettings() {
           {settings.featuredProviderIds.map((id) => (
             <View key={id} style={styles.rowBetween}>
               <Text size={13} color={t.c.text}>
-                ⭐ {findProvider(id)?.name ?? id}
+                {findProvider(id)?.name ?? id}
               </Text>
               <KButton label="Remove" size="sm" variant="ghost" onPress={() => update({ featuredProviderIds: settings.featuredProviderIds.filter((x) => x !== id) })} />
             </View>

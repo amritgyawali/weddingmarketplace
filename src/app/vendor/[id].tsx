@@ -65,12 +65,12 @@ export default function VendorDetailScreen() {
 
         <View style={styles.head}>
           <View style={styles.rowBetween}>
-            <Text size={13} weight="bold" color={colors.primary} tracking={0.6}>
-              {(sub?.title ?? category?.title ?? '').toUpperCase()}
+            <Text size={13} weight="medium" color={colors.textMuted}>
+              {(sub?.title ?? category?.title ?? '')}
             </Text>
             <Rating value={vendor.rating} count={vendor.reviewCount} />
           </View>
-          <Text size={24} weight="bold" color={colors.heading} lineHeight={30} style={{ marginTop: 6 }}>
+          <Text serif size={24} weight="bold" color={colors.heading} lineHeight={34} style={{ marginTop: 4 }}>
             {vendor.name}
           </Text>
           <View style={styles.location}>
@@ -89,7 +89,6 @@ export default function VendorDetailScreen() {
               label="Call"
               variant="outline"
               icon="call-outline"
-              color={colors.call}
               onPress={() => Linking.openURL(`tel:${vendor.phone.replace(/\s/g, '')}`)}
               style={{ flex: 1 }}
             />
@@ -109,7 +108,7 @@ export default function VendorDetailScreen() {
                   style={[styles.pkg, active && styles.pkgActive]}>
                   <View style={styles.rowBetween}>
                     <View style={styles.pkgTitle}>
-                      <Ionicons name={active ? 'radio-button-on' : 'radio-button-off'} size={20} color={active ? colors.primary : colors.textSubtle} />
+                      <Ionicons name={active ? 'radio-button-on' : 'radio-button-off'} size={20} color={active ? colors.heading : colors.textSubtle} />
                       <Text size={16} weight="semibold" color={colors.heading}>
                         {p.name}
                       </Text>
@@ -142,7 +141,6 @@ export default function VendorDetailScreen() {
           <View style={styles.services}>
             {vendor.services.map((s) => (
               <View key={s} style={styles.service}>
-                <Ionicons name="sparkles-outline" size={14} color={colors.primary} />
                 <Text size={13} color={colors.text}>
                   {s}
                 </Text>
@@ -189,13 +187,13 @@ export default function VendorDetailScreen() {
 
 const styles = StyleSheet.create({
   root: { flex: 1, backgroundColor: colors.white },
-  head: { paddingHorizontal: GUTTER, paddingTop: 16, paddingBottom: 20, borderBottomWidth: 8, borderBottomColor: '#F4F4F5' },
+  head: { paddingHorizontal: GUTTER, paddingTop: 16, paddingBottom: 20, borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: colors.border },
   rowBetween: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', gap: 10 },
   location: { flexDirection: 'row', alignItems: 'center', gap: 4, marginTop: 4 },
   tiles: { flexDirection: 'row', gap: 10, marginTop: 16 },
   actions: { flexDirection: 'row', gap: 12, marginTop: 16 },
-  pkg: { borderWidth: 1.2, borderColor: colors.border, borderRadius: radius.md, padding: 14 },
-  pkgActive: { borderColor: colors.primary, backgroundColor: colors.primaryTint },
+  pkg: { borderWidth: 1, borderColor: colors.border, borderRadius: radius.md, padding: 14 },
+  pkgActive: { borderColor: colors.heading, borderWidth: 1.5 },
   pkgTitle: { flexDirection: 'row', alignItems: 'center', gap: 8 },
   includes: { marginTop: 8, marginLeft: 28, gap: 3 },
   services: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
@@ -205,7 +203,7 @@ const styles = StyleSheet.create({
     gap: 6,
     borderWidth: 1,
     borderColor: colors.border,
-    borderRadius: radius.pill,
+    borderRadius: radius.sm,
     paddingHorizontal: 12,
     paddingVertical: 7,
   },

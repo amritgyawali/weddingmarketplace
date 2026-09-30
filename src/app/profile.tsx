@@ -1,11 +1,10 @@
-import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
 import { router, type Href } from 'expo-router';
-import type { ReactNode } from 'react';
+import type { ComponentProps, ReactNode } from 'react';
 import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { BackButton } from '@/components/ui/IconButton';
-import { GenieLampIcon } from '@/components/ui/Icons';
 import { Text } from '@/components/ui/Text';
 import { colors, GUTTER } from '@/constants/theme';
 import { useCustomerWorkspace } from '@/hooks/useWorkspace';
@@ -15,7 +14,9 @@ import { useInbox } from '@/store/useDb';
 import { useAccount } from '@/store/useSession';
 import { confirm } from '@/utils/confirm';
 
-const ICON = '#606266';
+const ICON = colors.textBody;
+
+type IconName = ComponentProps<typeof Ionicons>['name'];
 
 interface MenuItem {
   label: string;
@@ -34,28 +35,49 @@ export default function ProfileMenuScreen() {
   const awaitingQuotes = quotes.filter((q) => q.status === 'sent' || q.status === 'viewed').length;
   const unreadNotifications = useInbox(account).filter((n) => !n.read).length;
 
-  const items: MenuItem[] = [
-    { label: 'My Wedding', icon: <Ionicons name="heart-outline" size={24} color={ICON} />, href: '/my-wedding', badge: awaitingQuotes },
-    { label: 'Notifications', icon: <Ionicons name="notifications-outline" size={24} color={ICON} />, href: '/notifications', badge: unreadNotifications },
-    { label: 'Inbox', icon: <Ionicons name="mail-open-outline" size={24} color={ICON} />, href: '/inbox', badge: unread },
-    { label: 'My Bookings', icon: <MaterialCommunityIcons name="calendar-check-outline" size={24} color={ICON} />, href: '/bookings', badge: bookings },
-    { label: 'Checklist', icon: <MaterialCommunityIcons name="ring" size={22} color={ICON} />, href: '/checklist' },
-    { label: 'Guests & RSVP', icon: <Ionicons name="people-circle-outline" size={24} color={ICON} />, href: '/guests' },
-    { label: 'Budget', icon: <Ionicons name="wallet-outline" size={23} color={ICON} />, href: '/budget' },
-    { label: 'Wedding website', icon: <Ionicons name="globe-outline" size={23} color={ICON} />, href: '/website' },
-    { label: 'Invitations', icon: <MaterialCommunityIcons name="email-open-heart-outline" size={23} color={ICON} />, href: '/invitations' },
-    { label: 'Shortlist', icon: <Ionicons name="bookmark-outline" size={23} color={ICON} />, href: '/shortlist' },
-    { label: 'Contracts', icon: <Ionicons name="document-lock-outline" size={23} color={ICON} />, href: '/contracts' },
-    { label: 'Deals & offers', icon: <Ionicons name="pricetags-outline" size={23} color={ICON} />, href: '/deals' },
-    { label: 'Join a Wedding', icon: <Ionicons name="people-outline" size={24} color={ICON} />, href: '/join-wedding' },
-    { label: 'Write a Review', icon: <MaterialCommunityIcons name="fountain-pen-tip" size={23} color={ICON} />, href: '/write-review' },
-    { label: 'Packages', icon: <Ionicons name="gift-outline" size={23} color={ICON} />, href: '/genie' },
-    { label: 'Genie Recommendations', icon: <GenieLampIcon size={25} color={ICON} />, href: '/assistant' },
-    { label: 'Shop', icon: <Ionicons name="bag-handle-outline" size={23} color={ICON} />, href: { pathname: '/info/[slug]', params: { slug: 'shop' } } },
-    { label: 'Promotions', icon: <Ionicons name="megaphone-outline" size={23} color={ICON} />, href: { pathname: '/info/[slug]', params: { slug: 'promotions' } } },
-    { label: 'Settings', icon: <Ionicons name="settings-outline" size={23} color={ICON} />, href: '/settings' },
-    { label: 'Contact Support', icon: <Ionicons name="call-outline" size={23} color={ICON} />, href: { pathname: '/info/[slug]', params: { slug: 'support' } } },
-    { label: 'Information', icon: <Ionicons name="document-text-outline" size={23} color={ICON} />, href: { pathname: '/info/[slug]', params: { slug: 'information' } } },
+  const icon = (name: IconName) => <Ionicons name={name} size={21} color={ICON} />;
+  const sections: { title: string; items: MenuItem[] }[] = [
+    {
+      title: 'Your wedding',
+      items: [
+        { label: 'My Wedding', icon: icon('heart-outline'), href: '/my-wedding', badge: awaitingQuotes },
+        { label: 'Guests & RSVP', icon: icon('people-outline'), href: '/guests' },
+        { label: 'Budget', icon: icon('wallet-outline'), href: '/budget' },
+        { label: 'Checklist', icon: icon('checkbox-outline'), href: '/checklist' },
+        { label: 'Invitations', icon: icon('mail-outline'), href: '/invitations' },
+        { label: 'Wedding website', icon: icon('globe-outline'), href: '/website' },
+        { label: 'Contracts', icon: icon('document-lock-outline'), href: '/contracts' },
+      ],
+    },
+    {
+      title: 'Bookings and messages',
+      items: [
+        { label: 'Notifications', icon: icon('notifications-outline'), href: '/notifications', badge: unreadNotifications },
+        { label: 'Inbox', icon: icon('chatbubble-outline'), href: '/inbox', badge: unread },
+        { label: 'Enquiries & bookings', icon: icon('receipt-outline'), href: '/bookings', badge: bookings },
+        { label: 'Shortlist', icon: icon('bookmark-outline'), href: '/shortlist' },
+        { label: 'Deals & offers', icon: icon('pricetags-outline'), href: '/deals' },
+      ],
+    },
+    {
+      title: 'Help',
+      items: [
+        { label: 'Planner packages', icon: icon('clipboard-outline'), href: '/genie' },
+        { label: 'Quick help', icon: icon('chatbubble-ellipses-outline'), href: '/assistant' },
+        { label: 'Contact support', icon: icon('call-outline'), href: { pathname: '/info/[slug]', params: { slug: 'support' } } },
+      ],
+    },
+    {
+      title: 'More',
+      items: [
+        { label: 'Join a wedding', icon: icon('enter-outline'), href: '/join-wedding' },
+        { label: 'Write a review', icon: icon('create-outline'), href: '/write-review' },
+        { label: 'Shop', icon: icon('bag-handle-outline'), href: { pathname: '/info/[slug]', params: { slug: 'shop' } } },
+        { label: 'Promotions', icon: icon('megaphone-outline'), href: { pathname: '/info/[slug]', params: { slug: 'promotions' } } },
+        { label: 'Settings', icon: icon('settings-outline'), href: '/settings' },
+        { label: 'About Vivah', icon: icon('information-circle-outline'), href: { pathname: '/info/[slug]', params: { slug: 'information' } } },
+      ],
+    },
   ];
 
   const confirmSignOut = () =>
@@ -69,7 +91,7 @@ export default function ProfileMenuScreen() {
       <Pressable onPress={() => router.push('/edit-profile')} style={styles.profile} accessibilityRole="button" accessibilityLabel="View profile">
         <View style={styles.avatar}>
           {profile.name ? (
-            <Text size={24} weight="bold" color={colors.primary}>
+            <Text size={20} weight="semibold" color={colors.textBody}>
               {profile.name
                 .split(/\s+/)
                 .map((p) => p[0])
@@ -78,41 +100,48 @@ export default function ProfileMenuScreen() {
                 .toUpperCase()}
             </Text>
           ) : (
-            <Ionicons name="person" size={40} color="#C4C4C6" style={{ marginTop: 10 }} />
+            <Ionicons name="person" size={30} color={colors.textSubtle} style={{ marginTop: 8 }} />
           )}
         </View>
         <View style={{ flex: 1 }}>
           <Text size={19} weight="semibold" color={colors.heading}>
             {profile.name || 'Guest'}
           </Text>
-          <Text size={15} color={colors.textMuted}>
-            View Profile
+          <Text size={14} color={colors.textMuted}>
+            Edit profile
           </Text>
         </View>
         <Ionicons name="chevron-forward" size={20} color={colors.textSubtle} />
       </Pressable>
 
       <ScrollView contentContainerStyle={{ paddingBottom: insets.bottom + 30 }}>
-        {items.map((item, i) => (
-          <Pressable
-            key={item.label}
-            onPress={() => router.push(item.href)}
-            accessibilityRole="button"
-            style={({ pressed }) => [styles.row, pressed && { backgroundColor: colors.bgSoft }]}>
-            <View style={styles.icon}>{item.icon}</View>
-            <View style={[styles.rowBody, i < items.length - 1 && styles.rowBorder]}>
-              <Text size={17} color={colors.text}>
-                {item.label}
-              </Text>
-              {!!item.badge && (
-                <View style={styles.badge}>
-                  <Text size={12} weight="bold" color={colors.white} lineHeight={15}>
-                    {item.badge}
+        {sections.map((section) => (
+          <View key={section.title}>
+            <Text size={13} weight="medium" color={colors.textMuted} style={styles.sectionTitle}>
+              {section.title}
+            </Text>
+            {section.items.map((item, i) => (
+              <Pressable
+                key={item.label}
+                onPress={() => router.push(item.href)}
+                accessibilityRole="button"
+                style={({ pressed }) => [styles.row, pressed && { backgroundColor: colors.bgSoft }]}>
+                <View style={styles.icon}>{item.icon}</View>
+                <View style={[styles.rowBody, i < section.items.length - 1 && styles.rowBorder]}>
+                  <Text size={16} color={colors.text}>
+                    {item.label}
                   </Text>
+                  {!!item.badge && (
+                    <View style={styles.badge}>
+                      <Text size={12} weight="semibold" color={colors.white} lineHeight={15}>
+                        {item.badge}
+                      </Text>
+                    </View>
+                  )}
                 </View>
-              )}
-            </View>
-          </Pressable>
+              </Pressable>
+            ))}
+          </View>
         ))}
         <Pressable onPress={confirmSignOut} style={styles.logout} accessibilityRole="button">
           <Ionicons name="log-out-outline" size={22} color={colors.danger} />
@@ -134,30 +163,31 @@ const styles = StyleSheet.create({
     paddingHorizontal: GUTTER - 4,
     paddingTop: 22,
     paddingBottom: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: '#D8D8DC',
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomColor: colors.border,
   },
   avatar: {
     width: 52,
     height: 52,
     borderRadius: 26,
-    backgroundColor: '#E2E2E4',
+    backgroundColor: colors.bgMuted,
     alignItems: 'center',
     justifyContent: 'center',
     overflow: 'hidden',
   },
-  row: { flexDirection: 'row', alignItems: 'center', paddingLeft: GUTTER - 4 },
-  icon: { width: 44, alignItems: 'flex-start', justifyContent: 'center' },
+  row: { flexDirection: 'row', alignItems: 'center', paddingLeft: GUTTER },
+  icon: { width: 24, alignItems: 'flex-start', justifyContent: 'center' },
   rowBody: {
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingVertical: 17,
+    paddingVertical: 13,
     paddingRight: GUTTER,
-    marginLeft: 16,
+    marginLeft: 14,
   },
-  rowBorder: { borderBottomWidth: 1, borderBottomColor: colors.divider },
+  rowBorder: { borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: colors.divider },
+  sectionTitle: { paddingHorizontal: GUTTER, paddingTop: 22, paddingBottom: 4 },
   badge: {
     minWidth: 22,
     height: 22,

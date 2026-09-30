@@ -145,7 +145,7 @@ export const quoteActions = (set: SetDb, get: GetDb): QuoteActions => ({
       return;
     }
 
-    // ── Accepted ─────────────────────────────────────────────────────
+    // Accepted
     const settings = get().settings;
     const total = quoteTotals(quote).total;
     const customer = useSession.getState().accounts.find((a) => a.id === quote.customerId);
@@ -198,7 +198,7 @@ export const quoteActions = (set: SetDb, get: GetDb): QuoteActions => ({
         quotes: s.quotes.map((q) => (q.id === id ? { ...q, projectId } : q)),
       }));
       get().confirmBooking(projectId, booking.id);
-      get().notify(vendorTo, `🎉 ${quote.customerName} accepted ${quote.number}`, 'The booking is now in your projects.', `/business/booking/${booking.id}`, 'booking');
+      get().notify(vendorTo, `${quote.customerName} accepted ${quote.number}`, 'The booking is now in your projects.', `/business/booking/${booking.id}`, 'booking');
       get().notify('platform', 'Direct booking confirmed', `${quote.customerName} booked ${quote.fromName} · ${formatMoney(total)}`, undefined, 'booking');
       get().log({ id: quote.customerId, name: quote.customerName }, 'quote.accept', 'quote', id, `v${quote.version}`);
       return;
@@ -265,8 +265,8 @@ export const quoteActions = (set: SetDb, get: GetDb): QuoteActions => ({
       const b = latest.bookings.find((x) => x.id === bid);
       if (b && b.providerResponse !== 'pending') get().confirmBooking(projectId, bid);
     }
-    get().notify(project.customerId, 'Your wedding is confirmed 🎉', `Payment schedule is ready — first instalment ${formatMoney(Math.round((total * (quote.schedule[0]?.percent ?? 30)) / 100))}.`, '/my-wedding?tab=payments', 'booking');
-    get().notify(vendorTo, `🎉 ${quote.customerName} accepted ${quote.number}`, `v${quote.version} · ${formatMoney(total)}`, `/platform/project/${projectId}`, 'quote');
+    get().notify(project.customerId, 'Your wedding is confirmed', `Payment schedule is ready — first instalment ${formatMoney(Math.round((total * (quote.schedule[0]?.percent ?? 30)) / 100))}.`, '/my-wedding?tab=payments', 'booking');
+    get().notify(vendorTo, `${quote.customerName} accepted ${quote.number}`, `v${quote.version} · ${formatMoney(total)}`, `/platform/project/${projectId}`, 'quote');
     get().log({ id: quote.customerId, name: quote.customerName }, 'quote.accept', 'quote', id, `v${quote.version} · ${formatMoney(total)}`);
   },
 

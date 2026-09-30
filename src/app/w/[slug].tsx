@@ -77,7 +77,8 @@ export default function WeddingSite() {
   }
 
   const theme = TEMPLATE[site.template];
-  const serif = site.font === 'serif' ? 'serif' : undefined;
+  // The couple's 'Elegant serif' option uses Martel, the app's display serif.
+  const serif = site.font === 'serif' ? 'Martel_700Bold' : undefined;
   const days = daysUntil(project.weddingDate);
   const events = project.events.filter((e) => !e.private && e.status !== 'cancelled').sort((a, b) => (a.date ?? '9').localeCompare(b.date ?? '9'));
 
@@ -116,10 +117,10 @@ export default function WeddingSite() {
               <View />
             )}
             <View style={{ alignItems: 'center', gap: 6 }}>
-              <Text size={13} weight="bold" color="#fff" tracking={3}>
-                WE’RE GETTING MARRIED
+              <Text size={13} weight="bold" color="#fff">
+                We’re getting married
               </Text>
-              <Text size={40} weight="extrabold" color="#fff" align="center" style={{ fontFamily: serif }}>
+              <Text size={40} weight="bold" color="#fff" align="center" style={{ fontFamily: serif }}>
                 {site.headline}
               </Text>
               <Text size={15} color="#fff">
@@ -248,7 +249,7 @@ export default function WeddingSite() {
           )}
 
           <Text size={12} color={colors.textSubtle} align="center">
-            Made with ♥ on Vivah
+            Made on Vivah
           </Text>
         </View>
       </ScrollView>
@@ -280,7 +281,7 @@ export default function WeddingSite() {
           setGift(null);
           setGiver('');
           setNote('');
-          toast('Thank you for your blessing 💐', 'heart');
+          toast('Dhanyabad for your blessing', 'heart');
         }}
       />
     </View>
@@ -290,12 +291,12 @@ export default function WeddingSite() {
 const styles = StyleSheet.create({
   center: { flex: 1, alignItems: 'center', gap: 12, paddingHorizontal: 24, backgroundColor: colors.bgSoft },
   veil: { ...StyleSheet.absoluteFill, backgroundColor: 'rgba(0,0,0,0.35)', justifyContent: 'space-between', padding: 18 },
-  previewBar: { flexDirection: 'row', alignItems: 'center', gap: 6, alignSelf: 'center', backgroundColor: 'rgba(0,0,0,0.5)', borderRadius: 999, paddingHorizontal: 12, paddingVertical: 6 },
-  count: { marginTop: 8, borderWidth: 1, borderRadius: 999, paddingHorizontal: 14, paddingVertical: 6 },
+  previewBar: { flexDirection: 'row', alignItems: 'center', gap: 6, alignSelf: 'center', backgroundColor: 'rgba(0,0,0,0.5)', borderRadius: 6, paddingHorizontal: 12, paddingVertical: 6 },
+  count: { marginTop: 8, borderWidth: 1, borderRadius: 6, paddingHorizontal: 14, paddingVertical: 6 },
   body: { padding: 18, gap: 28 },
   rule: { width: 48, height: 2, alignSelf: 'center', borderRadius: 1 },
   row: { flexDirection: 'row', alignItems: 'center', gap: 8 },
   gallery: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, justifyContent: 'space-between' },
-  photo: { aspectRatio: 1, borderRadius: 12 },
+  photo: { aspectRatio: 1, borderRadius: 8 },
   giftCard: { position: 'absolute', left: 0, right: 0, bottom: 0, backgroundColor: '#fff', borderTopLeftRadius: 24, borderTopRightRadius: 24, padding: 20, gap: 12 },
 });
