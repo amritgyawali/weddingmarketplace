@@ -76,7 +76,8 @@ alter table profiles add column staff_team text;
 alter table profiles add column persona_confirmed_at timestamptz;
 
 alter table providers add column business_form text check (business_form in ('venue', 'studio', 'shop', 'solo'));
-alter table providers add column team_size int check (team_size is null or team_size >= 0);
+-- team_size already exists (0001); only the check is new.
+alter table providers add constraint providers_team_size_check check (team_size is null or team_size >= 0);
 alter table providers add column trade_profile jsonb not null default '{}';
 
 -- One primary service per provider, any number of add-ons.

@@ -40,30 +40,37 @@ export interface Split {
  *  C  LEAD_FEE          customer pays provider price; platform nets a flat fee
  *  D  FREELANCER_MARGIN client 10,000 → freelancer 8,000, platform 2,000
  */
+/**
+ * Whole rupees, half up, without binary floating-point drift: 1,780,150 × 1.15
+ * is 2,047,172.5 and rounds to 2,047,173, where plain Math.round sees
+ * 2,047,172.4999… Mirrors vivah_rupees() in supabase/migrations/0011.
+ */
+export const roundMoney = (x: number) => Math.round(Number(x.toPrecision(12)));
+
 export function splitBooking(model: PricingModel, rate: number, amounts: { customerPrice?: number; providerCost?: number }): Split {
   switch (model) {
     case 'MARKUP': {
-      const providerCost = Math.round(amounts.providerCost ?? amounts.customerPrice ?? 0);
-      const agreedPrice = Math.round(providerCost * (1 + rate));
+      const providerCost = roundMoney(amounts.providerCost ?? amounts.customerPrice ?? 0);
+      const agreedPrice = roundMoney(providerCost * (1 + rate));
       return { agreedPrice, providerCost, platformFee: agreedPrice - providerCost, providerPayable: providerCost };
     }
     case 'LEAD_FEE': {
-      const agreedPrice = Math.round(amounts.customerPrice ?? amounts.providerCost ?? 0);
-      const fee = Math.min(agreedPrice, Math.round(rate));
+      const agreedPrice = roundMoney(amounts.customerPrice ?? amounts.providerCost ?? 0);
+      const fee = Math.min(agreedPrice, roundMoney(rate));
       return { agreedPrice, providerCost: agreedPrice, platformFee: fee, providerPayable: agreedPrice - fee };
     }
     case 'COMMISSION':
     case 'FREELANCER_MARGIN':
     default: {
-      const agreedPrice = Math.round(amounts.customerPrice ?? amounts.providerCost ?? 0);
-      const platformFee = Math.round(agreedPrice * rate);
+      const agreedPrice = roundMoney(amounts.customerPrice ?? amounts.providerCost ?? 0);
+      const platformFee = roundMoney(agreedPrice * rate);
       return { agreedPrice, providerCost: agreedPrice, platformFee, providerPayable: agreedPrice - platformFee };
     }
   }
 }
 
 /** Freelancer pay after the platform margin (model D). */
-export const freelancerNet = (clientPay: number, margin = 0.2) => ({ pay: Math.round(clientPay * (1 - margin)), margin: Math.round(clientPay * margin) });
+export const freelancerNet = (clientPay: number, margin = 0.2) => ({ pay: roundMoney(clientPay * (1 - margin)), margin: roundMoney(clientPay * margin) });
 
 // Payment schedules
 export const SCHEDULE_TEMPLATES: { id: string; label: string; steps: ScheduleStep[] }[] = [
@@ -126,7 +133,7 @@ export function dueDateFor(step: ScheduleStep, dates: { confirmed: string; event
 export function buildMilestones(steps: ScheduleStep[], total: number, dates: { confirmed: string; event: string; lastEvent?: string }, quoteId?: string): PaymentMilestone[] {
   let allocated = 0;
   return steps.map((step, i) => {
-    const amount = i === steps.length - 1 ? total - allocated : Math.round((total * step.percent) / 100);
+    const amount = i === steps.length - 1 ? total - allocated : roundMoney((total * step.percent) / 100);
     allocated += amount;
     const due = dueDateFor(step, dates);
     return {
@@ -174,7 +181,7 @@ export function payablesForBooking(booking: ServiceBooking, project: Project): P
     .filter((e) => booking.eventIds.includes(e.id) && e.date)
     .map((e) => e.date!)
     .sort()[0] ?? project.weddingDate;
-  const before = Math.round(booking.providerPayable * 0.4);
+  const before = roundMoney(booking.providerPayable * 0.4);
   const base = {
     payeeKind: 'provider' as const,
     payeeId: booking.providerAccountId ?? booking.providerId,

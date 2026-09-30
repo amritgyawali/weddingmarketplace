@@ -1,6 +1,6 @@
 import type { QuoteItem, QuoteVersion, Quotation } from '@/types/platform';
 
-import { VAT_RATE } from './pricing';
+import { roundMoney, VAT_RATE } from './pricing';
 
 /** Nepal VAT (13%). */
 export const TAX_RATE = VAT_RATE;
@@ -28,12 +28,12 @@ export function quoteTotals(q: Totalable): QuoteTotals {
   const discount = Math.min(Math.max(0, q.discount), subtotal);
   const serviceFee = Math.max(0, q.serviceFee ?? 0);
   const taxable = subtotal - discount + serviceFee;
-  const tax = Math.round(taxable * q.taxRate);
+  const tax = roundMoney(taxable * q.taxRate);
   const cost = q.items.reduce((sum, i) => sum + Math.max(0, i.qty) * Math.max(0, i.cost ?? i.rate), 0);
   return { subtotal, discount, serviceFee, taxable, tax, total: taxable + tax, cost, margin: taxable - cost };
 }
 
-export const lineTotal = (i: QuoteItem) => Math.round(Math.max(0, i.qty) * Math.max(0, i.rate));
+export const lineTotal = (i: QuoteItem) => roundMoney(Math.max(0, i.qty) * Math.max(0, i.rate));
 
 /** QT-2026-0042 style numbers, unique within the existing set. */
 export function nextQuoteNumber(existing: string[]): string {

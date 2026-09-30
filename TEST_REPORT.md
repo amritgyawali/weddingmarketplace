@@ -161,25 +161,29 @@ Each role only reaches its own app (`Stack.Protected`). Public `/w/<slug>` and `
 
 Severity is judged for production. Most app-side items are not visible in the demo, because the UI already guards them.
 
-### High: SQL schema, blocks production API use
+### Fixed in P5 (30 Sep 2026)
 
-| # | Defect | Evidence | Fix |
-|---|---|---|---|
-| S1 | **No authenticated user can create a project or change its status.** The `log_project_status()` trigger is not `SECURITY DEFINER`, and `project_status_history` has only a SELECT policy, so the trigger's INSERT fails RLS. A couple inserting a project, and a coordinator updating its status, both get `new row violates row-level security policy for table "project_status_history"`. Only `service_role` works. | [0001_core_schema.sql:460](supabase/migrations/0001_core_schema.sql#L460), [0002_rls.sql:153](supabase/migrations/0002_rls.sql#L153) | Make the function `security definer set search_path = public` (as `audit_row()` already is) |
-| S2 | **Vendors cannot assign freelancers to their own bookings.** `block_calendar_for_assignment()` is not `SECURITY DEFINER`, so its INSERT into `availability` (owner = the freelancer) is rejected for a provider org member, although the "assignments manage" policy allows the assignment. | [0001_core_schema.sql:796](supabase/migrations/0001_core_schema.sql#L796), [0002_rls.sql:137](supabase/migrations/0002_rls.sql#L137) | Same fix. Check `block_calendar_for_booking()` too |
+Each has a check in `npm run db:test` (`scripts/db/core-loop.mjs`, the core loop on an in-process Postgres with RLS on).
 
-### Medium
+| # | Defect | Fix |
+|---|---|---|
+| S1 | No authenticated user could create a project or change its status (`log_project_status()` not security definer) | `0010`: security definer, plus `block_calendar_for_booking()`, `prevent_sent_item_changes()` and `freeze_sent_quote_version()` |
+| S2 | Vendors couldn't assign freelancers (`block_calendar_for_assignment()` not security definer) | `0010`: security definer |
+| M1 | A payment could be refunded more than once | `0010`: `cap_refunds()` trigger; on-device `requestRefund` counts open and processed requests too |
+| M5 | Project codes collided with seeded ones | `submitPlan` takes the next free number after every existing code |
+| M6 | Couples could rewrite platform fields of their project and quote | `0010`: `guard_customer_project_update()` allows plan details only; couples answer quotes through `rpc_respond_to_quote` |
+| M7 | VIEWER collaborators could write | `0010`: `can_edit_project()` / `can_own_project()` on every couple-tool table |
+| M8 | The quote freeze could be bypassed | `0010`: a sent version is frozen in full and can't be deleted or un-sent; a sent quote can't be deleted or go back to draft without a new version |
+
+`0005_personas.sql` also failed to apply (the `team_size` column already existed); `npm run db:check` now applies every migration on each run.
+
+### Medium (open)
 
 | # | Defect | Evidence |
 |---|---|---|
-| M1 | **A payment can be refunded more than once.** The couple can open "Request refund" again while the first request is pending, because the icon shows while the payment is still `SUCCEEDED`. Each request asks for the full amount, and approving both refunds 2×. The store has no cap, and neither does SQL (`refunds.amount` is only `> 0`). | [Payments.tsx:296](src/components/work/Payments.tsx#L296), [finance.ts:95](src/store/db/finance.ts#L95), [0001_core_schema.sql:964](supabase/migrations/0001_core_schema.sql#L964). Test: refunded 1,002,924 on a 501,462 payment |
-| M2 | **Cancelling a confirmed booking leaves the money in place.** The platform commission stays in revenue, and the couple's milestones are unchanged, so they still owe the cancelled provider's share. | [projects.ts:543](src/store/db/projects.ts#L543). Test: NPR 360,000 booking cancelled, milestones still NPR 2,740,250 |
-| M3 | **Wrong estimates and budgets for per-person services** (accommodation, security). `estimateFor()` multiplies by *guests* instead of rooms or staff, and `perUnitBudget()` divides by guests. Estimates come out about 50× too high: accommodation NPR 4.55M, security NPR 1.0M. Per-unit budgets come out about 20× too low (NPR 200/room, NPR 10/guard). MatchPanel pre-fills the inflated price in "Check & propose". | [matching.ts:116](src/services/matching.ts#L116), [planner.ts:106](src/services/planner.ts#L106) |
-| M4 | **Freelancers can be double-booked on-device.** Hiring through a gig (or `assignWorker`) never checks the freelancer's calendar, and the applicants list shows no conflict warning. SQL prevents this (exclusion constraint); the demo backend doesn't. | [gigs.ts:146](src/store/db/gigs.ts#L146). Test: 2 BOOKED entries on the same day |
-| M5 | **Project codes collide.** The code is `WP-${1000 + projects.length + 31}`. After 11 new plans (from a reset), a new project gets **WP-1051**, which already belongs to seeded Sneha & Arjun. | [projects.ts:176](src/store/db/projects.ts#L176) |
-| M6 | **RLS lets clients rewrite platform fields.** "projects staff update" lets a couple update *any* column of their project; the test cleared `coordinator_id` and changed the budget. "quotes customer respond" lets a couple rewrite `issuer_org_id` or versions. | [0002_rls.sql:152](supabase/migrations/0002_rls.sql#L152), [0002_rls.sql:170](supabase/migrations/0002_rls.sql#L170) |
-| M7 | **Collaborator permission is not enforced.** `is_project_customer()` treats every accepted collaborator as the owner, so a VIEWER can edit guests, budget and the website, and can promote themselves to OWNER. | [0002_rls.sql:50](supabase/migrations/0002_rls.sql#L50) |
-| M8 | **The quote freeze can be bypassed.** A sent version can be "un-sent" (`sent_at → null`) and then edited, or deleted outright (its items cascade). `vat_rate`, `notes` and `valid_until` are not frozen. | [0001_core_schema.sql:617](supabase/migrations/0001_core_schema.sql#L617) |
+| M2 | **Cancelling a confirmed booking leaves the money in place on-device.** The platform commission stays in revenue, and the couple's milestones are unchanged. The SQL `rpc_cancel_booking` now cancels open payables and reverses the fee; what the couple then owes still needs a product decision. | [projects.ts](src/store/db/projects.ts) (`cancelBooking`) |
+| M3 | **Wrong estimates and budgets for per-person services** (accommodation, security). `estimateFor()` multiplies by *guests* instead of rooms or staff, and `perUnitBudget()` divides by guests. | [matching.ts:116](src/services/matching.ts#L116), [planner.ts:106](src/services/planner.ts#L106) |
+| M4 | **Freelancers can be double-booked on-device.** SQL prevents this (exclusion constraint); the demo backend doesn't. | [gigs.ts:146](src/store/db/gigs.ts#L146) |
 
 ### Low
 
@@ -219,4 +223,4 @@ The dev server is running with `npx expo start --lan --port 8081`.
 - **Logic harness.** `src/store` and `src/services` were bundled with esbuild, with React Native and AsyncStorage stubbed out. The harness ran the real zustand store through full multi-role scenarios, with a timed wait for the store's setTimeout-driven auto-replies.
 - **SQL.** The migrations were applied to PGlite (Postgres 17 in WASM) with `pgcrypto`, `btree_gist` and `pg_trgm`, plus shims for Supabase's `auth.uid()` and its anon/authenticated/service_role roles and default grants. RLS was tested with `set role authenticated` plus JWT claims.
 - **UI.** Playwright drove the Expo web build (the same JavaScript as Expo Go), with sessions seeded per role, screenshots of every page, and console and page errors captured.
-- **The harness is not in the repo**, because it would break `tsc`, which type-checks every `.ts` file. It lives in the session scratchpad.
+- **The SQL harness is now in the repo** as plain `.mjs` (so `tsc` ignores it): `npm run db:check`, `npm run db:test`, `npm run test:parity` (see `scripts/db`). The logic harness for the store is still outside the repo.

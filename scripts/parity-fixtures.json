@@ -1,0 +1,34 @@
+{
+  "quotes": [
+    { "note": "AGENTS.md invariant 2: 100,000 + 25,000 fee", "items": [{ "qty": 1, "rate": 100000 }], "discount": 0, "serviceFee": 25000, "taxRate": 0.13 },
+    { "note": "WP-1021 v1 shape", "items": [{ "qty": 2, "rate": 180000 }, { "qty": 1250, "rate": 1300 }, { "qty": 1, "rate": 180000 }, { "qty": 1, "rate": 150000 }, { "qty": 1, "rate": 250000 }], "discount": 0, "serviceFee": 25000, "taxRate": 0.13 },
+    { "note": "WP-1021 v2 shape", "items": [{ "qty": 2, "rate": 180000 }, { "qty": 1250, "rate": 1200 }, { "qty": 1, "rate": 180000 }, { "qty": 1, "rate": 150000 }, { "qty": 1, "rate": 250000 }, { "qty": 1, "rate": 20000 }], "discount": 60000, "serviceFee": 25000, "taxRate": 0.13 },
+    { "note": "discount above the subtotal is clamped", "items": [{ "qty": 1, "rate": 5000 }], "discount": 999999, "serviceFee": 0, "taxRate": 0.13 },
+    { "note": "negative fee is ignored", "items": [{ "qty": 1, "rate": 5000 }], "discount": 0, "serviceFee": -100, "taxRate": 0.13 },
+    { "note": "half-rupee line rounds up", "items": [{ "qty": 1.5, "rate": 333 }], "discount": 0, "serviceFee": 0, "taxRate": 0.13 },
+    { "note": "tax exactly on .5", "items": [{ "qty": 1, "rate": 50 }], "discount": 0, "serviceFee": 0, "taxRate": 0.13 },
+    { "note": "no VAT", "items": [{ "qty": 3, "rate": 12345 }], "discount": 45, "serviceFee": 10, "taxRate": 0 }
+  ],
+  "splits": [
+    { "note": "invariant 4: commission 10%", "model": "COMMISSION", "rate": 0.1, "price": 100000 },
+    { "note": "invariant 4: markup 15%", "model": "MARKUP", "rate": 0.15, "price": 70000 },
+    { "note": "invariant 4: lead fee 2,000", "model": "LEAD_FEE", "rate": 2000, "price": 50000 },
+    { "note": "lead fee capped at the price", "model": "LEAD_FEE", "rate": 2000, "price": 1500 },
+    { "note": "freelancer margin 20%", "model": "FREELANCER_MARGIN", "rate": 0.2, "price": 8000 },
+    { "note": "exact .5 that binary floats miss (found by the generator): 1,780,150 × 1.15", "model": "MARKUP", "rate": 0.15, "price": 1780150 }
+  ],
+  "milestones": [
+    { "note": "invariant 3: 30/50/20", "total": 1412500, "percents": [30, 50, 20] },
+    { "note": "rounding goes to the last step", "total": 100001, "percents": [33, 33, 34] },
+    { "note": "tiny total", "total": 1, "percents": [30, 50, 20] }
+  ],
+  "payables": [
+    { "note": "invariant 5: 40/60", "providerPayable": 90000 },
+    { "note": "odd amount", "providerPayable": 90001 },
+    { "providerPayable": 1 }
+  ],
+  "freelancers": [
+    { "note": "invariant 8 shape", "clientPay": 10000, "margin": 0.2 },
+    { "clientPay": 8333, "margin": 0.2 }
+  ]
+}
