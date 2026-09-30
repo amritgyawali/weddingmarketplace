@@ -4,7 +4,7 @@ import { categoryForService } from '@/data/categories';
 import { EVENT_TYPE_BY_ID } from '@/data/events';
 import { occasionIdFor, PROTECTED_OCCASIONS, type OccasionDef } from '@/data/occasions';
 import type { Permission } from '@/data/permissions';
-import { SERVICE_BY_ID } from '@/data/services';
+import { CREW_ROLES, SERVICE_BY_ID } from '@/data/services';
 import { BUSINESS_FORMS, type BusinessForm } from '@/data/trades';
 import { can, experienceFor } from '@/services/experience';
 import { useSession } from '@/store/useSession';
@@ -24,9 +24,18 @@ export interface ProviderPersonaInput {
   tradeProfile?: Account['tradeProfile'];
 }
 
+/** What a freelancer confirms in onboarding or Profile → Your craft. */
+export interface FreelancerPersonaInput {
+  skills: string[];
+  primarySkill: string;
+  tradeProfile?: Account['tradeProfile'];
+}
+
 export interface PersonaActions {
   /** Saves a vendor's services (primary + add-ons), business form and trade essentials. Returns an error to show, or null. */
   setProviderPersona: (accountId: string, input: ProviderPersonaInput) => string | null;
+  /** Saves a freelancer's skills (primary first) and craft profile. Returns an error to show, or null. */
+  setFreelancerPersona: (accountId: string, input: FreelancerPersonaInput) => string | null;
   /** Adds an occasion (super admin). Returns the new occasion, or an error to show. */
   addOccasion: (input: OccasionInput) => { occasion?: OccasionDef; error?: string };
   /** Edits an occasion (super admin). Returns an error to show, or null. */
@@ -36,6 +45,7 @@ export interface PersonaActions {
 }
 
 const MODULES = new Set<string>(PLANNER_MODULES);
+const SKILLS = new Set<string>(CREW_ROLES);
 
 /** Does the signed-in staff member hold this permission? */
 export function actorCan(perm: Permission, get: GetDb): boolean {
@@ -99,6 +109,25 @@ export const personaActions = (set: SetDb, get: GetDb): PersonaActions => ({
       personaConfirmedAt: now(),
     });
     get().log(currentActor(), 'persona.update', 'account', accountId, `${input.primaryService} + ${services.length - 1} more · ${input.businessForm}`);
+    return null;
+  },
+
+  setFreelancerPersona: (accountId, input) => {
+    const session = useSession.getState();
+    const account = session.accounts.find((a) => a.id === accountId);
+    if (!account || account.role !== 'freelancer') return 'This freelancer account no longer exists';
+    const actorId = session.session?.accountId;
+    if (actorId !== accountId && !actorCan('provider.verify', get)) return 'You can only change your own skills';
+    const skills = [...new Set(input.skills)].filter((k) => SKILLS.has(k));
+    if (!skills.length) return 'Pick at least one skill';
+    if (!skills.includes(input.primarySkill)) return 'Your main skill must be one of your skills';
+    session.updateAccount(accountId, {
+      skills: [input.primarySkill, ...skills.filter((k) => k !== input.primarySkill)],
+      primarySkill: input.primarySkill,
+      tradeProfile: input.tradeProfile ? { ...account.tradeProfile, ...input.tradeProfile } : account.tradeProfile,
+      personaConfirmedAt: now(),
+    });
+    get().log(currentActor(), 'persona.update', 'account', accountId, `${input.primarySkill} + ${skills.length - 1} more`);
     return null;
   },
 

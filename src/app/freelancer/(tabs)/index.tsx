@@ -8,7 +8,6 @@ import { triggerHaptic } from '@/components/ui/PressableScale';
 import { Text } from '@/components/ui/Text';
 import { GigCard } from '@/components/work/GigCard';
 import { cityDistanceKm } from '@/data/cities';
-import { FREELANCE_SKILLS } from '@/data/skills';
 import { useFreelancerWorkspace } from '@/hooks/useWorkspace';
 import { useAccount } from '@/store/useSession';
 import { useRoleTheme } from '@/theme/RoleTheme';
@@ -16,7 +15,7 @@ import { daysUntil, formatClock, formatMoney, formatMoneyCompact } from '@/utils
 
 type Sort = 'match' | 'pay' | 'date' | 'distance';
 
-/** Gig marketplace for crew: invitations, emergencies and skill-matched gigs nearby. */
+/** Gig marketplace for crew: invitations, emergencies and gigs for the freelancer's own skills only. */
 export default function DiscoverGigs() {
   const t = useRoleTheme();
   const account = useAccount();
@@ -29,8 +28,9 @@ export default function DiscoverGigs() {
 
   const km = (city: string) => cityDistanceKm(account.city, city);
   const emergencies = open.filter((g) => g.emergency && mySkills.includes(g.skill));
+  // Strict: only gigs for a skill on the profile. Invitations are listed separately whatever the skill.
   const feed = open
-    .filter((g) => !g.emergency || !mySkills.includes(g.skill))
+    .filter((g) => mySkills.includes(g.skill) && !g.emergency && !g.invited?.includes(account.id))
     .filter((g) => (!skill || g.skill === skill) && (!nearMe || (km(g.city) ?? 999) <= radius))
     .sort((a, b) =>
       sort === 'pay'
@@ -39,11 +39,11 @@ export default function DiscoverGigs() {
           ? a.date.localeCompare(b.date)
           : sort === 'distance'
             ? (km(a.city) ?? 999) - (km(b.city) ?? 999)
-            : Number(mySkills.includes(b.skill)) - Number(mySkills.includes(a.skill)) || (km(a.city) ?? 999) - (km(b.city) ?? 999),
+            : Number(b.skill === account.primarySkill) - Number(a.skill === account.primarySkill) || (km(a.city) ?? 999) - (km(b.city) ?? 999) || a.date.localeCompare(b.date),
     );
   const today = upcoming.find((x) => daysUntil(x.assignment.date) === 0);
   const month = payables.filter((p) => p.status === 'PAID' && new Date(p.paidAt ?? p.due).getMonth() === new Date().getMonth()).reduce((s, p) => s + p.amount, 0);
-  const skillOrder = [...mySkills, ...FREELANCE_SKILLS.filter((s) => !mySkills.includes(s))];
+  const skillOrder = mySkills.length > 1 ? mySkills : [];
 
   const header = (
     <View style={{ gap: 16, paddingBottom: 6 }}>
@@ -99,11 +99,11 @@ export default function DiscoverGigs() {
         </View>
       )}
 
-      {invited.filter((g) => !g.emergency).length > 0 && (
+      {invited.filter((g) => !emergencies.includes(g)).length > 0 && (
         <View style={{ paddingHorizontal: 16, gap: 10 }}>
           <SectionTitle title="You’re invited" />
           {invited
-            .filter((g) => !g.emergency)
+            .filter((g) => !emergencies.includes(g))
             .map((g) => (
               <GigCard key={g.id} gig={g} badge="invited" distance={km(g.city)} onPress={() => router.push({ pathname: '/freelancer/gig/[id]', params: { id: g.id } })} />
             ))}
@@ -152,10 +152,18 @@ export default function DiscoverGigs() {
         contentContainerStyle={{ gap: 12, paddingBottom: 32 }}
         renderItem={({ item }) => (
           <View style={{ paddingHorizontal: 16 }}>
-            <GigCard gig={item} distance={km(item.city)} badge={mySkills.includes(item.skill) ? 'match' : undefined} onPress={() => router.push({ pathname: '/freelancer/gig/[id]', params: { id: item.id } })} />
+            <GigCard gig={item} distance={km(item.city)} onPress={() => router.push({ pathname: '/freelancer/gig/[id]', params: { id: item.id } })} />
           </View>
         )}
-        ListEmptyComponent={<EmptyBlock icon="search-outline" title="No gigs right now" message={`Try another skill or widen your radius. Your rate: ${formatMoney(account.dayRate ?? 0)}/day.`} />}
+        ListEmptyComponent={
+          <EmptyBlock
+            icon="search-outline"
+            title="No gigs for your skills right now"
+            message={`You see gigs for ${mySkills.join(', ') || 'your skills'}. Widen your radius or add a skill in Your craft. Your rate: ${formatMoney(account.dayRate ?? 0)}/day.`}
+            action="Your craft"
+            onAction={() => router.push('/freelancer/craft')}
+          />
+        }
       />
     </View>
   );

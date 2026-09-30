@@ -5,6 +5,8 @@ import { StyleSheet, View } from 'react-native';
 import { Card, ChoiceChips, EmptyBlock, KButton, SectionTitle, StatusPill } from '@/components/kit';
 import { Text } from '@/components/ui/Text';
 import { cityDistanceKm } from '@/data/cities';
+import type { CraftId } from '@/data/crafts';
+import { useExperience } from '@/hooks/useExperience';
 import { isBlocking, statusOn } from '@/services/matching';
 import { NEPAL_HOLIDAYS } from '@/services/toolkit';
 import { useDb } from '@/store/useDb';
@@ -20,16 +22,50 @@ const jobLabel = (jobs: JobRef[], id?: string) => jobs.find((j) => j.id === id)?
 
 // ─── Gear checklist ─────────────────────────────────────────────────────────
 
-const GEAR: Record<string, string[]> = {
-  Camera: ['Two camera bodies', 'Batteries charged (×4)', 'Memory cards formatted (×6)', 'Wide, standard and tele lenses', 'Lens cloth and blower'],
-  Light: ['Speedlights and spare AA batteries', 'Trigger', 'LED panel', 'Light stand', 'Reflector'],
-  'Power and data': ['Power bank', 'Card reader', 'Laptop or backup drive', 'Extension board', 'Charging cables'],
-  Personal: ['Comfortable shoes', 'Water and snacks', 'Rain cover', 'Vivah ID and job sheet', 'Cash for parking and tea'],
+const PERSONAL = ['Comfortable shoes', 'Water and snacks', 'Rain cover', 'Vivah ID and job sheet', 'Cash for parking and tea'];
+
+/** Starter packing lists per craft (added once, the first time the tool opens). */
+const GEAR_BY_CRAFT: Partial<Record<CraftId, Record<string, string[]>>> = {
+  photo: {
+    Camera: ['Two camera bodies', 'Batteries charged (×4)', 'Memory cards formatted (×6)', 'Wide, standard and tele lenses', 'Lens cloth and blower'],
+    Light: ['Speedlights and spare AA batteries', 'Trigger', 'LED panel', 'Light stand', 'Reflector'],
+    'Power and data': ['Power bank', 'Card reader', 'Laptop or backup drive', 'Extension board', 'Charging cables'],
+    Personal: PERSONAL,
+  },
+  music: {
+    Sound: ['Controller or mixer', 'Speakers and stands', 'Two wireless mics, spare batteries', 'Headphones', 'XLR and RCA cables'],
+    Music: ['Laptop with the set downloaded offline', 'Backup USB stick', 'Couple’s song requests printed'],
+    Power: ['Extension boards (×3)', 'Voltage stabiliser', 'Gaffer tape'],
+    Personal: PERSONAL,
+  },
+  technician: {
+    Sound: ['Mixer', 'Wireless mic kit', 'Stage monitors', 'Spare cables and adapters'],
+    Light: ['LED pars and bars', 'DMX controller', 'Clamps and safety wires'],
+    Power: ['Distribution board', 'Extension drums', 'Multimeter', 'Gaffer tape'],
+    Personal: PERSONAL,
+  },
+  driver: {
+    Vehicle: ['Fuel full the night before', 'Tyre pressure and spare wheel', 'Car washed, ribbons and flowers fixed', 'First-aid box'],
+    Papers: ['Bluebook', 'Insurance papers', 'Driving licence', 'Route and pickup list'],
+    Personal: PERSONAL,
+  },
+  decor: {
+    Tools: ['Drill and bits', 'Cable ties and tape', 'Floral wire and foam', 'Scissors and cutters', 'Ladder'],
+    Setup: ['Design sheet and photos', 'Fabric steamer', 'Extension boards'],
+    Personal: PERSONAL,
+  },
+};
+
+const GENERAL_GEAR: Record<string, string[]> = {
+  'Power and data': ['Power bank', 'Charging cables', 'Laptop or tablet'],
+  Personal: PERSONAL,
 };
 
 export function GearChecklist() {
   const { account } = useJobs();
+  const exp = useExperience();
   const toggle = useDb((s) => s.toggleToolEntry);
+  const GEAR = (exp.craft && GEAR_BY_CRAFT[exp.craft]) || GENERAL_GEAR;
   return (
     <ToolPage title="Gear checklist" subtitle="Pack the night before every job">
       <EntryList

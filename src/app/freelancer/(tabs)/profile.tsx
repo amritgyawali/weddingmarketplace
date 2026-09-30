@@ -11,8 +11,10 @@ import { Text } from '@/components/ui/Text';
 import { Toggle } from '@/components/ui/Toggle';
 import { toast } from '@/components/ui/Toast';
 import { photos } from '@/constants/images';
+import { craftProfileLines } from '@/components/persona/FreelancerPersona';
+import { CRAFT_BY_ID, CRAFTS } from '@/data/crafts';
 import { reliabilityScore } from '@/data/freelancers';
-import { FREELANCE_SKILLS } from '@/data/skills';
+import { useExperience } from '@/hooks/useExperience';
 import { myApplication, useFreelancerWorkspace } from '@/hooks/useWorkspace';
 import { logout } from '@/services/auth';
 import { useDb, useUnreadMessageCount } from '@/store/useDb';
@@ -55,6 +57,9 @@ export default function FreelancerProfile() {
   const insets = useSafeAreaInsets();
   const account = useAccount();
   const updateAccount = useSession((s) => s.updateAccount);
+  const setPersona = useDb((s) => s.setFreelancerPersona);
+  const exp = useExperience();
+  const craft = exp.craft ? CRAFT_BY_ID[exp.craft] : undefined;
   const verification = useDb((s) => s.verifications.find((v) => v.subjectId === account.id));
   const portfolio = useDb((s) => s.portfolio);
   const unread = useUnreadMessageCount(account);
@@ -76,10 +81,16 @@ export default function FreelancerProfile() {
   const earned = payables.filter((p) => p.status === 'PAID').reduce((s, p) => s + p.amount, 0);
   const work = portfolio.filter((p) => p.providerId === account.id).sort((a, b) => a.order - b.order);
   const status = verification?.status ?? (account.verified ? 'VERIFIED' : 'UNVERIFIED');
+  const kinds = EQUIPMENT_KINDS.filter((k) => !exp.equipmentKinds.length || exp.equipmentKinds.includes(k.id));
+  const hasKit = exp.equipmentKinds.length > 0 || (account.equipment ?? []).length > 0;
+  const profileLines = craft ? craftProfileLines(craft.id, account.tradeProfile) : [];
+  // Skills worth offering as chips: the crafts they already work in, plus their neighbours.
+  const skillOptions = [...new Set([...exp.crafts.flatMap((c) => [...CRAFT_BY_ID[c].skills, ...CRAFT_BY_ID[c].neighbours]), ...(account.skills ?? [])])];
   const checklist = [
     { done: (account.skills ?? []).length > 0, label: 'Skills' },
     { done: !!account.bio, label: 'Bio' },
-    { done: (account.equipment ?? []).length > 0, label: 'Equipment' },
+    ...(craft ? [{ done: profileLines.length > 0, label: `${craft.label} profile` }] : []),
+    ...(hasKit ? [{ done: (account.equipment ?? []).length > 0, label: 'Equipment' }] : []),
     { done: work.length >= 6, label: '6+ portfolio items' },
     { done: status === 'VERIFIED', label: 'Verified ID' },
     { done: !!account.payoutMethod, label: 'Payout method' },
@@ -113,8 +124,14 @@ export default function FreelancerProfile() {
   const toggleSkill = (s: string) => {
     const skills = account.skills ?? [];
     const next = skills.includes(s) ? skills.filter((x) => x !== s) : [...skills, s];
-    if (next.length) updateAccount(account.id, { skills: next });
-    else toast('Keep at least one skill');
+    if (!next.length) return toast('Keep at least one skill');
+    const primary = account.primarySkill && next.includes(account.primarySkill) ? account.primarySkill : next[0];
+    const problem = setPersona(account.id, { skills: next, primarySkill: primary });
+    if (problem) toast(problem);
+  };
+  const openKit = () => {
+    if (!kinds.some((k) => k.id === kitKind)) setKitKind(kinds[0]?.id ?? 'other');
+    setKitOpen(true);
   };
   const toggleLanguage = (l: string) => {
     const langs = account.languages ?? ['Nepali'];
@@ -231,8 +248,8 @@ export default function FreelancerProfile() {
             </Text>
             <View style={styles.wrap}>
               {[
-                `${formatMoney(account.dayRate ?? 0)}/day`,
-                account.eventRate ? `${formatMoney(account.eventRate)}/event` : null,
+                exp.rateModel === 'package' ? `${formatMoney(account.dayRate ?? 0)} per project` : exp.rateModel === 'event' && account.eventRate ? `${formatMoney(account.eventRate)}/event` : `${formatMoney(account.dayRate ?? 0)}/day`,
+                exp.rateModel === 'event' && account.eventRate ? `${formatMoney(account.dayRate ?? 0)}/day` : exp.rateModel !== 'event' && account.eventRate ? `${formatMoney(account.eventRate)}/event` : null,
                 account.hourlyRate ? `${formatMoney(account.hourlyRate)}/hr` : null,
                 account.experienceYears ? `${account.experienceYears} yrs experience` : null,
               ]
@@ -250,15 +267,44 @@ export default function FreelancerProfile() {
       </Card>
 
       <Card style={{ gap: 12 }}>
-        <SectionTitle title="Skills" />
-        <ChoiceChips options={[...FREELANCE_SKILLS]} selected={account.skills ?? []} onToggle={toggleSkill} />
+        <SectionTitle title={craft ? `Your craft · ${craft.label}` : 'Your craft'} action="Edit" onAction={() => router.push('/freelancer/craft')} />
+        {!account.primarySkill && (
+          <Text size={13} color={t.c.warning}>
+            Pick your main skill so organisers see the right profile.
+          </Text>
+        )}
+        {profileLines.length === 0 ? (
+          <Text size={13} color={t.c.muted}>
+            {craft ? `Answer a few ${craft.label.toLowerCase()} questions organisers check before hiring.` : 'Tell organisers what you do.'}
+          </Text>
+        ) : (
+          profileLines.map((l) => (
+            <View key={l.label} style={styles.between}>
+              <Text size={13} color={t.c.muted} style={{ flex: 1 }}>
+                {l.label}
+              </Text>
+              <Text size={13} weight="medium" color={t.c.textStrong} style={{ flex: 1, textAlign: 'right' }}>
+                {l.value}
+              </Text>
+            </View>
+          ))
+        )}
       </Card>
 
       <Card style={{ gap: 12 }}>
-        <SectionTitle title="Equipment" action="Add" onAction={() => setKitOpen(true)} />
+        <SectionTitle title="Skills" action={skillOptions.length < CRAFTS.flatMap((c) => c.skills).length ? 'All skills' : undefined} onAction={() => router.push('/freelancer/craft')} />
+        <ChoiceChips options={skillOptions} selected={account.skills ?? []} onToggle={toggleSkill} />
+        <Text size={12} color={t.c.muted}>
+          You see gigs for these skills only. {account.primarySkill ? `${account.primarySkill} is your main skill.` : ''}
+        </Text>
+      </Card>
+
+      {hasKit && (
+      <Card style={{ gap: 12 }}>
+        <SectionTitle title="Equipment" action={exp.equipmentKinds.length ? 'Add' : undefined} onAction={openKit} />
         {(account.equipment ?? []).length === 0 ? (
           <Text size={13} color={t.c.muted}>
-            Organisers filter by kit — list your camera bodies, lenses, lights and drone.
+            Organisers filter by kit. {craft?.kitHint ? `List what you bring, ${craft.kitHint.replace(/^e\.g\. /, 'like ')}.` : 'List what you bring to a job.'}
           </Text>
         ) : (
           (account.equipment ?? []).map((e, i) => (
@@ -273,16 +319,17 @@ export default function FreelancerProfile() {
             </View>
           ))
         )}
+      </Card>
+      )}
+
+      <Card style={{ gap: 12 }}>
+        <SectionTitle title="Travel & languages" />
         <View style={styles.between}>
           <Text size={14} color={t.c.text}>
             I have my own vehicle
           </Text>
           <Toggle value={account.ownVehicle ?? false} onValueChange={(v) => updateAccount(account.id, { ownVehicle: v })} accessibilityLabel="Own vehicle" />
         </View>
-      </Card>
-
-      <Card style={{ gap: 12 }}>
-        <SectionTitle title="Travel & languages" />
         <Text size={13} color={t.c.muted}>
           I’ll travel up to
         </Text>
@@ -338,7 +385,8 @@ export default function FreelancerProfile() {
       </Card>
 
       <Card padded={false} style={{ overflow: 'hidden' }}>
-        <ListRow icon="construct-outline" title="Freelancer tools" subtitle="Tax, invoices, gear, travel and 16 more" onPress={() => router.push('/freelancer/tools')} />
+        <ListRow icon="briefcase-outline" title="Your craft" subtitle={account.primarySkill ? `${(account.skills ?? []).join(', ')}` : 'Pick your main skill'} onPress={() => router.push('/freelancer/craft')} />
+        <ListRow icon="construct-outline" title="Freelancer tools" subtitle="Tax, invoices, travel and more for your craft" onPress={() => router.push('/freelancer/tools')} />
         <ListRow icon="chatbubbles-outline" title="Messages" subtitle={unread ? `${unread} unread` : 'Organiser and team chats'} onPress={() => router.push('/freelancer/inbox')} />
         <ListRow icon="shield-checkmark-outline" title="Verification" subtitle={status === 'VERIFIED' ? `Verified${verification?.expiresAt ? ` · renews ${formatShortDate(verification.expiresAt)}` : ''}` : 'Upload citizenship & portfolio'} onPress={() => router.push('/freelancer/verification')} />
         <ListRow icon="notifications-outline" title="Notifications" onPress={() => router.push('/notifications')} />
@@ -350,8 +398,8 @@ export default function FreelancerProfile() {
 
       <Sheet visible={kitOpen} onClose={() => setKitOpen(false)} title="Add equipment">
         <View style={{ paddingHorizontal: 20, gap: 14 }}>
-          <ChoiceChips options={EQUIPMENT_KINDS.map((k) => k.label)} selected={[EQUIPMENT_KINDS.find((k) => k.id === kitKind)!.label]} onToggle={(v) => setKitKind(EQUIPMENT_KINDS.find((k) => k.label === v)!.id)} />
-          <KField label="Model" value={kitName} onChangeText={setKitName} placeholder="e.g. Sony A7 IV, 24-70mm f/2.8 GM" />
+          <ChoiceChips options={kinds.map((k) => k.label)} selected={kinds.filter((k) => k.id === kitKind).map((k) => k.label)} onToggle={(v) => setKitKind(kinds.find((k) => k.label === v)!.id)} />
+          <KField label="Model" value={kitName} onChangeText={setKitName} placeholder={craft?.kitHint ?? 'e.g. Sony A7 IV, 24-70mm f/2.8 GM'} />
           <KButton
             label="Add"
             disabled={!kitName.trim()}

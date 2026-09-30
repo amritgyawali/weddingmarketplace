@@ -70,11 +70,11 @@ export const TOOL_RULES = {
   'vendor.fittings': { capsAny: ['fashion.fittings'] },
   'vendor.muhurta': { capsAny: ['rituals.muhurta', 'rituals.samagri'] },
 
-  // ─── Freelancer (P2 switches the filtering on) ────────────────────────────
+  // ─── Freelancer ───────────────────────────────────────────────────────────
   'freelancer.week': ALL,
   'freelancer.open': ALL,
   'freelancer.travel': ALL,
-  'freelancer.gear': { capsAny: ['media.camera', 'music.gear', 'av.gear', 'logistics.fleet'] },
+  'freelancer.gear': { capsAny: ['media.camera', 'music.gear', 'av.gear', 'logistics.fleet', 'decor.rental_inventory'] },
   'freelancer.safety': ALL,
   'freelancer.backup': { capsAny: ['media.card_backup'] },
   'freelancer.deliveries': { capsAny: ['media.deliverables', 'media.editing_queue', 'stationery.proofs'] },
@@ -91,6 +91,10 @@ export const TOOL_RULES = {
   'freelancer.network': ALL,
   'freelancer.certs': ALL,
   'freelancer.gearcare': { capsAny: ['media.camera', 'music.gear', 'av.gear', 'logistics.fleet'] },
+  // Craft tools (P2)
+  'freelancer.kit': { capsAny: ['beauty.product_kit'] },
+  'freelancer.setlist': { capsAny: ['music.setlist'] },
+  'freelancer.vehicle': { capsAny: ['logistics.fleet'] },
 
   // ─── Platform (P4 switches the filtering on) ──────────────────────────────
   'platform.sla': { perms: ['project.view_all'] },

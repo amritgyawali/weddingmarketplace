@@ -94,12 +94,13 @@ export const useSession = create<SessionState>()(
       name: 'vivah-session',
       // v2: persona fields on the demo accounts (services, business form, primary skill, super admin).
       // v3: the Phoolbari Decor demo account.
-      version: 3,
+      // v4: the DJ Suman demo account and Raj's craft profile.
+      version: 4,
       storage: createJSONStorage(() => AsyncStorage),
       partialize: (s) => ({ accounts: s.accounts, session: s.session, lastAccountId: s.lastAccountId, selectedRole: s.selectedRole }),
       migrate: (persisted, version) => {
         const s = persisted as Partial<SessionState>;
-        return (version < 3 && s.accounts ? { ...s, accounts: syncDemoAccounts(s.accounts) } : s) as SessionState;
+        return (version < 4 && s.accounts ? { ...s, accounts: syncDemoAccounts(s.accounts) } : s) as SessionState;
       },
     },
   ),

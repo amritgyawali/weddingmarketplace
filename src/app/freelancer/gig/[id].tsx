@@ -51,7 +51,8 @@ export default function FreelancerGigDetail() {
   const client = freelancerNet(Math.round(gig.pay / 0.8));
 
   const apply = () => {
-    applyToGig(gig.id, { freelancerId: account.id, freelancerName: account.name, skill: gig.skill, rating: account.rating ?? 4.8, message: message.trim(), expectedPay: Number(pay) || gig.pay });
+    const problem = applyToGig(gig.id, { freelancerId: account.id, freelancerName: account.name, skill: gig.skill, rating: account.rating ?? 4.8, message: message.trim(), expectedPay: Number(pay) || gig.pay });
+    if (problem) return toast(problem);
     triggerHaptic('success');
     toast('Application sent', 'paper-plane');
     router.back();
@@ -154,7 +155,7 @@ export default function FreelancerGigDetail() {
               </Text>
               {!skillMatch && (
                 <Text size={12} color={t.c.warning}>
-                  This gig needs {gig.skill}, which isn’t on your profile yet.
+                  This gig needs a {gig.skill}, which isn’t on your profile. Add the skill in Your craft to apply.
                 </Text>
               )}
               <KField label="Message to the organiser" value={message} onChangeText={setMessage} multiline placeholder="Similar weddings you’ve done, your kit, availability…" />
@@ -188,7 +189,11 @@ export default function FreelancerGigDetail() {
             ) : application?.status === 'applied' ? (
               <KButton label="Withdraw application" variant="secondary" onPress={() => { withdraw(gig.id, account.id); toast('Application withdrawn'); }} />
             ) : !application ? (
-              <KButton label={`Apply · ${formatMoney(Number(pay) || gig.pay)}`} icon="flash" size="lg" onPress={apply} />
+              skillMatch ? (
+                <KButton label={`Apply · ${formatMoney(Number(pay) || gig.pay)}`} icon="flash" size="lg" onPress={apply} />
+              ) : (
+                <KButton label={`Add ${gig.skill} to your craft`} icon="add" variant="secondary" size="lg" onPress={() => router.push('/freelancer/craft')} />
+              )
             ) : null}
           </View>
         )}
