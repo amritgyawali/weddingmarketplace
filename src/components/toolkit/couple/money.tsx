@@ -7,6 +7,7 @@ import { Card, ChoiceChips, KButton, ProgressBar, SectionTitle } from '@/compone
 import { Text } from '@/components/ui/Text';
 import { toast } from '@/components/ui/Toast';
 import { CORE_SERVICES, serviceName } from '@/data/services';
+import { useExperience } from '@/hooks/useExperience';
 import { estimateTotal } from '@/services/planner';
 import { HONEYMOON_SPOTS, honeymoonEstimate, savingsPlan, TIERS, tipFor, type Tier } from '@/services/toolkit';
 import { useDb } from '@/store/useDb';
@@ -24,6 +25,8 @@ export function GiftLedger() {
   const w = useWedding();
   const update = useDb((s) => s.updateToolEntry);
   const fromGuestList = w.guests.filter((g) => g.gift).length;
+  const exp = useExperience();
+  const sides = ['wedding', 'engagement', 'anniversary'].includes(exp.occasion?.id ?? 'wedding') ? ['Bride', 'Groom', 'Both'] : ['Mother’s side', 'Father’s side', 'Friends'];
   return (
     <ToolPage title="Shagun and gifts" subtitle="Who gave what, and thank-yous">
       <EntryList
@@ -32,13 +35,13 @@ export function GiftLedger() {
         noun="gift"
         groupBy="group"
         groupOrder={w.eventNames}
-        defaults={{ group: w.eventNames[0], fields: { side: 'Bride' } }}
+        defaults={{ group: w.eventNames[0], fields: { side: sides[0] } }}
         fields={[
           { key: 'title', label: 'From', kind: 'text', required: true, placeholder: 'e.g. Hari mama and family' },
           { key: 'amount', label: 'Cash (shagun)', kind: 'money' },
           { key: 'f.item', label: 'Gift item', kind: 'text', placeholder: 'e.g. Gold chain, dinner set' },
           { key: 'group', label: 'Function', kind: 'select', options: w.eventNames },
-          { key: 'f.side', label: 'Side', kind: 'select', options: ['Bride', 'Groom', 'Both'] },
+          { key: 'f.side', label: 'Side', kind: 'select', options: sides },
           { key: 'f.phone', label: 'Phone (for the thank-you)', kind: 'text' },
           { key: 'done', label: 'Thank-you sent', kind: 'toggle' },
         ]}

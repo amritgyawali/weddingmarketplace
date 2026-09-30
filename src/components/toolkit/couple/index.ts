@@ -2,9 +2,10 @@ import type { ToolDef } from '../hub';
 
 import { EmergencyKit, FamilyDuties, JantiPlanner, MusicPlan, MyDay, Outfits, SaitFinder, Samagri, ShotList, WeatherGuide } from './ceremony';
 import { ContactSheet, GuestRooms, Pickups, VendorMeetings } from './logistics';
+import { BabyKeepsakes, GamesActivities, SurprisePlan } from './occasions';
 import { GiftLedger, HoneymoonPlanner, MenuPlanner, SavingsGoal, TipsPlanner, WhatIfBudget } from './money';
 
-/** The couple's 20 extra planning tools (`/tools`). */
+/** The couple's extra planning tools (`/tools`), filtered by the active occasion through `TOOL_RULES`. */
 export const COUPLE_TOOLS: ToolDef[] = [
   { id: 'couple.sait', title: 'Sait finder', subtitle: 'Auspicious dates for the next 12 months', icon: 'calendar-number-outline', group: 'Dates and rituals', Component: SaitFinder },
   { id: 'couple.samagri', title: 'Puja samagri', subtitle: 'Ritual items for every ceremony', icon: 'flower-outline', group: 'Dates and rituals', Component: Samagri },
@@ -25,5 +26,8 @@ export const COUPLE_TOOLS: ToolDef[] = [
   { id: 'couple.gifts', title: 'Shagun and gifts', subtitle: 'Who gave what, and thank-yous', icon: 'gift-outline', group: 'Money', Component: GiftLedger },
   { id: 'couple.whatif', title: 'What-if budget', subtitle: 'How guests and services move the total', icon: 'calculator-outline', group: 'Money', Component: WhatIfBudget },
   { id: 'couple.savings', title: 'Savings goal', subtitle: 'Monthly target to reach your budget', icon: 'trending-up-outline', group: 'Money', Component: SavingsGoal },
+  { id: 'couple.keepsakes', title: 'Baby keepsakes', subtitle: 'Firsts, weight and gifts from relatives', icon: 'happy-outline', group: 'Family and guests', Component: BabyKeepsakes },
+  { id: 'couple.surprise', title: 'Surprise plan', subtitle: 'Keep it secret, keep it on track', icon: 'heart-circle-outline', group: 'Family and guests', Component: SurprisePlan },
+  { id: 'couple.games', title: 'Games and activities', subtitle: 'What happens when, and the prizes', icon: 'dice-outline', group: 'Family and guests', Component: GamesActivities },
   { id: 'couple.honeymoon', title: 'Honeymoon planner', subtitle: 'Nepal getaways for two, costed', icon: 'airplane-outline', group: 'After the wedding', Component: HoneymoonPlanner },
 ];

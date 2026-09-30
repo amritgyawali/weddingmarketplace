@@ -17,6 +17,7 @@ const COUPLE = 'prj_1021';
 const VENDOR = 'acc_vendor_demo';
 const CREW = 'acc_freelancer_demo';
 const DJ = 'acc_freelancer_dj';
+const NEWBORN = 'prj_1040';
 const DECOR = 'acc_vendor_decor';
 const OPS = 'platform';
 
@@ -72,6 +73,13 @@ export function buildToolkitSeed(): { toolEntries: ToolEntry[]; toolState: Recor
     { id: 'te_f_inv1', ownerId: CREW, tool: 'freelancer.invoices', title: 'Tuladhar family', amount: 18_000, date: day(4), status: 'sent', note: 'Bratabandha shoot, 6 hours', fields: { number: 'INV-R014' }, ago: 3 },
     { id: 'te_f_inv2', ownerId: CREW, tool: 'freelancer.invoices', title: 'Himal Cafe', amount: 9_000, date: day(-20), status: 'paid', note: 'Menu photography', fields: { number: 'INV-R012' }, ago: 25 },
     { id: 'te_f_del1', ownerId: CREW, tool: 'freelancer.deliveries', title: '350 edited photos', refId: 'as_1009_raj', date: day(-2), status: 'editing', ago: 17 },
+    // Newborn family (WP-1040): gifts from the nwaran and keepsakes.
+    { id: 'te_nb_gift1', ownerId: NEWBORN, tool: 'couple.gifts', title: 'Hajurama (father’s side)', amount: 5_001, group: 'Nwaran', fields: { side: 'Father’s side', item: 'Silver bracelet' }, done: true, ago: 148 },
+    { id: 'te_nb_gift2', ownerId: NEWBORN, tool: 'couple.gifts', title: 'Maiju and mama', amount: 3_001, group: 'Nwaran', fields: { side: 'Mother’s side', item: 'Topi and bhoto set' }, ago: 148 },
+    { id: 'te_nb_keep1', ownerId: NEWBORN, tool: 'couple.keepsakes', title: 'Name chosen at the nwaran', group: 'Firsts', date: day(-149), fields: { value: 'Aarohi' }, ago: 149 },
+    { id: 'te_nb_keep2', ownerId: NEWBORN, tool: 'couple.keepsakes', title: 'Weight at birth', group: 'Growth', date: day(-160), fields: { value: '3.1 kg' }, ago: 150 },
+    { id: 'te_nb_keep3', ownerId: NEWBORN, tool: 'couple.keepsakes', title: 'Silver bowl and spoon', group: 'Gifts from relatives', fields: { from: 'Hajurba' }, ago: 20 },
+
     // Freelancer (DJ Suman): setlist and gear.
     { id: 'te_dj_set1', ownerId: DJ, tool: 'freelancer.setlist', title: 'Bihe ko bela', group: 'Entry', fields: { artist: 'Traditional', minutes: 4 }, ago: 40 },
     { id: 'te_dj_set2', ownerId: DJ, tool: 'freelancer.setlist', title: 'Timro mero maya', group: 'First dance', fields: { artist: 'Sugam Pokharel', minutes: 5 }, ago: 40 },

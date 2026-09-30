@@ -1,7 +1,10 @@
 import { COUPLE_TOOLS } from '@/components/toolkit/couple';
-import { ToolHub } from '@/components/toolkit/hub';
+import { ToolHub, useVisibleTools } from '@/components/toolkit/hub';
+import { useExperience } from '@/hooks/useExperience';
 
-/** Extra planning tools for the couple. */
+/** Extra planning tools for the couple, picked for what they are celebrating. */
 export default function CoupleTools() {
-  return <ToolHub role="customer" tools={COUPLE_TOOLS} title="Planning tools" subtitle="20 extra tools for your wedding" />;
+  const tools = useVisibleTools(COUPLE_TOOLS);
+  const exp = useExperience();
+  return <ToolHub role="customer" tools={tools} title="Planning tools" subtitle={`${tools.length} tools for your ${exp.vocab.noun}`} />;
 }

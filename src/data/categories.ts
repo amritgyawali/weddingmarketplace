@@ -65,6 +65,25 @@ export const VENUE_COLLECTIONS: VenueCollection[] = [
 
 export const findCategory = (id: string) => VENDOR_CATEGORIES.find((c) => c.id === id);
 
+/**
+ * The marketplace for an occasion (owner decision): only the categories and
+ * services it lists are shown; the rest are hidden, not ranked lower. Venue
+ * types all count as the `venue` service. Every service listed keeps the full
+ * catalogue (weddings, "something else").
+ */
+export function categoriesFor(services: readonly string[]): VendorCategory[] {
+  if (services.length >= SERVICES.length) return VENDOR_CATEGORIES;
+  const allowed = new Set(services);
+  return VENDOR_CATEGORIES.flatMap((c) => {
+    if (c.id === 'venues') return allowed.has('venue') ? [c] : [];
+    const subcategories = c.subcategories.filter((s) => allowed.has(s.id));
+    return subcategories.length ? [{ ...c, subcategories }] : [];
+  });
+}
+
+/** Home shortcuts for an occasion's services. */
+export const homeCategoriesFor = (services: readonly string[]) => (services.length >= SERVICES.length ? HOME_CATEGORIES : HOME_CATEGORIES.filter((c) => services.includes(c.categoryId === 'venues' ? 'venue' : (c.subcategoryId ?? ''))));
+
 export const findSubcategory = (categoryId: string, subId?: string) =>
   findCategory(categoryId)?.subcategories.find((s) => s.id === subId);
 

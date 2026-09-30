@@ -63,7 +63,7 @@ Public pages need no sign-in: `/w/[slug]` (the couple's wedding website and regi
 - Calculators live in `services/toolkit.ts` (sait dates, climate, Nepal income-tax slabs, VAT position, price suggestions, hall capacity, freelancer quotes, janti vehicles, cash-flow buckets). Tax figures are labelled estimates.
 - Most record-shaped tools are a config for `EntryList` (`components/toolkit/core.tsx`); computed tools read the existing store and never write to core entities, except the platform's "Assign all" (`assignCoordinator`) and "Release batch" (`releasePayable`, behind a confirm), which reuse existing guarded actions.
 
-**Routing.** Routing is **Expo Router**, with a `Stack.Protected` guard per role in `src/app/_layout.tsx`. A role must never be able to reach another role's app. Signed out, users go to `welcome/`. A couple that hasn't onboarded goes to `onboarding/` (one screen, five questions: who, date, city, guests, budget, then a review card). "Build our plan" there calls `submitPlan` with sensible defaults (Wedding + Reception, the six core services); "Just browse" only saves the answers to `useAppStore` (`guests`, `budget`), which prefill the full 8-step plan wizard later.
+**Routing.** Routing is **Expo Router**, with a `Stack.Protected` guard per role in `src/app/_layout.tsx`. A role must never be able to reach another role's app. Signed out, users go to `welcome/`. A couple that hasn't onboarded goes to `onboarding/` ("What are we celebrating?", then five questions shaped by the occasion: who, date, city, guests, budget, then a review card; a wedding asks exactly the questions it always did). "Build our plan" there calls `submitPlan` with the occasion, its functions and default services (for a wedding: Wedding + Reception, the six core services); "Just browse" only saves the answers to `useAppStore` (`guests`, `budget`), which prefill the full 8-step plan wizard later.
 
 **Demo sign-in.** Use any `98XXXXXXXX` number with OTP **1234**, or tap "Continue as …" on each login screen (one button per demo account of that role). New platform staff need the access code `VIVAH2026`.
 
@@ -77,6 +77,7 @@ Public pages need no sign-in: `/w/[slug]` (the couple's wedding website and regi
 | Bikram Adhikari, platform super admin | 9800000006 | Admin console, occasion catalogue |
 | Sunita Maharjan, vendor (Phoolbari Decor, Lalitpur) | 9800000007 | Decor studio: themes, rentals, setup sheets, setup checklist |
 | Suman Tamang, freelancer (DJ Suman) | 9800000008 | DJ and MC: music craft profile, sound gear, setlist, DJ-only gig feed |
+| Sarita Duwal, couple (newborn family, Bhaktapur) | 9800000009 | Owns WP-1040, Aarohi’s pasni: newborn occasion, filtered marketplace and tools, gift log, keepsakes |
 
 ## 3. Architecture map
 
@@ -110,7 +111,7 @@ src/
   theme/ constants/    role themes/fonts, colours, images, brand
   types/platform.ts    the domain model (mirrors the SQL schema). types/persona.ts = When/Experience. types/index.ts = catalogue/legacy types
   utils/               format (money/dates/phone), confirm, links, random
-supabase/migrations/   0001 core schema · 0002 RLS · 0003 matching, reliability, risk · 0004 toolkits · 0005 personas · 0006 freelancer crafts
+supabase/migrations/   0001 core schema · 0002 RLS · 0003 matching, reliability, risk · 0004 toolkits · 0005 personas · 0006 freelancer crafts · 0007–0008 customer occasions
 scripts/               check-personas.mjs + personaCheck.ts (registry check and persona matrix, §6a)
 docs/MASTER_PLAN.md    persona-driven experience and the zero-cost production stack (phases P0–P8)
 TEST_REPORT.md         last full test run + list of known defects (read before fixing bugs)
@@ -277,7 +278,12 @@ Rules:
    - the craft decides the rate model (`Experience.rateModel`: day, event or per project) and the equipment kinds asked about (`Experience.equipmentKinds`); crafts without equipment (kitchen, event crew, rituals) get no equipment section, so a DJ never sees camera fields;
    - tools are filtered by `TOOL_RULES` through `useVisibleTools()`, plus three craft tools in `components/toolkit/freelancer/crafts.tsx`: product kit and hygiene log (makeup, mehendi), setlist (DJ, musician, MC), vehicle log (drivers); the gear checklist starts from a packing list for the craft;
    - the gig feed is **strict**: only gigs for a skill on the profile (invitations and emergencies addressed to them still show). `applyToGig` refuses a role the freelancer doesn't have unless they were invited, and `0006_freelancer_crafts.sql` mirrors that with a trigger.
-10. **Registry check.** `npm run check:personas` fails on unknown capabilities, permissions, occasions or services, a service without capabilities or trade, a crew role in no craft or in two, or a fixture persona with fewer than three tools, and compares every fixture's visible tools with `scripts/persona-matrix.json`. After an intended change run `npm run check:personas -- --update` and commit the new matrix.
+10. **Customers (P3, live).** Onboarding and Profile → **Plan another celebration** (`/celebrate`) ask the occasion first (the active list in `DbData.occasions`), then questions for it: the couple for weddings and engagements, whose anniversary and which year, the parents-to-be, the baby and nwaran or pasni (suggested by age), whose bratabandha or birthday, the organisation, or a name for anything else. `submitPlan` takes `occasion`, `honourees` and `title` (all optional; missing means inferred from the main function). Then:
+   - a couple can hold several celebrations; `useAppStore.activeProjectId` picks the one the planner works on, and `useCustomerWorkspace()` returns it. The switcher (`CelebrationSwitcher`) sits at the top of the plan page;
+   - planning tools are filtered by the occasion's modules through `useVisibleTools()`, plus three occasion tools in `components/toolkit/couple/occasions.tsx` (baby keepsakes, surprise plan, games and activities); plan shortcuts, Profile items and the hero's website button follow the same modules ("Event page" outside weddings);
+   - the marketplace shows **only the occasion's services** (`categoriesFor`, `homeCategoriesFor` in `data/categories.ts`); the rest are hidden, not ranked lower. Search still finds everything;
+   - `NWARAN` is a function (event type); the built-in newborn occasion offers it with the pasni. The DB store `migrate` (v4) adds it to older installs, with the newborn demo project.
+11. **Registry check.** `npm run check:personas` fails on unknown capabilities, permissions, occasions or services, a service without capabilities or trade, a crew role in no craft or in two, or a fixture persona with fewer than three tools, and compares every fixture's visible tools with `scripts/persona-matrix.json`. After an intended change run `npm run check:personas -- --update` and commit the new matrix.
 
 ## 7. Seed and demo contract (don't break the demo)
 

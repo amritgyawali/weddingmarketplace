@@ -6,6 +6,7 @@
  */
 import type { PhotoKey } from '@/constants/images';
 import { EVENT_TYPE_BY_ID, bandFor, isPeakSeason } from '@/data/events';
+import type { OccasionId } from '@/data/occasions';
 import { SERVICE_BY_ID, defaultDetails, findService, serviceName } from '@/data/services';
 import { milestoneStatus, paymentSummary } from '@/services/pricing';
 import type {
@@ -38,6 +39,11 @@ export interface PlanInput {
   notes: string;
   inspiration: PhotoKey[];
   partnerName?: string;
+  /** What is being celebrated (weddings when missing) and who it is for. */
+  occasion?: OccasionId;
+  honourees?: Project['honourees'];
+  /** Shown instead of the names-based title ("Aarav’s pasni"). */
+  title?: string;
 }
 
 const shift = (iso: string, days: number) => {

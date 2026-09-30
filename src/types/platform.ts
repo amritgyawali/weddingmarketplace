@@ -98,6 +98,7 @@ export type EventType =
   | 'PRE_WEDDING'
   | 'POST_WEDDING'
   | 'PASNI'
+  | 'NWARAN'
   | 'BRATABANDHA'
   | 'ANNIVERSARY'
   | 'RECEPTION'

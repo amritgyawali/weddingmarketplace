@@ -7,7 +7,7 @@ backend, which runs on the device for the demo, and one Postgres/Supabase schema
 
 | User type | App | What it does |
 |---|---|---|
-| **Couple** (customer) | Marketplace + **My Wedding** | Covers the whole wedding: a "Plan my wedding" wizard (8 steps, multi-function Nepali ceremonies), versioned quotes, payments, guests & RSVP, seating, budget, website, invitations, registry, mood boards, compare, deals, contracts, calendar and checklist. |
+| **Couple** (customer) | Marketplace + **My Wedding** | Covers the whole wedding: a "Plan my wedding" wizard (8 steps, multi-function Nepali ceremonies), versioned quotes, payments, guests & RSVP, seating, budget, website, invitations, registry, mood boards, compare, deals, contracts, calendar and checklist. Onboarding asks what is being celebrated first (wedding, engagement, anniversary, baby shower, newborn ceremony, bratabandha, birthday, corporate or something else); the questions, marketplace categories and tools follow the occasion, and one account can plan several celebrations. |
 | **Vendor** (venues & businesses) | Vivah for Business | Covers running a business on Vivah: lead CRM, a quote builder, and bookings with crew and deliverables. It also has an availability calendar, packages, portfolio, finance/payables, analytics, promotions, reviews, team, customers and verification. |
 | **Freelancer** (photographers, MUAs, crew) | Gig marketplace | Covers crew work: discovering gigs and invites, including emergency gigs. Crew can manage assignments (confirm, GPS check-in, check-out with proof), keep a calendar with weekly rules, and track earnings and payouts. They also maintain a profile with kit, rates and reliability. Sign-up asks the craft first, and the profile, rate model, equipment, tools and gig feed follow it. |
 | **Platform team** | Operations console (web-ready) | Covers running the platform: leads kanban, a 12-tab project console, a matching engine and quote builder, a control room and emergency replacement. It also covers approvals, finance (revenue, payables, refunds, disputes), users, providers, freelancers, analytics, the marketplace and the audit log. |
@@ -16,7 +16,7 @@ Each app also has a **toolkit of 20 extra tools**, opened from a searchable hub:
 
 | User type | Hub | Tools |
 |---|---|---|
-| Couple | Profile → Planning tools | Sait finder, puja samagri, weather and season, family duties, janti planner, guest rooms, pickups, wedding-day contacts, my day schedule, outfits and jewellery, emergency kit, photo shot list, music, bhoj menu, vendor meetings, tips and dakshina, shagun and gifts, what-if budget, savings goal, honeymoon planner |
+| Couple | Profile → Planning tools | Sait finder, puja samagri, weather and season, family duties, janti planner, guest rooms, pickups, wedding-day contacts, my day schedule, outfits and jewellery, emergency kit, photo shot list, music, bhoj menu, vendor meetings, tips and dakshina, shagun and gifts, what-if budget, savings goal, honeymoon planner, plus baby keepsakes, surprise plan and games for the occasions that use them. Tools are filtered by occasion. |
 | Vendor | Business → Business tools | Saved replies, follow-ups, site visits, reply-time goal, cancellation policy, hours and away message, price calculator, market benchmark, gift vouchers, referral partners, monthly goals, expenses, profit and loss, VAT and tax, staff roster, event prep checklists, team tasks, inventory, suppliers, halls and capacity |
 | Freelancer | Profile → Freelancer tools | This week, open dates, travel planner, gear checklist, health and safety, card backup log, edits and deliveries, work diary, rate calculator, private invoices, expenses and mileage, income tax estimate, earnings goal, savings pots, pitch builder, reliability coach, clients, crew network, certificates, gear care, plus craft tools (product kit, setlist, vehicle log). Tools are filtered by craft. |
 | Platform team | More → Operations tools | SLA monitor, coordinator workload, on-call roster, holidays and closures, quality audits, helpdesk, reply macros, broadcasts, win-back list, promo campaigns, vendor recruitment, city supply, demand by season, source funnel, provider scorecards, monthly targets, cash-flow forecast, payout batches, risk and fraud watch, export centre |
@@ -71,6 +71,7 @@ Sign in with any Nepali mobile number (`98XXXXXXXX`); the OTP is **1234**. Each 
 | Vendor | Sunita Maharjan, Phoolbari Decor (9800000007) | Decor studio: themes, rentals, setup sheets and the setup checklist |
 | Freelancer | Raj Maharjan (9800000003) | Assignments, emergency gig in Pokhara, earnings |
 | Freelancer | Suman Tamang, DJ Suman (9800000008) | Music craft: sound gear, setlist, DJ-only gig feed |
+| Couple | Sarita Duwal (9800000009) | Aarohi’s pasni in Bhaktapur: newborn occasion, filtered marketplace and tools, gift log, keepsakes |
 | Platform | Sita Karki, coordinator (9800000004) | Today → WP-1017 wedding live today with an emergency replacement |
 | Platform | Bikram Adhikari, super admin (9800000006) | Approvals, finance, users, audit, occasions (More → Occasions). New staff use access code `VIVAH2026`. |
 

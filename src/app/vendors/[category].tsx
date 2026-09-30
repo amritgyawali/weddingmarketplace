@@ -14,7 +14,9 @@ import { VenueCardSkeleton } from '@/components/ui/Skeleton';
 import { Text } from '@/components/ui/Text';
 import { colors, GUTTER } from '@/constants/theme';
 import { ALL_CITIES } from '@/data/cities';
-import { findCategory } from '@/data/categories';
+import { categoriesFor, findCategory } from '@/data/categories';
+import { SERVICES } from '@/data/services';
+import { useExperience } from '@/hooks/useExperience';
 import { useDebounce } from '@/hooks/useDebounce';
 import { useVendors } from '@/hooks/queries';
 import { selectShortlistCount, useAppStore } from '@/store/useAppStore';
@@ -29,7 +31,9 @@ const SORTS: { id: Sort; label: string }[] = [
 
 export default function VendorListingScreen() {
   const params = useLocalSearchParams<{ category: string; sub?: string }>();
-  const category = findCategory(params.category);
+  const exp = useExperience();
+  // Only the services the active occasion lists; a category it doesn't list at all stays browsable from a deep link.
+  const category = categoriesFor(exp.occasion?.services ?? SERVICES.map((s) => s.id)).find((c) => c.id === params.category) ?? findCategory(params.category);
   const city = useAppStore((s) => s.city);
   const shortlistCount = useAppStore(selectShortlistCount);
   const [sub, setSub] = useState<string | undefined>(params.sub);
@@ -56,6 +60,7 @@ export default function VendorListingScreen() {
   }
 
   const subTitle = category.subcategories.find((s) => s.id === sub)?.title ?? category.title;
+  const list = data?.filter((v) => category.id === 'venues' || category.subcategories.some((s) => s.id === v.subcategoryId));
 
   return (
     <View style={styles.root}>
@@ -64,7 +69,7 @@ export default function VendorListingScreen() {
         right={<IconButton icon="bookmark" iconSize={18} badge={shortlistCount} accessibilityLabel="Shortlist" onPress={() => router.push('/shortlist')} />}
       />
       <FlatList
-        data={isLoading ? [] : data}
+        data={isLoading ? [] : list}
         keyExtractor={(v) => v.id}
         renderItem={({ item }) => <VendorCard vendor={item} />}
         keyboardShouldPersistTaps="handled"
@@ -88,7 +93,7 @@ export default function VendorListingScreen() {
             </View>
             {!!data && (
               <Text size={13} color={colors.textMuted} style={{ paddingHorizontal: GUTTER }}>
-                {data.length} {subTitle.toLowerCase()} · sorted by {SORTS.find((s) => s.id === sort)!.label.toLowerCase()}
+                {list?.length ?? 0} {subTitle.toLowerCase()} · sorted by {SORTS.find((s) => s.id === sort)!.label.toLowerCase()}
               </Text>
             )}
           </View>

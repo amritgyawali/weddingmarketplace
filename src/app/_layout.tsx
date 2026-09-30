@@ -112,6 +112,7 @@ export default function RootLayout() {
             <Stack.Screen name="info/[slug]" />
             <Stack.Screen name="tools" />
             <Stack.Screen name="tool/[id]" />
+            <Stack.Screen name="celebrate" options={{ animation: 'slide_from_bottom' }} />
           </Stack.Protected>
 
           {/* Each business role gets a completely separate app. */}

@@ -4,19 +4,23 @@ import { ScrollView, StyleSheet } from 'react-native';
 
 import { PressableScale } from '@/components/ui/PressableScale';
 import { Text } from '@/components/ui/Text';
-import { HOME_CATEGORIES } from '@/data/categories';
+import { homeCategoriesFor } from '@/data/categories';
+import { SERVICES } from '@/data/services';
+import { useExperience } from '@/hooks/useExperience';
 import { photos } from '@/constants/images';
 import { colors, GUTTER } from '@/constants/theme';
 
 /** Horizontally scrolling category shortcuts: small photo tiles with a label underneath. */
 export function CategoryCircles() {
+  const exp = useExperience();
+  const categories = homeCategoriesFor(exp.occasion?.services ?? SERVICES.map((s) => s.id));
   return (
     <ScrollView
       horizontal
       showsHorizontalScrollIndicator={false}
       style={styles.band}
       contentContainerStyle={styles.content}>
-      {HOME_CATEGORIES.map((c) => (
+      {categories.map((c) => (
         <PressableScale
           key={c.id}
           accessibilityLabel={c.title}
