@@ -1,0 +1,120 @@
+# Restore rehearsal (master plan §10.2; P8 is done when one has passed).
+# Every quarter, and on demand: takes a backup from R2, decrypts it, restores
+# it into an empty local Supabase stack on the runner, and checks every table
+# has exactly the rows the dump says it should, and that rpc_health answers.
+# Nothing touches the production project.
+#
+# The age private key is the only secret that can read backups, so it lives in
+# its own GitHub environment, `restore`, with a required reviewer: each run
+# waits for the owner's approval (docs/LAUNCH.md §5).
+name: Restore rehearsal
+
+on:
+  schedule:
+    - cron: '0 5 1 1,4,7,10 *' # first day of each quarter
+  workflow_dispatch:
+    inputs:
+      key:
+        description: 'Backup to restore, e.g. daily/vivah-2027-01-15.tar.gz.age (default: the latest daily)'
+        required: false
+
+permissions:
+  contents: read
+
+jobs:
+  rehearse:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    environment: restore
+    env:
+      BACKUP_AGE_IDENTITY: ${{ secrets.BACKUP_AGE_IDENTITY }}
+      R2_ACCOUNT_ID: ${{ secrets.R2_ACCOUNT_ID }}
+      R2_BUCKET: ${{ vars.R2_BUCKET || 'vivah-backups' }}
+      AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+      AWS_DEFAULT_REGION: auto
+      AWS_REQUEST_CHECKSUM_CALCULATION: when_required
+      AWS_RESPONSE_CHECKSUM_VALIDATION: when_required
+      # psql from the Postgres 17 image, so it understands everything pg_dump 17 writes.
+      PSQL: docker run --rm --network host -v ${{ github.workspace }}/restore:/restore postgres:17 psql postgresql://postgres:postgres@127.0.0.1:54322/postgres
+    steps:
+      - name: Check configuration
+        id: config
+        run: |
+          missing=""
+          for v in BACKUP_AGE_IDENTITY R2_ACCOUNT_ID AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY; do
+            [ -n "${!v}" ] || missing="$missing $v"
+          done
+          if [ -n "$missing" ]; then
+            echo "::notice::Nothing to rehearse yet (missing:$missing). See docs/LAUNCH.md §5."
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: actions/checkout@v4
+        if: steps.config.outputs.ready == 'true'
+
+      - uses: supabase/setup-cli@v1
+        if: steps.config.outputs.ready == 'true'
+        with:
+          version: latest
+
+      - name: Install age
+        if: steps.config.outputs.ready == 'true'
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq age
+
+      - name: Download and decrypt
+        if: steps.config.outputs.ready == 'true'
+        env:
+          KEY: ${{ inputs.key }}
+        run: |
+          endpoint="https://$R2_ACCOUNT_ID.r2.cloudflarestorage.com"
+          if [ -z "$KEY" ]; then
+            KEY="daily/$(aws s3 ls "s3://$R2_BUCKET/daily/" --endpoint-url "$endpoint" | awk '{ print $4 }' | grep '^vivah-' | sort | tail -1)"
+          fi
+          [ "$KEY" != "daily/" ] || { echo "No backups in $R2_BUCKET/daily/"; exit 1; }
+          echo "Restoring $KEY"
+          echo "BACKUP_KEY=$KEY" >> "$GITHUB_ENV"
+          aws s3 cp "s3://$R2_BUCKET/$KEY" backup.tar.gz.age --endpoint-url "$endpoint" --only-show-errors
+          umask 077
+          printf '%s\n' "$BACKUP_AGE_IDENTITY" > "$RUNNER_TEMP/age.key"
+          mkdir -p restore
+          age -d -i "$RUNNER_TEMP/age.key" backup.tar.gz.age | tar -xzf - -C restore
+          rm -f "$RUNNER_TEMP/age.key" backup.tar.gz.age
+          chmod -R a+r restore
+          ls -l restore
+
+      - name: Start an empty local Supabase
+        if: steps.config.outputs.ready == 'true'
+        run: |
+          mkdir -p "$RUNNER_TEMP/rehearsal" && cd "$RUNNER_TEMP/rehearsal"
+          supabase init --force
+          supabase start
+
+      - name: Restore (roles, schema, then data with triggers off)
+        if: steps.config.outputs.ready == 'true'
+        run: |
+          $PSQL --single-transaction --variable ON_ERROR_STOP=1 \
+            --file /restore/roles.sql \
+            --file /restore/schema.sql \
+            --command 'SET session_replication_role = replica' \
+            --file /restore/data.sql
+
+      - name: Check every table and the health check
+        if: steps.config.outputs.ready == 'true'
+        run: |
+          {
+            echo "### Restore rehearsal: $BACKUP_KEY"
+            echo "Backup taken $(cat restore/taken-at.txt 2>/dev/null || echo 'at an unknown time') from commit $(cat restore/commit.txt 2>/dev/null || echo 'unknown')."
+            echo
+          } >> "$GITHUB_STEP_SUMMARY"
+          bash scripts/ops/verify-restore.sh restore/counts.tsv "$PSQL" | tee -a "$GITHUB_STEP_SUMMARY"
+          $PSQL -Atq -c 'select rpc_health()' | grep -Eq '"ok": ?true'
+          echo "rpc_health answers on the restored database." | tee -a "$GITHUB_STEP_SUMMARY"
+
+      - name: Clean up
+        if: always() && steps.config.outputs.ready == 'true'
+        run: |
+          (cd "$RUNNER_TEMP/rehearsal" && supabase stop --no-backup) || true
+          rm -rf restore

@@ -1,7 +1,10 @@
 import { router } from 'expo-router';
+import { useState } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 
-import { Card, ChoiceChips, KButton, SectionTitle, StackHeader } from '@/components/kit';
+import { deleteMyAccount, exportMyData } from '@/backend/account';
+import { usesEmailSignIn } from '@/backend/auth';
+import { Card, ChoiceChips, KButton, ListRow, SectionTitle, StackHeader } from '@/components/kit';
 import { Text } from '@/components/ui/Text';
 import { Toggle } from '@/components/ui/Toggle';
 import { toast } from '@/components/ui/Toast';
@@ -22,6 +25,7 @@ export const DEFAULT_PREFS: AccountPrefs = {
   calendar: 'both',
   showProfileToVendors: true,
   marketing: false,
+  analytics: true,
 };
 
 type Kind = NonNullable<AppNotification['kind']>;
@@ -48,9 +52,12 @@ export function SettingsScreen() {
   const set = (patch: Partial<AccountPrefs>) => updateAccount(account.id, { prefs: { ...prefs, ...patch } });
   const kinds = KINDS.filter((k) => !k.roles || k.roles.includes(account.role));
 
-  const exportData = () => {
+  const [busy, setBusy] = useState<'export' | 'delete' | null>(null);
+  const live = usesEmailSignIn();
+
+  const exportData = async () => {
     const db = useDb.getState();
-    const mine = {
+    const mine: Record<string, unknown> = {
       account,
       projects: db.projects.filter((p) => p.customerId === account.id || p.collaborators.some((c) => c.accountId === account.id)).map((p) => p.code),
       reviews: db.reviews.filter((r) => r.authorId === account.id),
@@ -58,7 +65,29 @@ export function SettingsScreen() {
       notifications: db.notifications.filter((n) => n.to === account.id).length,
       exportedAt: new Date().toISOString(),
     };
+    if (live) {
+      // What the server holds is the real record; the device copy comes along for completeness.
+      setBusy('export');
+      const server = await exportMyData();
+      setBusy(null);
+      if (!server.ok) return toast(server.error);
+      mine.server = server.value;
+    }
     shareText(JSON.stringify(mine, null, 2), `${BRAND.name.toLowerCase()}-my-data.json`, 'application/json');
+  };
+
+  const removeAccount = async () => {
+    if (live) {
+      setBusy('delete');
+      const closed = await deleteMyAccount();
+      setBusy(null);
+      // Open bookings, refunds or payouts come back as a message saying what to settle first.
+      if (!closed.ok) return toast(closed.error);
+      logout();
+    }
+    deleteAccount(account.id);
+    toast('Account deleted');
+    router.replace('/');
   };
 
   const row = (label: string, value: boolean, onChange: (v: boolean) => void, hint?: string) => (
@@ -108,29 +137,34 @@ export function SettingsScreen() {
         <Card padded={false}>
           {row(account.role === 'customer' ? 'Let vendors see my wedding details' : 'Show my profile in search', prefs.showProfileToVendors, (v) => set({ showProfileToVendors: v }), account.role === 'customer' ? 'Date, city and guest count — never your phone number' : undefined)}
           {row('Offers & wedding tips', prefs.marketing, (v) => set({ marketing: v }))}
+          {row('Share usage analytics', prefs.analytics !== false, (v) => set({ analytics: v }), 'Which screens are used, never your details. Crash reports are sent either way.')}
         </Card>
 
         <SectionTitle title="Your data" />
         <Card style={{ gap: 10 }}>
-          <KButton label="Download my data" icon="download-outline" variant="secondary" onPress={exportData} />
-          <KButton label="Log out" icon="log-out-outline" variant="secondary" onPress={() => confirm('Log out?', 'You can sign back in with your mobile number.', 'Log out', logout)} />
+          <KButton label="Download my data" icon="download-outline" variant="secondary" loading={busy === 'export'} onPress={exportData} />
+          <KButton label="Log out" icon="log-out-outline" variant="secondary" onPress={() => confirm('Log out?', live ? 'You can sign back in with a code sent to your email.' : 'You can sign back in with your mobile number.', 'Log out', logout)} />
           <KButton
             label="Delete my account"
             icon="trash-outline"
             variant="danger"
+            loading={busy === 'delete'}
             onPress={() =>
               confirm(
                 'Delete your account?',
-                'This removes your profile from this device and signs you out. Bookings, payments and contracts are kept for 7 years as required by Nepal’s tax law, but anonymised.',
+                'Your profile, contact details, devices and private documents are removed and you are signed out. Bookings, payments and contracts are kept as long as Nepal’s tax law requires, without your name.',
                 'Delete',
-                () => {
-                  deleteAccount(account.id);
-                  toast('Account deleted');
-                  router.replace('/');
-                },
+                () => void removeAccount(),
               )
             }
           />
+        </Card>
+
+        <SectionTitle title="Legal" />
+        <Card padded={false} style={{ overflow: 'hidden' }}>
+          <ListRow icon="document-text-outline" title="Terms of use" onPress={() => router.push({ pathname: '/legal/[doc]', params: { doc: 'terms' } })} />
+          <ListRow icon="shield-checkmark-outline" title="Privacy policy" onPress={() => router.push({ pathname: '/legal/[doc]', params: { doc: 'privacy' } })} />
+          <ListRow icon="receipt-outline" title="Cancellation and refunds" onPress={() => router.push({ pathname: '/legal/[doc]', params: { doc: 'refunds' } })} />
         </Card>
         <Text size={11} color={t.c.subtle} align="center">
           {BRAND.name} · support {BRAND.supportPhone} · {BRAND.supportEmail}

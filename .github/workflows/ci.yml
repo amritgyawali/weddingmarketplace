@@ -33,3 +33,9 @@ jobs:
         run: npm run test:parity
       - name: Edge Functions
         run: npm run test:functions
+      - name: Analytics and error payloads
+        run: npm run test:telemetry
+      - name: Web build (what Cloudflare Pages and Vercel serve)
+        run: npx expo export -p web
+      - name: Legal pages and headers ship with the web build
+        run: test -f dist/_headers && test -f dist/robots.txt && test -f dist/sitemap.xml

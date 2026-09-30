@@ -41,3 +41,53 @@ export async function userRpc<T>(req: Request, fn: string, args: Record<string, 
   }
   return { ok: true, value: body as T };
 }
+
+const serviceHeaders = () => ({ apikey: serviceKey(), Authorization: `Bearer ${serviceKey()}`, 'Content-Type': 'application/json' });
+
+/** Every file under a folder of a private bucket, walking sub-folders (Storage lists one level at a time). */
+export async function listFiles(bucket: string, folder: string): Promise<string[]> {
+  const files: string[] = [];
+  const pending = [folder.replace(/\/$/, '')];
+  while (pending.length) {
+    const prefix = pending.pop()!;
+    for (let offset = 0; ; offset += 100) {
+      const res = await fetch(`${supabaseUrl()}/storage/v1/object/list/${bucket}`, {
+        method: 'POST',
+        headers: serviceHeaders(),
+        body: JSON.stringify({ prefix, limit: 100, offset }),
+      });
+      if (!res.ok) throw new Error(`list ${prefix}: ${res.status}`);
+      const page = (await res.json()) as { name: string; id: string | null }[];
+      // Folders come back with no id.
+      for (const item of page) (item.id ? files : pending).push(`${prefix}/${item.name}`);
+      if (page.length < 100) break;
+    }
+  }
+  return files;
+}
+
+/** Removes files from a bucket, 100 at a time. */
+export async function removeFiles(bucket: string, paths: string[]): Promise<void> {
+  for (let i = 0; i < paths.length; i += 100) {
+    const res = await fetch(`${supabaseUrl()}/storage/v1/object/${bucket}`, {
+      method: 'DELETE',
+      headers: serviceHeaders(),
+      body: JSON.stringify({ prefixes: paths.slice(i, i + 100) }),
+    });
+    if (!res.ok) throw new Error(`remove: ${res.status}`);
+  }
+}
+
+/**
+ * Soft-deletes an auth user: they can't sign in again and their email is
+ * freed, but the user row stays, so the profile (and the bookings and
+ * payments pointing at it) are kept.
+ */
+export async function softDeleteUser(userId: string): Promise<void> {
+  const res = await fetch(`${supabaseUrl()}/auth/v1/admin/users/${userId}`, {
+    method: 'DELETE',
+    headers: serviceHeaders(),
+    body: JSON.stringify({ should_soft_delete: true }),
+  });
+  if (!res.ok && res.status !== 404) throw new Error(`auth delete: ${res.status}`);
+}

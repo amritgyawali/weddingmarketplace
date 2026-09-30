@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Submitted to Google Search Console and Bing Webmaster Tools (docs/LAUNCH.md).
+     Update lastmod when src/data/legal.ts LEGAL_VERSION changes. -->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://vivah.com.np/</loc></url>
+  <url><loc>https://vivah.com.np/legal/terms</loc><lastmod>2026-10-01</lastmod></url>
+  <url><loc>https://vivah.com.np/legal/privacy</loc><lastmod>2026-10-01</lastmod></url>
+  <url><loc>https://vivah.com.np/legal/refunds</loc><lastmod>2026-10-01</lastmod></url>
+  <url><loc>https://vivah.com.np/legal/delete-account</loc><lastmod>2026-10-01</lastmod></url>
+</urlset>

@@ -1,0 +1,44 @@
+# Keeps the free Supabase projects awake (master plan §10.2): a free project
+# pauses after 7 days without traffic. Once a day this calls rpc_health on
+# staging and production and pings a Better Stack heartbeat, which alerts if
+# the ping stops arriving.
+#
+# Secrets live in the GitHub environments `staging` and `production`
+# (docs/LAUNCH.md §3). Until a project exists the job just says so and passes.
+name: Keep-alive
+
+on:
+  schedule:
+    - cron: '30 3 * * *' # 09:15 in Kathmandu
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  ping:
+    name: Ping ${{ matrix.environment }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    strategy:
+      fail-fast: false
+      matrix:
+        environment: [staging, production]
+    environment: ${{ matrix.environment }}
+    env:
+      SUPABASE_URL: ${{ vars.SUPABASE_URL }}
+      SUPABASE_PUBLISHABLE_KEY: ${{ vars.SUPABASE_PUBLISHABLE_KEY }}
+      HEARTBEAT_URL: ${{ secrets.BETTERSTACK_KEEPALIVE_HEARTBEAT_URL }}
+    steps:
+      - name: Call rpc_health
+        run: |
+          if [ -z "$SUPABASE_URL" ] || [ -z "$SUPABASE_PUBLISHABLE_KEY" ]; then
+            echo "::notice::No Supabase project configured for ${{ matrix.environment }} yet; nothing to keep awake."
+            exit 0
+          fi
+          body=$(curl -fsS --retry 3 --retry-delay 20 --max-time 30 \
+            -X POST "$SUPABASE_URL/rest/v1/rpc/rpc_health" \
+            -H "apikey: $SUPABASE_PUBLISHABLE_KEY" -H 'Content-Type: application/json' -d '{}')
+          echo "$body"
+          echo "$body" | grep -Eq '"ok"[[:space:]]*:[[:space:]]*true'
+          if [ -n "$HEARTBEAT_URL" ]; then curl -fsS --retry 3 --max-time 30 "$HEARTBEAT_URL" > /dev/null; fi

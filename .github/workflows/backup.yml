@@ -1,0 +1,108 @@
+# Nightly encrypted backup of the production database to Cloudflare R2
+# (master plan §10.2: Supabase's free plan has no backups).
+#
+#   1. supabase db dump: roles, schema and data (COPY) as plain SQL.
+#   2. Row counts per table are read from the data dump (scripts/ops/dump-counts.awk);
+#      the restore rehearsal checks a restore against them.
+#   3. tar + gzip, encrypted with age to BACKUP_AGE_RECIPIENT (a public key;
+#      the private key stays offline, docs/LAUNCH.md §5).
+#   4. Uploaded to R2 as daily/vivah-YYYY-MM-DD.tar.gz.age, and on the 1st of
+#      the month also monthly/vivah-YYYY-MM.tar.gz.age. R2 lifecycle rules
+#      expire daily/ after 30 days and monthly/ after 365.
+#   5. A Better Stack heartbeat, which alerts when a night is missed.
+#
+# Files in Storage (KYC, contracts, invoices) are not in the dump; see LAUNCH.md.
+# Secrets live in the GitHub environment `production`. Until they are set the
+# job says so and passes.
+name: Database backup
+
+on:
+  schedule:
+    - cron: '30 21 * * *' # 03:15 in Kathmandu
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: backup
+  cancel-in-progress: false
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    environment: production
+    env:
+      SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+      BACKUP_AGE_RECIPIENT: ${{ vars.BACKUP_AGE_RECIPIENT }}
+      R2_ACCOUNT_ID: ${{ secrets.R2_ACCOUNT_ID }}
+      R2_BUCKET: ${{ vars.R2_BUCKET || 'vivah-backups' }}
+      AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+      AWS_DEFAULT_REGION: auto
+      # R2 doesn't take the newer default checksums of AWS CLI v2.
+      AWS_REQUEST_CHECKSUM_CALCULATION: when_required
+      AWS_RESPONSE_CHECKSUM_VALIDATION: when_required
+      HEARTBEAT_URL: ${{ secrets.BETTERSTACK_BACKUP_HEARTBEAT_URL }}
+    steps:
+      - name: Check configuration
+        id: config
+        run: |
+          missing=""
+          for v in SUPABASE_DB_URL BACKUP_AGE_RECIPIENT R2_ACCOUNT_ID AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY; do
+            [ -n "${!v}" ] || missing="$missing $v"
+          done
+          if [ -n "$missing" ]; then
+            echo "::notice::Backups are not set up yet (missing:$missing). See docs/LAUNCH.md §5."
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: actions/checkout@v4
+        if: steps.config.outputs.ready == 'true'
+
+      - uses: supabase/setup-cli@v1
+        if: steps.config.outputs.ready == 'true'
+        with:
+          version: latest
+
+      - name: Install age
+        if: steps.config.outputs.ready == 'true'
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq age
+
+      - name: Dump roles, schema and data
+        if: steps.config.outputs.ready == 'true'
+        run: |
+          mkdir -p backup
+          supabase db dump --db-url "$SUPABASE_DB_URL" -f backup/roles.sql --role-only
+          supabase db dump --db-url "$SUPABASE_DB_URL" -f backup/schema.sql
+          supabase db dump --db-url "$SUPABASE_DB_URL" -f backup/data.sql --use-copy --data-only
+          awk -f scripts/ops/dump-counts.awk backup/data.sql > backup/counts.tsv
+          git rev-parse HEAD > backup/commit.txt
+          date -u +%Y-%m-%dT%H:%M:%SZ > backup/taken-at.txt
+          [ -s backup/schema.sql ] && [ -s backup/counts.tsv ] || { echo "The dump is empty"; exit 1; }
+          echo "Tables: $(wc -l < backup/counts.tsv), rows: $(awk -F '\t' '{ s += $2 } END { print s }' backup/counts.tsv)"
+
+      - name: Encrypt and upload to R2
+        if: steps.config.outputs.ready == 'true'
+        run: |
+          day=$(date -u +%Y-%m-%d)
+          file="vivah-$day.tar.gz.age"
+          tar -czf - -C backup . | age -r "$BACKUP_AGE_RECIPIENT" > "$file"
+          endpoint="https://$R2_ACCOUNT_ID.r2.cloudflarestorage.com"
+          aws s3 cp "$file" "s3://$R2_BUCKET/daily/$file" --endpoint-url "$endpoint" --only-show-errors
+          if [ "$(date -u +%d)" = "01" ]; then
+            aws s3 cp "$file" "s3://$R2_BUCKET/monthly/vivah-$(date -u +%Y-%m).tar.gz.age" --endpoint-url "$endpoint" --only-show-errors
+          fi
+          {
+            echo "### Backup $day"
+            echo "Uploaded \`daily/$file\` ($(du -h "$file" | cut -f1), encrypted)."
+            echo "Tables: $(wc -l < backup/counts.tsv), rows: $(awk -F '\t' '{ s += $2 } END { print s }' backup/counts.tsv)."
+          } >> "$GITHUB_STEP_SUMMARY"
+          rm -rf backup "$file"
+
+      - name: Heartbeat
+        if: steps.config.outputs.ready == 'true' && env.HEARTBEAT_URL != ''
+        run: curl -fsS --retry 3 --max-time 30 "$HEARTBEAT_URL" > /dev/null

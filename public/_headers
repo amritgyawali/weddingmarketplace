@@ -1,0 +1,17 @@
+# Cloudflare Pages response headers (production web, master plan §7.7). Vercel
+# previews get the same from vercel.json.
+#
+# No _redirects file on purpose: the build has no top-level 404.html, so Pages
+# serves index.html for every path that isn't a file (its single-page mode),
+# and /w/…, /rsvp/…, /pay/… and /legal/… work when opened directly.
+
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  X-Frame-Options: DENY
+  Strict-Transport-Security: max-age=31536000; includeSubDomains
+  Permissions-Policy: camera=(self), geolocation=(self), microphone=(), payment=()
+
+# Bundles have content hashes in their names, so they never change.
+/_expo/static/*
+  Cache-Control: public, max-age=31536000, immutable

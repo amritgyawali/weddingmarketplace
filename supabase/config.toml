@@ -47,3 +47,11 @@ verify_jwt = true
 # "check again" sends its JWT and the function checks ownership itself.
 [functions.payment-verify]
 verify_jwt = false
+
+# Public: the Better Stack monitor and the keep-alive call it (P8).
+[functions.health]
+verify_jwt = false
+
+# Closes the signed-in user's account (Settings → Delete my account).
+[functions.account-delete]
+verify_jwt = true

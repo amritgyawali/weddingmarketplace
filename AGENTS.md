@@ -113,9 +113,12 @@ src/
   theme/ constants/    role themes/fonts, colours, images, brand
   types/platform.ts    the domain model (mirrors the SQL schema). types/persona.ts = When/Experience. types/index.ts = catalogue/legacy types
   utils/               format (money/dates/phone), confirm, links, random
-supabase/migrations/   0001 core schema · 0002 RLS · 0003 matching, reliability, risk · 0004 toolkits · 0005 personas · 0006 freelancer crafts · 0007–0008 customer occasions · 0009 platform RBAC · 0010 SQL defect fixes · 0011 core-loop RPCs · 0012 auth, media, notifications · 0013 scheduled jobs · 0014 gateway payments
-supabase/functions/    Edge Functions (Deno, no dependencies): send-otp, media-sign, notify-fanout, payment-initiate, payment-verify; pure logic in _shared/ (tested in Node by npm run test:functions)
+supabase/migrations/   0001 core schema · 0002 RLS · 0003 matching, reliability, risk · 0004 toolkits · 0005 personas · 0006 freelancer crafts · 0007–0008 customer occasions · 0009 platform RBAC · 0010 SQL defect fixes · 0011 core-loop RPCs · 0012 auth, media, notifications · 0013 scheduled jobs · 0014 gateway payments · 0015 launch (health, consent, export, account deletion)
+supabase/functions/    Edge Functions (Deno, no dependencies): send-otp, media-sign, notify-fanout, payment-initiate, payment-verify, health, account-delete; pure logic in _shared/ (tested in Node by npm run test:functions)
 docs/SETUP_SUPABASE.md putting the app on a Supabase staging project, step by step
+docs/LAUNCH.md         going live (P8): production project, GitHub environments, backups and restore rehearsal, Cloudflare Pages, monitoring, Play Store
+scripts/ops/           backup row counts (dump-counts.awk) and the restore check (verify-restore.sh) used by the backup workflows
+.github/workflows/     ci (every PR), keep-alive (daily), backup (nightly), restore-rehearsal (quarterly), deploy-web (main → Cloudflare Pages)
 src/backend/           Backend interface for the core loop: mock (the store) and supabase (the RPCs), chosen by EXPO_PUBLIC_BACKEND
 scripts/               check-personas.mjs + personaCheck.ts (registry check and persona matrix, §6a); ts-loader.mjs (Node imports of pure app modules)
 scripts/db/            PGlite harness: db-check (migrations apply, RLS everywhere), core-loop (the loop as each role, RLS on), parity (app money = SQL money)
@@ -303,6 +306,11 @@ Rules:
    - **Notifications:** a new `notifications` row calls `notify-fanout` (pg_net + Vault), which sends Expo push and Resend email by the user's preferences; muted kinds send nothing, `emergency` always rings. Remote push needs a development or store build (`src/backend/push.ts` skips Expo Go).
    - **Jobs:** `0013_jobs.sql` (milestone status, payable readiness, lead SLA, payment reminders, cleanup), scheduled by pg_cron.
 13a. **Gateway payments (P7).** Khalti and eSewa money is recorded **only** by `payment-verify` after the gateway's own lookup (Khalti `/epayment/lookup`, eSewa status API), never from a redirect's query or the app. `payment-initiate` calls `rpc_begin_payment` as the couple, which works out the amount from the milestone and makes a `payment_intents` row; `rpc_settle_payment` (service role only) locks the intent, so duplicate callbacks, refreshes and "check again" record one payment. Money a milestone can no longer take becomes `REFUND_DUE` and finance is told. In the app, `src/backend/payments.ts` opens the gateway and `/pay/result` checks the attempt again on return; the demo (`mock`) keeps its simulated gateways in `PaymentSheet`. Tests: `scripts/db/payments.mjs` (in `npm run db:test`) and the payment checks in `npm run test:functions`. Setup: `docs/SETUP_SUPABASE.md` §6.
+13b. **Launch (P8).** Runbook: `docs/LAUNCH.md`.
+   - **Legal pages** `/legal/[doc]` (terms, privacy, refunds, delete-account) are public and read `src/data/legal.ts`; the Play listing and the gateways link to them. The text must describe what the app really does: when behaviour it mentions changes (data collected, processors, retention, deletion, refunds), update the text and bump `LEGAL_VERSION`. The login screen says continuing accepts them; Supabase builds record it with `rpc_accept_legal` (`rpc_me.legal` is the last accepted version).
+   - **Your data:** Settings → Download my data adds `rpc_export_my_data` on Supabase builds; Delete my account calls the `account-delete` Edge Function, which runs `rpc_delete_my_account` as the user (refused while a confirmed celebration, open booking, refund or payout remains, or for the last super admin), removes `<user id>/…` from the documents bucket and soft-deletes the auth user. Profiles are anonymised, never hard-deleted: bookings, payments and contracts point at them. The demo keeps deleting the on-device account.
+   - **Telemetry:** `src/backend/telemetry.ts` sends PostHog events and `$exception`s and Sentry envelopes over HTTP (no SDKs, so Expo Go still works); payloads are built in `telemetryPayloads.ts` (tested by `npm run test:telemetry`). Only route patterns and the account id with persona fields leave the device, never names, emails, phones, ids in paths or RSVP codes. `prefs.analytics === false` stops analytics, not error reports. The root layout's `ErrorBoundary` is `AppErrorBoundary`.
+   - **Ops:** `rpc_health` + the `health` function (Better Stack), `keep-alive.yml`, `backup.yml` (age-encrypted dumps to R2), `restore-rehearsal.yml`, `deploy-web.yml` (Cloudflare Pages; `public/_headers`, `robots.txt`, `sitemap.xml` ship with the build). Each skips with a notice until its GitHub environment secrets exist.
 14. **Registry check.** `npm run check:personas` fails on unknown capabilities, permissions, occasions or services, a service without capabilities or trade, a crew role in no craft or in two, or a fixture persona with fewer than three tools, and compares every fixture's visible tools (and, for staff, console routes) with `scripts/persona-matrix.json`. After an intended change run `npm run check:personas -- --update` and commit the new matrix.
 
 ## 7. Seed and demo contract (don't break the demo)
@@ -351,6 +359,7 @@ npm run db:check        # when you touch SQL: every migration applies, RLS on ev
 npm run db:test         # the core loop, sign-up, media, files, notifications and jobs against the SQL as each role, RLS on
 npm run test:parity     # money in src/services equals money in SQL
 npm run test:functions  # when you touch supabase/functions
+npm run test:telemetry  # when you touch src/backend/telemetry*
 npx expo-doctor         # no new failures
 npx expo start          # app loads in Expo Go; press w for web
 ```

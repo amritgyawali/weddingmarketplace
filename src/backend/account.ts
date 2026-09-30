@@ -3,11 +3,12 @@
  * first-time sign-up (rpc_complete_signup), and mirroring them into the
  * app's local Account so the role apps keep working unchanged.
  */
+import { ENV } from '@/constants/env';
 import type { Account, UserRole } from '@/types/platform';
 
-import type { Me } from './auth';
+import { getAccessToken, type Me } from './auth';
 import { rpc } from './supabase';
-import type { Result } from './types';
+import { failResult, okResult, type Result } from './types';
 
 export const fetchMe = () => rpc<Me>('rpc_me', {});
 
@@ -57,4 +58,31 @@ export function accountFromMe(me: Me, role: UserRole): Account {
       : {}),
     ...(role === 'platform' ? { staffRole, team: (me.staffTeam ?? undefined) as Account['team'] } : {}),
   };
+}
+
+/** Records that the user accepted this version of the Terms and Privacy policy (src/data/legal.ts). */
+export const acceptLegal = (version: string) => rpc<void>('rpc_accept_legal', { p_version: version });
+
+/** Everything the server holds about the signed-in user, as one JSON document. */
+export const exportMyData = () => rpc<Record<string, unknown>>('rpc_export_my_data', {});
+
+/**
+ * Closes the signed-in user's account through the account-delete Edge
+ * Function: the server refuses while bookings, refunds or payouts are open,
+ * removes their private files and stops the email signing in again.
+ */
+export async function deleteMyAccount(): Promise<Result<void>> {
+  const token = await getAccessToken();
+  if (!token) return failResult('Sign in again to continue');
+  try {
+    const res = await fetch(`${ENV.supabaseUrl}/functions/v1/account-delete`, {
+      method: 'POST',
+      headers: { apikey: ENV.supabasePublishableKey ?? '', Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ confirm: 'DELETE' }),
+    });
+    const body = (await res.json().catch(() => ({}))) as { message?: string };
+    return res.ok ? okResult(undefined) : failResult(body.message ?? 'Couldn’t delete your account. Try again.');
+  } catch {
+    return failResult('No connection. Check your internet and try again.');
+  }
 }

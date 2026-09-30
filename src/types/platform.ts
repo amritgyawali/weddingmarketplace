@@ -36,6 +36,8 @@ export interface AccountPrefs {
   calendar: 'AD' | 'BS' | 'both';
   showProfileToVendors: boolean;
   marketing: boolean;
+  /** Usage analytics (PostHog); error reports are sent either way. Missing means on. */
+  analytics?: boolean;
 }
 
 export interface Account {

@@ -238,6 +238,55 @@ ok('payment-verify: the app’s check returns the status and receipt', mineOut.s
 const lost = await get('paypal/nope');
 ok('payment-verify: unknown paths go to the result page, never elsewhere', lost.headers.get('Location') === 'https://vivah.com.np/pay/result?status=unknown');
 
+// ─── Launch (P8): health and account deletion ───────────────────────────────────
+const launchNet = { dbUp: true, deleteRefusal: null, files: { '10000000-0000-4000-8000-000000000001': [{ name: 'kyc', id: null }, { name: 'pan.pdf', id: 'f1' }], '10000000-0000-4000-8000-000000000001/kyc': [{ name: 'citizenship.jpg', id: 'f2' }] }, removed: [], authDeleted: [], rpcArgs: null };
+const payFetch = globalThis.fetch;
+globalThis.fetch = async (url, init = {}) => {
+  const u = String(url);
+  if (u.endsWith('/rest/v1/rpc/rpc_health')) {
+    if (!launchNet.dbUp) throw new Error('paused');
+    return new Response(JSON.stringify({ ok: true, at: 'now', schema: '0015' }));
+  }
+  if (u.endsWith('/rest/v1/rpc/rpc_delete_my_account')) {
+    launchNet.rpcArgs = { args: JSON.parse(init.body), auth: init.headers.Authorization };
+    return launchNet.deleteRefusal ? new Response(JSON.stringify({ message: launchNet.deleteRefusal }), { status: 400 }) : new Response(JSON.stringify({ deleted: true, files: 'someone-else' }));
+  }
+  if (u.endsWith('/storage/v1/object/list/documents')) {
+    const { prefix } = JSON.parse(init.body);
+    return new Response(JSON.stringify(launchNet.files[prefix] ?? []));
+  }
+  if (u.endsWith('/storage/v1/object/documents') && init.method === 'DELETE') { launchNet.removed.push(...JSON.parse(init.body).prefixes); return new Response('[]'); }
+  if (u.includes('/auth/v1/admin/users/') && init.method === 'DELETE') { launchNet.authDeleted.push({ url: u, body: JSON.parse(init.body), auth: init.headers.Authorization }); return new Response('{}'); }
+  return payFetch(url, init);
+};
+
+await load('health/index.ts');
+const healthFn = handler;
+const healthy = await healthFn(new Request('https://fn.test'));
+ok('health: up when the database answers', healthy.status === 200 && (await healthy.json()).db === 'up' && healthy.headers.get('Cache-Control') === 'no-store');
+launchNet.dbUp = false;
+const down = await healthFn(new Request('https://fn.test'));
+ok('health: 503 when the database is paused or down', down.status === 503 && (await down.json()).ok === false);
+ok('health: only GET', (await healthFn(post({}))).status === 405);
+
+await load('account-delete/index.ts');
+const deleteFn = handler;
+authUser = '10000000-0000-4000-8000-000000000001';
+const me = { Authorization: 'Bearer couple-jwt' };
+ok('account-delete: needs the word DELETE', (await deleteFn(post({ confirm: 'yes' }, me))).status === 400 && launchNet.rpcArgs === null);
+authUser = null;
+ok('account-delete: signed-out callers are refused', (await deleteFn(post({ confirm: 'DELETE' }, me))).status === 401);
+authUser = '10000000-0000-4000-8000-000000000001';
+launchNet.deleteRefusal = 'Your celebration WP-1021 is confirmed.';
+const blocked = await deleteFn(post({ confirm: 'DELETE' }, me));
+ok('account-delete: a refusal from the database reaches the app, nothing removed', blocked.status === 400 && (await blocked.json()).message.includes('WP-1021') && launchNet.removed.length === 0 && launchNet.authDeleted.length === 0);
+ok('account-delete: the RPC runs as the user, not the service role', launchNet.rpcArgs?.auth === 'Bearer couple-jwt');
+launchNet.deleteRefusal = null;
+const closed = await deleteFn(post({ confirm: 'delete' }, me));
+const closedBody = await closed.json();
+ok('account-delete: removes the caller’s own files, sub-folders included', closed.status === 200 && closedBody.files === 2 && launchNet.removed.join(',') === '10000000-0000-4000-8000-000000000001/pan.pdf,10000000-0000-4000-8000-000000000001/kyc/citizenship.jpg', JSON.stringify(launchNet.removed));
+ok('account-delete: soft-deletes the auth user with the service role', launchNet.authDeleted[0]?.url.endsWith('/auth/v1/admin/users/10000000-0000-4000-8000-000000000001') && launchNet.authDeleted[0]?.body.should_soft_delete === true && launchNet.authDeleted[0]?.auth === 'Bearer service');
+
 const failed = results.filter((r) => !r.pass);
 results.forEach((r) => console.log(`${r.pass ? 'pass' : 'FAIL'}  ${r.name}${!r.pass && r.detail ? `  (${r.detail})` : ''}`));
 console.log(`\n${results.length - failed.length} of ${results.length} checks passed.`);

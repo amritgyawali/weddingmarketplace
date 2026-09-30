@@ -45,6 +45,8 @@ export interface Me {
   staffRequest?: { status: 'PENDING' | 'APPROVED' | 'REJECTED'; team: string; staffRole: string } | null;
   freelancer?: { skills: string[]; primarySkill: string | null; dayRate: number | null; eventRate: number | null; bio: string | null; travelRadiusKm: number } | null;
   provider?: { orgId: string; businessName: string; providerId: string | null; businessForm: string | null; services: string[] } | null;
+  /** The Terms and Privacy policy version last accepted (LEGAL_VERSION), or null. */
+  legal?: string | null;
 }
 
 /** True when this build signs in through Supabase instead of the demo. */
