@@ -759,12 +759,12 @@ P0 to P4 need no backend work and can start now. P5 can run in parallel in anoth
 - Cloudinary plans: https://cloudinary.com/pricing, https://cloudinary.com/documentation/billing_and_plans
 - Expo plans and push: https://docs.expo.dev/billing/plans/, https://docs.expo.dev/push-notifications/faq/
 - Resend free tier: https://resend.com/docs/knowledge-base/what-is-resend-pricing
-- PostHog pricing: https://posthog.com/pricing
-- Sentry free plan: https://sentry.io/pricing/
+- PostHog pricing: https://posthog.com/pricing, https://flexprice.io/blog/posthog-pricing-guide
+- Sentry free plan: https://sentry.io/pricing/, https://sentrypricing.com/free-plan
 - Upstash pricing: https://upstash.com/pricing/redis
-- Cloudflare R2 pricing: https://developers.cloudflare.com/r2/pricing/
+- Cloudflare R2 and Pages: https://developers.cloudflare.com/r2/pricing/, https://temps.sh/blog/cloudflare-pages-free-tier-limits-2026
 - Better Stack status pages: https://betterstack.com/status-page
 - Google Maps Platform free usage: https://mapsplatform.google.com/pricing/
-- WhatsApp API pricing changes: https://respond.io/blog/whatsapp-business-api-pricing
-- Nepal payment gateways: https://paybridgenp.com/blog/esewa-charges-fees-nepal
-- Nepal SMS gateways: https://sparrowsms.com/services/sms-gateway-api/
+- WhatsApp API pricing changes: https://respond.io/blog/whatsapp-business-api-pricing, https://blog.peppercloud.com/whatsapp-api-pricing-everything-you-need-to-know/
+- Nepal payment gateways: https://paybridgenp.com/blog/esewa-charges-fees-nepal, https://paybridgenp.com/blog/khalti-merchant-account-guide
+- Nepal SMS gateways: https://sparrowsms.com/services/sms-gateway-api/, https://www.webtechnepal.com/best-bulk-sms-service-provider-in-nepal/
