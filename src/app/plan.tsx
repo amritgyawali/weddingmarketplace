@@ -14,7 +14,7 @@ import { Text } from '@/components/ui/Text';
 import { photos, type PhotoKey } from '@/constants/images';
 import { colors } from '@/constants/theme';
 import { CITIES, ONBOARDING_CITIES } from '@/data/cities';
-import { EVENT_TYPE_BY_ID, EVENT_TYPES, GUEST_BANDS, bsMonthLabel, isPeakSeason } from '@/data/events';
+import { EVENT_TYPE_BY_ID, EVENT_TYPES, GUEST_BANDS, bandFor, bsMonthLabel, isPeakSeason } from '@/data/events';
 import { IDEA_PHOTOS } from '@/data/ideas';
 import { SERVICE_GROUPS, SERVICES, findService } from '@/data/services';
 import { allocateBudget, estimateTotal, perUnitBudget, type PlanInput } from '@/services/planner';
@@ -59,6 +59,9 @@ export default function PlanWizard() {
   const submitPlan = useDb((s) => s.submitPlan);
   const appCity = useAppStore((s) => s.city);
   const appDate = useAppStore((s) => s.weddingDate);
+  const appGuests = useAppStore((s) => s.guests);
+  const appBudget = useAppStore((s) => s.budget);
+  const appPartner = useAppStore((s) => s.profile.partnerName);
   const [step, setStep] = useState(0);
   const [eventTypes, setEventTypes] = useState<EventType[]>(['WEDDING']);
   const [city, setCity] = useState(CITIES.some((c) => c.name === appCity) && appCity !== 'All Nepal' ? appCity : account.city || 'Kathmandu');
@@ -67,15 +70,15 @@ export default function PlanWizard() {
   const [venue, setVenue] = useState('');
   const [dates, setDates] = useState<Partial<Record<EventType, string | null>>>({ WEDDING: appDate });
   const [dateFor, setDateFor] = useState<EventType>('WEDDING');
-  const [band, setBand] = useState<(typeof GUEST_BANDS)[number]['id']>('300-500');
+  const [band, setBand] = useState<(typeof GUEST_BANDS)[number]['id']>(appGuests ? bandFor(appGuests) : '300-500');
   const [exactGuests, setExactGuests] = useState('');
   const [services, setServices] = useState<string[]>(['venue', 'catering', 'photography', 'videography', 'decoration']);
   const [budgetMode, setBudgetMode] = useState<PlanInput['budgetMode']>('overall');
-  const [budget, setBudget] = useState('');
+  const [budget, setBudget] = useState(appBudget ? String(appBudget) : '');
   const [serviceBudgets, setServiceBudgets] = useState<Record<string, [number, number]>>({});
   const [styles_, setStyles] = useState<Record<string, string[]>>({});
   const [notes, setNotes] = useState('');
-  const [partner, setPartner] = useState('');
+  const [partner, setPartner] = useState(appPartner);
   const [inspiration, setInspiration] = useState<PhotoKey[]>([]);
   const [submitting, setSubmitting] = useState(false);
 

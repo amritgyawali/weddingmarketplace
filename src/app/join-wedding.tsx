@@ -74,7 +74,7 @@ export default function JoinWeddingScreen() {
           onPress={() => {
             router.back();
             if (title) router.push('/my-wedding');
-            else if (role === 'customer' && !hasOnboarded) router.push('/onboarding/role');
+            else if (role === 'customer' && !hasOnboarded) router.push('/onboarding');
           }}
         />
       </View>
