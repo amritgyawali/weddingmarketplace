@@ -16,6 +16,7 @@ const entry = ({ ago = 3, ...e }: Seed): ToolEntry => ({ ...e, createdAt: at(-ag
 const COUPLE = 'prj_1021';
 const VENDOR = 'acc_vendor_demo';
 const CREW = 'acc_freelancer_demo';
+const DJ = 'acc_freelancer_dj';
 const DECOR = 'acc_vendor_decor';
 const OPS = 'platform';
 
@@ -71,6 +72,14 @@ export function buildToolkitSeed(): { toolEntries: ToolEntry[]; toolState: Recor
     { id: 'te_f_inv1', ownerId: CREW, tool: 'freelancer.invoices', title: 'Tuladhar family', amount: 18_000, date: day(4), status: 'sent', note: 'Bratabandha shoot, 6 hours', fields: { number: 'INV-R014' }, ago: 3 },
     { id: 'te_f_inv2', ownerId: CREW, tool: 'freelancer.invoices', title: 'Himal Cafe', amount: 9_000, date: day(-20), status: 'paid', note: 'Menu photography', fields: { number: 'INV-R012' }, ago: 25 },
     { id: 'te_f_del1', ownerId: CREW, tool: 'freelancer.deliveries', title: '350 edited photos', refId: 'as_1009_raj', date: day(-2), status: 'editing', ago: 17 },
+    // Freelancer (DJ Suman): setlist and gear.
+    { id: 'te_dj_set1', ownerId: DJ, tool: 'freelancer.setlist', title: 'Bihe ko bela', group: 'Entry', fields: { artist: 'Traditional', minutes: 4 }, ago: 40 },
+    { id: 'te_dj_set2', ownerId: DJ, tool: 'freelancer.setlist', title: 'Timro mero maya', group: 'First dance', fields: { artist: 'Sugam Pokharel', minutes: 5 }, ago: 40 },
+    { id: 'te_dj_set3', ownerId: DJ, tool: 'freelancer.setlist', title: 'Resham firiri', group: 'Dinner', fields: { artist: 'Folk', minutes: 4 }, ago: 40 },
+    { id: 'te_dj_set4', ownerId: DJ, tool: 'freelancer.setlist', title: 'Kutu ma kutu', group: 'Party', fields: { artist: 'Rajesh Payal Rai', minutes: 5 }, ago: 40 },
+    { id: 'te_dj_set5', ownerId: DJ, tool: 'freelancer.setlist', title: 'Chura ta hoina', group: 'Party', fields: { artist: 'Lok dohori', minutes: 5 }, ago: 30 },
+    { id: 'te_dj_set6', ownerId: DJ, tool: 'freelancer.setlist', title: 'Loud English EDM', group: 'Do not play', note: 'Elders present until 10 pm', ago: 30 },
+    { id: 'te_dj_gear1', ownerId: DJ, tool: 'freelancer.gearcare', title: 'Pioneer DDJ-1000', amount: 210_000, date: day(60), fields: { serial: 'PDJ-51122', insured: true }, ago: 120 },
     { id: 'te_f_cert1', ownerId: CREW, tool: 'freelancer.certs', title: 'CAAN drone pilot permit', date: day(40), fields: { issuer: 'Civil Aviation Authority of Nepal', issued: day(-325) }, ago: 300 },
     { id: 'te_f_net1', ownerId: CREW, tool: 'freelancer.network', title: 'Pooja Shrestha', group: 'Second shooter', fields: { city: 'Lalitpur', phone: '9803456789', rate: 7_500, trusted: true }, ago: 80 },
 

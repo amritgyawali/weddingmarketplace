@@ -60,6 +60,7 @@ export interface Account {
   primaryService?: string;
   businessForm?: BusinessForm;
   teamSize?: number;
+  /** Trade essentials (vendors) or craft profile answers (freelancers), keyed by the field keys in `trades.ts` / `crafts.ts`. */
   tradeProfile?: Record<string, string | number | boolean | string[]>;
   /** freelancer persona: the main crew role (also listed in `skills`). */
   primarySkill?: string;

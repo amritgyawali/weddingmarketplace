@@ -22,7 +22,8 @@ import { accountById, currentActor, type GetDb, now, type SetDb, today } from '.
 
 export interface GigActions {
   postGig: (gig: Omit<Gig, 'id' | 'createdAt' | 'status' | 'applications'>) => Gig;
-  applyToGig: (gigId: string, application: Omit<GigApplication, 'id' | 'appliedAt' | 'status'>) => void;
+  /** Applies for a gig. Freelancers can only apply for their own skills unless they were invited. Returns an error to show, or null. */
+  applyToGig: (gigId: string, application: Omit<GigApplication, 'id' | 'appliedAt' | 'status'>) => string | null;
   inviteToGig: (gigId: string, freelancerId: string) => void;
   respondToInvite: (gigId: string, freelancer: Account, accept: boolean) => void;
   askGigQuestion: (gigId: string, freelancer: { id: string; name: string }, question: string) => void;
@@ -90,6 +91,11 @@ export const gigActions = (set: SetDb, get: GetDb): GigActions => ({
   },
 
   applyToGig: (gigId, application) => {
+    const target = get().gigs.find((g) => g.id === gigId);
+    if (!target) return 'This gig no longer exists';
+    const applicant = accountById(application.freelancerId);
+    if (applicant?.role === 'freelancer' && !target.invited?.includes(applicant.id) && !(applicant.skills ?? []).includes(target.skill))
+      return `This gig needs a ${target.skill}. Add the skill in Your craft to apply.`;
     set((s) => ({
       gigs: s.gigs.map((g) =>
         g.id === gigId
@@ -108,6 +114,7 @@ export const gigActions = (set: SetDb, get: GetDb): GigActions => ({
       const to = gig.postedByKind === 'platform' ? (gig.projectId ? (get().projects.find((p) => p.id === gig.projectId)?.coordinatorId ?? 'platform') : 'platform') : gig.postedById;
       get().notify(to, `${gig.emergency ? 'Urgent: ' : ''}New applicant: ${application.freelancerName}`, gig.title, gig.postedByKind === 'platform' ? `/platform/gig/${gig.id}` : `/business/gig/${gig.id}`, 'gig');
     }
+    return null;
   },
 
   inviteToGig: (gigId, freelancerId) => {

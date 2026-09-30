@@ -5,6 +5,7 @@
  *   taxonomy → capabilities → surfaces
  */
 import type { Capability } from '@/data/capabilities';
+import type { CraftId } from '@/data/crafts';
 import type { OccasionDef, OccasionId, OccasionVocab } from '@/data/occasions';
 import type { Permission } from '@/data/permissions';
 import type { BusinessForm, TradeId } from '@/data/trades';
@@ -12,6 +13,7 @@ import type { BusinessForm, TradeId } from '@/data/trades';
 import type { Equipment, PlatformTeam, StaffRole, UserRole } from './platform';
 
 export type { Capability, PlannerModule, PlanCapability, ProviderCapability } from '@/data/capabilities';
+export type { CraftId } from '@/data/crafts';
 export type { HonoureeKind, OccasionDef, OccasionId, OccasionVocab } from '@/data/occasions';
 export type { Permission } from '@/data/permissions';
 export type { BusinessForm, TradeId } from '@/data/trades';
@@ -76,6 +78,9 @@ export interface Experience {
   trades: TradeId[];
   primaryTrade?: TradeId;
   form?: BusinessForm;
+  /** Freelancers: the craft of the primary skill, and every craft their skills cover. */
+  craft?: CraftId;
+  crafts: CraftId[];
   /** Customers: the active occasion. */
   occasion?: OccasionDef;
   vocab: Vocabulary;

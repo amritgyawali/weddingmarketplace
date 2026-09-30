@@ -1,10 +1,11 @@
 import type { ToolDef } from '../hub';
 
+import { ProductKit, Setlist, VehicleLog } from './crafts';
 import { Certifications, Clients, Network, PitchBuilder, ReliabilityCoach } from './growth';
 import { EarningsGoal, ExpensesMileage, PrivateInvoices, RateCalculator, SavingsPots, TaxEstimate } from './money';
 import { BackupLog, Deliveries, GearCare, GearChecklist, OpenDates, SafetyChecklist, TravelPlanner, WeekPlanner, WorkDiary } from './work';
 
-/** The freelancer's 20 extra tools (`/freelancer/tools`). */
+/** The freelancer's extra tools (`/freelancer/tools`): 20 for every craft plus craft tools, filtered by `TOOL_RULES`. */
 export const FREELANCER_TOOLS: ToolDef[] = [
   { id: 'freelancer.week', title: 'This week', subtitle: 'Jobs, trips, deadlines and days off', icon: 'calendar-outline', group: 'Plan your work', Component: WeekPlanner },
   { id: 'freelancer.open', title: 'Open dates', subtitle: 'Share when you can take work', icon: 'calendar-clear-outline', group: 'Plan your work', Component: OpenDates },
@@ -25,5 +26,8 @@ export const FREELANCER_TOOLS: ToolDef[] = [
   { id: 'freelancer.clients', title: 'Clients and organisers', subtitle: 'Studios, venues and planners', icon: 'people-outline', group: 'Grow', Component: Clients },
   { id: 'freelancer.network', title: 'Crew network', subtitle: 'Second shooters and assistants', icon: 'git-network-outline', group: 'Grow', Component: Network },
   { id: 'freelancer.certs', title: 'Skills and certificates', subtitle: 'Courses, permits and renewals', icon: 'ribbon-outline', group: 'Grow', Component: Certifications },
+  { id: 'freelancer.kit', title: 'Product kit', subtitle: 'Products, expiry dates and hygiene log', icon: 'color-palette-outline', group: 'On the job', Component: ProductKit },
+  { id: 'freelancer.setlist', title: 'Setlist', subtitle: 'Songs per moment and do-not-play list', icon: 'musical-notes-outline', group: 'On the job', Component: Setlist },
+  { id: 'freelancer.vehicle', title: 'Vehicle log', subtitle: 'Fuel, servicing and papers', icon: 'car-outline', group: 'On the job', Component: VehicleLog },
   { id: 'freelancer.gearcare', title: 'Gear care and insurance', subtitle: 'Servicing, warranty and value', icon: 'construct-outline', group: 'Grow', Component: GearCare },
 ];

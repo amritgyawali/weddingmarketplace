@@ -76,6 +76,7 @@ Public pages need no sign-in: `/w/[slug]` (the couple's wedding website and regi
 | Anil Gurung, vendor (Wedding Story Nepal) | 9800000005 | Photo studio |
 | Bikram Adhikari, platform super admin | 9800000006 | Admin console, occasion catalogue |
 | Sunita Maharjan, vendor (Phoolbari Decor, Lalitpur) | 9800000007 | Decor studio: themes, rentals, setup sheets, setup checklist |
+| Suman Tamang, freelancer (DJ Suman) | 9800000008 | DJ and MC: music craft profile, sound gear, setlist, DJ-only gig feed |
 
 ## 3. Architecture map
 
@@ -109,7 +110,7 @@ src/
   theme/ constants/    role themes/fonts, colours, images, brand
   types/platform.ts    the domain model (mirrors the SQL schema). types/persona.ts = When/Experience. types/index.ts = catalogue/legacy types
   utils/               format (money/dates/phone), confirm, links, random
-supabase/migrations/   0001 core schema · 0002 RLS · 0003 matching, reliability, risk · 0004 toolkits · 0005 personas
+supabase/migrations/   0001 core schema · 0002 RLS · 0003 matching, reliability, risk · 0004 toolkits · 0005 personas · 0006 freelancer crafts
 scripts/               check-personas.mjs + personaCheck.ts (registry check and persona matrix, §6a)
 docs/MASTER_PLAN.md    persona-driven experience and the zero-cost production stack (phases P0–P8)
 TEST_REPORT.md         last full test run + list of known defects (read before fixing bugs)
@@ -254,7 +255,7 @@ Every user gets one level of identity inside their role (master plan §2–§3):
 |---|---|---|
 | customer | the **occasion** of the active project (wedding, engagement, anniversary, baby shower, newborn, bratabandha, birthday, corporate, something else, plus any a super admin adds) | `Project.occasion`, `DbData.occasions` (seeded from `data/occasions.ts`) |
 | vendor | **services** (a primary plus any add-ons, across trades) and a **business form** (`venue`, `studio`, `shop`, `solo`) | `Account.services`, `primaryService`, `businessForm`, `tradeProfile` |
-| freelancer | **skills** (crew roles) with a `primarySkill`; the trade is derived through `SERVICES_BY_CREW_ROLE` | `Account.skills`, `primarySkill` |
+| freelancer | **skills** (crew roles) with a `primarySkill`; the **craft** (`data/crafts.ts`) comes from the primary skill, the trade and capabilities through `SERVICES_BY_CREW_ROLE` | `Account.skills`, `primarySkill`, `tradeProfile` (craft profile answers) |
 | platform | **staff role** and team → permissions | `data/permissions.ts` (`STAFF_PERMISSIONS`, `TEAM_PERMISSIONS`) |
 
 Rules:
@@ -272,7 +273,11 @@ Rules:
    - "Hire crew" and "Team" only for venue and team businesses (`VENDOR_LINK_RULES`); "Site visits" renamed per trade (Tastings, Design meetings, Fittings…);
    - a setup checklist on the home built from the trade (`VENDOR_SETUP_STEPS`), hidden when done;
    - package editor limited to the vendor's services, with crew and delivery fields only where they apply.
-9. **Registry check.** `npm run check:personas` fails on unknown capabilities, permissions, occasions or services, a service without capabilities or trade, or a fixture persona with fewer than three tools, and compares every fixture's visible tools with `scripts/persona-matrix.json`. After an intended change run `npm run check:personas -- --update` and commit the new matrix.
+9. **Freelancers (P2, live).** Sign-up asks the craft first (10 tiles: photo and film, editing, makeup and mehendi, music and hosting, decor, kitchen and service, driving, sound and AV, rituals, event crew), then the main skill and extra skills (the craft and its neighbours first, other crafts on request), then the craft profile, then rate, bio and travel. Profile → **Your craft** (`/freelancer/craft`, `setFreelancerPersona`) edits the same later. Then:
+   - the craft decides the rate model (`Experience.rateModel`: day, event or per project) and the equipment kinds asked about (`Experience.equipmentKinds`); crafts without equipment (kitchen, event crew, rituals) get no equipment section, so a DJ never sees camera fields;
+   - tools are filtered by `TOOL_RULES` through `useVisibleTools()`, plus three craft tools in `components/toolkit/freelancer/crafts.tsx`: product kit and hygiene log (makeup, mehendi), setlist (DJ, musician, MC), vehicle log (drivers); the gear checklist starts from a packing list for the craft;
+   - the gig feed is **strict**: only gigs for a skill on the profile (invitations and emergencies addressed to them still show). `applyToGig` refuses a role the freelancer doesn't have unless they were invited, and `0006_freelancer_crafts.sql` mirrors that with a trigger.
+10. **Registry check.** `npm run check:personas` fails on unknown capabilities, permissions, occasions or services, a service without capabilities or trade, a crew role in no craft or in two, or a fixture persona with fewer than three tools, and compares every fixture's visible tools with `scripts/persona-matrix.json`. After an intended change run `npm run check:personas -- --update` and commit the new matrix.
 
 ## 7. Seed and demo contract (don't break the demo)
 
@@ -283,7 +288,7 @@ Rules:
 - WP-1017: live today, with the emergency replacement;
 - the other seeded projects cover every status;
 - the Everest Grand Party Palace venue and Wedding Story Nepal studio listings;
-- the demo accounts' persona fields (Everest: venue + catering, form venue; Wedding Story: five photo and film services, form studio; Phoolbari Decor: decoration + florist + lighting, form studio, with the `phoolbari-decor-lalitpur` listing; Raj: primary skill Photographer; Bikram: `super_admin`). `syncDemoAccounts()` in `useSession.ts` copies them onto older installs through the session `migrate`; bump the session `version` when you add a demo account or persona field.
+- the demo accounts' persona fields (Everest: venue + catering, form venue; Wedding Story: five photo and film services, form studio; Phoolbari Decor: decoration + florist + lighting, form studio, with the `phoolbari-decor-lalitpur` listing; Raj: primary skill Photographer with a photo craft profile; DJ Suman: DJ + MC with sound gear and a setlist; Bikram: `super_admin`). `syncDemoAccounts()` in `useSession.ts` copies them onto older installs through the session `migrate`; bump the session `version` when you add a demo account or persona field.
 
 Seed dates are **relative to today** (`day(n)`/`at(n)`); keep them relative.
 

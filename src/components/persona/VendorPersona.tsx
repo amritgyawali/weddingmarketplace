@@ -158,15 +158,21 @@ export function FormPicker({ draft, onChange }: { draft: VendorPersonaDraft; onC
 
 /** The trade's two or three essentials. */
 export function EssentialsForm({ draft, onChange }: { draft: VendorPersonaDraft; onChange: (d: VendorPersonaDraft) => void }) {
+  return <EssentialFields fields={TRADE_BY_ID[draft.trade].essentials} profile={draft.tradeProfile} onChange={(tradeProfile) => onChange({ ...draft, tradeProfile })} />;
+}
+
+type Profile = NonNullable<Account['tradeProfile']>;
+
+/** A short form for trade essentials or a craft profile. Empty answers are dropped. */
+export function EssentialFields({ fields, profile, onChange }: { fields: EssentialField[]; profile: Profile; onChange: (p: Profile) => void }) {
   const t = useRoleTheme();
-  const fields = TRADE_BY_ID[draft.trade].essentials;
   const put = (key: string, v: string | number | boolean | string[] | undefined) => {
-    const next = { ...draft.tradeProfile };
+    const next = { ...profile };
     if (v === undefined || v === '') delete next[key];
     else next[key] = v;
-    onChange({ ...draft, tradeProfile: next });
+    onChange(next);
   };
-  const value = (f: EssentialField) => draft.tradeProfile[f.key];
+  const value = (f: EssentialField) => profile[f.key];
   return (
     <View style={{ gap: 14 }}>
       {fields.map((f) => {

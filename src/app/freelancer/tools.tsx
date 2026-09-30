@@ -1,7 +1,8 @@
 import { FREELANCER_TOOLS } from '@/components/toolkit/freelancer';
-import { ToolHub } from '@/components/toolkit/hub';
+import { ToolHub, useVisibleTools } from '@/components/toolkit/hub';
 
-/** Extra tools for freelancers. */
+/** Extra tools for freelancers, picked for their craft. */
 export default function FreelancerTools() {
-  return <ToolHub role="freelancer" tools={FREELANCER_TOOLS} title="Freelancer tools" subtitle="20 tools for your work and money" />;
+  const tools = useVisibleTools(FREELANCER_TOOLS);
+  return <ToolHub role="freelancer" tools={tools} title="Freelancer tools" subtitle={`${tools.length} tools for your work and money`} />;
 }

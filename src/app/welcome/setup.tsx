@@ -5,12 +5,13 @@ import { KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, View
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Card, ChoiceChips, KButton, KField, StackHeader } from '@/components/kit';
+import { CraftProfileForm, CraftTiles, draftForCraft, SkillPicker, type FreelancerPersonaDraft } from '@/components/persona/FreelancerPersona';
 import { draftForTrade, EssentialsForm, FormPicker, ServicePicker, TradeTiles, type VendorPersonaDraft } from '@/components/persona/VendorPersona';
 import { Text } from '@/components/ui/Text';
 import { categoryForService } from '@/data/categories';
 import { ONBOARDING_CITIES } from '@/data/cities';
 import { PLATFORM_ACCESS_CODE } from '@/data/seed';
-import { FREELANCE_SKILLS } from '@/data/skills';
+import { CRAFT_BY_ID, RATE_LABEL } from '@/data/crafts';
 import { VENDORS } from '@/data/vendors';
 import { VENUES } from '@/data/venues';
 import { completeLogin, onAccountCreated } from '@/services/auth';
@@ -29,6 +30,7 @@ const TEAMS: { team: PlatformTeam; role: StaffRole }[] = [
 ];
 const CITY_OPTIONS = [...ONBOARDING_CITIES];
 const VENDOR_STEPS = ['What does your business do?', 'Which services do you offer?', 'How is your business set up?', 'The essentials', 'Create your account'];
+const FREELANCER_STEPS = ['What’s your craft?', 'Your skills', 'Your craft profile', 'Create your account'];
 
 function SetupForm({ phone }: { phone: string }) {
   const t = useRoleTheme();
@@ -44,8 +46,10 @@ function SetupForm({ phone }: { phone: string }) {
   const categoryId = categoryForService(persona.primaryService);
   const [claimQuery, setClaimQuery] = useState('');
   const [claimed, setClaimed] = useState<{ id: string; kind: 'venue' | 'vendor'; name: string } | null>(null);
-  // freelancer
-  const [skills, setSkills] = useState<string[]>([]);
+  // freelancer: craft -> skills -> craft profile -> details
+  const [fstep, setFstep] = useState(0);
+  const [crew, setCrew] = useState<FreelancerPersonaDraft>(() => draftForCraft('photo'));
+  const craft = CRAFT_BY_ID[crew.craft];
   const [dayRate, setDayRate] = useState('');
   const [bio, setBio] = useState('');
   const [radius, setRadius] = useState('25 km');
@@ -72,8 +76,7 @@ function SetupForm({ phone }: { phone: string }) {
       name: name.trim().length < 2 ? 'Enter your full name' : null,
       email: email && !/^\S+@\S+\.\S+$/.test(email) ? 'Enter a valid email' : null,
       business: t.role === 'vendor' && !claimed && businessName.trim().length < 3 ? 'Enter your business name or claim a listing' : null,
-      skills: t.role === 'freelancer' && !skills.length ? 'Pick at least one skill' : null,
-      rate: t.role === 'freelancer' && !(Number(dayRate) > 0) ? 'Enter your day rate' : null,
+      rate: t.role === 'freelancer' && !(Number(dayRate) > 0) ? `Enter your rate ${RATE_LABEL[craft.rate]}` : null,
       pan: t.role === 'vendor' && panVat && !/^\d{9}$/.test(panVat) ? 'PAN/VAT numbers have 9 digits' : null,
       code: t.role === 'platform' && accessCode.trim().toUpperCase() !== PLATFORM_ACCESS_CODE ? 'Invalid team access code' : null,
     };
@@ -103,7 +106,19 @@ function SetupForm({ phone }: { phone: string }) {
             personaConfirmedAt: new Date().toISOString(),
           }
         : t.role === 'freelancer'
-          ? { skills, dayRate: Number(dayRate), bio: bio.trim(), available: true, rating: 5, travelRadiusKm: Number(radius.replace(/\D/g, '')), languages: ['Nepali'] }
+          ? {
+              skills: [crew.primarySkill, ...crew.skills.filter((x) => x !== crew.primarySkill)],
+              primarySkill: crew.primarySkill,
+              tradeProfile: crew.tradeProfile,
+              personaConfirmedAt: new Date().toISOString(),
+              dayRate: Number(dayRate),
+              eventRate: craft.rate === 'event' ? Number(dayRate) : undefined,
+              bio: bio.trim(),
+              available: true,
+              rating: 5,
+              travelRadiusKm: Number(radius.replace(/\D/g, '')),
+              languages: ['Nepali'],
+            }
           : t.role === 'platform'
             ? { team, staffRole: TEAMS.find((x) => x.team === team)!.role }
             : {};
@@ -115,8 +130,14 @@ function SetupForm({ phone }: { phone: string }) {
   return (
     <View style={{ flex: 1, backgroundColor: t.c.bg }}>
       <StackHeader
-        title={t.role === 'customer' ? 'What should we call you?' : t.role === 'vendor' ? VENDOR_STEPS[vstep] : 'Create your account'}
-        subtitle={t.role === 'vendor' ? `Step ${vstep + 1} of ${VENDOR_STEPS.length} · ${formatPhone(phone)}` : `${t.label} · ${formatPhone(phone)}`}
+        title={t.role === 'customer' ? 'What should we call you?' : t.role === 'vendor' ? VENDOR_STEPS[vstep] : t.role === 'freelancer' ? FREELANCER_STEPS[fstep] : 'Create your account'}
+        subtitle={
+          t.role === 'vendor'
+            ? `Step ${vstep + 1} of ${VENDOR_STEPS.length} · ${formatPhone(phone)}`
+            : t.role === 'freelancer'
+              ? `Step ${fstep + 1} of ${FREELANCER_STEPS.length} · ${formatPhone(phone)}`
+              : `${t.label} · ${formatPhone(phone)}`
+        }
       />
       <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
         <ScrollView contentContainerStyle={{ padding: 18, gap: 16, paddingBottom: insets.bottom + 110 }} keyboardShouldPersistTaps="handled">
@@ -138,7 +159,24 @@ function SetupForm({ phone }: { phone: string }) {
               <EssentialsForm draft={persona} onChange={setPersona} />
             </>
           )}
-          {(t.role !== 'vendor' || vstep === 4) && (
+          {t.role === 'freelancer' && fstep === 0 && (
+            <>
+              <Text size={14} color={t.c.muted}>
+                Pick the one you do most. You can add skills from other crafts next.
+              </Text>
+              <CraftTiles value={crew.craft} onChange={(c) => setCrew((d) => (c === d.craft ? d : draftForCraft(c, d)))} />
+            </>
+          )}
+          {t.role === 'freelancer' && fstep === 1 && <SkillPicker draft={crew} onChange={setCrew} />}
+          {t.role === 'freelancer' && fstep === 2 && (
+            <>
+              <Text size={14} color={t.c.muted}>
+                What organisers check before they hire a {crew.primarySkill.toLowerCase()}. Skip anything you’d rather add later.
+              </Text>
+              <CraftProfileForm draft={crew} onChange={setCrew} />
+            </>
+          )}
+          {((t.role !== 'vendor' && t.role !== 'freelancer') || (t.role === 'vendor' && vstep === 4) || (t.role === 'freelancer' && fstep === 3)) && (
           <>
           <KField label={t.role === 'vendor' ? 'Owner / manager name' : 'Full name'} value={name} onChangeText={setName} placeholder="Your name" autoComplete="name" error={errors.name} />
           <KField label="Email (optional)" value={email} onChangeText={setEmail} keyboardType="email-address" autoCapitalize="none" placeholder="you@example.com" error={errors.email} />
@@ -196,19 +234,16 @@ function SetupForm({ phone }: { phone: string }) {
 
           {t.role === 'freelancer' && (
             <>
-              <View style={{ gap: 6 }}>
-                <Text size={13} weight="semibold" color={t.c.muted}>
-                  Your skills
-                </Text>
-                <ChoiceChips options={[...FREELANCE_SKILLS]} selected={skills} onToggle={(s) => setSkills((cur) => (cur.includes(s) ? cur.filter((x) => x !== s) : [...cur, s]))} />
-                {!!errors.skills && (
-                  <Text size={12} color={t.c.danger}>
-                    {errors.skills}
-                  </Text>
-                )}
-              </View>
-              <KField label="Day rate" value={dayRate} onChangeText={(v) => setDayRate(v.replace(/\D/g, ''))} keyboardType="number-pad" prefix="NPR" placeholder="8000" error={errors.rate} />
-              <KField label="Short bio" value={bio} onChangeText={setBio} multiline placeholder="Experience, style, equipment…" />
+              <KField
+                label={craft.rate === 'day' ? 'Day rate' : `Your usual rate ${RATE_LABEL[craft.rate]}`}
+                value={dayRate}
+                onChangeText={(v) => setDayRate(v.replace(/\D/g, ''))}
+                keyboardType="number-pad"
+                prefix="NPR"
+                placeholder="8000"
+                error={errors.rate}
+              />
+              <KField label="Short bio" value={bio} onChangeText={setBio} multiline placeholder={craft.equipment.length ? 'Experience, style, the kit you bring…' : 'Experience and the events you’ve worked…'} />
               <View style={{ gap: 6 }}>
                 <Text size={13} weight="semibold" color={t.c.muted}>
                   How far will you travel?
@@ -249,7 +284,12 @@ function SetupForm({ phone }: { phone: string }) {
           )}
         </ScrollView>
         <View style={[styles.footer, { backgroundColor: t.c.surface, borderTopColor: t.c.border, paddingBottom: Math.max(insets.bottom, 14) }]}>
-          {t.role === 'vendor' && vstep < 4 ? (
+          {t.role === 'freelancer' && fstep < 3 ? (
+            <View style={styles.footerRow}>
+              {fstep > 0 && <KButton label="Back" variant="secondary" size="lg" style={{ flex: 1 }} onPress={() => setFstep((n) => n - 1)} />}
+              <KButton label={fstep === 2 ? 'Continue to your details' : 'Continue'} size="lg" style={{ flex: 2 }} onPress={() => setFstep((n) => n + 1)} />
+            </View>
+          ) : t.role === 'vendor' && vstep < 4 ? (
             <View style={styles.footerRow}>
               {vstep > 0 && <KButton label="Back" variant="secondary" size="lg" style={{ flex: 1 }} onPress={() => setVstep((n) => n - 1)} />}
               <KButton label={vstep === 3 ? 'Continue to your details' : 'Continue'} size="lg" style={{ flex: 2 }} onPress={() => setVstep((n) => n + 1)} />
@@ -257,6 +297,7 @@ function SetupForm({ phone }: { phone: string }) {
           ) : (
             <View style={styles.footerRow}>
               {t.role === 'vendor' && <KButton label="Back" variant="secondary" size="lg" style={{ flex: 1 }} onPress={() => setVstep(3)} />}
+              {t.role === 'freelancer' && <KButton label="Back" variant="secondary" size="lg" style={{ flex: 1 }} onPress={() => setFstep(2)} />}
               <KButton label={t.role === 'customer' ? 'Continue' : 'Create account'} size="lg" style={{ flex: 2 }} onPress={submit} />
             </View>
           )}

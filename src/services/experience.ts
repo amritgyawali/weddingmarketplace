@@ -9,6 +9,7 @@
  * occasion are inferred from the data they already have.
  */
 import { type Capability, planCap } from '@/data/capabilities';
+import { craftOf, type CraftDef, type CraftId } from '@/data/crafts';
 import { BUILT_IN_OCCASIONS, findOccasion, occasionForEventType, type OccasionDef } from '@/data/occasions';
 import { permissionsFor, type Permission } from '@/data/permissions';
 import { findProvider } from '@/data/providers';
@@ -146,8 +147,14 @@ export function resolveExperience(input: PersonaInput, occasions: OccasionDef[] 
   const trades = [...new Set(services.map((s) => tradeOf(s)?.id).filter((x): x is TradeId => !!x))];
   const primaryTrade = primaryService ? tradeOf(primaryService)?.id : undefined;
   const unit = primaryService ? SERVICE_BY_ID[primaryService]?.unit : undefined;
-  const rateModel: RateModel = input.role === 'freelancer' ? 'day' : unit ? (RATE_BY_UNIT[unit] ?? 'event') : 'event';
-  const equipmentKinds = [...new Set(EQUIPMENT_BY_CAP.filter(([c]) => caps.has(c)).flatMap(([, kinds]) => kinds))];
+  // Freelancers: the craft decides the rate model and the equipment asked about.
+  const craftDefs = input.role === 'freelancer' ? [...new Set([input.primarySkill, ...(input.skills ?? [])].map(craftOf).filter((c): c is CraftDef => !!c))] : [];
+  const craft = craftDefs[0];
+  const rateModel: RateModel = input.role === 'freelancer' ? (craft?.rate ?? 'day') : unit ? (RATE_BY_UNIT[unit] ?? 'event') : 'event';
+  const equipmentKinds =
+    input.role === 'freelancer' && craftDefs.length
+      ? [...new Set(craftDefs.flatMap((c) => c.equipment))]
+      : [...new Set(EQUIPMENT_BY_CAP.filter(([c]) => caps.has(c)).flatMap(([, kinds]) => kinds))];
 
   return {
     key: keyOf(input, occasion),
@@ -159,10 +166,13 @@ export function resolveExperience(input: PersonaInput, occasions: OccasionDef[] 
     trades,
     primaryTrade,
     form: input.role === 'vendor' ? form : undefined,
+    craft: craft?.id,
+    crafts: craftDefs.map((c): CraftId => c.id),
     occasion,
     vocab: { ...DEFAULT_VOCAB, ...occasion?.vocab, meetings: primaryTrade ? (tradeOf(primaryService!)?.meetings ?? DEFAULT_VOCAB.meetings) : DEFAULT_VOCAB.meetings },
     rateModel,
-    equipmentKinds: equipmentKinds.length ? equipmentKinds : ['kit', 'other'],
+    // A craft without equipment (chefs, event crew) gets none; other personas fall back to a generic kit.
+    equipmentKinds: equipmentKinds.length || craftDefs.length ? equipmentKinds : ['kit', 'other'],
     inferred: false,
   };
 }

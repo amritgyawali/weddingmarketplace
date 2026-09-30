@@ -9,10 +9,11 @@
  */
 import { TOOL_RULES, toolRole, UNIVERSAL_TOOLS, type ToolId } from '@/data/access';
 import { isCapability } from '@/data/capabilities';
+import { CRAFTS } from '@/data/crafts';
 import { EVENT_TYPE_BY_ID } from '@/data/events';
 import { BUILT_IN_OCCASIONS } from '@/data/occasions';
 import { isPermission, PERMISSIONS, STAFF_PERMISSIONS } from '@/data/permissions';
-import { SERVICE_BY_ID, SERVICES } from '@/data/services';
+import { CREW_ROLES, SERVICE_BY_ID, SERVICES } from '@/data/services';
 import { BUSINESS_FORMS, SERVICE_CAPABILITIES, TRADES } from '@/data/trades';
 import { allowsTool, resolveExperience } from '@/services/experience';
 import type { PersonaInput, When } from '@/types/persona';
@@ -45,6 +46,8 @@ export const FIXTURES: Record<string, PersonaInput> = {
   'freelancer:makeup': { role: 'freelancer', skills: ['Makeup Artist'], primarySkill: 'Makeup Artist' },
   'freelancer:dj': { role: 'freelancer', skills: ['DJ'], primarySkill: 'DJ' },
   'freelancer:driver': { role: 'freelancer', skills: ['Driver'], primarySkill: 'Driver' },
+  ...Object.fromEntries(CRAFTS.map((c) => [`freelancer:craft-${c.id}`, { role: 'freelancer', skills: [c.skills[0]], primarySkill: c.skills[0] } satisfies PersonaInput])),
+  'freelancer:demo-dj': { role: 'freelancer', skills: ['DJ', 'MC'], primarySkill: 'DJ' },
   ...Object.fromEntries(BUILT_IN_OCCASIONS.map((o) => [`customer:${o.id}`, { role: 'customer', occasion: o.id } satisfies PersonaInput])),
   ...Object.fromEntries(Object.keys(STAFF_PERMISSIONS).map((r) => [`platform:${r}`, { role: 'platform', staffRole: r as PersonaInput['staffRole'] } satisfies PersonaInput])),
   'platform:support-vendor-success': { role: 'platform', staffRole: 'support', team: 'Vendor Success' },
@@ -67,6 +70,16 @@ export function runPersonaCheck(): CheckResult {
     [...t.services, ...t.neighbours].forEach((id) => SERVICE_BY_ID[id] || errors.push(`trade ${t.id}: unknown service ${id}`));
     t.core.forEach((id) => t.services.includes(id) || errors.push(`trade ${t.id}: core service ${id} is not in the trade`));
     if (!FORMS.has(t.defaultForm)) errors.push(`trade ${t.id}: unknown business form ${t.defaultForm}`);
+  }
+
+  // Crafts: every crew role in exactly one craft.
+  for (const role of CREW_ROLES) {
+    const crafts = CRAFTS.filter((c) => c.skills.includes(role));
+    if (crafts.length !== 1) errors.push(`crew role ${role}: in ${crafts.length} crafts (needs exactly 1)`);
+  }
+  for (const c of CRAFTS) {
+    [...c.skills, ...c.neighbours].forEach((k) => CREW_ROLES.includes(k) || errors.push(`craft ${c.id}: unknown crew role ${k}`));
+    if (!c.profile.length) errors.push(`craft ${c.id}: no profile questions`);
   }
 
   // Occasions.
