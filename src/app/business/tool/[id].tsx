@@ -1,7 +1,8 @@
-import { ToolRoute } from '@/components/toolkit/hub';
+import { ToolRoute, useVisibleTools } from '@/components/toolkit/hub';
 import { VENDOR_TOOLS } from '@/components/toolkit/vendor';
 
-/** One vendor business tool. */
+/** One vendor business tool (or why it isn't available for this business). */
 export default function BusinessTool() {
-  return <ToolRoute tools={VENDOR_TOOLS} />;
+  const visible = useVisibleTools(VENDOR_TOOLS);
+  return <ToolRoute tools={VENDOR_TOOLS} visible={visible} settingsHref="/business/services" />;
 }

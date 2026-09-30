@@ -181,4 +181,21 @@ Object.assign(studio, {
     'Wedding Story Nepal is a Kathmandu studio of 14 photographers, cinematographers and editors. We cover every ritual from tilak to bidai, run pre-wedding shoots from Nagarkot to Pokhara, and deliver sneak peeks within 72 hours.',
 });
 
+/** Pin the decor studio used by the decor demo account (Lalitpur). */
+const decor = VENDORS.find((v) => v.subcategoryId === 'decoration' && v.city === 'Lalitpur')!;
+Object.assign(decor, {
+  id: 'phoolbari-decor-lalitpur',
+  name: 'Phoolbari Decor',
+  rating: 4.8,
+  reviewCount: 96,
+  startingPrice: 85_000,
+  experience: 11,
+  eventsDone: 380,
+  teamSize: 9,
+  styles: ['Floral', 'Traditional', 'Newari'],
+  images: ['decorMandapFloral', 'decorMandapNight', 'venueOutdoorMandap', 'venueLuxuryStage'],
+  about:
+    'Phoolbari Decor is a Lalitpur flower and decor studio run by Sunita Maharjan. Marigold and rose mandaps, Newari courtyard setups, stage lighting and fresh flowers from our own Kalimati stall.',
+});
+
 export const findVendor = (id: string) => VENDORS.find((v) => v.id === id);

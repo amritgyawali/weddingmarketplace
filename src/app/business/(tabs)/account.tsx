@@ -9,8 +9,13 @@ import { Text } from '@/components/ui/Text';
 import { Toggle } from '@/components/ui/Toggle';
 import { toast } from '@/components/ui/Toast';
 import { photos } from '@/constants/images';
+import { useVisibleTools } from '@/components/toolkit/hub';
+import { VENDOR_TOOLS } from '@/components/toolkit/vendor';
+import { VENDOR_LINK_RULES } from '@/data/access';
 import { serviceName } from '@/data/services';
+import { useExperience } from '@/hooks/useExperience';
 import { useVendorWorkspace } from '@/hooks/useWorkspace';
+import { allows } from '@/services/experience';
 import { logout } from '@/services/auth';
 import { useDb, useUnreadMessageCount } from '@/store/useDb';
 import { useAccount } from '@/store/useSession';
@@ -27,15 +32,18 @@ export default function BusinessAccount() {
   const packages = useDb((s) => s.packages);
   const portfolio = useDb((s) => s.portfolio);
   const unread = useUnreadMessageCount(account);
+  const exp = useExperience();
+  const toolCount = useVisibleTools(VENDOR_TOOLS).length;
   const [acceptingLeads, setAcceptingLeads] = useState(true);
   const [instantQuote, setInstantQuote] = useState(false);
   const vc = verifications.find((v) => v.subjectId === account.listingId || v.subjectId === account.id);
   const cover = portfolio.filter((p) => p.providerId === account.listingId).sort((a, b) => a.order - b.order)[0];
   const ready = payables.filter((p) => p.status === 'READY');
 
-  const tools: { icon: IconName; title: string; subtitle: string; href: Href; badge?: number }[] = [
+  const rows: { icon: IconName; title: string; subtitle: string; href: Href; badge?: number }[] = [
     { icon: 'chatbubbles-outline', title: 'Messages', subtitle: 'Couples, coordinators and crew', href: '/business/inbox', badge: unread },
-    { icon: 'construct-outline', title: 'Business tools', subtitle: 'Expenses, VAT, roster, pricing and 16 more', href: '/business/tools' },
+    { icon: 'options-outline', title: 'Your services', subtitle: exp.services.length ? `${serviceName(exp.services[0])}${exp.services.length > 1 ? ` + ${exp.services.length - 1} more` : ''}${account.personaConfirmedAt ? '' : ' · please confirm'}` : 'Tell us what you offer', href: '/business/services' },
+    { icon: 'construct-outline', title: 'Business tools', subtitle: `${toolCount} tools for your business`, href: '/business/tools' },
     { icon: 'document-text-outline', title: 'Quotations', subtitle: 'Drafts, sent, versions and wins', href: '/business/quotes' },
     { icon: 'pricetags-outline', title: 'Packages & services', subtitle: `${packages.filter((p) => p.providerId === account.listingId).length} packages · add-ons & inclusions`, href: '/business/packages' },
     { icon: 'images-outline', title: 'Portfolio', subtitle: `${portfolio.filter((p) => p.providerId === account.listingId).length} photos & videos`, href: '/business/portfolio' },
@@ -48,10 +56,11 @@ export default function BusinessAccount() {
     { icon: 'star-outline', title: 'Reviews', subtitle: `${reviews.length} reviews · reply publicly`, href: '/business/reviews' },
     { icon: 'shield-checkmark-outline', title: 'Verification', subtitle: vc ? vc.status.replace('_', ' ').toLowerCase() : 'Submit documents', href: '/business/verification' },
   ];
+  const tools = rows.filter((row) => allows(exp, VENDOR_LINK_RULES[String(row.href)]));
 
   return (
     <View style={{ flex: 1, backgroundColor: t.c.bg }}>
-      <RoleHeader title="Business" subtitle={`${listing ? serviceName(listing.serviceId) : 'Vendor'} · ${account.city}`} />
+      <RoleHeader title="Business" subtitle={`${exp.primaryService ? serviceName(exp.primaryService) : listing ? serviceName(listing.serviceId) : 'Vendor'} · ${account.city}`} />
       <ScrollView contentContainerStyle={{ padding: 16, gap: 16, paddingBottom: 40 }}>
         <Card padded={false} style={{ overflow: 'hidden' }}>
           {cover?.image || listing ? (

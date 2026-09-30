@@ -27,7 +27,7 @@ function LoginForm() {
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const otpRef = useRef<TextInput>(null);
-  const demo = DEMO_ACCOUNTS.find((a) => a.role === t.role)!;
+  const demos = DEMO_ACCOUNTS.filter((a) => a.role === t.role);
 
   const sendOtp = async () => {
     if (!isNepalMobile(phone)) {
@@ -148,9 +148,13 @@ function LoginForm() {
               Just looking around?
             </Text>
             <Text size={13} color={t.c.muted}>
-              Use the demo account for {demo.businessName ?? demo.name}. It already has projects, quotations and gigs in it.
+              {demos.length > 1 ? 'Use a demo account. Each one shows a different kind of business, with projects, quotations and gigs already in it.' : `Use the demo account for ${demos[0].businessName ?? demos[0].name}. It already has projects, quotations and gigs in it.`}
             </Text>
-            <KButton label={`Continue as ${demo.businessName ?? demo.name}`} variant="secondary" size="sm" style={{ alignSelf: 'flex-start', marginTop: 6 }} onPress={() => completeLogin(demo)} />
+            <View style={styles.demoButtons}>
+              {demos.map((demo) => (
+                <KButton key={demo.id} label={`Continue as ${demo.businessName ?? demo.name}`} variant="secondary" size="sm" onPress={() => completeLogin(demo)} />
+              ))}
+            </View>
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
@@ -177,4 +181,5 @@ const styles = StyleSheet.create({
   phoneInput: { flex: 1, fontSize: 18, letterSpacing: 0.5, height: '100%' },
   otp: { height: 56, borderRadius: 8, borderWidth: 1, textAlign: 'center', fontSize: 26, letterSpacing: 14 },
   demo: { gap: 2, marginTop: 18, paddingTop: 18, borderTopWidth: StyleSheet.hairlineWidth },
+  demoButtons: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginTop: 6 },
 });

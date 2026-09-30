@@ -8,6 +8,7 @@ import { Card, ChoiceChips, KButton, KField, ListRow, SectionTitle, StatusPill }
 import { Text } from '@/components/ui/Text';
 import { Toggle } from '@/components/ui/Toggle';
 import { toast } from '@/components/ui/Toast';
+import { useExperience } from '@/hooks/useExperience';
 import { useVendorWorkspace } from '@/hooks/useWorkspace';
 import { hoursBetween } from '@/services/toolkit';
 import { useAccount } from '@/store/useSession';
@@ -156,9 +157,10 @@ const VISIT_STATUS = [
 
 export function SiteVisits() {
   const account = useAccount();
+  const { vocab } = useExperience();
   const { leads } = useVendorWorkspace(account);
   return (
-    <ToolPage title="Site visits" subtitle="Tours, tastings and walk-throughs">
+    <ToolPage title={vocab.meetings} subtitle="Visits, tastings, fittings and walk-throughs">
       <EntryList
         ownerId={account.id}
         tool="vendor.visits"

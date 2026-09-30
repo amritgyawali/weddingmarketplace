@@ -38,6 +38,7 @@ export default function BusinessLayout() {
         <Stack.Screen name="settings" />
         <Stack.Screen name="tools" />
         <Stack.Screen name="tool/[id]" />
+        <Stack.Screen name="services" />
       </Stack>
     </RoleThemeProvider>
   );

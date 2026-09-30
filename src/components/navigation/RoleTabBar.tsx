@@ -2,7 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { router, type Href } from 'expo-router';
 import type { BottomTabBarProps } from 'expo-router/tabs';
 import type { ComponentProps } from 'react';
-import { Pressable, StyleSheet, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { triggerHaptic } from '@/components/ui/PressableScale';
@@ -26,6 +26,8 @@ export interface SidebarLink {
   icon: IconName;
   href: Href;
   badge?: number;
+  /** Links with a section are listed under that heading, after the others. */
+  section?: string;
 }
 
 /**
@@ -83,19 +85,28 @@ export function RoleTabBar({ state, navigation, tabs, links = [] }: BottomTabBar
           );
         })}
         {links.length > 0 && <View style={[styles.sideDivider, { backgroundColor: t.c.border }]} />}
-        {links.map((l) => (
-          <Pressable key={l.label} onPress={() => router.push(l.href)} style={({ pressed }) => [styles.sideItem, pressed && { opacity: 0.7 }]}>
-            <Ionicons name={l.icon} size={18} color={t.c.muted} />
-            <Text size={14} color={t.c.text} style={{ flex: 1 }}>
-              {l.label}
-            </Text>
-            {!!l.badge && (
-              <Text size={12} weight="semibold" color={t.c.danger}>
-                {l.badge}
-              </Text>
-            )}
-          </Pressable>
-        ))}
+        <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
+          {[...links.filter((l) => !l.section), ...links.filter((l) => l.section)].map((l, i, all) => (
+            <View key={`${l.section ?? ''}${l.label}`}>
+              {!!l.section && all[i - 1]?.section !== l.section && (
+                <Text size={12} weight="semibold" color={t.c.muted} style={styles.sideSection}>
+                  {l.section}
+                </Text>
+              )}
+              <Pressable onPress={() => router.push(l.href)} style={({ pressed }) => [styles.sideItem, pressed && { opacity: 0.7 }]}>
+                <Ionicons name={l.icon} size={18} color={t.c.muted} />
+                <Text size={14} color={t.c.text} style={{ flex: 1 }}>
+                  {l.label}
+                </Text>
+                {!!l.badge && (
+                  <Text size={12} weight="semibold" color={t.c.danger}>
+                    {l.badge}
+                  </Text>
+                )}
+              </Pressable>
+            </View>
+          ))}
+        </ScrollView>
       </View>
     );
   }
@@ -138,6 +149,7 @@ const styles = StyleSheet.create({
   sideBrand: { paddingHorizontal: 20, marginBottom: 16 },
   sideItem: { flexDirection: 'row', alignItems: 'center', gap: 12, marginHorizontal: 8, paddingHorizontal: 12, paddingVertical: 8, borderRadius: 6 },
   sideDivider: { height: StyleSheet.hairlineWidth, marginVertical: 10, marginHorizontal: 20 },
+  sideSection: { paddingHorizontal: 20, marginTop: 14, marginBottom: 4 },
   bar: { flexDirection: 'row', borderTopWidth: StyleSheet.hairlineWidth, paddingTop: 7 },
   item: { flex: 1, alignItems: 'center', gap: 2 },
   badge: { position: 'absolute', top: -4, right: -10, minWidth: 17, height: 17, borderRadius: 9, borderWidth: 2, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 3 },

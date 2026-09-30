@@ -68,6 +68,7 @@ const pick = (serviceId: string, city: string, n = 0): Provider => {
 
 export const DEMO_VENUE = VENUES[0];
 export const DEMO_STUDIO = VENDORS.find((v) => v.id === 'wedding-story-nepal-kathmandu')!;
+export const DEMO_DECOR = VENDORS.find((v) => v.id === 'phoolbari-decor-lalitpur')!;
 const P = (id: string) => PROVIDERS.find((p) => p.id === id)!;
 
 // Accounts
@@ -177,6 +178,26 @@ export const DEMO_ACCOUNTS: Account[] = [
     verified: true,
     team: 'Admin',
     staffRole: 'super_admin',
+  },
+  {
+    id: 'acc_vendor_decor',
+    role: 'vendor',
+    name: 'Sunita Maharjan',
+    phone: '9800000007',
+    email: 'hello@phoolbari.com.np',
+    city: 'Lalitpur',
+    createdAt: at(-120),
+    verified: true,
+    businessName: DEMO_DECOR.name,
+    categoryId: 'decor',
+    listingKind: 'vendor',
+    listingId: DEMO_DECOR.id,
+    services: ['decoration', 'florist', 'lighting'],
+    primaryService: 'decoration',
+    businessForm: 'studio',
+    teamSize: 9,
+    tradeProfile: { themes: ['Floral', 'Traditional', 'Newari'], leadDays: 3, coverage: 'Kathmandu valley' },
+    personaConfirmedAt: at(-120),
   },
 ];
 
@@ -1011,6 +1032,8 @@ function buildLeads(): Lead[] {
     { ...common, id: 'ld_bipana', customerId: 'acc_customer_bipana', customerName: 'Bipana Rai', customerPhone: '9800000104', eventDate: day(75), guests: 700, functions: ['Wedding'], message: 'Need parking for 150 cars and a separate dining hall.', status: 'negotiating', priority: 'high', labels: ['Big wedding'], followUp: day(2), createdAt: at(-6) },
     { ...common, id: 'ld_sneha', customerId: 'acc_customer_sneha', customerName: 'Sneha Rai', customerPhone: '9800000091', eventDate: day(30), guests: 250, functions: ['Wedding', 'Reception'], status: 'won', createdAt: at(-30) },
     { ...common, id: 'ld_old', customerId: 'acc_customer_samir', customerName: 'Samir Lama', customerPhone: '9800000105', eventDate: day(15), guests: 120, functions: ['Engagement'], status: 'lost', createdAt: at(-40) },
+    { listingKind: 'vendor', listingId: DEMO_DECOR.id, listingName: DEMO_DECOR.name, city: 'Lalitpur', source: 'marketplace', id: 'ld_decor_1', customerId: 'acc_customer_rojina', customerName: 'Rojina Shakya', customerPhone: '9800000107', eventDate: day(40), guests: 350, functions: ['Wedding', 'Reception'], services: ['decoration', 'florist'], message: 'We want a Newari courtyard look with marigolds for the wedding and a pastel stage for the reception.', budget: 250_000, status: 'new', priority: 'high', createdAt: at(0, 10) },
+    { listingKind: 'vendor', listingId: DEMO_DECOR.id, listingName: DEMO_DECOR.name, city: 'Lalitpur', source: 'marketplace', id: 'ld_decor_2', customerId: 'acc_customer_prakash', customerName: 'Prakash Bajracharya', customerPhone: '9800000108', eventDate: day(18), guests: 120, functions: ['Pasni'], services: ['decoration'], message: 'Small pasni at home in Patan. Can you do a simple floral backdrop?', status: 'contacted', priority: 'medium', createdAt: at(-2) },
     { listingKind: 'vendor', listingId: DEMO_STUDIO.id, listingName: DEMO_STUDIO.name, city: 'Kathmandu', source: 'marketplace', id: 'ld_studio_1', customerId: 'acc_customer_shristi', customerName: 'Shristi Thapa', customerPhone: '9800000106', eventDate: day(52), guests: 300, functions: ['Engagement', 'Wedding'], services: ['photography', 'videography'], message: 'Loved your Nagarkot pre-wedding reel! Need photo + video for 2 events.', budget: 200_000, status: 'new', priority: 'high', createdAt: at(0, 11) },
   ];
 }

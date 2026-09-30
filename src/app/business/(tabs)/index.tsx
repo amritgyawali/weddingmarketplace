@@ -3,12 +3,17 @@ import { router } from 'expo-router';
 import { ScrollView, StyleSheet, View } from 'react-native';
 
 import { BarChart, Card, KButton, KpiCard, ListRow, QuickAction, RoleHeader, SectionTitle, StatusPill } from '@/components/kit';
+import { SetupChecklist } from '@/components/persona/SetupChecklist';
+import { toolHref, useVisibleTools } from '@/components/toolkit/hub';
+import { VENDOR_TOOLS } from '@/components/toolkit/vendor';
 import { Text } from '@/components/ui/Text';
 import { toast } from '@/components/ui/Toast';
 import { crewFill } from '@/components/work/Bookings';
 import { serviceName } from '@/data/services';
+import { useExperience } from '@/hooks/useExperience';
 import { useLayout } from '@/hooks/useLayout';
 import { useVendorWorkspace } from '@/hooks/useWorkspace';
+import { has } from '@/services/experience';
 import { useDb } from '@/store/useDb';
 import { useAccount } from '@/store/useSession';
 import { useRoleTheme } from '@/theme/RoleTheme';
@@ -22,6 +27,9 @@ export default function VendorDashboard() {
   const account = useAccount();
   const { leads, quotes, bookings, requests, payables, reviews, listing } = useVendorWorkspace(account);
   const respond = useDb((s) => s.respondToBooking);
+  const exp = useExperience();
+  /** The first trade tool (menu, themes, gallery…) earns a quick action. */
+  const tradeTool = useVisibleTools(VENDOR_TOOLS).find((x) => !['Couples and enquiries', 'Sales and pricing', 'Money', 'Operations'].includes(x.group));
 
   const active = bookings.filter(({ booking }) => booking.status !== 'CANCELLED' && booking.providerResponse !== 'pending');
   const upcoming = active
@@ -49,7 +57,7 @@ export default function VendorDashboard() {
   return (
     <View style={{ flex: 1, backgroundColor: t.c.bg }}>
       <ScrollView contentContainerStyle={{ paddingBottom: 30 }} showsVerticalScrollIndicator={false}>
-        <RoleHeader title={account.businessName ?? account.name} subtitle={`${listing ? serviceName(listing.serviceId) : 'Vendor'} · ${account.city}`}>
+        <RoleHeader title={account.businessName ?? account.name} subtitle={`${exp.primaryService ? serviceName(exp.primaryService) : listing ? serviceName(listing.serviceId) : 'Vendor'} · ${account.city}`}>
           <View style={styles.headerStats}>
             <View style={styles.headerStat}>
               <Text size={17} weight="semibold" color={t.c.textStrong}>
@@ -85,6 +93,7 @@ export default function VendorDashboard() {
         </RoleHeader>
 
         <View style={styles.body}>
+          <SetupChecklist />
           {requests.length > 0 && (
             <View>
               <SectionTitle title={`Booking requests from Vivah (${requests.length})`} />
@@ -132,7 +141,11 @@ export default function VendorDashboard() {
 
           <Card style={{ flexDirection: 'row', paddingVertical: 14 }}>
             <QuickAction icon="add-circle-outline" label="New quote" onPress={() => router.navigate('/business/leads')} />
-            <QuickAction icon="megaphone-outline" label="Hire crew" onPress={() => router.push('/business/gig/new')} />
+            {has(exp, 'team.hire_crew') ? (
+              <QuickAction icon="megaphone-outline" label="Hire crew" onPress={() => router.push('/business/gig/new')} />
+            ) : (
+              tradeTool && <QuickAction icon={tradeTool.icon} label={tradeTool.title} onPress={() => router.push(toolHref('vendor', tradeTool.id))} />
+            )}
             <QuickAction icon="calendar-outline" label="Availability" onPress={() => router.navigate('/business/calendar')} />
             <QuickAction icon="pricetags-outline" label="Packages" onPress={() => router.push('/business/packages')} />
             <QuickAction icon="rocket-outline" label="Promote" onPress={() => router.push('/business/promotions')} />
