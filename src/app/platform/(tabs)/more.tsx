@@ -4,6 +4,8 @@ import { ScrollView, View } from 'react-native';
 import { Avatar, Card, KButton, ListRow, RoleHeader, SectionTitle, StatusPill, type IconName } from '@/components/kit';
 import { Text } from '@/components/ui/Text';
 import { toast } from '@/components/ui/Toast';
+import { useExperience } from '@/hooks/useExperience';
+import { can } from '@/services/experience';
 import { logout } from '@/services/auth';
 import { useDb, useUnreadMessageCount } from '@/store/useDb';
 import { useAccount } from '@/store/useSession';
@@ -21,6 +23,8 @@ export default function PlatformMore() {
   const disputes = useDb((s) => s.disputes);
   const refunds = useDb((s) => s.refunds);
   const unread = useUnreadMessageCount(account);
+  const exp = useExperience();
+  const occasions = useDb((s) => s.occasions);
   const ready = payables.filter((p) => p.status === 'READY');
   const pendingKyc = verifications.filter((v) => v.status === 'DOCUMENT_SUBMITTED' || v.status === 'UNDER_REVIEW').length;
   const flagged = reviews.filter((r) => r.status === 'flagged').length;
@@ -52,6 +56,7 @@ export default function PlatformMore() {
         { icon: 'people-outline', title: 'Freelancers', subtitle: 'Crew directory, equipment and scores', href: '/platform/freelancers' },
         { icon: 'person-circle-outline', title: 'Users', subtitle: 'Couples, businesses, crew and staff', href: '/platform/users' },
         { icon: 'options-outline', title: 'Marketplace settings', subtitle: 'Commission, fees, featured, deals & banners', href: '/platform/marketplace' },
+        ...(can(exp, 'occasion.manage') ? [{ icon: 'calendar-number-outline' as IconName, title: 'Occasions', subtitle: `${occasions.filter((o) => o.active).length} offered · add, edit or delete what families can plan`, href: '/platform/occasions' as Href }] : []),
       ],
     },
     {
