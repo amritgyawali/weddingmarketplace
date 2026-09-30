@@ -5,19 +5,23 @@ import type { Account, CheckState, ReviewRecord, VerificationCase, VerificationS
 import { addDays, formatMoney, uid } from '@/utils/format';
 
 import { accountById, currentActor, type GetDb, now, ownersOf, type SetDb, today } from './helpers';
+import { staffOnly } from './personas';
 
 export interface TrustActions {
   submitReview: (input: Omit<ReviewRecord, 'id' | 'at' | 'status' | 'helpful' | 'verifiedBooking'>) => ReviewRecord;
   replyToReview: (id: string, text: string) => void;
   toggleHelpful: (id: string, accountId: string) => void;
   flagReview: (id: string, reason: string) => void;
-  moderateReview: (id: string, keep: boolean) => void;
+  /** Staff with `provider.verify` or `incident.manage`. Returns an error to show, or null. */
+  moderateReview: (id: string, keep: boolean) => string | null;
 
   submitForApproval: (account: Account) => void;
-  setVerificationCheck: (caseId: string, check: keyof VerificationCase['checks'], state: CheckState) => void;
-  decideVerification: (caseId: string, status: VerificationStatus, note?: string) => void;
+  setVerificationCheck: (caseId: string, check: keyof VerificationCase['checks'], state: CheckState) => string | null;
+  /** Vendor Success, admins (`provider.verify`). Returns an error to show, or null. */
+  decideVerification: (caseId: string, status: VerificationStatus, note?: string) => string | null;
   addVerificationDocument: (caseId: string, doc: { kind: string; name: string }) => void;
-  setAccountSuspended: (accountId: string, suspended: boolean, reason?: string) => void;
+  /** Admins (`user.suspend`). Returns an error to show, or null. */
+  setAccountSuspended: (accountId: string, suspended: boolean, reason?: string) => string | null;
 }
 
 const SPAM = /(\d{7,}|98x+|call me|whatsapp me|http|www\.)/i;
@@ -55,8 +59,11 @@ export const trustActions = (set: SetDb, get: GetDb): TrustActions => ({
   },
 
   moderateReview: (id, keep) => {
+    const denied = staffOnly(['provider.verify', 'incident.manage'], get);
+    if (denied) return denied;
     set((s) => ({ reviews: s.reviews.map((r) => (r.id === id ? { ...r, status: keep ? 'published' : 'removed' } : r)) }));
     get().log(currentActor(), keep ? 'review.keep' : 'review.remove', 'review', id);
+    return null;
   },
 
   submitForApproval: (account) => {
@@ -79,10 +86,14 @@ export const trustActions = (set: SetDb, get: GetDb): TrustActions => ({
     get().notify('platform', 'New verification request', `${vc.title} · ${vc.subtitle}`, '/platform/approvals', 'system');
   },
 
-  setVerificationCheck: (caseId, check, state) =>
+  setVerificationCheck: (caseId, check, state) => {
+    const denied = staffOnly('provider.verify', get);
+    if (denied) return denied;
     set((s) => ({
       verifications: s.verifications.map((v) => (v.id === caseId ? { ...v, status: v.status === 'DOCUMENT_SUBMITTED' ? 'UNDER_REVIEW' : v.status, checks: { ...v.checks, [check]: state } } : v)),
-    })),
+    }));
+    return null;
+  },
 
   addVerificationDocument: (caseId, doc) =>
     set((s) => ({
@@ -90,8 +101,10 @@ export const trustActions = (set: SetDb, get: GetDb): TrustActions => ({
     })),
 
   decideVerification: (caseId, status, note) => {
+    const denied = staffOnly('provider.verify', get);
+    if (denied) return denied;
     const vc = get().verifications.find((v) => v.id === caseId);
-    if (!vc) return;
+    if (!vc) return 'This case no longer exists';
     set((s) => ({
       verifications: s.verifications.map((v) => (v.id === caseId ? { ...v, status, notes: note ?? v.notes, decidedAt: now(), expiresAt: status === 'VERIFIED' ? addDays(today(), 365) : v.expiresAt } : v)),
     }));
@@ -107,10 +120,15 @@ export const trustActions = (set: SetDb, get: GetDb): TrustActions => ({
       );
     }
     get().log(currentActor(), 'verification.decide', 'verification', caseId, status);
+    return null;
   },
 
   setAccountSuspended: (accountId, suspended, reason) => {
+    const denied = staffOnly('user.suspend', get);
+    if (denied) return denied;
+    if (accountId === currentActor().id) return 'You can’t suspend your own account';
     useSession.getState().updateAccount(accountId, { suspended });
     get().log(currentActor(), suspended ? 'account.suspend' : 'account.restore', 'account', accountId, reason);
+    return null;
   },
 });

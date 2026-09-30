@@ -6,15 +6,18 @@ import { findVenue } from '@/data/venues';
 import type { Account, AppNotification, Lead, LeadStatus, PlatformSettings, Quotation } from '@/types/platform';
 import { addDays, uid } from '@/utils/format';
 
-import { accountById, type Actor, type GetDb, now, ownersOf, type SetDb, today } from './helpers';
+import { accountById, type Actor, currentActor, type GetDb, now, ownersOf, type SetDb, today } from './helpers';
+import { staffDenied } from './personas';
 
 export interface CoreActions {
   notify: (to: string, title: string, body: string, href?: string, kind?: AppNotification['kind']) => void;
   markNotificationsRead: (account: Account) => void;
   markNotificationRead: (id: string) => void;
   log: (actor: Actor, action: string, entity: string, entityId: string, detail?: string) => void;
-  updateSettings: (patch: Partial<PlatformSettings>) => void;
-  resetDemo: () => void;
+  /** Staff need `settings.edit`; vendors buying a promotion pass. Returns an error to show, or null. */
+  updateSettings: (patch: Partial<PlatformSettings>) => string | null;
+  /** Admins only (`demo.reset`). Returns an error to show, or null. */
+  resetDemo: () => string | null;
 
   createLead: (input: Omit<Lead, 'id' | 'createdAt' | 'status'>) => Lead;
   setLeadStatus: (id: string, status: LeadStatus) => void;
@@ -74,9 +77,18 @@ export const coreActions = (set: SetDb, get: GetDb): CoreActions => ({
   log: (actor, action, entity, entityId, detail) =>
     set((s) => ({ audit: [{ id: uid('au'), at: now(), actorId: actor.id, actorName: actor.name, action, entity, entityId, detail }, ...s.audit].slice(0, 500) })),
 
-  updateSettings: (patch) => set((s) => ({ settings: { ...s.settings, ...patch } })),
+  updateSettings: (patch) => {
+    const denied = staffDenied('settings.edit', get);
+    if (denied) return denied;
+    set((s) => ({ settings: { ...s.settings, ...patch } }));
+    get().log(currentActor(), 'settings.update', 'settings', 'platform', Object.keys(patch).join(', '));
+    return null;
+  },
 
-  resetDemo: () => set(buildSeedData()),
+  resetDemo: () => {
+    set(buildSeedData());
+    return null;
+  },
 
   // Provider CRM leads
   createLead: (input) => {

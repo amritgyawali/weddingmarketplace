@@ -2,6 +2,7 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 
+import { staffScreen } from '@/components/persona/StaffGate';
 import { BarChart, Card, ChoiceChips, EmptyBlock, KButton, KField, KpiCard, ProgressBar, Segmented, StackHeader, StatusPill } from '@/components/kit';
 import { Text } from '@/components/ui/Text';
 import { toast } from '@/components/ui/Toast';
@@ -54,9 +55,9 @@ function DisputeCard({ d }: { d: Dispute }) {
         <>
           <KField placeholder="Resolution note" value={note} onChangeText={setNote} />
           <View style={styles.row}>
-            {d.status === 'OPEN' && <KButton label="Investigate" size="sm" variant="secondary" style={{ flex: 1 }} onPress={() => update(d.id, 'INVESTIGATING', note.trim() || 'Investigating with both parties')} />}
-            <KButton label="Reject" size="sm" variant="ghost" style={{ flex: 1 }} onPress={() => update(d.id, 'REJECTED', note.trim() || 'Rejected', { unfreeze: true })} />
-            <KButton label="Resolve & release" size="sm" variant="success" style={{ flex: 1.3 }} onPress={() => update(d.id, 'RESOLVED', note.trim() || 'Resolved', { resolution: note.trim(), unfreeze: true })} />
+            {d.status === 'OPEN' && <KButton label="Investigate" size="sm" variant="secondary" style={{ flex: 1 }} onPress={() => { const err = update(d.id, 'INVESTIGATING', note.trim() || 'Investigating with both parties'); if (err) toast(err, 'alert-circle'); }} />}
+            <KButton label="Reject" size="sm" variant="ghost" style={{ flex: 1 }} onPress={() => { const err = update(d.id, 'REJECTED', note.trim() || 'Rejected', { unfreeze: true }); if (err) toast(err, 'alert-circle'); }} />
+            <KButton label="Resolve & release" size="sm" variant="success" style={{ flex: 1.3 }} onPress={() => { const err = update(d.id, 'RESOLVED', note.trim() || 'Resolved', { resolution: note.trim(), unfreeze: true }); if (err) toast(err, 'alert-circle'); }} />
           </View>
         </>
       )}
@@ -65,7 +66,7 @@ function DisputeCard({ d }: { d: Dispute }) {
 }
 
 /** Finance: customer money in, escrow, payouts out and platform revenue by business model. */
-export default function Finance() {
+function Finance() {
   const t = useRoleTheme();
   const params = useLocalSearchParams<{ tab?: Tab }>();
   const [tab, setTab] = useState<Tab>(params.tab ?? 'overview');
@@ -190,7 +191,7 @@ export default function Finance() {
                     {p.status === 'ON_HOLD' ? (
                       <KButton label="Release hold" size="sm" variant="secondary" style={{ flex: 1 }} onPress={() => markReady(p.id)} />
                     ) : (
-                      <KButton label="Hold" size="sm" variant="ghost" style={{ flex: 1 }} onPress={() => hold(p.id, 'Held by finance')} />
+                      <KButton label="Hold" size="sm" variant="ghost" style={{ flex: 1 }} onPress={() => { const err = hold(p.id, 'Held by finance'); if (err) toast(err, 'alert-circle'); }} />
                     )}
                     {ready.includes(p) && (
                       <KButton
@@ -199,8 +200,8 @@ export default function Finance() {
                         variant="success"
                         style={{ flex: 1.3 }}
                         onPress={() => {
-                          release(p.id);
-                          toast(`${formatMoney(p.amount)} sent to ${p.payeeName}`, 'cash');
+                          const err = release(p.id);
+                          toast(err ?? `${formatMoney(p.amount)} sent to ${p.payeeName}`, err ? 'alert-circle' : 'cash');
                         }}
                       />
                     )}
@@ -262,8 +263,8 @@ export default function Finance() {
                 </Text>
                 {r.status === 'REQUESTED' && (
                   <View style={styles.row}>
-                    <KButton label="Reject" size="sm" variant="danger" style={{ flex: 1 }} onPress={() => decideRefund(r.id, false)} />
-                    <KButton label="Approve & refund" size="sm" variant="success" style={{ flex: 1 }} onPress={() => decideRefund(r.id, true)} />
+                    <KButton label="Reject" size="sm" variant="danger" style={{ flex: 1 }} onPress={() => { const err = decideRefund(r.id, false); if (err) toast(err, 'alert-circle'); }} />
+                    <KButton label="Approve & refund" size="sm" variant="success" style={{ flex: 1 }} onPress={() => { const err = decideRefund(r.id, true); if (err) toast(err, 'alert-circle'); }} />
                   </View>
                 )}
               </Card>
@@ -284,3 +285,5 @@ const styles = StyleSheet.create({
   rowBetween: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 10 },
   method: { width: 8, alignSelf: 'stretch', borderRadius: 4 },
 });
+
+export default staffScreen('/platform/finance', Finance);

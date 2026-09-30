@@ -2,6 +2,7 @@ import { router } from 'expo-router';
 import { useState } from 'react';
 import { FlatList, View } from 'react-native';
 
+import { staffScreen } from '@/components/persona/StaffGate';
 import { EmptyBlock, Fab, Segmented, StackHeader } from '@/components/kit';
 import { GigCard } from '@/components/work/GigCard';
 import { useDb } from '@/store/useDb';
@@ -10,7 +11,7 @@ import { daysUntil } from '@/utils/format';
 
 type Filter = 'emergency' | 'open' | 'mine' | 'all';
 
-export default function PlatformGigs() {
+function PlatformGigs() {
   const t = useRoleTheme();
   const gigs = useDb((s) => s.gigs);
   const [filter, setFilter] = useState<Filter>(gigs.some((g) => g.emergency && g.status === 'open') ? 'emergency' : 'open');
@@ -46,3 +47,5 @@ export default function PlatformGigs() {
     </View>
   );
 }
+
+export default staffScreen('/platform/gigs', PlatformGigs);

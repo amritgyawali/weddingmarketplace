@@ -3,6 +3,7 @@ import { useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { FlatList, Pressable, StyleSheet, View } from 'react-native';
 
+import { staffScreen } from '@/components/persona/StaffGate';
 import { Card, EmptyBlock, KButton, KField, Segmented, StackHeader, StatusPill } from '@/components/kit';
 import { Text } from '@/components/ui/Text';
 import { toast } from '@/components/ui/Toast';
@@ -28,7 +29,8 @@ function CaseCard({ vc }: { vc: VerificationCase }) {
   const [note, setNote] = useState('');
   const allPassed = Object.values(vc.checks).every((c) => c === 'passed');
   const decideAs = (status: VerificationStatus) => {
-    decide(vc.id, status, note.trim() || undefined);
+    const err = decide(vc.id, status, note.trim() || undefined);
+    if (err) return toast(err, 'alert-circle');
     toast(`${vc.title}: ${status.toLowerCase().replace('_', ' ')}`, status === 'VERIFIED' ? 'shield-checkmark' : 'close-circle');
   };
   return (
@@ -92,7 +94,7 @@ function CaseCard({ vc }: { vc: VerificationCase }) {
 }
 
 /** Trust & safety: KYC verification workflow and review moderation. */
-export default function Approvals() {
+function Approvals() {
   const t = useRoleTheme();
   const params = useLocalSearchParams<{ tab?: Tab }>();
   const verifications = useDb((s) => s.verifications);
@@ -160,3 +162,5 @@ const styles = StyleSheet.create({
   icon: { width: 40, height: 40, borderRadius: 10, alignItems: 'center', justifyContent: 'center' },
   check: { flexDirection: 'row', alignItems: 'center', gap: 10, paddingVertical: 2 },
 });
+
+export default staffScreen('/platform/approvals', Approvals);

@@ -6,6 +6,7 @@ import { Card, EmptyBlock, KField, ListRow, SectionTitle, type IconName } from '
 import { Text } from '@/components/ui/Text';
 import { toolRole, toolRule, type ToolId } from '@/data/access';
 import { BUILT_IN_OCCASIONS, type OccasionDef } from '@/data/occasions';
+import { PERMISSION_LABELS } from '@/data/permissions';
 import { SERVICE_BY_ID } from '@/data/services';
 import { SERVICE_CAPABILITIES, SERVICES_BY_CREW_ROLE } from '@/data/trades';
 import { useExperience } from '@/hooks/useExperience';
@@ -116,6 +117,21 @@ export function ToolRoute({ tools, visible, settingsHref }: { tools: ToolDef[]; 
   const { id } = useLocalSearchParams<{ id: string }>();
   const catalogue = useDb((s) => s.occasions);
   const def = tools.find((x) => x.id === id);
+  if (def && visible && !visible.some((x) => x.id === def.id) && toolRole(def.id) === 'platform') {
+    const rule = toolRule(def.id);
+    const needs = [...(rule.perms ?? []), ...(rule.permsAny ?? [])].map((p) => PERMISSION_LABELS[p].toLowerCase());
+    return (
+      <ToolPage title={def.title}>
+        <EmptyBlock
+          icon="lock-closed-outline"
+          title={`${def.title} isn’t part of your role`}
+          message={needs.length ? `It is for staff who can ${needs.join(' or ')}. Ask an admin if you need it.` : 'Ask an admin if you need it.'}
+          action="All tools"
+          onAction={() => (router.canGoBack() ? router.back() : undefined)}
+        />
+      </ToolPage>
+    );
+  }
   if (def && visible && !visible.some((x) => x.id === def.id) && toolRole(def.id) === 'customer') {
     const plans = unlockingOccasions(def.id, catalogue.length ? catalogue : BUILT_IN_OCCASIONS);
     return (

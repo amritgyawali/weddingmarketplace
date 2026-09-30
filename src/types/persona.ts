@@ -35,6 +35,10 @@ export interface When {
   forms?: BusinessForm[];
   /** Platform only: all of these permissions. */
   perms?: Permission[];
+  /** Platform only: at least one of these permissions. */
+  permsAny?: Permission[];
+  /** Platform only: the staff member's team is one of these. */
+  teams?: PlatformTeam[];
   /** Hidden when this nested rule passes. */
   not?: When;
 }
@@ -78,6 +82,9 @@ export interface Experience {
   trades: TradeId[];
   primaryTrade?: TradeId;
   form?: BusinessForm;
+  /** Platform staff: role and team (their permissions are in `perms`). */
+  staffRole?: StaffRole;
+  team?: PlatformTeam;
   /** Freelancers: the craft of the primary skill, and every craft their skills cover. */
   craft?: CraftId;
   crafts: CraftId[];

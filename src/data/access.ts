@@ -139,6 +139,57 @@ export const VENDOR_LINK_RULES: Record<string, When> = {
   '/business/team': { forms: ['venue', 'studio'] },
 };
 
+// ─── Platform console (P4): tabs, links and screens by permission ──────────
+
+/**
+ * Operations tabs, screens and More rows by route. A deep link to a screen the
+ * staff member can't use shows who it is for instead of opening.
+ */
+export const PLATFORM_ROUTE_RULES: Record<string, When> = {
+  // Tabs (finance and support don't get the leads kanban)
+  '/platform/leads': { perms: ['project.manage'] },
+  '/platform/weddings': { perms: ['project.view_all'] },
+  '/platform/execution': { permsAny: ['incident.manage', 'emergency.start'] },
+  '/platform/approvals': { permsAny: ['provider.verify', 'incident.manage'] },
+  '/platform/finance': { permsAny: ['payout.release', 'refund.approve', 'payment.record_cash'] },
+  '/platform/gigs': { permsAny: ['project.manage', 'emergency.start'] },
+  '/platform/quotes': { permsAny: ['quote.send', 'refund.approve'] },
+  '/platform/calendar': { perms: ['project.view_all'] },
+  '/platform/providers': { permsAny: ['provider.verify', 'project.manage'] },
+  '/platform/freelancers': { permsAny: ['provider.verify', 'project.manage', 'emergency.start'] },
+  '/platform/users': { permsAny: ['user.suspend', 'staff.manage'] },
+  '/platform/analytics': { perms: ['project.view_all'] },
+  '/platform/marketplace': { perms: ['settings.edit'] },
+  '/platform/audit': { perms: ['audit.view'] },
+};
+
+/** Who a staff screen is for, in words ("finance and admins"), for the no-access message. */
+export const ROUTE_AUDIENCE: Record<string, string> = {
+  '/platform/leads': 'coordinators and admins',
+  '/platform/weddings': 'the operations team',
+  '/platform/execution': 'coordinators, support and admins',
+  '/platform/approvals': 'Vendor Success, support and admins',
+  '/platform/finance': 'finance and admins',
+  '/platform/gigs': 'coordinators, support and admins',
+  '/platform/quotes': 'coordinators, finance and admins',
+  '/platform/calendar': 'the operations team',
+  '/platform/providers': 'coordinators, Vendor Success and admins',
+  '/platform/freelancers': 'coordinators, support, Vendor Success and admins',
+  '/platform/users': 'admins',
+  '/platform/analytics': 'the operations team',
+  '/platform/marketplace': 'admins',
+  '/platform/audit': 'finance and admins',
+};
+
+/** The staff member's focus on the Today screen, first match wins. */
+export const TODAY_FOCUS: { id: 'admin' | 'finance' | 'vendor_success' | 'support' | 'coordinator'; when: When }[] = [
+  { id: 'admin', when: { perms: ['settings.edit'] } },
+  { id: 'finance', when: { perms: ['payout.release'] } },
+  { id: 'vendor_success', when: { perms: ['provider.verify'], not: { perms: ['project.manage'] } } },
+  { id: 'support', when: { perms: ['incident.manage'], not: { perms: ['project.manage'] } } },
+  { id: 'coordinator', when: {} },
+];
+
 /** A step on the vendor home's setup checklist, shown until it is done. */
 export interface SetupStepDef {
   id: string;

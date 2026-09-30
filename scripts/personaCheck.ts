@@ -7,7 +7,7 @@
  * service that does not exist, when a service has no capabilities or trade,
  * or when a persona fixture ends up with fewer than three tools.
  */
-import { TOOL_RULES, toolRole, UNIVERSAL_TOOLS, type ToolId } from '@/data/access';
+import { PLATFORM_ROUTE_RULES, TODAY_FOCUS, TOOL_RULES, toolRole, UNIVERSAL_TOOLS, type ToolId } from '@/data/access';
 import { isCapability } from '@/data/capabilities';
 import { CRAFTS } from '@/data/crafts';
 import { EVENT_TYPE_BY_ID } from '@/data/events';
@@ -15,7 +15,7 @@ import { BUILT_IN_OCCASIONS } from '@/data/occasions';
 import { isPermission, PERMISSIONS, STAFF_PERMISSIONS } from '@/data/permissions';
 import { CREW_ROLES, SERVICE_BY_ID, SERVICES } from '@/data/services';
 import { BUSINESS_FORMS, SERVICE_CAPABILITIES, TRADES } from '@/data/trades';
-import { allowsTool, resolveExperience } from '@/services/experience';
+import { allows, allowsTool, resolveExperience } from '@/services/experience';
 import type { PersonaInput, When } from '@/types/persona';
 
 export interface CheckResult {
@@ -31,6 +31,7 @@ function checkRule(where: string, rule: When, errors: string[]) {
   rule.capsAny?.forEach((c) => isCapability(c) || errors.push(`${where}: unknown capability ${c}`));
   rule.capsAll?.forEach((c) => isCapability(c) || errors.push(`${where}: unknown capability ${c}`));
   rule.perms?.forEach((p) => isPermission(p) || errors.push(`${where}: unknown permission ${p}`));
+  rule.permsAny?.forEach((p) => isPermission(p) || errors.push(`${where}: unknown permission ${p}`));
   rule.forms?.forEach((f) => FORMS.has(f) || errors.push(`${where}: unknown business form ${f}`));
   rule.occasions?.forEach((o) => OCCASIONS.has(o) || errors.push(`${where}: unknown occasion ${o}`));
   if (rule.not) checkRule(`${where} (not)`, rule.not, errors);
@@ -101,6 +102,8 @@ export function runPersonaCheck(): CheckResult {
     if (!toolRole(id)) errors.push(`tool ${id}: id prefix is not a role app`);
     checkRule(`tool ${id}`, TOOL_RULES[id], errors);
   }
+  Object.entries(PLATFORM_ROUTE_RULES).forEach(([route, rule]) => checkRule(`route ${route}`, rule, errors));
+  TODAY_FOCUS.forEach((f) => checkRule(`today focus ${f.id}`, f.when, errors));
   notes.push(`${UNIVERSAL_TOOLS.length} of ${Object.keys(TOOL_RULES).length} tools are universal for their role on purpose`);
 
   // Persona matrix.
@@ -110,7 +113,9 @@ export function runPersonaCheck(): CheckResult {
     const tools = (Object.keys(TOOL_RULES) as ToolId[]).filter((id) => allowsTool(exp, id)).sort();
     if (tools.length < 3) errors.push(`fixture ${name}: only ${tools.length} tools`);
     if (input.role !== 'customer' && input.role !== 'platform' && !exp.services.length) errors.push(`fixture ${name}: resolved no services`);
-    matrix[name] = tools;
+    // Staff also get the console screens their permissions open, so a matrix change that hides finance from finance fails the build.
+    const routes = input.role === 'platform' ? Object.keys(PLATFORM_ROUTE_RULES).filter((r) => allows(exp, PLATFORM_ROUTE_RULES[r])).map((r) => `route:${r}`) : [];
+    matrix[name] = [...tools, ...routes.sort()];
   }
 
   return { errors, notes, matrix };

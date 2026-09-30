@@ -2,6 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { ScrollView, StyleSheet, View } from 'react-native';
 
+import { staffScreen } from '@/components/persona/StaffGate';
 import { Card, EmptyBlock, KButton, ProgressBar, RoleHeader, SectionTitle, StatusPill } from '@/components/kit';
 import { Text } from '@/components/ui/Text';
 import { RunSheet } from '@/components/work/RunSheet';
@@ -10,7 +11,7 @@ import { useRoleTheme } from '@/theme/RoleTheme';
 import { daysUntil, formatShortDate } from '@/utils/format';
 
 /** Wedding-day control room: every live or same-day event across the platform. */
-export default function ControlRoom() {
+function ControlRoom() {
   const t = useRoleTheme();
   const projects = useDb((s) => s.projects);
   const gigs = useDb((s) => s.gigs);
@@ -183,3 +184,5 @@ const styles = StyleSheet.create({
   stat: { flex: 1, borderRadius: 10, padding: 10, alignItems: 'center' },
   nextRow: { flexDirection: 'row', alignItems: 'center', gap: 12, padding: 14 },
 });
+
+export default staffScreen('/platform/execution', ControlRoom);

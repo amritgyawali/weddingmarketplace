@@ -1,7 +1,8 @@
-import { ToolHub } from '@/components/toolkit/hub';
+import { ToolHub, useVisibleTools } from '@/components/toolkit/hub';
 import { PLATFORM_TOOLS } from '@/components/toolkit/platform';
 
-/** Extra operations tools for platform staff. */
+/** Extra operations tools for platform staff, picked by their permissions. */
 export default function PlatformTools() {
-  return <ToolHub role="platform" tools={PLATFORM_TOOLS} title="Operations tools" subtitle="20 tools for the ops team" />;
+  const tools = useVisibleTools(PLATFORM_TOOLS);
+  return <ToolHub role="platform" tools={tools} title="Operations tools" subtitle={`${tools.length} tools for your role`} />;
 }

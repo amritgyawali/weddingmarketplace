@@ -1,7 +1,8 @@
-import { ToolRoute } from '@/components/toolkit/hub';
+import { ToolRoute, useVisibleTools } from '@/components/toolkit/hub';
 import { PLATFORM_TOOLS } from '@/components/toolkit/platform';
 
-/** One operations tool. */
+/** One operations tool (or which roles it is for). */
 export default function PlatformTool() {
-  return <ToolRoute tools={PLATFORM_TOOLS} />;
+  const visible = useVisibleTools(PLATFORM_TOOLS);
+  return <ToolRoute tools={PLATFORM_TOOLS} visible={visible} />;
 }

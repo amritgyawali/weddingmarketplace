@@ -58,8 +58,8 @@ export default function PlatformQuote() {
           onSave={(quote, send, summary) => {
             saveQuote(quote);
             if (send) {
-              sendQuote(quote.id, summary);
-              toast(`${quote.number} v${quote.version} sent to ${quote.customerName}`, 'paper-plane');
+              const err = sendQuote(quote.id, summary);
+              toast(err ?? `${quote.number} v${quote.version} sent to ${quote.customerName}`, err ? 'alert-circle' : 'paper-plane');
             } else toast('Draft saved');
             router.back();
           }}

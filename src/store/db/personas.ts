@@ -3,12 +3,12 @@ import { PLANNER_MODULES, type PlannerModule } from '@/data/capabilities';
 import { categoryForService } from '@/data/categories';
 import { EVENT_TYPE_BY_ID } from '@/data/events';
 import { occasionIdFor, PROTECTED_OCCASIONS, type OccasionDef } from '@/data/occasions';
-import type { Permission } from '@/data/permissions';
+import { PERMISSION_LABELS, PERMISSION_SCOPE, type Permission } from '@/data/permissions';
 import { CREW_ROLES, SERVICE_BY_ID } from '@/data/services';
 import { BUSINESS_FORMS, type BusinessForm } from '@/data/trades';
 import { can, experienceFor } from '@/services/experience';
 import { useSession } from '@/store/useSession';
-import type { Account, EventType } from '@/types/platform';
+import type { Account, EventType, Project } from '@/types/platform';
 
 import { currentActor, type GetDb, now, type SetDb } from './helpers';
 
@@ -52,6 +52,39 @@ export function actorCan(perm: Permission, get: GetDb): boolean {
   const s = useSession.getState();
   const account = s.accounts.find((a) => a.id === s.session?.accountId);
   return !!account && account.role === 'platform' && can(experienceFor(account, { occasions: get().occasions }), perm);
+}
+
+const signedIn = (): Account | undefined => {
+  const s = useSession.getState();
+  return s.accounts.find((a) => a.id === s.session?.accountId);
+};
+
+const denial = (perm: Permission) => `You don’t have permission to ${PERMISSION_LABELS[perm].charAt(0).toLowerCase()}${PERMISSION_LABELS[perm].slice(1)}. Ask an admin if you need it.`;
+
+/**
+ * For platform staff only: an error when they lack the permission, or when a
+ * right that is scoped to their own records (a coordinator's projects) is used
+ * on someone else's. Other actors get null: couples, vendors and freelancers
+ * reach these actions only through their own, separately guarded flows.
+ */
+export function staffDenied(perms: Permission | Permission[], get: GetDb, project?: Pick<Project, 'coordinatorId' | 'coordinatorName'> | null): string | null {
+  const account = signedIn();
+  if (!account || account.role !== 'platform') return null;
+  const list = Array.isArray(perms) ? perms : [perms];
+  const exp = experienceFor(account, { occasions: get().occasions });
+  const held = list.find((p) => can(exp, p));
+  if (!held) return denial(list[0]);
+  const scope = account.staffRole ? PERMISSION_SCOPE[account.staffRole]?.[held] : undefined;
+  if (scope === 'own' && project?.coordinatorId && project.coordinatorId !== account.id) return `This project is ${project.coordinatorName ?? 'another coordinator'}’s. Ask them or an admin to make the change.`;
+  return null;
+}
+
+/** Staff-only actions (payouts, refunds, verification…): an error unless the signed-in user is staff with the permission. */
+export function staffOnly(perms: Permission | Permission[], get: GetDb): string | null {
+  const account = signedIn();
+  const list = Array.isArray(perms) ? perms : [perms];
+  if (!account || account.role !== 'platform') return 'Only the Vivah team can do this';
+  return staffDenied(list, get);
 }
 
 /** Cleans admin input; returns the problem instead of trusting the form. */

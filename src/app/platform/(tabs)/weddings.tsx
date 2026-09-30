@@ -3,13 +3,16 @@ import { router } from 'expo-router';
 import { useState } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
 
+import { staffScreen } from '@/components/persona/StaffGate';
 import { Avatar, Card, EmptyBlock, KField, ProgressBar, RoleHeader, Segmented, StatusPill } from '@/components/kit';
 import { Text } from '@/components/ui/Text';
 import { STATUS_LABEL } from '@/components/work/Pipeline';
+import { SegmentFilter } from '@/components/work/SegmentFilter';
 import { useLayout } from '@/hooks/useLayout';
 import { planningProgress } from '@/services/planner';
 import { projectEconomics } from '@/services/pricing';
 import { projectRisks } from '@/services/risk';
+import { inSegment, projectFacts, type Segment } from '@/services/segments';
 import { useDb } from '@/store/useDb';
 import { useRoleTheme } from '@/theme/RoleTheme';
 import type { Project } from '@/types/platform';
@@ -34,14 +37,16 @@ const test = (f: Filter, p: Project) => {
   }
 };
 
-export default function PlatformWeddings() {
+function PlatformWeddings() {
   const t = useRoleTheme();
   const { columns } = useLayout();
   const projects = useDb((s) => s.projects);
   const [filter, setFilter] = useState<Filter>('active');
   const [query, setQuery] = useState('');
+  const [segment, setSegment] = useState<Segment>({});
+  const occasions = useDb((s) => s.occasions);
   const q = query.trim().toLowerCase();
-  const list = projects.filter((p) => test(filter, p) && (!q || `${p.title} ${p.code} ${p.city} ${p.customerName}`.toLowerCase().includes(q))).sort((a, b) => a.weddingDate.localeCompare(b.weddingDate));
+  const list = projects.filter((p) => test(filter, p) && inSegment(segment, projectFacts(p, occasions)) && (!q || `${p.title} ${p.code} ${p.city} ${p.customerName}`.toLowerCase().includes(q))).sort((a, b) => a.weddingDate.localeCompare(b.weddingDate));
   const counts = Object.fromEntries((['active', 'confirmed', 'live', 'completed', 'self', 'all'] as Filter[]).map((f) => [f, projects.filter((p) => test(f, p)).length])) as Record<Filter, number>;
 
   return (
@@ -50,6 +55,7 @@ export default function PlatformWeddings() {
       <View style={{ paddingTop: 12, gap: 10 }}>
         <View style={{ paddingHorizontal: 14 }}>
           <KField placeholder="Search code, couple or city" value={query} onChangeText={setQuery} />
+          <SegmentFilter value={segment} onChange={setSegment} />
         </View>
         <Segmented
           options={[
@@ -129,3 +135,5 @@ const styles = StyleSheet.create({
   row: { flexDirection: 'row', alignItems: 'center', gap: 6 },
   grid: { flexDirection: 'row', justifyContent: 'space-between' },
 });
+
+export default staffScreen('/platform/weddings', PlatformWeddings);

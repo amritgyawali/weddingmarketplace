@@ -3,7 +3,10 @@ import { router } from 'expo-router';
 import { useState } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 
+import { staffScreen } from '@/components/persona/StaffGate';
 import { Card, ChoiceChips, KField, RoleHeader } from '@/components/kit';
+import { SegmentFilter } from '@/components/work/SegmentFilter';
+import { inSegment, projectFacts, type Segment } from '@/services/segments';
 import { Text } from '@/components/ui/Text';
 import { STATUS_LABEL } from '@/components/work/Pipeline';
 import { EVENT_TYPE_BY_ID } from '@/data/events';
@@ -57,18 +60,21 @@ function LeadCard({ project }: { project: Project }) {
 }
 
 /** Lead pipeline: every requirement from "New" to "Won", as a kanban board. */
-export default function LeadsPipeline() {
+function LeadsPipeline() {
   const t = useRoleTheme();
   const account = useAccount();
   const { wide } = useLayout();
   const projects = useDb((s) => s.projects);
   const [scope, setScope] = useState<'All' | 'Mine' | 'Unassigned'>('All');
   const [query, setQuery] = useState('');
+  const [segment, setSegment] = useState<Segment>({});
+  const occasions = useDb((s) => s.occasions);
   const q = query.trim().toLowerCase();
   const list = projects
     .filter((p) => p.managedBy === 'platform')
     .filter((p) => (scope === 'Mine' ? p.coordinatorId === account.id : scope === 'Unassigned' ? !p.coordinatorId : true))
-    .filter((p) => !q || `${p.title} ${p.code} ${p.city} ${p.customerName}`.toLowerCase().includes(q));
+    .filter((p) => !q || `${p.title} ${p.code} ${p.city} ${p.customerName}`.toLowerCase().includes(q))
+    .filter((p) => inSegment(segment, projectFacts(p, occasions)));
   const lost = list.filter((p) => p.status === 'CANCELLED').length;
 
   return (
@@ -77,6 +83,7 @@ export default function LeadsPipeline() {
       <View style={{ padding: 14, gap: 10 }}>
         <KField placeholder="Search couple, code or city" value={query} onChangeText={setQuery} />
         <ChoiceChips options={['All', 'Mine', 'Unassigned']} selected={[scope]} onToggle={(v) => setScope(v as typeof scope)} />
+        <SegmentFilter value={segment} onChange={setSegment} />
       </View>
       <ScrollView horizontal={!wide} showsHorizontalScrollIndicator={false} contentContainerStyle={[styles.board, wide && { flexDirection: 'row', flexWrap: 'nowrap' }]}>
         {COLUMNS.map((col) => {
@@ -114,3 +121,5 @@ const styles = StyleSheet.create({
   board: { paddingHorizontal: 14, gap: 10, paddingBottom: 20 },
   column: { width: 270, borderRadius: 8, padding: 10, gap: 10, maxHeight: 640 },
 });
+
+export default staffScreen('/platform/leads', LeadsPipeline);

@@ -1,7 +1,10 @@
 import { useState } from 'react';
 import { FlatList, ScrollView, StyleSheet, View } from 'react-native';
 
+import { staffScreen } from '@/components/persona/StaffGate';
 import { Avatar, Card, ChoiceChips, KeyValue, KField, StackHeader, StatusPill } from '@/components/kit';
+import { SegmentFilter } from '@/components/work/SegmentFilter';
+import { freelancerFacts, inSegment, type Segment } from '@/services/segments';
 import { Sheet } from '@/components/ui/Sheet';
 import { Text } from '@/components/ui/Text';
 import { AvailabilityCalendar } from '@/components/work/AvailabilityCalendar';
@@ -13,7 +16,7 @@ import type { FreelancerProfile } from '@/types/platform';
 import { formatMoney } from '@/utils/format';
 
 /** Crew directory with equipment, travel radius, rates and reliability. */
-export default function FreelancerDirectory() {
+function FreelancerDirectory() {
   const t = useRoleTheme();
   const { columns } = useLayout();
   const pool = useDb((s) => s.freelancerPool)();
@@ -21,9 +24,10 @@ export default function FreelancerDirectory() {
   const [city, setCity] = useState('All');
   const [query, setQuery] = useState('');
   const [open, setOpen] = useState<FreelancerProfile | null>(null);
+  const [segment, setSegment] = useState<Segment>({});
   const q = query.trim().toLowerCase();
   const list = pool
-    .filter((f) => (role === 'All' || f.skills.includes(role)) && (city === 'All' || f.city === city) && (!q || `${f.name} ${f.skills.join(' ')}`.toLowerCase().includes(q)))
+    .filter((f) => (role === 'All' || f.skills.includes(role)) && (city === 'All' || f.city === city) && inSegment(segment, freelancerFacts(f)) && (!q || `${f.name} ${f.skills.join(' ')}`.toLowerCase().includes(q)))
     .sort((a, b) => b.reliability - a.reliability);
 
   return (
@@ -31,6 +35,7 @@ export default function FreelancerDirectory() {
       <StackHeader title="Freelancers" subtitle={`${pool.length} crew across Nepal`} />
       <View style={{ padding: 14, gap: 8 }}>
         <KField placeholder="Search name or skill" value={query} onChangeText={setQuery} />
+        <SegmentFilter value={segment} onChange={setSegment} dims={['trade', 'city']} />
         <ChoiceChips options={['All', ...CREW_ROLES.slice(0, 14)]} selected={[role]} onToggle={setRole} />
         <ChoiceChips options={['All', 'Kathmandu', 'Lalitpur', 'Bhaktapur', 'Pokhara', 'Chitwan']} selected={[city]} onToggle={setCity} />
       </View>
@@ -89,3 +94,5 @@ export default function FreelancerDirectory() {
 const styles = StyleSheet.create({
   row: { flexDirection: 'row', alignItems: 'center', gap: 10, padding: 12 },
 });
+
+export default staffScreen('/platform/freelancers', FreelancerDirectory);

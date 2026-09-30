@@ -2,6 +2,7 @@ import { router } from 'expo-router';
 import { useState } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
 
+import { staffScreen } from '@/components/persona/StaffGate';
 import { Card, EmptyBlock, Segmented, StackHeader, StatusPill } from '@/components/kit';
 import { Text } from '@/components/ui/Text';
 import { quoteTotals } from '@/services/quotes';
@@ -11,7 +12,7 @@ import { formatMoney, formatShortDate } from '@/utils/format';
 
 type Filter = 'all' | 'open' | 'revision' | 'accepted' | 'genie';
 
-export default function AllQuotes() {
+function AllQuotes() {
   const t = useRoleTheme();
   const quotes = useDb((s) => s.quotes);
   const [filter, setFilter] = useState<Filter>('all');
@@ -73,3 +74,5 @@ export default function AllQuotes() {
 const styles = StyleSheet.create({
   row: { flexDirection: 'row', alignItems: 'center', gap: 8 },
 });
+
+export default staffScreen('/platform/quotes', AllQuotes);

@@ -786,7 +786,17 @@
     "platform.targets",
     "platform.tickets",
     "platform.winback",
-    "platform.workload"
+    "platform.workload",
+    "route:/platform/analytics",
+    "route:/platform/approvals",
+    "route:/platform/calendar",
+    "route:/platform/execution",
+    "route:/platform/freelancers",
+    "route:/platform/gigs",
+    "route:/platform/leads",
+    "route:/platform/providers",
+    "route:/platform/quotes",
+    "route:/platform/weddings"
   ],
   "platform:support": [
     "platform.broadcasts",
@@ -801,7 +811,14 @@
     "platform.targets",
     "platform.tickets",
     "platform.winback",
-    "platform.workload"
+    "platform.workload",
+    "route:/platform/analytics",
+    "route:/platform/approvals",
+    "route:/platform/calendar",
+    "route:/platform/execution",
+    "route:/platform/freelancers",
+    "route:/platform/gigs",
+    "route:/platform/weddings"
   ],
   "platform:finance": [
     "platform.batches",
@@ -816,7 +833,13 @@
     "platform.sla",
     "platform.targets",
     "platform.winback",
-    "platform.workload"
+    "platform.workload",
+    "route:/platform/analytics",
+    "route:/platform/audit",
+    "route:/platform/calendar",
+    "route:/platform/finance",
+    "route:/platform/quotes",
+    "route:/platform/weddings"
   ],
   "platform:admin": [
     "platform.broadcasts",
@@ -837,7 +860,21 @@
     "platform.targets",
     "platform.tickets",
     "platform.winback",
-    "platform.workload"
+    "platform.workload",
+    "route:/platform/analytics",
+    "route:/platform/approvals",
+    "route:/platform/audit",
+    "route:/platform/calendar",
+    "route:/platform/execution",
+    "route:/platform/finance",
+    "route:/platform/freelancers",
+    "route:/platform/gigs",
+    "route:/platform/leads",
+    "route:/platform/marketplace",
+    "route:/platform/providers",
+    "route:/platform/quotes",
+    "route:/platform/users",
+    "route:/platform/weddings"
   ],
   "platform:super_admin": [
     "platform.batches",
@@ -859,7 +896,21 @@
     "platform.targets",
     "platform.tickets",
     "platform.winback",
-    "platform.workload"
+    "platform.workload",
+    "route:/platform/analytics",
+    "route:/platform/approvals",
+    "route:/platform/audit",
+    "route:/platform/calendar",
+    "route:/platform/execution",
+    "route:/platform/finance",
+    "route:/platform/freelancers",
+    "route:/platform/gigs",
+    "route:/platform/leads",
+    "route:/platform/marketplace",
+    "route:/platform/providers",
+    "route:/platform/quotes",
+    "route:/platform/users",
+    "route:/platform/weddings"
   ],
   "platform:support-vendor-success": [
     "platform.broadcasts",
@@ -876,6 +927,14 @@
     "platform.targets",
     "platform.tickets",
     "platform.winback",
-    "platform.workload"
+    "platform.workload",
+    "route:/platform/analytics",
+    "route:/platform/approvals",
+    "route:/platform/calendar",
+    "route:/platform/execution",
+    "route:/platform/freelancers",
+    "route:/platform/gigs",
+    "route:/platform/providers",
+    "route:/platform/weddings"
   ]
 }
