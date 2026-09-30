@@ -730,7 +730,7 @@ P0 to P4 need no backend work and can start now. P5 can run in parallel in anoth
 
 | Risk | Mitigation |
 |---|---|
-| The brand "Vivah" means wedding, which may confuse non-wedding customers | keep the brand for now and use "celebration" in copy for other occasions; the owner plans a rebrand later, so the name lives in `constants/brand` only (§17) |
+| The brand "Vivah" means wedding, which may confuse non-wedding customers | keep the brand for now and use "celebration" in copy for other occasions; the owner plans a rebrand later, so new copy takes the name from `BRAND.name` in `constants/brand.ts` (about 57 files still hard-code it and move over as they are touched) (§17) |
 | Inferred vendor services are only a guess, since today's `categoryId` is group-level | a one-time "Confirm your services" card on the vendor home; `personaConfirmedAt` records it |
 | Hiding tools confuses existing users who used them | tools a user already has entries in stay visible for them (checked through `toolEntries`) |
 | Free-tier limits hit sooner than expected | the guardrails and triggers in §10; PostHog and Supabase usage dashboards reviewed monthly |
