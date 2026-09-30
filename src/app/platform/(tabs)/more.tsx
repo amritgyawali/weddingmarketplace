@@ -5,7 +5,8 @@ import { Avatar, Card, KButton, ListRow, RoleHeader, SectionTitle, StatusPill, t
 import { Text } from '@/components/ui/Text';
 import { toast } from '@/components/ui/Toast';
 import { useExperience } from '@/hooks/useExperience';
-import { can } from '@/services/experience';
+import { PLATFORM_ROUTE_RULES } from '@/data/access';
+import { allows, can } from '@/services/experience';
 import { logout } from '@/services/auth';
 import { useDb, useUnreadMessageCount } from '@/store/useDb';
 import { useAccount } from '@/store/useSession';
@@ -68,6 +69,10 @@ export default function PlatformMore() {
     },
   ];
 
+  const visible = sections
+    .map((section) => ({ ...section, rows: section.rows.filter((r) => allows(exp, PLATFORM_ROUTE_RULES[String(r.href).split('?')[0]])) }))
+    .filter((section) => section.rows.length);
+
   return (
     <View style={{ flex: 1, backgroundColor: t.c.bg }}>
       <RoleHeader title="More" subtitle="Operations tools" />
@@ -84,7 +89,7 @@ export default function PlatformMore() {
           </View>
           <StatusPill status="verified" label={(account.staffRole ?? 'staff').replace('_', ' ')} />
         </Card>
-        {sections.map((section) => (
+        {visible.map((section) => (
           <View key={section.title}>
             <SectionTitle title={section.title} />
             <Card padded={false} style={{ overflow: 'hidden' }}>
@@ -99,17 +104,19 @@ export default function PlatformMore() {
           <Card padded={false} style={{ overflow: 'hidden' }}>
             <ListRow icon="notifications-outline" title="Notifications" onPress={() => router.push('/notifications')} />
             <ListRow icon="settings-outline" title="Settings" onPress={() => router.push('/platform/settings')} />
-            <ListRow
-              icon="refresh-outline"
-              title="Reset demo data"
-              subtitle="Restore seeded projects, quotes, gigs and payments"
-              onPress={() =>
-                confirm('Reset demo data?', 'Everything returns to the seeded state.', 'Reset', () => {
-                  resetDemo();
-                  toast('Demo data restored');
-                })
-              }
-            />
+            {can(exp, 'demo.reset') && (
+              <ListRow
+                icon="refresh-outline"
+                title="Reset demo data"
+                subtitle="Restore seeded projects, quotes, gigs and payments"
+                onPress={() =>
+                  confirm('Reset demo data?', 'Everything returns to the seeded state.', 'Reset', () => {
+                    const err = resetDemo();
+                    toast(err ?? 'Demo data restored');
+                  })
+                }
+              />
+            )}
           </Card>
         </View>
         <KButton label="Log out" variant="danger" icon="log-out-outline" onPress={() => confirm('Log out?', 'You can sign back in with your mobile number.', 'Log out', logout)} />

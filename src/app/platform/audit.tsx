@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
 
+import { staffScreen } from '@/components/persona/StaffGate';
 import { Card, ChoiceChips, KButton, KField, StackHeader } from '@/components/kit';
 import { Text } from '@/components/ui/Text';
 import { exportCsv } from '@/services/exporters';
@@ -9,7 +10,7 @@ import { useRoleTheme } from '@/theme/RoleTheme';
 import { formatShortDate, formatTime } from '@/utils/format';
 
 /** Append-only audit trail of sensitive actions (bookings, payments, payouts, verification…). */
-export default function AuditLog() {
+function AuditLog() {
   const t = useRoleTheme();
   const audit = useDb((s) => s.audit);
   const [entity, setEntity] = useState('All');
@@ -59,3 +60,5 @@ export default function AuditLog() {
 const styles = StyleSheet.create({
   row: { flexDirection: 'row', gap: 10, padding: 10 },
 });
+
+export default staffScreen('/platform/audit', AuditLog);

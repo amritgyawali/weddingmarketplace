@@ -15,7 +15,7 @@ import { chatActions, type ChatActions, clearReplyTimers } from './chat';
 import { coreActions, type CoreActions } from './core';
 import { financeActions, type FinanceActions } from './finance';
 import { gigActions, type GigActions } from './gigs';
-import { personaActions, type PersonaActions } from './personas';
+import { personaActions, type PersonaActions, staffDenied } from './personas';
 import { plannerActions, type PlannerActions } from './planner';
 import { projectActions, type ProjectActions } from './projects';
 import { quoteActions, type QuoteActions } from './quotes';
@@ -57,8 +57,11 @@ export const useDb = create<Db>()(
       ...toolkitActions(set, get),
       ...personaActions(set, get),
       resetDemo: () => {
+        const denied = staffDenied('demo.reset', get);
+        if (denied) return denied;
         clearReplyTimers();
         set(buildSeedData());
+        return null;
       },
     }),
     {

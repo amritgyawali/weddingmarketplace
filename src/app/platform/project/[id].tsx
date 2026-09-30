@@ -139,10 +139,10 @@ function Summary({ project }: { project: Project }) {
               variant={s === 'CANCELLED' || s === 'QUOTE_REJECTED' ? 'danger' : 'secondary'}
               onPress={() => {
                 const apply = () => {
-                  setStatus(project.id, s as ProjectStatus, note.trim() || undefined);
+                  const err = setStatus(project.id, s as ProjectStatus, note.trim() || undefined);
                   setStatusOpen(false);
                   setNote('');
-                  toast(`Moved to ${STATUS_LABEL[s]}`);
+                  toast(err ?? `Moved to ${STATUS_LABEL[s]}`, err ? 'alert-circle' : undefined);
                 };
                 if (s === 'CANCELLED') confirm('Cancel project?', 'The customer will be notified.', 'Cancel project', apply);
                 else apply();
@@ -164,9 +164,9 @@ function Summary({ project }: { project: Project }) {
               label={`${a.name} · ${a.team ?? 'Team'}`}
               variant={a.id === project.coordinatorId ? 'primary' : 'secondary'}
               onPress={() => {
-                assign(project.id, { id: a.id, name: a.name });
+                const err = assign(project.id, { id: a.id, name: a.name });
                 setCoordOpen(false);
-                toast(`${a.name} now owns ${project.code}`);
+                toast(err ?? `${a.name} now owns ${project.code}`, err ? 'alert-circle' : undefined);
               }}
             />
           ))}
@@ -561,7 +561,7 @@ function MoneyTab({ project }: { project: Project }) {
               <StatusPill status={p.status} />
             </View>
           </View>
-          {(p.status === 'READY' || (p.status === 'ACCRUED' && releasable(p, project))) && <KButton label="Release payout" size="sm" variant="success" onPress={() => release(p.id)} />}
+          {(p.status === 'READY' || (p.status === 'ACCRUED' && releasable(p, project))) && <KButton label="Release payout" size="sm" variant="success" onPress={() => { const err = release(p.id); if (err) toast(err, 'alert-circle'); }} />}
         </Card>
       ))}
       <Text size={13} weight="medium" color={t.c.muted}>

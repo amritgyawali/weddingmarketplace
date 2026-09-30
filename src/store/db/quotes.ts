@@ -12,10 +12,12 @@ import type { PricingModel, Project, Quotation, QuoteItem, ServiceBooking } from
 import { addDays, formatMoney, uid } from '@/utils/format';
 
 import { bookingDates, currentActor, firstDate, type GetDb, lastDate, mapProject, now, type SetDb, today } from './helpers';
+import { staffDenied } from './personas';
 
 export interface QuoteActions {
   saveQuote: (quote: Quotation) => void;
-  sendQuote: (id: string, changeSummary?: string) => void;
+  /** Platform quotes need `quote.send` (coordinators: their own projects). Returns an error to show, or null. */
+  sendQuote: (id: string, changeSummary?: string) => string | null;
   reviseQuote: (id: string) => void;
   markQuoteViewed: (id: string) => void;
   respondToQuote: (id: string, action: 'accept' | 'decline' | 'revision', note?: string) => void;
@@ -68,7 +70,11 @@ export const quoteActions = (set: SetDb, get: GetDb): QuoteActions => ({
 
   sendQuote: (id, changeSummary) => {
     const quote = get().quotes.find((q) => q.id === id);
-    if (!quote) return;
+    if (!quote) return 'This quotation no longer exists';
+    if (quote.fromKind === 'platform') {
+      const denied = staffDenied('quote.send', get, get().projects.find((p) => p.id === quote.projectId));
+      if (denied) return denied;
+    }
     const version = snapshot(quote, changeSummary);
     set((s) => ({
       quotes: s.quotes.map((q) => (q.id === id ? { ...q, status: 'sent', revisionNote: undefined, versions: [...q.versions.filter((v) => v.version !== q.version), version], updatedAt: now() } : q)),
@@ -88,6 +94,7 @@ export const quoteActions = (set: SetDb, get: GetDb): QuoteActions => ({
     const actor = currentActor();
     if (thread) get().sendMessage(thread.id, { id: actor.id, name: actor.name, role: quote.fromKind === 'platform' ? 'platform' : 'vendor' }, `${quote.number} (v${quote.version})`, 'quote', { quoteId: id }, { silent: true });
     get().log(actor, 'quote.send', 'quote', id, `v${quote.version} · ${formatMoney(total)}`);
+    return null;
   },
 
   reviseQuote: (id) =>

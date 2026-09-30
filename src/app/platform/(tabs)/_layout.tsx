@@ -1,14 +1,21 @@
 import { Tabs } from 'expo-router';
 
 import { RoleTabBar, type RoleTab, type SidebarLink } from '@/components/navigation/RoleTabBar';
+import { PLATFORM_ROUTE_RULES } from '@/data/access';
+import { useExperience } from '@/hooks/useExperience';
 import { useLayout } from '@/hooks/useLayout';
+import { allows } from '@/services/experience';
 import { useDb, useUnreadMessageCount } from '@/store/useDb';
 import { useAccount } from '@/store/useSession';
 import { ROLE_THEMES } from '@/theme/roles';
 
+const ALL_TABS = ['index', 'leads', 'weddings', 'execution', 'more'];
+
 export default function PlatformTabs() {
   const { wide } = useLayout();
   const account = useAccount();
+  const exp = useExperience();
+  const allowed = (route: string) => allows(exp, PLATFORM_ROUTE_RULES[route]);
   const verifications = useDb((s) => s.verifications);
   const reviews = useDb((s) => s.reviews);
   const projects = useDb((s) => s.projects);
@@ -24,7 +31,7 @@ export default function PlatformTabs() {
     { name: 'weddings', label: 'Weddings', icon: 'heart-outline', activeIcon: 'heart' },
     { name: 'execution', label: 'Control', icon: 'radio-outline', activeIcon: 'radio', badge: live },
     { name: 'more', label: 'More', icon: 'apps-outline', activeIcon: 'apps', badge: pending || undefined },
-  ];
+  ].filter((tab) => allowed(`/platform/${tab.name}`)) as RoleTab[];
   const links: SidebarLink[] = [
     { label: 'Messages', icon: 'chatbubbles-outline', href: '/platform/inbox', badge: unread || undefined },
     { label: 'Approvals', icon: 'shield-checkmark-outline', href: '/platform/approvals', badge: pending || undefined },
@@ -38,14 +45,14 @@ export default function PlatformTabs() {
     { label: 'Analytics', icon: 'stats-chart-outline', href: '/platform/analytics' },
     { label: 'Marketplace', icon: 'options-outline', href: '/platform/marketplace' },
     { label: 'Audit log', icon: 'list-outline', href: '/platform/audit' },
-  ];
+  ].filter((l) => allowed(String(l.href).split('?')[0])) as SidebarLink[];
 
   return (
     <Tabs
       tabBar={(props) => <RoleTabBar {...props} tabs={tabs} links={links} />}
       screenOptions={{ headerShown: false, tabBarPosition: wide ? 'left' : 'bottom', sceneStyle: { backgroundColor: ROLE_THEMES.platform.c.bg } }}>
-      {tabs.map((tab) => (
-        <Tabs.Screen key={tab.name} name={tab.name} options={{ title: tab.label }} />
+      {ALL_TABS.map((name) => (
+        <Tabs.Screen key={name} name={name} options={{ title: tabs.find((x) => x.name === name)?.label ?? name, href: tabs.some((x) => x.name === name) ? undefined : null }} />
       ))}
     </Tabs>
   );

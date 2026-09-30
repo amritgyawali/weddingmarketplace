@@ -1,5 +1,6 @@
 import { ScrollView, StyleSheet, View } from 'react-native';
 
+import { staffScreen } from '@/components/persona/StaffGate';
 import { BarChart, Card, KpiCard, ProgressBar, SectionTitle, StackHeader } from '@/components/kit';
 import { Text } from '@/components/ui/Text';
 import { serviceName } from '@/data/services';
@@ -12,7 +13,7 @@ import { formatMoneyCompact } from '@/utils/format';
 const hoursBetween = (a: string, b: string) => Math.max(0, (new Date(b).getTime() - new Date(a).getTime()) / 3_600_000);
 
 /** Marketplace analytics: funnel, GMV mix, revenue by model, speed and staffing. */
-export default function Analytics() {
+function Analytics() {
   const t = useRoleTheme();
   const { columns } = useLayout();
   const projects = useDb((s) => s.projects);
@@ -127,3 +128,5 @@ const styles = StyleSheet.create({
   rowBetween: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 10 },
   cols: { gap: 16 },
 });
+
+export default staffScreen('/platform/analytics', Analytics);

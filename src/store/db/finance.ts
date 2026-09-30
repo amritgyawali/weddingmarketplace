@@ -7,17 +7,21 @@ import type { Dispute, Invoice, Payment, PaymentMethod, Refund } from '@/types/p
 import { formatMoney, uid } from '@/utils/format';
 
 import { accountById, currentActor, type GetDb, mapProject, nextNumber, now, type SetDb } from './helpers';
+import { staffDenied, staffOnly } from './personas';
 
 export interface FinanceActions {
   payMilestone: (projectId: string, milestoneId: string, amount: number, method: PaymentMethod, payerName: string) => Payment | null;
-  waiveMilestone: (projectId: string, milestoneId: string) => void;
-  releasePayable: (id: string, reference?: string) => void;
-  holdPayable: (id: string, reason: string) => void;
+  /** Staff with refund approval only. Returns an error to show, or null. */
+  waiveMilestone: (projectId: string, milestoneId: string) => string | null;
+  /** Finance and super admins only (`payout.release`). Returns an error to show, or null. */
+  releasePayable: (id: string, reference?: string) => string | null;
+  holdPayable: (id: string, reason: string) => string | null;
   markPayableReady: (id: string) => void;
   requestRefund: (paymentId: string, amount: number, reason: string) => void;
-  decideRefund: (id: string, approve: boolean) => void;
+  /** Finance and admins only (`refund.approve`). Returns an error to show, or null. */
+  decideRefund: (id: string, approve: boolean) => string | null;
   raiseDispute: (input: Omit<Dispute, 'id' | 'at' | 'status' | 'log' | 'paymentFrozen'> & { freeze?: boolean }) => Dispute;
-  updateDispute: (id: string, status: Dispute['status'], note: string, opts?: { resolution?: string; unfreeze?: boolean }) => void;
+  updateDispute: (id: string, status: Dispute['status'], note: string, opts?: { resolution?: string; unfreeze?: boolean }) => string | null;
   saveInvoice: (invoice: Invoice) => void;
   contribute: (itemId: string, name: string, amount: number, method: PaymentMethod, message?: string) => void;
 }
@@ -37,6 +41,8 @@ const reference = (method: PaymentMethod) => `${METHOD_PREFIX[method]}-${Math.ra
 
 export const financeActions = (set: SetDb, get: GetDb): FinanceActions => ({
   payMilestone: (projectId, milestoneId, amount, method, payerName) => {
+    // Cash is recorded by finance staff only (AGENTS.md §1); everyone else pays through a gateway.
+    if (method === 'cash' && staffOnly('payment.record_cash', get)) return null;
     const project = get().projects.find((p) => p.id === projectId);
     const milestone = project?.milestones.find((m) => m.id === milestoneId);
     if (!project || !milestone || amount <= 0) return null;
@@ -76,19 +82,34 @@ export const financeActions = (set: SetDb, get: GetDb): FinanceActions => ({
     return payment;
   },
 
-  waiveMilestone: (projectId, milestoneId) =>
-    set((s) => ({ projects: mapProject(s.projects, projectId, (p) => ({ ...p, milestones: p.milestones.map((m) => (m.id === milestoneId ? { ...m, status: 'WAIVED' } : m)) })) })),
+  waiveMilestone: (projectId, milestoneId) => {
+    const denied = staffOnly('refund.approve', get);
+    if (denied) return denied;
+    set((s) => ({ projects: mapProject(s.projects, projectId, (p) => ({ ...p, milestones: p.milestones.map((m) => (m.id === milestoneId ? { ...m, status: 'WAIVED' } : m)) })) }));
+    get().log(currentActor(), 'milestone.waive', 'project', projectId, milestoneId);
+    return null;
+  },
 
   releasePayable: (id, ref) => {
+    const denied = staffOnly('payout.release', get);
+    if (denied) return denied;
     const payable = get().payables.find((p) => p.id === id);
-    if (!payable || payable.status === 'PAID' || payable.status === 'ON_HOLD' || payable.status === 'CANCELLED') return;
+    if (!payable) return 'This payout no longer exists';
+    if (payable.status === 'PAID' || payable.status === 'ON_HOLD' || payable.status === 'CANCELLED') return `This payout is ${payable.status.toLowerCase().replace('_', ' ')} and can’t be released`;
     set((s) => ({ payables: s.payables.map((p) => (p.id === id ? { ...p, status: 'PAID', paidAt: now(), reference: ref ?? reference('bank_transfer') } : p)) }));
     const to = payable.payeeKind === 'freelancer' ? payable.payeeId : (accountById(payable.payeeId)?.id ?? payable.payeeId);
     get().notify(to, 'Payout released', `${formatMoney(payable.amount)} · ${payable.label}`, payable.payeeKind === 'freelancer' ? '/freelancer/earnings' : '/business/finance', 'payment');
     get().log(currentActor(), 'payable.release', 'payable', id, formatMoney(payable.amount));
+    return null;
   },
 
-  holdPayable: (id, reason) => set((s) => ({ payables: s.payables.map((p) => (p.id === id && p.status !== 'PAID' ? { ...p, status: 'ON_HOLD', holdReason: reason } : p)) })),
+  holdPayable: (id, reason) => {
+    const denied = staffOnly(['payout.release', 'refund.approve'], get);
+    if (denied) return denied;
+    set((s) => ({ payables: s.payables.map((p) => (p.id === id && p.status !== 'PAID' ? { ...p, status: 'ON_HOLD', holdReason: reason } : p)) }));
+    get().log(currentActor(), 'payable.hold', 'payable', id, reason);
+    return null;
+  },
 
   markPayableReady: (id) => set((s) => ({ payables: s.payables.map((p) => (p.id === id && p.status !== 'PAID' ? { ...p, status: 'READY', holdReason: undefined } : p)) })),
 
@@ -101,8 +122,10 @@ export const financeActions = (set: SetDb, get: GetDb): FinanceActions => ({
   },
 
   decideRefund: (id, approve) => {
+    const denied = staffOnly('refund.approve', get);
+    if (denied) return denied;
     const refund = get().refunds.find((r) => r.id === id);
-    if (!refund) return;
+    if (!refund) return 'This refund request no longer exists';
     set((s) => ({
       refunds: s.refunds.map((r) => (r.id === id ? { ...r, status: approve ? 'PROCESSED' : 'REJECTED', processedAt: now() } : r)),
       payments: approve
@@ -116,6 +139,7 @@ export const financeActions = (set: SetDb, get: GetDb): FinanceActions => ({
     const project = get().projects.find((p) => p.id === refund.projectId);
     if (project) get().notify(project.customerId, approve ? 'Refund processed' : 'Refund declined', `${formatMoney(refund.amount)} · ${refund.reason}`, '/my-wedding?tab=payments', 'payment');
     get().log(currentActor(), approve ? 'refund.process' : 'refund.reject', 'refund', id, formatMoney(refund.amount));
+    return null;
   },
 
   raiseDispute: (input) => {
@@ -130,8 +154,10 @@ export const financeActions = (set: SetDb, get: GetDb): FinanceActions => ({
   },
 
   updateDispute: (id, status, note, opts = {}) => {
+    const denied = staffDenied(['refund.approve', 'incident.manage'], get);
+    if (denied) return denied;
     const dispute = get().disputes.find((d) => d.id === id);
-    if (!dispute) return;
+    if (!dispute) return 'This dispute no longer exists';
     const actor = currentActor();
     set((s) => ({
       disputes: s.disputes.map((d) =>
@@ -140,6 +166,8 @@ export const financeActions = (set: SetDb, get: GetDb): FinanceActions => ({
       payables: opts.unfreeze && dispute.bookingId ? s.payables.map((p) => (p.bookingId === dispute.bookingId && p.status === 'ON_HOLD' ? { ...p, status: 'READY', holdReason: undefined } : p)) : s.payables,
     }));
     get().notify(dispute.raisedById, `Dispute ${status.toLowerCase()}`, note, undefined, 'payment');
+    get().log(actor, 'dispute.update', 'dispute', id, status);
+    return null;
   },
 
   saveInvoice: (invoice) =>

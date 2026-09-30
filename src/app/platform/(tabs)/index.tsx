@@ -7,9 +7,12 @@ import { Text } from '@/components/ui/Text';
 import { toast } from '@/components/ui/Toast';
 import { RiskList } from '@/components/work/Collab';
 import { STATUS_LABEL } from '@/components/work/Pipeline';
+import { TodayFocus } from '@/components/work/TodayFocus';
 import { bsMonthLabel } from '@/data/events';
 import { serviceName } from '@/data/services';
+import { useExperience } from '@/hooks/useExperience';
 import { useLayout } from '@/hooks/useLayout';
+import { can } from '@/services/experience';
 import { milestoneStatus } from '@/services/pricing';
 import { quoteTotals } from '@/services/quotes';
 import { projectRisks } from '@/services/risk';
@@ -52,6 +55,7 @@ export default function PlatformToday() {
   const gigs = useDb((s) => s.gigs);
   const revenue = useDb((s) => s.revenue);
   const assign = useDb((s) => s.assignCoordinator);
+  const exp = useExperience();
 
   const now = today();
   const active = projects.filter((p) => !['COMPLETED', 'CLOSED', 'CANCELLED', 'QUOTE_REJECTED'].includes(p.status));
@@ -84,6 +88,7 @@ export default function PlatformToday() {
     <View style={{ flex: 1, backgroundColor: t.c.bg }}>
       <RoleHeader eyebrow={`${formatLongDate(now)} · ${bsMonthLabel(now)}`} title={`Namaste, ${account.name.split(' ')[0]}`} subtitle={`${account.team ?? 'Operations'} · ${active.length} active projects`} />
       <ScrollView contentContainerStyle={{ padding: 14, gap: 16, paddingBottom: 40 }}>
+        <TodayFocus />
         <View>
           <SectionTitle title="Today" />
           <View style={styles.kpis}>
@@ -119,7 +124,7 @@ export default function PlatformToday() {
               <SectionTitle title={`Risk alerts (${risks.length})`} />
               <RiskList risks={risks} limit={8} onPress={(r) => router.push({ pathname: '/platform/project/[id]', params: { id: r.projectId } })} />
             </View>
-            {newLeads.length > 0 && (
+            {newLeads.length > 0 && can(exp, 'project.manage') && (
               <View>
                 <SectionTitle title="New wedding leads" action="Pipeline" onAction={() => router.navigate('/platform/leads')} />
                 <View style={{ gap: 8 }}>
@@ -144,8 +149,8 @@ export default function PlatformToday() {
                           size="sm"
                           icon="hand-right-outline"
                           onPress={() => {
-                            assign(p.id, { id: account.id, name: account.name });
-                            toast(`You own ${p.code}`);
+                            const err = assign(p.id, { id: account.id, name: account.name });
+                            toast(err ?? `You own ${p.code}`);
                           }}
                         />
                       )}
@@ -210,6 +215,7 @@ export default function PlatformToday() {
           </View>
         </View>
 
+        {(can(exp, 'audit.view') || can(exp, 'settings.edit')) && (
         <View>
           <SectionTitle title="Business" action="Analytics" onAction={() => router.push('/platform/analytics')} />
           <View style={styles.kpis}>
@@ -225,6 +231,7 @@ export default function PlatformToday() {
             <BarChart data={chart} format={formatMoneyCompact} />
           </Card>
         </View>
+        )}
       </ScrollView>
     </View>
   );

@@ -36,14 +36,17 @@ import type {
 import { addDays, daysUntil, formatMoney, formatShortDate, shortCode, uid } from '@/utils/format';
 
 import { accountById, bookingDates, currentActor, type GetDb, mapBooking, mapProject, now, ownersOf, type SetDb, SYSTEM, today } from './helpers';
+import { staffDenied } from './personas';
 
 export interface ProjectActions {
   submitPlan: (customer: Account, input: PlanInput) => Project;
   ensureCustomerProject: (customer: Account, details?: { weddingDate?: string | null; city?: string; managedBy?: Project['managedBy']; geniePackageId?: string }) => Project;
   updateProject: (id: string, update: (p: Project) => Project) => void;
   patchProject: (id: string, patch: Partial<Project>) => void;
-  setProjectStatus: (id: string, status: ProjectStatus, note?: string) => void;
-  assignCoordinator: (id: string, coordinator: { id: string; name: string }) => void;
+  /** Staff need `project.manage` (coordinators: their own projects). Returns an error to show, or null. */
+  setProjectStatus: (id: string, status: ProjectStatus, note?: string) => string | null;
+  /** Staff need `project.manage`; a coordinator can take unassigned projects and hand over their own. Returns an error to show, or null. */
+  assignCoordinator: (id: string, coordinator: { id: string; name: string }) => string | null;
 
   addEvent: (projectId: string, event: Pick<ProjectEvent, 'type' | 'date' | 'venue' | 'guests'> & Partial<ProjectEvent>) => void;
   updateEvent: (projectId: string, eventId: string, patch: Partial<ProjectEvent>) => void;
@@ -272,7 +275,10 @@ export const projectActions = (set: SetDb, get: GetDb): ProjectActions => ({
   setProjectStatus: (id, status, note) => {
     const actor = currentActor();
     const project = get().projects.find((p) => p.id === id);
-    if (!project || project.status === status) return;
+    if (!project) return 'This project no longer exists';
+    const denied = staffDenied('project.manage', get, project);
+    if (denied) return denied;
+    if (project.status === status) return null;
     set((s) => ({ projects: mapProject(s.projects, id, (p) => ({ ...p, status, statusHistory: [...p.statusHistory, { status, at: now(), by: actor.name, note }] })) }));
     const labels: Partial<Record<ProjectStatus, string>> = {
       NEEDS_CLARIFICATION: 'Your coordinator needs a few more details',
@@ -285,11 +291,14 @@ export const projectActions = (set: SetDb, get: GetDb): ProjectActions => ({
     };
     if (labels[status]) get().notify(project.customerId, labels[status]!, note ?? `${project.code} is now ${status.replace(/_/g, ' ').toLowerCase()}.`, '/my-wedding', 'system');
     get().log(actor, 'project.status', 'project', id, status);
+    return null;
   },
 
   assignCoordinator: (id, coordinator) => {
     const project = get().projects.find((p) => p.id === id);
-    if (!project) return;
+    if (!project) return 'This project no longer exists';
+    const denied = staffDenied('project.manage', get, project);
+    if (denied) return denied;
     set((s) => ({
       projects: mapProject(s.projects, id, (p) => ({
         ...p,
@@ -306,6 +315,7 @@ export const projectActions = (set: SetDb, get: GetDb): ProjectActions => ({
     get().notify(project.customerId, `Meet your coordinator, ${coordinator.name.split(' ')[0]}`, 'They will manage every vendor for you — chat or call anytime from My Wedding.', '/my-wedding', 'system');
     get().notify(coordinator.id, `You now own ${project.code}`, project.title, `/platform/project/${id}`, 'lead');
     get().log(currentActor(), 'project.assign', 'project', id, coordinator.name);
+    return null;
   },
 
   // Events
@@ -477,6 +487,7 @@ export const projectActions = (set: SetDb, get: GetDb): ProjectActions => ({
     const requirement = project?.requirements.find((r) => r.id === reqId);
     const provider = findProvider(providerId);
     if (!project || !requirement || !provider) return null;
+    if (staffDenied('project.manage', get, project)) return null;
     const settings = get().settings;
     const candidate = requirement.candidates.find((c) => c.providerId === providerId);
     const model = opts.model ?? 'COMMISSION';
@@ -693,6 +704,7 @@ export const projectActions = (set: SetDb, get: GetDb): ProjectActions => ({
     const b = project?.bookings.find((x) => x.id === bookingId);
     const a = b?.assignments.find((x) => x.id === assignmentId);
     if (!project || !b || !a) return null;
+    if (staffDenied('emergency.start', get)) return null;
     const event = project.events.find((e) => e.id === a.eventId);
     const offered = pay ?? Math.round((a.pay * 1.25) / 500) * 500;
     get().setAssignmentStatus(projectId, bookingId, assignmentId, 'EMERGENCY_REPLACEMENT');

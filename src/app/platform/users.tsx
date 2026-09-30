@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
 
+import { staffScreen } from '@/components/persona/StaffGate';
 import { Avatar, Card, KButton, KField, Segmented, StackHeader, StatusPill } from '@/components/kit';
 import { Text } from '@/components/ui/Text';
 import { toast } from '@/components/ui/Toast';
@@ -15,7 +16,7 @@ import { formatPhone, formatShortDate } from '@/utils/format';
 type Filter = 'all' | UserRole | 'suspended';
 
 /** Every account on the platform with verify / suspend / restore controls. */
-export default function UsersDirectory() {
+function UsersDirectory() {
   const t = useRoleTheme();
   const accounts = useSession((s) => s.accounts);
   const updateAccount = useSession((s) => s.updateAccount);
@@ -88,8 +89,8 @@ export default function UsersDirectory() {
                       variant="success"
                       style={{ flex: 1 }}
                       onPress={() => {
-                        suspend(item.id, false);
-                        toast(`${item.name} restored`);
+                        const err = suspend(item.id, false);
+                        toast(err ?? `${item.name} restored`);
                       }}
                     />
                   ) : (
@@ -100,8 +101,8 @@ export default function UsersDirectory() {
                       style={{ flex: 1 }}
                       onPress={() =>
                         confirm(`Suspend ${item.name}?`, 'They will be signed out and cannot log in until restored.', 'Suspend', () => {
-                          suspend(item.id, true, 'Suspended by admin');
-                          toast(`${item.name} suspended`, 'ban');
+                          const err = suspend(item.id, true, 'Suspended by admin');
+                          toast(err ?? `${item.name} suspended`, err ? 'alert-circle' : 'ban');
                         })
                       }
                     />
@@ -119,3 +120,5 @@ export default function UsersDirectory() {
 const styles = StyleSheet.create({
   row: { flexDirection: 'row', alignItems: 'center', gap: 10 },
 });
+
+export default staffScreen('/platform/users', UsersDirectory);

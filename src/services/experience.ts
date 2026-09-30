@@ -166,6 +166,8 @@ export function resolveExperience(input: PersonaInput, occasions: OccasionDef[] 
     trades,
     primaryTrade,
     form: input.role === 'vendor' ? form : undefined,
+    staffRole: input.role === 'platform' ? input.staffRole : undefined,
+    team: input.role === 'platform' ? input.team : undefined,
     craft: craft?.id,
     crafts: craftDefs.map((c): CraftId => c.id),
     occasion,
@@ -214,6 +216,8 @@ export function allows(exp: Experience, when: When | undefined): boolean {
   if (when.occasions && !(exp.occasion && when.occasions.includes(exp.occasion.id))) return false;
   if (when.forms && !(exp.form && when.forms.includes(exp.form))) return false;
   if (when.perms && !when.perms.every((p) => exp.perms.has(p))) return false;
+  if (when.permsAny && !when.permsAny.some((p) => exp.perms.has(p))) return false;
+  if (when.teams && !(exp.team && when.teams.includes(exp.team))) return false;
   if (when.not && allows(exp, when.not)) return false;
   return true;
 }

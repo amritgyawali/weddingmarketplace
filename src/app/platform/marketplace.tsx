@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 
+import { staffScreen } from '@/components/persona/StaffGate';
 import { Card, ChoiceChips, KButton, KField, SectionTitle, StackHeader, StatusPill } from '@/components/kit';
 import { Text } from '@/components/ui/Text';
 import { Toggle } from '@/components/ui/Toggle';
@@ -15,7 +16,7 @@ import type { Deal } from '@/types/platform';
 import { formatMoney, uid } from '@/utils/format';
 
 /** Marketplace configuration: business-model rates, cities, featured providers, deals and banners. */
-export default function MarketplaceSettings() {
+function MarketplaceSettings() {
   const t = useRoleTheme();
   const settings = useDb((s) => s.settings);
   const update = useDb((s) => s.updateSettings);
@@ -179,3 +180,5 @@ const styles = StyleSheet.create({
   rowBetween: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 10 },
   chips: { flexDirection: 'row', flexWrap: 'wrap', gap: 6 },
 });
+
+export default staffScreen('/platform/marketplace', MarketplaceSettings);

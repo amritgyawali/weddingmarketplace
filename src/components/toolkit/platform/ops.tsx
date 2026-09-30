@@ -297,8 +297,8 @@ export function PayoutBatches() {
                 onPress={() =>
                   confirm('Release this batch?', `${g.items.length} payouts, ${formatMoney(total)} via ${label[g.kind]}. Only do this after the transfers have been made.`, 'Release', () => {
                     const ref = `BATCH-${g.kind.toUpperCase()}-${shortCode(4)}`;
-                    g.items.forEach((p) => release(p.id, ref));
-                    toast(`${g.items.length} payouts released · ${ref}`, 'wallet');
+                    const errors = g.items.map((p) => release(p.id, ref)).filter(Boolean);
+                    toast(errors.length ? errors[0]! : `${g.items.length} payouts released · ${ref}`, errors.length ? 'alert-circle' : 'wallet');
                   })
                 }
               />

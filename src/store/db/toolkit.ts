@@ -4,6 +4,7 @@ import type { Broadcast, ToolEntry, ToolEntryInput, ToolState, ToolValue, UserRo
 import { uid } from '@/utils/format';
 
 import { currentActor, type GetDb, now, type SetDb } from './helpers';
+import { staffOnly } from './personas';
 
 export interface ToolkitActions {
   addToolEntry: (input: ToolEntryInput) => ToolEntry | null;
@@ -80,6 +81,7 @@ export const toolkitActions = (set: SetDb, get: GetDb): ToolkitActions => ({
   },
 
   sendBroadcast: (audience, title, body) => {
+    if (staffOnly('broadcast.send', get)) return null;
     const t = title.trim();
     const b = body.trim();
     if (!t || !b) return null;

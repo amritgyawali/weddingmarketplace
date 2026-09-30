@@ -2,6 +2,7 @@ import { router } from 'expo-router';
 import { useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 
+import { staffScreen } from '@/components/persona/StaffGate';
 import { Card, StackHeader, StatusPill } from '@/components/kit';
 import { Text } from '@/components/ui/Text';
 import { MonthGrid } from '@/components/work/MonthGrid';
@@ -13,7 +14,7 @@ import { useRoleTheme } from '@/theme/RoleTheme';
 import { formatLongDate, formatMoney, today } from '@/utils/format';
 
 /** Operations calendar: every function, meeting and payment due across projects. */
-export default function OpsCalendar() {
+function OpsCalendar() {
   const t = useRoleTheme();
   const { wide } = useLayout();
   const projects = useDb((s) => s.projects);
@@ -113,3 +114,5 @@ const styles = StyleSheet.create({
   rowBetween: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 10 },
   legend: { flexDirection: 'row', flexWrap: 'wrap', gap: 12, marginTop: 10 },
 });
+
+export default staffScreen('/platform/calendar', OpsCalendar);

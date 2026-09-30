@@ -77,6 +77,8 @@ Public pages need no sign-in: `/w/[slug]` (the couple's wedding website and regi
 | Bikram Adhikari, platform super admin | 9800000006 | Admin console, occasion catalogue |
 | Sunita Maharjan, vendor (Phoolbari Decor, Lalitpur) | 9800000007 | Decor studio: themes, rentals, setup sheets, setup checklist |
 | Suman Tamang, freelancer (DJ Suman) | 9800000008 | DJ and MC: music craft profile, sound gear, setlist, DJ-only gig feed |
+| Nisha Rai, platform finance | 9800000010 | Finance console: payouts, refunds, disputes, audit; no leads or approvals |
+| Prakash Thapa, platform support (Vendor Success) | 9800000011 | Verification queue, recruitment, provider scorecards |
 | Sarita Duwal, couple (newborn family, Bhaktapur) | 9800000009 | Owns WP-1040, Aarohi’s pasni: newborn occasion, filtered marketplace and tools, gift log, keepsakes |
 
 ## 3. Architecture map
@@ -111,7 +113,7 @@ src/
   theme/ constants/    role themes/fonts, colours, images, brand
   types/platform.ts    the domain model (mirrors the SQL schema). types/persona.ts = When/Experience. types/index.ts = catalogue/legacy types
   utils/               format (money/dates/phone), confirm, links, random
-supabase/migrations/   0001 core schema · 0002 RLS · 0003 matching, reliability, risk · 0004 toolkits · 0005 personas · 0006 freelancer crafts · 0007–0008 customer occasions
+supabase/migrations/   0001 core schema · 0002 RLS · 0003 matching, reliability, risk · 0004 toolkits · 0005 personas · 0006 freelancer crafts · 0007–0008 customer occasions · 0009 platform RBAC
 scripts/               check-personas.mjs + personaCheck.ts (registry check and persona matrix, §6a)
 docs/MASTER_PLAN.md    persona-driven experience and the zero-cost production stack (phases P0–P8)
 TEST_REPORT.md         last full test run + list of known defects (read before fixing bugs)
@@ -283,7 +285,14 @@ Rules:
    - planning tools are filtered by the occasion's modules through `useVisibleTools()`, plus three occasion tools in `components/toolkit/couple/occasions.tsx` (baby keepsakes, surprise plan, games and activities); plan shortcuts, Profile items and the hero's website button follow the same modules ("Event page" outside weddings);
    - the marketplace shows **only the occasion's services** (`categoriesFor`, `homeCategoriesFor` in `data/categories.ts`); the rest are hidden, not ranked lower. Search still finds everything;
    - `NWARAN` is a function (event type); the built-in newborn occasion offers it with the pasni. The DB store `migrate` (v4) adds it to older installs, with the newborn demo project.
-11. **Registry check.** `npm run check:personas` fails on unknown capabilities, permissions, occasions or services, a service without capabilities or trade, a crew role in no craft or in two, or a fixture persona with fewer than three tools, and compares every fixture's visible tools with `scripts/persona-matrix.json`. After an intended change run `npm run check:personas -- --update` and commit the new matrix.
+11. **Platform staff (P4, live).** The permission matrix in `data/permissions.ts` (staff role + team) decides the console:
+   - tabs, sidebar links, More rows and screens follow `PLATFORM_ROUTE_RULES` (`data/access.ts`); finance gets no leads kanban, support no payouts. A deep link to a screen outside the role shows `NoAccess` (screens are wrapped with `staffScreen()` from `components/persona/StaffGate.tsx`);
+   - store actions refuse on their own: `staffOnly(perm)` for staff-only actions (payouts, holds, refunds, waivers, verification, suspension, broadcasts, cash payments) and `staffDenied(perm, project?)` for actions others also use (project status, coordinator assignment, platform quotes, bookings, emergency replacement, settings, demo reset). A coordinator's `project.manage` and `quote.send` apply to their own or unowned projects only (`PERMISSION_SCOPE`). Guarded actions return an error string (or null); screens toast it;
+   - Today opens with a focus panel per job (`TodayFocus`, picked by `TODAY_FOCUS`): coordinator, support, Vendor Success, finance or admin. Business numbers show to finance and admins only;
+   - weddings, leads, providers and freelancers lists have an occasion × trade × city segment filter (`services/segments.ts`, `SegmentFilter`);
+   - operations tools are filtered by permission; **Reset demo data** is for admins and super admins (`demo.reset`): sign in as Bikram (9800000006) to reset;
+   - `0009_platform_rbac.sql` swaps the role-name RLS checks for `has_permission()` and adds `can_manage_project()`.
+12. **Registry check.** `npm run check:personas` fails on unknown capabilities, permissions, occasions or services, a service without capabilities or trade, a crew role in no craft or in two, or a fixture persona with fewer than three tools, and compares every fixture's visible tools (and, for staff, console routes) with `scripts/persona-matrix.json`. After an intended change run `npm run check:personas -- --update` and commit the new matrix.
 
 ## 7. Seed and demo contract (don't break the demo)
 
@@ -300,7 +309,7 @@ Seed dates are **relative to today** (`day(n)`/`at(n)`); keep them relative.
 
 - Keep ids and slugs stable.
 - New seed data must be internally consistent: bookings satisfy `agreedPrice = payable + fee`, and milestones sum to the accepted quote total.
-- Platform → More → **Reset demo data** (`resetDemo`) must always restore a working seed.
+- Platform → More → **Reset demo data** (`resetDemo`, admins and super admins) must always restore a working seed.
 
 ## 8. Code conventions
 
