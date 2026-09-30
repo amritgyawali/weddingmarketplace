@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| Status | Proposal for owner review |
+| Status | Approved by the owner on 30 Sep 2026 (decisions in §17). P0 in progress |
 | Date | 30 Sep 2026 |
 | Scope | All four role apps, the backend, media, web deployment, operations |
 | Constraints | Nepal only, NPR, Expo SDK 57, Supabase, Cloudinary, Vercel, free tiers for the first year |
@@ -85,6 +85,8 @@ interface OccasionDef {
   ritual: boolean;                     // enables sait, samagri, pandit-first flows
 }
 ```
+
+Occasions are **data, not code**: the nine above are built-in defaults, and a super admin can add, edit, switch off or delete occasions from the operations console (permission `occasion.manage`). *Wedding* and *Something else* are fallbacks and cannot be deleted.
 
 One customer account can hold **several celebrations** (a wedding now, a pasni in two years). The planner works on the *active* celebration, and a switcher sits at the top of "My celebration".
 
@@ -393,7 +395,7 @@ A **segment filter** (occasion × trade × city) sits on every list in the conso
 | New: Games and activities | baby shower, birthday |
 | Photo shot list, Music, Menu, Shagun and gifts, Contacts, My day, Vendor meetings, What-if budget, Savings goal, Emergency kit, Weather | every occasion |
 
-**Marketplace.** Services relevant to the occasion are ranked first on Home and in the vendors tab. Everything else sits under "More services" and is never removed, because a family may still want a DJ at a pasni. Search results are boosted, not filtered, by occasion.
+**Marketplace (owner decision).** For a non-wedding occasion, the marketplace shows **only the categories related to it** (the occasion's `services` list). Unrelated categories are hidden, not ranked lower. A super admin edits each occasion's list, so a family that needs a DJ at a pasni is handled by adding DJ to Newborn's services.
 
 **Copy.** `vocab` replaces fixed words: "My wedding" becomes "My celebration" or "Pasni plan", "couple" becomes "family", and "wedding day" becomes the occasion's day. The role accent colours and the design rules in `AGENTS.md` §8 stay as they are.
 
@@ -501,8 +503,8 @@ screens → store actions (unchanged API) → repository interface
 
 ### 7.3 Auth
 
-- **Supabase Auth.** Customers use email OTP or Google sign-in, which are free. Phone OTP uses the Send SMS hook to call an Edge Function that sends through a Nepali SMS gateway (Sparrow SMS or Aakash SMS, about NPR 1.4 per SMS, §9).
-- Vendors, freelancers and staff verify their phone (needed for payouts and trust). Customers can skip phone OTP to keep SMS cost down.
+- **Supabase Auth, email only for year one (owner decision).** Every role signs in with email OTP (magic code), which is free. Google sign-in can be added at no cost. The phone number is still collected and shown for contact and payouts, but it is not verified by SMS.
+- **After about a year**, add phone OTP for vendors, freelancers and staff through the Send SMS hook and a Nepali gateway (Sparrow SMS or Aakash SMS, about NPR 1.4 per SMS). The auth code keeps a provider seam so this is a configuration change.
 - A **custom access token hook** puts `role`, `staff_role` and `persona_key` into the JWT, so RLS and the app read them without extra queries.
 - Staff sign-up keeps the access-code gate and adds admin approval.
 
@@ -539,9 +541,9 @@ Both gateways are integrated and tested in their free sandboxes. Going live need
 - `npx expo export -p web` produces the static build. Vercel serves it with SPA rewrites (`app.json` already has `web.output: "single"`).
 - Preview deployments are created for every pull request. Production follows `main`.
 - Public pages (`/w/[slug]`, `/rsvp/[code]`) get Open Graph tags. Later, switching Expo Router to server or static output for those routes improves SEO; check the SDK 57 docs before doing this.
-- **Important licence note: Vercel's free Hobby plan is for non-commercial use only.** A marketplace that takes payments is commercial, and Vercel enforces this. The plan is:
-  - **Before launch:** Hobby is fine for development and previews.
-  - **At commercial launch:** either upgrade to Vercel Pro ($20 per month per seat), or deploy the same static build to **Cloudflare Pages**, which is free with commercial use allowed and unlimited static bandwidth. The build is identical, so switching takes about an hour.
+- **Important licence note: Vercel's free Hobby plan is for non-commercial use only.** A marketplace that takes payments is commercial, and Vercel enforces this. **Owner decision: everything stays free.**
+  - **Before launch:** Vercel Hobby for development and pull request previews.
+  - **At commercial launch:** production web moves to **Cloudflare Pages** (free, commercial use allowed, unlimited static bandwidth). The build is identical, so switching takes about an hour. Vercel Pro is not used.
 
 ### 7.8 Expo Go versus production builds
 
@@ -551,7 +553,7 @@ Both gateways are integrated and tested in their free sandboxes. Going live need
 - native crash reporting (Sentry);
 - custom app icon and splash, deep-link domains and store builds.
 
-Plan: keep **Expo Go + mock backend** as the development and demo path. Add an **EAS development build** profile (free builds) for testing production-only features. Ship store builds from EAS. Library additions still go through `npx expo install`, and anything native is added only to the development and production profiles, with owner approval (§17).
+Plan (owner left the choice to us; this is the recommended option): keep **Expo Go + mock backend** as the development and demo path. Add an **EAS development build** profile (free builds) for testing production-only features. Ship store builds from EAS. Library additions still go through `npx expo install`, and anything native is added only to the development and production profiles, with owner approval (§17).
 
 ---
 
@@ -592,13 +594,13 @@ Also free and used without a separate account: Supabase `pg_trgm` full-text sear
 |---|---|---|
 | Apple Developer Program | USD 99 per year | needed only for the iOS App Store; Android can launch first |
 | Google Play Console | USD 25, once | none |
-| SMS OTP (Sparrow SMS / Aakash SMS) | about NPR 1.4 per SMS | phone OTP only for vendors, freelancers and staff; customers use email OTP or Google; Redis rate limit |
+| SMS OTP (Sparrow SMS / Aakash SMS) | NPR 0 in year one (email OTP only); about NPR 1.4 per SMS once added | owner decision: email only for the first year, then phone OTP for providers and staff; Redis rate limit |
 | Payment gateway fees | about 1–2% per transaction; eSewa reports a one-time setup fee of roughly NPR 20,000–30,000 | pass through in the service fee; start with Khalti, add eSewa when volume justifies it |
 | Domain | `.com.np` is free for Nepali entities through Mercantile's registry; a `.com` is about USD 10–15 per year | use `vivah.com.np` |
-| Vercel Pro (only if staying on Vercel at commercial launch) | USD 20 per month per seat | or use Cloudflare Pages for $0 |
+| Vercel Pro | not used | production web on Cloudflare Pages ($0), owner decision |
 | WhatsApp Business API | Meta bills per message, and in-window service messages become billable from October 2026 | not in year one; push, email and SMS cover it |
 
-**Minimum year-one cash cost:** about USD 124 (both app stores) plus SMS and gateway fees that scale with usage, with every platform service on a free tier.
+**Minimum year-one cash cost:** about USD 124 (both app stores) plus payment gateway fees that scale with usage. There is no SMS cost in year one, and every platform service is on a free tier.
 
 ---
 
@@ -632,7 +634,7 @@ Planning assumption for year one: 3,000 projects, 1,500 providers, 800 freelance
 | EAS Starter ($19/month) | Update MAU over 900 |
 | Resend Pro | more than 80 emails per day on 5 days in a month |
 | Sentry Team | a second engineer needs access |
-| Vercel Pro | commercial launch, unless moved to Cloudflare Pages |
+| Vercel Pro | not planned: production web runs on Cloudflare Pages |
 
 ---
 
@@ -728,29 +730,29 @@ P0 to P4 need no backend work and can start now. P5 can run in parallel in anoth
 
 | Risk | Mitigation |
 |---|---|
-| The brand "Vivah" means wedding, which may confuse non-wedding customers | keep the brand, use "celebration" in copy for other occasions (owner decision, §17) |
+| The brand "Vivah" means wedding, which may confuse non-wedding customers | keep the brand for now and use "celebration" in copy for other occasions; the owner plans a rebrand later, so the name lives in `constants/brand` only (§17) |
 | Inferred vendor services are only a guess, since today's `categoryId` is group-level | a one-time "Confirm your services" card on the vendor home; `personaConfirmedAt` records it |
 | Hiding tools confuses existing users who used them | tools a user already has entries in stay visible for them (checked through `toolEntries`) |
 | Free-tier limits hit sooner than expected | the guardrails and triggers in §10; PostHog and Supabase usage dashboards reviewed monthly |
 | Vercel Hobby commercial clause | Cloudflare Pages ready as a $0 alternative (§7.7) |
 | Expo Go cannot run production-only features | development builds for those features; Expo Go remains the development and demo path (§7.8) |
 | Logic drifts between the TypeScript mock and SQL | parity tests in CI (§13) |
-| SMS cost grows with sign-ups | phone OTP only where trust needs it; email OTP and Google for customers; rate limits |
+| SMS cost grows with sign-ups | none in year one (email OTP only); later, phone OTP only where trust needs it, with rate limits |
 
 ---
 
-## 17. Decisions needed from the owner
+## 17. Owner decisions (30 Sep 2026)
 
-1. **Multi-trade vendors:** one primary trade plus any number of add-on services from other trades? *Recommended: yes.*
-2. **Occasion list:** the nine in §2.1, with `NWARAN` added as a new event type?
-3. **Marketplace for non-wedding occasions:** rank irrelevant categories lower under "More services" (*recommended*), or hide them completely?
-4. **Brand copy:** keep "Vivah" and say "celebration" outside weddings, or rebrand?
-5. **Web hosting at commercial launch:** Vercel Pro (USD 20/month) or Cloudflare Pages (free)?
-6. **Expo Go rule:** allow an EAS development build for production-only features (push on Android, Sentry), with Expo Go kept for development and the demo?
-7. **SMS:** phone OTP for providers and staff only, customers on email or Google? Which gateway (Sparrow SMS or Aakash SMS)?
-8. **Start:** P0 then P1 (vendors first, where the mismatch is most visible)?
-
----
+| # | Question | Decision |
+|---|---|---|
+| 1 | Multi-trade vendors | **Yes.** One primary service plus any number of add-on services, from any trade. |
+| 2 | Occasion list | **The nine in §2.1 are right.** Super admins can also add, edit and delete occasions from the console (`occasion.manage`). |
+| 3 | Marketplace for non-wedding occasions | **Show only the related categories**; unrelated ones are hidden (§5.4). |
+| 4 | Brand | **Keep "Vivah" for now**; a rebrand is planned later. |
+| 5 | Web hosting at commercial launch | **All free:** Cloudflare Pages for production, Vercel Hobby for previews only. |
+| 6 | Expo Go rule | Left to us: **EAS development build** for production-only features, Expo Go stays the development and demo path (§7.8). |
+| 7 | SMS | **Email OTP only for the first year** (free). Phone OTP through a Nepali SMS gateway after about a year. |
+| 8 | Start | **P0, then P1** (vendors first). |
 
 ## 18. Sources for the free-tier figures
 
