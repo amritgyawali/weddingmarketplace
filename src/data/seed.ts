@@ -8,6 +8,7 @@ import type { PhotoKey } from '@/constants/images';
 import { EVENT_TYPE_BY_ID } from '@/data/events';
 import { FREELANCER_DIRECTORY } from '@/data/freelancers';
 import { IDEA_PHOTOS } from '@/data/ideas';
+import { builtInOccasions } from '@/data/occasions';
 import { PROVIDERS, type Provider } from '@/data/providers';
 import { SERVICE_BY_ID, crewPlanFor, defaultDetails } from '@/data/services';
 import { buildToolkitSeed } from '@/data/toolkitSeed';
@@ -95,6 +96,12 @@ export const DEMO_ACCOUNTS: Account[] = [
     listingKind: 'venue',
     listingId: DEMO_VENUE.id,
     panVat: '601234567',
+    services: ['venue', 'catering'],
+    primaryService: 'venue',
+    businessForm: 'venue',
+    teamSize: 38,
+    tradeProfile: { seated: 450, floating: 700, inHouseCatering: true, parking: 120 },
+    personaConfirmedAt: at(-400),
   },
   {
     id: 'acc_freelancer_demo',
@@ -123,6 +130,8 @@ export const DEMO_ACCOUNTS: Account[] = [
     languages: ['Nepali', 'Newari', 'English'],
     experienceYears: 7,
     ownVehicle: true,
+    primarySkill: 'Photographer',
+    personaConfirmedAt: at(-260),
   },
   {
     id: 'acc_platform_demo',
@@ -150,6 +159,12 @@ export const DEMO_ACCOUNTS: Account[] = [
     listingKind: 'vendor',
     listingId: DEMO_STUDIO.id,
     panVat: '609876543',
+    services: ['photography', 'videography', 'drone', 'pre-wedding', 'album'],
+    primaryService: 'photography',
+    businessForm: 'studio',
+    teamSize: 14,
+    tradeProfile: { startingPackage: 60_000, deliveryWeeks: 6, styles: ['Candid', 'Cinematic', 'Traditional'] },
+    personaConfirmedAt: at(-500),
   },
   {
     id: 'acc_platform_admin',
@@ -161,9 +176,12 @@ export const DEMO_ACCOUNTS: Account[] = [
     createdAt: at(-900),
     verified: true,
     team: 'Admin',
-    staffRole: 'admin',
+    staffRole: 'super_admin',
   },
 ];
+
+/** Persona fields that demo accounts on older installs are missing (filled in by the session migration). */
+export const DEMO_PERSONA_KEYS = ['services', 'primaryService', 'businessForm', 'teamSize', 'tradeProfile', 'primarySkill', 'personaConfirmedAt', 'staffRole'] as const;
 
 /** Demo OTP for every phone number (no SMS gateway in the prototype). */
 export const DEMO_OTP = '1234';
@@ -1682,6 +1700,7 @@ export function buildSeedData(): DbData {
       ],
     },
     ...buildToolkitSeed(),
+    occasions: builtInOccasions(),
   };
 }
 

@@ -4,14 +4,15 @@ import { StyleSheet, View } from 'react-native';
 
 import { Card, EmptyBlock, KField, ListRow, SectionTitle, type IconName } from '@/components/kit';
 import { Text } from '@/components/ui/Text';
+import type { ToolId } from '@/data/access';
 import { useRoleTheme } from '@/theme/RoleTheme';
 import type { UserRole } from '@/types/platform';
 
 import { ToolPage } from './core';
 
 export interface ToolDef {
-  /** Registry id, also the route param and the `ToolEntry.tool` value. */
-  id: string;
+  /** Registry id, also the route param and the `ToolEntry.tool` value. Needs a rule in `TOOL_RULES`. */
+  id: ToolId;
   title: string;
   subtitle: string;
   icon: IconName;

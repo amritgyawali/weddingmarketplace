@@ -74,7 +74,7 @@ Public pages need no sign-in: `/w/[slug]` (the couple's wedding website and regi
 | Raj Maharjan, freelancer | 9800000003 | Photographer |
 | Sita Karki, platform coordinator | 9800000004 | Coordination console |
 | Anil Gurung, vendor (Wedding Story Nepal) | 9800000005 | Photo studio |
-| Bikram Adhikari, platform admin | 9800000006 | Admin console |
+| Bikram Adhikari, platform super admin | 9800000006 | Admin console, occasion catalogue |
 
 ## 3. Architecture map
 
@@ -88,23 +88,29 @@ src/
                        Bookings, Payments, TaskBoard, Timeline, ThreadView, AvailabilityCalendar, RunSheet,
                        ContractView, SignaturePad, GigForm, ApplicantsList, VerificationScreen…
     toolkit/           role toolkits: core.tsx (EntryList, ToolPage, hooks), hub.tsx (ToolHub/ToolRoute), couple/ vendor/ freelancer/ platform/
+    persona/           <Gate> (render by capability, permission or occasion)
     planner/ home/ listing/ detail/ genie/ ideas/ navigation/ onboarding/ wedding/
   store/
     useDb.ts           re-export of store/db — THE shared backend (all 4 roles)
-    db/                backend split by domain: core, quotes, projects, finance, gigs, chat, trust, planner, toolkit
+    db/                backend split by domain: core, quotes, projects, finance, gigs, chat, trust, planner, toolkit, personas
                        + helpers.ts (now/today, currentActor, mapProject, mapBooking, nextNumber…) + types.ts (DbData)
     useSession.ts      accounts + session (mock auth). useAccount()/useCurrentAccount()
     useAppStore.ts     per-device couple marketplace state (onboarding, city, shortlist, likes, legacy bookings/chats)
   services/            pure business logic (no React): matching, pricing, quotes, planner, risk,
                        documents (printable HTML), exporters (ICS/CSV/PDF/share), api (catalogue reads),
-                       assistant (rule-based), auth (completeLogin/onAccountCreated/logout)
+                       assistant (rule-based), auth (completeLogin/onAccountCreated/logout),
+                       experience (the persona resolver, §6a)
   data/                Nepal catalogue (cities, services, events/ceremonies, venues, vendors, providers,
                        freelancers, ideas, genie) + seed.ts (demo accounts and the whole demo world)
-  hooks/               useWorkspace (role-scoped selectors), useLayout (wide ≥ 960 px), queries (React Query), useHydrated…
+                       + personas: capabilities, trades, occasions, permissions, access (visibility rules)
+  hooks/               useWorkspace (role-scoped selectors), useExperience (resolved persona), useLayout (wide ≥ 960 px),
+                       queries (React Query), useHydrated…
   theme/ constants/    role themes/fonts, colours, images, brand
-  types/platform.ts    the domain model (mirrors the SQL schema). types/index.ts = catalogue/legacy types
+  types/platform.ts    the domain model (mirrors the SQL schema). types/persona.ts = When/Experience. types/index.ts = catalogue/legacy types
   utils/               format (money/dates/phone), confirm, links, random
-supabase/migrations/   0001 core schema · 0002 RLS · 0003 matching, reliability, risk · 0004 toolkits
+supabase/migrations/   0001 core schema · 0002 RLS · 0003 matching, reliability, risk · 0004 toolkits · 0005 personas
+scripts/               check-personas.mjs + personaCheck.ts (registry check and persona matrix, §6a)
+docs/MASTER_PLAN.md    persona-driven experience and the zero-cost production stack (phases P0–P8)
 TEST_REPORT.md         last full test run + list of known defects (read before fixing bugs)
 ```
 
@@ -234,10 +240,32 @@ Couple onboarding (5 questions) or plan wizard (8 steps) → submitPlan → Proj
 6. **Money UI:** always use `formatMoney`/`formatMoneyCompact`/`parseMoney` from `utils/format`. Take totals from `quoteTotals` or `paymentSummary`. Never do arithmetic in JSX.
 7. **Dates:** store date-only values as `yyyy-mm-dd` and use `toISODate`/`fromISODate`/`addDays`/`daysUntil`, which are local and timezone-safe. Never use `new Date('yyyy-mm-dd')` directly.
 8. **SQL:**
-   - mirror model changes in a **new** migration file (`0004_…sql`); never edit applied migrations;
+   - mirror model changes in a **new** migration file (`0006_…sql`); never edit applied migrations;
    - keep RLS on every table;
    - make trigger functions that write to RLS-protected tables `security definer set search_path = public`.
 9. **Nothing native outside Expo Go.** Install with `npx expo install <pkg>` only, and only modules bundled in Expo Go SDK 57. Otherwise the app stops running in Expo Go; ask the owner first.
+
+## 6a. Personas: identify first, show only what fits
+
+Every user gets one level of identity inside their role (master plan §2–§3):
+
+| Role | Identity | Where it lives |
+|---|---|---|
+| customer | the **occasion** of the active project (wedding, engagement, anniversary, baby shower, newborn, bratabandha, birthday, corporate, something else, plus any a super admin adds) | `Project.occasion`, `DbData.occasions` (seeded from `data/occasions.ts`) |
+| vendor | **services** (a primary plus any add-ons, across trades) and a **business form** (`venue`, `studio`, `shop`, `solo`) | `Account.services`, `primaryService`, `businessForm`, `tradeProfile` |
+| freelancer | **skills** (crew roles) with a `primarySkill`; the trade is derived through `SERVICES_BY_CREW_ROLE` | `Account.skills`, `primarySkill` |
+| platform | **staff role** and team → permissions | `data/permissions.ts` (`STAFF_PERMISSIONS`, `TEAM_PERMISSIONS`) |
+
+Rules:
+
+1. **Taxonomy → capabilities → surfaces.** Services grant capabilities (`SERVICE_CAPABILITIES` in `data/trades.ts`), occasions grant planner modules (`plan.<module>`), staff roles grant permissions. Screens never ask "is this a photographer?"; they ask `has(exp, 'media.camera')`, `can(exp, 'payout.release')` or use `<Gate cap=… perm=… occasion=…>`.
+2. **One resolver.** `services/experience.ts` is pure. `experienceFor(account, { project, occasions })` and the `useExperience()` hook return the **same object for the same persona** (module-level cache keyed by the input), so it is safe in render and selectors.
+3. **Infer, don't migrate.** Missing persona fields are inferred: services from the listing or `categoryId`, the form as `venue` for venues and `studio` otherwise (keeps every tool), the occasion from `project.eventType`, else `wedding`. `Experience.inferred` is true until the user confirms.
+4. **Visibility rules are data.** Every tool has a rule in `TOOL_RULES` (`data/access.ts`); `ToolDef.id` is typed `ToolId`, so a tool without a rule does not compile. `{}` means universal on purpose. Other persona-aware surfaces (sidebar links, home widgets, setup steps) also declare `When` rules there.
+5. **Hide, don't disable, and never dead-end.** A deep link to a hidden tool shows an empty state that explains why and how to add the service.
+6. **Server-enforced.** Store actions check permissions themselves (`actorCan()` in `store/db/personas.ts`); SQL mirrors it with `has_permission()`/`has_capability()` in `0005_personas.sql`.
+7. **Occasions are editable data.** Only `occasion.manage` (super admin) may add, edit or delete them (`addOccasion`/`updateOccasion`/`removeOccasion`, audited). `wedding` and `other` are fallbacks and can't be deleted or switched off; an occasion used by a project can't be deleted (switch it off instead).
+8. **Registry check.** `npm run check:personas` fails on unknown capabilities, permissions, occasions or services, a service without capabilities or trade, or a fixture persona with fewer than three tools, and compares every fixture's visible tools with `scripts/persona-matrix.json`. After an intended change run `npm run check:personas -- --update` and commit the new matrix.
 
 ## 7. Seed and demo contract (don't break the demo)
 
@@ -247,7 +275,8 @@ Couple onboarding (5 questions) or plan wizard (8 steps) → submitPlan → Proj
 - WP-1021 (the demo couple): quote v1 → v2, payments, guests, seating, website slug `aakriti-weds-sujan`;
 - WP-1017: live today, with the emergency replacement;
 - the other seeded projects cover every status;
-- the Everest Grand Party Palace venue and Wedding Story Nepal studio listings.
+- the Everest Grand Party Palace venue and Wedding Story Nepal studio listings;
+- the demo accounts' persona fields (Everest: venue + catering, form venue; Wedding Story: five photo and film services, form studio; Raj: primary skill Photographer; Bikram: `super_admin`). `syncDemoAccounts()` in `useSession.ts` copies them onto older installs through the session `migrate`; bump the session `version` when you add a demo account or persona field.
 
 Seed dates are **relative to today** (`day(n)`/`at(n)`); keep them relative.
 
@@ -279,6 +308,7 @@ One design system for all four apps; only the accent colour changes per role (`s
 ```bash
 npx tsc --noEmit        # must be 0 errors (typed routes are generated by `npx expo start`)
 npx expo lint           # must be 0 errors / 0 warnings
+npm run check:personas  # registry check + persona matrix (Node 24+)
 npx expo-doctor         # no new failures
 npx expo start          # app loads in Expo Go; press w for web
 ```

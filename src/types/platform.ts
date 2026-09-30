@@ -13,6 +13,8 @@
  */
 import type { PhotoKey } from '@/constants/images';
 
+import type { BusinessForm, Capability, HonoureeKind, OccasionId } from './persona';
+
 export type UserRole = 'customer' | 'vendor' | 'freelancer' | 'platform';
 /** Platform-team roles (admin console permissions). */
 export type StaffRole = 'coordinator' | 'admin' | 'support' | 'finance' | 'super_admin';
@@ -53,6 +55,18 @@ export interface Account {
   listingKind?: 'venue' | 'vendor';
   listingId?: string;
   panVat?: string;
+  /** vendor persona: services offered (primary first), how the business is set up, trade essentials. */
+  services?: string[];
+  primaryService?: string;
+  businessForm?: BusinessForm;
+  teamSize?: number;
+  tradeProfile?: Record<string, string | number | boolean | string[]>;
+  /** freelancer persona: the main crew role (also listed in `skills`). */
+  primarySkill?: string;
+  /** Capabilities an admin granted on top of the persona (beta tools, special cases). */
+  capsOverride?: Capability[];
+  /** Set when the provider confirmed their services; until then they are inferred. */
+  personaConfirmedAt?: string;
   /** freelancer */
   skills?: string[];
   dayRate?: number;
@@ -493,6 +507,10 @@ export interface Project {
   customerPhone: string;
   partnerName?: string;
   eventType: EventType;
+  /** What is being celebrated; inferred from `eventType` when missing. */
+  occasion?: OccasionId;
+  /** Who the celebration is for. */
+  honourees?: { kind: HonoureeKind; names: string[]; dob?: string; years?: number };
   city: string;
   area?: string;
   venueSelected?: string;
@@ -1099,3 +1117,5 @@ export interface PlatformSettings {
 
 // Role toolkits (generic tool records, settings and broadcasts)
 export * from './toolkit';
+// Personas (occasions, trades, capabilities, permissions)
+export type * from './persona';

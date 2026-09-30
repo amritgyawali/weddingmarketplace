@@ -15,6 +15,7 @@ import { chatActions, type ChatActions, clearReplyTimers } from './chat';
 import { coreActions, type CoreActions } from './core';
 import { financeActions, type FinanceActions } from './finance';
 import { gigActions, type GigActions } from './gigs';
+import { personaActions, type PersonaActions } from './personas';
 import { plannerActions, type PlannerActions } from './planner';
 import { projectActions, type ProjectActions } from './projects';
 import { quoteActions, type QuoteActions } from './quotes';
@@ -23,7 +24,7 @@ import { trustActions, type TrustActions } from './trust';
 import type { DbData } from './types';
 
 export type { DbData } from './types';
-export type Db = DbData & CoreActions & QuoteActions & ProjectActions & FinanceActions & GigActions & ChatActions & TrustActions & PlannerActions & ToolkitActions;
+export type Db = DbData & CoreActions & QuoteActions & ProjectActions & FinanceActions & GigActions & ChatActions & TrustActions & PlannerActions & ToolkitActions & PersonaActions;
 
 const DATA_KEYS = Object.keys(buildSeedData()) as (keyof DbData)[];
 
@@ -40,6 +41,7 @@ export const useDb = create<Db>()(
       ...trustActions(set, get),
       ...plannerActions(set, get),
       ...toolkitActions(set, get),
+      ...personaActions(set, get),
       resetDemo: () => {
         clearReplyTimers();
         set(buildSeedData());

@@ -70,7 +70,7 @@ Sign in with any Nepali mobile number (`98XXXXXXXX`); the OTP is **1234**. Each 
 | Vendor | Anil Gurung, Wedding Story Nepal (9800000005) | Photography studio with packages, portfolio, gigs |
 | Freelancer | Raj Maharjan (9800000003) | Assignments, emergency gig in Pokhara, earnings |
 | Platform | Sita Karki, coordinator (9800000004) | Today → WP-1017 wedding live today with an emergency replacement |
-| Platform | Bikram Adhikari, admin (9800000006) | Approvals, finance, users, audit. New staff use access code `VIVAH2026`. |
+| Platform | Bikram Adhikari, super admin (9800000006) | Approvals, finance, users, audit, occasions (More → Occasions). New staff use access code `VIVAH2026`. |
 
 The platform app's **More → Reset demo data** restores the seed.
 

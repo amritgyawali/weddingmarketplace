@@ -38,6 +38,8 @@ export default function PlatformLayout() {
         <Stack.Screen name="settings" />
         <Stack.Screen name="tools" />
         <Stack.Screen name="tool/[id]" />
+        <Stack.Screen name="occasions" />
+        <Stack.Screen name="occasion/[id]" />
       </Stack>
     </RoleThemeProvider>
   );

@@ -16,6 +16,7 @@ import type {
   Invoice,
   Lead,
   Message,
+  OccasionDef,
   Payable,
   Payment,
   PlatformSettings,
@@ -83,4 +84,7 @@ export interface DbData {
   /** Keyed `${ownerId}:${tool}`. */
   toolState: Record<string, ToolState>;
   broadcasts: Broadcast[];
+  // personas
+  /** Occasions customers can plan; seeded from the built-ins, editable by a super admin. */
+  occasions: OccasionDef[];
 }

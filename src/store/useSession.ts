@@ -2,7 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 
-import { DEMO_ACCOUNTS } from '@/data/seed';
+import { DEMO_ACCOUNTS, DEMO_PERSONA_KEYS } from '@/data/seed';
 import type { Account, UserRole } from '@/types/platform';
 import { uid } from '@/utils/format';
 
@@ -29,6 +29,23 @@ interface SessionState {
 }
 
 const normalizePhone = (p: string) => p.replace(/\D/g, '').slice(-10);
+
+/**
+ * Brings the demo accounts of an older install up to date: adds demo accounts
+ * it doesn't have yet and copies the demo persona fields onto the existing
+ * ones. Other accounts are left alone.
+ */
+export function syncDemoAccounts(accounts: Account[]): Account[] {
+  const byId = new Map(DEMO_ACCOUNTS.map((a) => [a.id, a]));
+  const synced = accounts.map((a) => {
+    const demo = byId.get(a.id);
+    if (!demo) return a;
+    const persona = Object.fromEntries(DEMO_PERSONA_KEYS.filter((k) => demo[k] !== undefined).map((k) => [k, demo[k]]));
+    return { ...a, ...persona };
+  });
+  const missing = DEMO_ACCOUNTS.filter((d) => !accounts.some((a) => a.id === d.id));
+  return [...synced, ...missing];
+}
 
 /**
  * Mock auth: accounts live on-device and any number verifies with the demo OTP.
@@ -75,9 +92,14 @@ export const useSession = create<SessionState>()(
     }),
     {
       name: 'vivah-session',
-      version: 1,
+      // v2: persona fields on the demo accounts (services, business form, primary skill, super admin).
+      version: 2,
       storage: createJSONStorage(() => AsyncStorage),
       partialize: (s) => ({ accounts: s.accounts, session: s.session, lastAccountId: s.lastAccountId, selectedRole: s.selectedRole }),
+      migrate: (persisted, version) => {
+        const s = persisted as Partial<SessionState>;
+        return (version < 2 && s.accounts ? { ...s, accounts: syncDemoAccounts(s.accounts) } : s) as SessionState;
+      },
     },
   ),
 );
