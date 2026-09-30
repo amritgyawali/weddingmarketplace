@@ -41,6 +41,7 @@ export default function ProfileMenuScreen() {
       title: 'Your wedding',
       items: [
         { label: 'My Wedding', icon: icon('heart-outline'), href: '/my-wedding', badge: awaitingQuotes },
+        { label: 'Planning tools', icon: icon('construct-outline'), href: '/tools' },
         { label: 'Guests & RSVP', icon: icon('people-outline'), href: '/guests' },
         { label: 'Budget', icon: icon('wallet-outline'), href: '/budget' },
         { label: 'Checklist', icon: icon('checkbox-outline'), href: '/checklist' },

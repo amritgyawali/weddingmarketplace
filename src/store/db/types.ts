@@ -3,6 +3,7 @@ import type {
   AuditEntry,
   AvailabilityEntry,
   AvailabilityRule,
+  Broadcast,
   BudgetLine,
   Contract,
   Deal,
@@ -30,6 +31,8 @@ import type {
   ShortlistEntry,
   StaffMember,
   Thread,
+  ToolEntry,
+  ToolState,
   VerificationCase,
   WeddingWebsite,
 } from '@/types/platform';
@@ -75,4 +78,9 @@ export interface DbData {
   packages: ProviderPackage[];
   portfolio: PortfolioItem[];
   settings: PlatformSettings;
+  // role toolkits
+  toolEntries: ToolEntry[];
+  /** Keyed `${ownerId}:${tool}`. */
+  toolState: Record<string, ToolState>;
+  broadcasts: Broadcast[];
 }

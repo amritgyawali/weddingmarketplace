@@ -12,6 +12,15 @@ backend, which runs on the device for the demo, and one Postgres/Supabase schema
 | **Freelancer** (photographers, MUAs, crew) | Gig marketplace | Covers crew work: discovering gigs and invites, including emergency gigs. Crew can manage assignments (confirm, GPS check-in, check-out with proof), keep a calendar with weekly rules, and track earnings and payouts. They also maintain a profile with kit, rates and reliability. |
 | **Platform team** | Operations console (web-ready) | Covers running the platform: leads kanban, a 12-tab project console, a matching engine and quote builder, a control room and emergency replacement. It also covers approvals, finance (revenue, payables, refunds, disputes), users, providers, freelancers, analytics, the marketplace and the audit log. |
 
+Each app also has a **toolkit of 20 extra tools**, opened from a searchable hub:
+
+| User type | Hub | Tools |
+|---|---|---|
+| Couple | Profile → Planning tools | Sait finder, puja samagri, weather and season, family duties, janti planner, guest rooms, pickups, wedding-day contacts, my day schedule, outfits and jewellery, emergency kit, photo shot list, music, bhoj menu, vendor meetings, tips and dakshina, shagun and gifts, what-if budget, savings goal, honeymoon planner |
+| Vendor | Business → Business tools | Saved replies, follow-ups, site visits, reply-time goal, cancellation policy, hours and away message, price calculator, market benchmark, gift vouchers, referral partners, monthly goals, expenses, profit and loss, VAT and tax, staff roster, event prep checklists, team tasks, inventory, suppliers, halls and capacity |
+| Freelancer | Profile → Freelancer tools | This week, open dates, travel planner, gear checklist, health and safety, card backup log, edits and deliveries, work diary, rate calculator, private invoices, expenses and mileage, income tax estimate, earnings goal, savings pots, pitch builder, reliability coach, clients, crew network, certificates, gear care |
+| Platform team | More → Operations tools | SLA monitor, coordinator workload, on-call roster, holidays and closures, quality audits, helpdesk, reply macros, broadcasts, win-back list, promo campaigns, vendor recruitment, city supply, demand by season, source funnel, provider scorecards, monthly targets, cash-flow forecast, payout batches, risk and fraud watch, export centre |
+
 ## The core loop
 
 ```
@@ -95,7 +104,8 @@ src/
   store/db/             the backend, split by domain: core, quotes, projects, finance, gigs, chat, trust, planner
   services/             matching, pricing, risk, planner, quotes, documents (PDF), exporters (ICS/CSV/PDF)
   data/                 Nepal catalogue (cities with coordinates, services, ceremonies with BS months) + seed
-supabase/migrations/    0001 schema · 0002 RLS · 0003 matching, reliability, risk views
+    toolkit/            the 80 role tools: shared EntryList + hub, one folder per role
+supabase/migrations/    0001 schema · 0002 RLS · 0003 matching, reliability, risk views · 0004 toolkits
 ```
 
 **Backend.** Every store action matches one API endpoint.

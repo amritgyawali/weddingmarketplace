@@ -338,6 +338,7 @@ export default function FreelancerProfile() {
       </Card>
 
       <Card padded={false} style={{ overflow: 'hidden' }}>
+        <ListRow icon="construct-outline" title="Freelancer tools" subtitle="Tax, invoices, gear, travel and 16 more" onPress={() => router.push('/freelancer/tools')} />
         <ListRow icon="chatbubbles-outline" title="Messages" subtitle={unread ? `${unread} unread` : 'Organiser and team chats'} onPress={() => router.push('/freelancer/inbox')} />
         <ListRow icon="shield-checkmark-outline" title="Verification" subtitle={status === 'VERIFIED' ? `Verified${verification?.expiresAt ? ` · renews ${formatShortDate(verification.expiresAt)}` : ''}` : 'Upload citizenship & portfolio'} onPress={() => router.push('/freelancer/verification')} />
         <ListRow icon="notifications-outline" title="Notifications" onPress={() => router.push('/notifications')} />

@@ -48,6 +48,21 @@ These product decisions are fixed. Do not reverse them without the owner's say-s
 
 Public pages need no sign-in: `/w/[slug]` (the couple's wedding website and registry) and `/rsvp/[code]` (the guest RSVP).
 
+**Role toolkits.** Each role also has 20 smaller tools on top of the core loop, listed by a searchable hub and opened through one dynamic route per role:
+
+| Role | Hub → tool route | Entry point | Registry |
+|---|---|---|---|
+| Couple | `/tools` → `/tool/[id]` | Profile menu → Planning tools | `components/toolkit/couple` |
+| Vendor | `/business/tools` → `/business/tool/[id]` | Business tab → Business tools | `components/toolkit/vendor` |
+| Freelancer | `/freelancer/tools` → `/freelancer/tool/[id]` | Profile tab → Freelancer tools | `components/toolkit/freelancer` |
+| Platform | `/platform/tools` → `/platform/tool/[id]` | More → Operations tools | `components/toolkit/platform` |
+
+- Tools store data in two generic collections, `toolEntries` (records) and `toolState` (per-owner settings keyed `${ownerId}:${tool}`), plus `broadcasts`. Never add a persisted key for a new tool; give it a registry id (`role.name`) and use these.
+- Owner: the couple's project id (so collaborators share it), the vendor or freelancer account id, or `'platform'` for the ops team (`useToolOwner()`).
+- Actions (`store/db/toolkit.ts`): `addToolEntry`, `updateToolEntry`, `removeToolEntry`, `toggleToolEntry`, `ensureToolPreset` (starter items added once per owner, never re-added after the owner edits the list), `setToolState`, `sendBroadcast` (notifies a whole role, audited). They clamp money and quantities to non-negative integers and drop malformed dates. Platform tools and the money tools of vendors/freelancers are written to the audit log.
+- Calculators live in `services/toolkit.ts` (sait dates, climate, Nepal income-tax slabs, VAT position, price suggestions, hall capacity, freelancer quotes, janti vehicles, cash-flow buckets). Tax figures are labelled estimates.
+- Most record-shaped tools are a config for `EntryList` (`components/toolkit/core.tsx`); computed tools read the existing store and never write to core entities, except the platform's "Assign all" (`assignCoordinator`) and "Release batch" (`releasePayable`, behind a confirm), which reuse existing guarded actions.
+
 **Routing.** Routing is **Expo Router**, with a `Stack.Protected` guard per role in `src/app/_layout.tsx`. A role must never be able to reach another role's app. Signed out, users go to `welcome/`. A couple that hasn't onboarded goes to `onboarding/` (one screen, five questions: who, date, city, guests, budget, then a review card). "Build our plan" there calls `submitPlan` with sensible defaults (Wedding + Reception, the six core services); "Just browse" only saves the answers to `useAppStore` (`guests`, `budget`), which prefill the full 8-step plan wizard later.
 
 **Demo sign-in.** Use any `98XXXXXXXX` number with OTP **1234**, or tap "Continue as …" on each login screen. New platform staff need the access code `VIVAH2026`.
@@ -72,10 +87,11 @@ src/
     work/              shared workflow UI used by several roles: MatchPanel, QuoteEditor, QuoteDocument,
                        Bookings, Payments, TaskBoard, Timeline, ThreadView, AvailabilityCalendar, RunSheet,
                        ContractView, SignaturePad, GigForm, ApplicantsList, VerificationScreen…
+    toolkit/           role toolkits: core.tsx (EntryList, ToolPage, hooks), hub.tsx (ToolHub/ToolRoute), couple/ vendor/ freelancer/ platform/
     planner/ home/ listing/ detail/ genie/ ideas/ navigation/ onboarding/ wedding/
   store/
     useDb.ts           re-export of store/db — THE shared backend (all 4 roles)
-    db/                backend split by domain: core, quotes, projects, finance, gigs, chat, trust, planner
+    db/                backend split by domain: core, quotes, projects, finance, gigs, chat, trust, planner, toolkit
                        + helpers.ts (now/today, currentActor, mapProject, mapBooking, nextNumber…) + types.ts (DbData)
     useSession.ts      accounts + session (mock auth). useAccount()/useCurrentAccount()
     useAppStore.ts     per-device couple marketplace state (onboarding, city, shortlist, likes, legacy bookings/chats)
@@ -88,7 +104,7 @@ src/
   theme/ constants/    role themes/fonts, colours, images, brand
   types/platform.ts    the domain model (mirrors the SQL schema). types/index.ts = catalogue/legacy types
   utils/               format (money/dates/phone), confirm, links, random
-supabase/migrations/   0001 core schema · 0002 RLS · 0003 matching, reliability, risk
+supabase/migrations/   0001 core schema · 0002 RLS · 0003 matching, reliability, risk · 0004 toolkits
 TEST_REPORT.md         last full test run + list of known defects (read before fixing bugs)
 ```
 
