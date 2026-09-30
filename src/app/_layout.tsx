@@ -147,6 +147,9 @@ export default function RootLayout() {
           {/* Public pages opened from invitation links and QR codes — no sign-in needed. */}
           <Stack.Screen name="w/[slug]" options={{ animation: 'fade' }} />
           <Stack.Screen name="rsvp/[code]" options={{ animation: 'fade' }} />
+          {/* Khalti and eSewa return here (through payment-verify); eSewa's form is posted from pay/esewa. */}
+          <Stack.Screen name="pay/result" options={{ animation: 'fade', gestureEnabled: false }} />
+          <Stack.Screen name="pay/esewa" options={{ animation: 'none' }} />
           <Stack.Screen name="+not-found" />
         </Stack>
         <ToastHost />

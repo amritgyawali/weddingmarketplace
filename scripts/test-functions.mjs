@@ -7,12 +7,13 @@
  *
  *   npm run test:functions
  */
-import { createHash } from 'node:crypto';
+import { createHash, createHmac } from 'node:crypto';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', 'supabase', 'functions');
 const load = (rel) => import(pathToFileURL(path.join(root, rel)).href);
+const createHmacB64 = (message, secret) => createHmac('sha256', secret).update(message).digest('base64');
 
 const results = [];
 const ok = (name, pass, detail = '') => results.push({ name, pass: !!pass, detail });
@@ -111,6 +112,131 @@ const out = await (await fanout(post({ notification_id: '00000000-0000-4000-8000
 ok('notify-fanout: sends one push and one email', out.push === 1 && out.email === true && calls.some((c) => c.url.startsWith('https://exp.host')) && calls.some((c) => c.url.startsWith('https://api.resend.com')), JSON.stringify(out));
 const rpcCall = calls.find((c) => c.url.includes('vivah_fanout_targets'));
 ok('notify-fanout: reads targets with the service role', rpcCall?.init.headers.Authorization === 'Bearer service');
+
+// ─── Payments (P7): shared logic ────────────────────────────────────────────────
+const pay = await load('_shared/payments.ts');
+ok('eSewa amounts: whole rupees without decimals, half rupees kept', pay.rupeesString(4237500) === '42375' && pay.rupeesString(4237550) === '42375.5' && pay.toPaisa('42375.5') === 4237550);
+// This exact form was accepted by eSewa's sandbox on 30 Sep 2026 (a message without the names was refused, ES104).
+const esewaSig = await pay.hmacBase64(pay.esewaMessage({ total_amount: '100', transaction_uuid: '241028', product_code: 'EPAYTEST' }, 'total_amount,transaction_uuid,product_code'), '8gBm/:&EnhH.1/q');
+ok('eSewa: HMAC-SHA256 over name=value pairs, base64', esewaSig === '1j74hEfOHLbqKdoVCXI3HHcClC0F3NwGLzoJjpItIuA=', esewaSig);
+const cbFields = { transaction_code: '000AWEO', status: 'COMPLETE', total_amount: '42375', transaction_uuid: 'WP-1051-1', product_code: 'EPAYTEST', signed_field_names: 'transaction_code,status,total_amount,transaction_uuid,product_code,signed_field_names' };
+const cbSigned = { ...cbFields, signature: await pay.hmacBase64(pay.esewaMessage(cbFields, cbFields.signed_field_names), '8gBm/:&EnhH.1/q') };
+const cbData = Buffer.from(JSON.stringify(cbSigned)).toString('base64');
+ok('eSewa: a signed callback decodes and verifies', (await pay.esewaDecode(cbData, '8gBm/:&EnhH.1/q'))?.valid === true);
+const forged = Buffer.from(JSON.stringify({ ...cbSigned, total_amount: '10' })).toString('base64');
+ok('eSewa: a tampered callback fails the signature', (await pay.esewaDecode(forged, '8gBm/:&EnhH.1/q'))?.valid === false);
+ok('eSewa: garbage data is ignored', (await pay.esewaDecode('%%%', 'k')) === null);
+ok('Khalti: only Completed is money', pay.khaltiOutcome('Completed') === 'COMPLETED' && pay.khaltiOutcome('Initiated') === 'PENDING' && pay.khaltiOutcome('User canceled') === 'CANCELLED' && pay.khaltiOutcome('Refunded') === 'FAILED' && pay.khaltiOutcome(undefined) === 'FAILED');
+ok('eSewa: only COMPLETE is money; NOT_FOUND waits until the attempt expires', pay.esewaOutcome('COMPLETE', false) === 'COMPLETED' && pay.esewaOutcome('NOT_FOUND', false) === 'PENDING' && pay.esewaOutcome('NOT_FOUND', true) === 'EXPIRED' && pay.esewaOutcome('FULL_REFUND', false) === 'FAILED');
+const app = 'https://vivah.com.np';
+ok('return address: the app, Expo Go and our web are allowed', ['vivah://pay/result', 'exp://192.168.1.5:8081/--/pay/result', 'https://vivah.com.np/pay/result', 'http://localhost:8081/pay/result'].every((u) => pay.safeReturnTo(u, app) === u));
+ok('return address: other sites and schemes are not (no open redirect)', ['https://evil.com/x', 'http://vivah.com.np/x', 'javascript:alert(1)', 'https://vivah.com.np.evil.com/', 42].every((u) => pay.safeReturnTo(u, app) === null));
+ok('return address: extra hosts from PAYMENT_RETURN_HOSTS', pay.safeReturnTo('https://vivah-git-p7.vercel.app/pay/result', app, ['vivah-git-p7.vercel.app']) !== null);
+ok('result is added to the return address', pay.withResult('vivah://pay/result', { intent: 'i', status: 'completed', receipt: undefined }) === 'vivah://pay/result?intent=i&status=completed' && pay.withResult('https://a.b/r?x=1#h', { s: '1' }) === 'https://a.b/r?x=1&s=1#h');
+const INTENT = '11111111-2222-4333-8444-555555555555';
+ok('verify path: gateway, intent and failure', JSON.stringify(pay.parseVerifyPath(`/functions/v1/payment-verify/esewa/${INTENT}/failure`)) === JSON.stringify({ gateway: 'esewa', intent: INTENT, failure: true }) && pay.parseVerifyPath('/payment-verify/paypal/x') === null);
+ok('eSewa data is found even after a second ?', pay.esewaDataParam(`https://f.co/payment-verify/esewa/${INTENT}?a=1?data=abc%3D`) === 'abc=');
+const kb = pay.khaltiInitiateBody({ intent: INTENT, orderRef: 'WP-1051-1', amount: 4237500, label: 'Booking advance · WP-1051', customer: { name: 'Aakriti', email: 'a@b.co', phone: '+977-9800000001' } }, 'https://r', 'https://w');
+ok('Khalti body: paisa, order id, a clean Nepali mobile', kb.amount === 4237500 && kb.purchase_order_id === 'WP-1051-1' && kb.customer_info.phone === '9800000001');
+ok('Khalti body: a bad phone is left out rather than failing the payment', pay.khaltiInitiateBody({ intent: INTENT, orderRef: 'o', amount: 1000, label: 'x', customer: { phone: '12345' } }, 'r', 'w').customer_info === undefined);
+
+// ─── Payments (P7): handlers ─────────────────────────────────────────────────────
+Object.assign(env, { KHALTI_SECRET_KEY: 'test_secret_key_x', KHALTI_BASE_URL: 'https://dev.khalti.com/api/v2' });
+const payNet = { khaltiLookup: { status: 'Completed', total_amount: 4237500, transaction_id: 'KTXN1', pidx: 'PIDX-1' }, khaltiLookupStatus: 200, esewa: { product_code: 'EPAYTEST', transaction_uuid: 'WP-1051-1', total_amount: 42375.0, status: 'COMPLETE', ref_id: 'ESW-REF-9' }, gatewayDown: false };
+let stored = { id: INTENT, method: 'KHALTI', amount: 4237500, orderRef: 'WP-1051-1', gatewayRef: 'PIDX-1', returnTo: 'vivah://pay/result', status: 'INITIATED', receiptNo: null, expiresAt: new Date(Date.now() + 3600e3).toISOString() };
+const settleCalls = [];
+const baseFetch = globalThis.fetch;
+globalThis.fetch = async (url, init = {}) => {
+  const u = String(url);
+  const args = init.body && typeof init.body === 'string' && init.body.startsWith('{') ? JSON.parse(init.body) : {};
+  if (u.endsWith('/rest/v1/rpc/rpc_begin_payment')) {
+    calls.push({ url: u, init });
+    return new Response(JSON.stringify({ intent: INTENT, orderRef: 'WP-1051-1', amount: args.p_amount ?? 4237500, label: 'Booking advance · WP-1051', customer: { name: 'Aakriti Shrestha', email: 'aakriti@example.com', phone: '9800000001' } }));
+  }
+  if (u.endsWith('/rest/v1/rpc/rpc_payment_attach')) { calls.push({ url: u, init }); return new Response('', { status: 200 }); }
+  if (u.endsWith('/rest/v1/rpc/vivah_payment_intent')) return new Response(JSON.stringify(stored));
+  if (u.endsWith('/rest/v1/rpc/rpc_payment_status')) return new Response(authUser === 'user-7' ? JSON.stringify({ status: stored.status }) : 'null');
+  if (u.endsWith('/rest/v1/rpc/rpc_settle_payment')) {
+    settleCalls.push(args);
+    const done = args.p_outcome === 'COMPLETED';
+    return new Response(JSON.stringify({ status: done ? 'COMPLETED' : args.p_outcome, receiptNo: done ? 'RCPT-2026-0042' : null, amount: stored.amount }));
+  }
+  if (u.startsWith('https://dev.khalti.com/api/v2/epayment/initiate/')) { calls.push({ url: u, init }); return new Response(JSON.stringify({ pidx: 'PIDX-1', payment_url: 'https://test-pay.khalti.com/?pidx=PIDX-1', expires_in: 1800 })); }
+  if (u.startsWith('https://dev.khalti.com/api/v2/epayment/lookup/')) {
+    calls.push({ url: u, init });
+    if (payNet.gatewayDown) throw new Error('down');
+    return new Response(JSON.stringify(payNet.khaltiLookup), { status: payNet.khaltiLookupStatus });
+  }
+  if (u.startsWith('https://rc.esewa.com.np/api/epay/transaction/status/')) { calls.push({ url: u, init }); return new Response(JSON.stringify(payNet.esewa)); }
+  return baseFetch(url, init);
+};
+
+await load('payment-initiate/index.ts');
+const initiate = handler;
+const bearer = { Authorization: 'Bearer user-jwt' };
+authUser = null;
+ok('payment-initiate: signed-out callers are refused', (await initiate(post({ milestoneId: INTENT, method: 'khalti' }, { Authorization: 'Bearer bad' }))).status === 401);
+authUser = 'user-7';
+ok('payment-initiate: only khalti and esewa', (await initiate(post({ milestoneId: INTENT, method: 'paypal' }, bearer))).status === 400);
+calls.length = 0;
+const kOut = await (await initiate(post({ milestoneId: INTENT, method: 'khalti', amount: 1500.5, returnTo: 'https://evil.com/steal' }, bearer))).json();
+const beginCall = calls.find((c) => c.url.endsWith('rpc_begin_payment'));
+const beginArgs = JSON.parse(beginCall.init.body);
+ok('payment-initiate: the intent is made as the couple (their JWT), amount in paisa', beginCall.init.headers.Authorization === 'Bearer user-jwt' && beginArgs.p_amount === 150050 && beginArgs.p_method === 'KHALTI');
+ok('payment-initiate: a foreign return address is replaced by our result page', beginArgs.p_return_to === 'https://vivah.com.np/pay/result');
+const kInit = JSON.parse(calls.find((c) => c.url.includes('/epayment/initiate/')).init.body);
+ok('payment-initiate: Khalti returns to payment-verify, not to the app', kInit.return_url === `https://proj.supabase.co/functions/v1/payment-verify/khalti/${INTENT}` && calls.find((c) => c.url.includes('/epayment/initiate/')).init.headers.Authorization === 'Key test_secret_key_x');
+ok('payment-initiate: the pidx is kept with the service role; the app gets Khalti’s page', kOut.url === 'https://test-pay.khalti.com/?pidx=PIDX-1' && JSON.parse(calls.find((c) => c.url.endsWith('rpc_payment_attach')).init.body).p_gateway_ref === 'PIDX-1' && calls.find((c) => c.url.endsWith('rpc_payment_attach')).init.headers.Authorization === 'Bearer service');
+const eOut = await (await initiate(post({ milestoneId: INTENT, method: 'esewa', returnTo: 'vivah://pay/result' }, bearer))).json();
+const eMsg = `total_amount=${eOut.form.fields.total_amount},transaction_uuid=WP-1051-1,product_code=EPAYTEST`;
+ok('payment-initiate: eSewa gets a signed form (sandbox secret by default) and our checkout page', eOut.form.fields.signature === createHmacB64(eMsg, '8gBm/:&EnhH.1/q') && eOut.url.startsWith('https://vivah.com.np/pay/esewa?') && eOut.form.fields.failure_url.endsWith('/failure'), JSON.stringify(eOut.form?.fields));
+delete env.KHALTI_SECRET_KEY;
+ok('payment-initiate: Khalti without keys says it isn’t set up', (await initiate(post({ milestoneId: INTENT, method: 'khalti' }, bearer))).status === 503);
+env.KHALTI_SECRET_KEY = 'test_secret_key_x';
+
+await load('payment-verify/index.ts');
+const verifyFn = handler;
+const get = (p) => verifyFn(new Request(`https://proj.supabase.co/functions/v1/payment-verify/${p}`, { method: 'GET' }));
+calls.length = 0;
+settleCalls.length = 0;
+const kRes = await get(`khalti/${INTENT}?pidx=FORGED&status=Completed&total_amount=100`);
+const lookupBody = JSON.parse(calls.find((c) => c.url.includes('/epayment/lookup/')).init.body);
+ok('payment-verify: looks up the stored pidx, not the one in the URL', lookupBody.pidx === 'PIDX-1');
+ok('payment-verify: a completed lookup settles with the gateway’s amount', settleCalls[0]?.p_outcome === 'COMPLETED' && settleCalls[0]?.p_amount === 4237500 && settleCalls[0]?.p_gateway_txn === 'KTXN1');
+ok('payment-verify: sends the browser back to the app with the receipt', kRes.status === 302 && kRes.headers.get('Location') === `vivah://pay/result?intent=${INTENT}&status=completed&receipt=RCPT-2026-0042`, kRes.headers.get('Location'));
+payNet.khaltiLookup = { status: 'User canceled', total_amount: 4237500, pidx: 'PIDX-1' };
+payNet.khaltiLookupStatus = 400;
+settleCalls.length = 0;
+await get(`khalti/${INTENT}?pidx=PIDX-1&status=User%20canceled`);
+ok('payment-verify: Khalti’s 400 "User canceled" is a cancel, not an error', settleCalls[0]?.p_outcome === 'CANCELLED');
+payNet.gatewayDown = true;
+const downRes = await get(`khalti/${INTENT}`);
+ok('payment-verify: gateway down → back to the app to check again, nothing settled', downRes.headers.get('Location')?.endsWith('status=checking') && settleCalls.length === 1);
+payNet.gatewayDown = false;
+
+stored = { ...stored, method: 'ESEWA', gatewayRef: null };
+settleCalls.length = 0;
+const eRes = await get(`esewa/${INTENT}?data=${encodeURIComponent(Buffer.from(JSON.stringify({ ...cbSigned, transaction_uuid: 'WP-1051-1' })).toString('base64'))}`);
+ok('payment-verify: eSewa is settled from the status API, with its ref id', settleCalls[0]?.p_outcome === 'COMPLETED' && settleCalls[0]?.p_gateway_ref === 'ESW-REF-9' && settleCalls[0]?.p_amount === 4237500 && eRes.status === 302);
+const statusCall = calls.filter((c) => c.url.startsWith('https://rc.esewa.com.np')).pop();
+ok('payment-verify: eSewa is asked about our transaction and our amount', statusCall.url.includes('transaction_uuid=WP-1051-1') && statusCall.url.includes('total_amount=42375'));
+payNet.esewa = { ...payNet.esewa, status: 'NOT_FOUND', ref_id: null };
+settleCalls.length = 0;
+await get(`esewa/${INTENT}/failure`);
+ok('payment-verify: back through eSewa’s failure URL with nothing paid is a cancel', settleCalls[0]?.p_outcome === 'CANCELLED');
+
+stored = { ...stored, status: 'COMPLETED', receiptNo: 'RCPT-2026-0042' };
+calls.length = 0;
+settleCalls.length = 0;
+const again = await get(`esewa/${INTENT}?data=x`);
+ok('payment-verify: an already settled payment is not asked about or settled again', settleCalls.length === 0 && !calls.some((c) => c.url.includes('esewa.com.np')) && again.headers.get('Location').includes('receipt=RCPT-2026-0042'));
+authUser = 'someone-else';
+ok('payment-verify: the app can only check its own payment', (await verifyFn(post({ intent: INTENT }, bearer))).status === 404);
+authUser = 'user-7';
+const mineOut = await (await verifyFn(post({ intent: INTENT }, bearer))).json();
+ok('payment-verify: the app’s check returns the status and receipt', mineOut.status === 'COMPLETED' && mineOut.receiptNo === 'RCPT-2026-0042');
+const lost = await get('paypal/nope');
+ok('payment-verify: unknown paths go to the result page, never elsewhere', lost.headers.get('Location') === 'https://vivah.com.np/pay/result?status=unknown');
 
 const failed = results.filter((r) => !r.pass);
 results.forEach((r) => console.log(`${r.pass ? 'pass' : 'FAIL'}  ${r.name}${!r.pass && r.detail ? `  (${r.detail})` : ''}`));

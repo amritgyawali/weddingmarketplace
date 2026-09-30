@@ -55,13 +55,17 @@ insert into user_roles (user_id, role) select id, 'SUPER_ADMIN' from auth.users 
 ## 3. Edge Functions
 
 ```bash
-npm run test:functions                                   # 24 checks, locally
+npm run test:functions                                   # 59 checks, locally
 npm run env:functions                                    # writes supabase/.env.functions.local
 npx supabase secrets set --env-file supabase/.env.functions.local
 npx supabase functions deploy send-otp
 npx supabase functions deploy media-sign
 npx supabase functions deploy notify-fanout
+npx supabase functions deploy payment-initiate
+npx supabase functions deploy payment-verify            # no JWT check: the gateways call it (config.toml)
 ```
+
+Also run the `do $$ … $$` block at the end of `0014_payments.sql` once pg_cron is on (it closes abandoned payment attempts hourly).
 
 ## 4. Cloudinary
 
@@ -84,7 +88,16 @@ Restart `npx expo start`. The login screen now asks for an email and a 6-digit c
 
 Push notifications need a development build (they don't work in Expo Go since SDK 53): `npx eas-cli@latest build --profile development`.
 
-## 6. Check it works (master plan P6 "done when")
+## 6. Payments: Khalti and eSewa sandboxes (P7)
+
+- **eSewa** works with no keys: with `ESEWA_PRODUCT_CODE=EPAYTEST` the functions use eSewa's published test secret. Pay with eSewa ID `9711111111`, password `Nepal@123`, token `123456`.
+- **Khalti:** sign up at test-admin.khalti.com, copy the `live_secret_key` of the test merchant into `KHALTI_SECRET_KEY`, run `npm run env:functions` and set the secrets again. Pay with Khalti ID `9800000000`, MPIN `1111`, OTP `987654`.
+- eSewa only accepts a form POST, so phones open the web app's `/pay/esewa` page, which posts the signed form. Until the web app is deployed at `EXPO_PUBLIC_APP_URL`, test eSewa from the web build; add a preview host to `PAYMENT_RETURN_HOSTS` if you test from a Vercel preview.
+- Going live: merchant accounts first (master plan §9), then `KHALTI_BASE_URL=https://khalti.com/api/v2`, your eSewa product code and secret with `ESEWA_BASE_URL=https://epay.esewa.com.np`, and `EXPO_PUBLIC_PAYMENT_MODE=live` (hides the test-account hint).
+
+Check (master plan P7 "done when"): pay a milestone with each gateway, then in the SQL editor `select status, receipt_no from payment_intents i join payments p on p.id = i.payment_id order by i.created_at desc limit 5;`. Opening the gateway's return link again (a duplicate callback) must not add a second payment.
+
+## 7. Check it works (master plan P6 "done when")
 
 - Sign up once for each role: couple, business, freelancer, staff (with the access code, then approve in the console).
 - Upload three photos from Business → Portfolio. They appear in Cloudinary under `vivah/portfolio/<user id>/` and in the app.
