@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { accountFromMe, completeSignup, roleOf } from '@/backend/account';
+import { acceptLegal, accountFromMe, completeSignup, roleOf } from '@/backend/account';
 import { signOut } from '@/backend/auth';
 import { registerForPush } from '@/backend/push';
 import { Card, ChoiceChips, KButton, KField, StackHeader } from '@/components/kit';
@@ -15,6 +15,7 @@ import { categoryForService } from '@/data/categories';
 import { ONBOARDING_CITIES } from '@/data/cities';
 import { PLATFORM_ACCESS_CODE } from '@/data/seed';
 import { CRAFT_BY_ID, RATE_LABEL } from '@/data/crafts';
+import { LEGAL_VERSION } from '@/data/legal';
 import { VENDORS } from '@/data/vendors';
 import { VENUES } from '@/data/venues';
 import { completeLogin, onAccountCreated } from '@/services/auth';
@@ -139,6 +140,8 @@ function SetupForm({ phone, signInEmail }: { phone: string; signInEmail?: string
       const res = await completeSignup(t.role, { ...base, ...extra }, t.role === 'platform' ? accessCode : undefined);
       setBusy(false);
       if (!res.ok) return setErrors({ ...next, form: res.error });
+      // They agreed on the sign-in screen; record it now the profile exists.
+      await acceptLegal(LEGAL_VERSION);
       const role = roleOf(res.value);
       if (!role) {
         setPending(true);

@@ -11,6 +11,7 @@ import { getAccessToken, usesEmailSignIn } from '@/backend/auth';
 import { ToastHost } from '@/components/ui/Toast';
 import { colors } from '@/constants/theme';
 import { useHydrated } from '@/hooks/useHydrated';
+import { useTelemetry } from '@/hooks/useTelemetry';
 import { useAppStore } from '@/store/useAppStore';
 import { useDb } from '@/store/useDb';
 import { logout } from '@/services/auth';
@@ -20,7 +21,8 @@ import { APP_FONTS } from '@/theme/fonts';
 SplashScreen.preventAutoHideAsync().catch(() => {});
 SplashScreen.setOptions({ duration: 350, fade: true });
 
-export { ErrorBoundary } from 'expo-router';
+// Reports render errors (PostHog, Sentry) before offering a retry.
+export { AppErrorBoundary as ErrorBoundary } from '@/components/AppErrorBoundary';
 
 // Refetch stale queries when the app returns to the foreground.
 AppState.addEventListener('change', (status) => {
@@ -45,6 +47,7 @@ export default function RootLayout() {
   const role = useSession((s) => s.session?.role ?? null);
   const hasOnboarded = useAppStore((s) => s.hasOnboarded);
   const ready = (fontsLoaded || !!fontError) && hydrated;
+  useTelemetry();
 
   useEffect(() => {
     if (ready) SplashScreen.hideAsync().catch(() => {});
@@ -147,6 +150,8 @@ export default function RootLayout() {
           {/* Public pages opened from invitation links and QR codes — no sign-in needed. */}
           <Stack.Screen name="w/[slug]" options={{ animation: 'fade' }} />
           <Stack.Screen name="rsvp/[code]" options={{ animation: 'fade' }} />
+          {/* Terms, privacy, refunds and account deletion: store listings and gateways link here. */}
+          <Stack.Screen name="legal/[doc]" />
           {/* Khalti and eSewa return here (through payment-verify); eSewa's form is posted from pay/esewa. */}
           <Stack.Screen name="pay/result" options={{ animation: 'fade', gestureEnabled: false }} />
           <Stack.Screen name="pay/esewa" options={{ animation: 'none' }} />

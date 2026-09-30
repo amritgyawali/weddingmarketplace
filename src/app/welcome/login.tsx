@@ -1,18 +1,19 @@
 import { Ionicons } from '@expo/vector-icons';
-import { router } from 'expo-router';
+import { Link, router } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useRef, useState } from 'react';
 import { KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, TextInput, View } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { accountFromMe, fetchMe, roleOf } from '@/backend/account';
+import { acceptLegal, accountFromMe, fetchMe, roleOf } from '@/backend/account';
 import { emailOtp, usesEmailSignIn } from '@/backend/auth';
 import { registerForPush } from '@/backend/push';
 import { KButton } from '@/components/kit';
 import { triggerHaptic } from '@/components/ui/PressableScale';
 import { Text } from '@/components/ui/Text';
 import { inputReset } from '@/constants/theme';
+import { LEGAL_VERSION } from '@/data/legal';
 import { DEMO_ACCOUNTS, DEMO_OTP } from '@/data/seed';
 import { completeLogin } from '@/services/auth';
 import { useSession } from '@/store/useSession';
@@ -88,6 +89,8 @@ function LoginForm() {
     }
     if (me.value.suspended) return setError('This account is suspended. Contact Vivah support to restore access.');
     if (role !== t.role) return setError(`This email is registered for ${role === 'customer' ? 'couples' : role === 'vendor' ? 'businesses' : role === 'freelancer' ? 'freelancers' : 'the Vivah team'}. Go back and pick that.`);
+    // Continuing past the notice below accepts the current Terms and Privacy policy.
+    if (me.value.legal !== LEGAL_VERSION) void acceptLegal(LEGAL_VERSION);
     const account = accountFromMe(me.value, role);
     upsertAccount(account);
     completeLogin(account);
@@ -222,6 +225,8 @@ function LoginForm() {
             </Animated.View>
           )}
 
+          {step === 'phone' && <LegalNotice />}
+
           {!emailMode && (
           <View style={[styles.demo, { borderTopColor: t.c.border }]}>
             <Text size={14} weight="semibold" color={t.c.textStrong}>
@@ -240,6 +245,21 @@ function LoginForm() {
         </ScrollView>
       </KeyboardAvoidingView>
     </View>
+  );
+}
+
+/** Continuing means accepting the Terms and Privacy policy (recorded on the server with rpc_accept_legal). */
+function LegalNotice() {
+  const t = useRoleTheme();
+  const link = (doc: 'terms' | 'privacy', label: string) => (
+    <Link href={{ pathname: '/legal/[doc]', params: { doc } }} style={{ color: t.c.primary, fontFamily: t.fonts.semibold }}>
+      {label}
+    </Link>
+  );
+  return (
+    <Text size={12} color={t.c.muted} lineHeight={18}>
+      By continuing you agree to our {link('terms', 'Terms of use')} and {link('privacy', 'Privacy policy')}.
+    </Text>
   );
 }
 

@@ -158,8 +158,9 @@ export default function InfoScreen() {
           title: 'Information',
           body: (
             <View>
-              <Row icon="document-text-outline" title="Terms of Use" onPress={() => toast('Opening Terms of Use', 'document-text')} />
-              <Row icon="shield-checkmark-outline" title="Privacy Policy" onPress={() => toast('Opening Privacy Policy', 'shield-checkmark')} />
+              <Row icon="document-text-outline" title="Terms of use" onPress={() => router.push({ pathname: '/legal/[doc]', params: { doc: 'terms' } })} />
+              <Row icon="shield-checkmark-outline" title="Privacy policy" onPress={() => router.push({ pathname: '/legal/[doc]', params: { doc: 'privacy' } })} />
+              <Row icon="receipt-outline" title="Cancellation and refunds" onPress={() => router.push({ pathname: '/legal/[doc]', params: { doc: 'refunds' } })} />
               <Row icon="help-circle-outline" title="FAQs" onPress={() => router.navigate('/genie')} />
               <Row icon="storefront-outline" title="List your business" subtitle="Are you a vendor? Join us" onPress={() => Linking.openURL(`mailto:${BRAND.supportEmail}?subject=Vendor%20listing`)} />
               <Text size={12} color={colors.textSubtle} align="center" style={{ marginTop: 30 }}>

@@ -125,7 +125,7 @@ The SQL in `supabase/migrations` covers the production design:
 
 The migrations have **not** been applied to any Supabase project. They are checked on every change against an in-process Postgres (`npm run db:check`, `npm run db:test`, `npm run test:parity`), and the Edge Functions in `supabase/functions` (email sign-in codes, signed Cloudinary uploads, push and email fan-out) by `npm run test:functions`.
 
-**Going live.** `docs/SETUP_SUPABASE.md` walks through a staging project: email-code sign-in for every role, Cloudinary uploads, private documents, notifications and scheduled jobs. Set `EXPO_PUBLIC_BACKEND=supabase` to switch the app over; the default stays the on-device demo.
+**Going live.** `docs/SETUP_SUPABASE.md` walks through a staging project: email-code sign-in for every role, Cloudinary uploads, private documents, notifications and scheduled jobs. Set `EXPO_PUBLIC_BACKEND=supabase` to switch the app over; the default stays the on-device demo. `docs/LAUNCH.md` then takes it to production: backups, monitoring, the web console on Cloudflare Pages, the legal pages and the Play Store release.
 
 **Web-ready consoles.** `useLayout()` switches the role apps to sidebar navigation at 960 px and wider, so `npx expo start --web` gives the platform team a desktop dashboard.
 
