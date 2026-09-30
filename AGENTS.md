@@ -293,10 +293,11 @@ The owner wants every piece of work on GitHub and reviewable as a pull request. 
    - stage only the files this task changed (`git add <paths>`; never `git add -A`, because several sessions share one working tree);
    - commit with a clear message: a short imperative subject, then what changed and why;
    - `git push`;
-   - open a pull request into `main`. If the branch was cut from another unmerged feature branch, target that branch so the diff shows only this task. If a PR for the branch already exists, the push updates it; don't open a duplicate.
+   - open a pull request into **`main`, always**. Every feature gets its own PR that merges into `main`; never target another feature branch, even when this branch was cut from one (the PR then also shows the unmerged parent commits, which is fine). If a PR for the branch already exists, the push updates it; don't open a duplicate.
 4. **PR description:** what changed and why, how it was tested (tsc, lint, the flows you smoke-tested), and anything the reviewer should look at. Mark it as a draft and list the failures if a check could not be made to pass.
 5. **Opening the PR.** This machine has no `gh` CLI. Use the GitHub REST API (`POST /repos/amritgyawali/weddingmarketplace/pulls`) with the token from `git credential fill`. Never print, log or commit the token.
 6. **Never** merge a PR, push to `main`, force-push, or rewrite pushed history. The owner reviews and merges.
+7. **Shared working tree.** If another session has uncommitted work checked out, don't switch branches under it. Use `git worktree add ../wt-<branch> <branch>` to work on your own branch in a separate folder.
 
 ## 10. Known defects (from `TEST_REPORT.md`, 29 Sep 2026)
 
