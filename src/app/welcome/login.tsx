@@ -6,6 +6,9 @@ import { KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { accountFromMe, fetchMe, roleOf } from '@/backend/account';
+import { emailOtp, usesEmailSignIn } from '@/backend/auth';
+import { registerForPush } from '@/backend/push';
 import { KButton } from '@/components/kit';
 import { triggerHaptic } from '@/components/ui/PressableScale';
 import { Text } from '@/components/ui/Text';
@@ -21,6 +24,11 @@ function LoginForm() {
   const t = useRoleTheme();
   const insets = useSafeAreaInsets();
   const findAccount = useSession((s) => s.findAccount);
+  const upsertAccount = useSession((s) => s.upsertAccount);
+  // Supabase builds sign in by email code (owner decision: no SMS in year one); the demo keeps phone + 1234.
+  const emailMode = usesEmailSignIn();
+  const codeLength = emailMode ? emailOtp.codeLength : DEMO_OTP.length;
+  const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [otp, setOtp] = useState('');
   const [step, setStep] = useState<'phone' | 'otp'>('phone');
@@ -30,6 +38,20 @@ function LoginForm() {
   const demos = DEMO_ACCOUNTS.filter((a) => a.role === t.role);
 
   const sendOtp = async () => {
+    if (emailMode) {
+      setError(null);
+      setBusy(true);
+      const sent = await emailOtp.start(email);
+      setBusy(false);
+      if (!sent.ok) {
+        setError(sent.error);
+        triggerHaptic('medium');
+        return;
+      }
+      setStep('otp');
+      setTimeout(() => otpRef.current?.focus(), 250);
+      return;
+    }
     if (!isNepalMobile(phone)) {
       setError('Enter a valid Nepali mobile number (98XXXXXXXX)');
       triggerHaptic('medium');
@@ -43,7 +65,37 @@ function LoginForm() {
     setTimeout(() => otpRef.current?.focus(), 250);
   };
 
+  const verifyEmail = async (code: string) => {
+    setBusy(true);
+    const session = await emailOtp.verify(email, code);
+    if (!session.ok) {
+      setBusy(false);
+      setError(session.error);
+      triggerHaptic('medium');
+      return;
+    }
+    const me = await fetchMe();
+    setBusy(false);
+    if (!me.ok) return setError(me.error);
+    if (!me.value.signedUp) {
+      router.push({ pathname: '/welcome/setup', params: { email: email.trim().toLowerCase() } });
+      return;
+    }
+    const role = roleOf(me.value);
+    if (!role) {
+      setError(me.value.staffRequest?.status === 'REJECTED' ? 'Your staff sign-up wasn’t approved. Ask an admin.' : 'Your staff sign-up is waiting for an admin’s approval. We’ll email you when it’s done.');
+      return;
+    }
+    if (me.value.suspended) return setError('This account is suspended. Contact Vivah support to restore access.');
+    if (role !== t.role) return setError(`This email is registered for ${role === 'customer' ? 'couples' : role === 'vendor' ? 'businesses' : role === 'freelancer' ? 'freelancers' : 'the Vivah team'}. Go back and pick that.`);
+    const account = accountFromMe(me.value, role);
+    upsertAccount(account);
+    completeLogin(account);
+    void registerForPush();
+  };
+
   const verify = async (code = otp) => {
+    if (emailMode) return verifyEmail(code);
     if (code !== DEMO_OTP) {
       setError('Incorrect OTP. Use 1234 in this demo.');
       triggerHaptic('medium');
@@ -72,16 +124,43 @@ function LoginForm() {
           {t.label}
         </Text>
         <Text serif size={26} weight="bold" color={t.c.textStrong} lineHeight={36}>
-          {step === 'phone' ? 'Log in with your mobile number' : 'Enter the code we sent'}
+          {step === 'phone' ? (emailMode ? 'Log in with your email' : 'Log in with your mobile number') : 'Enter the code we sent'}
         </Text>
         <Text size={14} color={t.c.muted}>
-          {step === 'phone' ? 'We’ll text you a 4-digit code. No password needed.' : `Sent to +977 ${phone}`}
+          {step === 'phone' ? (emailMode ? 'We’ll email you a 6-digit code. No password needed.' : 'We’ll text you a 4-digit code. No password needed.') : emailMode ? `Sent to ${email.trim().toLowerCase()}` : `Sent to +977 ${phone}`}
         </Text>
       </View>
 
       <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
         <ScrollView contentContainerStyle={{ padding: 20, gap: 16, paddingBottom: insets.bottom + 30 }} keyboardShouldPersistTaps="handled">
-          {step === 'phone' ? (
+          {step === 'phone' && emailMode ? (
+            <Animated.View entering={FadeInDown.duration(300)} style={{ gap: 12 }}>
+              <Text size={13} weight="semibold" color={t.c.muted}>
+                Email
+              </Text>
+              <TextInput
+                value={email}
+                onChangeText={(v) => {
+                  setEmail(v);
+                  setError(null);
+                }}
+                placeholder="you@example.com"
+                placeholderTextColor={t.c.subtle}
+                keyboardType="email-address"
+                autoCapitalize="none"
+                autoComplete="email"
+                autoFocus
+                style={[styles.email, inputReset, { color: t.c.textStrong, borderColor: error ? t.c.danger : t.c.border, backgroundColor: t.c.surface, fontFamily: t.fonts.medium }]}
+                onSubmitEditing={sendOtp}
+              />
+              {!!error && (
+                <Text size={13} color={t.c.danger}>
+                  {error}
+                </Text>
+              )}
+              <KButton label="Email me a code" size="lg" onPress={sendOtp} loading={busy} disabled={!email.includes('@')} />
+            </Animated.View>
+          ) : step === 'phone' ? (
             <Animated.View entering={FadeInDown.duration(300)} style={{ gap: 12 }}>
               <Text size={13} weight="semibold" color={t.c.muted}>
                 Mobile number
@@ -119,14 +198,14 @@ function LoginForm() {
                 ref={otpRef}
                 value={otp}
                 onChangeText={(v) => {
-                  const code = v.replace(/\D/g, '').slice(0, 4);
+                  const code = v.replace(/\D/g, '').slice(0, codeLength);
                   setOtp(code);
                   setError(null);
-                  if (code.length === 4) verify(code);
+                  if (code.length === codeLength) verify(code);
                 }}
                 keyboardType="number-pad"
-                maxLength={4}
-                placeholder="0000"
+                maxLength={codeLength}
+                placeholder={'0'.repeat(codeLength)}
                 placeholderTextColor={t.c.subtle}
                 style={[styles.otp, inputReset, { color: t.c.textStrong, borderColor: error ? t.c.danger : t.c.border, backgroundColor: t.c.surface, fontFamily: t.fonts.semibold }]}
               />
@@ -136,13 +215,14 @@ function LoginForm() {
                 </Text>
               )}
               <Text size={12} color={t.c.muted}>
-                Demo mode: the OTP is {DEMO_OTP}.
+                {emailMode ? 'The code works for 10 minutes. Check your spam folder if it hasn’t arrived.' : `Demo mode: the OTP is ${DEMO_OTP}.`}
               </Text>
-              <KButton label="Continue" size="lg" onPress={() => verify()} loading={busy} disabled={otp.length < 4} />
-              <KButton label="Change number" variant="ghost" size="sm" onPress={() => { setStep('phone'); setOtp(''); }} />
+              <KButton label="Continue" size="lg" onPress={() => verify()} loading={busy} disabled={otp.length < codeLength} />
+              <KButton label={emailMode ? 'Change email' : 'Change number'} variant="ghost" size="sm" onPress={() => { setStep('phone'); setOtp(''); }} />
             </Animated.View>
           )}
 
+          {!emailMode && (
           <View style={[styles.demo, { borderTopColor: t.c.border }]}>
             <Text size={14} weight="semibold" color={t.c.textStrong}>
               Just looking around?
@@ -156,6 +236,7 @@ function LoginForm() {
               ))}
             </View>
           </View>
+          )}
         </ScrollView>
       </KeyboardAvoidingView>
     </View>
@@ -179,6 +260,7 @@ const styles = StyleSheet.create({
   phone: { flexDirection: 'row', alignItems: 'center', gap: 12, height: 52, borderRadius: 8, borderWidth: 1, paddingHorizontal: 14 },
   vr: { width: 1, height: 22 },
   phoneInput: { flex: 1, fontSize: 18, letterSpacing: 0.5, height: '100%' },
+  email: { height: 52, borderRadius: 8, borderWidth: 1, paddingHorizontal: 14, fontSize: 17 },
   otp: { height: 56, borderRadius: 8, borderWidth: 1, textAlign: 'center', fontSize: 26, letterSpacing: 14 },
   demo: { gap: 2, marginTop: 18, paddingTop: 18, borderTopWidth: StyleSheet.hairlineWidth },
   demoButtons: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginTop: 6 },

@@ -1,9 +1,10 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
-import { FlatList, Pressable, StyleSheet, View } from 'react-native';
+import { FlatList, Linking, Pressable, StyleSheet, View } from 'react-native';
 
 import { staffScreen } from '@/components/persona/StaffGate';
+import { documentLink } from '@/backend/files';
 import { Card, EmptyBlock, KButton, KField, Segmented, StackHeader, StatusPill } from '@/components/kit';
 import { Text } from '@/components/ui/Text';
 import { toast } from '@/components/ui/Toast';
@@ -65,9 +66,18 @@ function CaseCard({ vc }: { vc: VerificationCase }) {
         </Pressable>
       ))}
       {vc.documents.map((d) => (
-        <Text key={d.name} size={12} color={t.c.muted}>
-          {d.kind}: {d.name} ({d.status})
-        </Text>
+        <View key={d.name} style={styles.row}>
+          <Text size={12} color={t.c.muted} style={{ flex: 1 }}>
+            {d.kind}: {d.name} ({d.status})
+          </Text>
+          {d.path && (
+            <Pressable onPress={() => openDocument(d.path!)} accessibilityRole="link" hitSlop={6}>
+              <Text size={12} weight="medium" color={t.c.primary}>
+                Open
+              </Text>
+            </Pressable>
+          )}
+        </View>
       ))}
       {vc.expiresAt && (
         <Text size={12} color={t.c.warning}>
@@ -94,6 +104,13 @@ function CaseCard({ vc }: { vc: VerificationCase }) {
 }
 
 /** Trust & safety: KYC verification workflow and review moderation. */
+/** Opens a private KYC document through a five-minute signed link. */
+async function openDocument(path: string) {
+  const link = await documentLink(path);
+  if (!link.ok) return toast(link.error, 'alert-circle');
+  await Linking.openURL(link.value);
+}
+
 function Approvals() {
   const t = useRoleTheme();
   const params = useLocalSearchParams<{ tab?: Tab }>();

@@ -2,7 +2,8 @@
  * A throwaway Postgres for checking the SQL without a Supabase project:
  * PGlite (Postgres compiled to WebAssembly) in this Node process, with a
  * small shim for what Supabase provides (the auth schema, auth.uid(), the
- * anon/authenticated/service_role roles and their default grants).
+ * anon/authenticated/service_role/supabase_auth_admin roles, their default
+ * grants, and the storage schema's buckets, objects and foldername()).
  *
  * Nothing here touches a real database. Used by db-check.mjs and parity.mjs.
  */
@@ -32,6 +33,20 @@ grant select on auth.users to authenticated, service_role;
 alter default privileges in schema public grant all on tables to anon, authenticated, service_role;
 alter default privileges in schema public grant all on sequences to anon, authenticated, service_role;
 alter default privileges in schema public grant execute on functions to anon, authenticated, service_role;
+do $$ begin create role supabase_auth_admin nologin; exception when duplicate_object then null; end $$;
+grant usage on schema public to supabase_auth_admin;
+
+-- Supabase Storage, just enough for bucket rows and object policies.
+create schema if not exists storage;
+create table if not exists storage.buckets (id text primary key, name text not null, public boolean not null default false, file_size_limit bigint, allowed_mime_types text[], created_at timestamptz not null default now());
+create table if not exists storage.objects (id uuid primary key default gen_random_uuid(), bucket_id text references storage.buckets (id), name text not null, owner uuid, metadata jsonb, created_at timestamptz not null default now(), updated_at timestamptz not null default now(), unique (bucket_id, name));
+alter table storage.objects enable row level security;
+create or replace function storage.foldername(name text) returns text[] language sql immutable as $$
+  select (string_to_array(name, '/'))[1:greatest(array_length(string_to_array(name, '/'), 1) - 1, 0)]
+$$;
+grant usage on schema storage to anon, authenticated, service_role;
+grant all on storage.objects to authenticated, service_role;
+grant select on storage.buckets to anon, authenticated, service_role;
 `;
 
 /** The migration files in order. */

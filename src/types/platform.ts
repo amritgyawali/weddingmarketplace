@@ -883,7 +883,8 @@ export interface VerificationCase {
   subtitle: string;
   status: VerificationStatus;
   checks: Record<'business' | 'identity' | 'phone' | 'bank' | 'portfolio', CheckState>;
-  documents: { kind: string; name: string; status: CheckState }[];
+  /** `path` is the private Storage path when the file was uploaded (Supabase builds). */
+  documents: { kind: string; name: string; status: CheckState; path?: string }[];
   notes?: string;
   submittedAt: string;
   decidedAt?: string;
@@ -1070,6 +1071,8 @@ export interface PortfolioItem {
   providerId: string;
   image?: PhotoKey;
   uri?: string;
+  /** Cloudinary public id when the file was uploaded (Supabase builds); `uri` then holds its card-size URL. */
+  publicId?: string;
   kind: 'image' | 'video';
   caption: string;
   tags: string[];

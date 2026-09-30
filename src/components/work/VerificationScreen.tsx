@@ -2,6 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import * as DocumentPicker from 'expo-document-picker';
 import { ScrollView, StyleSheet, View } from 'react-native';
 
+import { privateFilesReady, uploadDocument } from '@/backend/files';
 import { Card, KButton, SectionTitle, StackHeader, StatusPill } from '@/components/kit';
 import { Text } from '@/components/ui/Text';
 import { toast } from '@/components/ui/Toast';
@@ -26,9 +27,17 @@ export function VerificationScreen() {
   const upload = async (kind: string) => {
     const res = await DocumentPicker.getDocumentAsync({ copyToCacheDirectory: true, type: ['application/pdf', 'image/*'] });
     if (res.canceled || !res.assets?.[0]) return;
+    const file = res.assets[0];
+    // Supabase builds keep KYC papers in the private documents bucket; the demo only records the name.
+    let path: string | undefined;
+    if (privateFilesReady()) {
+      const up = await uploadDocument({ uri: file.uri, name: file.name, mimeType: file.mimeType }, 'kyc');
+      if (!up.ok) return toast(up.error, 'alert-circle');
+      path = up.value;
+    }
     if (!vc) submit(account);
     const current = useDb.getState().verifications.find((v) => v.subjectId === (account.listingId ?? account.id) || v.subjectId === account.id);
-    if (current) addDoc(current.id, { kind, name: res.assets[0].name });
+    if (current) addDoc(current.id, { kind, name: file.name, path });
     toast(`${kind} uploaded`, 'cloud-upload');
   };
 

@@ -1,0 +1,40 @@
+# Supabase CLI configuration (`npx supabase link`, `db push`, `functions deploy`).
+# See docs/SETUP_SUPABASE.md. Nothing is deployed until the owner runs those.
+
+project_id = "vivah"
+
+[auth]
+site_url = "https://vivah.com.np"
+additional_redirect_urls = ["vivah://", "http://localhost:8081"]
+jwt_expiry = 3600
+enable_refresh_token_rotation = true
+
+[auth.email]
+# Owner decision: sign-in by a 6-digit email code for the first year (no SMS).
+enable_signup = true
+enable_confirmations = false
+otp_length = 6
+otp_expiry = 600
+
+[auth.email.template.magic_link]
+subject = "Your Vivah sign-in code"
+content_path = "./supabase/templates/otp.html"
+
+[auth.sms]
+enable_signup = false
+
+# Puts app roles, staff role and persona key into every JWT (0012).
+[auth.hook.custom_access_token]
+enabled = true
+uri = "pg-functions://postgres/public/custom_access_token_hook"
+
+# send-otp is how people sign in, so it can't require a session.
+[functions.send-otp]
+verify_jwt = false
+
+[functions.media-sign]
+verify_jwt = true
+
+# Called by the database with a shared secret, not a user JWT.
+[functions.notify-fanout]
+verify_jwt = false

@@ -7,11 +7,13 @@ import { useEffect, useState } from 'react';
 import { AppState, Platform } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
+import { getAccessToken, usesEmailSignIn } from '@/backend/auth';
 import { ToastHost } from '@/components/ui/Toast';
 import { colors } from '@/constants/theme';
 import { useHydrated } from '@/hooks/useHydrated';
 import { useAppStore } from '@/store/useAppStore';
 import { useDb } from '@/store/useDb';
+import { logout } from '@/services/auth';
 import { useSession } from '@/store/useSession';
 import { APP_FONTS } from '@/theme/fonts';
 
@@ -47,6 +49,14 @@ export default function RootLayout() {
   useEffect(() => {
     if (ready) SplashScreen.hideAsync().catch(() => {});
   }, [ready]);
+
+  // Supabase builds: a device session whose tokens can no longer be refreshed signs out.
+  useEffect(() => {
+    if (!ready || !role || !usesEmailSignIn()) return;
+    getAccessToken().then((token) => {
+      if (!token) logout();
+    });
+  }, [ready, role]);
 
   if (!ready) return null;
 
