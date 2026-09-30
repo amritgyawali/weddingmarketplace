@@ -30,8 +30,10 @@ yarn-error.*
 .DS_Store
 *.pem
 
-# local env files
+# local env files: keys live here, never in git (templates end in .example)
+.env
 .env*.local
+.env.vercel
 
 # typescript
 *.tsbuildinfo
