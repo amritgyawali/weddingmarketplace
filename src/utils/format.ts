@@ -31,6 +31,19 @@ export const formatMoneyRange = (lo: number, hi: number) =>
 
 const trim = (n: number) => (Math.round(n * 10) / 10).toString().replace(/\.0$/, '');
 
+/** How families talk about wedding budgets: "7.5 lakh", "26 lakh", "1.2 crore". */
+export function formatLakh(value: number): string {
+  const abs = Math.abs(value);
+  if (abs >= 10_000_000) return `${trim(value / 10_000_000)} crore`;
+  return `${abs >= 1_000_000 ? Math.round(value / 100_000) : trim(value / 100_000)} lakh`;
+}
+
+/** NPR 7.1–26 lakh, or NPR 45 lakh – 1.2 crore across the boundary. */
+export function formatLakhRange(lo: number, hi: number): string {
+  if (hi < 10_000_000) return `${CURRENCY} ${formatLakh(lo).replace(' lakh', '')}–${formatLakh(hi)}`;
+  return `${CURRENCY} ${formatLakh(lo)} – ${formatLakh(hi)}`;
+}
+
 /** Parse "1,50,000", "150000", "150k", "1.5m" into a number (NaN when invalid). */
 export function parseMoney(input: string): number {
   const s = input.trim().toLowerCase().replace(/npr|rs\.?|,|\s/g, '');

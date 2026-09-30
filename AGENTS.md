@@ -48,7 +48,7 @@ These product decisions are fixed. Do not reverse them without the owner's say-s
 
 Public pages need no sign-in: `/w/[slug]` (the couple's wedding website and registry) and `/rsvp/[code]` (the guest RSVP).
 
-**Routing.** Routing is **Expo Router**, with a `Stack.Protected` guard per role in `src/app/_layout.tsx`. A role must never be able to reach another role's app. Signed out, users go to `welcome/`. A couple that hasn't onboarded goes to `onboarding/`.
+**Routing.** Routing is **Expo Router**, with a `Stack.Protected` guard per role in `src/app/_layout.tsx`. A role must never be able to reach another role's app. Signed out, users go to `welcome/`. A couple that hasn't onboarded goes to `onboarding/` (one screen, five questions: who, date, city, guests, budget, then a review card). "Build our plan" there calls `submitPlan` with sensible defaults (Wedding + Reception, the six core services); "Just browse" only saves the answers to `useAppStore` (`guests`, `budget`), which prefill the full 8-step plan wizard later.
 
 **Demo sign-in.** Use any `98XXXXXXXX` number with OTP **1234**, or tap "Continue as …" on each login screen. New platform staff need the access code `VIVAH2026`.
 
@@ -72,7 +72,7 @@ src/
     work/              shared workflow UI used by several roles: MatchPanel, QuoteEditor, QuoteDocument,
                        Bookings, Payments, TaskBoard, Timeline, ThreadView, AvailabilityCalendar, RunSheet,
                        ContractView, SignaturePad, GigForm, ApplicantsList, VerificationScreen…
-    planner/ home/ listing/ detail/ genie/ ideas/ navigation/ onboarding/
+    planner/ home/ listing/ detail/ genie/ ideas/ navigation/ onboarding/ wedding/
   store/
     useDb.ts           re-export of store/db — THE shared backend (all 4 roles)
     db/                backend split by domain: core, quotes, projects, finance, gigs, chat, trust, planner
@@ -143,7 +143,7 @@ Every project status change appends to `statusHistory`. Important actions also c
 ## 5. The core loop and its invariants (must stay true)
 
 ```
-Plan wizard (8 steps) → submitPlan → Project + coordinator auto-assigned + project thread + checklist
+Couple onboarding (5 questions) or plan wizard (8 steps) → submitPlan → Project + coordinator auto-assigned + project thread + checklist
   → runMatching per requirement (ranked candidates) → proposeBooking (provider confirms)
   → draftProjectQuote → sendQuote (v1 frozen) → reviseQuote/sendQuote (v2…) → couple accepts vN
   → bookings CONFIRMED → milestones, payables (40/60), revenue, contracts, calendars BOOKED
@@ -282,6 +282,21 @@ Never:
 - delete or rename routes, store actions, persisted keys, status values or seed ids that other code or users depend on;
 - disable lint rules or type checks to get green;
 - merge to `main` or force-push. Work on a feature branch and let the owner review.
+
+### Git workflow: push every branch, open a PR for every finished task
+
+The owner wants every piece of work on GitHub and reviewable as a pull request. This is standing permission to commit, push and open PRs without asking each time.
+
+1. **Branch.** Never commit to `main`. Start each task on a new branch (`feature/<short-name>` or `fix/<short-name>`) from the latest `origin/main`, or from the branch the task builds on.
+2. **Push new branches immediately.** Right after creating a branch, run `git push -u origin <branch>` so it exists on GitHub from the start.
+3. **When a task is complete** and the §9 checks pass:
+   - stage only the files this task changed (`git add <paths>`; never `git add -A`, because several sessions share one working tree);
+   - commit with a clear message: a short imperative subject, then what changed and why;
+   - `git push`;
+   - open a pull request into `main`. If the branch was cut from another unmerged feature branch, target that branch so the diff shows only this task. If a PR for the branch already exists, the push updates it; don't open a duplicate.
+4. **PR description:** what changed and why, how it was tested (tsc, lint, the flows you smoke-tested), and anything the reviewer should look at. Mark it as a draft and list the failures if a check could not be made to pass.
+5. **Opening the PR.** This machine has no `gh` CLI. Use the GitHub REST API (`POST /repos/amritgyawali/weddingmarketplace/pulls`) with the token from `git credential fill`. Never print, log or commit the token.
+6. **Never** merge a PR, push to `main`, force-push, or rewrite pushed history. The owner reviews and merges.
 
 ## 10. Known defects (from `TEST_REPORT.md`, 29 Sep 2026)
 
