@@ -68,7 +68,7 @@ export default function WriteReviewScreen() {
                 photos: [],
                 photoUris: r.photoUris,
               });
-              toast(saved.status === 'published' ? 'Thanks! Your review is live 💐' : 'Thanks! Your review is with our team for a quick check', 'star');
+              toast(saved.status === 'published' ? 'Your review is live. Dhanyabad!' : 'Thanks! Your review is with our team for a quick check', 'star');
               router.back();
             }}
           />

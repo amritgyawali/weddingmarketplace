@@ -27,11 +27,11 @@ export default function ControlRoom() {
 
   return (
     <View style={{ flex: 1, backgroundColor: t.c.bg }}>
-      <RoleHeader eyebrow="WEDDING EXECUTION" title="Control room" subtitle={`${active.length} active today · ${incidents.length} open incidents`} />
+      <RoleHeader title="Control room" subtitle={`${active.length} active today · ${incidents.length} open incidents`} />
       <ScrollView contentContainerStyle={{ padding: 14, gap: 14, paddingBottom: 30 }}>
         {emergencies.length > 0 && (
           <View>
-            <SectionTitle title="🚨 Emergency replacements" />
+            <SectionTitle title="Emergency replacements" />
             <View style={{ gap: 10 }}>
               {emergencies.map((g) => (
                 <Card key={g.id} onPress={() => router.push({ pathname: '/platform/gig/[id]', params: { id: g.id } })} style={[styles.incident, { borderLeftColor: t.c.danger }]}>
@@ -89,7 +89,7 @@ export default function ControlRoom() {
                   <Card key={event.id} style={{ gap: 12, borderColor: event.status === 'live' ? t.c.danger : t.c.border }}>
                     <View style={styles.row}>
                       <View style={{ flex: 1 }}>
-                        <Text size={12} weight="bold" color={t.c.primary}>
+                        <Text size={12} weight="medium" color={t.c.muted}>
                           {project.code} · {project.city}
                         </Text>
                         <Text size={17} weight="bold" color={t.c.textStrong}>
@@ -99,7 +99,7 @@ export default function ControlRoom() {
                           {event.venue} · {event.startTime} · {event.guests} guests
                         </Text>
                       </View>
-                      <StatusPill status={event.status} label={event.status === 'live' ? '● LIVE' : undefined} />
+                      <StatusPill status={event.status} label={event.status === 'live' ? 'Live now' : undefined} />
                     </View>
                     <View style={styles.statRow}>
                       <View style={[styles.stat, { backgroundColor: t.c.surfaceAlt }]}>
@@ -163,7 +163,7 @@ export default function ControlRoom() {
                       {event.date ? formatShortDate(event.date) : 'TBC'} · {event.startTime} · {project.city}
                     </Text>
                   </View>
-                  <Text size={12} weight="bold" color={t.c.primary}>
+                  <Text size={12} weight="medium" color={t.c.muted}>
                     in {event.date ? daysUntil(event.date) : '?'}d
                   </Text>
                 </View>

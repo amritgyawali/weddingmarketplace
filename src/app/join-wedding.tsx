@@ -86,7 +86,7 @@ export default function JoinWeddingScreen() {
       <ScreenHeader title="Join a Wedding" />
       <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
         <View style={styles.body}>
-          <Text size={26} weight="bold" color={colors.heading}>
+          <Text serif size={24} weight="bold" color={colors.heading} lineHeight={34}>
             Have an invite code?
           </Text>
           <Text size={15} color={colors.textBody} lineHeight={22}>
@@ -135,7 +135,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     height: 64,
     borderRadius: radius.md,
-    borderWidth: 1.5,
+    borderWidth: 1,
     borderColor: colors.border,
     textAlign: 'center',
     fontFamily: fonts.bold,

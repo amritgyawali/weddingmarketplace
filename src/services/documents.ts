@@ -70,7 +70,7 @@ export function contractHtml(c: Contract) {
 export function guestListHtml(project: Project, guests: Guest[], events: ProjectEvent[]) {
   const head = events.map((e) => `<th>${esc(e.name)}</th>`).join('');
   const rows = guests
-    .map((g) => `<tr><td><b>${esc(g.name)}</b>${g.vip ? ' ⭐' : ''}<div class="muted">${esc(g.category)} · ${g.side}</div></td><td>${esc(g.phone ?? '')}</td>${events.map((e) => {
+    .map((g) => `<tr><td><b>${esc(g.name)}</b>${g.vip ? ' (VIP)' : ''}<div class="muted">${esc(g.category)} · ${g.side}</div></td><td>${esc(g.phone ?? '')}</td>${events.map((e) => {
       const inv = g.invites.find((i) => i.eventId === e.id);
       return `<td>${inv ? `${inv.rsvp.toUpperCase()}${inv.attending ? ` (${inv.attending})` : ''}` : '—'}</td>`;
     }).join('')}<td>${esc(g.dietary.join(', '))}</td></tr>`)

@@ -8,8 +8,8 @@ import { BackButton } from './IconButton';
 import { Text } from './Text';
 
 /**
- * Top bar used by stack screens: circular back button, centred title and
- * an optional right slot. Includes the status-bar inset.
+ * Top bar used by stack screens: back chevron, centred title and an optional
+ * right slot. Includes the status-bar inset.
  */
 export function ScreenHeader({
   title,
@@ -37,14 +37,14 @@ export function ScreenHeader({
     <View
       style={[
         styles.wrap,
-        { paddingTop: insets.top + 8, backgroundColor: background },
+        { paddingTop: insets.top + 4, backgroundColor: background },
         border && styles.border,
         style,
       ]}>
       <View style={styles.side}>{left ?? (back ? <BackButton onPress={onBack} /> : null)}</View>
       <View style={styles.center}>
         {title && (
-          <Text weight="bold" size={18} color={colors.heading} numberOfLines={1} align="center">
+          <Text weight="semibold" size={17} color={colors.heading} numberOfLines={1} align="center">
             {title}
           </Text>
         )}
@@ -63,13 +63,13 @@ const styles = StyleSheet.create({
   wrap: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: GUTTER - 4,
-    paddingBottom: 10,
-    minHeight: 56,
+    paddingHorizontal: GUTTER - 8,
+    paddingBottom: 6,
+    minHeight: 52,
     zIndex: 10,
   },
   border: { borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: colors.hairline },
-  side: { minWidth: 76, flexDirection: 'row', alignItems: 'center', gap: 10 },
+  side: { minWidth: 76, flexDirection: 'row', alignItems: 'center', gap: 4 },
   right: { justifyContent: 'flex-end' },
   center: { flex: 1, alignItems: 'center' },
 });

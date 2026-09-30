@@ -1,6 +1,4 @@
 import { Ionicons } from '@expo/vector-icons';
-import { Image } from 'expo-image';
-import { LinearGradient } from 'expo-linear-gradient';
 import { router, type Href } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
 import {
@@ -26,13 +24,10 @@ import Animated, {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { VendorMiniCard, VenueMiniCard } from '@/components/listing/MiniCards';
-import { GenieAvatar } from '@/components/ui/GenieFab';
-import { HeadsetIcon, SparklesIcon } from '@/components/ui/Icons';
 import { PressableScale, triggerHaptic } from '@/components/ui/PressableScale';
 import { Text } from '@/components/ui/Text';
 import { BRAND } from '@/constants/brand';
-import { photos } from '@/constants/images';
-import { colors, fonts, gradients, GUTTER, inputReset, radius, shadows } from '@/constants/theme';
+import { colors, fonts, GUTTER, inputReset, radius } from '@/constants/theme';
 import { askAssistant, POPULAR_SUGGESTIONS, type AssistantReply } from '@/services/assistant';
 import { useAppStore } from '@/store/useAppStore';
 import { uid } from '@/utils/format';
@@ -62,7 +57,13 @@ function TypingDots() {
 }
 
 function AssistantAvatar() {
-  return <Image source={photos.assistantFace} style={styles.miniAvatar} contentFit="cover" />;
+  return (
+    <View style={styles.miniAvatar}>
+      <Text size={13} weight="bold" serif color={colors.primary} lineHeight={18}>
+        V
+      </Text>
+    </View>
+  );
 }
 
 function AssistantBubble({ reply, onSuggestion }: { reply: AssistantReply; onSuggestion: (s: string) => void }) {
@@ -98,14 +99,14 @@ function AssistantBubble({ reply, onSuggestion }: { reply: AssistantReply; onSug
             <Text size={14} weight="semibold" color={colors.primary}>
               {reply.action.label}
             </Text>
-            <Ionicons name="arrow-forward" size={15} color={colors.primary} />
+            <Ionicons name="chevron-forward" size={15} color={colors.primary} />
           </PressableScale>
         )}
         {!!reply.suggestions?.length && (
           <View style={styles.inlineSuggestions}>
             {reply.suggestions.map((s) => (
               <Pressable key={s} onPress={() => onSuggestion(s)} style={styles.inlineChip}>
-                <Text size={13} weight="medium" color={colors.primary}>
+                <Text size={13} color={colors.heading}>
                   {s}
                 </Text>
               </Pressable>
@@ -158,24 +159,21 @@ export default function AssistantScreen() {
     <View>
       <Animated.View entering={FadeInDown.duration(380)} style={styles.assistantRow}>
         <AssistantAvatar />
-        <View style={[styles.bubble, styles.bubbleAssistant, styles.greeting]}>
-          <Text size={17} weight="semibold" color={colors.textStrong}>
-            Hi ! I am {BRAND.assistantName}.
-          </Text>
-          <Text size={16} color={colors.textStrong}>
-            How can I help you today?
+        <View style={[styles.bubble, styles.bubbleAssistant]}>
+          <Text size={15} color={colors.textStrong} lineHeight={22}>
+            Namaste. Ask about venues, vendors, prices or planning in your city and I’ll pull answers from our listings.
           </Text>
         </View>
       </Animated.View>
       {messages.length === 0 && (
-        <Animated.View entering={FadeInUp.duration(400).delay(150)} style={{ marginTop: 34 }}>
-          <Text size={18} weight="semibold" color={colors.textStrong} style={{ marginBottom: 12 }}>
-            Popular suggestions
+        <Animated.View entering={FadeInUp.duration(300).delay(100)} style={{ marginTop: 24 }}>
+          <Text size={13} color={colors.textMuted} style={{ marginBottom: 4, marginLeft: 4 }}>
+            Try asking
           </Text>
           {POPULAR_SUGGESTIONS.map((s) => (
             <PressableScale key={s} onPress={() => send(s)} accessibilityLabel={s} style={styles.suggestion}>
-              <SparklesIcon size={22} />
-              <Text size={16} weight="medium" color={colors.textStrong} style={{ flexShrink: 1 }}>
+              <Ionicons name="return-down-forward-outline" size={16} color={colors.textMuted} />
+              <Text size={15} color={colors.textStrong} style={{ flexShrink: 1 }}>
                 {s}
               </Text>
             </PressableScale>
@@ -187,26 +185,23 @@ export default function AssistantScreen() {
 
   return (
     <View style={styles.root}>
-      <LinearGradient colors={gradients.assistantBg} locations={[0, 0.12, 0.55, 1]} style={StyleSheet.absoluteFill} />
-
       <View style={[styles.header, { paddingTop: insets.top + 8 }]}>
         <Pressable onPress={() => router.back()} hitSlop={12} accessibilityLabel="Go back" style={{ padding: 4 }}>
-          <Ionicons name="chevron-back" size={28} color={colors.textStrong} />
+          <Ionicons name="chevron-back" size={24} color={colors.textStrong} />
         </Pressable>
-        <GenieAvatar size={50} ring={2} />
         <View style={{ flex: 1 }}>
-          <Text size={20} weight="medium" color={colors.textStrong} numberOfLines={1}>
+          <Text size={17} weight="semibold" color={colors.textStrong} numberOfLines={1}>
             {BRAND.assistantTitle}
           </Text>
-          <Text size={13} color={colors.textMuted} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.85}>
+          <Text size={12} color={colors.textMuted} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.85}>
             {BRAND.assistantSubtitle}
           </Text>
         </View>
-        <PressableScale onPress={() => router.navigate('/genie')} accessibilityLabel="Talk to an expert" style={styles.expert}>
-          <Text size={15} color={colors.textMuted}>
-            Expert
+        <PressableScale onPress={() => router.navigate('/genie')} accessibilityLabel="Talk to a planner" style={styles.expert}>
+          <Ionicons name="call-outline" size={15} color={colors.heading} />
+          <Text size={14} weight="medium" color={colors.heading}>
+            Talk to a planner
           </Text>
-          <HeadsetIcon size={18} />
         </PressableScale>
       </View>
 
@@ -244,11 +239,11 @@ export default function AssistantScreen() {
         />
 
         <View style={[styles.composer, { paddingBottom: Math.max(insets.bottom, 12) }]}>
-          <View style={[styles.inputPill, shadows.card]}>
+          <View style={styles.inputPill}>
             <TextInput
               value={input}
               onChangeText={setInput}
-              placeholder="Ask Question"
+              placeholder="Ask about venues, vendors or prices"
               placeholderTextColor={colors.placeholder}
               style={[styles.input, inputReset]}
               multiline
@@ -261,12 +256,12 @@ export default function AssistantScreen() {
               onPress={() => send(input)}
               disabled={!canSend}
               accessibilityLabel="Send message"
-              style={[styles.send, { backgroundColor: canSend ? colors.primary : '#B8B9C6' }]}>
-              <Ionicons name="paper-plane" size={20} color={colors.white} />
+              style={[styles.send, { backgroundColor: canSend ? colors.primary : colors.bgMuted }]}>
+              <Ionicons name="arrow-up" size={20} color={canSend ? colors.white : colors.textSubtle} />
             </PressableScale>
           </View>
-          <Text size={13} color={colors.textMuted} align="center" style={{ marginTop: 10 }}>
-            {BRAND.assistantName} may make mistakes. Please verify key info.
+          <Text size={12} color={colors.textMuted} align="center" style={{ marginTop: 8 }}>
+            Answers are automatic and come from our listings. Check prices with the vendor before you book.
           </Text>
         </View>
       </KeyboardAvoidingView>
@@ -284,50 +279,42 @@ const styles = StyleSheet.create({
     paddingBottom: 12,
     backgroundColor: colors.white,
     borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: colors.hairline,
+    borderBottomColor: colors.border,
   },
   expert: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
     borderWidth: 1,
-    borderColor: colors.hairline,
-    borderRadius: radius.pill,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    backgroundColor: colors.white,
+    borderColor: colors.border,
+    borderRadius: radius.md,
+    paddingHorizontal: 10,
+    paddingVertical: 7,
   },
-  list: { paddingHorizontal: 12, paddingTop: 24, paddingBottom: 16, gap: 14 },
-  assistantRow: { flexDirection: 'row', alignItems: 'flex-start', gap: 10 },
-  miniAvatar: { width: 36, height: 36, borderRadius: 18, borderWidth: 1, borderColor: '#F9C4DC' },
-  bubble: { borderRadius: 20, paddingHorizontal: 16, paddingVertical: 12, maxWidth: '86%' },
-  bubbleAssistant: { backgroundColor: colors.white, alignSelf: 'flex-start', ...shadows.pill },
-  greeting: { paddingHorizontal: 20, paddingVertical: 14, borderRadius: 24 },
-  bubbleUser: { backgroundColor: colors.primary, alignSelf: 'flex-end', borderBottomRightRadius: 6 },
+  list: { paddingHorizontal: 12, paddingTop: 20, paddingBottom: 16, gap: 14 },
+  assistantRow: { flexDirection: 'row', alignItems: 'flex-start', gap: 8 },
+  miniAvatar: { width: 28, height: 28, borderRadius: 14, borderWidth: 1, borderColor: colors.border, alignItems: 'center', justifyContent: 'center', marginTop: 2 },
+  bubble: { borderRadius: 12, paddingHorizontal: 14, paddingVertical: 10, maxWidth: '86%' },
+  bubbleAssistant: { backgroundColor: colors.bgSoft, alignSelf: 'flex-start', borderTopLeftRadius: 4 },
+  bubbleUser: { backgroundColor: colors.primary, alignSelf: 'flex-end', borderBottomRightRadius: 4 },
   suggestion: {
     flexDirection: 'row',
     alignItems: 'center',
-    alignSelf: 'flex-start',
     gap: 10,
-    backgroundColor: colors.white,
-    borderWidth: 1.5,
-    borderColor: '#F7B3D2',
-    borderRadius: radius.pill,
-    paddingHorizontal: 18,
-    paddingVertical: 13,
-    marginBottom: 12,
-    maxWidth: '92%',
-    ...shadows.pill,
+    paddingHorizontal: 4,
+    paddingVertical: 11,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomColor: colors.border,
   },
   cards: { gap: 10, paddingRight: 12 },
-  cardShell: { backgroundColor: colors.white, borderRadius: radius.lg, padding: 8, ...shadows.pill },
+  cardShell: { backgroundColor: colors.white, borderRadius: radius.lg, padding: 8, borderWidth: 1, borderColor: colors.border },
   actionBtn: {
     flexDirection: 'row',
     alignItems: 'center',
     alignSelf: 'flex-start',
     gap: 6,
     backgroundColor: colors.white,
-    borderRadius: radius.pill,
+    borderRadius: radius.sm,
     paddingHorizontal: 14,
     paddingVertical: 9,
     borderWidth: 1,
@@ -335,36 +322,36 @@ const styles = StyleSheet.create({
   },
   inlineSuggestions: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
   inlineChip: {
-    backgroundColor: 'rgba(255,255,255,0.85)',
-    borderRadius: radius.pill,
+    backgroundColor: colors.white,
+    borderRadius: radius.sm,
     borderWidth: 1,
-    borderColor: '#F7B3D2',
+    borderColor: colors.border,
     paddingHorizontal: 12,
     paddingVertical: 7,
   },
   typing: { flexDirection: 'row', gap: 5, paddingVertical: 5 },
-  typingDot: { width: 8, height: 8, borderRadius: 4, backgroundColor: colors.primary },
-  composer: { paddingHorizontal: GUTTER - 4, paddingTop: 10, backgroundColor: 'rgba(250,247,253,0.9)' },
+  typingDot: { width: 6, height: 6, borderRadius: 3, backgroundColor: colors.textMuted },
+  composer: { paddingHorizontal: GUTTER - 4, paddingTop: 10, backgroundColor: colors.white, borderTopWidth: StyleSheet.hairlineWidth, borderTopColor: colors.border },
   inputPill: {
     flexDirection: 'row',
     alignItems: 'flex-end',
     backgroundColor: colors.white,
-    borderRadius: radius.md,
-    paddingLeft: 16,
-    paddingRight: 8,
-    paddingVertical: 8,
-    minHeight: 60,
+    borderRadius: radius.lg,
+    paddingLeft: 14,
+    paddingRight: 6,
+    paddingVertical: 6,
+    minHeight: 48,
     borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.9)',
+    borderColor: colors.border,
   },
   input: {
     flex: 1,
     fontFamily: fonts.regular,
-    fontSize: 17,
+    fontSize: 16,
     color: colors.textStrong,
     maxHeight: 120,
-    paddingTop: 10,
-    paddingBottom: 10,
+    paddingTop: 8,
+    paddingBottom: 8,
   },
-  send: { width: 44, height: 44, borderRadius: 22, alignItems: 'center', justifyContent: 'center' },
+  send: { width: 36, height: 36, borderRadius: 18, alignItems: 'center', justifyContent: 'center' },
 });

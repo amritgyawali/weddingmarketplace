@@ -23,15 +23,15 @@ export interface IconButtonProps {
   style?: StyleProp<ViewStyle>;
 }
 
-/** Round grey action button used across every top bar in the reference UI. */
+/** Bare icon button for top bars. Pass `background` for a filled variant (e.g. over photos). */
 export function IconButton({
   icon,
   children,
   onPress,
-  size = 36,
-  iconSize = 19,
-  color = colors.text,
-  background = colors.bgMuted,
+  size = 38,
+  iconSize = 22,
+  color = colors.heading,
+  background = 'transparent',
   badge,
   accessibilityLabel,
   style,
@@ -59,13 +59,13 @@ export function IconButton({
   );
 }
 
-/** Circular back chevron — falls back to home when there is no history (deep links). */
+/** Back chevron. Falls back to home when there is no history (deep links). */
 export function BackButton({ onPress, style }: { onPress?: () => void; style?: StyleProp<ViewStyle> }) {
   return (
     <IconButton
       icon="chevron-back"
-      iconSize={20}
-      size={34}
+      iconSize={24}
+      size={38}
       accessibilityLabel="Go back"
       onPress={onPress ?? (() => (router.canGoBack() ? router.back() : router.replace('/')))}
       style={style}
@@ -77,12 +77,12 @@ const styles = StyleSheet.create({
   base: { alignItems: 'center', justifyContent: 'center' },
   badge: {
     position: 'absolute',
-    top: -3,
-    right: -3,
-    minWidth: 17,
-    height: 17,
+    top: 2,
+    right: 0,
+    minWidth: 16,
+    height: 16,
     paddingHorizontal: 4,
-    borderRadius: 9,
+    borderRadius: 8,
     backgroundColor: colors.primary,
     alignItems: 'center',
     justifyContent: 'center',

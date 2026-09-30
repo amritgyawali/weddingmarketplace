@@ -77,7 +77,7 @@ export default function AssignmentScreen() {
 
   const addProofPhoto = async () => {
     const res = await ImagePicker.launchImageLibraryAsync({ mediaTypes: ['images'], quality: 0.5 });
-    if (!res.canceled && res.assets[0]) setProof((p) => `${p}${p ? '\n' : ''}📷 ${res.assets[0].fileName ?? 'photo'} attached`);
+    if (!res.canceled && res.assets[0]) setProof((p) => `${p}${p ? '\n' : ''}Photo: ${res.assets[0].fileName ?? 'photo'} attached`);
   };
 
   return (
@@ -106,7 +106,7 @@ export default function AssignmentScreen() {
         {a.status === 'ASSIGNED' && (
           <View style={styles.row}>
             <KButton label="Can’t make it" variant="danger" size="sm" style={{ flex: 1 }} onPress={() => setCantOpen(true)} />
-            <KButton label="Confirm I’ll be there" icon="checkmark" style={{ flex: 1.5 }} onPress={() => { setStatus(project.id, booking.id, a.id, 'CONFIRMED'); toast('Confirmed ✅'); }} />
+            <KButton label="Confirm I’ll be there" icon="checkmark" style={{ flex: 1.5 }} onPress={() => { setStatus(project.id, booking.id, a.id, 'CONFIRMED'); toast('Confirmed'); }} />
           </View>
         )}
         {a.status === 'CONFIRMED' && (
@@ -226,6 +226,6 @@ export default function AssignmentScreen() {
 }
 
 const styles = StyleSheet.create({
-  hero: { flexDirection: 'row', alignItems: 'center', gap: 14, borderWidth: 1.5 },
+  hero: { flexDirection: 'row', alignItems: 'center', gap: 14, borderWidth: 1 },
   row: { flexDirection: 'row', alignItems: 'center', gap: 8 },
 });

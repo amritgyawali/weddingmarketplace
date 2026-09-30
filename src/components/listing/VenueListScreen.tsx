@@ -3,9 +3,7 @@ import { useState } from 'react';
 import { FlatList, RefreshControl, StyleSheet, View } from 'react-native';
 
 import { EmptyState, ErrorState } from '@/components/ui/EmptyState';
-import { GenieAvatar } from '@/components/ui/GenieFab';
 import { IconButton } from '@/components/ui/IconButton';
-import { PressableScale } from '@/components/ui/PressableScale';
 import { ScreenHeader } from '@/components/ui/ScreenHeader';
 import { SearchBar } from '@/components/ui/SearchBar';
 import { VenueCardSkeleton } from '@/components/ui/Skeleton';
@@ -55,25 +53,27 @@ export function VenueListScreen({
     <View>
       <View style={styles.searchRow}>
         <SearchBar
-          placeholder="Search Venues..."
+          placeholder="Search by name or area"
           value={query}
           onChangeText={setQuery}
           style={{ flex: 1 }}
           height={44}
         />
-        <PressableScale onPress={() => router.push('/assistant')} accessibilityLabel="Ask Wedika AI" activeScale={0.9}>
-          <GenieAvatar size={44} ring={2} />
-        </PressableScale>
       </View>
       <View style={styles.toggleRow}>
-        <Text size={17} weight="medium" color={colors.heading}>
-          Destination Wedding Pricing
-        </Text>
-        <Toggle value={destinationPricing} onValueChange={setDestinationPricing} accessibilityLabel="Destination Wedding Pricing" />
+        <View style={{ flex: 1 }}>
+          <Text size={15} weight="medium" color={colors.heading}>
+            Destination pricing
+          </Text>
+          <Text size={13} color={colors.textMuted}>
+            Show 2-day packages with rooms included
+          </Text>
+        </View>
+        <Toggle value={destinationPricing} onValueChange={setDestinationPricing} accessibilityLabel="Destination pricing" />
       </View>
       {!!data && (
         <Text size={13} color={colors.textMuted} style={styles.count}>
-          {data.length} {data.length === 1 ? 'venue' : 'venues'} found
+          {data.length} {data.length === 1 ? 'venue' : 'venues'}
         </Text>
       )}
     </View>
@@ -86,8 +86,8 @@ export function VenueListScreen({
         onBack={onBack}
         right={
           <IconButton
-            icon="bookmark"
-            iconSize={18}
+            icon="bookmark-outline"
+            iconSize={21}
             badge={shortlistCount}
             accessibilityLabel="Shortlist"
             onPress={() => router.push('/shortlist')}
@@ -138,14 +138,16 @@ export function VenueListScreen({
 
 const styles = StyleSheet.create({
   root: { flex: 1, backgroundColor: colors.white },
-  searchRow: { flexDirection: 'row', alignItems: 'center', gap: 12, paddingHorizontal: GUTTER, paddingTop: 16 },
+  searchRow: { flexDirection: 'row', alignItems: 'center', gap: 12, paddingHorizontal: GUTTER, paddingTop: 12 },
   toggleRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
+    gap: 12,
     paddingHorizontal: GUTTER,
-    paddingTop: 18,
-    paddingBottom: 2,
+    paddingTop: 14,
+    paddingBottom: 12,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomColor: colors.border,
   },
-  count: { paddingHorizontal: GUTTER, paddingTop: 8 },
+  count: { paddingHorizontal: GUTTER, paddingTop: 12 },
 });

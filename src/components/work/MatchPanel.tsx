@@ -87,7 +87,7 @@ function CandidateRow({
         </View>
         <View style={{ alignItems: 'flex-end', gap: 4 }}>
           <View style={[styles.fit, { backgroundColor: `${color}1F` }]}>
-            <Text size={15} weight="extrabold" color={color}>
+            <Text size={15} weight="bold" color={color}>
               {Math.round(candidate.score)}%
             </Text>
           </View>
@@ -201,8 +201,8 @@ export function MatchPanel({ project, requirement }: { project: Project; require
   return (
     <View style={{ gap: 10 }}>
       <View style={styles.rowBetween}>
-        <Text size={13} weight="bold" color={t.c.muted}>
-          {candidates.length ? `RECOMMENDED · ${candidates.length}` : 'NO CANDIDATES YET'}
+        <Text size={13} weight="medium" color={t.c.muted}>
+          {candidates.length ? `Recommended · ${candidates.length}` : 'No candidates yet'}
         </Text>
         <Pressable
           onPress={() => {
@@ -244,7 +244,7 @@ export function MatchPanel({ project, requirement }: { project: Project; require
               <Text size={14} color={t.c.muted}>
                 Overall fit
               </Text>
-              <Text size={28} weight="extrabold" color={fitColor(detail.score, t)}>
+              <Text size={28} weight="bold" color={fitColor(detail.score, t)}>
                 {Math.round(detail.score)}%
               </Text>
             </View>
@@ -285,7 +285,7 @@ export function MatchPanel({ project, requirement }: { project: Project; require
 
 const styles = StyleSheet.create({
   factor: { flexDirection: 'row', alignItems: 'center', gap: 8 },
-  candidate: { borderWidth: 1, borderRadius: 12, padding: 10, gap: 10 },
+  candidate: { borderWidth: 1, borderRadius: 8, padding: 10, gap: 10 },
   candidateTop: { flexDirection: 'row', gap: 10, alignItems: 'center' },
   thumb: { width: 52, height: 52, borderRadius: 10 },
   reasons: { gap: 1, marginTop: 2 },

@@ -1,5 +1,4 @@
 import { Ionicons } from '@expo/vector-icons';
-import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
@@ -58,11 +57,12 @@ function Invitations({ project, readOnly }: { project: Project; readOnly: boolea
 
   return (
     <ScrollView contentContainerStyle={{ padding: 16, gap: 14, paddingBottom: 60 }} keyboardShouldPersistTaps="handled">
-      <LinearGradient colors={design.colors} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={styles.card}>
-        <Text size={13} color={design.accent} tracking={1}>
+      <View style={[styles.card, { backgroundColor: design.colors[0] }]}>
+        <View pointerEvents="none" style={[styles.frame, { borderColor: design.accent }]} />
+        <Text size={13} color={design.accent}>
           ॐ श्री गणेशाय नमः
         </Text>
-        <Text size={30} weight="extrabold" color={design.accent} align="center" style={{ fontFamily: 'serif' }}>
+        <Text serif size={28} weight="bold" color={design.accent} align="center" lineHeight={38}>
           {names}
         </Text>
         <Text size={13} color="#fff" align="center" lineHeight={20}>
@@ -79,12 +79,12 @@ function Invitations({ project, readOnly }: { project: Project; readOnly: boolea
             <QRCode value={siteUrl} size={78} />
           </View>
         )}
-      </LinearGradient>
+      </View>
 
       <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 8 }}>
         {DESIGNS.map((d) => (
           <Pressable key={d.id} onPress={() => setDesign(d)} style={[styles.design, { borderColor: design.id === d.id ? t.c.primary : t.c.border }]}>
-            <LinearGradient colors={d.colors} style={styles.designSwatch} />
+            <View style={[styles.designSwatch, { backgroundColor: d.colors[0], borderColor: d.accent }]} />
             <Text size={12} weight="semibold" color={t.c.text}>
               {d.label}
             </Text>
@@ -197,10 +197,11 @@ export default function InvitationsScreen() {
 }
 
 const styles = StyleSheet.create({
-  card: { borderRadius: 22, padding: 22, gap: 10, alignItems: 'center' },
-  divider: { width: 60, height: 1.5, marginVertical: 4 },
-  qr: { backgroundColor: '#fff', padding: 8, borderRadius: 10, marginTop: 6 },
-  design: { width: 110, borderWidth: 2, borderRadius: 14, padding: 6, gap: 6, alignItems: 'center' },
-  designSwatch: { width: '100%', height: 50, borderRadius: 10 },
+  card: { borderRadius: 4, paddingHorizontal: 26, paddingVertical: 30, gap: 10, alignItems: 'center' },
+  frame: { position: 'absolute', top: 8, left: 8, right: 8, bottom: 8, borderWidth: 1, borderRadius: 2, opacity: 0.7 },
+  divider: { width: 48, height: 1, marginVertical: 4 },
+  qr: { backgroundColor: '#fff', padding: 8, borderRadius: 4, marginTop: 6 },
+  design: { width: 110, borderWidth: 1.5, borderRadius: 8, padding: 6, gap: 6, alignItems: 'center' },
+  designSwatch: { width: '100%', height: 48, borderRadius: 3, borderWidth: 2 },
   icon: { width: 36, height: 36, alignItems: 'center', justifyContent: 'center' },
 });

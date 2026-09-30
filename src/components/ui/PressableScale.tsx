@@ -1,12 +1,12 @@
 import * as Haptics from 'expo-haptics';
 import { Platform, Pressable, type PressableProps, type StyleProp, type ViewStyle } from 'react-native';
-import Animated, { useAnimatedStyle, useSharedValue, withSpring, withTiming } from 'react-native-reanimated';
+import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 export interface PressableScaleProps extends Omit<PressableProps, 'style'> {
   style?: StyleProp<ViewStyle>;
-  /** Scale applied while pressed. */
+  /** Kept for older call sites; presses now dim instead of shrinking. */
   activeScale?: number;
   haptic?: boolean | 'light' | 'medium' | 'selection';
 }
@@ -22,9 +22,9 @@ export const triggerHaptic = (kind: 'light' | 'medium' | 'selection' | 'success'
     ).catch(() => {});
 };
 
-/** Pressable with a spring "squish" — the tactile feel used for every tappable card and pill. */
+/** Pressable that dims briefly while held: the press feedback for every tappable surface. */
 export function PressableScale({
-  activeScale = 0.97,
+  activeScale: _activeScale,
   haptic = false,
   onPressIn,
   onPressOut,
@@ -34,26 +34,26 @@ export function PressableScale({
   disabled,
   ...rest
 }: PressableScaleProps) {
-  const scale = useSharedValue(1);
-  const animatedStyle = useAnimatedStyle(() => ({ transform: [{ scale: scale.get() }] }));
+  const dim = useSharedValue(1);
+  const animatedStyle = useAnimatedStyle(() => ({ opacity: dim.get() }));
 
   return (
     <AnimatedPressable
       accessibilityRole="button"
       disabled={disabled}
       onPressIn={(e) => {
-        scale.set(withTiming(activeScale, { duration: 90 }));
+        dim.set(withTiming(0.72, { duration: 60 }));
         onPressIn?.(e);
       }}
       onPressOut={(e) => {
-        scale.set(withSpring(1, { damping: 14, stiffness: 260 }));
+        dim.set(withTiming(1, { duration: 160 }));
         onPressOut?.(e);
       }}
       onPress={(e) => {
         if (haptic) triggerHaptic(haptic === true ? 'light' : haptic);
         onPress?.(e);
       }}
-      style={[animatedStyle, disabled && { opacity: 0.5 }, style]}
+      style={[animatedStyle, style, disabled && { opacity: 0.45 }]}
       {...rest}>
       {children}
     </AnimatedPressable>

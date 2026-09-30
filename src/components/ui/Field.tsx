@@ -36,9 +36,9 @@ export const Field = forwardRef<TextInput, FieldProps>(function Field({ label, e
 
 const styles = StyleSheet.create({
   input: {
-    minHeight: 50,
+    minHeight: 48,
     borderRadius: radius.md,
-    borderWidth: 1.2,
+    borderWidth: 1,
     borderColor: colors.border,
     backgroundColor: colors.white,
     paddingHorizontal: 14,

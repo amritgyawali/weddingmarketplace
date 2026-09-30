@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import { StyleSheet, type StyleProp, type ViewStyle } from 'react-native';
 
-import { colors, radius, shadows } from '@/constants/theme';
+import { colors, radius } from '@/constants/theme';
 
 import { PressableScale } from './PressableScale';
 import { Text } from './Text';
@@ -11,9 +11,10 @@ export interface ChipProps {
   onPress?: () => void;
   selected?: boolean;
   /**
-   * elevated — white pill with soft shadow (onboarding)
-   * outline  — pink outline (popular searches)
-   * filled   — grey fill, pink when selected (filters)
+   * elevated — white with a hairline border (onboarding choices)
+   * outline  — hairline border, ink text (popular searches)
+   * filled   — quiet grey fill (filters)
+   * All three turn solid ink when selected.
    */
   variant?: 'elevated' | 'outline' | 'filled';
   size?: 'md' | 'lg';
@@ -35,24 +36,21 @@ export function Chip({
   const isLg = size === 'lg';
   const base: StyleProp<ViewStyle> = [
     styles.base,
-    { paddingHorizontal: isLg ? 17 : 14, paddingVertical: isLg ? 11 : 7, minHeight: isLg ? 44 : undefined },
+    { paddingHorizontal: isLg ? 16 : 12, paddingVertical: isLg ? 10 : 6, minHeight: isLg ? 44 : 34 },
   ];
 
   let bg: string = colors.bgMuted;
   let fg: string = colors.text;
   let borderColor = 'transparent';
 
-  if (variant === 'elevated') {
-    bg = selected ? colors.primary : colors.white;
+  if (variant === 'elevated' || variant === 'outline') {
+    bg = selected ? colors.heading : colors.white;
     fg = selected ? colors.white : colors.text;
-  } else if (variant === 'outline') {
-    bg = selected ? colors.primary : colors.white;
-    fg = selected ? colors.white : colors.primary;
-    borderColor = colors.primary;
+    borderColor = selected ? colors.heading : colors.border;
   } else {
-    bg = selected ? colors.primarySoft : colors.bgMuted;
-    fg = selected ? colors.primary : colors.text;
-    borderColor = selected ? colors.primary : 'transparent';
+    bg = selected ? colors.heading : colors.bgMuted;
+    fg = selected ? colors.white : colors.text;
+    borderColor = selected ? colors.heading : colors.bgMuted;
   }
 
   return (
@@ -63,12 +61,11 @@ export function Chip({
       accessibilityLabel={label}
       style={[
         base,
-        { backgroundColor: bg, borderColor, borderWidth: variant === 'elevated' ? 0 : 1.2 },
-        variant === 'elevated' && (selected ? shadows.pinkGlow : shadows.pill),
+        { backgroundColor: bg, borderColor, borderWidth: 1 },
         style,
       ]}>
       {leading}
-      <Text weight={bold || selected ? 'semibold' : 'medium'} size={isLg ? 16 : 14} color={fg}>
+      <Text weight={bold || selected ? 'semibold' : 'medium'} size={isLg ? 15 : 14} color={fg}>
         {label}
       </Text>
     </PressableScale>
@@ -77,7 +74,7 @@ export function Chip({
 
 const styles = StyleSheet.create({
   base: {
-    borderRadius: radius.pill,
+    borderRadius: radius.sm,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',

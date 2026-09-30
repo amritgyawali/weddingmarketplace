@@ -1,5 +1,4 @@
 import { Ionicons } from '@expo/vector-icons';
-import { LinearGradient } from 'expo-linear-gradient';
 import { router, useLocalSearchParams, type Href } from 'expo-router';
 import { useState } from 'react';
 import { Linking, Pressable, ScrollView, StyleSheet, View } from 'react-native';
@@ -17,7 +16,7 @@ import { PaymentsPanel } from '@/components/work/Payments';
 import { CUSTOMER_STATUS, PipelineStepper } from '@/components/work/Pipeline';
 import { TaskBoard } from '@/components/work/TaskBoard';
 import { TimelineView } from '@/components/work/Timeline';
-import { colors, gradients } from '@/constants/theme';
+import { colors } from '@/constants/theme';
 import { bsMonthLabel } from '@/data/events';
 import { SERVICES, findService, serviceName } from '@/data/services';
 import { useCustomerWorkspace } from '@/hooks/useWorkspace';
@@ -61,34 +60,34 @@ function Hero({ project }: { project: Project }) {
   const progress = planningProgress(project);
   const days = daysUntil(project.weddingDate);
   return (
-    <LinearGradient colors={gradients.checklist} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={styles.hero}>
+    <View style={styles.hero}>
       <View style={styles.rowBetween}>
         <View style={{ flex: 1 }}>
-          <Text size={12} weight="bold" color="rgba(255,255,255,0.85)" tracking={0.8}>
-            {project.code} · {project.city.toUpperCase()}
+          <Text size={13} color={colors.textMuted}>
+            {formatLongDate(project.weddingDate)} · {bsMonthLabel(project.weddingDate)}
           </Text>
-          <Text size={24} weight="extrabold" color="#fff">
+          <Text serif size={26} weight="bold" color={colors.heading} lineHeight={36}>
             {project.title}
           </Text>
-          <Text size={13} color="rgba(255,255,255,0.9)">
-            {formatLongDate(project.weddingDate)} · {bsMonthLabel(project.weddingDate)}
+          <Text size={13} color={colors.textMuted}>
+            {project.city} · {project.code}
           </Text>
         </View>
         <View style={styles.countdown}>
-          <Text size={26} weight="extrabold" color="#fff">
+          <Text serif size={30} weight="bold" color={colors.primary} lineHeight={38}>
             {Math.abs(days)}
           </Text>
-          <Text size={10} weight="bold" color="#fff">
-            {days >= 0 ? 'DAYS TO GO' : 'DAYS AGO'}
+          <Text size={12} color={colors.textMuted} lineHeight={14}>
+            {days >= 0 ? 'days to go' : 'days ago'}
           </Text>
         </View>
       </View>
       <View style={{ gap: 6 }}>
         <View style={styles.rowBetween}>
-          <Text size={12} weight="semibold" color="#fff">
+          <Text size={13} color={colors.textBody}>
             Planning progress
           </Text>
-          <Text size={12} weight="bold" color="#fff">
+          <Text size={13} weight="semibold" color={colors.heading}>
             {Math.round(progress.overall * 100)}%
           </Text>
         </View>
@@ -97,22 +96,22 @@ function Hero({ project }: { project: Project }) {
         </View>
       </View>
       <View style={styles.heroStats}>
-        <HeroStat label="Services" value={`${progress.services.confirmed}/${progress.services.total}`} />
-        <HeroStat label="Paid" value={`${formatMoneyCompact(progress.pay.paid).replace('NPR ', '')}/${formatMoneyCompact(progress.pay.total).replace('NPR ', '')}`} />
-        <HeroStat label="Tasks" value={`${progress.tasks.done}/${progress.tasks.total}`} />
-        <HeroStat label="Guests" value={String(project.guests)} />
+        <HeroStat label="Services booked" value={`${progress.services.confirmed} of ${progress.services.total}`} />
+        <HeroStat label={`Paid of ${formatMoneyCompact(progress.pay.total).replace('NPR ', '')}`} value={formatMoneyCompact(progress.pay.paid).replace('NPR ', '')} />
+        <HeroStat label="Tasks done" value={`${progress.tasks.done} of ${progress.tasks.total}`} />
+        <HeroStat label="Guests" value={String(project.guests)} last />
       </View>
-    </LinearGradient>
+    </View>
   );
 }
 
-function HeroStat({ label, value }: { label: string; value: string }) {
+function HeroStat({ label, value, last }: { label: string; value: string; last?: boolean }) {
   return (
-    <View style={styles.heroStat}>
-      <Text size={16} weight="extrabold" color="#fff" numberOfLines={1} adjustsFontSizeToFit>
+    <View style={[styles.heroStat, !last && styles.heroStatBorder]}>
+      <Text size={15} weight="semibold" color={colors.heading} numberOfLines={1} adjustsFontSizeToFit>
         {value}
       </Text>
-      <Text size={11} color="rgba(255,255,255,0.85)">
+      <Text size={11} color={colors.textMuted} numberOfLines={1}>
         {label}
       </Text>
     </View>
@@ -125,9 +124,9 @@ function CoordinatorCard({ project }: { project: Project }) {
   if (!project.coordinatorName) {
     return (
       <Card style={styles.coord}>
-        <Ionicons name="hourglass-outline" size={22} color={colors.primary} />
+        <Ionicons name="hourglass-outline" size={22} color={colors.textMuted} />
         <View style={{ flex: 1 }}>
-          <Text size={15} weight="bold" color={colors.heading}>
+          <Text size={15} weight="semibold" color={colors.heading}>
             Assigning your coordinator
           </Text>
           <Text size={13} color={colors.textMuted}>
@@ -141,21 +140,21 @@ function CoordinatorCard({ project }: { project: Project }) {
     <Card style={styles.coord}>
       <Avatar name={project.coordinatorName} size={48} />
       <View style={{ flex: 1 }}>
-        <Text size={12} weight="semibold" color={colors.textMuted}>
-          Your wedding coordinator
+        <Text size={12} color={colors.textMuted}>
+          Your coordinator
         </Text>
-        <Text size={17} weight="bold" color={colors.heading}>
+        <Text size={16} weight="semibold" color={colors.heading}>
           {project.coordinatorName}
         </Text>
         <Text size={12} color={colors.textMuted}>
           One contact for all {project.bookings.filter((b) => b.status !== 'CANCELLED').length || ''} providers
         </Text>
       </View>
-      <Pressable onPress={() => thread && router.push({ pathname: '/inbox/[id]', params: { id: thread.id } })} style={[styles.circleBtn, { backgroundColor: colors.primarySoft }]} accessibilityLabel="Chat with coordinator">
-        <Ionicons name="chatbubble" size={18} color={colors.primary} />
+      <Pressable onPress={() => thread && router.push({ pathname: '/inbox/[id]', params: { id: thread.id } })} style={styles.circleBtn} accessibilityLabel="Chat with coordinator">
+        <Ionicons name="chatbubble-outline" size={19} color={colors.heading} />
       </Pressable>
-      <Pressable onPress={() => Linking.openURL('tel:+9779800000004')} style={[styles.circleBtn, { backgroundColor: '#E7F7EE' }]} accessibilityLabel="Call coordinator">
-        <Ionicons name="call" size={18} color={colors.success} />
+      <Pressable onPress={() => Linking.openURL('tel:+9779800000004')} style={styles.circleBtn} accessibilityLabel="Call coordinator">
+        <Ionicons name="call-outline" size={19} color={colors.heading} />
       </Pressable>
     </Card>
   );
@@ -176,9 +175,9 @@ function Overview({ project, setTab }: { project: Project; setTab: (t: Tab) => v
       <CoordinatorCard project={project} />
       <Card style={{ gap: 10 }}>
         <View style={styles.row}>
-          <Ionicons name={status.icon as never} size={22} color={colors.primary} />
+          <Ionicons name={status.icon as never} size={21} color={colors.success} />
           <View style={{ flex: 1 }}>
-            <Text size={15} weight="bold" color={colors.heading}>
+            <Text size={15} weight="semibold" color={colors.heading}>
               {status.title}
             </Text>
             <Text size={13} color={colors.textMuted}>
@@ -190,15 +189,12 @@ function Overview({ project, setTab }: { project: Project; setTab: (t: Tab) => v
       </Card>
 
       <Pressable onPress={() => router.push(action.href as Href)} accessibilityRole="button">
-        <Card style={[styles.row, { borderColor: colors.primary, borderWidth: 1.5 }]}>
-          <View style={[styles.circleBtn, { backgroundColor: colors.primary }]}>
-            <Ionicons name={action.icon as never} size={18} color="#fff" />
-          </View>
+        <Card style={[styles.row, { borderLeftColor: colors.primary, borderLeftWidth: 3 }]}>
           <View style={{ flex: 1 }}>
-            <Text size={11} weight="bold" color={colors.primary}>
-              NEXT STEP
+            <Text size={12} color={colors.textMuted}>
+              Next up
             </Text>
-            <Text size={15} weight="bold" color={colors.heading}>
+            <Text size={15} weight="semibold" color={colors.heading}>
               {action.title}
             </Text>
             <Text size={13} color={colors.textMuted}>
@@ -210,16 +206,19 @@ function Overview({ project, setTab }: { project: Project; setTab: (t: Tab) => v
       </Pressable>
 
       {(risks.length > 0 || reviews.length > 0) && (
-        <Card style={{ gap: 8, borderColor: colors.warning }}>
+        <Card style={{ gap: 8, borderLeftColor: colors.warning, borderLeftWidth: 3 }}>
           {risks.map((r) => (
-            <Text key={r.id} size={13} color={colors.danger}>
-              ⚠ {r.message}
-            </Text>
+            <View key={r.id} style={styles.row}>
+              <Ionicons name="alert-circle-outline" size={16} color={colors.danger} />
+              <Text size={13} color={colors.danger} style={{ flex: 1 }}>
+                {r.message}
+              </Text>
+            </View>
           ))}
           {reviews.map((d) => (
             <Pressable key={d.id} onPress={() => setTab('services')}>
               <Text size={13} color={colors.text}>
-                👀 {d.title} is ready for your review
+                {d.title} is ready for your review
               </Text>
             </Pressable>
           ))}
@@ -231,7 +230,7 @@ function Overview({ project, setTab }: { project: Project; setTab: (t: Tab) => v
           <Text size={12} color={colors.textMuted}>
             Next payment
           </Text>
-          <Text size={17} weight="bold" color={colors.heading}>
+          <Text size={16} weight="semibold" color={colors.heading}>
             {pay.next ? formatMoney(pay.next.amount - pay.next.paidAmount) : 'All paid'}
           </Text>
           <Text size={12} color={pay.overdue.length ? colors.danger : colors.textMuted}>
@@ -242,7 +241,7 @@ function Overview({ project, setTab }: { project: Project; setTab: (t: Tab) => v
           <Text size={12} color={colors.textMuted}>
             Next task
           </Text>
-          <Text size={14} weight="bold" color={colors.heading} numberOfLines={2}>
+          <Text size={14} weight="semibold" color={colors.heading} numberOfLines={2}>
             {nextTask?.title ?? 'Nothing pending'}
           </Text>
           <Text size={12} color={colors.textMuted}>
@@ -257,11 +256,9 @@ function Overview({ project, setTab }: { project: Project; setTab: (t: Tab) => v
         </Text>
         <View style={styles.tools}>
           {TOOLS.map((tool) => (
-            <Pressable key={tool.label} onPress={() => router.push(tool.href)} style={({ pressed }) => [styles.tool, { opacity: pressed ? 0.7 : 1 }]} accessibilityRole="button">
-              <View style={styles.toolIcon}>
-                <Ionicons name={tool.icon as never} size={20} color={colors.primary} />
-              </View>
-              <Text size={11} weight="semibold" color={colors.text} align="center" numberOfLines={1}>
+            <Pressable key={tool.label} onPress={() => router.push(tool.href)} style={({ pressed }) => [styles.tool, pressed && { backgroundColor: colors.bgSoft }]} accessibilityRole="button">
+              <Ionicons name={`${tool.icon}-outline` as never} size={21} color={colors.textBody} />
+              <Text size={12} color={colors.text} align="center" numberOfLines={1}>
                 {tool.label}
               </Text>
             </Pressable>
@@ -292,11 +289,11 @@ function AddServiceSheet({ project, visible, onClose }: { project: Project; visi
               onPress={() => {
                 addRequirement(project.id, id);
                 triggerHaptic('success');
-                toast(`${def.name} added — your coordinator is on it`, 'sparkles');
+                toast(`${def.name} added. Your coordinator will find providers.`, 'checkmark-circle');
                 onClose();
               }}
               style={({ pressed }) => [styles.serviceRow, { opacity: pressed ? 0.7 : 1 }]}>
-              <Ionicons name={def.icon as never} size={20} color={colors.primary} />
+              <Ionicons name={def.icon as never} size={20} color={colors.textBody} />
               <View style={{ flex: 1 }}>
                 <Text size={15} weight="semibold" color={colors.heading}>
                   {def.name}
@@ -305,7 +302,7 @@ function AddServiceSheet({ project, visible, onClose }: { project: Project; visi
                   Typically {formatMoneyCompact(def.priceRange[0])}–{formatMoneyCompact(def.priceRange[1]).replace('NPR ', '')} {def.unit}
                 </Text>
               </View>
-              <Ionicons name="add-circle" size={22} color={colors.primary} />
+              <Ionicons name="add" size={22} color={colors.primary} />
             </Pressable>
           );
         })}
@@ -336,8 +333,8 @@ function Services({ project }: { project: Project }) {
           <View key={r.id} style={{ gap: 8 }}>
             <View style={styles.rowBetween}>
               <View style={styles.row}>
-                <Ionicons name={(def?.icon ?? 'briefcase-outline') as never} size={18} color={colors.primary} />
-                <Text size={15} weight="bold" color={colors.heading}>
+                <Ionicons name={(def?.icon ?? 'briefcase-outline') as never} size={18} color={colors.textBody} />
+                <Text size={15} weight="semibold" color={colors.heading}>
                   {serviceName(r.serviceId)}
                 </Text>
               </View>
@@ -413,7 +410,7 @@ function Team({ project }: { project: Project }) {
       </Text>
       {serviceThreads.map((t) => (
         <Card key={t.id} onPress={() => router.push({ pathname: '/inbox/[id]', params: { id: t.id } })} style={styles.row}>
-          <Ionicons name="chatbubbles-outline" size={20} color={colors.primary} />
+          <Ionicons name="chatbubbles-outline" size={20} color={colors.textBody} />
           <Text size={14} weight="semibold" color={colors.heading} style={{ flex: 1 }}>
             {t.title}
           </Text>
@@ -461,16 +458,15 @@ export default function MyWedding() {
       <View style={styles.root}>
         <ScreenHeader title="My Wedding" />
         <ScrollView contentContainerStyle={{ padding: 20, gap: 16 }}>
-          <LinearGradient colors={gradients.checklist} style={[styles.hero, { alignItems: 'center' }]}>
-            <Ionicons name="sparkles" size={36} color="#fff" />
-            <Text size={22} weight="extrabold" color="#fff" align="center">
-              Tell us once. We manage the whole wedding.
+          <View style={styles.hero}>
+            <Text serif size={24} weight="bold" color={colors.heading} lineHeight={34}>
+              Tell us once. We handle the rest.
             </Text>
-            <Text size={14} color="rgba(255,255,255,0.9)" align="center">
-              Share your dates, guests, services and budget — a dedicated coordinator builds one quotation and books every provider for you.
+            <Text size={15} color={colors.textBody}>
+              Share your dates, guest count, the services you need and your budget. A coordinator builds one quotation and books every provider for you.
             </Text>
-            <KButton label="Plan my wedding" icon="arrow-forward" onPress={() => router.push('/plan')} style={{ alignSelf: 'stretch', backgroundColor: '#fff', borderColor: '#fff' }} />
-          </LinearGradient>
+            <KButton label="Start planning" onPress={() => router.push('/plan')} />
+          </View>
           <KButton label="I have an invite code" variant="secondary" icon="key-outline" onPress={() => router.push('/join-wedding')} />
         </ScrollView>
       </View>
@@ -486,12 +482,12 @@ export default function MyWedding() {
         title="My Wedding"
         subtitle={`${project.code}${isCollaborator ? ' · shared with you' : ''}`}
         right={
-          <Pressable onPress={() => router.push('/calendar')} hitSlop={10} accessibilityLabel="Calendar">
+          <Pressable onPress={() => router.push('/calendar')} hitSlop={10} accessibilityLabel="Calendar" style={{ padding: 6 }}>
             <Ionicons name="calendar-outline" size={22} color={colors.heading} />
           </Pressable>
         }
       />
-      <View style={{ paddingVertical: 10, backgroundColor: colors.white }}>
+      <View style={{ backgroundColor: colors.white }}>
         <Segmented options={TABS} value={tab} onChange={setTab} counts={{ tasks: openTasks || undefined, payments: due || undefined }} />
       </View>
       <ScrollView contentContainerStyle={{ padding: 16, paddingBottom: 60 }}>
@@ -512,18 +508,18 @@ const styles = StyleSheet.create({
   root: { flex: 1, backgroundColor: colors.bgSoft },
   row: { flexDirection: 'row', alignItems: 'center', gap: 12 },
   rowBetween: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 10 },
-  hero: { borderRadius: 22, padding: 18, gap: 14 },
-  countdown: { alignItems: 'center', backgroundColor: 'rgba(255,255,255,0.2)', borderRadius: 16, paddingHorizontal: 12, paddingVertical: 8 },
-  heroBar: { height: 8, borderRadius: 4, backgroundColor: 'rgba(255,255,255,0.3)', overflow: 'hidden' },
-  heroFill: { height: 8, borderRadius: 4, backgroundColor: '#fff' },
-  heroStats: { flexDirection: 'row', gap: 8 },
-  heroStat: { flex: 1, backgroundColor: 'rgba(255,255,255,0.16)', borderRadius: 12, padding: 8, alignItems: 'center' },
+  hero: { backgroundColor: colors.white, borderRadius: 10, borderWidth: 1, borderColor: colors.border, padding: 16, gap: 14 },
+  countdown: { alignItems: 'flex-end' },
+  heroBar: { height: 4, borderRadius: 2, backgroundColor: colors.divider, overflow: 'hidden' },
+  heroFill: { height: 4, backgroundColor: colors.primary },
+  heroStats: { flexDirection: 'row', borderTopWidth: StyleSheet.hairlineWidth, borderTopColor: colors.border, paddingTop: 12 },
+  heroStat: { flex: 1, paddingHorizontal: 6 },
+  heroStatBorder: { borderRightWidth: StyleSheet.hairlineWidth, borderRightColor: colors.border },
   coord: { flexDirection: 'row', alignItems: 'center', gap: 12 },
-  circleBtn: { width: 40, height: 40, borderRadius: 20, alignItems: 'center', justifyContent: 'center' },
+  circleBtn: { width: 38, height: 38, borderRadius: 19, borderWidth: 1, borderColor: colors.border, alignItems: 'center', justifyContent: 'center' },
   grid2: { flexDirection: 'row', gap: 10 },
   miniCard: { flex: 1, gap: 3 },
-  tools: { flexDirection: 'row', flexWrap: 'wrap', rowGap: 14 },
-  tool: { width: '25%', alignItems: 'center', gap: 6 },
-  toolIcon: { width: 48, height: 48, borderRadius: 16, backgroundColor: colors.primarySoft, alignItems: 'center', justifyContent: 'center' },
+  tools: { flexDirection: 'row', flexWrap: 'wrap', backgroundColor: colors.white, borderRadius: 10, borderWidth: 1, borderColor: colors.border, overflow: 'hidden' },
+  tool: { width: '25%', alignItems: 'center', gap: 4, paddingVertical: 14 },
   serviceRow: { flexDirection: 'row', alignItems: 'center', gap: 12, paddingVertical: 10, borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: colors.hairline },
 });

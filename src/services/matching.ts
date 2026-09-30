@@ -50,8 +50,7 @@ export const MATCH_FACTORS: { key: keyof ScoreBreakdown; label: string }[] = [
 const clamp = (n: number) => Math.max(0, Math.min(1, n));
 const round1 = (n: number) => Math.round(n * 10) / 10;
 
-// ── Availability ─────────────────────────────────────────────────────────
-
+// Availability
 /**
  * Demo calendars: static catalogue providers/freelancers are "busy" on a
  * deterministic ~12% of dates (peak-season Saturdays more often) so the
@@ -89,8 +88,7 @@ export function requirementDates(project: Project, requirement: Pick<Requirement
   return [...new Set(dates.length ? dates : [project.weddingDate])];
 }
 
-// ── Providers ────────────────────────────────────────────────────────────
-
+// Providers
 export interface RankedProvider {
   provider: Provider;
   score: number;
@@ -266,8 +264,7 @@ export function buildBestPackage(project: Project, ctx: MatchContext) {
   return { lines, total, withinBudget: !project.budget || total <= project.budget };
 }
 
-// ── Freelancers ──────────────────────────────────────────────────────────
-
+// Freelancers
 export interface RankedFreelancer {
   freelancer: FreelancerProfile;
   score: number;

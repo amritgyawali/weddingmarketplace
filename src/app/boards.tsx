@@ -72,7 +72,7 @@ function BoardView({ board, readOnly, onBack }: { board: InspirationBoard; readO
               if (!p) return null;
               return (
                 <View key={id} style={{ width: size }}>
-                  <Image source={photos[p.image]} style={{ width: size, height: size * 1.25, borderRadius: 12 }} contentFit="cover" />
+                  <Image source={photos[p.image]} style={{ width: size, height: size * 1.25, borderRadius: 8 }} contentFit="cover" />
                   <Text size={12} color={t.c.text} numberOfLines={2} style={{ marginTop: 4 }}>
                     {p.title}
                   </Text>

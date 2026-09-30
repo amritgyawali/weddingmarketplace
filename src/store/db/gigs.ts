@@ -79,7 +79,7 @@ export const gigActions = (set: SetDb, get: GetDb): GigActions => ({
     accounts.forEach((f) =>
       get().notify(
         f.id,
-        gig.emergency ? `🚨 Emergency gig ${formatShortDate(gig.date) === formatShortDate(today()) ? 'today' : formatShortDate(gig.date)} — ${gig.city}` : gig.invited?.includes(f.id) ? `You're invited: ${gig.title}` : `New ${gig.skill} gig near you`,
+        gig.emergency ? `Urgent gig ${formatShortDate(gig.date) === formatShortDate(today()) ? 'today' : formatShortDate(gig.date)} — ${gig.city}` : gig.invited?.includes(f.id) ? `You're invited: ${gig.title}` : `New ${gig.skill} gig near you`,
         `${gig.title} · ${formatMoney(gig.pay)}`,
         `/freelancer/gig/${gig.id}`,
         gig.emergency ? 'emergency' : 'gig',
@@ -106,7 +106,7 @@ export const gigActions = (set: SetDb, get: GetDb): GigActions => ({
     const gig = get().gigs.find((g) => g.id === gigId);
     if (gig) {
       const to = gig.postedByKind === 'platform' ? (gig.projectId ? (get().projects.find((p) => p.id === gig.projectId)?.coordinatorId ?? 'platform') : 'platform') : gig.postedById;
-      get().notify(to, `${gig.emergency ? '🚨 ' : ''}New applicant: ${application.freelancerName}`, gig.title, gig.postedByKind === 'platform' ? `/platform/gig/${gig.id}` : `/business/gig/${gig.id}`, 'gig');
+      get().notify(to, `${gig.emergency ? 'Urgent: ' : ''}New applicant: ${application.freelancerName}`, gig.title, gig.postedByKind === 'platform' ? `/platform/gig/${gig.id}` : `/business/gig/${gig.id}`, 'gig');
     }
   },
 
@@ -172,7 +172,7 @@ export const gigActions = (set: SetDb, get: GetDb): GigActions => ({
       }),
     }));
     if (status === 'hired' || status === 'rejected' || status === 'shortlisted') {
-      const title = status === 'hired' ? 'You’re hired! 🎉' : status === 'shortlisted' ? 'You’ve been shortlisted' : 'Application update';
+      const title = status === 'hired' ? 'You’re hired' : status === 'shortlisted' ? 'You’ve been shortlisted' : 'Application update';
       get().notify(app.freelancerId, title, before.title, assignmentId ? `/freelancer/assignment/${assignmentId}` : `/freelancer/job/${gigId}`, 'gig');
     }
   },

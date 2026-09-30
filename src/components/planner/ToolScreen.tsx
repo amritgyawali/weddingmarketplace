@@ -34,10 +34,10 @@ export function ToolScreen({
       <View style={styles.root}>
         <ScreenHeader title={title} />
         <EmptyBlock
-          icon="sparkles-outline"
+          icon="document-text-outline"
           title="Start your wedding plan first"
-          message="Tell us your dates, guests and services once — every planning tool then works on the same wedding."
-          action="Plan my wedding"
+          message="Tell us your dates, guest count and the services you need. Every planning tool then works from that one plan."
+          action="Start planning"
           onAction={() => router.push('/plan')}
         />
       </View>
@@ -56,7 +56,7 @@ export const toolStyles = StyleSheet.create({
   between: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 10 },
   wrap: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
   stats: { flexDirection: 'row', gap: 8 },
-  stat: { flex: 1, alignItems: 'center', gap: 2, paddingVertical: 12, paddingHorizontal: 6 },
+  stat: { flex: 1, gap: 0, paddingVertical: 10, paddingHorizontal: 12 },
 });
 
 const styles = StyleSheet.create({

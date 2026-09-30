@@ -84,7 +84,7 @@ export const financeActions = (set: SetDb, get: GetDb): FinanceActions => ({
     if (!payable || payable.status === 'PAID' || payable.status === 'ON_HOLD' || payable.status === 'CANCELLED') return;
     set((s) => ({ payables: s.payables.map((p) => (p.id === id ? { ...p, status: 'PAID', paidAt: now(), reference: ref ?? reference('bank_transfer') } : p)) }));
     const to = payable.payeeKind === 'freelancer' ? payable.payeeId : (accountById(payable.payeeId)?.id ?? payable.payeeId);
-    get().notify(to, 'Payout released 💸', `${formatMoney(payable.amount)} · ${payable.label}`, payable.payeeKind === 'freelancer' ? '/freelancer/earnings' : '/business/finance', 'payment');
+    get().notify(to, 'Payout released', `${formatMoney(payable.amount)} · ${payable.label}`, payable.payeeKind === 'freelancer' ? '/freelancer/earnings' : '/business/finance', 'payment');
     get().log(currentActor(), 'payable.release', 'payable', id, formatMoney(payable.amount));
   },
 
@@ -166,6 +166,6 @@ export const financeActions = (set: SetDb, get: GetDb): FinanceActions => ({
       registry: s.registry.map((r) => (r.id === itemId ? { ...r, contributions: [...r.contributions, { id: uid('c'), name, amount, message, at: now(), thanked: false }] } : r)),
     }));
     const project = get().projects.find((p) => p.id === item.projectId);
-    if (project) get().notify(project.customerId, `🎁 ${name} contributed`, `${formatMoney(amount)} to ${item.title}${message ? ` — “${message}”` : ''}`, '/registry', 'payment');
+    if (project) get().notify(project.customerId, `${name} contributed`, `${formatMoney(amount)} to ${item.title}${message ? ` — “${message}”` : ''}`, '/registry', 'payment');
   },
 });

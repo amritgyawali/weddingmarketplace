@@ -19,7 +19,8 @@ const current = (q: Quotation): Snapshot => ({ version: q.version, items: q.item
 export function QuoteDocument({ quote, showVersions = true }: { quote: Quotation; showVersions?: boolean }) {
   const t = useRoleTheme();
   const versions: Snapshot[] = quote.versions.length ? quote.versions : [current(quote)];
-  const draftIsNew = quote.status === 'draft' && !quote.versions.some((v) => v.version === quote.version);
+  // With no sent versions, `versions` already is the draft; only append it when it follows sent ones.
+  const draftIsNew = quote.status === 'draft' && quote.versions.length > 0 && !quote.versions.some((v) => v.version === quote.version);
   const all = draftIsNew ? [...versions, current(quote)] : versions;
   const [selected, setSelected] = useState(all[all.length - 1].version);
   const v = all.find((x) => x.version === selected) ?? all[all.length - 1];
@@ -31,8 +32,8 @@ export function QuoteDocument({ quote, showVersions = true }: { quote: Quotation
     <Card style={{ gap: 14 }}>
       <View style={styles.head}>
         <View style={{ flex: 1 }}>
-          <Text size={12} weight="bold" color={t.c.primary} tracking={0.8}>
-            QUOTATION{quote.title ? ` · ${quote.title.toUpperCase()}` : ''}
+          <Text size={12} weight="medium" color={t.c.muted}>
+            Quotation{quote.title ? ` · ${quote.title}` : ''}
           </Text>
           <Text size={20} weight="bold" color={t.c.textStrong}>
             {quote.number}
@@ -49,8 +50,8 @@ export function QuoteDocument({ quote, showVersions = true }: { quote: Quotation
           {all.map((x) => {
             const on = x.version === selected;
             return (
-              <Pressable key={x.version} onPress={() => setSelected(x.version)} style={[styles.version, { borderColor: on ? t.c.primary : t.c.border, backgroundColor: on ? t.c.soft : 'transparent' }]} accessibilityRole="tab" accessibilityState={{ selected: on }}>
-                <Text size={12} weight="bold" color={on ? t.c.primary : t.c.text}>
+              <Pressable key={x.version} onPress={() => setSelected(x.version)} style={[styles.version, { borderColor: on ? t.c.textStrong : t.c.border, backgroundColor: on ? t.c.textStrong : 'transparent' }]} accessibilityRole="tab" accessibilityState={{ selected: on }}>
+                <Text size={12} weight="semibold" color={on ? t.c.surface : t.c.text}>
                   V{x.version}
                   {x.version === quote.acceptedVersion ? ' ✓' : x.sentAt ? '' : ' (draft)'}
                 </Text>
@@ -61,8 +62,8 @@ export function QuoteDocument({ quote, showVersions = true }: { quote: Quotation
       )}
       {changes.length > 0 && (
         <View style={[styles.changes, { backgroundColor: t.c.surfaceAlt }]}>
-          <Text size={11} weight="bold" color={t.c.muted}>
-            CHANGES FROM V{prev!.version}
+          <Text size={11} weight="semibold" color={t.c.muted}>
+            Changes from v{prev!.version}
           </Text>
           {changes.map((c) => (
             <Text key={c} size={12} color={t.c.text}>
@@ -74,8 +75,8 @@ export function QuoteDocument({ quote, showVersions = true }: { quote: Quotation
 
       <View style={[styles.meta, { backgroundColor: t.c.surfaceAlt }]}>
         <View style={{ flex: 1 }}>
-          <Text size={11} weight="bold" color={t.c.muted}>
-            PREPARED FOR
+          <Text size={12} weight="medium" color={t.c.muted}>
+            Prepared for
           </Text>
           <Text size={15} weight="semibold" color={t.c.textStrong}>
             {quote.customerName}
@@ -85,8 +86,8 @@ export function QuoteDocument({ quote, showVersions = true }: { quote: Quotation
           </Text>
         </View>
         <View style={{ alignItems: 'flex-end' }}>
-          <Text size={11} weight="bold" color={t.c.muted}>
-            EVENT DATE
+          <Text size={12} weight="medium" color={t.c.muted}>
+            Event date
           </Text>
           <Text size={14} weight="semibold" color={t.c.textStrong}>
             {formatLongDate(quote.eventDate)}
@@ -131,8 +132,8 @@ export function QuoteDocument({ quote, showVersions = true }: { quote: Quotation
 
       {v.schedule.length > 0 && (
         <View style={{ gap: 6 }}>
-          <Text size={12} weight="bold" color={t.c.muted}>
-            PAYMENT SCHEDULE
+          <Text size={12} weight="medium" color={t.c.muted}>
+            Payment schedule
           </Text>
           {v.schedule.map((s) => (
             <View key={s.label} style={styles.scheduleRow}>
@@ -152,8 +153,8 @@ export function QuoteDocument({ quote, showVersions = true }: { quote: Quotation
 
       {!!v.notes && (
         <View style={{ gap: 4 }}>
-          <Text size={12} weight="bold" color={t.c.muted}>
-            NOTES
+          <Text size={12} weight="medium" color={t.c.muted}>
+            Notes
           </Text>
           <Text size={13} color={t.c.text} lineHeight={19}>
             {v.notes}
@@ -161,8 +162,8 @@ export function QuoteDocument({ quote, showVersions = true }: { quote: Quotation
         </View>
       )}
       <View style={{ gap: 4 }}>
-        <Text size={12} weight="bold" color={t.c.muted}>
-          TERMS
+        <Text size={12} weight="medium" color={t.c.muted}>
+          Terms
         </Text>
         <Text size={12} color={t.c.muted} lineHeight={18}>
           {v.terms}
@@ -187,7 +188,7 @@ export function QuoteDocument({ quote, showVersions = true }: { quote: Quotation
 const styles = StyleSheet.create({
   head: { flexDirection: 'row', alignItems: 'flex-start', gap: 12 },
   versions: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
-  version: { borderWidth: 1.2, borderRadius: 999, paddingHorizontal: 12, paddingVertical: 5 },
+  version: { borderWidth: 1, borderRadius: 6, paddingHorizontal: 12, paddingVertical: 5 },
   changes: { borderRadius: 10, padding: 10, gap: 3 },
   meta: { flexDirection: 'row', gap: 12, padding: 12, borderRadius: 10 },
   item: { flexDirection: 'row', gap: 10, paddingVertical: 10, borderBottomWidth: StyleSheet.hairlineWidth },

@@ -21,7 +21,7 @@ import { addDays, daysUntil, formatLongDate, formatMoneyCompact, formatShortDate
 
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
-/** Per-service status line for the operations calendar ("Catering: Missing ⚠"). */
+/** Per-service status line for the operations calendar ("Catering: Missing"). */
 function ServiceStatusLine({ project }: { project: Project }) {
   const t = useRoleTheme();
   return (
@@ -34,7 +34,7 @@ function ServiceStatusLine({ project }: { project: Project }) {
           return (
             <View key={r.id} style={[styles.svc, { backgroundColor: ok ? `${t.c.success}14` : b ? `${t.c.warning}1A` : `${t.c.danger}14` }]}>
               <Text size={11} weight="semibold" color={ok ? t.c.success : b ? t.c.warning : t.c.danger}>
-                {serviceName(r.serviceId).split(' ')[0]}: {ok ? 'Confirmed' : b ? 'Pending' : 'Missing ⚠'}
+                {serviceName(r.serviceId).split(' ')[0]}: {ok ? 'Confirmed' : b ? 'Pending' : 'Missing'}
               </Text>
             </View>
           );
@@ -82,12 +82,12 @@ export default function PlatformToday() {
 
   return (
     <View style={{ flex: 1, backgroundColor: t.c.bg }}>
-      <RoleHeader eyebrow={`${formatLongDate(now).toUpperCase()} · ${bsMonthLabel(now).toUpperCase()}`} title={`Namaste, ${account.name.split(' ')[0]}`} subtitle={`${account.team ?? 'Operations'} · ${active.length} active projects`} />
+      <RoleHeader eyebrow={`${formatLongDate(now)} · ${bsMonthLabel(now)}`} title={`Namaste, ${account.name.split(' ')[0]}`} subtitle={`${account.team ?? 'Operations'} · ${active.length} active projects`} />
       <ScrollView contentContainerStyle={{ padding: 14, gap: 16, paddingBottom: 40 }}>
         <View>
           <SectionTitle title="Today" />
           <View style={styles.kpis}>
-            <KpiCard label="Weddings today" value={String(new Set(todayEvents.map((x) => x.p.id)).size)} icon="heart-outline" tone="#DB2777" onPress={() => router.navigate('/platform/execution')} style={{ minWidth: columns > 1 ? '15%' : '46%' }} />
+            <KpiCard label="Weddings today" value={String(new Set(todayEvents.map((x) => x.p.id)).size)} icon="heart-outline" onPress={() => router.navigate('/platform/execution')} style={{ minWidth: columns > 1 ? '15%' : '46%' }} />
             <KpiCard label="Crew assignments" value={String(todayAssignments.length)} icon="people-outline" style={{ minWidth: columns > 1 ? '15%' : '46%' }} />
             <KpiCard label="Pending confirmations" value={String(pendingConfirmations.length)} icon="hourglass-outline" tone={t.c.warning} style={{ minWidth: columns > 1 ? '15%' : '46%' }} />
             <KpiCard label="Payments overdue" value={String(overdue.length)} icon="card-outline" tone={t.c.danger} onPress={() => router.push('/platform/finance')} style={{ minWidth: columns > 1 ? '15%' : '46%' }} />
@@ -97,7 +97,7 @@ export default function PlatformToday() {
         </View>
 
         {todayEvents.length > 0 && (
-          <Card onPress={() => router.navigate('/platform/execution')} style={[styles.row, { borderColor: t.c.danger, borderWidth: 1.5 }]}>
+          <Card onPress={() => router.navigate('/platform/execution')} style={[styles.row, { borderLeftColor: t.c.danger, borderLeftWidth: 3 }]}>
             <View style={[styles.liveDot, { backgroundColor: t.c.danger }]} />
             <View style={{ flex: 1 }}>
               <Text size={14} weight="bold" color={t.c.textStrong}>
@@ -107,8 +107,8 @@ export default function PlatformToday() {
                 {todayEvents.map(({ e, p }) => `${p.code} ${e.name}`).join(' · ')}
               </Text>
             </View>
-            <Text size={12} weight="bold" color={t.c.danger}>
-              CONTROL ROOM →
+            <Text size={13} weight="semibold" color={t.c.danger}>
+              Open control room
             </Text>
           </Card>
         )}
@@ -124,11 +124,12 @@ export default function PlatformToday() {
                 <SectionTitle title="New wedding leads" action="Pipeline" onAction={() => router.navigate('/platform/leads')} />
                 <View style={{ gap: 8 }}>
                   {newLeads.map((p) => (
-                    <Card key={p.id} style={{ gap: 8 }} onPress={() => router.push({ pathname: '/platform/project/[id]', params: { id: p.id } })}>
-                      <View style={styles.row}>
+                    <Card key={p.id} style={{ gap: 8 }}>
+                      {/* Row and claim button are siblings: a pressable card around a button nests <button>s on web. */}
+                      <Pressable onPress={() => router.push({ pathname: '/platform/project/[id]', params: { id: p.id } })} accessibilityRole="button" style={styles.row}>
                         <Avatar name={p.customerName} />
                         <View style={{ flex: 1 }}>
-                          <Text size={15} weight="bold" color={t.c.textStrong}>
+                          <Text size={15} weight="semibold" color={t.c.textStrong}>
                             {p.title}
                           </Text>
                           <Text size={12} color={t.c.muted}>
@@ -136,10 +137,10 @@ export default function PlatformToday() {
                           </Text>
                         </View>
                         <StatusPill status={p.status} />
-                      </View>
+                      </Pressable>
                       {!p.coordinatorId && (
                         <KButton
-                          label="Claim — I’ll coordinate this"
+                          label="Claim: I’ll coordinate this"
                           size="sm"
                           icon="hand-right-outline"
                           onPress={() => {
@@ -162,13 +163,13 @@ export default function PlatformToday() {
                   .filter((d) => d.items.length)
                   .map((d) => (
                     <Card key={d.date} style={{ gap: 8 }}>
-                      <Text size={13} weight="bold" color={t.c.primary}>
-                        {formatShortDate(d.date)} {d.date === now ? '· TODAY' : ''}
+                      <Text size={13} weight="semibold" color={t.c.muted}>
+                        {formatShortDate(d.date)}{d.date === now ? ' · Today' : ''}
                       </Text>
                       {d.items.map(({ p, e }) => (
                         <Pressable key={e.id} onPress={() => router.push({ pathname: '/platform/project/[id]', params: { id: p.id } })} style={{ gap: 4 }}>
                           <Text size={14} weight="semibold" color={t.c.textStrong}>
-                            {p.code} · {p.title} — {e.name}
+                            {p.code} · {p.title}, {e.name}
                           </Text>
                           <Text size={12} color={t.c.muted}>
                             {e.venue} · {e.guests} guests · {STATUS_LABEL[p.status]}
@@ -232,9 +233,9 @@ export default function PlatformToday() {
 const styles = StyleSheet.create({
   kpis: { flexDirection: 'row', flexWrap: 'wrap', gap: 10 },
   row: { flexDirection: 'row', alignItems: 'center', gap: 12 },
-  liveDot: { width: 12, height: 12, borderRadius: 6 },
+  liveDot: { width: 8, height: 8, borderRadius: 4 },
   cols: { gap: 16 },
   serviceLine: { flexDirection: 'row', flexWrap: 'wrap', gap: 5 },
-  svc: { borderRadius: 999, paddingHorizontal: 7, paddingVertical: 2 },
+  svc: { borderRadius: 6, paddingHorizontal: 7, paddingVertical: 2 },
   mineRow: { flexDirection: 'row', alignItems: 'center', gap: 10, padding: 12 },
 });

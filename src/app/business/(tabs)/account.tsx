@@ -50,7 +50,7 @@ export default function BusinessAccount() {
 
   return (
     <View style={{ flex: 1, backgroundColor: t.c.bg }}>
-      <RoleHeader eyebrow="STOREFRONT" title="Business" subtitle={`${listing ? serviceName(listing.serviceId) : 'Vendor'} · ${account.city}`} />
+      <RoleHeader title="Business" subtitle={`${listing ? serviceName(listing.serviceId) : 'Vendor'} · ${account.city}`} />
       <ScrollView contentContainerStyle={{ padding: 16, gap: 16, paddingBottom: 40 }}>
         <Card padded={false} style={{ overflow: 'hidden' }}>
           {cover?.image || listing ? (

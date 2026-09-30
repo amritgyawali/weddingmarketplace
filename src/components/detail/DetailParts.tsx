@@ -44,7 +44,7 @@ export function Section({ title, children, right }: { title: string; children: R
   return (
     <View style={styles.section}>
       <View style={styles.sectionHead}>
-        <Text size={19} weight="bold" color={colors.heading}>
+        <Text size={18} weight="bold" color={colors.heading}>
           {title}
         </Text>
         {right}
@@ -61,7 +61,7 @@ export function ExpandableText({ text, lines = 4 }: { text: string; lines?: numb
       <Text size={15} color={colors.textBody} lineHeight={23} numberOfLines={open ? undefined : lines}>
         {text}
       </Text>
-      <Text size={14} weight="semibold" color={colors.primary} onPress={() => setOpen((o) => !o)} style={{ marginTop: 6 }}>
+      <Text size={14} weight="medium" color={colors.primary} onPress={() => setOpen((o) => !o)} style={{ marginTop: 6 }}>
         {open ? 'Read less' : 'Read more'}
       </Text>
     </View>
@@ -75,21 +75,21 @@ export function ReviewList({ reviews, rating, count, onWrite }: { reviews: Revie
     <View>
       <View style={styles.ratingSummary}>
         <View style={styles.ratingBig}>
-          <Text size={32} weight="bold" color={colors.white}>
+          <Text serif size={34} weight="bold" color={colors.heading} lineHeight={42}>
             {rating.toFixed(1)}
           </Text>
           <View style={{ flexDirection: 'row' }}>
             {[1, 2, 3, 4, 5].map((n) => (
-              <Ionicons key={n} name={n <= Math.round(rating) ? 'star' : 'star-outline'} size={12} color={colors.white} />
+              <Ionicons key={n} name={n <= Math.round(rating) ? 'star' : 'star-outline'} size={12} color={colors.star} />
             ))}
           </View>
         </View>
-        <View style={{ flex: 1, gap: 4 }}>
-          <Text size={16} weight="semibold" color={colors.heading}>
-            Rated by {count} couples
+        <View style={{ flex: 1, gap: 2 }}>
+          <Text size={15} weight="semibold" color={colors.heading}>
+            {count} reviews
           </Text>
           <Text size={13} color={colors.textMuted}>
-            Verified reviews from newly weds
+            Only couples who booked through Vivah can review.
           </Text>
           <Button label="Write a review" variant="outline" size="sm" icon="create-outline" onPress={onWrite} style={{ alignSelf: 'flex-start', marginTop: 6 }} />
         </View>
@@ -98,7 +98,7 @@ export function ReviewList({ reviews, rating, count, onWrite }: { reviews: Revie
         <View key={r.id} style={styles.review}>
           <View style={styles.reviewHead}>
             <View style={styles.reviewAvatar}>
-              <Text size={14} weight="bold" color={colors.primary}>
+              <Text size={14} weight="semibold" color={colors.textBody}>
                 {r.author[0]}
               </Text>
             </View>
@@ -111,8 +111,8 @@ export function ReviewList({ reviews, rating, count, onWrite }: { reviews: Revie
               </Text>
             </View>
             <View style={styles.pill}>
-              <Ionicons name="star" size={12} color={colors.white} />
-              <Text size={12} weight="bold" color={colors.white}>
+              <Ionicons name="star" size={12} color={colors.star} />
+              <Text size={13} weight="medium" color={colors.heading}>
                 {r.rating.toFixed(1)}
               </Text>
             </View>
@@ -123,7 +123,7 @@ export function ReviewList({ reviews, rating, count, onWrite }: { reviews: Revie
         </View>
       ))}
       {reviews.length > 2 && (
-        <Text size={14} weight="semibold" color={colors.primary} onPress={() => setShowAll((v) => !v)} style={{ marginTop: 12 }}>
+        <Text size={14} weight="medium" color={colors.primary} onPress={() => setShowAll((v) => !v)} style={{ marginTop: 12 }}>
           {showAll ? 'Show fewer reviews' : `Show all ${reviews.length} reviews`}
         </Text>
       )}
@@ -151,9 +151,9 @@ export function StickyCta({
         <Text size={12} color={colors.textMuted}>
           {priceLabel}
         </Text>
-        <Text size={19} weight="bold" color={colors.textStrong}>
+        <Text size={18} weight="semibold" color={colors.textStrong}>
           {price}{' '}
-          <Text size={12} color={colors.textBody}>
+          <Text size={12} color={colors.textMuted}>
             {unit}
           </Text>
         </Text>
@@ -166,7 +166,7 @@ export function StickyCta({
 export function InfoTile({ icon, label, value }: { icon: React.ComponentProps<typeof Ionicons>['name']; label: string; value: string }) {
   return (
     <View style={styles.tile}>
-      <Ionicons name={icon} size={20} color={colors.primary} />
+      <Ionicons name={icon} size={19} color={colors.textMuted} />
       <Text size={12} color={colors.textMuted}>
         {label}
       </Text>
@@ -191,39 +191,25 @@ const styles = StyleSheet.create({
   sectionHead: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 },
   ratingSummary: {
     flexDirection: 'row',
-    gap: 16,
-    padding: 16,
-    borderRadius: radius.lg,
-    backgroundColor: colors.primaryTint,
-    marginBottom: 6,
-  },
-  ratingBig: {
-    width: 84,
-    borderRadius: radius.md,
-    backgroundColor: colors.primary,
     alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 10,
+    gap: 16,
+    paddingBottom: 14,
+    marginBottom: 2,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomColor: colors.border,
   },
-  review: { paddingVertical: 14, borderBottomWidth: 1, borderBottomColor: colors.divider },
+  ratingBig: { alignItems: 'center', paddingRight: 16, borderRightWidth: StyleSheet.hairlineWidth, borderRightColor: colors.border },
+  review: { paddingVertical: 14, borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: colors.divider },
   reviewHead: { flexDirection: 'row', alignItems: 'center', gap: 10 },
   reviewAvatar: {
     width: 36,
     height: 36,
     borderRadius: 18,
-    backgroundColor: colors.primarySoft,
+    backgroundColor: colors.bgMuted,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  pill: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 3,
-    backgroundColor: colors.success,
-    borderRadius: 6,
-    paddingHorizontal: 7,
-    paddingVertical: 3,
-  },
+  pill: { flexDirection: 'row', alignItems: 'center', gap: 3 },
   sticky: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -232,8 +218,7 @@ const styles = StyleSheet.create({
     paddingTop: 12,
     backgroundColor: colors.white,
     borderTopWidth: StyleSheet.hairlineWidth,
-    borderTopColor: colors.hairline,
-    ...shadows.tabBar,
+    borderTopColor: colors.border,
   },
   tile: {
     flex: 1,
@@ -241,8 +226,7 @@ const styles = StyleSheet.create({
     gap: 3,
     padding: 12,
     borderRadius: radius.md,
-    backgroundColor: colors.bgSoft,
     borderWidth: 1,
-    borderColor: colors.divider,
+    borderColor: colors.border,
   },
 });

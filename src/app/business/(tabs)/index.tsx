@@ -49,27 +49,35 @@ export default function VendorDashboard() {
   return (
     <View style={{ flex: 1, backgroundColor: t.c.bg }}>
       <ScrollView contentContainerStyle={{ paddingBottom: 30 }} showsVerticalScrollIndicator={false}>
-        <RoleHeader eyebrow="VIVAH FOR BUSINESS" title={account.businessName ?? account.name} subtitle={`${listing ? serviceName(listing.serviceId) : 'Vendor'} · ${account.city}`}>
+        <RoleHeader title={account.businessName ?? account.name} subtitle={`${listing ? serviceName(listing.serviceId) : 'Vendor'} · ${account.city}`}>
           <View style={styles.headerStats}>
             <View style={styles.headerStat}>
-              <Text size={11} weight="semibold" color="rgba(255,255,255,0.75)">
-                PAYOUTS IN PIPELINE
-              </Text>
-              <Text size={20} weight="extrabold" color="#FFFFFF">
+              <Text size={17} weight="semibold" color={t.c.textStrong}>
                 {formatMoneyCompact(pipeline)}
               </Text>
-            </View>
-            <View style={styles.headerStat}>
-              <Text size={11} weight="semibold" color="rgba(255,255,255,0.75)">
-                RATING · WIN RATE
-              </Text>
-              <Text size={20} weight="extrabold" color="#FFFFFF">
-                {avgRating.toFixed(1)}★ · {conversion}%
+              <Text size={12} color={t.c.muted}>
+                Payouts due
               </Text>
             </View>
-            <View style={[styles.verified, { backgroundColor: account.verified ? 'rgba(255,255,255,0.2)' : 'rgba(245,158,11,0.3)' }]}>
-              <Ionicons name={account.verified ? 'shield-checkmark' : 'time-outline'} size={14} color="#FFFFFF" />
-              <Text size={11} weight="bold" color="#FFFFFF">
+            <View style={[styles.headerStat, styles.headerDivider, { borderLeftColor: t.c.border }]}>
+              <Text size={17} weight="semibold" color={t.c.textStrong}>
+                {avgRating.toFixed(1)}
+              </Text>
+              <Text size={12} color={t.c.muted}>
+                Rating
+              </Text>
+            </View>
+            <View style={[styles.headerStat, styles.headerDivider, { borderLeftColor: t.c.border }]}>
+              <Text size={17} weight="semibold" color={t.c.textStrong}>
+                {conversion}%
+              </Text>
+              <Text size={12} color={t.c.muted}>
+                Quotes won
+              </Text>
+            </View>
+            <View style={styles.verified}>
+              <Ionicons name={account.verified ? 'checkmark-circle' : 'time-outline'} size={15} color={account.verified ? t.c.success : t.c.warning} />
+              <Text size={13} weight="medium" color={account.verified ? t.c.success : t.c.warning}>
                 {account.verified ? 'Verified' : 'In review'}
               </Text>
             </View>
@@ -82,11 +90,11 @@ export default function VendorDashboard() {
               <SectionTitle title={`Booking requests from Vivah (${requests.length})`} />
               <View style={{ gap: 10 }}>
                 {requests.map(({ project, booking }) => (
-                  <Card key={booking.id} style={{ gap: 10, borderColor: t.c.primary, borderWidth: 1.5 }}>
+                  <Card key={booking.id} style={{ gap: 10, borderLeftColor: t.c.primary, borderLeftWidth: 3 }}>
                     <View style={styles.row}>
                       <View style={{ flex: 1 }}>
-                        <Text size={12} weight="bold" color={t.c.primary}>
-                          {serviceName(booking.serviceId).toUpperCase()} · {project.code}
+                        <Text size={12} color={t.c.muted}>
+                          {serviceName(booking.serviceId)} · {project.code}
                         </Text>
                         <Text size={16} weight="bold" color={t.c.textStrong}>
                           {project.title}
@@ -99,7 +107,7 @@ export default function VendorDashboard() {
                         <Text size={11} color={t.c.muted}>
                           You receive
                         </Text>
-                        <Text size={17} weight="extrabold" color={t.c.textStrong}>
+                        <Text size={16} weight="bold" color={t.c.textStrong}>
                           {formatMoney(booking.providerPayable)}
                         </Text>
                       </View>
@@ -107,7 +115,7 @@ export default function VendorDashboard() {
                     <View style={styles.row}>
                       <KButton label="Decline" size="sm" variant="danger" style={{ flex: 1 }} onPress={() => { respond(project.id, booking.id, false, 'Not available'); toast('Declined'); }} />
                       <KButton label="Details" size="sm" variant="secondary" style={{ flex: 1 }} onPress={() => router.push({ pathname: '/business/booking/[id]', params: { id: booking.id } })} />
-                      <KButton label="Accept" size="sm" icon="checkmark" style={{ flex: 1.2 }} onPress={() => { respond(project.id, booking.id, true); toast('Availability confirmed ✅'); }} />
+                      <KButton label="Accept" size="sm" icon="checkmark" style={{ flex: 1.2 }} onPress={() => { respond(project.id, booking.id, true); toast('Availability confirmed'); }} />
                     </View>
                   </Card>
                 ))}
@@ -158,12 +166,12 @@ export default function VendorDashboard() {
                   <ListRow
                     key={`${booking.id}-${e.id}`}
                     leading={
-                      <View style={[styles.dateBox, { backgroundColor: t.c.soft }]}>
-                        <Text size={16} weight="extrabold" color={t.c.primary} lineHeight={18}>
-                          {e.date!.slice(8)}
+                      <View style={[styles.dateBox, { borderColor: t.c.border }]}>
+                        <Text size={11} color={t.c.muted} lineHeight={13}>
+                          {MONTHS[Number(e.date!.slice(5, 7)) - 1]}
                         </Text>
-                        <Text size={10} weight="bold" color={t.c.primary}>
-                          {MONTHS[Number(e.date!.slice(5, 7)) - 1].toUpperCase()}
+                        <Text size={18} weight="semibold" color={t.c.textStrong} lineHeight={22}>
+                          {e.date!.slice(8)}
                         </Text>
                       </View>
                     }
@@ -197,12 +205,13 @@ export default function VendorDashboard() {
 }
 
 const styles = StyleSheet.create({
-  headerStats: { flexDirection: 'row', alignItems: 'flex-end', gap: 10, marginTop: 18 },
-  headerStat: { flex: 1, backgroundColor: 'rgba(255,255,255,0.14)', borderRadius: 14, padding: 12 },
-  verified: { flexDirection: 'row', alignItems: 'center', gap: 4, borderRadius: 999, paddingHorizontal: 10, paddingVertical: 6, alignSelf: 'flex-start' },
+  headerStats: { flexDirection: 'row', alignItems: 'center', marginTop: 14 },
+  headerStat: { paddingRight: 16 },
+  headerDivider: { borderLeftWidth: StyleSheet.hairlineWidth, paddingLeft: 16 },
+  verified: { flexDirection: 'row', alignItems: 'center', gap: 4, marginLeft: 'auto' },
   body: { padding: 16, gap: 16 },
   kpis: { flexDirection: 'row', flexWrap: 'wrap', gap: 10 },
   row: { flexDirection: 'row', alignItems: 'center', gap: 8 },
   rowBetween: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
-  dateBox: { width: 46, height: 46, borderRadius: 12, alignItems: 'center', justifyContent: 'center' },
+  dateBox: { width: 44, height: 46, borderRadius: 6, borderWidth: 1, alignItems: 'center', justifyContent: 'center' },
 });

@@ -15,7 +15,7 @@ import { VENDOR_CATEGORIES } from '@/data/categories';
 import { selectShortlistCount, useAppStore } from '@/store/useAppStore';
 import type { VendorCategory } from '@/types';
 
-const ROW_HEIGHT = 126;
+const ROW_HEIGHT = 88;
 
 function openSubcategory(category: VendorCategory, subId: string) {
   if (category.id === 'venues') {
@@ -41,21 +41,19 @@ function CategoryRow({ category, expanded, onToggle }: { category: VendorCategor
         accessibilityRole="button"
         accessibilityState={{ expanded }}
         accessibilityLabel={`${category.title}. ${category.subtitle}`}
-        style={({ pressed }) => [styles.row, { backgroundColor: category.bg, opacity: pressed ? 0.92 : 1 }]}>
+        style={({ pressed }) => [styles.row, pressed && { backgroundColor: colors.bgSoft }]}>
+        <Image source={photos[category.image]} style={styles.image} contentFit="cover" transition={200} />
         <View style={styles.text}>
-          <View style={styles.titleRow}>
-            <Text size={21} weight="semibold" color={colors.heading} tracking={-0.3}>
-              {category.title}
-            </Text>
-            <Animated.View style={chevron}>
-              <Ionicons name="chevron-down" size={20} color={colors.heading} />
-            </Animated.View>
-          </View>
-          <Text size={16} color={colors.textBody} numberOfLines={1} style={{ marginTop: 10 }}>
+          <Text size={17} weight="semibold" color={colors.heading}>
+            {category.title}
+          </Text>
+          <Text size={14} color={colors.textMuted} numberOfLines={1}>
             {category.subtitle}
           </Text>
         </View>
-        <Image source={photos[category.image]} style={styles.image} contentFit="cover" transition={200} />
+        <Animated.View style={chevron}>
+          <Ionicons name="chevron-down" size={18} color={colors.textMuted} />
+        </Animated.View>
       </Pressable>
 
       {expanded && (
@@ -70,7 +68,7 @@ function CategoryRow({ category, expanded, onToggle }: { category: VendorCategor
                 i < category.subcategories.length - 1 && styles.subBorder,
                 pressed && { backgroundColor: colors.primaryTint },
               ]}>
-              <Text size={16} color={colors.text}>
+              <Text size={15} color={colors.text}>
                 {s.title}
               </Text>
               <Ionicons name="chevron-forward" size={18} color={colors.textSubtle} />
@@ -92,11 +90,9 @@ export default function VendorsTab() {
         border={false}
         right={
           <>
-            <IconButton icon="search" size={40} iconSize={21} accessibilityLabel="Search vendors" onPress={() => router.push('/search')} />
+            <IconButton icon="search-outline" accessibilityLabel="Search vendors" onPress={() => router.push('/search')} />
             <IconButton
-              icon="bookmark"
-              size={40}
-              iconSize={20}
+              icon="bookmark-outline"
               badge={shortlistCount}
               accessibilityLabel="Shortlist"
               onPress={() => router.push('/shortlist')}
@@ -120,17 +116,11 @@ export default function VendorsTab() {
 
 const styles = StyleSheet.create({
   root: { flex: 1, backgroundColor: colors.white },
-  block: { marginBottom: 4 },
-  row: { height: ROW_HEIGHT, flexDirection: 'row', alignItems: 'center', overflow: 'hidden' },
-  text: { flex: 1, paddingLeft: 21, paddingRight: 12 },
-  titleRow: { flexDirection: 'row', alignItems: 'center', gap: 8 },
-  image: {
-    width: 158,
-    height: ROW_HEIGHT,
-    borderTopLeftRadius: ROW_HEIGHT,
-    borderBottomLeftRadius: ROW_HEIGHT,
-  },
-  subList: { backgroundColor: colors.white, paddingHorizontal: 21 },
-  subItem: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingVertical: 15 },
-  subBorder: { borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: colors.hairline },
+  block: { borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: colors.border },
+  row: { height: ROW_HEIGHT, flexDirection: 'row', alignItems: 'center', gap: 14, paddingHorizontal: 16 },
+  text: { flex: 1, gap: 1 },
+  image: { width: 64, height: 64, borderRadius: 8, backgroundColor: colors.bgMuted },
+  subList: { backgroundColor: colors.bgSoft, paddingLeft: 94, paddingRight: 16 },
+  subItem: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingVertical: 13 },
+  subBorder: { borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: colors.border },
 });

@@ -1,4 +1,3 @@
-import { Ionicons } from '@expo/vector-icons';
 import type { ReactNode } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 
@@ -24,7 +23,7 @@ export function SectionHeader({
   return (
     <View style={[styles.row, inset && { paddingHorizontal: GUTTER }]}>
       <View style={styles.titleRow}>
-        <Text weight="semibold" size={19} color={colors.heading} tracking={-0.2} numberOfLines={1} style={{ flexShrink: 1 }}>
+        <Text weight="bold" size={18} color={colors.heading} numberOfLines={1} style={{ flexShrink: 1 }}>
           {title}
         </Text>
         {badge}
@@ -32,10 +31,9 @@ export function SectionHeader({
       {right ??
         (onAction && (
           <Pressable onPress={onAction} hitSlop={10} style={styles.action} accessibilityRole="button">
-            <Text size={13} weight="semibold" color={colors.primary}>
+            <Text size={14} weight="medium" color={colors.primary}>
               {actionLabel}
             </Text>
-            <Ionicons name="chevron-forward" size={14} color={colors.primary} />
           </Pressable>
         ))}
     </View>
@@ -45,16 +43,16 @@ export function SectionHeader({
 export function NewBadge() {
   return (
     <View style={styles.badge}>
-      <Text size={11} weight="bold" color={colors.white} lineHeight={14} tracking={0.4}>
-        NEW
+      <Text size={11} weight="semibold" color={colors.badgeNew} lineHeight={14}>
+        New
       </Text>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  row: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 },
+  row: { flexDirection: 'row', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 12 },
   titleRow: { flexDirection: 'row', alignItems: 'center', gap: 10, flexShrink: 1 },
   action: { flexDirection: 'row', alignItems: 'center', gap: 2 },
-  badge: { backgroundColor: colors.badgeNew, borderRadius: 5, paddingHorizontal: 8, paddingVertical: 3 },
+  badge: { borderWidth: 1, borderColor: colors.badgeNew, borderRadius: 3, paddingHorizontal: 5, paddingVertical: 1 },
 });

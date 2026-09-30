@@ -3,7 +3,6 @@ import { router } from 'expo-router';
 import { memo } from 'react';
 import { Linking, StyleSheet, useWindowDimensions, View } from 'react-native';
 
-import { CrownRibbon } from '@/components/ui/Icons';
 import { PressableScale } from '@/components/ui/PressableScale';
 import { Rating } from '@/components/ui/Rating';
 import { Text } from '@/components/ui/Text';
@@ -24,51 +23,44 @@ export const VendorCard = memo(function VendorCard({ vendor }: { vendor: Vendor 
   return (
     <View style={styles.card}>
       <View>
-        <ImageCarousel images={vendor.images} width={cardWidth} height={cardWidth * 0.6} radius={radius.md} onPressImage={open} />
+        <ImageCarousel images={vendor.images} width={cardWidth} height={cardWidth * 0.6} radius={radius.lg} onPressImage={open} />
         {vendor.featured && (
-          <View style={styles.crown} pointerEvents="none">
-            <CrownRibbon size={26} />
+          <View style={styles.featured} pointerEvents="none">
+            <Text size={12} weight="semibold" color={colors.heading} lineHeight={16}>
+              Featured
+            </Text>
           </View>
         )}
-        <ShortlistButton kind="vendors" id={vendor.id} size={38} style={styles.save} />
+        <ShortlistButton kind="vendors" id={vendor.id} size={36} style={styles.save} />
       </View>
 
-      <PressableScale onPress={open} activeScale={0.99} accessibilityLabel={`${vendor.name}, open details`} style={styles.meta}>
+      <PressableScale onPress={open} accessibilityLabel={`${vendor.name}, open details`} style={styles.meta}>
         <View style={styles.rowBetween}>
-          <Text size={15} color={colors.textBody}>
-            {vendor.city}
+          <Text size={18} weight="semibold" color={colors.heading} numberOfLines={1} style={{ flex: 1 }}>
+            {vendor.name}
           </Text>
           <Rating value={vendor.rating} count={vendor.reviewCount} />
         </View>
-        <Text size={19} weight="semibold" color={colors.heading} numberOfLines={1} style={{ marginTop: 6 }}>
-          {vendor.name}
-        </Text>
-        <Text size={13} color={colors.textMuted} style={{ marginTop: 8 }}>
-          Starting price
+        <Text size={14} color={colors.textMuted} numberOfLines={1}>
+          {vendor.city} · {vendor.services.slice(0, 3).join(', ')}
         </Text>
         <View style={styles.priceRow}>
-          <Text size={20} weight="bold" color={colors.textStrong}>
+          <Text size={14} color={colors.textMuted}>
+            From
+          </Text>
+          <Text size={17} weight="semibold" color={colors.textStrong}>
             {formatMoney(vendor.startingPrice)}
           </Text>
-          <Text size={13} color={colors.textBody}>
+          <Text size={14} color={colors.textMuted}>
             {vendor.priceUnit}
           </Text>
-        </View>
-        <View style={styles.tags}>
-          {vendor.services.slice(0, 3).map((s) => (
-            <View key={s} style={styles.tag}>
-              <Text size={12} color={colors.textBody}>
-                {s}
-              </Text>
-            </View>
-          ))}
         </View>
       </PressableScale>
 
       <View style={styles.actions}>
         <PressableScale haptic onPress={() => startConversation('vendor', vendor)} accessibilityLabel={`Message ${vendor.name}`} style={styles.message}>
-          <Ionicons name="chatbubble-ellipses" size={22} color={colors.primary} />
-          <Text size={17} weight="medium" color={colors.primary}>
+          <Ionicons name="chatbubble-outline" size={18} color={colors.heading} />
+          <Text size={15} weight="medium" color={colors.heading}>
             Message
           </Text>
         </PressableScale>
@@ -77,7 +69,7 @@ export const VendorCard = memo(function VendorCard({ vendor }: { vendor: Vendor 
           onPress={() => Linking.openURL(`tel:${vendor.phone.replace(/\s/g, '')}`)}
           accessibilityLabel={`Call ${vendor.name}`}
           style={styles.call}>
-          <Ionicons name="call" size={22} color={colors.call} />
+          <Ionicons name="call-outline" size={19} color={colors.heading} />
         </PressableScale>
       </View>
     </View>
@@ -85,25 +77,23 @@ export const VendorCard = memo(function VendorCard({ vendor }: { vendor: Vendor 
 });
 
 const styles = StyleSheet.create({
-  card: { paddingHorizontal: GUTTER, paddingTop: 16, paddingBottom: 20, borderBottomWidth: 8, borderBottomColor: '#F4F4F5' },
-  crown: { position: 'absolute', top: 0, left: 0 },
+  card: { paddingHorizontal: GUTTER, paddingTop: 16, paddingBottom: 18, borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: colors.border },
+  featured: { position: 'absolute', top: 10, left: 10, backgroundColor: colors.white, borderRadius: 4, paddingHorizontal: 7, paddingVertical: 2 },
   save: { position: 'absolute', top: 10, right: 10 },
-  meta: { paddingTop: 12 },
-  rowBetween: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
-  priceRow: { flexDirection: 'row', alignItems: 'baseline', gap: 6, marginTop: 2 },
-  tags: { flexDirection: 'row', flexWrap: 'wrap', gap: 6, marginTop: 10 },
-  tag: { backgroundColor: colors.bgMuted, borderRadius: radius.pill, paddingHorizontal: 10, paddingVertical: 4 },
-  actions: { flexDirection: 'row', gap: 12, marginTop: 16 },
+  meta: { paddingTop: 10, gap: 1 },
+  rowBetween: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', gap: 10 },
+  priceRow: { flexDirection: 'row', alignItems: 'baseline', gap: 5, marginTop: 4 },
+  actions: { flexDirection: 'row', gap: 10, marginTop: 12 },
   message: {
     flex: 1,
-    height: 50,
-    borderRadius: 25,
-    borderWidth: 1.3,
-    borderColor: colors.primary,
+    height: 42,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: colors.border,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     gap: 8,
   },
-  call: { width: 50, height: 50, borderRadius: 25, borderWidth: 1.3, borderColor: colors.call, alignItems: 'center', justifyContent: 'center' },
+  call: { width: 48, height: 42, borderRadius: 8, borderWidth: 1, borderColor: colors.border, alignItems: 'center', justifyContent: 'center' },
 });

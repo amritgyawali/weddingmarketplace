@@ -1,9 +1,8 @@
-import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { memo } from 'react';
 import { Linking, StyleSheet, useWindowDimensions, View } from 'react-native';
 
-import { CrownRibbon } from '@/components/ui/Icons';
 import { PressableScale } from '@/components/ui/PressableScale';
 import { Rating } from '@/components/ui/Rating';
 import { Text } from '@/components/ui/Text';
@@ -35,7 +34,7 @@ export function useStartConversation() {
   };
 }
 
-/** Full-width venue card from the "Kathmandu • Venues" listing. */
+/** Full-width venue card for the venue listing. */
 export const VenueCard = memo(function VenueCard({
   venue,
   destinationPricing,
@@ -52,49 +51,34 @@ export const VenueCard = memo(function VenueCard({
   return (
     <View style={styles.card}>
       <View>
-        <ImageCarousel images={venue.images} width={cardWidth} height={cardWidth * 0.63} radius={radius.md} onPressImage={open} />
+        <ImageCarousel images={venue.images} width={cardWidth} height={cardWidth * 0.62} radius={radius.lg} onPressImage={open} />
         {venue.featured && (
-          <View style={styles.crown} pointerEvents="none">
-            <CrownRibbon size={26} />
+          <View style={styles.featured} pointerEvents="none">
+            <Text size={12} weight="semibold" color={colors.heading} lineHeight={16}>
+              Featured
+            </Text>
           </View>
         )}
-        <ShortlistButton kind="venues" id={venue.id} size={38} style={styles.save} />
+        <ShortlistButton kind="venues" id={venue.id} size={36} style={styles.save} />
       </View>
 
-      <PressableScale onPress={open} activeScale={0.99} accessibilityLabel={`${venue.name}, open details`} style={styles.meta}>
+      <PressableScale onPress={open} accessibilityLabel={`${venue.name}, open details`} style={styles.meta}>
         <View style={styles.rowBetween}>
-          <Text size={15} color={colors.textBody}>
-            {venue.city}
+          <Text size={18} weight="semibold" color={colors.heading} numberOfLines={1} style={{ flex: 1 }}>
+            {venue.name}
           </Text>
           <Rating value={venue.rating} count={venue.reviewCount} />
         </View>
-        <Text size={19} weight="semibold" color={colors.heading} numberOfLines={2} style={{ marginTop: 6 }}>
-          {venue.name}
-        </Text>
-        <Text size={13} color={colors.textMuted} style={{ marginTop: 8 }}>
-          {price.label}
+        <Text size={14} color={colors.textMuted} numberOfLines={1}>
+          {venue.type} · {venue.city} · {venue.capacity.min}–{venue.capacity.max} guests
         </Text>
         <View style={styles.priceRow}>
-          <Text size={20} weight="bold" color={colors.textStrong}>
+          <Text size={17} weight="semibold" color={colors.textStrong}>
             {formatMoney(price.value)}
           </Text>
-          <Text size={13} color={colors.textBody}>
-            {price.unit}
+          <Text size={14} color={colors.textMuted}>
+            {price.unit} · {price.label.toLowerCase()}
           </Text>
-        </View>
-        <View style={[styles.rowBetween, { marginTop: 10 }]}>
-          <View style={styles.spec}>
-            <MaterialCommunityIcons name="account-group" size={22} color={colors.textMuted} />
-            <Text size={15} color={colors.textMuted}>
-              {venue.capacity.min}-{venue.capacity.max} pax
-            </Text>
-          </View>
-          <View style={styles.spec}>
-            <MaterialCommunityIcons name="bank-outline" size={19} color={colors.textMuted} />
-            <Text size={15} color={colors.textMuted}>
-              {venue.type}
-            </Text>
-          </View>
         </View>
       </PressableScale>
 
@@ -104,8 +88,8 @@ export const VenueCard = memo(function VenueCard({
           onPress={() => startConversation('venue', venue)}
           accessibilityLabel={`Message ${venue.name}`}
           style={styles.message}>
-          <Ionicons name="chatbubble-ellipses" size={22} color={colors.primary} />
-          <Text size={17} weight="medium" color={colors.primary}>
+          <Ionicons name="chatbubble-outline" size={18} color={colors.heading} />
+          <Text size={15} weight="medium" color={colors.heading}>
             Message
           </Text>
         </PressableScale>
@@ -114,7 +98,7 @@ export const VenueCard = memo(function VenueCard({
           onPress={() => Linking.openURL(`tel:${venue.phone.replace(/\s/g, '')}`)}
           accessibilityLabel={`Call ${venue.name}`}
           style={styles.call}>
-          <Ionicons name="call" size={22} color={colors.call} />
+          <Ionicons name="call-outline" size={19} color={colors.heading} />
         </PressableScale>
       </View>
     </View>
@@ -125,34 +109,33 @@ const styles = StyleSheet.create({
   card: {
     paddingHorizontal: GUTTER,
     paddingTop: 16,
-    paddingBottom: 20,
-    borderBottomWidth: 8,
-    borderBottomColor: '#F4F4F5',
+    paddingBottom: 18,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomColor: colors.border,
   },
-  crown: { position: 'absolute', top: 0, left: 0 },
+  featured: { position: 'absolute', top: 10, left: 10, backgroundColor: colors.white, borderRadius: 4, paddingHorizontal: 7, paddingVertical: 2 },
   save: { position: 'absolute', top: 10, right: 10 },
-  meta: { paddingTop: 12 },
-  rowBetween: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
-  priceRow: { flexDirection: 'row', alignItems: 'baseline', gap: 6, marginTop: 2 },
-  spec: { flexDirection: 'row', alignItems: 'center', gap: 8 },
-  actions: { flexDirection: 'row', gap: 12, marginTop: 16 },
+  meta: { paddingTop: 10, gap: 1 },
+  rowBetween: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', gap: 10 },
+  priceRow: { flexDirection: 'row', alignItems: 'baseline', gap: 6, marginTop: 4 },
+  actions: { flexDirection: 'row', gap: 10, marginTop: 12 },
   message: {
     flex: 1,
-    height: 50,
-    borderRadius: 25,
-    borderWidth: 1.3,
-    borderColor: colors.primary,
+    height: 42,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: colors.border,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     gap: 8,
   },
   call: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-    borderWidth: 1.3,
-    borderColor: colors.call,
+    width: 48,
+    height: 42,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: colors.border,
     alignItems: 'center',
     justifyContent: 'center',
   },

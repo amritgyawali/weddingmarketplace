@@ -50,7 +50,7 @@ export default function LeadsTab() {
 
   return (
     <View style={{ flex: 1, backgroundColor: t.c.bg }}>
-      <RoleHeader eyebrow="LEAD CRM" title="Leads" subtitle={`${counts.new} new · ${formatMoneyCompact(pipelineValue)} open pipeline`} />
+      <RoleHeader title="Leads" subtitle={`${counts.new} new · ${formatMoneyCompact(pipelineValue)} open pipeline`} />
       <View style={{ paddingTop: 14, gap: 10 }}>
         <Segmented
           options={[
@@ -94,7 +94,7 @@ export default function LeadsTab() {
                   <Avatar name={item.customerName} size={44} />
                   <View style={{ flex: 1 }}>
                     <Text size={16} weight="bold" color={t.c.textStrong}>
-                      {item.customerName} {item.priority === 'high' ? '🔥' : ''}
+                      {item.customerName}
                     </Text>
                     <Text size={12} color={t.c.muted}>
                       {timeAgo(item.createdAt)} · {item.source ?? 'marketplace'}
@@ -149,5 +149,5 @@ export default function LeadsTab() {
 const styles = StyleSheet.create({
   row: { flexDirection: 'row', alignItems: 'center', gap: 12 },
   tags: { flexDirection: 'row', flexWrap: 'wrap', gap: 6 },
-  tag: { flexDirection: 'row', alignItems: 'center', gap: 5, borderRadius: 999, paddingHorizontal: 10, paddingVertical: 5 },
+  tag: { flexDirection: 'row', alignItems: 'center', gap: 5, borderRadius: 6, paddingHorizontal: 10, paddingVertical: 5 },
 });

@@ -3,7 +3,6 @@ import { router, type Href } from 'expo-router';
 import type { BottomTabBarProps } from 'expo-router/tabs';
 import type { ComponentProps } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
-import Animated, { LinearTransition } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { triggerHaptic } from '@/components/ui/PressableScale';
@@ -30,10 +29,9 @@ export interface SidebarLink {
 }
 
 /**
- * One tab bar, three personalities:
- * vendor — white bar, active tab expands into a teal pill;
- * freelancer — floating dark capsule with amber active circle;
- * platform — navy console rail with a top indicator.
+ * Shared tab bar for the vendor, freelancer and staff apps. On phones it is a
+ * plain bottom bar; at desktop widths it becomes a sidebar that also lists
+ * the deep links. The same component in every role, only the accent differs.
  */
 export function RoleTabBar({ state, navigation, tabs, links = [] }: BottomTabBarProps & { tabs: RoleTab[]; links?: SidebarLink[] }) {
   const t = useRoleTheme();
@@ -52,19 +50,17 @@ export function RoleTabBar({ state, navigation, tabs, links = [] }: BottomTabBar
     .map((route, index) => ({ route, index, tab: tabs.find((x) => x.name === route.name) }))
     .filter((x): x is typeof x & { tab: RoleTab } => !!x.tab);
 
-  // Desktop / tablet web: a persistent sidebar with the tabs plus deep links.
   if (wide) {
-    const dark = t.role === 'platform' || t.role === 'freelancer';
-    const fg = dark ? '#FFFFFF' : t.c.textStrong;
-    const muted = dark ? 'rgba(255,255,255,0.6)' : t.c.muted;
     return (
-      <View style={[styles.sidebar, { backgroundColor: dark ? t.c.header : t.c.surface, borderRightColor: t.c.border, paddingTop: insets.top + 18 }]}>
-        <Text size={20} weight="extrabold" color={dark ? '#FFFFFF' : t.c.primary} style={{ paddingHorizontal: 18 }}>
-          {BRAND.name}
-        </Text>
-        <Text size={11} weight="bold" color={muted} style={{ paddingHorizontal: 18, marginBottom: 14 }}>
-          {t.label.toUpperCase()}
-        </Text>
+      <View style={[styles.sidebar, { backgroundColor: t.c.surface, borderRightColor: t.c.border, paddingTop: insets.top + 20 }]}>
+        <View style={styles.sideBrand}>
+          <Text size={20} weight="bold" serif color={t.c.textStrong} lineHeight={26}>
+            {BRAND.name}
+          </Text>
+          <Text size={13} color={t.c.muted}>
+            {t.label}
+          </Text>
+        </View>
         {items.map(({ route, index, tab }) => {
           const focused = state.index === index;
           return (
@@ -73,34 +69,30 @@ export function RoleTabBar({ state, navigation, tabs, links = [] }: BottomTabBar
               onPress={() => press(route.name, route.key, focused)}
               accessibilityRole="tab"
               accessibilityState={{ selected: focused }}
-              style={[styles.sideItem, focused && { backgroundColor: dark ? 'rgba(255,255,255,0.12)' : t.c.soft }]}>
-              <Ionicons name={focused ? tab.activeIcon : tab.icon} size={19} color={focused ? (dark ? '#FFFFFF' : t.c.primary) : muted} />
-              <Text size={14} weight={focused ? 'bold' : 'medium'} color={focused ? fg : muted} style={{ flex: 1 }}>
+              style={({ pressed }) => [styles.sideItem, focused && { backgroundColor: t.c.surfaceAlt }, pressed && !focused && { opacity: 0.7 }]}>
+              <Ionicons name={focused ? tab.activeIcon : tab.icon} size={19} color={focused ? t.c.primary : t.c.muted} />
+              <Text size={14} weight={focused ? 'semibold' : 'regular'} color={focused ? t.c.textStrong : t.c.text} style={{ flex: 1 }}>
                 {tab.label}
               </Text>
               {!!tab.badge && (
-                <View style={styles.sideBadge}>
-                  <Text size={10} weight="bold" color="#FFFFFF" lineHeight={12}>
-                    {tab.badge > 99 ? '99+' : tab.badge}
-                  </Text>
-                </View>
+                <Text size={12} weight="semibold" color={t.c.danger}>
+                  {tab.badge > 99 ? '99+' : tab.badge}
+                </Text>
               )}
             </Pressable>
           );
         })}
-        {links.length > 0 && <View style={[styles.sideDivider, { backgroundColor: dark ? 'rgba(255,255,255,0.12)' : t.c.border }]} />}
+        {links.length > 0 && <View style={[styles.sideDivider, { backgroundColor: t.c.border }]} />}
         {links.map((l) => (
           <Pressable key={l.label} onPress={() => router.push(l.href)} style={({ pressed }) => [styles.sideItem, pressed && { opacity: 0.7 }]}>
-            <Ionicons name={l.icon} size={18} color={muted} />
-            <Text size={13} weight="medium" color={muted} style={{ flex: 1 }}>
+            <Ionicons name={l.icon} size={18} color={t.c.muted} />
+            <Text size={14} color={t.c.text} style={{ flex: 1 }}>
               {l.label}
             </Text>
             {!!l.badge && (
-              <View style={styles.sideBadge}>
-                <Text size={10} weight="bold" color="#FFFFFF" lineHeight={12}>
-                  {l.badge}
-                </Text>
-              </View>
+              <Text size={12} weight="semibold" color={t.c.danger}>
+                {l.badge}
+              </Text>
             )}
           </Pressable>
         ))}
@@ -108,99 +100,32 @@ export function RoleTabBar({ state, navigation, tabs, links = [] }: BottomTabBar
     );
   }
 
-  if (t.role === 'freelancer') {
-    return (
-      <View style={[styles.floatWrap, { paddingBottom: Math.max(insets.bottom, 12) }]} pointerEvents="box-none">
-        <View style={[styles.float, { backgroundColor: t.c.surface, borderColor: t.c.border }]}>
-          {items.map(({ route, index, tab }) => {
-            const focused = state.index === index;
-            return (
-              <Pressable
-                key={route.key}
-                onPress={() => press(route.name, route.key, focused)}
-                accessibilityRole="tab"
-                accessibilityState={{ selected: focused }}
-                accessibilityLabel={tab.label}
-                style={styles.floatItem}>
-                <View style={[styles.floatIcon, focused && { backgroundColor: t.c.primary }]}>
-                  <Ionicons name={focused ? tab.activeIcon : tab.icon} size={21} color={focused ? t.c.onPrimary : t.c.muted} />
-                  {!!tab.badge && !focused && <View style={[styles.dotBadge, { backgroundColor: t.c.primary }]} />}
-                </View>
-                <Text size={10} weight="semibold" color={focused ? t.c.primary : t.c.muted}>
-                  {tab.label}
-                </Text>
-              </Pressable>
-            );
-          })}
-        </View>
-      </View>
-    );
-  }
-
-  if (t.role === 'platform') {
-    return (
-      <View style={[styles.rail, { backgroundColor: t.c.header, paddingBottom: Math.max(insets.bottom, 8) }]}>
-        {items.map(({ route, index, tab }) => {
-          const focused = state.index === index;
-          return (
-            <Pressable
-              key={route.key}
-              onPress={() => press(route.name, route.key, focused)}
-              accessibilityRole="tab"
-              accessibilityState={{ selected: focused }}
-              accessibilityLabel={tab.label}
-              style={styles.railItem}>
-              <View style={[styles.railIndicator, { backgroundColor: focused ? '#A5B4FC' : 'transparent' }]} />
-              <View>
-                <Ionicons name={focused ? tab.activeIcon : tab.icon} size={21} color={focused ? '#FFFFFF' : '#8F8CC0'} />
-                {!!tab.badge && (
-                  <View style={styles.railBadge}>
-                    <Text size={9} weight="bold" color="#FFFFFF" lineHeight={11}>
-                      {tab.badge > 9 ? '9+' : tab.badge}
-                    </Text>
-                  </View>
-                )}
-              </View>
-              <Text size={10} weight={focused ? 'bold' : 'medium'} color={focused ? '#FFFFFF' : '#8F8CC0'}>
-                {tab.label}
-              </Text>
-            </Pressable>
-          );
-        })}
-      </View>
-    );
-  }
-
-  // vendor
   return (
-    <View style={[styles.pillBar, { backgroundColor: t.c.surface, borderTopColor: t.c.border, paddingBottom: Math.max(insets.bottom, 10) }]}>
+    <View style={[styles.bar, { backgroundColor: t.c.surface, borderTopColor: t.c.border, paddingBottom: Math.max(insets.bottom, 8) }]}>
       {items.map(({ route, index, tab }) => {
         const focused = state.index === index;
+        const tint = focused ? t.c.primary : t.c.muted;
         return (
           <Pressable
             key={route.key}
             onPress={() => press(route.name, route.key, focused)}
             accessibilityRole="tab"
             accessibilityState={{ selected: focused }}
-            accessibilityLabel={tab.label}
-            style={[styles.pillItem, { flex: focused ? 1.9 : 1 }]}>
-            <Animated.View layout={LinearTransition.duration(180)} style={[styles.pill, focused && { backgroundColor: t.c.soft, paddingHorizontal: 14 }]}>
-              <View>
-                <Ionicons name={focused ? tab.activeIcon : tab.icon} size={21} color={focused ? t.c.primary : t.c.muted} />
-                {!!tab.badge && (
-                  <View style={[styles.pillBadge, { borderColor: t.c.surface }]}>
-                    <Text size={9} weight="bold" color="#FFFFFF" lineHeight={11}>
-                      {tab.badge > 9 ? '9+' : tab.badge}
-                    </Text>
-                  </View>
-                )}
-              </View>
-              {focused && (
-                <Text size={12} weight="bold" color={t.c.primary} numberOfLines={1}>
-                  {tab.label}
-                </Text>
+            accessibilityLabel={tab.badge ? `${tab.label}, ${tab.badge} new` : tab.label}
+            style={styles.item}>
+            <View>
+              <Ionicons name={focused ? tab.activeIcon : tab.icon} size={23} color={tint} />
+              {!!tab.badge && (
+                <View style={[styles.badge, { backgroundColor: t.c.danger, borderColor: t.c.surface }]}>
+                  <Text size={9} weight="bold" color="#FFFFFF" lineHeight={11}>
+                    {tab.badge > 9 ? '9+' : tab.badge}
+                  </Text>
+                </View>
               )}
-            </Animated.View>
+            </View>
+            <Text size={11} weight={focused ? 'semibold' : 'regular'} color={tint} lineHeight={14} numberOfLines={1}>
+              {tab.label}
+            </Text>
           </Pressable>
         );
       })}
@@ -209,21 +134,11 @@ export function RoleTabBar({ state, navigation, tabs, links = [] }: BottomTabBar
 }
 
 const styles = StyleSheet.create({
-  sidebar: { width: 232, borderRightWidth: StyleSheet.hairlineWidth, paddingBottom: 18, gap: 2 },
-  sideItem: { flexDirection: 'row', alignItems: 'center', gap: 12, marginHorizontal: 10, paddingHorizontal: 12, paddingVertical: 10, borderRadius: 10 },
-  sideBadge: { minWidth: 18, height: 18, borderRadius: 9, backgroundColor: '#EF4444', alignItems: 'center', justifyContent: 'center', paddingHorizontal: 4 },
-  sideDivider: { height: StyleSheet.hairlineWidth, marginVertical: 10, marginHorizontal: 18 },
-  floatWrap: { position: 'absolute', left: 0, right: 0, bottom: 0, paddingHorizontal: 14 },
-  float: { flexDirection: 'row', borderRadius: 28, borderWidth: 1, paddingVertical: 8, paddingHorizontal: 6 },
-  floatItem: { flex: 1, alignItems: 'center', gap: 3 },
-  floatIcon: { width: 40, height: 40, borderRadius: 20, alignItems: 'center', justifyContent: 'center' },
-  dotBadge: { position: 'absolute', top: 6, right: 6, width: 8, height: 8, borderRadius: 4 },
-  rail: { flexDirection: 'row' },
-  railItem: { flex: 1, alignItems: 'center', gap: 4, paddingBottom: 6 },
-  railIndicator: { width: 28, height: 3, borderBottomLeftRadius: 3, borderBottomRightRadius: 3, marginBottom: 6 },
-  railBadge: { position: 'absolute', top: -5, right: -9, minWidth: 16, height: 16, borderRadius: 8, backgroundColor: '#EF4444', alignItems: 'center', justifyContent: 'center', paddingHorizontal: 3 },
-  pillBar: { flexDirection: 'row', borderTopWidth: StyleSheet.hairlineWidth, paddingTop: 10, paddingHorizontal: 8 },
-  pillItem: { flex: 1, alignItems: 'center' },
-  pill: { flexDirection: 'row', alignItems: 'center', gap: 6, height: 38, borderRadius: 19, paddingHorizontal: 8 },
-  pillBadge: { position: 'absolute', top: -4, right: -8, minWidth: 16, height: 16, borderRadius: 8, backgroundColor: '#EF4444', alignItems: 'center', justifyContent: 'center', paddingHorizontal: 3, borderWidth: 1.5 },
+  sidebar: { width: 228, borderRightWidth: StyleSheet.hairlineWidth, paddingBottom: 18, gap: 1 },
+  sideBrand: { paddingHorizontal: 20, marginBottom: 16 },
+  sideItem: { flexDirection: 'row', alignItems: 'center', gap: 12, marginHorizontal: 8, paddingHorizontal: 12, paddingVertical: 8, borderRadius: 6 },
+  sideDivider: { height: StyleSheet.hairlineWidth, marginVertical: 10, marginHorizontal: 20 },
+  bar: { flexDirection: 'row', borderTopWidth: StyleSheet.hairlineWidth, paddingTop: 7 },
+  item: { flex: 1, alignItems: 'center', gap: 2 },
+  badge: { position: 'absolute', top: -4, right: -10, minWidth: 17, height: 17, borderRadius: 9, borderWidth: 2, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 3 },
 });

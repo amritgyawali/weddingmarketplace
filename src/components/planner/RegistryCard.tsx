@@ -1,6 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
-import { Linking, StyleSheet, View } from 'react-native';
+import { Linking, Pressable, StyleSheet, View } from 'react-native';
 
 import { Card, KButton, ProgressBar } from '@/components/kit';
 import { Text } from '@/components/ui/Text';
@@ -28,17 +28,18 @@ export function RegistryCard({ item, accent = colors.primary, onContribute, onPr
   const kind = REGISTRY_KINDS.find((k) => k.id === item.kind)!;
   const funded = goal > 0 && raised >= goal;
   return (
-    <Card onPress={onPress} padded={false} style={{ overflow: 'hidden' }}>
+    <Card padded={false} style={{ overflow: 'hidden' }}>
+      <Pressable disabled={!onPress} onPress={onPress} accessibilityRole={onPress ? 'button' : undefined} accessibilityLabel={item.title}>
       {item.image && <Image source={photos[item.image]} style={styles.image} contentFit="cover" />}
-      <View style={{ padding: 14, gap: 8 }}>
+      <View style={{ padding: 14, paddingBottom: 0, gap: 8 }}>
         <View style={styles.row}>
           <Ionicons name={kind.icon} size={16} color={accent} />
-          <Text size={12} weight="bold" color={accent}>
-            {kind.label.toUpperCase()}
+          <Text size={12} weight="medium" color={accent}>
+            {kind.label}
           </Text>
           {funded && (
-            <Text size={12} weight="bold" color={colors.success}>
-              · FULLY FUNDED
+            <Text size={12} weight="medium" color={colors.success}>
+              · Fully funded
             </Text>
           )}
         </View>
@@ -58,6 +59,9 @@ export function RegistryCard({ item, accent = colors.primary, onContribute, onPr
             </Text>
           </>
         )}
+      </View>
+      </Pressable>
+      <View style={{ paddingHorizontal: 14, paddingTop: 8, paddingBottom: 14 }}>
         {item.kind === 'external' && item.link ? (
           <KButton label="Open wishlist" icon="open-outline" variant="secondary" size="sm" onPress={() => Linking.openURL(item.link!)} />
         ) : (

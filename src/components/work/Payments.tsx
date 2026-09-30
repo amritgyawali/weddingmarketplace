@@ -74,10 +74,10 @@ export function PaymentSheet({
         {step === 'choose' && (
           <>
             <View style={[styles.amountBox, { backgroundColor: t.c.soft }]}>
-              <Text size={12} weight="semibold" color={t.c.primary}>
-                AMOUNT DUE
+              <Text size={12} weight="semibold" color={t.c.muted}>
+                Amount due
               </Text>
-              <Text size={26} weight="extrabold" color={t.c.textStrong}>
+              <Text size={26} weight="bold" color={t.c.textStrong}>
                 {formatMoney(payAmount)}
               </Text>
             </View>
@@ -121,13 +121,13 @@ export function PaymentSheet({
               <Text size={18} weight="bold" color="#fff">
                 {m.label}
               </Text>
-              <Text size={24} weight="extrabold" color="#fff">
+              <Text size={24} weight="bold" color="#fff">
                 {formatMoney(payAmount)}
               </Text>
             </View>
             {method === 'fonepay' && (
               <View style={{ alignItems: 'center', gap: 8 }}>
-                <View style={{ padding: 12, backgroundColor: '#fff', borderRadius: 12 }}>
+                <View style={{ padding: 12, backgroundColor: '#fff', borderRadius: 8 }}>
                   <QRCode value={`fonepay://pay?merchant=VIVAH&amount=${payAmount}&ref=${title.replace(/\s+/g, '-')}`} size={170} />
                 </View>
                 <Text size={12} color={t.c.muted}>
@@ -159,7 +159,7 @@ export function PaymentSheet({
         {step === 'done' && (
           <View style={{ alignItems: 'center', gap: 10, paddingVertical: 16 }}>
             <Ionicons name="checkmark-circle" size={64} color={t.c.success} />
-            <Text size={22} weight="extrabold" color={t.c.textStrong}>
+            <Text size={22} weight="bold" color={t.c.textStrong}>
               {formatMoney(payAmount)}
             </Text>
             <Text size={14} color={t.c.muted} align="center">
@@ -246,7 +246,7 @@ export function PaymentsPanel({ project, mode }: { project: Project; mode: 'cust
             <Text size={12} color={t.c.muted}>
               Paid so far
             </Text>
-            <Text size={22} weight="extrabold" color={t.c.textStrong}>
+            <Text size={22} weight="bold" color={t.c.textStrong}>
               {formatMoney(summary.paid)}
             </Text>
           </View>
@@ -273,8 +273,8 @@ export function PaymentsPanel({ project, mode }: { project: Project; mode: 'cust
 
       {payments.length > 0 && (
         <View style={{ gap: 8 }}>
-          <Text size={13} weight="bold" color={t.c.muted}>
-            RECEIPTS
+          <Text size={13} weight="medium" color={t.c.muted}>
+            Receipts
           </Text>
           {payments.map((p) => (
             <Card key={p.id} style={styles.receipt}>
@@ -340,10 +340,10 @@ export function PaymentsPanel({ project, mode }: { project: Project; mode: 'cust
 
 const styles = StyleSheet.create({
   rowBetween: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', gap: 10 },
-  amountBox: { borderRadius: 14, padding: 14, alignItems: 'center', gap: 2 },
-  method: { flexDirection: 'row', alignItems: 'center', gap: 12, borderWidth: 1, borderRadius: 14, padding: 12 },
+  amountBox: { borderRadius: 8, padding: 14, alignItems: 'center', gap: 2 },
+  method: { flexDirection: 'row', alignItems: 'center', gap: 12, borderWidth: 1, borderRadius: 8, padding: 12 },
   methodIcon: { width: 36, height: 36, borderRadius: 10, alignItems: 'center', justifyContent: 'center' },
   secure: { flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: 4 },
-  gateway: { borderRadius: 16, padding: 18, alignItems: 'center', gap: 6 },
+  gateway: { borderRadius: 10, padding: 18, alignItems: 'center', gap: 6 },
   receipt: { flexDirection: 'row', alignItems: 'center', gap: 10, padding: 12 },
 });

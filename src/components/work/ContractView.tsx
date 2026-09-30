@@ -67,8 +67,8 @@ export function ContractView({ contract, party, signerName }: { contract: Contra
           return (
             <View key={p} style={[styles.sig, { borderColor: t.c.border }]}>
               <View style={{ flex: 1 }}>
-                <Text size={12} weight="bold" color={t.c.muted}>
-                  {PARTY_LABEL[p].toUpperCase()}
+                <Text size={12} weight="medium" color={t.c.muted}>
+                  {PARTY_LABEL[p]}
                 </Text>
                 <Text size={14} weight="semibold" color={t.c.textStrong}>
                   {sig ? sig.name : contract.parties[p]}
@@ -103,7 +103,7 @@ export function ContractView({ contract, party, signerName }: { contract: Contra
             onPress={() => {
               sign(contract.id, party!, name.trim(), path ?? undefined);
               triggerHaptic('success');
-              toast('Contract signed ✍️', 'document-lock');
+              toast('Contract signed', 'document-lock');
             }}
           />
           <Text size={11} color={t.c.subtle}>
@@ -119,5 +119,5 @@ export function ContractView({ contract, party, signerName }: { contract: Contra
 
 const styles = StyleSheet.create({
   between: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 10 },
-  sig: { flexDirection: 'row', alignItems: 'center', gap: 10, borderWidth: 1, borderRadius: 12, padding: 10 },
+  sig: { flexDirection: 'row', alignItems: 'center', gap: 10, borderWidth: 1, borderRadius: 8, padding: 10 },
 });

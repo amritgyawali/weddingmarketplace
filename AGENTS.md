@@ -41,10 +41,10 @@ These product decisions are fixed. Do not reverse them without the owner's say-s
 
 | Role (`UserRole`) | App | Routes | Theme |
 |---|---|---|---|
-| `customer`, the couple | Marketplace + **My Wedding** planning tools | `src/app/(tabs)/…` and root screens (`my-wedding`, `plan`, `guests`, `seating`, `budget`, `website`, `invitations`, `registry`, `boards`, `compare`, `deals`, `contracts`, `calendar`, `checklist`, `quote/[id]` …) | pink |
-| `vendor`: venues and businesses | Vivah for Business: leads CRM, quote builder, bookings, crew, calendar, packages, portfolio, finance, analytics, promotions, reviews, team, verification | `src/app/business/…` | teal |
-| `freelancer`: photographers, makeup artists, crew | Gig marketplace: gigs, invites, emergency gigs, assignments, GPS check-in/out, calendar and weekly rules, earnings, profile | `src/app/freelancer/…` | dark |
-| `platform`: staff (coordinator, admin, support, finance) | Operations console: today view, leads kanban, 12-tab project console, matching, quote builder, control room, emergency replacement, approvals, finance, users, providers, freelancers, analytics, marketplace, audit | `src/app/platform/…` | indigo |
+| `customer`, the couple | Marketplace + **My Wedding** planning tools | `src/app/(tabs)/…` and root screens (`my-wedding`, `plan`, `guests`, `seating`, `budget`, `website`, `invitations`, `registry`, `boards`, `compare`, `deals`, `contracts`, `calendar`, `checklist`, `quote/[id]` …) | sindoor crimson |
+| `vendor`: venues and businesses | Vivah for Business: leads CRM, quote builder, bookings, crew, calendar, packages, portfolio, finance, analytics, promotions, reviews, team, verification | `src/app/business/…` | pine green |
+| `freelancer`: photographers, makeup artists, crew | Gig marketplace: gigs, invites, emergency gigs, assignments, GPS check-in/out, calendar and weekly rules, earnings, profile | `src/app/freelancer/…` | slate blue |
+| `platform`: staff (coordinator, admin, support, finance) | Operations console: today view, leads kanban, 12-tab project console, matching, quote builder, control room, emergency replacement, approvals, finance, users, providers, freelancers, analytics, marketplace, audit | `src/app/platform/…` | graphite |
 
 Public pages need no sign-in: `/w/[slug]` (the couple's wedding website and registry) and `/rsvp/[code]` (the guest RSVP).
 
@@ -245,7 +245,17 @@ Seed dates are **relative to today** (`day(n)`/`at(n)`); keep them relative.
 - Match the surrounding style: small typed helpers, JSDoc one-liners on exported functions, and no comment noise.
 - Ids come from `uid(prefix)`; human codes from `shortCode()`, `nextQuoteNumber()` and `nextNumber()`.
 - Copy is Nepal-first and friendly ("Namaste", "Dhanyabad"). Use the existing tone.
-- On web, avoid nesting pressables (`Card onPress` containing buttons). It produces `<button>` inside `<button>`.
+- On web, avoid nesting pressables (`Card onPress` containing buttons). It produces `<button>` inside `<button>`. Make the tappable area and the buttons siblings inside a plain `Card`.
+
+### Visual design
+
+One design system for all four apps; only the accent colour changes per role (`src/theme/roles.ts`).
+
+- **Type.** Mukta for all UI text, Martel (`<Text serif>`) for a few display lines only: couple names, onboarding and welcome headlines, big numbers like the countdown. Both are Ek Type faces with Devanagari, so Nepali text sets in the same voice. Don't add other font families.
+- **Colour.** Warm neutrals, white surfaces and dark ink do most of the work. The accent marks primary actions and the one thing that needs attention. Status colours come from `statusTone()`. No gradients except dark scrims over photos; no glows, no coloured shadows.
+- **Shape.** Cards 10 px radius with a 1 px border and no shadow; buttons 8 px; chips and pills 4–6 px. Shadows only on things that float (sheets, toasts, the floating filter bar).
+- **Copy.** Sentence case everywhere, including labels, tabs and buttons. No all-caps eyebrows, no letter-spaced labels, no emoji in UI chrome or notifications, no "AI"/"magic"/sparkle language: the assistant is a rule-based help bot and is called "Quick help".
+- **Stats.** Label above, number below, in ink. Colour a number only when it flags a problem (overdue, risk).
 - Keep `README.md` (the product overview) and this file current when behaviour changes.
 
 ## 9. Definition of done: run these before saying the work is finished
@@ -292,10 +302,7 @@ Fix these deliberately, with tests. Don't paper over them, and don't "fix" them 
   - the project code `WP-${1000 + projects.length + 31}` can collide with seeded codes.
 - **App, low:**
   - seed data for WP-1051 disagrees (quote, milestones and booking);
-  - `QuoteDocument` shows a duplicate "V1 (draft)" chip;
   - the quote preview hides send errors;
-  - there are nested buttons on web;
-  - `/plan-submitted` without an id renders blank;
   - store actions trust the UI for validation (overpay, RSVP headcount, negative gifts, duplicate slugs).
 
 When you fix one, remove it from this list and from `TEST_REPORT.md`.

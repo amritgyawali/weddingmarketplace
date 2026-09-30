@@ -25,10 +25,10 @@ import type { Message, Thread } from '@/types/platform';
 import { addDays, formatMoney, formatShortDate, formatTime, today } from '@/utils/format';
 
 const QUICK_REPLIES: Record<string, string[]> = {
-  customer: ['Thank you! 🙏', 'Can we schedule a call?', 'Please share the updated quote', 'Is this date available?'],
+  customer: ['Dhanyabad!', 'Can we schedule a call?', 'Please share the updated quote', 'Is this date available?'],
   vendor: ['Thanks for reaching out! Sharing our packages now.', 'The date is available — shall I hold it?', 'Can we do a site visit this weekend?', 'Advance of 30% confirms the booking.'],
-  platform: ['I’ve shared the updated quotation.', 'Your provider has confirmed ✅', 'Reminder: your next instalment is due soon.', 'I’ll call you in 10 minutes.'],
-  freelancer: ['On my way 🚗', 'Reached the venue.', 'Could you share the exact location?', 'Sharing raw files tonight.'],
+  platform: ['I’ve shared the updated quotation.', 'Your provider has confirmed.', 'Reminder: your next instalment is due soon.', 'I’ll call you in 10 minutes.'],
+  freelancer: ['On my way.', 'Reached the venue.', 'Could you share the exact location?', 'Sharing raw files tonight.'],
 };
 
 const quoteHref = (role: string, id: string) => (role === 'customer' ? `/quote/${id}` : role === 'platform' ? `/platform/quote/${id}` : role === 'vendor' ? `/business/quote/${id}` : null);
@@ -307,14 +307,14 @@ export function ThreadView({ thread }: { thread: Thread }) {
 
 const styles = StyleSheet.create({
   members: { paddingVertical: 8, borderBottomWidth: StyleSheet.hairlineWidth },
-  member: { flexDirection: 'row', alignItems: 'center', gap: 5, borderRadius: 999, paddingHorizontal: 8, paddingVertical: 4 },
+  member: { flexDirection: 'row', alignItems: 'center', gap: 5, borderRadius: 6, paddingHorizontal: 8, paddingVertical: 4 },
   bubbleWrap: { marginVertical: 2 },
-  bubble: { maxWidth: '82%', borderRadius: 18, paddingHorizontal: 12, paddingVertical: 8, gap: 4 },
-  card: { flexDirection: 'row', alignItems: 'center', gap: 10, borderRadius: 12, padding: 10, minWidth: 220 },
-  image: { width: 220, height: 160, borderRadius: 12 },
+  bubble: { maxWidth: '82%', borderRadius: 10, paddingHorizontal: 12, paddingVertical: 8, gap: 4 },
+  card: { flexDirection: 'row', alignItems: 'center', gap: 10, borderRadius: 8, padding: 10, minWidth: 220 },
+  image: { width: 220, height: 160, borderRadius: 8 },
   composer: { flexDirection: 'row', alignItems: 'flex-end', gap: 8, paddingHorizontal: 10, paddingTop: 8 },
   input: { flex: 1, minHeight: 40, maxHeight: 120, borderRadius: 20, paddingHorizontal: 14, paddingTop: 10, paddingBottom: 10, fontSize: 15 },
   circle: { width: 40, height: 40, borderRadius: 20, alignItems: 'center', justifyContent: 'center' },
-  quick: { borderWidth: 1, borderRadius: 999, paddingHorizontal: 12, paddingVertical: 6 },
-  menuRow: { flexDirection: 'row', alignItems: 'center', gap: 12, borderWidth: 1, borderRadius: 12, padding: 14 },
+  quick: { borderWidth: 1, borderRadius: 6, paddingHorizontal: 12, paddingVertical: 6 },
+  menuRow: { flexDirection: 'row', alignItems: 'center', gap: 12, borderWidth: 1, borderRadius: 8, padding: 14 },
 });

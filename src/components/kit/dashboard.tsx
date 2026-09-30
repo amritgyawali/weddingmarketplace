@@ -1,5 +1,4 @@
 import { Ionicons } from '@expo/vector-icons';
-import { LinearGradient } from 'expo-linear-gradient';
 import { router, type Href } from 'expo-router';
 import type { ReactNode } from 'react';
 import { Pressable, StyleSheet, View, type StyleProp, type ViewStyle } from 'react-native';
@@ -12,10 +11,13 @@ import { useRoleTheme } from '@/theme/RoleTheme';
 
 import { Card, type IconName } from './primitives';
 
+const ALERT_TONES = ['#DC2626', '#EF4444', '#E11D48', '#B42318'];
+
+/** Text-only stat tile: label on top, figure below. `tone` only matters when it flags a problem. */
 export function KpiCard({
   label,
   value,
-  icon,
+  icon: _icon,
   delta,
   tone,
   style,
@@ -23,6 +25,7 @@ export function KpiCard({
 }: {
   label: string;
   value: string;
+  /** Kept for call-site compatibility; stat tiles no longer draw icons. */
   icon: IconName;
   delta?: string;
   tone?: string;
@@ -30,31 +33,28 @@ export function KpiCard({
   onPress?: () => void;
 }) {
   const t = useRoleTheme();
-  const color = tone ?? t.c.primary;
   const negative = delta?.startsWith('-');
+  const alert = !!tone && (tone === t.c.danger || ALERT_TONES.includes(tone.toUpperCase())) && value !== '0';
   return (
     <Card style={[styles.kpi, style]} onPress={onPress} accessibilityLabel={`${label}: ${value}`}>
-      <View style={styles.kpiTop}>
-        <View style={[styles.kpiIcon, { backgroundColor: `${color}${t.dark ? '33' : '1A'}` }]}>
-          <Ionicons name={icon} size={18} color={color} />
-        </View>
+      <Text size={13} color={t.c.muted} numberOfLines={1}>
+        {label}
+      </Text>
+      <View style={styles.kpiValueRow}>
+        <Text size={24} weight="semibold" lineHeight={30} color={alert ? t.c.danger : t.c.textStrong} numberOfLines={1} adjustsFontSizeToFit style={{ flexShrink: 1 }}>
+          {value}
+        </Text>
         {delta && (
-          <Text size={12} weight="bold" color={negative ? t.c.danger : t.c.success}>
+          <Text size={12} weight="medium" color={negative ? t.c.danger : t.c.success}>
             {delta}
           </Text>
         )}
       </View>
-      <Text size={22} weight="bold" color={t.c.textStrong} numberOfLines={1} adjustsFontSizeToFit>
-        {value}
-      </Text>
-      <Text size={12} weight="medium" color={t.c.muted} numberOfLines={1}>
-        {label}
-      </Text>
     </Card>
   );
 }
 
-/** Minimal column chart (no chart lib needed). */
+/** Minimal column chart (no chart lib needed). The latest bar is inked, the rest stay grey. */
 export function BarChart({ data, height = 120, format }: { data: { label: string; value: number }[]; height?: number; format?: (v: number) => string }) {
   const t = useRoleTheme();
   const max = Math.max(1, ...data.map((d) => d.value));
@@ -66,25 +66,26 @@ export function BarChart({ data, height = 120, format }: { data: { label: string
           return (
             <View key={d.label} style={styles.barCol} accessibilityLabel={`${d.label}: ${format ? format(d.value) : d.value}`}>
               {last && (
-                <Text size={10} weight="bold" color={t.c.primary} style={{ marginBottom: 4 }}>
+                <Text size={11} weight="semibold" color={t.c.textStrong} style={{ marginBottom: 4 }}>
                   {format ? format(d.value) : d.value}
                 </Text>
               )}
               <View
                 style={{
-                  width: '62%',
-                  height: Math.max(4, (d.value / max) * (height - 20)),
-                  borderRadius: 6,
-                  backgroundColor: last ? t.c.primary : `${t.c.primary}${t.dark ? '55' : '40'}`,
+                  width: '56%',
+                  height: Math.max(3, (d.value / max) * (height - 20)),
+                  borderTopLeftRadius: 2,
+                  borderTopRightRadius: 2,
+                  backgroundColor: last ? t.c.primary : t.c.border,
                 }}
               />
             </View>
           );
         })}
       </View>
-      <View style={styles.labels}>
+      <View style={[styles.labels, { borderTopColor: t.c.border }]}>
         {data.map((d) => (
-          <Text key={d.label} size={10} color={t.c.muted} align="center" style={{ flex: 1 }}>
+          <Text key={d.label} size={11} color={t.c.muted} align="center" style={{ flex: 1 }}>
             {d.label}
           </Text>
         ))}
@@ -93,7 +94,7 @@ export function BarChart({ data, height = 120, format }: { data: { label: string
   );
 }
 
-function BellButton({ light }: { light: boolean }) {
+function BellButton() {
   const account = useAccount();
   const unread = useInbox(account).filter((n) => !n.read).length;
   const t = useRoleTheme();
@@ -102,11 +103,11 @@ function BellButton({ light }: { light: boolean }) {
       onPress={() => router.push('/notifications')}
       hitSlop={10}
       accessibilityLabel={`Notifications, ${unread} unread`}
-      style={[styles.iconBtn, { backgroundColor: light ? 'rgba(255,255,255,0.16)' : t.c.surfaceAlt }]}>
-      <Ionicons name="notifications-outline" size={20} color={light ? '#FFFFFF' : t.c.textStrong} />
+      style={({ pressed }) => [styles.iconBtn, pressed && { opacity: 0.6 }]}>
+      <Ionicons name="notifications-outline" size={23} color={t.c.textStrong} />
       {unread > 0 && (
-        <View style={[styles.badge, { backgroundColor: t.role === 'freelancer' ? t.c.primary : '#EF4444' }]}>
-          <Text size={10} weight="bold" color={t.role === 'freelancer' ? t.c.onPrimary : '#FFFFFF'} lineHeight={12}>
+        <View style={[styles.badge, { backgroundColor: t.c.danger, borderColor: t.c.header }]}>
+          <Text size={10} weight="bold" color="#FFFFFF" lineHeight={12}>
             {unread > 9 ? '9+' : unread}
           </Text>
         </View>
@@ -115,11 +116,14 @@ function BellButton({ light }: { light: boolean }) {
   );
 }
 
-/**
- * Tab-root header. Each role gets its own look:
- * vendor — teal gradient with rounded base; freelancer — dark minimal;
- * platform — compact navy console bar.
- */
+/** "VIVAH FOR BUSINESS" → "Vivah for business". Mixed-case strings pass through untouched. */
+function sentenceCase(s: string) {
+  if (s !== s.toUpperCase()) return s;
+  const lower = s.toLowerCase();
+  return (lower.charAt(0).toUpperCase() + lower.slice(1)).replace(/\bvivah\b/g, 'Vivah').replace(/\b(wp|qt)-/g, (m) => m.toUpperCase());
+}
+
+/** Tab-root header: plain bar, title on the left, bell on the right. Same shape in every role app. */
 export function RoleHeader({
   eyebrow,
   title,
@@ -135,67 +139,55 @@ export function RoleHeader({
 }) {
   const t = useRoleTheme();
   const insets = useSafeAreaInsets();
-  const light = t.role === 'vendor' || t.role === 'platform';
-
-  const content = (
-    <View style={{ paddingTop: insets.top + 10, paddingHorizontal: 18, paddingBottom: children ? 16 : t.role === 'vendor' ? 22 : 14 }}>
+  return (
+    <View style={[styles.header, { backgroundColor: t.c.header, borderBottomColor: t.c.border, paddingTop: insets.top + 10 }]}>
       <View style={styles.headerRow}>
         <View style={{ flex: 1 }}>
           {eyebrow && (
-            <Text size={12} weight="semibold" color={light ? 'rgba(255,255,255,0.75)' : t.c.muted} tracking={0.6}>
-              {eyebrow}
+            <Text size={13} color={t.c.muted} numberOfLines={1}>
+              {sentenceCase(eyebrow)}
             </Text>
           )}
-          <Text size={t.role === 'platform' ? 20 : 24} weight="bold" color={light ? '#FFFFFF' : t.c.textStrong} numberOfLines={1}>
+          <Text size={t.role === 'platform' ? 21 : 23} weight="bold" lineHeight={t.role === 'platform' ? 28 : 30} color={t.c.textStrong} numberOfLines={1}>
             {title}
           </Text>
           {subtitle && (
-            <Text size={13} color={light ? 'rgba(255,255,255,0.8)' : t.c.muted} numberOfLines={1}>
+            <Text size={14} color={t.c.muted} numberOfLines={1}>
               {subtitle}
             </Text>
           )}
         </View>
         <View style={styles.headerActions}>
           {right}
-          <BellButton light={light} />
+          <BellButton />
         </View>
       </View>
       {children}
     </View>
   );
-
-  if (t.role === 'vendor') {
-    return (
-      <LinearGradient colors={t.gradient} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={styles.vendorHeader}>
-        {content}
-      </LinearGradient>
-    );
-  }
-  return <View style={{ backgroundColor: t.c.header }}>{content}</View>;
 }
 
-/** Stack header for detail screens, styled per role. */
+/** Stack header for detail screens. */
 export function StackHeader({ title, subtitle, right, back = true }: { title: string; subtitle?: string; right?: ReactNode; back?: boolean }) {
   const t = useRoleTheme();
   const insets = useSafeAreaInsets();
-  const light = t.role === 'vendor' || t.role === 'platform';
   return (
-    <View style={[styles.stack, { paddingTop: insets.top + 6, backgroundColor: t.c.header, borderBottomColor: t.dark ? t.c.border : 'transparent' }]}>
+    <View style={[styles.stack, { paddingTop: insets.top + 6, backgroundColor: t.c.header, borderBottomColor: t.c.border }]}>
       {back && (
         <Pressable
           onPress={() => (router.canGoBack() ? router.back() : router.replace(`/${t.role === 'vendor' ? 'business' : t.role}` as Href))}
           hitSlop={12}
           accessibilityLabel="Go back"
-          style={[styles.iconBtn, { backgroundColor: light ? 'rgba(255,255,255,0.16)' : t.c.surfaceAlt }]}>
-          <Ionicons name="chevron-back" size={20} color={light ? '#FFFFFF' : t.c.textStrong} />
+          style={({ pressed }) => [styles.backBtn, pressed && { opacity: 0.6 }]}>
+          <Ionicons name="chevron-back" size={24} color={t.c.textStrong} />
         </Pressable>
       )}
       <View style={{ flex: 1 }}>
-        <Text size={17} weight="bold" color={light ? '#FFFFFF' : t.c.textStrong} numberOfLines={1}>
+        <Text size={17} weight="semibold" color={t.c.textStrong} numberOfLines={1}>
           {title}
         </Text>
         {subtitle && (
-          <Text size={12} color={light ? 'rgba(255,255,255,0.75)' : t.c.muted} numberOfLines={1}>
+          <Text size={13} color={t.c.muted} numberOfLines={1}>
             {subtitle}
           </Text>
         )}
@@ -205,15 +197,15 @@ export function StackHeader({ title, subtitle, right, back = true }: { title: st
   );
 }
 
-/** Quick action tile (icon + label) used on dashboards. */
+/** Shortcut (icon over label) used in dashboard shortcut rows. */
 export function QuickAction({ icon, label, onPress }: { icon: IconName; label: string; onPress: () => void }) {
   const t = useRoleTheme();
   return (
-    <Pressable onPress={onPress} accessibilityRole="button" style={({ pressed }) => [styles.quick, { opacity: pressed ? 0.7 : 1 }]}>
-      <View style={[styles.quickIcon, { backgroundColor: t.c.soft, borderRadius: t.role === 'platform' ? 12 : 18 }]}>
-        <Ionicons name={icon} size={22} color={t.c.primary} />
+    <Pressable onPress={onPress} accessibilityRole="button" style={({ pressed }) => [styles.quick, { opacity: pressed ? 0.6 : 1 }]}>
+      <View style={styles.quickIcon}>
+        <Ionicons name={icon} size={23} color={t.c.textStrong} />
       </View>
-      <Text size={12} weight="semibold" color={t.c.text} align="center" numberOfLines={2}>
+      <Text size={13} color={t.c.text} align="center" numberOfLines={2}>
         {label}
       </Text>
     </Pressable>
@@ -221,18 +213,18 @@ export function QuickAction({ icon, label, onPress }: { icon: IconName; label: s
 }
 
 const styles = StyleSheet.create({
-  kpi: { flex: 1, minWidth: '46%', gap: 4, padding: 14 },
-  kpiTop: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 },
-  kpiIcon: { width: 34, height: 34, borderRadius: 10, alignItems: 'center', justifyContent: 'center' },
+  kpi: { flex: 1, minWidth: '46%', gap: 0, paddingVertical: 12, paddingHorizontal: 14 },
+  kpiValueRow: { flexDirection: 'row', alignItems: 'baseline', gap: 8 },
   bars: { flexDirection: 'row', alignItems: 'flex-end' },
   barCol: { flex: 1, alignItems: 'center', justifyContent: 'flex-end' },
-  labels: { flexDirection: 'row', marginTop: 6 },
-  vendorHeader: { borderBottomLeftRadius: 26, borderBottomRightRadius: 26 },
+  labels: { flexDirection: 'row', paddingTop: 6, borderTopWidth: StyleSheet.hairlineWidth },
+  header: { paddingHorizontal: 16, paddingBottom: 12, borderBottomWidth: StyleSheet.hairlineWidth },
   headerRow: { flexDirection: 'row', alignItems: 'center', gap: 12 },
-  headerActions: { flexDirection: 'row', alignItems: 'center', gap: 10 },
-  iconBtn: { width: 40, height: 40, borderRadius: 20, alignItems: 'center', justifyContent: 'center' },
-  badge: { position: 'absolute', top: -2, right: -2, minWidth: 18, height: 18, borderRadius: 9, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 4 },
-  stack: { flexDirection: 'row', alignItems: 'center', gap: 12, paddingHorizontal: 14, paddingBottom: 12, borderBottomWidth: StyleSheet.hairlineWidth },
-  quick: { flex: 1, alignItems: 'center', gap: 6 },
-  quickIcon: { width: 54, height: 54, alignItems: 'center', justifyContent: 'center' },
+  headerActions: { flexDirection: 'row', alignItems: 'center', gap: 4 },
+  iconBtn: { width: 40, height: 40, alignItems: 'center', justifyContent: 'center' },
+  backBtn: { width: 30, height: 40, alignItems: 'flex-start', justifyContent: 'center', marginLeft: -4 },
+  badge: { position: 'absolute', top: 4, right: 3, minWidth: 18, height: 18, borderRadius: 9, borderWidth: 2, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 3 },
+  stack: { flexDirection: 'row', alignItems: 'center', gap: 8, paddingHorizontal: 14, paddingBottom: 10, borderBottomWidth: StyleSheet.hairlineWidth },
+  quick: { flex: 1, alignItems: 'center', gap: 2, paddingVertical: 4 },
+  quickIcon: { width: 44, height: 34, alignItems: 'center', justifyContent: 'center' },
 });

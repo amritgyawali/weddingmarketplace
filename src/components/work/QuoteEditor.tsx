@@ -72,8 +72,8 @@ function ItemEditor({ item, internal, onChange, onRemove }: { item: QuoteItem; i
       </View>
       {internal && (
         <View style={[styles.internal, { backgroundColor: `${t.c.warning}14`, borderColor: `${t.c.warning}55` }]}>
-          <Text size={11} weight="bold" color={t.c.warning}>
-            INTERNAL · NOT SHOWN TO CUSTOMER
+          <Text size={12} weight="medium" color={t.c.warning}>
+            Internal · not shown to the customer
           </Text>
           <ChoiceChips options={PRICING_MODELS.filter((m) => m.id !== 'FREELANCER_MARGIN').map((m) => m.label)} selected={[PRICING_MODELS.find((m) => m.id === model)!.label]} onToggle={(label) => onChange({ ...item, pricingModel: PRICING_MODELS.find((m) => m.label === label)!.id as PricingModel })} />
           <View style={styles.itemBottom}>
@@ -176,8 +176,8 @@ export function QuoteEditor({
     <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
       <ScrollView contentContainerStyle={{ padding: 16, gap: 14, paddingBottom: 130 }} keyboardShouldPersistTaps="handled">
         <Card style={{ gap: 4 }}>
-          <Text size={12} weight="bold" color={t.c.primary} tracking={0.6}>
-            {quote.number} · VERSION {quote.version}
+          <Text size={12} weight="medium" color={t.c.muted}>
+            {quote.number} · version {quote.version}
             {isRevision ? ` (revising v${quote.versions[quote.versions.length - 1].version})` : ''}
           </Text>
           <Text size={18} weight="bold" color={t.c.textStrong}>
@@ -306,7 +306,7 @@ export function QuoteEditor({
 const styles = StyleSheet.create({
   rowBetween: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 10 },
   inline: { flexDirection: 'row', alignItems: 'center', gap: 4 },
-  itemCard: { borderWidth: 1, borderRadius: 12, padding: 12, gap: 8 },
+  itemCard: { borderWidth: 1, borderRadius: 8, padding: 12, gap: 8 },
   itemTop: { flexDirection: 'row', alignItems: 'center', gap: 10 },
   titleInput: { flex: 1, fontSize: 15, paddingVertical: 4 },
   itemBottom: { flexDirection: 'row', gap: 8 },

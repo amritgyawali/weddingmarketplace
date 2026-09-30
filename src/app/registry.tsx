@@ -58,7 +58,7 @@ function Registry({ project, readOnly }: { project: Project; readOnly: boolean }
             { label: 'To thank', value: String(unthanked.length) },
           ].map((s) => (
             <Card key={s.label} style={toolStyles.stat}>
-              <Text size={16} weight="bold" color={t.c.primary}>
+              <Text size={16} weight="semibold" color={t.c.textStrong}>
                 {s.value}
               </Text>
               <Text size={12} color={t.c.muted}>
@@ -188,6 +188,6 @@ export default function RegistryScreen() {
 }
 
 const styles = StyleSheet.create({
-  thank: { flexDirection: 'row', alignItems: 'center', gap: 4, borderWidth: 1, borderRadius: 999, paddingHorizontal: 10, paddingVertical: 5 },
-  thumb: { width: 70, height: 70, borderRadius: 12, borderWidth: 2 },
+  thank: { flexDirection: 'row', alignItems: 'center', gap: 4, borderWidth: 1, borderRadius: 6, paddingHorizontal: 10, paddingVertical: 5 },
+  thumb: { width: 70, height: 70, borderRadius: 8, borderWidth: 2 },
 });

@@ -184,13 +184,13 @@ export function TaskBoard({ project, mode }: { project: Project; mode: Mode }) {
         if (!tasks.length) return null;
         return (
           <View key={col.status} style={{ gap: 8 }}>
-            <Text size={12} weight="bold" color={t.c.muted}>
-              {col.label.toUpperCase()} · {tasks.length}
+            <Text size={12} weight="medium" color={t.c.muted}>
+              {col.label} · {tasks.length}
             </Text>
             {tasks.map((task) => {
               const late = overdue(task);
               return (
-                <Card key={task.id} onPress={() => setEditing(task)} style={styles.task}>
+                <Card key={task.id} style={styles.task}>
                   <Pressable
                     onPress={() => {
                       triggerHaptic(task.status === 'IN_PROGRESS' ? 'success' : 'selection');
@@ -205,6 +205,7 @@ export function TaskBoard({ project, mode }: { project: Project; mode: Mode }) {
                       color={task.status === 'COMPLETED' ? t.c.success : task.status === 'IN_PROGRESS' ? t.c.warning : task.status === 'WAITING' ? t.c.info : t.c.muted}
                     />
                   </Pressable>
+                  <Pressable onPress={() => setEditing(task)} accessibilityRole="button" accessibilityLabel={`Edit ${task.title}`} style={styles.taskBody}>
                   <View style={{ flex: 1, gap: 2 }}>
                     <Text size={14} weight="semibold" color={t.c.textStrong} style={task.status === 'COMPLETED' ? { textDecorationLine: 'line-through', opacity: 0.6 } : undefined}>
                       {task.title}
@@ -215,6 +216,7 @@ export function TaskBoard({ project, mode }: { project: Project; mode: Mode }) {
                     </Text>
                   </View>
                   {(task.priority === 'high' || task.priority === 'urgent') && task.status !== 'COMPLETED' && <StatusPill status={task.priority} />}
+                  </Pressable>
                 </Card>
               );
             })}
@@ -223,7 +225,7 @@ export function TaskBoard({ project, mode }: { project: Project; mode: Mode }) {
       })}
       {!list.length && (
         <Text size={13} color={t.c.muted} align="center" style={{ paddingVertical: 20 }}>
-          Nothing here — you’re on track ✨
+          Nothing due here.
         </Text>
       )}
       <TaskSheet key={editing === 'new' ? 'new' : (editing?.id ?? 'none')} project={project} mode={mode} task={editing} onClose={() => setEditing(null)} />
@@ -235,5 +237,6 @@ const styles = StyleSheet.create({
   rowBetween: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
   inline: { flexDirection: 'row', alignItems: 'center', gap: 6 },
   task: { flexDirection: 'row', alignItems: 'center', gap: 12, padding: 12 },
-  due: { flexDirection: 'row', alignItems: 'center', gap: 10, height: 46, borderRadius: 12, borderWidth: 1.2, paddingHorizontal: 14 },
+  taskBody: { flex: 1, flexDirection: 'row', alignItems: 'center', gap: 10 },
+  due: { flexDirection: 'row', alignItems: 'center', gap: 10, height: 46, borderRadius: 8, borderWidth: 1, paddingHorizontal: 14 },
 });

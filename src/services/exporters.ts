@@ -10,8 +10,7 @@ import { Linking, Platform } from 'react-native';
 
 import { toast } from '@/components/ui/Toast';
 
-// ── Generic save/share ───────────────────────────────────────────────────
-
+// Generic save/share
 function downloadOnWeb(content: string, fileName: string, mime: string) {
   const blob = new Blob([content], { type: mime });
   const url = URL.createObjectURL(blob);
@@ -49,8 +48,7 @@ export async function sharePdf(html: string, fileName: string) {
   }
 }
 
-// ── Calendar ─────────────────────────────────────────────────────────────
-
+// Calendar
 export interface CalendarItem {
   title: string;
   date: string;
@@ -101,8 +99,7 @@ export function googleCalendarUrl(item: CalendarItem): string {
 
 export const addToGoogleCalendar = (item: CalendarItem) => Linking.openURL(googleCalendarUrl(item));
 
-// ── CSV ──────────────────────────────────────────────────────────────────
-
+// CSV
 const csvCell = (v: unknown) => {
   const s = v === undefined || v === null ? '' : String(v);
   return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;

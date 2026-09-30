@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Card, EmptyBlock, KButton, SectionTitle, StatusPill } from '@/components/kit';
@@ -84,11 +84,11 @@ export default function FreelancerCalendar() {
         <EmptyBlock icon="calendar-clear-outline" title={day ? 'Nothing booked this day' : 'No upcoming work'} message="Keep your calendar up to date — organisers only invite crew who are free." />
       ) : (
         shown.map((r) => (
-          <Card key={r.id} onPress={r.href} style={{ gap: 8 }}>
-            <View style={styles.row}>
-              <View style={[styles.date, { backgroundColor: t.c.soft }]}>
-                <Text size={11} weight="bold" color={t.c.primary}>
-                  {new Date(`${r.date}T00:00:00`).toLocaleString('en', { month: 'short' }).toUpperCase()}
+          <Card key={r.id} style={{ gap: 8 }}>
+            <Pressable onPress={r.href} accessibilityRole="button" style={styles.row}>
+              <View style={[styles.date, { borderWidth: 1, borderColor: t.c.border }]}>
+                <Text size={12} weight="medium" color={t.c.muted}>
+                  {new Date(`${r.date}T00:00:00`).toLocaleString('en', { month: 'short' })}
                 </Text>
                 <Text size={18} weight="bold" color={t.c.textStrong}>
                   {Number(r.date.slice(8, 10))}
@@ -103,9 +103,9 @@ export default function FreelancerCalendar() {
                 </Text>
               </View>
               <StatusPill status={r.status} />
-            </View>
+            </Pressable>
             <View style={styles.row}>
-              <Text size={15} weight="bold" color={t.c.textStrong} style={{ flex: 1 }}>
+              <Text size={15} weight="semibold" color={t.c.textStrong} style={{ flex: 1 }}>
                 {formatMoney(r.pay)}
               </Text>
               <KButton label="Google Calendar" icon="logo-google" variant="ghost" size="sm" onPress={() => addToGoogleCalendar(r.item)} />
@@ -117,10 +117,10 @@ export default function FreelancerCalendar() {
   );
 
   return (
-    <ScrollView style={{ flex: 1, backgroundColor: t.c.bg }} contentContainerStyle={{ paddingTop: insets.top + 12, paddingHorizontal: 16, gap: 16, paddingBottom: 130 }}>
+    <ScrollView style={{ flex: 1, backgroundColor: t.c.bg }} contentContainerStyle={{ paddingTop: insets.top + 12, paddingHorizontal: 16, gap: 16, paddingBottom: 32 }}>
       <View style={styles.head}>
         <View style={{ flex: 1 }}>
-          <Text size={28} weight="bold" color={t.c.textStrong}>
+          <Text size={23} weight="bold" color={t.c.textStrong}>
             Calendar
           </Text>
           <Text size={14} color={t.c.muted}>
@@ -143,5 +143,5 @@ const styles = StyleSheet.create({
   head: { flexDirection: 'row', alignItems: 'center', gap: 12 },
   split: { flexDirection: 'row', gap: 16, alignItems: 'flex-start' },
   row: { flexDirection: 'row', alignItems: 'center', gap: 12 },
-  date: { width: 50, height: 54, borderRadius: 14, alignItems: 'center', justifyContent: 'center' },
+  date: { width: 50, height: 54, borderRadius: 8, alignItems: 'center', justifyContent: 'center' },
 });

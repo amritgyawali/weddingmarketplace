@@ -60,8 +60,8 @@ export default function IdeaViewer() {
 
       <LinearGradient colors={['transparent', 'rgba(0,0,0,0.85)']} style={[styles.bottom, { paddingBottom: insets.bottom + 18 }]}>
         <View style={{ flex: 1 }}>
-          <Text size={12} weight="bold" color={colors.primary} tracking={0.8}>
-            {photo.category.toUpperCase()}
+          <Text size={12} weight="medium" color={colors.textMuted}>
+            {photo.category}
           </Text>
           <Text size={18} weight="semibold" color={colors.white} style={{ marginTop: 4 }}>
             {photo.title}

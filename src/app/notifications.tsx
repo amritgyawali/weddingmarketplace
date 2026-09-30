@@ -32,7 +32,8 @@ function NotificationList() {
       <FlatList
         data={[...inbox].sort((a, b) => b.at.localeCompare(a.at))}
         keyExtractor={(n) => n.id}
-        contentContainerStyle={{ padding: 14, gap: 8, paddingBottom: 40 }}
+        style={{ backgroundColor: t.c.surface }}
+        contentContainerStyle={{ paddingBottom: 40 }}
         ListEmptyComponent={<EmptyBlock icon="notifications-off-outline" title="You're all caught up" />}
         renderItem={({ item }) => {
           const openable = !!item.href && canOpen(item.href, account.role);
@@ -40,15 +41,10 @@ function NotificationList() {
             <Pressable
               disabled={!openable}
               onPress={() => openable && router.push(item.href as Href)}
-              style={({ pressed }) => [
-                styles.item,
-                { backgroundColor: item.read ? t.c.surface : t.c.soft, borderColor: t.c.border, borderRadius: t.cardRadius, opacity: pressed ? 0.8 : 1 },
-              ]}>
-              <View style={[styles.icon, { backgroundColor: item.read ? t.c.surfaceAlt : t.c.primary }]}>
-                <Ionicons name="notifications" size={16} color={item.read ? t.c.muted : t.c.onPrimary} />
-              </View>
-              <View style={{ flex: 1, gap: 2 }}>
-                <Text size={14} weight={item.read ? 'semibold' : 'bold'} color={t.c.textStrong}>
+              style={({ pressed }) => [styles.item, { borderBottomColor: t.c.border }, pressed && { backgroundColor: t.c.surfaceAlt }]}>
+              <View style={[styles.dot, { backgroundColor: item.read ? 'transparent' : t.c.primary }]} />
+              <View style={{ flex: 1, gap: 1 }}>
+                <Text size={15} weight={item.read ? 'medium' : 'semibold'} color={t.c.textStrong}>
                   {item.title}
                 </Text>
                 <Text size={13} color={t.c.muted}>
@@ -80,6 +76,6 @@ export default function NotificationsScreen() {
 }
 
 const styles = StyleSheet.create({
-  item: { flexDirection: 'row', alignItems: 'center', gap: 12, padding: 12, borderWidth: 1 },
-  icon: { width: 34, height: 34, borderRadius: 17, alignItems: 'center', justifyContent: 'center' },
+  item: { flexDirection: 'row', alignItems: 'center', gap: 10, paddingVertical: 12, paddingRight: 14, paddingLeft: 10, borderBottomWidth: StyleSheet.hairlineWidth },
+  dot: { width: 7, height: 7, borderRadius: 4, alignSelf: 'flex-start', marginTop: 7 },
 });

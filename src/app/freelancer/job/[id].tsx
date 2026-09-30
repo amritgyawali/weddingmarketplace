@@ -153,5 +153,5 @@ export default function FreelancerJob() {
 }
 
 const styles = StyleSheet.create({
-  hero: { flexDirection: 'row', alignItems: 'center', gap: 14, borderWidth: 1.5 },
+  hero: { flexDirection: 'row', alignItems: 'center', gap: 14, borderWidth: 1 },
 });

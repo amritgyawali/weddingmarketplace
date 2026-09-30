@@ -29,9 +29,9 @@ export interface AssistantContext {
 }
 
 export const POPULAR_SUGGESTIONS = [
-  'Plan my dream destination wedding',
-  'Show me the best wedding venues',
-  'Suggest top photographer in Kathmandu',
+  'Plan a destination wedding in Pokhara',
+  'Banquet halls for 500 guests',
+  'Photographers in Kathmandu under NPR 1 lakh',
 ];
 
 type Intent =
@@ -123,13 +123,13 @@ function reply(message: string, ctx: AssistantContext): AssistantReply {
   switch (intent) {
     case 'greeting':
       return {
-        text: `Namaste! I'm ${BRAND.assistantName}, your wedding planning buddy. Tell me what you're looking for — venues, photographers, makeup artists, budgets or a full plan — and I'll find the best options ${cityLabel(ctx.city)}.`,
+        text: `Namaste! I'm ${BRAND.assistantName}, Vivah’s quick-help bot. Ask about venues, photographers, makeup artists or budgets and I’ll pull options ${cityLabel(ctx.city)}.`,
         suggestions: POPULAR_SUGGESTIONS,
       };
 
     case 'thanks':
       return {
-        text: 'Always happy to help! 💕 Anything else you’d like me to look up?',
+        text: 'Anything else you’d like me to look up?',
         suggestions: ['Show me decorators', 'What should I book first?', 'Suggest a wedding budget'],
       };
 
@@ -139,13 +139,13 @@ function reply(message: string, ctx: AssistantContext): AssistantReply {
         .slice(0, 6);
       return {
         text:
-          'A destination wedding, how exciting! ✨ Here’s how I would plan it:\n\n' +
+          'For a destination wedding, here’s how I would plan it:\n\n' +
           '1. Fix the guest count (destination weddings work best under 250 guests).\n' +
           '2. Pick the vibe — lakeside (Pokhara, Begnas), hills (Nagarkot, Dhulikhel, Bandipur) or jungle (Sauraha).\n' +
           '3. Block rooms 9–12 months ahead and book a planner who knows the location.\n\n' +
           'These top-rated destination venues are a great place to start:',
         venues,
-        suggestions: ['Show venues in Pokhara', 'Suggest a wedding budget', 'Talk to a Genie expert'],
+        suggestions: ['Show venues in Pokhara', 'Suggest a wedding budget', 'Talk to an expert'],
         action: { label: 'Explore Destination Venues', href: '/collection/destination' },
       };
     }
@@ -195,7 +195,7 @@ function reply(message: string, ctx: AssistantContext): AssistantReply {
       return {
         text: `Top ${meta.label} ${cityLabel(city)}, ranked by couple reviews:`,
         vendors,
-        suggestions: ['Compare their prices', 'What should I book first?', 'Talk to a Genie expert'],
+        suggestions: ['Compare their prices', 'What should I book first?', 'Talk to an expert'],
         action: {
           label: `See all ${meta.label}`,
           href: `/vendors/${meta.categoryId}${meta.subcategoryId ? `?sub=${meta.subcategoryId}` : ''}`,
@@ -238,9 +238,9 @@ function reply(message: string, ctx: AssistantContext): AssistantReply {
     case 'genie': {
       const city = GENIE_PACKAGES.find((p) => p.id === 'city')!;
       return {
-        text: `Want a human expert? Our Genie planners shortlist venues & vendors, negotiate prices and stay with you till the wedding day. Packages start at just NPR ${GENIE_PACKAGES[0].price} — the most popular is the ${city.title} at NPR ${city.price}.`,
-        action: { label: 'View Genie packages', href: '/genie' },
-        suggestions: ['What does Genie include?', 'Show me the best wedding venues'],
+        text: `Want a person to handle it? Our planners shortlist venues and vendors, negotiate prices and stay with you until the wedding day. Packages start at NPR ${GENIE_PACKAGES[0].price} — the most popular is the ${city.title} at NPR ${city.price}.`,
+        action: { label: 'See planner packages', href: '/genie' },
+        suggestions: ['What do your experts do?', 'Show me the best wedding venues'],
       };
     }
 

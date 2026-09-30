@@ -8,7 +8,7 @@ import { Text } from './Text';
 export function Rating({ value, count, size = 15 }: { value: number; count?: number; size?: number }) {
   return (
     <View style={styles.row} accessibilityLabel={`Rated ${value} out of 5${count ? ` from ${count} reviews` : ''}`}>
-      <Ionicons name="star" size={size + 3} color={colors.star} />
+      <Ionicons name="star" size={size - 1} color={colors.star} />
       <Text size={size} weight="medium" color={colors.text}>
         {value.toFixed(1)}
       </Text>
@@ -42,5 +42,5 @@ export function StarInput({ value, onChange, size = 34 }: { value: number; onCha
 }
 
 const styles = StyleSheet.create({
-  row: { flexDirection: 'row', alignItems: 'center', gap: 4 },
+  row: { flexDirection: 'row', alignItems: 'center', gap: 3 },
 });

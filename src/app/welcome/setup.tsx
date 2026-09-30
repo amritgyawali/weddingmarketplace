@@ -239,7 +239,7 @@ export default function SetupScreen() {
 }
 
 const styles = StyleSheet.create({
-  claim: { flexDirection: 'row', alignItems: 'center', gap: 10, borderWidth: 1.2, borderRadius: 12, padding: 10 },
-  note: { flexDirection: 'row', gap: 10, padding: 12, borderRadius: 12, alignItems: 'flex-start' },
+  claim: { flexDirection: 'row', alignItems: 'center', gap: 10, borderWidth: 1, borderRadius: 8, padding: 10 },
+  note: { flexDirection: 'row', gap: 10, padding: 12, borderRadius: 8, alignItems: 'flex-start' },
   footer: { position: 'absolute', left: 0, right: 0, bottom: 0, padding: 14, borderTopWidth: StyleSheet.hairlineWidth },
 });

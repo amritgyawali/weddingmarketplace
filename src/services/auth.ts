@@ -30,7 +30,7 @@ export function onAccountCreated(account: Account) {
   if (account.role === 'vendor' || account.role === 'freelancer') db.submitForApproval(account);
   if (account.role === 'vendor') db.seedVendorWorkspace(account);
   if (account.role === 'customer') useAppStore.getState().bindOwner(account, { city: account.city, weddingDate: null });
-  db.notify(account.id, 'Welcome to Vivah 👋', account.role === 'customer' ? 'Explore venues, collect quotations and track everything in My Wedding.' : 'Your workspace is ready.');
+  db.notify(account.id, 'Welcome to Vivah', account.role === 'customer' ? 'Explore venues, collect quotations and track everything in My Wedding.' : 'Your workspace is ready.');
 }
 
 export function logout() {

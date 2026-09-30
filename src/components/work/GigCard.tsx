@@ -18,22 +18,22 @@ export function GigCard({ gig, onPress, showApplicants, badge, distance }: { gig
   const pending = gig.applications.filter((a) => a.status === 'applied' || a.status === 'shortlisted').length;
 
   return (
-    <Card onPress={onPress} accessibilityLabel={gig.title} style={[{ gap: 12 }, gig.emergency && gig.status === 'open' && { borderColor: t.c.danger, borderWidth: 1.5 }]}>
+    <Card onPress={onPress} accessibilityLabel={gig.title} style={[{ gap: 12 }, gig.emergency && gig.status === 'open' && { borderColor: t.c.danger, borderWidth: 1 }]}>
       {gig.emergency && gig.status === 'open' && (
         <View style={[styles.emergency, { backgroundColor: `${t.c.danger}22` }]}>
           <Ionicons name="medkit" size={13} color={t.c.danger} />
-          <Text size={11} weight="bold" color={t.c.danger} tracking={0.6}>
-            EMERGENCY · {days === 0 ? 'TODAY' : formatShortDate(gig.date).toUpperCase()}
+          <Text size={12} weight="medium" color={t.c.danger}>
+            Urgent · {days === 0 ? 'Today' : formatShortDate(gig.date)}
           </Text>
         </View>
       )}
       <View style={styles.row}>
-        <View style={[styles.icon, { backgroundColor: t.c.soft }]}>
+        <View style={[styles.icon, { borderWidth: 1, borderColor: t.c.border }]}>
           <Ionicons name={skillIcon(gig.skill) as never} size={22} color={t.c.primary} />
         </View>
         <View style={{ flex: 1 }}>
-          <Text size={12} weight="bold" color={t.c.primary} tracking={0.4}>
-            {gig.skill.toUpperCase()}
+          <Text size={12} weight="medium" color={t.c.muted}>
+            {gig.skill}
           </Text>
           <Text size={16} weight="bold" color={t.c.textStrong} numberOfLines={2}>
             {gig.title}
@@ -94,8 +94,8 @@ export function GigCard({ gig, onPress, showApplicants, badge, distance }: { gig
 
 const styles = StyleSheet.create({
   row: { flexDirection: 'row', alignItems: 'center', gap: 12 },
-  icon: { width: 44, height: 44, borderRadius: 14, alignItems: 'center', justifyContent: 'center' },
+  icon: { width: 44, height: 44, borderRadius: 8, alignItems: 'center', justifyContent: 'center' },
   meta: { flexDirection: 'row', flexWrap: 'wrap', gap: 12 },
   metaItem: { flexDirection: 'row', alignItems: 'center', gap: 4 },
-  emergency: { flexDirection: 'row', alignItems: 'center', gap: 6, alignSelf: 'flex-start', borderRadius: 999, paddingHorizontal: 10, paddingVertical: 4 },
+  emergency: { flexDirection: 'row', alignItems: 'center', gap: 6, alignSelf: 'flex-start', borderRadius: 6, paddingHorizontal: 10, paddingVertical: 4 },
 });

@@ -1,93 +1,71 @@
 import { Ionicons } from '@expo/vector-icons';
-import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 import type { ComponentProps } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
-import Animated, { FadeInDown } from 'react-native-reanimated';
+import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { BackButton } from '@/components/ui/IconButton';
-import { RingsMark } from '@/components/ui/Icons';
-import { PressableScale } from '@/components/ui/PressableScale';
+import { triggerHaptic } from '@/components/ui/PressableScale';
 import { Text } from '@/components/ui/Text';
 import { BRAND } from '@/constants/brand';
 import { colors } from '@/constants/theme';
 import { useSession } from '@/store/useSession';
-import { useRoleFonts } from '@/theme/fonts';
 import { ROLE_THEMES } from '@/theme/roles';
 import type { UserRole } from '@/types/platform';
 
-const ROLES: { role: UserRole; icon: ComponentProps<typeof Ionicons>['name']; features: string[] }[] = [
-  { role: 'customer', icon: 'heart', features: ['Venues & vendors', 'Quotes & bookings', 'My Wedding tracker'] },
-  { role: 'vendor', icon: 'storefront', features: ['Leads & quotations', 'Projects & payments', 'Hire freelancers'] },
-  { role: 'freelancer', icon: 'flash', features: ['Find gigs nearby', 'Check-in on site', 'Weekly payouts'] },
-  { role: 'platform', icon: 'shield-checkmark', features: ['Wedding control room', 'Approvals', 'Genie planning'] },
+const ROLES: { role: UserRole; icon: ComponentProps<typeof Ionicons>['name']; who: string }[] = [
+  { role: 'customer', icon: 'heart-outline', who: 'We’re getting married, or planning it for family' },
+  { role: 'vendor', icon: 'storefront-outline', who: 'I run a venue, studio, caterer or decor business' },
+  { role: 'freelancer', icon: 'camera-outline', who: 'I shoot, do makeup or work crew at weddings' },
+  { role: 'platform', icon: 'id-card-outline', who: 'I work at Vivah' },
 ];
 
 export default function RolePicker() {
   const insets = useSafeAreaInsets();
   const selectRole = useSession((s) => s.selectRole);
-  const fontsReady = useRoleFonts('all');
-  if (!fontsReady) return <View style={styles.root} />;
 
   return (
     <View style={styles.root}>
-      <ScrollView contentContainerStyle={{ paddingTop: insets.top + 10, paddingBottom: insets.bottom + 24, paddingHorizontal: 20 }}>
-        <BackButton />
-        <View style={styles.brand}>
-          <View style={styles.mark}>
-            <RingsMark size={26} />
-          </View>
-          <Text size={13} weight="bold" color={colors.primary} tracking={1.2}>
-            {BRAND.name.toUpperCase()} · ONE WEDDING PLATFORM
+      <ScrollView contentContainerStyle={{ paddingTop: insets.top + 6, paddingBottom: insets.bottom + 24 }}>
+        <View style={{ paddingHorizontal: 8 }}>
+          <BackButton />
+        </View>
+        <View style={styles.head}>
+          <Text serif size={28} weight="bold" color={colors.heading} lineHeight={38}>
+            How will you use {BRAND.name}?
+          </Text>
+          <Text size={15} color={colors.textMuted}>
+            Each account type opens its own app. You can switch later.
           </Text>
         </View>
-        <Text size={32} weight="bold" color={colors.heading} lineHeight={38} tracking={-0.6}>
-          Who are you?
-        </Text>
-        <Text size={15} color={colors.textMuted} style={{ marginTop: 6, marginBottom: 22 }}>
-          Every account type gets its own app experience.
-        </Text>
 
-        <View style={{ gap: 14 }}>
-          {ROLES.map(({ role, icon, features }, i) => {
+        <View style={styles.list}>
+          {ROLES.map(({ role, icon, who }, i) => {
             const theme = ROLE_THEMES[role];
             return (
-              <Animated.View key={role} entering={FadeInDown.delay(i * 70).duration(380)}>
-                <PressableScale
-                  haptic
-                  accessibilityLabel={`Continue as ${theme.label}`}
-                  onPress={() => {
-                    selectRole(role);
-                    router.push('/welcome/login');
-                  }}
-                  style={styles.card}>
-                  <LinearGradient colors={theme.gradient} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={StyleSheet.absoluteFill} />
-                  <View style={styles.cardTop}>
-                    <View style={styles.icon}>
-                      <Ionicons name={icon} size={24} color={role === 'freelancer' ? '#111418' : '#FFFFFF'} />
-                    </View>
-                    <View style={{ flex: 1 }}>
-                      <Text size={20} weight="bold" color={role === 'freelancer' ? '#111418' : '#FFFFFF'} style={{ fontFamily: theme.fonts.bold }}>
-                        {theme.label}
-                      </Text>
-                      <Text size={13} color={role === 'freelancer' ? 'rgba(17,20,24,0.8)' : 'rgba(255,255,255,0.85)'} style={{ fontFamily: theme.fonts.regular }}>
-                        {theme.tagline}
-                      </Text>
-                    </View>
-                    <Ionicons name="arrow-forward" size={20} color={role === 'freelancer' ? '#111418' : '#FFFFFF'} />
-                  </View>
-                  <View style={styles.features}>
-                    {features.map((f) => (
-                      <View key={f} style={[styles.feature, { backgroundColor: role === 'freelancer' ? 'rgba(0,0,0,0.12)' : 'rgba(255,255,255,0.18)' }]}>
-                        <Text size={11} weight="semibold" color={role === 'freelancer' ? '#111418' : '#FFFFFF'} style={{ fontFamily: theme.fonts.semibold }}>
-                          {f}
-                        </Text>
-                      </View>
-                    ))}
-                  </View>
-                </PressableScale>
-              </Animated.View>
+              <Pressable
+                key={role}
+                accessibilityRole="button"
+                accessibilityLabel={`Continue as ${theme.label}`}
+                onPress={() => {
+                  triggerHaptic('light');
+                  selectRole(role);
+                  router.push('/welcome/login');
+                }}
+                style={({ pressed }) => [styles.row, i > 0 && styles.rowBorder, pressed && { backgroundColor: colors.bgSoft }]}>
+                <View style={styles.icon}>
+                  <Ionicons name={icon} size={22} color={theme.c.primary} />
+                </View>
+                <View style={{ flex: 1 }}>
+                  <Text size={17} weight="semibold" color={colors.heading}>
+                    {theme.label}
+                  </Text>
+                  <Text size={14} color={colors.textMuted}>
+                    {who}
+                  </Text>
+                </View>
+                <Ionicons name="chevron-forward" size={18} color={colors.textSubtle} />
+              </Pressable>
             );
           })}
         </View>
@@ -97,12 +75,10 @@ export default function RolePicker() {
 }
 
 const styles = StyleSheet.create({
-  root: { flex: 1, backgroundColor: colors.bgSoft },
-  brand: { flexDirection: 'row', alignItems: 'center', gap: 10, marginTop: 24, marginBottom: 14 },
-  mark: { width: 40, height: 40, borderRadius: 12, backgroundColor: colors.primary, alignItems: 'center', justifyContent: 'center' },
-  card: { borderRadius: 20, overflow: 'hidden', padding: 16, gap: 14 },
-  cardTop: { flexDirection: 'row', alignItems: 'center', gap: 14 },
-  icon: { width: 46, height: 46, borderRadius: 14, backgroundColor: 'rgba(255,255,255,0.2)', alignItems: 'center', justifyContent: 'center' },
-  features: { flexDirection: 'row', flexWrap: 'wrap', gap: 6 },
-  feature: { borderRadius: 999, paddingHorizontal: 10, paddingVertical: 4 },
+  root: { flex: 1, backgroundColor: colors.white },
+  head: { paddingHorizontal: 20, marginTop: 20, marginBottom: 24, gap: 4 },
+  list: { borderTopWidth: StyleSheet.hairlineWidth, borderBottomWidth: StyleSheet.hairlineWidth, borderColor: colors.border },
+  row: { flexDirection: 'row', alignItems: 'center', gap: 14, paddingHorizontal: 20, paddingVertical: 16 },
+  rowBorder: { borderTopWidth: StyleSheet.hairlineWidth, borderTopColor: colors.divider },
+  icon: { width: 44, height: 44, borderRadius: 22, borderWidth: 1, borderColor: colors.border, alignItems: 'center', justifyContent: 'center' },
 });

@@ -34,16 +34,16 @@ export function Sheet({
             <Pressable style={styles.backdrop} onPress={onClose} accessibilityLabel="Close" />
           </Animated.View>
           <Animated.View
-            entering={SlideInDown.springify().damping(20).stiffness(180)}
+            entering={SlideInDown.duration(240)}
             exiting={SlideOutDown.duration(200)}
             style={[styles.sheet, { paddingBottom: Math.max(insets.bottom, 16), backgroundColor: t.c.surface }]}>
             <View style={[styles.handle, { backgroundColor: t.c.border }]} />
             {title && (
               <View style={styles.header}>
-                <Text weight="bold" size={19} color={t.c.textStrong}>
+                <Text weight="bold" size={18} color={t.c.textStrong}>
                   {title}
                 </Text>
-                <IconButton icon="close" size={32} iconSize={18} accessibilityLabel="Close" onPress={onClose} background={t.c.surfaceAlt} color={t.c.textStrong} />
+                <IconButton icon="close" size={34} iconSize={22} accessibilityLabel="Close" onPress={onClose} color={t.c.textStrong} />
               </View>
             )}
             {children}
@@ -57,17 +57,17 @@ export function Sheet({
 
 const styles = StyleSheet.create({
   root: { flex: 1, justifyContent: 'flex-end' },
-  backdrop: { flex: 1, backgroundColor: 'rgba(0,0,0,0.4)' },
+  backdrop: { flex: 1, backgroundColor: colors.overlay },
   sheet: {
     backgroundColor: colors.white,
-    borderTopLeftRadius: radius.xl + 4,
-    borderTopRightRadius: radius.xl + 4,
+    borderTopLeftRadius: radius.xl,
+    borderTopRightRadius: radius.xl,
     maxHeight: '88%',
   },
   handle: {
     alignSelf: 'center',
-    width: 40,
-    height: 5,
+    width: 36,
+    height: 4,
     borderRadius: 3,
     backgroundColor: colors.hairline,
     marginTop: 8,
@@ -77,7 +77,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 20,
-    paddingVertical: 10,
+    paddingLeft: 16,
+    paddingRight: 8,
+    paddingVertical: 6,
   },
 });

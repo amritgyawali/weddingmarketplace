@@ -15,8 +15,7 @@ import { useRoleTheme } from '@/theme/RoleTheme';
 import type { FileRef, Project } from '@/types/platform';
 import { formatShortDate, timeAgo } from '@/utils/format';
 
-// ── Internal notes (staff only) ──────────────────────────────────────────
-
+// Internal notes (staff only)
 export function NotesPanel({ project }: { project: Project }) {
   const t = useRoleTheme();
   const account = useAccount();
@@ -71,8 +70,7 @@ export function NotesPanel({ project }: { project: Project }) {
   );
 }
 
-// ── Files (Drive-style project folders) ─────────────────────────────────
-
+// Files (Drive-style project folders)
 export const PROJECT_FOLDERS = ['01-Contract', '02-Photography', '03-Video', '04-Decoration', '05-Quotation', '06-Invoices', '07-Final-Delivery'];
 
 const FILE_ICON: Record<FileRef['kind'], string> = { pdf: 'document-text', image: 'image', video: 'videocam', doc: 'document', link: 'link' };
@@ -137,7 +135,7 @@ export function FilesPanel({ project, mode }: { project: Project; mode: 'custome
       {!list.length && <EmptyBlock icon="folder-open-outline" title="No files here yet" message="Contracts, quotations, receipts and deliveries are filed automatically." />}
       {list.map((f) => (
         <Pressable key={f.id} onPress={() => f.uri && Linking.openURL(f.uri)} style={({ pressed }) => [styles.file, { borderColor: t.c.border, backgroundColor: t.c.surface, opacity: pressed ? 0.8 : 1 }]}>
-          <View style={[styles.fileIcon, { backgroundColor: t.c.soft }]}>
+          <View style={[styles.fileIcon, { borderWidth: 1, borderColor: t.c.border }]}>
             <Ionicons name={FILE_ICON[f.kind] as never} size={18} color={t.c.primary} />
           </View>
           <View style={{ flex: 1 }}>
@@ -161,8 +159,7 @@ export function FilesPanel({ project, mode }: { project: Project; mode: 'custome
   );
 }
 
-// ── Risk list ────────────────────────────────────────────────────────────
-
+// Risk list
 export function RiskList({ risks, onPress, limit }: { risks: RiskFlag[]; onPress?: (r: RiskFlag) => void; limit?: number }) {
   const t = useRoleTheme();
   if (!risks.length) {
@@ -184,10 +181,10 @@ export function RiskList({ risks, onPress, limit }: { risks: RiskFlag[]; onPress
             <Ionicons name={RISK_ICONS[r.kind] as never} size={18} color={color} />
             <View style={{ flex: 1 }}>
               <Text size={13} weight="semibold" color={t.c.textStrong}>
-                ⚠ {r.message}
+                {r.message}
               </Text>
-              <Text size={11} color={t.c.muted}>
-                {r.projectCode} · {r.severity.toUpperCase()}
+              <Text size={12} color={t.c.muted}>
+                {r.projectCode} · {r.severity}
               </Text>
             </View>
             {onPress && <Ionicons name="chevron-forward" size={16} color={t.c.subtle} />}
@@ -203,8 +200,7 @@ export function RiskList({ risks, onPress, limit }: { risks: RiskFlag[]; onPress
   );
 }
 
-// ── Inbox list ───────────────────────────────────────────────────────────
-
+// Inbox list
 export function InboxList({ basePath }: { basePath: '/inbox' | '/business/inbox' | '/freelancer/inbox' | '/platform/inbox' }) {
   const t = useRoleTheme();
   const account = useAccount();
@@ -224,14 +220,14 @@ export function InboxList({ basePath }: { basePath: '/inbox' | '/business/inbox'
   return (
     <View style={{ gap: 10 }}>
       <KField placeholder="Search conversations and messages" value={query} onChangeText={setQuery} />
-      <ChoiceChips options={['all', 'unread', 'archived']} selected={[filter]} onToggle={(v) => setFilter(v as typeof filter)} />
+      <ChoiceChips options={['All', 'Unread', 'Archived']} selected={[filter.charAt(0).toUpperCase() + filter.slice(1)]} onToggle={(v) => setFilter(v.toLowerCase() as typeof filter)} />
       {!list.length && <EmptyBlock icon="chatbubbles-outline" title="No conversations" message="Project, service and enquiry chats appear here." />}
       {list.map(({ thread, last, unread }) => (
-        <Card key={thread.id} onPress={() => router.push(`${basePath}/${thread.id}` as Href)} style={styles.threadRow}>
-          <Avatar name={thread.title} size={44} />
+        <Card key={thread.id} onPress={() => router.push(`${basePath}/${thread.id}` as Href)} style={[styles.threadRow, unread > 0 && { borderLeftColor: t.c.primary, borderLeftWidth: 3 }]}>
+          <Avatar name={thread.title.replace(/[^\p{L}\s]/gu, ' ')} size={44} />
           <View style={{ flex: 1, gap: 2 }}>
             <View style={styles.rowBetween}>
-              <Text size={15} weight={unread ? 'bold' : 'semibold'} color={t.c.textStrong} numberOfLines={1} style={{ flex: 1 }}>
+              <Text size={15} weight={unread ? 'bold' : 'medium'} color={t.c.textStrong} numberOfLines={1} style={{ flex: 1 }}>
                 {thread.title}
               </Text>
               <Text size={11} color={t.c.muted}>
@@ -241,9 +237,9 @@ export function InboxList({ basePath }: { basePath: '/inbox' | '/business/inbox'
             <Text size={13} color={unread ? t.c.textStrong : t.c.muted} numberOfLines={1}>
               {last ? `${last.senderId === account.id ? 'You: ' : ''}${last.kind === 'text' ? last.text : `[${last.kind}] ${last.text}`}` : thread.kind === 'project' ? 'Project team chat' : 'No messages yet'}
             </Text>
-            <Text size={10} weight="bold" color={t.c.primary}>
-              {thread.kind.toUpperCase()}
-              {thread.mutedBy.includes(account.id) ? ' · MUTED' : ''}
+            <Text size={12} weight="medium" color={t.c.muted}>
+              {thread.kind}
+              {thread.mutedBy.includes(account.id) ? ' · muted' : ''}
             </Text>
           </View>
           {unread > 0 && (
@@ -263,7 +259,7 @@ const styles = StyleSheet.create({
   banner: { flexDirection: 'row', alignItems: 'center', gap: 8, borderRadius: 10, padding: 10 },
   rowBetween: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', gap: 8 },
   inline: { flexDirection: 'row', alignItems: 'center', gap: 8 },
-  file: { flexDirection: 'row', alignItems: 'center', gap: 10, borderWidth: 1, borderRadius: 12, padding: 10 },
+  file: { flexDirection: 'row', alignItems: 'center', gap: 10, borderWidth: 1, borderRadius: 8, padding: 10 },
   fileIcon: { width: 36, height: 36, borderRadius: 10, alignItems: 'center', justifyContent: 'center' },
   risk: { flexDirection: 'row', alignItems: 'center', gap: 10, borderWidth: 1, borderLeftWidth: 4, borderRadius: 10, padding: 10 },
   threadRow: { flexDirection: 'row', alignItems: 'center', gap: 12, padding: 12 },

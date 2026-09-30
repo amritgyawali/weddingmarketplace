@@ -1,66 +1,53 @@
-import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
 import type { BottomTabBarProps } from 'expo-router/tabs';
-import { StyleSheet, View } from 'react-native';
-import Animated, { useAnimatedStyle, withTiming } from 'react-native-reanimated';
+import type { ComponentProps } from 'react';
+import { Pressable, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { GenieLampIcon } from '@/components/ui/Icons';
-import { PressableScale } from '@/components/ui/PressableScale';
+import { triggerHaptic } from '@/components/ui/PressableScale';
 import { Text } from '@/components/ui/Text';
-import { colors, shadows } from '@/constants/theme';
+import { colors } from '@/constants/theme';
 
-const TABS: Record<string, { label: string; icon: (color: string) => React.ReactNode }> = {
-  index: { label: 'FOR YOU', icon: (c) => <Ionicons name="home" size={17} color={c} /> },
-  venues: { label: 'VENUES', icon: (c) => <MaterialCommunityIcons name="storefront" size={18} color={c} /> },
-  vendors: { label: 'VENDORS', icon: (c) => <MaterialCommunityIcons name="account-tie" size={19} color={c} /> },
-  ideas: { label: 'IDEAS', icon: (c) => <Ionicons name="sparkles" size={16} color={c} /> },
-  genie: { label: 'GENIE', icon: (c) => <GenieLampIcon size={21} color={c} /> },
+type IconName = ComponentProps<typeof Ionicons>['name'];
+
+const TABS: Record<string, { label: string; icon: IconName; active: IconName }> = {
+  index: { label: 'Home', icon: 'home-outline', active: 'home' },
+  venues: { label: 'Venues', icon: 'business-outline', active: 'business' },
+  vendors: { label: 'Vendors', icon: 'people-outline', active: 'people' },
+  ideas: { label: 'Ideas', icon: 'images-outline', active: 'images' },
+  genie: { label: 'Planner', icon: 'clipboard-outline', active: 'clipboard' },
 };
 
-function TabItem({ active, label, icon, onPress }: { active: boolean; label: string; icon: (c: string) => React.ReactNode; onPress: () => void }) {
-  const circle = useAnimatedStyle(() => ({
-    backgroundColor: withTiming(active ? colors.primary : colors.bgMuted, { duration: 180 }),
-    transform: [{ scale: withTiming(active ? 1.06 : 1, { duration: 180 }) }],
-  }));
-
-  return (
-    <PressableScale
-      onPress={onPress}
-      haptic="selection"
-      activeScale={0.92}
-      accessibilityRole="tab"
-      accessibilityState={{ selected: active }}
-      accessibilityLabel={label}
-      style={styles.item}>
-      <Animated.View style={[styles.circle, circle]}>{icon(active ? colors.white : '#4B4B4E')}</Animated.View>
-      <Text size={10.5} weight={active ? 'bold' : 'semibold'} color={active ? colors.primary : '#4B4B4E'} tracking={0.5} lineHeight={14}>
-        {label}
-      </Text>
-    </PressableScale>
-  );
-}
-
-/** Custom bar reproducing the pink-circle active state of the reference design. */
+/** Couple-app bottom bar: outline icons, filled + crimson when active, short sentence-case labels. */
 export function TabBar({ state, navigation }: BottomTabBarProps) {
   const insets = useSafeAreaInsets();
 
   return (
-    <View style={[styles.bar, { paddingBottom: Math.max(insets.bottom, 10) }]}>
+    <View style={[styles.bar, { paddingBottom: Math.max(insets.bottom, 8) }]}>
       {state.routes.map((route, i) => {
         const meta = TABS[route.name];
         if (!meta) return null;
         const active = state.index === i;
+        const tint = active ? colors.primary : colors.textMuted;
         return (
-          <TabItem
+          <Pressable
             key={route.key}
-            active={active}
-            label={meta.label}
-            icon={meta.icon}
+            accessibilityRole="tab"
+            accessibilityState={{ selected: active }}
+            accessibilityLabel={meta.label}
+            style={styles.item}
             onPress={() => {
               const event = navigation.emit({ type: 'tabPress', target: route.key, canPreventDefault: true });
-              if (!active && !event.defaultPrevented) navigation.navigate(route.name, route.params);
-            }}
-          />
+              if (!active && !event.defaultPrevented) {
+                triggerHaptic('selection');
+                navigation.navigate(route.name, route.params);
+              }
+            }}>
+            <Ionicons name={active ? meta.active : meta.icon} size={23} color={tint} />
+            <Text size={11} weight={active ? 'semibold' : 'regular'} color={tint} lineHeight={14}>
+              {meta.label}
+            </Text>
+          </Pressable>
         );
       })}
     </View>
@@ -72,10 +59,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     backgroundColor: colors.white,
     borderTopWidth: StyleSheet.hairlineWidth,
-    borderTopColor: colors.hairline,
-    paddingTop: 8,
-    ...shadows.tabBar,
+    borderTopColor: colors.border,
+    paddingTop: 7,
   },
-  item: { flex: 1, alignItems: 'center', gap: 5 },
-  circle: { width: 32, height: 32, borderRadius: 16, alignItems: 'center', justifyContent: 'center' },
+  item: { flex: 1, alignItems: 'center', gap: 2 },
 });

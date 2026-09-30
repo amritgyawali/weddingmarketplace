@@ -28,7 +28,7 @@ export default function VendorCalendar() {
 
   return (
     <View style={{ flex: 1, backgroundColor: t.c.bg }}>
-      <RoleHeader eyebrow="AVAILABILITY" title="Calendar" subtitle="Booked, held and blocked days feed Vivah matching" />
+      <RoleHeader title="Calendar" subtitle="Booked, held and blocked days feed Vivah matching" />
       <ScrollView contentContainerStyle={[{ padding: 16, gap: 16, paddingBottom: 40 }, wide && { flexDirection: 'row', alignItems: 'flex-start' }]}>
         <Card style={{ flex: wide ? 1.2 : undefined }}>
           <AvailabilityCalendar ownerKind="provider" ownerId={ownerId} onSelectDay={setDay} />

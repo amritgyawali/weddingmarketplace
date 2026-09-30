@@ -105,7 +105,7 @@ export default function CustomerQuote() {
             onPress={() => {
               respond(quote.id, 'accept');
               triggerHaptic('success');
-              toast('Confirmed! Your providers are being booked 🎉', 'heart');
+              toast('Confirmed. We’re booking your providers now.', 'heart');
               router.replace({ pathname: '/my-wedding', params: { tab: 'payments' } });
             }}
           />

@@ -1,14 +1,7 @@
-import {
-  Manrope_400Regular,
-  Manrope_500Medium,
-  Manrope_600SemiBold,
-  Manrope_700Bold,
-  Manrope_800ExtraBold,
-  useFonts,
-} from '@expo-google-fonts/manrope';
 import { focusManager, QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
+import { useFonts } from 'expo-font';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect, useState } from 'react';
 import { AppState, Platform } from 'react-native';
@@ -20,6 +13,7 @@ import { useHydrated } from '@/hooks/useHydrated';
 import { useAppStore } from '@/store/useAppStore';
 import { useDb } from '@/store/useDb';
 import { useSession } from '@/store/useSession';
+import { APP_FONTS } from '@/theme/fonts';
 
 SplashScreen.preventAutoHideAsync().catch(() => {});
 SplashScreen.setOptions({ duration: 350, fade: true });
@@ -40,13 +34,7 @@ export default function RootLayout() {
         },
       }),
   );
-  const [fontsLoaded, fontError] = useFonts({
-    Manrope_400Regular,
-    Manrope_500Medium,
-    Manrope_600SemiBold,
-    Manrope_700Bold,
-    Manrope_800ExtraBold,
-  });
+  const [fontsLoaded, fontError] = useFonts(APP_FONTS);
   // All three persisted stores must be restored before routing decisions.
   const appHydrated = useHydrated(useAppStore);
   const sessionHydrated = useHydrated(useSession);
@@ -67,7 +55,7 @@ export default function RootLayout() {
   return (
     <GestureHandlerRootView style={{ flex: 1, backgroundColor: colors.white }}>
       <QueryClientProvider client={queryClient}>
-        <StatusBar style={role === 'vendor' || role === 'platform' || role === 'freelancer' ? 'light' : 'dark'} />
+        <StatusBar style="dark" />
         <Stack
           screenOptions={{
             headerShown: false,

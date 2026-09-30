@@ -76,8 +76,7 @@ export interface Account {
   staffRole?: StaffRole;
 }
 
-// ── Reference ──────────────────────────────────────────────────────────
-
+// Reference
 export type EventType =
   | 'WEDDING'
   | 'ENGAGEMENT'
@@ -117,8 +116,7 @@ export type ProjectStatus =
 
 export type LeadSource = 'plan_wizard' | 'enquiry' | 'concierge' | 'assistant' | 'phone' | 'referral';
 
-// ── Provider CRM leads (direct marketplace enquiries) ──────────────────
-
+// Provider CRM leads (direct marketplace enquiries)
 export type LeadStatus = 'new' | 'contacted' | 'responded' | 'quoted' | 'negotiating' | 'meeting' | 'won' | 'lost' | 'archived';
 
 export interface Lead {
@@ -147,8 +145,7 @@ export interface Lead {
   createdAt: string;
 }
 
-// ── Quotations (versioned) ─────────────────────────────────────────────
-
+// Quotations (versioned)
 export type PricingModel = 'COMMISSION' | 'MARKUP' | 'LEAD_FEE' | 'FREELANCER_MARGIN';
 export type MilestoneRule = 'on_confirmation' | 'days_before_event' | 'on_event_day' | 'after_completion' | 'fixed_date';
 
@@ -232,8 +229,7 @@ export interface Quotation {
   updatedAt: string;
 }
 
-// ── Project ────────────────────────────────────────────────────────────
-
+// Project
 export interface StatusChange {
   status: ProjectStatus;
   at: string;
@@ -529,8 +525,7 @@ export interface Project {
   updatedAt: string;
 }
 
-// ── Money (customer payments never share records with payouts) ─────────
-
+// Money (customer payments never share records with payouts)
 export type PaymentMethod = 'esewa' | 'khalti' | 'fonepay' | 'connect_ips' | 'ime_pay' | 'bank_transfer' | 'card' | 'cash';
 
 export interface Payment {
@@ -612,8 +607,7 @@ export interface Dispute {
   log: { at: string; by: string; text: string }[];
 }
 
-// ── Availability ───────────────────────────────────────────────────────
-
+// Availability
 export type AvailabilityStatus = 'AVAILABLE' | 'TENTATIVE' | 'HELD' | 'BOOKED' | 'UNAVAILABLE';
 export type DayPart = 'full' | 'morning' | 'afternoon' | 'evening';
 
@@ -637,8 +631,7 @@ export interface AvailabilityRule {
   part: DayPart;
 }
 
-// ── Freelancers & gigs ─────────────────────────────────────────────────
-
+// Freelancers & gigs
 export interface FreelancerProfile {
   id: string;
   name: string;
@@ -739,8 +732,7 @@ export interface Gig {
   createdAt: string;
 }
 
-// ── Communication, files, audit ────────────────────────────────────────
-
+// Communication, files, audit
 export interface ThreadMember {
   id: string;
   name: string;
@@ -836,8 +828,7 @@ export interface AppNotification {
   kind?: 'lead' | 'quote' | 'booking' | 'payment' | 'gig' | 'message' | 'task' | 'event' | 'review' | 'system' | 'emergency';
 }
 
-// ── Reviews & verification ─────────────────────────────────────────────
-
+// Reviews & verification
 export interface ReviewRecord {
   id: string;
   targetKind: 'provider' | 'freelancer' | 'platform';
@@ -879,8 +870,7 @@ export interface VerificationCase {
   expiresAt?: string;
 }
 
-// ── Couple planning tools ──────────────────────────────────────────────
-
+// Couple planning tools
 export type RsvpStatus = 'pending' | 'yes' | 'no' | 'maybe';
 
 export interface GuestInvite {

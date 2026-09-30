@@ -8,7 +8,7 @@ import { HOME_CATEGORIES } from '@/data/categories';
 import { photos } from '@/constants/images';
 import { colors, GUTTER } from '@/constants/theme';
 
-/** Horizontally scrolling round category shortcuts on a soft grey band. */
+/** Horizontally scrolling category shortcuts: small photo tiles with a label underneath. */
 export function CategoryCircles() {
   return (
     <ScrollView
@@ -30,7 +30,7 @@ export function CategoryCircles() {
           }
           style={styles.item}>
           <Image source={photos[c.image]} style={styles.circle} contentFit="cover" transition={200} />
-          <Text size={14} weight="medium" color={colors.text} align="center" numberOfLines={2} lineHeight={18}>
+          <Text size={13} color={colors.text} align="center" numberOfLines={2} lineHeight={16}>
             {c.title}
           </Text>
         </PressableScale>
@@ -40,8 +40,8 @@ export function CategoryCircles() {
 }
 
 const styles = StyleSheet.create({
-  band: { backgroundColor: '#F7F7F8', flexGrow: 0 },
-  content: { paddingHorizontal: GUTTER - 4, paddingTop: 14, paddingBottom: 18, gap: 10 },
-  item: { width: 104, alignItems: 'center', gap: 10 },
-  circle: { width: 84, height: 84, borderRadius: 42, backgroundColor: colors.bgMuted },
+  band: { flexGrow: 0, marginTop: 22 },
+  content: { paddingHorizontal: GUTTER, gap: 12 },
+  item: { width: 76, alignItems: 'center', gap: 6 },
+  circle: { width: 76, height: 76, borderRadius: 8, backgroundColor: colors.bgMuted },
 });

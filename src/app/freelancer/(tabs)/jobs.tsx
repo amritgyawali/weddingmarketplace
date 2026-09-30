@@ -35,12 +35,12 @@ export default function MyJobs() {
     return (
       <Card key={x.assignment.id} onPress={() => router.push({ pathname: '/freelancer/assignment/[id]', params: { id: x.assignment.id } })} style={{ gap: 10 }}>
         <View style={styles.row}>
-          <View style={[styles.icon, { backgroundColor: t.c.soft }]}>
+          <View style={[styles.icon, { borderWidth: 1, borderColor: t.c.border }]}>
             <Ionicons name="heart" size={20} color={t.c.primary} />
           </View>
           <View style={{ flex: 1 }}>
-            <Text size={12} weight="bold" color={t.c.primary}>
-              {x.assignment.role.toUpperCase()} · {x.booking.providerName}
+            <Text size={12} weight="medium" color={t.c.muted}>
+              {x.assignment.role} · {x.booking.providerName}
             </Text>
             <Text size={16} weight="bold" color={t.c.textStrong} numberOfLines={1}>
               {x.project.title} — {event?.name ?? 'Event'}
@@ -72,7 +72,7 @@ export default function MyJobs() {
   return (
     <View style={{ flex: 1, backgroundColor: t.c.bg, paddingTop: insets.top + 12 }}>
       <View style={{ paddingHorizontal: 16, marginBottom: 14 }}>
-        <Text size={28} weight="bold" color={t.c.textStrong}>
+        <Text size={23} weight="bold" color={t.c.textStrong}>
           My jobs
         </Text>
         <Text size={14} color={t.c.muted}>
@@ -92,7 +92,7 @@ export default function MyJobs() {
       <FlatList
         data={groups[filter]}
         keyExtractor={(x) => x.id}
-        contentContainerStyle={{ padding: 16, gap: 12, paddingBottom: 130 }}
+        contentContainerStyle={{ padding: 16, gap: 12, paddingBottom: 32 }}
         ListEmptyComponent={<EmptyBlock icon="briefcase-outline" title={filter === 'upcoming' ? 'No confirmed jobs yet' : filter === 'applied' ? 'No applications pending' : 'No completed jobs'} message="Apply to gigs — you’ll be notified the moment you’re hired." action="Discover gigs" onAction={() => router.navigate('/freelancer')} />}
         renderItem={({ item }) => <View>{item.node}</View>}
       />
@@ -103,5 +103,5 @@ export default function MyJobs() {
 
 const styles = StyleSheet.create({
   row: { flexDirection: 'row', alignItems: 'center', gap: 12 },
-  icon: { width: 44, height: 44, borderRadius: 14, alignItems: 'center', justifyContent: 'center' },
+  icon: { width: 44, height: 44, borderRadius: 8, alignItems: 'center', justifyContent: 'center' },
 });

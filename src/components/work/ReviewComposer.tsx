@@ -45,7 +45,7 @@ export function ReviewComposer({
         <Text size={13} color={t.c.muted}>
           How was {targetName}?
         </Text>
-        <Text size={40} weight="extrabold" color={overall ? t.c.primary : t.c.subtle}>
+        <Text size={40} weight="bold" color={overall ? t.c.primary : t.c.subtle}>
           {overall ? overall.toFixed(1) : '–'}
         </Text>
       </View>

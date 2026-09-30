@@ -1,7 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 
 import { Card, KButton, SectionTitle, StatusPill } from '@/components/kit';
 import { ToolScreen, toolStyles } from '@/components/planner/ToolScreen';
@@ -70,9 +70,13 @@ function WeddingCalendar({ project }: { project: Project }) {
         </Text>
       )}
       {shown.map((i) => (
-        <Card key={`${i.kind}-${i.id}`} style={[toolStyles.row, { padding: 12, opacity: i.done ? 0.6 : 1 }]} onPress={i.kind === 'task' ? () => router.push({ pathname: '/my-wedding', params: { tab: 'tasks' } }) : i.kind === 'payment' ? () => router.push({ pathname: '/my-wedding', params: { tab: 'payments' } }) : undefined}>
-          <View style={[styles.icon, { backgroundColor: `${color[i.kind]}1A` }]}>
-            <Ionicons name={KIND_ICON[i.kind]} size={18} color={color[i.kind]} />
+        <Card key={`${i.kind}-${i.id}`} style={[toolStyles.row, { padding: 12, opacity: i.done ? 0.6 : 1 }]}>
+          <Pressable
+            disabled={i.kind !== 'task' && i.kind !== 'payment'}
+            onPress={() => router.push({ pathname: '/my-wedding', params: { tab: i.kind === 'task' ? 'tasks' : 'payments' } })}
+            style={[toolStyles.row, { flex: 1 }]}>
+          <View style={[styles.icon, { borderWidth: 1, borderColor: t.c.border }]}>
+            <Ionicons name={KIND_ICON[i.kind]} size={17} color={color[i.kind]} />
           </View>
           <View style={{ flex: 1 }}>
             <Text size={14} weight="semibold" color={t.c.textStrong} numberOfLines={2}>
@@ -84,6 +88,7 @@ function WeddingCalendar({ project }: { project: Project }) {
               {i.sub}
             </Text>
           </View>
+          </Pressable>
           {i.done ? <StatusPill status="done" /> : <KButton label="" icon="logo-google" variant="ghost" size="sm" onPress={() => addToGoogleCalendar(i.cal)} />}
         </Card>
       ))}
@@ -94,14 +99,14 @@ function WeddingCalendar({ project }: { project: Project }) {
     <ScrollView contentContainerStyle={{ padding: 16, gap: 14, paddingBottom: 60 }}>
       <Card style={[toolStyles.row, { gap: 14 }]}>
         <View style={{ flex: 1 }}>
-          <Text size={12} weight="bold" color={t.c.muted}>
-            WEDDING DAY
+          <Text size={12} weight="medium" color={t.c.muted}>
+            Wedding day
           </Text>
           <Text size={17} weight="bold" color={t.c.textStrong}>
             {formatLongDate(main)}
           </Text>
           <Text size={12} color={t.c.muted}>
-            {bsMonthLabel(main)} · {daysUntil(main) >= 0 ? `${daysUntil(main)} days to go` : 'Married! 🎉'}
+            {bsMonthLabel(main)} · {daysUntil(main) >= 0 ? `${daysUntil(main)} days to go` : 'Married'}
           </Text>
         </View>
         <KButton label="Export all" icon="download-outline" size="sm" variant="secondary" onPress={() => exportCalendar(items.filter((i) => !i.done).map((i) => i.cal), `${project.code}-calendar`)} />
@@ -136,6 +141,6 @@ export default function CalendarScreen() {
 }
 
 const styles = StyleSheet.create({
-  icon: { width: 36, height: 36, borderRadius: 12, alignItems: 'center', justifyContent: 'center' },
+  icon: { width: 36, height: 36, borderRadius: 8, alignItems: 'center', justifyContent: 'center' },
   dot: { width: 8, height: 8, borderRadius: 4 },
 });

@@ -53,7 +53,7 @@ export default function FreelancerGigDetail() {
   const apply = () => {
     applyToGig(gig.id, { freelancerId: account.id, freelancerName: account.name, skill: gig.skill, rating: account.rating ?? 4.8, message: message.trim(), expectedPay: Number(pay) || gig.pay });
     triggerHaptic('success');
-    toast('Application sent 🚀', 'paper-plane');
+    toast('Application sent', 'paper-plane');
     router.back();
   };
 
@@ -180,7 +180,7 @@ export default function FreelancerGigDetail() {
                   onPress={() => {
                     respondToInvite(gig.id, account, true);
                     triggerHaptic('success');
-                    toast(gig.emergency ? 'You’re on! Head to the venue 🚗' : 'Accepted — the organiser will confirm', 'checkmark-circle');
+                    toast(gig.emergency ? 'You’re on. Head to the venue.' : 'Accepted — the organiser will confirm', 'checkmark-circle');
                     router.back();
                   }}
                 />

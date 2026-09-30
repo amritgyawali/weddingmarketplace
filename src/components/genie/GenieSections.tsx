@@ -1,9 +1,8 @@
 import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
-import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { Linking, Platform, Pressable, StyleSheet, View } from 'react-native';
+import { Linking, Pressable, StyleSheet, View } from 'react-native';
 import Animated, { FadeIn, LinearTransition, useAnimatedStyle, withTiming } from 'react-native-reanimated';
 
 import { Button } from '@/components/ui/Button';
@@ -16,45 +15,26 @@ import { GENIE_FEATURES } from '@/data/genie';
 import type { Faq, GeniePackage, Testimonial } from '@/types';
 import { formatNumber, formatShortDate } from '@/utils/format';
 
-const scriptFont = Platform.select({ ios: 'Georgia', android: 'serif', default: 'Georgia, serif' });
-
+/** Photo on top, then a plain statement of what the service does. */
 export function GenieHero() {
   return (
-    <View style={styles.hero}>
-      {/* Left-anchored crop keeps the couple in the right half, clear of the text fade. */}
-      <Image source={photos.virtualPlanningCouple} style={StyleSheet.absoluteFill} contentFit="cover" contentPosition="left" />
-      <LinearGradient
-        colors={['rgba(255,255,255,0.97)', 'rgba(255,255,255,0.85)', 'rgba(255,255,255,0)']}
-        locations={[0, 0.42, 0.72]}
-        start={{ x: 0, y: 0.5 }}
-        end={{ x: 1, y: 0.5 }}
-        style={StyleSheet.absoluteFill}
-      />
+    <View>
+      <View style={styles.hero}>
+        <Image source={photos.virtualPlanningCouple} style={StyleSheet.absoluteFill} contentFit="cover" />
+      </View>
       <View style={styles.heroContent}>
-        <View>
-          <Text size={9} weight="extrabold" color={colors.primary} tracking={0.5}>
-            {BRAND.name.toUpperCase()}
-          </Text>
-          <Text
-            size={44}
-            lineHeight={48}
-            color={colors.primary}
-            style={{ fontFamily: scriptFont, fontStyle: 'italic', fontWeight: '700', marginTop: -6 }}>
-            genie
-          </Text>
-          <Text size={11} weight="semibold" color={colors.primary} style={{ marginTop: -4, marginLeft: 24 }}>
-            {BRAND.genieTagline}
-          </Text>
-        </View>
-        <Text size={18} weight="semibold" color={colors.textStrong} lineHeight={24} style={{ marginTop: 16 }}>
-          The smart way to{'\n'}find venues & vendors{'\n'}for your wedding
+        <Text serif size={24} weight="bold" color={colors.heading} lineHeight={34}>
+          A planner who makes the calls for you
+        </Text>
+        <Text size={15} color={colors.textBody} style={{ marginTop: 4 }}>
+          Tell us the date, city and budget. Your planner shortlists venues and vendors, negotiates the price and books them.
         </Text>
         <View style={styles.features}>
           {GENIE_FEATURES.map((f) => (
             <View key={f.label} style={styles.feature}>
-              <Ionicons name={f.icon} size={22} color={colors.primary} />
-              <Text size={13} weight="semibold" color={colors.textStrong} lineHeight={16}>
-                {f.label}
+              <Ionicons name={f.icon} size={19} color={colors.textBody} />
+              <Text size={14} color={colors.text} lineHeight={18}>
+                {f.label.replace(/\n/g, ' ')}
               </Text>
             </View>
           ))}
@@ -67,35 +47,33 @@ export function GenieHero() {
 export function PackageCard({ pkg, active, onBuy }: { pkg: GeniePackage; active?: boolean; onBuy: () => void }) {
   const discount = Math.round((1 - pkg.price / pkg.mrp) * 100);
   return (
-    <View style={[styles.card, shadows.card, active && { borderColor: colors.success, borderWidth: 1.5 }]}>
+    <View style={[styles.card, pkg.popular && { borderColor: colors.heading }, active && { borderColor: colors.success }]}>
       {pkg.popular && (
-        <View style={styles.popular}>
-          <Text size={11} weight="bold" color={colors.white} tracking={0.5}>
-            MOST POPULAR
-          </Text>
-        </View>
+        <Text size={12} weight="semibold" color={colors.primary} style={{ marginBottom: 4 }}>
+          Most couples choose this
+        </Text>
       )}
       <View style={styles.cardHead}>
-        <Text size={21} weight="semibold" color={colors.heading} lineHeight={27} style={{ flex: 1 }}>
+        <Text size={18} weight="semibold" color={colors.heading} lineHeight={24} style={{ flex: 1 }}>
           {pkg.title}
         </Text>
         <View style={{ alignItems: 'flex-end' }}>
-          <Text size={21} weight="bold" color={colors.primary}>
+          <Text size={18} weight="bold" color={colors.heading}>
             NPR {formatNumber(pkg.price)}
           </Text>
-          <Text size={15} color={colors.textMuted} style={{ textDecorationLine: 'line-through', marginTop: 2 }}>
+          <Text size={13} color={colors.textSubtle} style={{ textDecorationLine: 'line-through' }}>
             NPR {formatNumber(pkg.mrp)}
           </Text>
         </View>
       </View>
-      <Text size={17} color={colors.textMuted} lineHeight={24} style={{ marginTop: 8, marginRight: 50 }}>
+      <Text size={14} color={colors.textMuted} lineHeight={20} style={{ marginTop: 2, marginRight: 60 }}>
         {pkg.subtitle}
       </Text>
       <View style={styles.list}>
         {pkg.features.map((f) => (
           <View key={f} style={styles.li}>
-            <Ionicons name="checkmark" size={20} color={colors.textStrong} style={{ marginTop: 1 }} />
-            <Text size={15} color={colors.text} lineHeight={22} style={{ flex: 1 }}>
+            <Ionicons name="checkmark" size={17} color={colors.success} style={{ marginTop: 2 }} />
+            <Text size={14} color={colors.text} lineHeight={20} style={{ flex: 1 }}>
               {f}
             </Text>
           </View>
@@ -103,13 +81,13 @@ export function PackageCard({ pkg, active, onBuy }: { pkg: GeniePackage; active?
       </View>
       {active ? (
         <View style={styles.activePlan}>
-          <Ionicons name="checkmark-circle" size={20} color={colors.success} />
-          <Text size={15} weight="semibold" color={colors.success}>
-            Your active plan
+          <Ionicons name="checkmark-circle" size={18} color={colors.success} />
+          <Text size={14} weight="semibold" color={colors.success}>
+            Your current plan
           </Text>
         </View>
       ) : (
-        <Button label={`Buy Now · Save ${discount}%`} onPress={onBuy} style={{ marginTop: 18 }} />
+        <Button label={`Choose this plan · ${discount}% off`} variant={pkg.popular ? 'primary' : 'outline'} onPress={onBuy} style={{ marginTop: 16 }} />
       )}
     </View>
   );
@@ -119,34 +97,28 @@ export function Testimonials({ items }: { items: Testimonial[] }) {
   const [open, setOpen] = useState<string | null>(null);
   return (
     <View style={styles.block}>
-      <Text size={24} weight="bold" color={colors.black} style={{ paddingHorizontal: GUTTER }}>
-        Let them speak for us!
-      </Text>
-      <Text size={15} color={colors.textSubtle} style={{ paddingHorizontal: GUTTER, marginTop: 14, marginBottom: 12 }}>
-        Some impressions from our customers
+      <Text size={18} weight="bold" color={colors.heading} style={{ paddingHorizontal: GUTTER, marginBottom: 4 }}>
+        From couples who used a planner
       </Text>
       {items.map((t) => {
         const expanded = open === t.id;
         return (
           <Animated.View key={t.id} layout={LinearTransition} style={styles.review}>
             <View style={styles.reviewHead}>
-              <Text size={17} weight="semibold" color={colors.heading}>
+              <Text size={15} weight="semibold" color={colors.heading} style={{ flex: 1 }}>
                 {t.couple}
               </Text>
-              <Ionicons name="star" size={18} color={colors.star} />
-              <Text size={14} color={colors.textBody}>
-                {t.rating.toFixed(1)}
+              <Ionicons name="star" size={13} color={colors.star} />
+              <Text size={13} color={colors.textBody}>
+                {t.rating.toFixed(1)} · {formatShortDate(t.date)}
               </Text>
             </View>
-            <Text size={14} color={colors.textMuted} style={{ marginTop: 4 }}>
-              {formatShortDate(t.date)}
-            </Text>
-            <Text size={15} color={colors.text} lineHeight={22} style={{ marginTop: 10 }} numberOfLines={expanded ? undefined : 2}>
+            <Text size={14} color={colors.text} lineHeight={21} style={{ marginTop: 6 }} numberOfLines={expanded ? undefined : 3}>
               {t.text}
             </Text>
             <Pressable onPress={() => setOpen(expanded ? null : t.id)} hitSlop={8}>
-              <Text size={16} weight="semibold" color={colors.heading} style={{ marginTop: 2 }}>
-                {expanded ? 'Read Less' : '...Read More'}
+              <Text size={14} weight="medium" color={colors.primary} style={{ marginTop: 4 }}>
+                {expanded ? 'Show less' : 'Read more'}
               </Text>
             </Pressable>
           </Animated.View>
@@ -162,16 +134,16 @@ function FaqItem({ faq }: { faq: Faq }) {
   return (
     <Animated.View layout={LinearTransition} style={styles.faq}>
       <Pressable onPress={() => setOpen((o) => !o)} accessibilityRole="button" accessibilityState={{ expanded: open }} style={styles.faqHead}>
-        <Text size={16} weight="semibold" color={colors.heading} style={{ flex: 1 }}>
+        <Text size={15} weight="medium" color={colors.heading} style={{ flex: 1 }}>
           {faq.q}
         </Text>
         <Animated.View style={chevron}>
-          <Ionicons name="chevron-down" size={20} color={colors.textMuted} />
+          <Ionicons name="chevron-down" size={18} color={colors.textMuted} />
         </Animated.View>
       </Pressable>
       {open && (
         <Animated.View entering={FadeIn}>
-          <Text size={15} color={colors.textBody} lineHeight={22} style={{ paddingBottom: 14 }}>
+          <Text size={14} color={colors.textBody} lineHeight={21} style={{ paddingBottom: 14 }}>
             {faq.a}
           </Text>
         </Animated.View>
@@ -183,15 +155,15 @@ function FaqItem({ faq }: { faq: Faq }) {
 export function Faqs({ items }: { items: Faq[] }) {
   return (
     <View style={[styles.block, { paddingHorizontal: GUTTER }]}>
-      <Text size={24} weight="bold" color={colors.black} style={{ marginBottom: 8 }}>
-        Frequently Asked Questions
+      <Text size={18} weight="bold" color={colors.heading} style={{ marginBottom: 4 }}>
+        Questions
       </Text>
       {items.map((f) => (
         <FaqItem key={f.id} faq={f} />
       ))}
       <View style={styles.helpRow}>
         <Button label="Call us" variant="outline" icon="call-outline" onPress={() => Linking.openURL(`tel:${BRAND.supportPhone}`)} style={{ flex: 1 }} />
-        <Button label="Ask Wedika" variant="soft" icon="sparkles-outline" onPress={() => router.push('/assistant')} style={{ flex: 1 }} />
+        <Button label="Ask a question" variant="outline" icon="chatbubble-outline" onPress={() => router.push('/assistant')} style={{ flex: 1 }} />
       </View>
     </View>
   );
@@ -208,58 +180,52 @@ export function WhatsAppFab({ bottom = 20 }: { bottom?: number }) {
           Linking.openURL(`https://wa.me/${BRAND.supportWhatsApp}?text=${message}`),
         )
       }
-      style={[styles.wa, { bottom }, shadows.whatsappGlow]}>
-      <Ionicons name="logo-whatsapp" size={34} color={colors.white} />
+      style={[styles.wa, { bottom }, shadows.fab]}>
+      <Ionicons name="logo-whatsapp" size={20} color={colors.white} />
+      <Text size={14} weight="semibold" color={colors.white}>
+        WhatsApp us
+      </Text>
     </PressableScale>
   );
 }
 
 const styles = StyleSheet.create({
-  hero: { aspectRatio: 1 / 0.9, backgroundColor: '#EFECE8', overflow: 'hidden' },
-  heroContent: { flex: 1, padding: GUTTER, paddingTop: 20, maxWidth: '60%' },
-  features: { gap: 12, marginTop: 20 },
-  feature: { flexDirection: 'row', alignItems: 'center', gap: 8 },
+  hero: { aspectRatio: 16 / 10, backgroundColor: colors.bgMuted, overflow: 'hidden' },
+  heroContent: { paddingHorizontal: GUTTER, paddingTop: 18, paddingBottom: 6 },
+  features: { gap: 8, marginTop: 14 },
+  feature: { flexDirection: 'row', alignItems: 'center', gap: 10 },
   card: {
-    marginHorizontal: 10,
-    marginTop: 16,
+    marginHorizontal: GUTTER,
+    marginTop: 12,
     backgroundColor: colors.white,
     borderRadius: radius.lg,
     borderWidth: 1,
-    borderColor: colors.divider,
-    padding: 20,
-    paddingTop: 22,
-  },
-  popular: {
-    position: 'absolute',
-    top: -11,
-    left: 20,
-    backgroundColor: colors.primary,
-    borderRadius: radius.pill,
-    paddingHorizontal: 10,
-    paddingVertical: 3,
+    borderColor: colors.border,
+    padding: 16,
   },
   cardHead: { flexDirection: 'row', alignItems: 'flex-start', gap: 12 },
-  list: { gap: 12, marginTop: 20 },
-  li: { flexDirection: 'row', gap: 12, alignItems: 'flex-start' },
-  activePlan: { flexDirection: 'row', alignItems: 'center', gap: 8, marginTop: 18, justifyContent: 'center' },
-  block: { marginTop: 44 },
+  list: { gap: 8, marginTop: 14 },
+  li: { flexDirection: 'row', gap: 10, alignItems: 'flex-start' },
+  activePlan: { flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: 16 },
+  block: { marginTop: 36 },
   review: {
-    marginHorizontal: GUTTER - 8,
-    paddingHorizontal: 8,
-    paddingVertical: 16,
-    borderTopWidth: 1,
-    borderTopColor: colors.divider,
+    marginHorizontal: GUTTER,
+    paddingVertical: 14,
+    borderTopWidth: StyleSheet.hairlineWidth,
+    borderTopColor: colors.border,
   },
-  reviewHead: { flexDirection: 'row', alignItems: 'center', gap: 8 },
-  faq: { borderBottomWidth: 1, borderBottomColor: colors.divider },
-  faqHead: { flexDirection: 'row', alignItems: 'center', gap: 12, paddingVertical: 16 },
-  helpRow: { flexDirection: 'row', gap: 12, marginTop: 24 },
+  reviewHead: { flexDirection: 'row', alignItems: 'center', gap: 5 },
+  faq: { borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: colors.border },
+  faqHead: { flexDirection: 'row', alignItems: 'center', gap: 12, paddingVertical: 14 },
+  helpRow: { flexDirection: 'row', gap: 10, marginTop: 20 },
   wa: {
     position: 'absolute',
-    right: 18,
-    width: 60,
-    height: 60,
-    borderRadius: 30,
+    right: 16,
+    height: 44,
+    borderRadius: 22,
+    paddingHorizontal: 16,
+    flexDirection: 'row',
+    gap: 8,
     backgroundColor: colors.whatsapp,
     alignItems: 'center',
     justifyContent: 'center',

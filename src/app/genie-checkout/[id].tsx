@@ -139,8 +139,8 @@ export default function GenieCheckoutScreen() {
       <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
         <ScrollView contentContainerStyle={styles.body} keyboardShouldPersistTaps="handled">
           <View style={styles.summary}>
-            <Text size={12} weight="bold" color={colors.primary} tracking={0.8}>
-              {BRAND.genieService.toUpperCase()}
+            <Text size={12} weight="medium" color={colors.textMuted}>
+              {BRAND.genieService}
             </Text>
             <Text size={20} weight="bold" color={colors.heading}>
               {pkg.title}
@@ -237,7 +237,7 @@ const styles = StyleSheet.create({
     gap: 12,
     padding: 14,
     borderRadius: radius.md,
-    borderWidth: 1.2,
+    borderWidth: 1,
     borderColor: colors.border,
   },
   methodActive: { borderColor: colors.primary, backgroundColor: colors.primaryTint },

@@ -64,13 +64,13 @@ export function VenueMiniCard({ venue, width = 205 }: { venue: Venue; width?: nu
         <Text size={13} color={colors.textMuted} numberOfLines={1} style={{ flex: 1 }}>
           {venue.locality}, {venue.city}
         </Text>
-        <Ionicons name="star" size={13} color={colors.star} />
-        <Text size={13} weight="semibold" color={colors.text}>
+        <Ionicons name="star" size={12} color={colors.star} />
+        <Text size={13} weight="medium" color={colors.text}>
           {venue.rating.toFixed(1)}
         </Text>
       </View>
-      <Text size={13} color={colors.textBody}>
-        <Text size={14} weight="bold" color={colors.textStrong}>
+      <Text size={13} color={colors.textMuted}>
+        <Text size={14} weight="semibold" color={colors.textStrong}>
           {formatMoney(venue.vegPerPlate)}
         </Text>{' '}
         per plate
@@ -92,17 +92,17 @@ export function VendorMiniCard({ vendor, width = 170 }: { vendor: Vendor; width?
         {vendor.name}
       </Text>
       <View style={styles.row}>
-        <Ionicons name="star" size={13} color={colors.star} />
-        <Text size={13} weight="semibold" color={colors.text}>
+        <Ionicons name="star" size={12} color={colors.star} />
+        <Text size={13} weight="medium" color={colors.text}>
           {vendor.rating.toFixed(1)}
         </Text>
         <Text size={13} color={colors.textMuted} numberOfLines={1} style={{ flex: 1 }}>
           ({vendor.reviewCount}) · {vendor.city}
         </Text>
       </View>
-      <Text size={13} color={colors.textBody} numberOfLines={1}>
+      <Text size={13} color={colors.textMuted} numberOfLines={1}>
         From{' '}
-        <Text size={14} weight="bold" color={colors.textStrong}>
+        <Text size={14} weight="semibold" color={colors.textStrong}>
           {formatMoney(vendor.startingPrice)}
         </Text>
       </Text>
@@ -113,6 +113,6 @@ export function VendorMiniCard({ vendor, width = 170 }: { vendor: Vendor; width?
 const styles = StyleSheet.create({
   imageWrap: { borderRadius: radius.lg, overflow: 'hidden', backgroundColor: colors.bgMuted },
   save: { position: 'absolute', top: 8, right: 8 },
-  meta: { paddingTop: 8, gap: 3 },
+  meta: { paddingTop: 8, gap: 0 },
   row: { flexDirection: 'row', alignItems: 'center', gap: 4 },
 });

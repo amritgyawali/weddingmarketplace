@@ -25,7 +25,7 @@ export default function PlatformGigs() {
       <View style={{ paddingTop: 12 }}>
         <Segmented
           options={[
-            { id: 'emergency', label: '🚨 Emergency' },
+            { id: 'emergency', label: 'Urgent' },
             { id: 'open', label: 'Open' },
             { id: 'mine', label: 'Posted by Vivah' },
             { id: 'all', label: 'Everything' },

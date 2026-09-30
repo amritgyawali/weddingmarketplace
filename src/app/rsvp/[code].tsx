@@ -43,7 +43,7 @@ export default function RsvpScreen() {
     return (
       <View style={[styles.root, { paddingTop: insets.top + 40, paddingHorizontal: 24, gap: 16 }]}>
         <Ionicons name="mail-open-outline" size={44} color={colors.primary} />
-        <Text size={26} weight="extrabold" color={colors.textStrong}>
+        <Text size={26} weight="bold" color={colors.textStrong}>
           RSVP to a wedding
         </Text>
         <Text size={15} color={colors.textMuted}>
@@ -83,7 +83,7 @@ export default function RsvpScreen() {
     return (
       <View style={[styles.root, { paddingTop: insets.top + 40, paddingHorizontal: 24, gap: 14, alignItems: 'center' }]}>
         <Ionicons name="heart-circle" size={72} color={accent} />
-        <Text size={26} weight="extrabold" color={colors.textStrong} align="center">
+        <Text size={26} weight="bold" color={colors.textStrong} align="center">
           Dhanyabad, {guest.name.split(' ')[0]}!
         </Text>
         <Text size={15} color={colors.textMuted} align="center">
@@ -114,10 +114,10 @@ export default function RsvpScreen() {
         <View>
           <Image source={photos[site?.cover ?? 'ideaCoupleGardenWalk']} style={{ width: '100%', height: 220 }} contentFit="cover" />
           <View style={[styles.veil, { paddingTop: insets.top + 12 }]}>
-            <Text size={13} weight="bold" color="#fff" tracking={2}>
-              YOU’RE INVITED
+            <Text size={13} weight="bold" color="#fff">
+              You’re invited
             </Text>
-            <Text size={30} weight="extrabold" color="#fff">
+            <Text serif size={30} weight="bold" color="#fff" lineHeight={40}>
               {site?.headline ?? project.title}
             </Text>
             <Text size={14} color="rgba(255,255,255,0.9)">
@@ -127,7 +127,7 @@ export default function RsvpScreen() {
         </View>
         <View style={{ padding: 18, gap: 14 }}>
           <Text size={18} weight="bold" color={colors.textStrong}>
-            Namaste {guest.name}! 🙏
+            Namaste, {guest.name}
           </Text>
           <Text size={14} color={colors.textMuted}>
             {size > 1 ? `We’ve reserved ${size} seats for your family. ` : ''}Please reply for each celebration{site?.rsvpDeadline ? ` by ${formatLongDate(site.rsvpDeadline)}` : ''}.
@@ -192,7 +192,7 @@ export default function RsvpScreen() {
           {site?.rsvpQuestions.map((q) => (
             <Card key={q.id} style={{ gap: 10 }}>
               <Text size={15} weight="bold" color={colors.textStrong}>
-                {q.kind === 'song' ? '🎵 ' : ''}
+                {q.kind === 'song' ? 'Song request: ' : ''}
                 {q.q}
               </Text>
               {q.kind === 'choice' && q.options ? (
@@ -218,6 +218,6 @@ export default function RsvpScreen() {
 const styles = StyleSheet.create({
   root: { flex: 1, backgroundColor: colors.bgSoft },
   veil: { ...StyleSheet.absoluteFill, backgroundColor: 'rgba(0,0,0,0.38)', paddingHorizontal: 18, justifyContent: 'flex-end', paddingBottom: 18, gap: 2 },
-  choice: { flexDirection: 'row', alignItems: 'center', gap: 10, borderWidth: 1.5, borderRadius: 14, padding: 12 },
+  choice: { flexDirection: 'row', alignItems: 'center', gap: 10, borderWidth: 1, borderRadius: 8, padding: 12 },
   row: { flexDirection: 'row', alignItems: 'center', gap: 12 },
 });

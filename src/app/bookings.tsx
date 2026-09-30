@@ -7,7 +7,6 @@ import { FlatList, ScrollView, StyleSheet, View } from 'react-native';
 import { Button } from '@/components/ui/Button';
 import { Chip } from '@/components/ui/Chip';
 import { EmptyState } from '@/components/ui/EmptyState';
-import { GenieLampIcon } from '@/components/ui/Icons';
 import { ScreenHeader } from '@/components/ui/ScreenHeader';
 import { Text } from '@/components/ui/Text';
 import { photos } from '@/constants/images';
@@ -18,9 +17,9 @@ import { formatMoney, formatLongDate, formatShortDate } from '@/utils/format';
 import { confirm } from '@/utils/confirm';
 
 const STATUS: Record<BookingStatus, { label: string; color: string; bg: string }> = {
-  pending: { label: 'Awaiting response', color: '#B7791F', bg: '#FFF6E5' },
-  confirmed: { label: 'Confirmed', color: colors.success, bg: '#E8F7EE' },
-  cancelled: { label: 'Cancelled', color: colors.danger, bg: '#FDECEC' },
+  pending: { label: 'Awaiting response', color: colors.warning, bg: `${colors.warning}14` },
+  confirmed: { label: 'Confirmed', color: colors.success, bg: `${colors.success}14` },
+  cancelled: { label: 'Cancelled', color: colors.danger, bg: `${colors.danger}14` },
 };
 
 type Filter = 'all' | Booking['kind'];
@@ -41,7 +40,7 @@ function BookingCard({ booking }: { booking: Booking }) {
           <Image source={photos[booking.image]} style={styles.image} contentFit="cover" />
         ) : (
           <View style={[styles.image, styles.genieIcon]}>
-            <GenieLampIcon size={30} color={colors.primary} />
+            <Ionicons name="clipboard-outline" size={26} color={colors.textMuted} />
           </View>
         )}
         <View style={{ flex: 1, gap: 2 }}>
@@ -117,7 +116,7 @@ export default function BookingsScreen() {
       <View>
         <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.filters}>
           {(['all', 'venue', 'vendor', 'genie'] as Filter[]).map((f) => (
-            <Chip key={f} label={f === 'all' ? 'All' : f === 'genie' ? 'Genie plans' : `${f[0].toUpperCase()}${f.slice(1)}s`} selected={filter === f} onPress={() => setFilter(f)} />
+            <Chip key={f} label={f === 'all' ? 'All' : f === 'genie' ? 'Planner packages' : `${f[0].toUpperCase()}${f.slice(1)}s`} selected={filter === f} onPress={() => setFilter(f)} />
           ))}
         </ScrollView>
       </View>
@@ -147,8 +146,8 @@ const styles = StyleSheet.create({
   card: { backgroundColor: colors.white, borderRadius: radius.lg, padding: 14, gap: 12 },
   cardTop: { flexDirection: 'row', gap: 12, alignItems: 'center' },
   image: { width: 64, height: 64, borderRadius: radius.md, backgroundColor: colors.bgMuted },
-  genieIcon: { alignItems: 'center', justifyContent: 'center', backgroundColor: colors.primarySoft },
-  status: { alignSelf: 'flex-start', borderRadius: radius.pill, paddingHorizontal: 8, paddingVertical: 3, marginTop: 4 },
+  genieIcon: { alignItems: 'center', justifyContent: 'center', backgroundColor: colors.bgMuted },
+  status: { alignSelf: 'flex-start', borderRadius: radius.sm, paddingHorizontal: 8, paddingVertical: 3, marginTop: 4 },
   meta: { gap: 6 },
   metaItem: { flexDirection: 'row', alignItems: 'center', gap: 6 },
   actions: { flexDirection: 'row', gap: 10 },

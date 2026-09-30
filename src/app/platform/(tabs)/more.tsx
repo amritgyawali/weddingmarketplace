@@ -64,7 +64,7 @@ export default function PlatformMore() {
 
   return (
     <View style={{ flex: 1, backgroundColor: t.c.bg }}>
-      <RoleHeader eyebrow="WORKSPACE" title="More" subtitle="Operations tools" />
+      <RoleHeader title="More" subtitle="Operations tools" />
       <ScrollView contentContainerStyle={{ padding: 14, gap: 16, paddingBottom: 30 }}>
         <Card style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
           <Avatar name={account.name} size={48} />

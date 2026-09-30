@@ -22,14 +22,14 @@ export interface SearchBarProps extends Omit<TextInputProps, 'style'> {
   height?: number;
 }
 
-/** Grey pill search field from the Venues / Ideas / City screens. */
+/** Search field used on the Venues, Ideas and City screens. */
 export const SearchBar = forwardRef<TextInput, SearchBarProps>(function SearchBar(
   { onPressReadOnly, trailing, style, height = 42, placeholder, value, onChangeText, ...rest },
   ref,
 ) {
   const content = (
     <>
-      <Ionicons name="search-outline" size={18} color={colors.placeholder} />
+      <Ionicons name="search" size={17} color={colors.textMuted} />
       {onPressReadOnly ? (
         <Text size={15} color={colors.placeholder} style={styles.flex} numberOfLines={1}>
           {placeholder}
@@ -76,9 +76,11 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: colors.bgMuted,
-    borderRadius: radius.pill,
-    paddingHorizontal: 14,
+    backgroundColor: colors.white,
+    borderWidth: 1,
+    borderColor: colors.border,
+    borderRadius: radius.md,
+    paddingHorizontal: 12,
     gap: 8,
   },
   flex: { flex: 1 },

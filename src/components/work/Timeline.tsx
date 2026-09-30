@@ -82,7 +82,7 @@ export function TimelineView({ project, mode }: { project: Project; mode: 'custo
               <Pressable disabled={!manual} onPress={() => toggle(project.id, e.id)} onLongPress={() => addToGoogleCalendar({ title: e.title, date: e.date, time: e.time, location: e.location })} style={{ flex: 1, paddingBottom: 16 }}>
                 <Text size={14} weight={isNext ? 'bold' : 'semibold'} color={t.c.textStrong} style={e.done ? { opacity: 0.7 } : undefined}>
                   {e.title}
-                  {e.internal ? '  🔒' : ''}
+                  {e.internal ? ' · internal' : ''}
                 </Text>
                 {(e.time || e.location) && (
                   <Text size={12} color={t.c.muted}>
@@ -90,7 +90,7 @@ export function TimelineView({ project, mode }: { project: Project; mode: 'custo
                   </Text>
                 )}
                 {isNext && (
-                  <Text size={11} weight="bold" color={t.c.primary}>
+                  <Text size={12} weight="medium" color={t.c.muted}>
                     NEXT · {daysUntil(e.date) === 0 ? 'today' : `in ${daysUntil(e.date)} days`}
                   </Text>
                 )}

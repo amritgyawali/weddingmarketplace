@@ -34,12 +34,12 @@ function CaseCard({ vc }: { vc: VerificationCase }) {
   return (
     <Card style={{ gap: 10 }}>
       <View style={styles.row}>
-        <View style={[styles.icon, { backgroundColor: t.c.soft }]}>
+        <View style={[styles.icon, { borderWidth: 1, borderColor: t.c.border }]}>
           <Ionicons name={vc.subjectKind === 'provider' ? 'storefront-outline' : 'person-outline'} size={20} color={t.c.primary} />
         </View>
         <View style={{ flex: 1 }}>
-          <Text size={11} weight="bold" color={t.c.muted}>
-            {vc.subjectKind.toUpperCase()} · submitted {timeAgo(vc.submittedAt)}
+          <Text size={12} weight="medium" color={t.c.muted}>
+            {vc.subjectKind} · submitted {timeAgo(vc.submittedAt)}
           </Text>
           <Text size={15} weight="bold" color={t.c.textStrong}>
             {vc.title}
@@ -64,7 +64,7 @@ function CaseCard({ vc }: { vc: VerificationCase }) {
       ))}
       {vc.documents.map((d) => (
         <Text key={d.name} size={12} color={t.c.muted}>
-          📎 {d.kind}: {d.name} ({d.status})
+          {d.kind}: {d.name} ({d.status})
         </Text>
       ))}
       {vc.expiresAt && (

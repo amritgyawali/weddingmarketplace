@@ -46,7 +46,7 @@ export default function PlatformWeddings() {
 
   return (
     <View style={{ flex: 1, backgroundColor: t.c.bg }}>
-      <RoleHeader eyebrow="PROJECT MANAGEMENT" title="Weddings" subtitle={`${projects.length} projects · ${counts.active} active`} />
+      <RoleHeader title="Weddings" subtitle={`${projects.length} projects · ${counts.active} active`} />
       <View style={{ paddingTop: 12, gap: 10 }}>
         <View style={{ paddingHorizontal: 14 }}>
           <KField placeholder="Search code, couple or city" value={query} onChangeText={setQuery} />
@@ -83,7 +83,7 @@ export default function PlatformWeddings() {
               <View style={styles.row}>
                 <Avatar name={item.title} size={42} />
                 <View style={{ flex: 1 }}>
-                  <Text size={12} weight="bold" color={t.c.primary}>
+                  <Text size={12} weight="medium" color={t.c.muted}>
                     {item.code} · {item.managedBy === 'platform' ? (item.coordinatorName ?? 'Unassigned') : 'Direct booking'}
                   </Text>
                   <Text size={16} weight="bold" color={t.c.textStrong}>

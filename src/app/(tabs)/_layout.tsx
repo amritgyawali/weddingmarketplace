@@ -12,11 +12,11 @@ export default function TabsLayout() {
         sceneStyle: { backgroundColor: colors.white },
         animation: 'fade',
       }}>
-      <Tabs.Screen name="index" options={{ title: 'For You' }} />
+      <Tabs.Screen name="index" options={{ title: 'Home' }} />
       <Tabs.Screen name="venues" options={{ title: 'Venues' }} />
       <Tabs.Screen name="vendors" options={{ title: 'Vendors' }} />
       <Tabs.Screen name="ideas" options={{ title: 'Ideas' }} />
-      <Tabs.Screen name="genie" options={{ title: 'Genie' }} />
+      <Tabs.Screen name="genie" options={{ title: 'Planner' }} />
     </Tabs>
   );
 }

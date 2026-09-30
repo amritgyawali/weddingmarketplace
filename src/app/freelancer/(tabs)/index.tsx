@@ -1,18 +1,15 @@
 import { Ionicons } from '@expo/vector-icons';
-import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { FlatList, Pressable, ScrollView, StyleSheet, View } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { EmptyBlock, SectionTitle } from '@/components/kit';
+import { EmptyBlock, RoleHeader, SectionTitle } from '@/components/kit';
 import { triggerHaptic } from '@/components/ui/PressableScale';
 import { Text } from '@/components/ui/Text';
 import { GigCard } from '@/components/work/GigCard';
 import { cityDistanceKm } from '@/data/cities';
 import { FREELANCE_SKILLS } from '@/data/skills';
 import { useFreelancerWorkspace } from '@/hooks/useWorkspace';
-import { useInbox } from '@/store/useDb';
 import { useAccount } from '@/store/useSession';
 import { useRoleTheme } from '@/theme/RoleTheme';
 import { daysUntil, formatClock, formatMoney, formatMoneyCompact } from '@/utils/format';
@@ -22,10 +19,8 @@ type Sort = 'match' | 'pay' | 'date' | 'distance';
 /** Gig marketplace for crew: invitations, emergencies and skill-matched gigs nearby. */
 export default function DiscoverGigs() {
   const t = useRoleTheme();
-  const insets = useSafeAreaInsets();
   const account = useAccount();
   const { open, invited, upcoming, payables } = useFreelancerWorkspace(account);
-  const unread = useInbox(account).filter((n) => !n.read).length;
   const mySkills = account.skills ?? [];
   const radius = account.travelRadiusKm ?? 25;
   const [skill, setSkill] = useState<string | null>(null);
@@ -51,46 +46,53 @@ export default function DiscoverGigs() {
   const skillOrder = [...mySkills, ...FREELANCE_SKILLS.filter((s) => !mySkills.includes(s))];
 
   const header = (
-    <View style={{ gap: 18, paddingBottom: 6 }}>
-      <View style={[styles.top, { paddingTop: insets.top + 12 }]}>
-        <View style={{ flex: 1 }}>
+    <View style={{ gap: 16, paddingBottom: 6 }}>
+      <RoleHeader title="Gigs" subtitle={`Namaste, ${account.name.split(' ')[0]} · ${mySkills.slice(0, 2).join(', ') || 'Crew'} · ${account.city}`}>
+        <View style={styles.statsRow}>
           <Text size={14} color={t.c.muted}>
-            Namaste {account.name.split(' ')[0]} 👋
+            <Text size={14} weight="semibold" color={t.c.textStrong}>
+              {open.filter((g) => mySkills.includes(g.skill)).length}
+            </Text>{' '}
+            match your skills
           </Text>
-          <Text size={28} weight="bold" color={t.c.textStrong} lineHeight={34}>
-            Find your next{'\n'}wedding gig
+          <Text size={14} color={t.c.muted}>
+            <Text size={14} weight="semibold" color={t.c.textStrong}>
+              {upcoming.length}
+            </Text>{' '}
+            booked
+          </Text>
+          <Text size={14} color={t.c.muted}>
+            <Text size={14} weight="semibold" color={t.c.textStrong}>
+              {formatMoneyCompact(month)}
+            </Text>{' '}
+            paid this month
           </Text>
         </View>
-        <Pressable onPress={() => router.push('/notifications')} accessibilityLabel="Notifications" style={[styles.bell, { backgroundColor: t.c.surface, borderColor: t.c.border }]}>
-          <Ionicons name="notifications-outline" size={21} color={t.c.textStrong} />
-          {unread > 0 && <View style={[styles.dot, { backgroundColor: t.c.primary }]} />}
-        </Pressable>
-      </View>
+      </RoleHeader>
 
       {today && (
-        <Pressable onPress={() => router.push({ pathname: '/freelancer/assignment/[id]', params: { id: today.assignment.id } })} accessibilityRole="button" style={{ marginHorizontal: 16 }}>
-          <LinearGradient colors={t.gradient} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={styles.today}>
-            <View style={{ flex: 1 }}>
-              <Text size={12} weight="bold" color={t.c.onPrimary} tracking={1}>
-                ● YOU’RE WORKING TODAY
-              </Text>
-              <Text size={17} weight="bold" color={t.c.onPrimary} numberOfLines={1}>
-                {today.assignment.role} · {today.project.title}
-              </Text>
-              <Text size={13} color={t.c.onPrimary}>
-                {formatClock(today.assignment.startTime)} · {today.project.events.find((e) => e.id === today.assignment.eventId)?.venue ?? today.project.city} · {today.assignment.status === 'CHECKED_IN' ? 'checked in' : 'tap to check in'}
-              </Text>
-            </View>
-            <View style={[styles.go, { backgroundColor: t.c.onPrimary }]}>
-              <Ionicons name="location" size={20} color={t.c.primary} />
-            </View>
-          </LinearGradient>
+        <Pressable
+          onPress={() => router.push({ pathname: '/freelancer/assignment/[id]', params: { id: today.assignment.id } })}
+          accessibilityRole="button"
+          style={({ pressed }) => [styles.today, { backgroundColor: t.c.surface, borderColor: t.c.border, borderLeftColor: t.c.success }, pressed && { opacity: 0.8 }]}>
+          <View style={{ flex: 1 }}>
+            <Text size={13} weight="medium" color={t.c.success}>
+              You’re working today
+            </Text>
+            <Text size={16} weight="semibold" color={t.c.textStrong} numberOfLines={1}>
+              {today.assignment.role} · {today.project.title}
+            </Text>
+            <Text size={13} color={t.c.muted}>
+              {formatClock(today.assignment.startTime)} · {today.project.events.find((e) => e.id === today.assignment.eventId)?.venue ?? today.project.city} · {today.assignment.status === 'CHECKED_IN' ? 'checked in' : 'tap to check in'}
+            </Text>
+          </View>
+          <Ionicons name="chevron-forward" size={18} color={t.c.subtle} />
         </Pressable>
       )}
 
       {emergencies.length > 0 && (
         <View style={{ paddingHorizontal: 16, gap: 10 }}>
-          <SectionTitle title="🚨 Emergency — needed now" />
+          <SectionTitle title="Urgent: needed today" />
           {emergencies.map((g) => (
             <GigCard key={g.id} gig={g} distance={km(g.city)} onPress={() => router.push({ pathname: '/freelancer/gig/[id]', params: { id: g.id } })} />
           ))}
@@ -108,43 +110,16 @@ export default function DiscoverGigs() {
         </View>
       )}
 
-      <View style={styles.statsRow}>
-        <View style={[styles.stat, { backgroundColor: t.c.surface, borderColor: t.c.border }]}>
-          <Text size={22} weight="bold" color={t.c.primary}>
-            {open.filter((g) => mySkills.includes(g.skill)).length}
-          </Text>
-          <Text size={12} color={t.c.muted}>
-            match your skills
-          </Text>
-        </View>
-        <View style={[styles.stat, { backgroundColor: t.c.surface, borderColor: t.c.border }]}>
-          <Text size={22} weight="bold" color={t.c.textStrong}>
-            {upcoming.length}
-          </Text>
-          <Text size={12} color={t.c.muted}>
-            jobs booked
-          </Text>
-        </View>
-        <View style={[styles.stat, { backgroundColor: t.c.surface, borderColor: t.c.border }]}>
-          <Text size={18} weight="bold" color={t.c.textStrong}>
-            {formatMoneyCompact(month).replace('NPR ', '')}
-          </Text>
-          <Text size={12} color={t.c.muted}>
-            paid this month
-          </Text>
-        </View>
-      </View>
-
       <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.filters}>
-        <Pressable onPress={() => { triggerHaptic('selection'); setNearMe((v) => !v); }} style={[styles.filter, { borderColor: nearMe ? t.c.primary : t.c.border, backgroundColor: nearMe ? t.c.primary : t.c.surface }]}>
-          <Ionicons name="location" size={14} color={nearMe ? t.c.onPrimary : t.c.muted} />
-          <Text size={13} weight="semibold" color={nearMe ? t.c.onPrimary : t.c.text}>
+        <Pressable onPress={() => { triggerHaptic('selection'); setNearMe((v) => !v); }} style={[styles.filter, { borderColor: nearMe ? t.c.textStrong : t.c.border, backgroundColor: nearMe ? t.c.textStrong : t.c.surface }]}>
+          <Ionicons name="location-outline" size={14} color={nearMe ? t.c.surface : t.c.muted} />
+          <Text size={13} weight="medium" color={nearMe ? t.c.surface : t.c.text}>
             Within {radius} km
           </Text>
         </Pressable>
         {(['match', 'pay', 'date', 'distance'] as Sort[]).map((s) => (
-          <Pressable key={s} onPress={() => setSort(s)} style={[styles.filter, { borderColor: sort === s ? t.c.primary : t.c.border, backgroundColor: t.c.surface }]}>
-            <Text size={13} weight="semibold" color={sort === s ? t.c.primary : t.c.text}>
+          <Pressable key={s} onPress={() => setSort(s)} style={[styles.filter, { borderColor: sort === s ? t.c.textStrong : t.c.border, backgroundColor: t.c.surface }]}>
+            <Text size={13} weight={sort === s ? 'semibold' : 'regular'} color={sort === s ? t.c.textStrong : t.c.muted}>
               {s === 'match' ? 'Best match' : s === 'pay' ? 'Highest pay' : s === 'date' ? 'Soonest' : 'Nearest'}
             </Text>
           </Pressable>
@@ -154,8 +129,8 @@ export default function DiscoverGigs() {
         {skillOrder.map((s) => {
           const on = skill === s;
           return (
-            <Pressable key={s} onPress={() => { triggerHaptic('selection'); setSkill(on ? null : s); }} style={[styles.filter, { borderColor: on ? t.c.primary : t.c.border, backgroundColor: on ? t.c.primary : t.c.surface }]}>
-              <Text size={13} weight="semibold" color={on ? t.c.onPrimary : t.c.text}>
+            <Pressable key={s} onPress={() => { triggerHaptic('selection'); setSkill(on ? null : s); }} style={[styles.filter, { borderColor: on ? t.c.textStrong : t.c.border, backgroundColor: on ? t.c.textStrong : t.c.surface }]}>
+              <Text size={13} weight="medium" color={on ? t.c.surface : t.c.text}>
                 {s}
               </Text>
             </Pressable>
@@ -174,7 +149,7 @@ export default function DiscoverGigs() {
         data={feed}
         keyExtractor={(g) => g.id}
         ListHeaderComponent={header}
-        contentContainerStyle={{ gap: 12, paddingBottom: 130 }}
+        contentContainerStyle={{ gap: 12, paddingBottom: 32 }}
         renderItem={({ item }) => (
           <View style={{ paddingHorizontal: 16 }}>
             <GigCard gig={item} distance={km(item.city)} badge={mySkills.includes(item.skill) ? 'match' : undefined} onPress={() => router.push({ pathname: '/freelancer/gig/[id]', params: { id: item.id } })} />
@@ -187,13 +162,8 @@ export default function DiscoverGigs() {
 }
 
 const styles = StyleSheet.create({
-  top: { flexDirection: 'row', alignItems: 'flex-start', paddingHorizontal: 16, gap: 12 },
-  bell: { width: 44, height: 44, borderRadius: 22, borderWidth: 1, alignItems: 'center', justifyContent: 'center' },
-  dot: { position: 'absolute', top: 10, right: 11, width: 9, height: 9, borderRadius: 5 },
-  today: { borderRadius: 22, padding: 16, flexDirection: 'row', alignItems: 'center', gap: 12 },
-  go: { width: 42, height: 42, borderRadius: 21, alignItems: 'center', justifyContent: 'center' },
-  statsRow: { flexDirection: 'row', gap: 10, paddingHorizontal: 16 },
-  stat: { flex: 1, borderRadius: 20, borderWidth: 1, padding: 12, gap: 2 },
+  today: { marginHorizontal: 16, borderRadius: 8, borderWidth: 1, borderLeftWidth: 3, padding: 14, flexDirection: 'row', alignItems: 'center', gap: 12 },
+  statsRow: { flexDirection: 'row', flexWrap: 'wrap', columnGap: 14, marginTop: 10 },
   filters: { gap: 8, paddingHorizontal: 16 },
-  filter: { flexDirection: 'row', alignItems: 'center', gap: 5, height: 36, borderRadius: 18, borderWidth: 1, paddingHorizontal: 14 },
+  filter: { flexDirection: 'row', alignItems: 'center', gap: 5, height: 34, borderRadius: 6, borderWidth: 1, paddingHorizontal: 12 },
 });

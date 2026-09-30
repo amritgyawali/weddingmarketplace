@@ -74,7 +74,7 @@ const PHOTO_CRITERIA = ['Photo quality', 'Communication', 'Punctuality', 'Profes
 const DEFAULT_CRITERIA = ['Quality', 'Communication', 'Punctuality', 'Value for money'];
 
 export const SERVICES: ServiceDef[] = [
-  // ── Venue & food ────────────────────────────────────────────────────
+  // Venue & food
   {
     id: 'venue',
     name: 'Party Palace / Venue',
@@ -149,7 +149,7 @@ export const SERVICES: ServiceDef[] = [
     crew: [{ role: 'Bartender', default: 2, pay: 3_000 }],
     reviewCriteria: DEFAULT_CRITERIA,
   },
-  // ── Photo & video ────────────────────────────────────────────────────
+  // Photo & video
   {
     id: 'photography',
     name: 'Photography',
@@ -293,7 +293,7 @@ export const SERVICES: ServiceDef[] = [
     reviewCriteria: DEFAULT_CRITERIA,
     deliverables: [{ title: 'Album design proof', kind: 'design', qty: 1, unit: 'proof', dueDays: 21 }],
   },
-  // ── Decor & planning ─────────────────────────────────────────────────
+  // Decor & planning
   {
     id: 'decoration',
     name: 'Decoration',
@@ -377,7 +377,7 @@ export const SERVICES: ServiceDef[] = [
     crew: [{ role: 'Coordinator', default: 2, pay: 5_000 }],
     reviewCriteria: ['Organisation', 'Communication', 'Problem solving', 'Value for money'],
   },
-  // ── Beauty ───────────────────────────────────────────────────────────
+  // Beauty
   {
     id: 'makeup',
     name: 'Bridal Makeup',
@@ -417,7 +417,7 @@ export const SERVICES: ServiceDef[] = [
     crew: [{ role: 'Mehendi Artist', default: 2, pay: 3_500 }],
     reviewCriteria: ['Design', 'Speed', 'Colour', 'Behaviour'],
   },
-  // ── Entertainment ────────────────────────────────────────────────────
+  // Entertainment
   {
     id: 'dj',
     name: 'DJ',
@@ -520,7 +520,7 @@ export const SERVICES: ServiceDef[] = [
     crew: [{ role: 'AV Technician', default: 1, pay: 3_500 }],
     reviewCriteria: DEFAULT_CRITERIA,
   },
-  // ── Fashion ──────────────────────────────────────────────────────────
+  // Fashion
   {
     id: 'bridal-wear',
     name: 'Bridal Wear',
@@ -566,7 +566,7 @@ export const SERVICES: ServiceDef[] = [
     crew: [],
     reviewCriteria: ['Craftsmanship', 'Purity/Trust', 'Service', 'Value for money'],
   },
-  // ── Rituals ──────────────────────────────────────────────────────────
+  // Rituals
   {
     id: 'pandit',
     name: 'Pandit / Purohit',
@@ -584,7 +584,7 @@ export const SERVICES: ServiceDef[] = [
     crew: [{ role: 'Assistant Purohit', default: 1, pay: 3_000 }],
     reviewCriteria: ['Knowledge', 'Punctuality', 'Explanation', 'Behaviour'],
   },
-  // ── Logistics ────────────────────────────────────────────────────────
+  // Logistics
   {
     id: 'transport',
     name: 'Wedding Cars & Transport',
@@ -658,7 +658,7 @@ export const SERVICES: ServiceDef[] = [
     crew: [],
     reviewCriteria: DEFAULT_CRITERIA,
   },
-  // ── Stationery & gifts ───────────────────────────────────────────────
+  // Stationery & gifts
   {
     id: 'invitation',
     name: 'Invitation Cards',

@@ -55,7 +55,7 @@ export default function ProvidersDirectory() {
             <Image source={photos[item.image]} style={styles.thumb} contentFit="cover" />
             <View style={{ flex: 1, gap: 2 }}>
               <Text size={14} weight="bold" color={t.c.textStrong} numberOfLines={1}>
-                {item.name} {featured.includes(item.id) ? '⭐' : ''}
+                {item.name}{featured.includes(item.id) ? ' · Featured' : ''}
               </Text>
               <Text size={12} color={t.c.muted} numberOfLines={1}>
                 {SERVICES.find((s) => s.id === item.serviceId)?.name} · {item.city} · {item.rating}★ · from {formatMoneyCompact(item.startingPrice)}

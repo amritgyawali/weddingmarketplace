@@ -1,4 +1,3 @@
-import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
@@ -8,62 +7,37 @@ import { PressableScale } from '@/components/ui/PressableScale';
 import { Text } from '@/components/ui/Text';
 import { BRAND } from '@/constants/brand';
 import { photos } from '@/constants/images';
-import { colors, GUTTER, radius, shadows } from '@/constants/theme';
+import { colors, GUTTER } from '@/constants/theme';
 
-/** Promo for the paid virtual-planning service. */
+/** Promo for the paid planning service: a photo with a plain caption underneath. */
 export function GenieBanner() {
   return (
-    <PressableScale
-      onPress={() => router.navigate('/genie')}
-      accessibilityLabel={`${BRAND.genieService}. Plans from NPR 2,999`}
-      style={[styles.card, shadows.card]}>
-      <Image source={photos.virtualPlanningCouple} style={StyleSheet.absoluteFill} contentFit="cover" contentPosition="left" />
-      <LinearGradient
-        colors={['rgba(255,255,255,0.98)', 'rgba(255,255,255,0.85)', 'rgba(255,255,255,0)']}
-        locations={[0, 0.5, 0.85]}
-        start={{ x: 0, y: 0.5 }}
-        end={{ x: 1, y: 0.5 }}
-        style={StyleSheet.absoluteFill}
-      />
-      <View style={styles.content}>
-        <Text size={12} weight="bold" color={colors.primary} tracking={1}>
-          {BRAND.genieTagline.toUpperCase()}
+    <PressableScale onPress={() => router.navigate('/genie')} accessibilityLabel={`${BRAND.genieService}. Plans from NPR 2,999`} style={styles.card}>
+      <View style={styles.photoWrap}>
+        <Image source={photos.virtualPlanningCouple} style={StyleSheet.absoluteFill} contentFit="cover" />
+        <LinearGradient colors={['rgba(0,0,0,0)', 'rgba(0,0,0,0.55)']} style={StyleSheet.absoluteFill} />
+        <Text size={13} weight="medium" color={colors.white} style={styles.caption}>
+          {BRAND.genieService}
         </Text>
-        <Text size={19} weight="bold" color={colors.textStrong} lineHeight={24}>
-          Let an expert plan{'\n'}your wedding
+      </View>
+      <View style={styles.body}>
+        <Text size={17} weight="bold" color={colors.heading}>
+          Hand the phone calls to a planner
         </Text>
-        <Text size={13} color={colors.textBody}>
-          Plans from just NPR 2,999
+        <Text size={14} color={colors.textBody}>
+          They shortlist, negotiate and book for you. From NPR 2,999.
         </Text>
-        <View style={styles.cta}>
-          <Text size={13} weight="bold" color={colors.white}>
-            Explore Genie
-          </Text>
-          <Ionicons name="arrow-forward" size={14} color={colors.white} />
-        </View>
+        <Text size={14} weight="semibold" color={colors.primary} style={{ marginTop: 4 }}>
+          See planner packages
+        </Text>
       </View>
     </PressableScale>
   );
 }
 
 const styles = StyleSheet.create({
-  card: {
-    marginHorizontal: GUTTER,
-    height: 170,
-    borderRadius: radius.lg,
-    overflow: 'hidden',
-    backgroundColor: colors.bgMuted,
-  },
-  content: { flex: 1, justifyContent: 'center', paddingHorizontal: 18, gap: 6, maxWidth: '68%' },
-  cta: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    alignSelf: 'flex-start',
-    gap: 6,
-    backgroundColor: colors.primary,
-    paddingHorizontal: 14,
-    paddingVertical: 8,
-    borderRadius: radius.pill,
-    marginTop: 4,
-  },
+  card: { marginHorizontal: GUTTER, borderWidth: 1, borderColor: colors.border, borderRadius: 10, overflow: 'hidden', backgroundColor: colors.white },
+  photoWrap: { height: 150, backgroundColor: colors.bgMuted, justifyContent: 'flex-end' },
+  caption: { padding: 12 },
+  body: { padding: 14, gap: 2 },
 });
