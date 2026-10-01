@@ -71,7 +71,8 @@
     "test:features": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/test-features.mjs",
     "docs:generate": "node scripts/docs/generate-reference.mjs",
     "docs:check": "node scripts/docs/generate-reference.mjs --check",
-    "bugs:inbox": "node scripts/bug-inbox.cjs"
+    "bugs:inbox": "node scripts/bug-inbox.cjs",
+    "setup:supabase": "node scripts/supabase-setup.mjs"
   },
   "private": true
 }

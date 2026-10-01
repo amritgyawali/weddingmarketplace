@@ -27,6 +27,7 @@ npm scripts and the Node scripts behind them. All run locally with no network un
 | `npm run docs:generate` | `node scripts/docs/generate-reference.mjs` |
 | `npm run docs:check` | `node scripts/docs/generate-reference.mjs --check` |
 | `npm run bugs:inbox` | `node scripts/bug-inbox.cjs` |
+| `npm run setup:supabase` | `node scripts/supabase-setup.mjs` |
 
 ## Script files
 
@@ -264,6 +265,36 @@ rewrite the expected matrix in `scripts/persona-matrix.json`.
 Fails when a registry references a capability, occasion, permission or
 service that does not exist, when a service has no capabilities or trade,
 or when a persona fixture ends up with fewer than three tools.
+
+### scripts/supabase-setup.mjs
+
+Source: [scripts/supabase-setup.mjs](../../scripts/supabase-setup.mjs)
+
+Sets up the Supabase project named in .env.local, end to end, so nobody has
+to click through docs/SETUP_SUPABASE.md §2–§3 by hand. It uses the
+Management API with SUPABASE_ACCESS_TOKEN, so it needs no database password
+and no Docker:
+
+  1. checks the project is up and reads its publishable key into .env.local;
+  2. turns on pg_cron and pg_net (so 0013/0014 schedule their jobs);
+  3. applies supabase/migrations that aren't applied yet, recording each in
+     supabase_migrations.schema_migrations like `supabase db push` does;
+  4. stores the Vault secrets functions_url and notify_webhook_secret;
+  5. configures Auth: 6-digit email codes, the OTP template, the custom
+     access token hook, and Resend as SMTP;
+  6. sets the Edge Function secrets and deploys every function
+     (Supabase CLI with --use-api, so no Docker);
+  7. calls the health function, and on success switches the app to
+     EXPO_PUBLIC_BACKEND=supabase.
+
+  npm run setup:supabase                       show what would happen (reads only)
+  npm run setup:supabase -- --apply            do it (safe to re-run)
+  npm run setup:supabase -- --apply --staff-code VIVAH-OPS-XXXX
+                                               also add a staff access code (stored hashed)
+  npm run setup:supabase -- --super-admin you@example.com
+                                               after signing up as staff: approve yourself as super admin
+
+Secrets are read from .env.local and never printed.
 
 ### scripts/test-features.mjs
 
