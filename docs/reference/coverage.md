@@ -4,7 +4,7 @@
 
 Exported symbols that have no JSDoc yet. The weekly documentation pass (see [the maintenance guide](../handbook/17-documentation-maintenance.md)) works through this list; whoever touches a file should document its exports too.
 
-**492 of 1154 exports documented (43%).** Files without a header comment: 289 of 368.
+**493 of 1155 exports documented (43%).** Files without a header comment: 289 of 368.
 
 | File | Undocumented exports |
 |---|---|

@@ -9,7 +9,7 @@ Every exported symbol in `src/constants/`, file by file. The guide that explains
 - [`brand.ts`](#brandts) (1 exports)
 - [`env.ts`](#envts) (2 exports) · Public configuration from `EXPO_PUBLIC_*` variables (`.env.local`, EAS and Vercel environment variables; see `.env.example`). Expo inlines …
 - [`images.ts`](#imagests) (3 exports)
-- [`theme.ts`](#themets) (12 exports)
+- [`theme.ts`](#themets) (13 exports)
 
 ## brand.ts
 
@@ -190,9 +190,19 @@ GUTTER= 16
 
 Page gutter.
 
+### `shadow`
+
+*function* · [src/constants/theme.ts:148](../../../src/constants/theme.ts#L148)
+
+```ts
+shadow(elevation: number, opacity: number, radiusPx: number, offsetY: number, color = '#251B18'): ViewStyle
+```
+
+Drop shadow for something that floats: elevation on Android, `boxShadow` on the web (shadow* props are deprecated there), shadow* on iOS.
+
 ### `shadows`
 
-*const* · [src/constants/theme.ts:160](../../../src/constants/theme.ts#L160)
+*const* · [src/constants/theme.ts:167](../../../src/constants/theme.ts#L167)
 
 ```ts
 shadows= { … }
@@ -202,7 +212,7 @@ Shadows are reserved for things that genuinely float (sheets, toasts).
 
 ### `type`
 
-*const* · [src/constants/theme.ts:170](../../../src/constants/theme.ts#L170)
+*const* · [src/constants/theme.ts:177](../../../src/constants/theme.ts#L177)
 
 ```ts
 type= { display: { fontFamily: serif.bold, fontSize: 30, lineHeight: 40 }, title: { fontFamily:…
@@ -212,7 +222,7 @@ _No JSDoc yet._
 
 ### `hitSlop`
 
-*const* · [src/constants/theme.ts:181](../../../src/constants/theme.ts#L181)
+*const* · [src/constants/theme.ts:188](../../../src/constants/theme.ts#L188)
 
 ```ts
 hitSlop= { top: 10, bottom: 10, left: 10, right: 10 }
@@ -222,7 +232,7 @@ _No JSDoc yet._
 
 ### `inputReset`
 
-*const* · [src/constants/theme.ts:184](../../../src/constants/theme.ts#L184)
+*const* · [src/constants/theme.ts:191](../../../src/constants/theme.ts#L191)
 
 ```ts
 inputReset: TextStyle
