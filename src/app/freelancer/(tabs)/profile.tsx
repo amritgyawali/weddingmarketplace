@@ -2,7 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Avatar, Card, ChoiceChips, KButton, KField, ListRow, ProgressBar, SectionTitle, StatusPill } from '@/components/kit';
@@ -23,6 +23,7 @@ import { useRoleTheme } from '@/theme/RoleTheme';
 import type { Equipment } from '@/types/platform';
 import { confirm } from '@/utils/confirm';
 import { formatMoney, formatPhone, formatShortDate } from '@/utils/format';
+import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
 
 const LANGUAGES = ['Nepali', 'English', 'Hindi', 'Newari', 'Maithili', 'Bhojpuri', 'Tamang', 'Gurung', 'Tharu', 'Magar'];
 const RADII = [10, 25, 50, 100, 200];

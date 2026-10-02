@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 import { deleteMyAccount, exportMyData } from '@/backend/account';
 import { usesEmailSignIn } from '@/backend/auth';
@@ -8,7 +8,9 @@ import { Card, ChoiceChips, KButton, ListRow, SectionTitle, StackHeader } from '
 import { Text } from '@/components/ui/Text';
 import { Toggle } from '@/components/ui/Toggle';
 import { toast } from '@/components/ui/Toast';
+import { LanguageSwitch } from '@/components/ui/LanguageSwitch';
 import { BRAND } from '@/constants/brand';
+import { usePrefs } from '@/i18n';
 import { logout } from '@/services/auth';
 import { shareText } from '@/services/exporters';
 import { useDb } from '@/store/useDb';
@@ -17,6 +19,7 @@ import { useRoleTheme } from '@/theme/RoleTheme';
 import type { AccountPrefs, AppNotification } from '@/types/platform';
 import { confirm } from '@/utils/confirm';
 import { formatPhone } from '@/utils/format';
+import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
 
 export const DEFAULT_PREFS: AccountPrefs = {
   muted: [],
@@ -53,6 +56,8 @@ export function SettingsScreen() {
   const kinds = KINDS.filter((k) => !k.roles || k.roles.includes(account.role));
 
   const [busy, setBusy] = useState<'export' | 'delete' | null>(null);
+  const calendar = usePrefs((s) => s.calendar);
+  const setCalendar = usePrefs((s) => s.setCalendar);
   const live = usesEmailSignIn();
 
   const exportData = async () => {
@@ -126,11 +131,26 @@ export function SettingsScreen() {
 
         <SectionTitle title="Language & dates" />
         <Card style={{ gap: 10 }}>
-          <ChoiceChips options={['English', 'नेपाली']} selected={[prefs.language === 'ne' ? 'नेपाली' : 'English']} onToggle={(v) => set({ language: v === 'नेपाली' ? 'ne' : 'en' })} />
           <Text size={13} color={t.c.muted}>
-            Show dates in
+            App language
           </Text>
-          <ChoiceChips options={['AD', 'BS (Bikram Sambat)', 'Both']} selected={[prefs.calendar === 'AD' ? 'AD' : prefs.calendar === 'BS' ? 'BS (Bikram Sambat)' : 'Both']} onToggle={(v) => set({ calendar: v === 'AD' ? 'AD' : v === 'Both' ? 'both' : 'BS' })} />
+          <LanguageSwitch onChange={(language) => set({ language })} />
+          <Text size={13} color={t.c.muted}>
+            Calendar
+          </Text>
+          <ChoiceChips
+            options={['Nepali (BS)', 'English (AD)']}
+            selected={[calendar === 'ad' ? 'English (AD)' : 'Nepali (BS)']}
+            onToggle={(v) => {
+              const next = v === 'English (AD)' ? 'ad' : 'bs';
+              setCalendar(next);
+              set({ calendar: next === 'ad' ? 'AD' : 'BS' });
+              toast(next === 'ad' ? 'Dates now show in AD' : 'Dates now show in Bikram Sambat');
+            }}
+          />
+          <Text size={12} color={t.c.muted}>
+            Calendars show the Nepali month with the English date in small type. Dates are saved the same either way.
+          </Text>
         </Card>
 
         <SectionTitle title="Privacy" />

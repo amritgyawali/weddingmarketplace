@@ -4,11 +4,10 @@ import { Pressable, StyleSheet, View } from 'react-native';
 
 import { Text } from '@/components/ui/Text';
 import { colors, GUTTER } from '@/constants/theme';
-import { bsMonthLabel } from '@/data/events';
 import { useCustomerWorkspace } from '@/hooks/useWorkspace';
 import { nextBestAction, planningProgress } from '@/services/planner';
 import { useAccount } from '@/store/useSession';
-import { daysUntil, formatLongDate } from '@/utils/format';
+import { daysUntil, formatDateAlt, formatLongDate } from '@/utils/format';
 
 /**
  * Top of the couple's home: a wine "luxury section" with their names, the
@@ -55,7 +54,7 @@ export function WeddingStrip() {
         <View style={styles.row}>
           <View style={{ flex: 1 }}>
             <Text size={13} color={colors.gold}>
-              {formatLongDate(project.weddingDate)} · {bsMonthLabel(project.weddingDate)}
+              {formatLongDate(project.weddingDate)} · {formatDateAlt(project.weddingDate)}
             </Text>
             <Text serif size={26} weight="bold" color={colors.white} lineHeight={36} numberOfLines={1}>
               {project.title}

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { FlatList, ScrollView, StyleSheet, View } from 'react-native';
+import { FlatList, StyleSheet, View } from 'react-native';
 
 import { staffScreen } from '@/components/persona/StaffGate';
 import { Avatar, Card, ChoiceChips, KeyValue, KField, StackHeader, StatusPill } from '@/components/kit';
@@ -14,6 +14,7 @@ import { useDb } from '@/store/useDb';
 import { useRoleTheme } from '@/theme/RoleTheme';
 import type { FreelancerProfile } from '@/types/platform';
 import { formatMoney } from '@/utils/format';
+import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
 
 /** Crew directory with equipment, travel radius, rates and reliability. */
 function FreelancerDirectory() {

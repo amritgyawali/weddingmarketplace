@@ -2,7 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 
 import { Card, EmptyBlock, KButton } from '@/components/kit';
 import { Text } from '@/components/ui/Text';
@@ -15,6 +15,7 @@ import { useStartChat } from '@/hooks/useChat';
 import { useDb } from '@/store/useDb';
 import { useAccount } from '@/store/useSession';
 import { formatMoney } from '@/utils/format';
+import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
 
 const COL = 176;
 

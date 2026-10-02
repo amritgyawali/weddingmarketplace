@@ -1,7 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { BarChart, Card, ChoiceChips, EmptyBlock, KButton, KField, SectionTitle, Segmented, StatusPill } from '@/components/kit';
@@ -14,6 +14,7 @@ import { useAccount, useSession } from '@/store/useSession';
 import { useRoleTheme } from '@/theme/RoleTheme';
 import type { Account, Payable } from '@/types/platform';
 import { formatMoney, formatMoneyCompact, formatShortDate } from '@/utils/format';
+import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
 
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 const METHODS: { id: NonNullable<Account['payoutMethod']>['kind']; label: string; hint: string }[] = [

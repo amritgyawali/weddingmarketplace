@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 import { Button } from '@/components/ui/Button';
 import { Chip } from '@/components/ui/Chip';
@@ -10,6 +10,7 @@ import { VENUE_TYPES } from '@/data/venues';
 import { DEFAULT_VENUE_FILTERS } from '@/services/api';
 import type { VenueFilters, VenueType } from '@/types';
 import { formatMoneyCompact } from '@/utils/format';
+import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
 
 const SORTS: { id: VenueFilters['sort']; label: string }[] = [
   { id: 'popular', label: 'Popularity' },

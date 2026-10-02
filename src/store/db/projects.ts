@@ -33,6 +33,7 @@ import type {
   TaskStatus,
   TimelineEntry,
 } from '@/types/platform';
+import { quietly } from '@/store/quiet';
 import { addDays, daysUntil, formatMoney, formatShortDate, shortCode, uid } from '@/utils/format';
 
 import { accountById, bookingDates, currentActor, type GetDb, mapBooking, mapProject, now, ownersOf, type SetDb, SYSTEM, today } from './helpers';
@@ -218,7 +219,7 @@ export const projectActions = (set: SetDb, get: GetDb): ProjectActions => ({
       events,
       requirements,
       bookings: [],
-      tasks: generateTasks(weddingDate, input.services, customer.name, coordinator?.name ?? 'Your coordinator'),
+      tasks: generateTasks(weddingDate, input.services, customer.name, coordinator?.name ?? 'Your coordinator', occasion.id),
       timeline: [],
       milestones: [],
       incidents: [],
@@ -533,7 +534,7 @@ export const projectActions = (set: SetDb, get: GetDb): ProjectActions => ({
       get().notify(owner.id, `Booking request: ${project.title}`, `${serviceName(requirement.serviceId)} · ${dates.map((d) => formatShortDate(d)).join(', ')} · ${formatMoney(split.providerPayable)} to you`, `/business/booking/${booking.id}`, 'booking');
     } else {
       // Unclaimed catalogue listing: simulate the provider confirming by phone.
-      setTimeout(() => get().respondToBooking(projectId, booking.id, true, 'Confirmed availability by phone'), 3500);
+      setTimeout(() => quietly(() => get().respondToBooking(projectId, booking.id, true, 'Confirmed availability by phone')), 3500);
     }
     get().log(currentActor(), 'booking.propose', 'booking', booking.id, `${provider.name} → ${project.code}`);
     return booking;
@@ -811,7 +812,7 @@ export const projectActions = (set: SetDb, get: GetDb): ProjectActions => ({
     const project = get().projects.find((p) => p.id === projectId);
     if (!project) return;
     const services = project.requirements.filter((r) => r.status !== 'CANCELLED').map((r) => r.serviceId);
-    const fresh = generateTasks(project.weddingDate, services, project.customerName, project.coordinatorName).filter((t) => !project.tasks.some((x) => x.title === t.title));
+    const fresh = generateTasks(project.weddingDate, services, project.customerName, project.coordinatorName, project.occasion ?? 'wedding').filter((t) => !project.tasks.some((x) => x.title === t.title));
     set((s) => ({ projects: mapProject(s.projects, projectId, (p) => ({ ...p, tasks: [...p.tasks, ...fresh] })) }));
   },
 

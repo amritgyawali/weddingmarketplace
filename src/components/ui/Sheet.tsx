@@ -7,6 +7,7 @@ import { colors, radius } from '@/constants/theme';
 import { useRoleTheme } from '@/theme/RoleTheme';
 
 import { IconButton } from './IconButton';
+import { KeyboardLift } from './Keyboard';
 import { Text } from './Text';
 
 /** Lightweight bottom sheet built on Modal + Reanimated layout animations. */
@@ -29,7 +30,7 @@ export function Sheet({
   return (
     <Modal visible={visible} transparent statusBarTranslucent navigationBarTranslucent animationType="none" onRequestClose={onClose}>
       {visible && (
-        <View style={styles.root}>
+        <KeyboardLift isolated style={styles.root}>
           <Animated.View entering={FadeIn.duration(180)} exiting={FadeOut.duration(160)} style={StyleSheet.absoluteFill}>
             <Pressable style={styles.backdrop} onPress={onClose} accessibilityLabel="Close" />
           </Animated.View>
@@ -40,7 +41,7 @@ export function Sheet({
             <View style={[styles.handle, { backgroundColor: t.c.border }]} />
             {title && (
               <View style={styles.header}>
-                <Text weight="bold" size={18} color={t.c.textStrong}>
+                <Text weight="bold" size={18} color={t.c.textStrong} style={{ flex: 1 }} numberOfLines={2}>
                   {title}
                 </Text>
                 <IconButton icon="close" size={34} iconSize={22} accessibilityLabel="Close" onPress={onClose} color={t.c.textStrong} />
@@ -49,7 +50,7 @@ export function Sheet({
             {children}
             {footer}
           </Animated.View>
-        </View>
+        </KeyboardLift>
       )}
     </Modal>
   );

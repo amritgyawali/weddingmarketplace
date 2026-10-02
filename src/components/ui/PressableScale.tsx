@@ -1,8 +1,6 @@
 import * as Haptics from 'expo-haptics';
+import { useRef } from 'react';
 import { Platform, Pressable, type PressableProps, type StyleProp, type ViewStyle } from 'react-native';
-import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
-
-const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 export interface PressableScaleProps extends Omit<PressableProps, 'style'> {
   style?: StyleProp<ViewStyle>;
@@ -22,40 +20,43 @@ export const triggerHaptic = (kind: 'light' | 'medium' | 'selection' | 'success'
     ).catch(() => {});
 };
 
-/** Pressable that dims briefly while held: the press feedback for every tappable surface. */
+/** Extra touch area around small targets, so a slightly-off tap still lands. */
+const SLOP = { top: 6, bottom: 6, left: 6, right: 6 };
+
+/**
+ * Pressable that dims while held: the press feedback for every tappable
+ * surface. It is a plain `Pressable` (no animated wrapper): an animated
+ * style changing on press-in made Android drop some taps, so buttons needed
+ * several presses. `onPress` fires on release as usual; a second tap within
+ * 350 ms is ignored so a double tap can't submit twice.
+ */
 export function PressableScale({
   activeScale: _activeScale,
   haptic = false,
-  onPressIn,
-  onPressOut,
   onPress,
   style,
   children,
   disabled,
+  hitSlop,
   ...rest
 }: PressableScaleProps) {
-  const dim = useSharedValue(1);
-  const animatedStyle = useAnimatedStyle(() => ({ opacity: dim.get() }));
-
+  const last = useRef(0);
   return (
-    <AnimatedPressable
+    <Pressable
       accessibilityRole="button"
+      accessibilityState={{ disabled: !!disabled }}
       disabled={disabled}
-      onPressIn={(e) => {
-        dim.set(withTiming(0.72, { duration: 60 }));
-        onPressIn?.(e);
-      }}
-      onPressOut={(e) => {
-        dim.set(withTiming(1, { duration: 160 }));
-        onPressOut?.(e);
-      }}
+      hitSlop={hitSlop ?? SLOP}
       onPress={(e) => {
+        const now = Date.now();
+        if (now - last.current < 350) return;
+        last.current = now;
         if (haptic) triggerHaptic(haptic === true ? 'light' : haptic);
         onPress?.(e);
       }}
-      style={[animatedStyle, style, disabled && { opacity: 0.45 }]}
+      style={({ pressed }) => [style, pressed && !disabled && { opacity: 0.7 }, disabled && { opacity: 0.45 }]}
       {...rest}>
       {children}
-    </AnimatedPressable>
+    </Pressable>
   );
 }

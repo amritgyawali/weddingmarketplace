@@ -1,7 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import { useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 
 import { Card, ChoiceChips, KButton, KField, ProgressBar, StatusPill } from '@/components/kit';
 import { Sheet } from '@/components/ui/Sheet';
@@ -16,6 +16,7 @@ import { useDb } from '@/store/useDb';
 import { useRoleTheme } from '@/theme/RoleTheme';
 import type { MatchCandidate, PricingModel, Project, Requirement, ScoreBreakdown } from '@/types/platform';
 import { formatMoney, formatMoneyCompact, formatMoneyRange } from '@/utils/format';
+import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
 
 export function fitColor(score: number, t: ReturnType<typeof useRoleTheme>) {
   return score >= 85 ? t.c.success : score >= 70 ? t.c.info : score >= 55 ? t.c.warning : t.c.danger;

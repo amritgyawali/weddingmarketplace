@@ -1,6 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import { router, useLocalSearchParams } from 'expo-router';
-import { Linking, ScrollView, StyleSheet, useWindowDimensions, View } from 'react-native';
+import { Linking, StyleSheet, useWindowDimensions, View } from 'react-native';
 
 import { ExpandableText, HeroControls, InfoTile, ReviewList, Section, StickyCta } from '@/components/detail/DetailParts';
 import { ImageCarousel } from '@/components/listing/ImageCarousel';
@@ -16,6 +16,7 @@ import { colors, GUTTER, radius } from '@/constants/theme';
 import { useSimilarVenues, useVenue } from '@/hooks/queries';
 import { NotFoundError } from '@/services/api';
 import { formatMoney } from '@/utils/format';
+import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
 
 export default function VenueDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();

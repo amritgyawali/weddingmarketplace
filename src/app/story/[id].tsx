@@ -1,6 +1,6 @@
 import { Image } from 'expo-image';
 import { router, useLocalSearchParams } from 'expo-router';
-import { ScrollView, Share, StyleSheet, useWindowDimensions, View } from 'react-native';
+import { Share, StyleSheet, useWindowDimensions, View } from 'react-native';
 
 import { EmptyState } from '@/components/ui/EmptyState';
 import { IconButton } from '@/components/ui/IconButton';
@@ -10,6 +10,7 @@ import { Text } from '@/components/ui/Text';
 import { photos } from '@/constants/images';
 import { colors, GUTTER } from '@/constants/theme';
 import { useStory } from '@/hooks/queries';
+import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
 
 export default function StoryScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();

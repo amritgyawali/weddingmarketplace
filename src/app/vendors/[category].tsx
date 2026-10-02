@@ -1,6 +1,6 @@
 import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
-import { FlatList, RefreshControl, ScrollView, StyleSheet, View } from 'react-native';
+import { FlatList, RefreshControl, StyleSheet, View } from 'react-native';
 
 import { VendorCard } from '@/components/listing/VendorCard';
 import { Chip } from '@/components/ui/Chip';
@@ -17,9 +17,11 @@ import { ALL_CITIES } from '@/data/cities';
 import { categoriesFor, findCategory } from '@/data/categories';
 import { SERVICES } from '@/data/services';
 import { useExperience } from '@/hooks/useExperience';
+import { useFeatures } from '@/hooks/useFeatures';
 import { useDebounce } from '@/hooks/useDebounce';
 import { useVendors } from '@/hooks/queries';
 import { selectShortlistCount, useAppStore } from '@/store/useAppStore';
+import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
 
 type Sort = 'popular' | 'rating' | 'priceLow' | 'priceHigh';
 const SORTS: { id: Sort; label: string }[] = [
@@ -32,6 +34,7 @@ const SORTS: { id: Sort; label: string }[] = [
 export default function VendorListingScreen() {
   const params = useLocalSearchParams<{ category: string; sub?: string }>();
   const exp = useExperience();
+  const on = useFeatures();
   // Only the services the active occasion lists; a category it doesn't list at all stays browsable from a deep link.
   const category = categoriesFor(exp.occasion?.services ?? SERVICES.map((s) => s.id)).find((c) => c.id === params.category) ?? findCategory(params.category);
   const city = useAppStore((s) => s.city);
@@ -114,7 +117,7 @@ export default function VendorListingScreen() {
           )
         }
       />
-      <GenieFab bottom={24} />
+      {on('couple.help') && <GenieFab bottom={24} />}
 
       <Sheet visible={sortOpen} onClose={() => setSortOpen(false)} title="Sort by">
         <View style={styles.sortList}>

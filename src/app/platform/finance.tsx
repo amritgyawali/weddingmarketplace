@@ -1,6 +1,6 @@
 import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 import { staffScreen } from '@/components/persona/StaffGate';
 import { BarChart, Card, ChoiceChips, EmptyBlock, KButton, KField, KpiCard, ProgressBar, Segmented, StackHeader, StatusPill } from '@/components/kit';
@@ -13,6 +13,7 @@ import { useDb } from '@/store/useDb';
 import { useRoleTheme } from '@/theme/RoleTheme';
 import type { Dispute, RevenueKind } from '@/types/platform';
 import { formatMoney, formatMoneyCompact, formatShortDate, timeAgo } from '@/utils/format';
+import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
 
 type Tab = 'overview' | 'payments' | 'payables' | 'revenue' | 'refunds' | 'disputes';
 

@@ -18,6 +18,7 @@ import { useSearch } from '@/hooks/queries';
 import { useAppStore } from '@/store/useAppStore';
 import type { SearchResult } from '@/types';
 import { formatMoney } from '@/utils/format';
+import { tr } from '@/i18n';
 
 const SECTION_TITLES: Record<SearchResult['kind'], string> = {
   category: 'Categories',
@@ -117,7 +118,7 @@ export default function SearchScreen() {
           value={query}
           onChangeText={setQuery}
           autoFocus
-          placeholder="Search..."
+          placeholder={tr('Search...')}
           placeholderTextColor={colors.placeholder}
           returnKeyType="search"
           onSubmitEditing={() => addRecentSearch(query)}

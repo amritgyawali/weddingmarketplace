@@ -2,7 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
-import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 import { Card, KField, StatusPill } from '@/components/kit';
 import { ScreenHeader } from '@/components/ui/ScreenHeader';
@@ -17,6 +17,7 @@ import { useCustomerWorkspace } from '@/hooks/useWorkspace';
 import { useDb } from '@/store/useDb';
 import { useAccount } from '@/store/useSession';
 import { formatShortDate } from '@/utils/format';
+import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
 
 interface Target {
   providerId: string;
@@ -48,7 +49,7 @@ export default function WriteReviewScreen() {
     return (
       <View style={styles.root}>
         <ScreenHeader title="Write a review" subtitle={`${target.name} · ${serviceName(target.serviceId)}`} />
-        <KeyboardAvoidingView style={{ flex: 1, paddingHorizontal: 16, paddingTop: 12 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+        <View style={{ flex: 1, paddingHorizontal: 16, paddingTop: 12 }}>
           <ReviewComposer
             serviceId={target.serviceId}
             targetName={target.name}
@@ -72,7 +73,7 @@ export default function WriteReviewScreen() {
               router.back();
             }}
           />
-        </KeyboardAvoidingView>
+        </View>
       </View>
     );
   }

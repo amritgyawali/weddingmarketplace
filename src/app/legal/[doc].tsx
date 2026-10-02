@@ -1,6 +1,6 @@
 import { Link, useLocalSearchParams } from 'expo-router';
 import Head from 'expo-router/head';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { ScreenHeader } from '@/components/ui/ScreenHeader';
@@ -10,6 +10,7 @@ import { ENV } from '@/constants/env';
 import { colors, GUTTER } from '@/constants/theme';
 import { isLegalDoc, LEGAL_DOCS, type LegalDocId } from '@/data/legal';
 import { formatLongDate } from '@/utils/format';
+import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
 
 const OTHERS: { id: LegalDocId; label: string }[] = [
   { id: 'terms', label: 'Terms of use' },

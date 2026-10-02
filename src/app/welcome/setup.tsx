@@ -1,7 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
-import { KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { acceptLegal, accountFromMe, completeSignup, roleOf } from '@/backend/account';
@@ -24,6 +24,7 @@ import { useRoleFonts } from '@/theme/fonts';
 import { RoleThemeProvider, useRoleTheme } from '@/theme/RoleTheme';
 import { formatPhone, isNepalMobile } from '@/utils/format';
 import type { Account, PlatformTeam, StaffRole } from '@/types/platform';
+import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
 
 const TEAMS: { team: PlatformTeam; role: StaffRole }[] = [
   { team: 'Wedding Coordination', role: 'coordinator' },
@@ -191,7 +192,7 @@ function SetupForm({ phone, signInEmail }: { phone: string; signInEmail?: string
               : `${t.label} · ${(signInEmail ?? formatPhone(phone))}`
         }
       />
-      <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+      <View style={{ flex: 1 }}>
         <ScrollView contentContainerStyle={{ padding: 18, gap: 16, paddingBottom: insets.bottom + 110 }} keyboardShouldPersistTaps="handled">
           {t.role === 'vendor' && vstep === 0 && (
             <>
@@ -363,7 +364,7 @@ function SetupForm({ phone, signInEmail }: { phone: string; signInEmail?: string
             </View>
           )}
         </View>
-      </KeyboardAvoidingView>
+      </View>
     </View>
   );
 }

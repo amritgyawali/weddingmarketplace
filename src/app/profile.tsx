@@ -1,19 +1,22 @@
 import { Ionicons } from '@expo/vector-icons';
 import { router, type Href } from 'expo-router';
 import type { ComponentProps, ReactNode } from 'react';
-import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { BackButton } from '@/components/ui/IconButton';
+import { LanguageSwitch } from '@/components/ui/LanguageSwitch';
 import { Text } from '@/components/ui/Text';
 import { colors, GUTTER } from '@/constants/theme';
 import { useExperience } from '@/hooks/useExperience';
+import { useFeatures } from '@/hooks/useFeatures';
 import { useCustomerWorkspace } from '@/hooks/useWorkspace';
 import { logout } from '@/services/auth';
 import { selectUnreadCount, useAppStore } from '@/store/useAppStore';
 import { useInbox } from '@/store/useDb';
 import { useAccount } from '@/store/useSession';
 import { confirm } from '@/utils/confirm';
+import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
 
 const ICON = colors.textBody;
 
@@ -38,6 +41,7 @@ export default function ProfileMenuScreen() {
   const has = (m: 'guests' | 'invitations' | 'website') => exp.caps.has(`plan.${m}`);
   const awaitingQuotes = quotes.filter((q) => q.status === 'sent' || q.status === 'viewed').length;
   const unreadNotifications = useInbox(account).filter((n) => !n.read).length;
+  const on = useFeatures();
 
   const icon = (name: IconName) => <Ionicons name={name} size={21} color={ICON} />;
   const sections: { title: string; items: MenuItem[] }[] = [
@@ -45,14 +49,14 @@ export default function ProfileMenuScreen() {
       title: wedding ? 'Your wedding' : `Your ${exp.vocab.noun}`,
       items: [
         { label: wedding ? 'My Wedding' : exp.vocab.planTitle, icon: icon('heart-outline'), href: '/my-wedding', badge: awaitingQuotes },
-        { label: 'Planning tools', icon: icon('construct-outline'), href: '/tools' },
+        ...(on('couple.tools') ? [{ label: 'Planning tools', icon: icon('construct-outline'), href: '/tools' as Href }] : []),
         ...(has('guests') ? [{ label: 'Guests & RSVP', icon: icon('people-outline'), href: '/guests' as Href }] : []),
         { label: 'Budget', icon: icon('wallet-outline'), href: '/budget' },
         { label: 'Checklist', icon: icon('checkbox-outline'), href: '/checklist' },
         ...(has('invitations') ? [{ label: 'Invitations', icon: icon('mail-outline'), href: '/invitations' as Href }] : []),
         ...(has('website') ? [{ label: wedding ? 'Wedding website' : 'Event page', icon: icon('globe-outline'), href: '/website' as Href }] : []),
         { label: 'Contracts', icon: icon('document-lock-outline'), href: '/contracts' },
-        { label: 'Plan another celebration', icon: icon('add-circle-outline'), href: '/celebrate' },
+        ...(on('couple.celebrate') ? [{ label: 'Plan another celebration', icon: icon('add-circle-outline'), href: '/celebrate' as Href }] : []),
       ],
     },
     {
@@ -68,8 +72,8 @@ export default function ProfileMenuScreen() {
     {
       title: 'Help',
       items: [
-        { label: 'Planner packages', icon: icon('clipboard-outline'), href: '/genie' },
-        { label: 'Quick help', icon: icon('chatbubble-ellipses-outline'), href: '/assistant' },
+        ...(wedding && on('tab.customer.genie') ? [{ label: 'Planner packages', icon: icon('clipboard-outline'), href: '/genie' as Href }] : []),
+        ...(on('couple.help') ? [{ label: 'Quick help', icon: icon('chatbubble-ellipses-outline'), href: '/assistant' as Href }] : []),
         { label: 'Contact support', icon: icon('call-outline'), href: { pathname: '/info/[slug]', params: { slug: 'support' } } },
       ],
     },
@@ -149,6 +153,13 @@ export default function ProfileMenuScreen() {
             ))}
           </View>
         ))}
+        <View style={styles.langRow}>
+          <Ionicons name="language-outline" size={21} color={ICON} />
+          <Text size={16} color={colors.text} style={{ flex: 1 }}>
+            Language
+          </Text>
+          <LanguageSwitch compact />
+        </View>
         <Pressable onPress={confirmSignOut} style={styles.logout} accessibilityRole="button">
           <Ionicons name="log-out-outline" size={22} color={colors.danger} />
           <Text size={16} weight="medium" color={colors.danger}>
@@ -162,6 +173,7 @@ export default function ProfileMenuScreen() {
 
 const styles = StyleSheet.create({
   root: { flex: 1, backgroundColor: colors.white },
+  langRow: { flexDirection: 'row', alignItems: 'center', gap: 16, paddingHorizontal: GUTTER - 4, paddingVertical: 14, marginTop: 10, borderTopWidth: StyleSheet.hairlineWidth, borderTopColor: colors.border },
   profile: {
     flexDirection: 'row',
     alignItems: 'center',

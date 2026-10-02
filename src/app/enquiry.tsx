@@ -2,7 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
-import { KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 import Animated, { ZoomIn } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -21,6 +21,7 @@ import { useAppStore } from '@/store/useAppStore';
 import { useDb } from '@/store/useDb';
 import { useAccount } from '@/store/useSession';
 import { formatLongDate } from '@/utils/format';
+import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
 
 const FUNCTIONS = ['Wedding', 'Reception', 'Sangeet', 'Mehendi', 'Engagement', 'Haldi'];
 
@@ -115,7 +116,7 @@ export default function EnquiryScreen() {
   return (
     <View style={styles.root}>
       <ScreenHeader title={kind === 'venue' ? 'Check Availability' : 'Send Enquiry'} />
-      <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+      <View style={{ flex: 1 }}>
         <ScrollView contentContainerStyle={styles.body} keyboardShouldPersistTaps="handled">
           {item && (
             <View style={styles.itemCard}>
@@ -184,7 +185,7 @@ export default function EnquiryScreen() {
         <View style={[styles.footer, { paddingBottom: Math.max(insets.bottom, 14) }]}>
           <Button label="Send Enquiry" onPress={submit} size="lg" loading={!item} />
         </View>
-      </KeyboardAvoidingView>
+      </View>
 
       <Sheet visible={dateOpen} onClose={() => setDateOpen(false)} title="Event date">
         <View style={{ paddingHorizontal: 20, gap: 16 }}>

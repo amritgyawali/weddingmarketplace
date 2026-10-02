@@ -55,6 +55,7 @@ export type ServiceGroupId =
   | 'fashion'
   | 'rituals'
   | 'logistics'
+  | 'vehicles'
   | 'stationery';
 
 export const SERVICE_GROUPS: { id: ServiceGroupId; title: string; subtitle: string; image: PhotoKey; bg: string }[] = [
@@ -67,6 +68,7 @@ export const SERVICE_GROUPS: { id: ServiceGroupId; title: string; subtitle: stri
   { id: 'fashion', title: 'Wear & Jewellery', subtitle: 'Bridal wear, Daura Suruwal, jewellery', image: 'ideaBrideParasol', bg: '#F6E6E5' },
   { id: 'rituals', title: 'Pandit & Rituals', subtitle: 'Purohit, puja samagri', image: 'ideaCeremonyHands', bg: '#F3E7D2' },
   { id: 'logistics', title: 'Transport & Logistics', subtitle: 'Wedding cars, buses, stay, security', image: 'ideaCoupleGardenWalk', bg: '#EDE1D3' },
+  { id: 'vehicles', title: 'Vehicles', subtitle: 'Decorated cars, jeeps, buses, baggi and doli', image: 'venueResortSunset', bg: '#F3E7D2' },
   { id: 'stationery', title: 'Invitations & Gifts', subtitle: 'Cards, e-invites, favours', image: 'virtualPlanningCouple', bg: '#F0E3DE' },
 ];
 
@@ -691,6 +693,90 @@ export const SERVICES: ServiceDef[] = [
     crew: [],
     reviewCriteria: DEFAULT_CRITERIA,
   },
+  // Vehicles (rental fleets and vehicle owners)
+  {
+    id: 'wedding-car',
+    name: 'Decorated Wedding Car',
+    icon: 'car-sport-outline',
+    group: 'vehicles',
+    image: 'ideaCoupleGardenWalk',
+    unit: 'per car',
+    priceRange: [8_000, 45_000],
+    budgetShare: 0.02,
+    styles: ['Decorated sedan', 'Luxury sedan', 'Convertible', 'Electric car', 'Flower decoration'],
+    fields: [
+      { key: 'cars', label: 'Cars', kind: 'number', default: 1, min: 1, max: 20 },
+      { key: 'decoration', label: 'Flower decoration', kind: 'toggle', default: true },
+      { key: 'hours', label: 'Hours', kind: 'number', default: 8, min: 2, max: 24, suffix: 'h' },
+    ],
+    crew: [{ role: 'Driver', default: 1, pay: 2_500 }],
+    reviewCriteria: ['Vehicle condition', 'Decoration', 'Punctuality', 'Driver behaviour'],
+  },
+  {
+    id: 'luxury-car',
+    name: 'Luxury Car & SUV Hire',
+    icon: 'car-outline',
+    group: 'vehicles',
+    image: 'venueResortSunset',
+    unit: 'per day',
+    priceRange: [15_000, 80_000],
+    budgetShare: 0.015,
+    styles: ['Land Cruiser', 'Prado', 'Mercedes', 'BMW', 'Range Rover'],
+    fields: [
+      { key: 'cars', label: 'Cars', kind: 'number', default: 2, min: 1, max: 20 },
+      { key: 'chauffeur', label: 'With chauffeur', kind: 'toggle', default: true },
+    ],
+    crew: [{ role: 'Driver', default: 2, pay: 3_000 }],
+    reviewCriteria: ['Vehicle condition', 'Punctuality', 'Driver behaviour', 'Value for money'],
+  },
+  {
+    id: 'bus-hire',
+    name: 'Bus & Coach Hire (Janti)',
+    icon: 'bus-outline',
+    group: 'vehicles',
+    image: 'venueLawn',
+    unit: 'per day',
+    priceRange: [12_000, 60_000],
+    budgetShare: 0.015,
+    styles: ['Tourist bus', 'Hiace / micro', 'Deluxe coach', 'Sofa bus'],
+    fields: [
+      { key: 'buses', label: 'Buses', kind: 'number', default: 2, min: 1, max: 20 },
+      { key: 'seats', label: 'Seats per bus', kind: 'choice', options: ['15', '25', '35', '45'], default: '35' },
+    ],
+    crew: [{ role: 'Driver', default: 2, pay: 3_000 }],
+    reviewCriteria: ['Vehicle condition', 'Punctuality', 'Driver behaviour', 'Comfort'],
+  },
+  {
+    id: 'jeep-hire',
+    name: 'Jeep & 4x4 Hire',
+    icon: 'speedometer-outline',
+    group: 'vehicles',
+    image: 'venueCliffside',
+    unit: 'per day',
+    priceRange: [8_000, 25_000],
+    budgetShare: 0.01,
+    styles: ['Scorpio', 'Bolero', 'Thar', 'Hilux'],
+    fields: [{ key: 'jeeps', label: 'Jeeps', kind: 'number', default: 2, min: 1, max: 20 }],
+    crew: [{ role: 'Driver', default: 2, pay: 2_500 }],
+    reviewCriteria: ['Vehicle condition', 'Punctuality', 'Driver behaviour'],
+  },
+  {
+    id: 'baggi',
+    name: 'Baggi, Doli & Vintage Car',
+    icon: 'ribbon-outline',
+    group: 'vehicles',
+    image: 'ideaBrideParasol',
+    unit: 'per event',
+    priceRange: [20_000, 150_000],
+    budgetShare: 0.01,
+    styles: ['Horse carriage (baggi)', 'Traditional doli', 'Vintage car', 'Open jeep'],
+    fields: [
+      { key: 'kind', label: 'Ride', kind: 'choice', options: ['Baggi', 'Doli', 'Vintage car', 'Open jeep'], default: 'Baggi' },
+      { key: 'route_km', label: 'Procession route', kind: 'number', default: 2, min: 1, max: 20, suffix: 'km' },
+    ],
+    crew: [{ role: 'Driver', default: 1, pay: 3_000 }],
+    reviewCriteria: ['Decoration', 'Punctuality', 'Handling', 'Value for money'],
+  },
 ];
 
 export const SERVICE_BY_ID: Record<string, ServiceDef> = Object.fromEntries(SERVICES.map((s) => [s.id, s]));
@@ -716,6 +802,8 @@ export function crewPlanFor(serviceId: string, details: Record<string, string | 
       if (c.role === 'Coordinator' && typeof details.coordinators === 'number') count = details.coordinators;
       if (c.role === 'Event Staff' && typeof details.staff === 'number') count = details.staff;
       if (c.role === 'Driver' && typeof details.cars === 'number') count = Math.max(1, details.cars + Number(details.buses ?? 0));
+      else if (c.role === 'Driver' && typeof details.buses === 'number') count = Math.max(1, details.buses);
+      else if (c.role === 'Driver' && typeof details.jeeps === 'number') count = Math.max(1, details.jeeps);
       if (c.role === 'Musician' && typeof details.players === 'number') count = details.players;
       return { role: c.role, count, pay: c.pay, equipment: c.equipment ?? [] };
     })

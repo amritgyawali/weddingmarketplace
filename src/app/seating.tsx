@@ -1,6 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useState } from 'react';
-import { type LayoutChangeEvent, Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { type LayoutChangeEvent, Pressable, StyleSheet, View } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 
 import { Avatar, Card, ChoiceChips, EmptyBlock, KButton, KField, SectionTitle } from '@/components/kit';
@@ -17,6 +17,7 @@ import { useRoleTheme } from '@/theme/RoleTheme';
 import type { Guest, Project, SeatingElement, SeatingLayout } from '@/types/platform';
 import { confirm } from '@/utils/confirm';
 import { uid } from '@/utils/format';
+import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
 
 const W = 1000;
 const H = 700;

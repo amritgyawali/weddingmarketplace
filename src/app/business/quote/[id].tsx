@@ -1,6 +1,6 @@
 import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
-import { ScrollView, View } from 'react-native';
+import { View } from 'react-native';
 
 import { EmptyBlock, KButton, StackHeader, StatusPill } from '@/components/kit';
 import { toast } from '@/components/ui/Toast';
@@ -13,6 +13,7 @@ import { useAccount } from '@/store/useSession';
 import { useRoleTheme } from '@/theme/RoleTheme';
 import type { Quotation } from '@/types/platform';
 import { addDays, today, uid } from '@/utils/format';
+import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
 
 /** Create (id = "new", with ?leadId) or edit a vendor quotation. Sent quotes are revised as new versions. */
 export default function VendorQuoteScreen() {

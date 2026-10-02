@@ -2,10 +2,11 @@ import { Tabs } from 'expo-router';
 
 import { TabBar } from '@/components/navigation/TabBar';
 import { colors } from '@/constants/theme';
+import { keyboardScreenLayout } from '@/components/ui/Keyboard';
 
 export default function TabsLayout() {
   return (
-    <Tabs
+    <Tabs screenLayout={keyboardScreenLayout}
       tabBar={(props) => <TabBar {...props} />}
       screenOptions={{
         headerShown: false,

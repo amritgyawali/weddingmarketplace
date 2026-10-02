@@ -1,9 +1,10 @@
 import { Ionicons } from '@expo/vector-icons';
 import type { ComponentProps, ReactNode } from 'react';
-import { ActivityIndicator, StyleSheet, View, type StyleProp, type ViewStyle } from 'react-native';
+import { StyleSheet, View, type StyleProp, type ViewStyle } from 'react-native';
 
 import { colors, radius } from '@/constants/theme';
 
+import { Loader } from './Loader';
 import { PressableScale } from './PressableScale';
 import { Text } from './Text';
 
@@ -64,7 +65,7 @@ export function Button({
         style,
       ]}>
       {loading ? (
-        <ActivityIndicator color={p.fg} />
+        <Loader size={7} color={p.fg} />
       ) : (
         <View style={styles.row}>
           {leading}

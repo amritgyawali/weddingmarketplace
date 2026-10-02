@@ -1,6 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
-import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 
 import { Avatar, BarChart, Card, KButton, KpiCard, RoleHeader, SectionTitle, StatusPill } from '@/components/kit';
 import { Text } from '@/components/ui/Text';
@@ -8,7 +8,6 @@ import { toast } from '@/components/ui/Toast';
 import { RiskList } from '@/components/work/Collab';
 import { STATUS_LABEL } from '@/components/work/Pipeline';
 import { TodayFocus } from '@/components/work/TodayFocus';
-import { bsMonthLabel } from '@/data/events';
 import { serviceName } from '@/data/services';
 import { useExperience } from '@/hooks/useExperience';
 import { useLayout } from '@/hooks/useLayout';
@@ -20,7 +19,8 @@ import { useDb } from '@/store/useDb';
 import { useAccount } from '@/store/useSession';
 import { useRoleTheme } from '@/theme/RoleTheme';
 import type { Project } from '@/types/platform';
-import { addDays, daysUntil, formatLongDate, formatMoneyCompact, formatShortDate, today } from '@/utils/format';
+import { addDays, daysUntil, formatDateAlt, formatLongDate, formatMoneyCompact, formatShortDate, today } from '@/utils/format';
+import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
 
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
@@ -86,7 +86,7 @@ export default function PlatformToday() {
 
   return (
     <View style={{ flex: 1, backgroundColor: t.c.bg }}>
-      <RoleHeader eyebrow={`${formatLongDate(now)} · ${bsMonthLabel(now)}`} title={`Namaste, ${account.name.split(' ')[0]}`} subtitle={`${account.team ?? 'Operations'} · ${active.length} active projects`} />
+      <RoleHeader eyebrow={`${formatLongDate(now)} · ${formatDateAlt(now)}`} title={`Namaste, ${account.name.split(' ')[0]}`} subtitle={`${account.team ?? 'Operations'} · ${active.length} active projects`} />
       <ScrollView contentContainerStyle={{ padding: 14, gap: 16, paddingBottom: 40 }}>
         <TodayFocus />
         <View>

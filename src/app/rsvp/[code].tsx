@@ -2,7 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
-import { KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Card, ChoiceChips, KButton, KField } from '@/components/kit';
@@ -10,11 +10,11 @@ import { triggerHaptic } from '@/components/ui/PressableScale';
 import { Text } from '@/components/ui/Text';
 import { photos } from '@/constants/images';
 import { colors } from '@/constants/theme';
-import { bsMonthLabel } from '@/data/events';
 import { exportCalendar } from '@/services/exporters';
 import { useDb } from '@/store/useDb';
 import type { RsvpStatus } from '@/types/platform';
-import { formatClock, formatLongDate } from '@/utils/format';
+import { formatClock, formatDateAlt, formatLongDate } from '@/utils/format';
+import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
 
 const DIETARY = ['Vegetarian', 'Non-veg', 'Vegan', 'Jain', 'No alcohol', 'Allergies'];
 const CHOICES: { id: RsvpStatus; label: string }[] = [
@@ -109,7 +109,7 @@ export default function RsvpScreen() {
   }
 
   return (
-    <KeyboardAvoidingView style={styles.root} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+    <View style={styles.root}>
       <ScrollView contentContainerStyle={{ paddingBottom: insets.bottom + 40 }} keyboardShouldPersistTaps="handled">
         <View>
           <Image source={photos[site?.cover ?? 'ideaCoupleGardenWalk']} style={{ width: '100%', height: 220 }} contentFit="cover" />
@@ -121,7 +121,7 @@ export default function RsvpScreen() {
               {site?.headline ?? project.title}
             </Text>
             <Text size={14} color="rgba(255,255,255,0.9)">
-              {formatLongDate(project.weddingDate)} · {bsMonthLabel(project.weddingDate)} · {project.city}
+              {formatLongDate(project.weddingDate)} · {formatDateAlt(project.weddingDate)} · {project.city}
             </Text>
           </View>
         </View>
@@ -211,7 +211,7 @@ export default function RsvpScreen() {
           )}
         </View>
       </ScrollView>
-    </KeyboardAvoidingView>
+    </View>
   );
 }
 

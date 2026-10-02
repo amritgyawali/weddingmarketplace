@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { ScrollView, View } from 'react-native';
+import { View } from 'react-native';
 
 import { Card, EmptyBlock, KButton, ListRow, RoleHeader, SectionTitle, StatusPill } from '@/components/kit';
 import { Text } from '@/components/ui/Text';
@@ -12,6 +12,7 @@ import { exportCalendar } from '@/services/exporters';
 import { useAccount } from '@/store/useSession';
 import { useRoleTheme } from '@/theme/RoleTheme';
 import { daysUntil, formatLongDate } from '@/utils/format';
+import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
 
 /** Availability calendar that feeds the matching engine, plus bookings by day. */
 export default function VendorCalendar() {

@@ -1,6 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useState } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 import { Card, ChoiceChips, EmptyBlock, KButton, KField, ProgressBar, SectionTitle } from '@/components/kit';
 import { ToolScreen, toolStyles } from '@/components/planner/ToolScreen';
@@ -16,6 +16,7 @@ import { useRoleTheme } from '@/theme/RoleTheme';
 import type { BudgetLine, Project } from '@/types/platform';
 import { confirm } from '@/utils/confirm';
 import { formatMoney, formatMoneyCompact, parseMoney } from '@/utils/format';
+import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
 
 const money = (v: string) => {
   const n = parseMoney(v);

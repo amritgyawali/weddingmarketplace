@@ -15,6 +15,7 @@ import {
 import Animated, { FadeIn, FadeInUp, useAnimatedStyle, withTiming } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { LanguageSwitch } from '@/components/ui/LanguageSwitch';
 import { PressableScale } from '@/components/ui/PressableScale';
 import { Text } from '@/components/ui/Text';
 import { BRAND } from '@/constants/brand';
@@ -119,6 +120,10 @@ export default function WelcomeCarousel() {
         </Text>
       </View>
 
+      <View style={[styles.lang, { top: insets.top + 16 }]}>
+        <LanguageSwitch compact />
+      </View>
+
       <View style={[styles.bottom, { paddingBottom: insets.bottom + 18 }]}>
         <Animated.View key={index} entering={FadeIn.duration(450)}>
           <Text serif size={24} lineHeight={34} weight="bold" color={colors.white} style={styles.headline}>
@@ -164,6 +169,7 @@ export default function WelcomeCarousel() {
 
 const styles = StyleSheet.create({
   root: { flex: 1, backgroundColor: colors.black },
+  lang: { position: 'absolute', right: 16, zIndex: 5 },
   top: {
     position: 'absolute',
     left: 0,

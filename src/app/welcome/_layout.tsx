@@ -2,6 +2,7 @@ import { Stack } from 'expo-router';
 import { Platform } from 'react-native';
 
 import { useRoleFonts } from '@/theme/fonts';
+import { keyboardScreenLayout } from '@/components/ui/Keyboard';
 
 export default function WelcomeLayout() {
   // Warm up every app's typeface while the carousel plays; the role picker and
@@ -9,7 +10,7 @@ export default function WelcomeLayout() {
   useRoleFonts('all');
 
   return (
-    <Stack screenOptions={{ headerShown: false, animation: Platform.OS === 'android' ? 'slide_from_right' : 'default' }}>
+    <Stack screenLayout={keyboardScreenLayout} screenOptions={{ headerShown: false, animation: Platform.OS === 'android' ? 'slide_from_right' : 'default' }}>
       <Stack.Screen name="index" options={{ contentStyle: { backgroundColor: '#000' } }} />
       <Stack.Screen name="role" />
       <Stack.Screen name="login" />

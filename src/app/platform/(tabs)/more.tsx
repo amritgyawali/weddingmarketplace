@@ -1,5 +1,5 @@
 import { router, type Href } from 'expo-router';
-import { ScrollView, View } from 'react-native';
+import { View } from 'react-native';
 
 import { Avatar, Card, KButton, ListRow, RoleHeader, SectionTitle, StatusPill, type IconName } from '@/components/kit';
 import { Text } from '@/components/ui/Text';
@@ -13,6 +13,7 @@ import { useAccount } from '@/store/useSession';
 import { useRoleTheme } from '@/theme/RoleTheme';
 import { confirm } from '@/utils/confirm';
 import { formatMoney, formatPhone } from '@/utils/format';
+import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
 
 export default function PlatformMore() {
   const t = useRoleTheme();
@@ -32,6 +33,14 @@ export default function PlatformMore() {
   const openDisputes = disputes.filter((d) => d.status === 'OPEN' || d.status === 'INVESTIGATING').length;
 
   const sections: { title: string; rows: { icon: IconName; title: string; subtitle: string; href: Href; badge?: number }[] }[] = [
+    {
+      title: 'Super admin',
+      rows: [
+        { icon: 'key-outline', title: 'Super admin console', subtitle: 'Edit or delete anything, switch features on and off, rewrite any text', href: '/platform/admin' },
+        { icon: 'people-circle-outline', title: 'All accounts', subtitle: 'Couples, businesses, freelancers and staff: edit, sign in as, delete', href: '/platform/admin/users' },
+        { icon: 'toggle-outline', title: 'Features', subtitle: 'Show or hide tabs, tools, services and sections for everyone', href: '/platform/admin/features' },
+      ],
+    },
     {
       title: 'Operations',
       rows: [

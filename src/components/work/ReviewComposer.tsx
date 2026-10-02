@@ -1,13 +1,14 @@
 import * as ImagePicker from 'expo-image-picker';
 import { Image } from 'expo-image';
 import { useState } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 import { KButton, KField } from '@/components/kit';
 import { StarInput } from '@/components/ui/Rating';
 import { Text } from '@/components/ui/Text';
 import { findService } from '@/data/services';
 import { useRoleTheme } from '@/theme/RoleTheme';
+import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
 
 export const FREELANCER_CRITERIA = ['Skill', 'Punctuality', 'Behaviour', 'Reliability'];
 

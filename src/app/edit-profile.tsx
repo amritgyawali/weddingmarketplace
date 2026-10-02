@@ -1,7 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useShallow } from 'zustand/react/shallow';
 
@@ -17,6 +17,7 @@ import { colors, GUTTER, radius } from '@/constants/theme';
 import { useAppStore } from '@/store/useAppStore';
 import type { Role } from '@/types';
 import { formatLongDate } from '@/utils/format';
+import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
 
 export default function EditProfileScreen() {
   const insets = useSafeAreaInsets();
@@ -55,7 +56,7 @@ export default function EditProfileScreen() {
   return (
     <View style={styles.root}>
       <ScreenHeader title="My Profile" />
-      <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+      <View style={{ flex: 1 }}>
         <ScrollView contentContainerStyle={styles.body} keyboardShouldPersistTaps="handled">
           <View style={{ gap: 10 }}>
             <Text size={13} weight="semibold" color={colors.textBody}>
@@ -111,7 +112,7 @@ export default function EditProfileScreen() {
         <View style={[styles.footer, { paddingBottom: Math.max(insets.bottom, 14) }]}>
           <Button label="Save changes" size="lg" onPress={save} />
         </View>
-      </KeyboardAvoidingView>
+      </View>
 
       <Sheet visible={dateOpen} onClose={() => setDateOpen(false)} title="Wedding date">
         <View style={{ paddingHorizontal: 20, gap: 16 }}>

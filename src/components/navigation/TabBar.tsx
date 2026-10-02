@@ -7,6 +7,9 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { triggerHaptic } from '@/components/ui/PressableScale';
 import { Text } from '@/components/ui/Text';
 import { colors } from '@/constants/theme';
+import { serviceFeature, tabFeature } from '@/data/features';
+import { useExperience } from '@/hooks/useExperience';
+import { useFeatures } from '@/hooks/useFeatures';
 
 type IconName = ComponentProps<typeof Ionicons>['name'];
 
@@ -18,15 +21,34 @@ const TABS: Record<string, { label: string; icon: IconName; active: IconName }> 
   genie: { label: 'Planner', icon: 'clipboard-outline', active: 'clipboard' },
 };
 
-/** Couple-app bottom bar: outline icons, filled + crimson when active, short sentence-case labels. */
+/** Tabs that only make sense while planning a wedding (wedding photos, wedding planner packages). */
+const WEDDING_TABS = new Set(['ideas', 'genie']);
+
+/**
+ * Couple-app bottom bar: outline icons, filled + crimson when active, short
+ * sentence-case labels. Follows the celebration (a pasni has no wedding ideas
+ * or planner packages) and the super admin's feature switches.
+ */
 export function TabBar({ state, navigation }: BottomTabBarProps) {
   const insets = useSafeAreaInsets();
+  const exp = useExperience();
+  const on = useFeatures();
+  const occasion = exp.occasion?.id ?? 'wedding';
+  const weddingLike = occasion === 'wedding' || occasion === 'engagement';
+  const services = exp.occasion?.services;
+  const shown = (name: string) => {
+    if (name === 'index') return true;
+    if (!on(tabFeature('customer', name))) return false;
+    if (WEDDING_TABS.has(name) && !weddingLike) return false;
+    if (name === 'venues' && ((services && !services.includes('venue')) || !on(serviceFeature('venue')))) return false;
+    return true;
+  };
 
   return (
     <View style={[styles.bar, { paddingBottom: Math.max(insets.bottom, 8) }]}>
       {state.routes.map((route, i) => {
         const meta = TABS[route.name];
-        if (!meta) return null;
+        if (!meta || !shown(route.name)) return null;
         const active = state.index === i;
         const tint = active ? colors.primary : colors.textMuted;
         return (
@@ -35,7 +57,7 @@ export function TabBar({ state, navigation }: BottomTabBarProps) {
             accessibilityRole="tab"
             accessibilityState={{ selected: active }}
             accessibilityLabel={meta.label}
-            style={styles.item}
+            style={({ pressed }) => [styles.item, pressed && { opacity: 0.6 }]}
             onPress={() => {
               const event = navigation.emit({ type: 'tabPress', target: route.key, canPreventDefault: true });
               if (!active && !event.defaultPrevented) {
@@ -44,7 +66,7 @@ export function TabBar({ state, navigation }: BottomTabBarProps) {
               }
             }}>
             <Ionicons name={active ? meta.active : meta.icon} size={23} color={tint} />
-            <Text size={11} weight={active ? 'semibold' : 'regular'} color={tint} lineHeight={14}>
+            <Text size={11} weight={active ? 'semibold' : 'regular'} color={tint} lineHeight={15} numberOfLines={1}>
               {meta.label}
             </Text>
           </Pressable>
@@ -62,5 +84,5 @@ const styles = StyleSheet.create({
     borderTopColor: colors.border,
     paddingTop: 7,
   },
-  item: { flex: 1, alignItems: 'center', gap: 2 },
+  item: { flex: 1, alignItems: 'center', gap: 2, minHeight: 44, justifyContent: 'center' },
 });

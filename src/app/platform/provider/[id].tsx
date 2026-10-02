@@ -1,6 +1,6 @@
 import { Image } from 'expo-image';
 import { router, useLocalSearchParams } from 'expo-router';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 import { Card, EmptyBlock, KButton, KeyValue, ProgressBar, SectionTitle, StackHeader, StatusPill } from '@/components/kit';
 import { Text } from '@/components/ui/Text';
@@ -13,6 +13,7 @@ import { useDb } from '@/store/useDb';
 import { useSession } from '@/store/useSession';
 import { useRoleTheme } from '@/theme/RoleTheme';
 import { formatMoney, formatShortDate } from '@/utils/format';
+import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
 
 /** Coordinator view of a provider: public profile + internal reliability signals. */
 export default function PlatformProvider() {

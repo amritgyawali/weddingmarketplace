@@ -1,7 +1,8 @@
 import { Ionicons } from '@expo/vector-icons';
 import type { ComponentProps, ReactNode } from 'react';
-import { ActivityIndicator, Pressable, StyleSheet, View, type StyleProp, type ViewStyle } from 'react-native';
+import { Pressable, StyleSheet, View, type StyleProp, type ViewStyle } from 'react-native';
 
+import { Loader } from '@/components/ui/Loader';
 import { PressableScale } from '@/components/ui/PressableScale';
 import { Text } from '@/components/ui/Text';
 import { statusLabel, statusTone } from '@/theme/roles';
@@ -85,11 +86,11 @@ export function KButton({
         style,
       ]}>
       {loading ? (
-        <ActivityIndicator color={p.fg} />
+        <Loader size={7} color={p.fg} />
       ) : (
         <>
           {icon && <Ionicons name={icon === 'sparkles-outline' || icon === 'sparkles' ? 'add' : icon} size={size === 'sm' ? 16 : 18} color={p.fg} />}
-          <Text size={size === 'sm' ? 14 : 15} weight="semibold" color={p.fg}>
+          <Text size={size === 'sm' ? 14 : 15} weight="semibold" color={p.fg} numberOfLines={1} style={{ flexShrink: 1 }}>
             {label}
           </Text>
         </>
@@ -143,11 +144,11 @@ export function SectionTitle({ title, action, onAction }: { title: string; actio
   const t = useRoleTheme();
   return (
     <View style={styles.sectionTitle}>
-      <Text size={16} weight="bold" color={t.c.textStrong}>
+      <Text size={16} weight="bold" color={t.c.textStrong} style={{ flex: 1 }}>
         {title}
       </Text>
       {action && onAction && (
-        <Pressable onPress={onAction} hitSlop={10}>
+        <Pressable onPress={onAction} hitSlop={12} style={({ pressed }) => pressed && { opacity: 0.6 }}>
           <Text size={14} weight="medium" color={t.c.primary}>
             {action}
           </Text>
@@ -185,7 +186,7 @@ export function KeyValue({ label, value, strong }: { label: string; value: strin
   const t = useRoleTheme();
   return (
     <View style={styles.kv}>
-      <Text size={14} color={t.c.muted}>
+      <Text size={14} color={t.c.muted} style={{ flexShrink: 1 }}>
         {label}
       </Text>
       <Text size={strong ? 16 : 14} weight={strong ? 'bold' : 'semibold'} color={t.c.textStrong} style={{ flexShrink: 1, textAlign: 'right' }}>
@@ -198,7 +199,7 @@ export function KeyValue({ label, value, strong }: { label: string; value: strin
 const styles = StyleSheet.create({
   button: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6, paddingHorizontal: 16, borderWidth: 1 },
   pill: { flexDirection: 'row', alignItems: 'center', alignSelf: 'flex-start', borderRadius: 4, paddingHorizontal: 6, paddingVertical: 1 },
-  sectionTitle: { flexDirection: 'row', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 10 },
+  sectionTitle: { flexDirection: 'row', alignItems: 'baseline', justifyContent: 'space-between', gap: 12, marginBottom: 10 },
   empty: { alignItems: 'center', padding: 28, gap: 6 },
   kv: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', gap: 12, paddingVertical: 4 },
 });

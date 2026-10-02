@@ -1,5 +1,5 @@
 import { router, useLocalSearchParams } from 'expo-router';
-import { ScrollView, View } from 'react-native';
+import { View } from 'react-native';
 
 import { EmptyBlock, KButton, StackHeader, StatusPill } from '@/components/kit';
 import { toast } from '@/components/ui/Toast';
@@ -7,6 +7,7 @@ import { QuoteDocument } from '@/components/work/QuoteDocument';
 import { QuoteEditor } from '@/components/work/QuoteEditor';
 import { useDb } from '@/store/useDb';
 import { useRoleTheme } from '@/theme/RoleTheme';
+import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
 
 /**
  * Package quote builder (id = quote id, or "new" with ?projectId). Vendor

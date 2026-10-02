@@ -1,6 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useState } from 'react';
-import { KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, TextInput, View } from 'react-native';
+import { Pressable, StyleSheet, TextInput, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Card, ChoiceChips, Divider, KButton, KeyValue, KField } from '@/components/kit';
@@ -15,6 +15,8 @@ import { quoteLineForBooking } from '@/store/db/quotes';
 import { useRoleTheme } from '@/theme/RoleTheme';
 import type { PricingModel, Project, QuoteItem, Quotation } from '@/types/platform';
 import { addDays, formatLongDate, formatMoney, today, uid } from '@/utils/format';
+import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
+import { tr } from '@/i18n';
 
 import { QuoteDocument } from './QuoteDocument';
 
@@ -31,12 +33,12 @@ function ItemEditor({ item, internal, onChange, onRemove }: { item: QuoteItem; i
   return (
     <View style={[styles.itemCard, { borderColor: t.c.border }]}>
       <View style={styles.itemTop}>
-        <TextInput value={item.title} onChangeText={(title) => onChange({ ...item, title })} placeholder="Item / service" placeholderTextColor={t.c.subtle} style={[styles.titleInput, inputReset, { color: t.c.textStrong, fontFamily: t.fonts.semibold }]} />
+        <TextInput value={item.title} onChangeText={(title) => onChange({ ...item, title })} placeholder={tr('Item / service')} placeholderTextColor={t.c.subtle} style={[styles.titleInput, inputReset, { color: t.c.textStrong, fontFamily: t.fonts.semibold }]} />
         <Pressable onPress={onRemove} hitSlop={10} accessibilityLabel="Remove item">
           <Ionicons name="trash-outline" size={18} color={t.c.danger} />
         </Pressable>
       </View>
-      <TextInput value={item.description ?? ''} onChangeText={(description) => onChange({ ...item, description })} placeholder="What's included (optional)" placeholderTextColor={t.c.subtle} style={[inputReset, { color: t.c.text, fontFamily: t.fonts.regular, fontSize: 13 }]} />
+      <TextInput value={item.description ?? ''} onChangeText={(description) => onChange({ ...item, description })} placeholder={tr("What's included (optional)")} placeholderTextColor={t.c.subtle} style={[inputReset, { color: t.c.text, fontFamily: t.fonts.regular, fontSize: 13 }]} />
       {!!item.providerName && (
         <Text size={11} color={t.c.muted}>
           {serviceName(item.serviceId ?? '')} · {item.providerName}
@@ -173,7 +175,7 @@ export function QuoteEditor({
   }
 
   return (
-    <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+    <View style={{ flex: 1 }}>
       <ScrollView contentContainerStyle={{ padding: 16, gap: 14, paddingBottom: 130 }} keyboardShouldPersistTaps="handled">
         <Card style={{ gap: 4 }}>
           <Text size={12} weight="medium" color={t.c.muted}>
@@ -299,7 +301,7 @@ export function QuoteEditor({
         <KButton label="Save draft" variant="secondary" onPress={() => submit(false)} style={{ flex: 1 }} disabled={locked} />
         <KButton label="Preview & send" icon="eye-outline" onPress={() => setPreview(true)} style={{ flex: 1.4 }} />
       </View>
-    </KeyboardAvoidingView>
+    </View>
   );
 }
 

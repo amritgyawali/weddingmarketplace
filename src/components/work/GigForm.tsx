@@ -1,6 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useState } from 'react';
-import { KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { ChoiceChips, KButton, KField } from '@/components/kit';
@@ -12,6 +12,7 @@ import { freelancerNet } from '@/services/pricing';
 import { useRoleTheme } from '@/theme/RoleTheme';
 import type { Gig, Project } from '@/types/platform';
 import { addDays, formatLongDate, formatMoney, today } from '@/utils/format';
+import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
 
 export type GigDraft = Omit<Gig, 'id' | 'createdAt' | 'status' | 'applications' | 'postedById' | 'postedByName' | 'postedByKind'>;
 
@@ -74,7 +75,7 @@ export function GigForm({ projects, defaultCity, initialProjectId, onSubmit }: {
   };
 
   return (
-    <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+    <View style={{ flex: 1 }}>
       <ScrollView contentContainerStyle={{ padding: 16, gap: 16, paddingBottom: 120 }} keyboardShouldPersistTaps="handled">
         <KField label="Gig title" placeholder="e.g. Second photographer for the reception" value={title} onChangeText={setTitle} error={errors.title} />
         <View style={{ gap: 6 }}>
@@ -190,7 +191,7 @@ export function GigForm({ projects, defaultCity, initialProjectId, onSubmit }: {
           <KButton label="Done" onPress={() => setDateOpen(false)} disabled={!date} />
         </View>
       </Sheet>
-    </KeyboardAvoidingView>
+    </View>
   );
 }
 

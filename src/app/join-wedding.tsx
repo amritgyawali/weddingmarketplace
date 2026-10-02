@@ -1,7 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { KeyboardAvoidingView, Platform, StyleSheet, TextInput, View } from 'react-native';
+import { StyleSheet, TextInput, View } from 'react-native';
 import Animated, { ZoomIn } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -84,7 +84,7 @@ export default function JoinWeddingScreen() {
   return (
     <View style={styles.root}>
       <ScreenHeader title="Join a Wedding" />
-      <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+      <View style={{ flex: 1 }}>
         <View style={styles.body}>
           <Text serif size={24} weight="bold" color={colors.heading} lineHeight={34}>
             Have an invite code?
@@ -121,7 +121,7 @@ export default function JoinWeddingScreen() {
         <View style={[styles.footer, { paddingBottom: Math.max(insets.bottom, 14) }]}>
           <Button label="Join Wedding" size="lg" onPress={submit} disabled={code.trim().length < 6} />
         </View>
-      </KeyboardAvoidingView>
+      </View>
     </View>
   );
 }

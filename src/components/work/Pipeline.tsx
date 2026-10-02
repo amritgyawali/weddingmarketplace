@@ -1,9 +1,10 @@
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 import { Text } from '@/components/ui/Text';
 import { useRoleTheme } from '@/theme/RoleTheme';
 import type { Project, ProjectStatus } from '@/types/platform';
 import { formatShortDate } from '@/utils/format';
+import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
 
 /** Happy-path order of the project pipeline. */
 export const PIPELINE: ProjectStatus[] = [

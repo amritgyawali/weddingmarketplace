@@ -214,15 +214,78 @@ const TASK_TEMPLATES: TaskTemplate[] = [
   { title: 'Review your vendors', daysBefore: -10, category: 'Reviews', assignee: 'customer' },
 ];
 
-/** Personalised checklist; overdue templates are compressed into the remaining time. */
-export function generateTasks(mainDate: string, services: string[], customerName: string, coordinatorName = 'Your coordinator'): ProjectTask[] {
+/**
+ * Checklist for every other celebration (pasni, bratabandha, birthday,
+ * anniversary, corporate…): shorter lead times and no bride, groom or janti.
+ */
+const CELEBRATION_TEMPLATES: TaskTemplate[] = [
+  { title: 'Fix the date and time (sait) with your pandit', daysBefore: 60, category: 'Rituals', assignee: 'family', service: 'pandit', priority: 'high' },
+  { title: 'Agree the budget with the family', daysBefore: 55, category: 'Budget', assignee: 'customer', priority: 'high' },
+  { title: 'Draft the guest list', daysBefore: 50, category: 'Guests', assignee: 'customer' },
+  { title: 'Visit and book the venue', daysBefore: 45, category: 'Venue', assignee: 'coordinator', service: 'venue', priority: 'high' },
+  { title: 'Book the photographer', daysBefore: 40, category: 'Photo & video', assignee: 'coordinator', service: 'photography', priority: 'high' },
+  { title: 'Book videography', daysBefore: 38, category: 'Photo & video', assignee: 'coordinator', service: 'videography' },
+  { title: 'Choose the caterer and the menu', daysBefore: 35, category: 'Food', assignee: 'coordinator', service: 'catering', priority: 'high' },
+  { title: 'Approve the decoration', daysBefore: 25, category: 'Decor', assignee: 'customer', service: 'decoration' },
+  { title: 'Book Panche Baja', daysBefore: 25, category: 'Music', assignee: 'coordinator', service: 'panche-baja' },
+  { title: 'Book the DJ or music', daysBefore: 25, category: 'Music', assignee: 'customer', service: 'dj' },
+  { title: 'Approve the invitation card', daysBefore: 25, category: 'Invitations', assignee: 'customer', service: 'invitation' },
+  { title: 'Send invitations and e-invites', daysBefore: 20, category: 'Invitations', assignee: 'customer', priority: 'high' },
+  { title: 'Book vehicles for family and guests', daysBefore: 15, category: 'Logistics', assignee: 'coordinator', service: 'bus-hire' },
+  { title: 'Order the cake', daysBefore: 12, category: 'Food', assignee: 'customer', service: 'cake' },
+  { title: 'Confirm the guest count with the caterer', daysBefore: 7, category: 'Food', assignee: 'coordinator', priority: 'high' },
+  { title: 'Prepare the puja samagri list with the pandit', daysBefore: 7, category: 'Rituals', assignee: 'family', service: 'pandit' },
+  { title: 'Final check with every vendor', daysBefore: 3, category: 'Coordination', assignee: 'coordinator', priority: 'high' },
+  { title: 'Send thank-you messages to guests', daysBefore: -3, category: 'Guests', assignee: 'customer' },
+  { title: 'Review your vendors', daysBefore: -7, category: 'Reviews', assignee: 'customer' },
+];
+
+/** Extra tasks for one occasion, on top of the celebration checklist. */
+const OCCASION_TASKS: Record<string, TaskTemplate[]> = {
+  newborn: [
+    { title: 'Buy the baby’s pasni outfit and silver bowl and spoon', daysBefore: 14, category: 'Rituals', assignee: 'family' },
+    { title: 'Plan the first-rice menu (kheer and the pasni thal)', daysBefore: 10, category: 'Food', assignee: 'family' },
+    { title: 'Set out the objects for the baby’s choosing ritual', daysBefore: 1, category: 'Rituals', assignee: 'family' },
+    { title: 'Save photos and gifts in the keepsake box', daysBefore: -5, category: 'Keepsakes', assignee: 'customer' },
+  ],
+  bratabandha: [
+    { title: 'Arrange the daura suruwal, topi and saffron robes', daysBefore: 21, category: 'Rituals', assignee: 'family' },
+    { title: 'Book the barber for the ritual shave', daysBefore: 14, category: 'Rituals', assignee: 'family' },
+  ],
+  baby_shower: [
+    { title: 'Plan the games and the gift table', daysBefore: 14, category: 'Activities', assignee: 'customer' },
+  ],
+  birthday: [
+    { title: 'Plan the games and activities', daysBefore: 14, category: 'Activities', assignee: 'customer' },
+    { title: 'Order the return gifts', daysBefore: 10, category: 'Gifts', assignee: 'customer' },
+  ],
+  anniversary: [
+    { title: 'Plan the surprise and who is in on it', daysBefore: 21, category: 'Surprise', assignee: 'customer' },
+  ],
+  corporate: [
+    { title: 'Share the agenda with speakers and hosts', daysBefore: 14, category: 'Agenda', assignee: 'customer', priority: 'high' },
+    { title: 'Check sound, screen and power at the venue', daysBefore: 3, category: 'Coordination', assignee: 'coordinator' },
+  ],
+};
+
+/** Occasions planned with the full wedding checklist. */
+const WEDDING_LIKE = new Set(['wedding', 'engagement']);
+
+/** Titles that only make sense for a wedding; older non-wedding plans drop them (store migrate v5). */
+export const WEDDING_ONLY_TASKS = new Set(TASK_TEMPLATES.map((t) => t.title).filter((title) => !CELEBRATION_TEMPLATES.some((c) => c.title === title)));
+
+/** Personalised checklist for the occasion; overdue templates are compressed into the remaining time. */
+export function generateTasks(mainDate: string, services: string[], customerName: string, coordinatorName = 'Your coordinator', occasion = 'wedding'): ProjectTask[] {
   const lead = Math.max(0, daysUntil(mainDate));
   const now = today();
-  return TASK_TEMPLATES.filter((t) => !t.service || services.includes(t.service)).map((t) => {
+  const wedding = WEDDING_LIKE.has(occasion);
+  const templates = wedding ? TASK_TEMPLATES : [...CELEBRATION_TEMPLATES, ...(OCCASION_TASKS[occasion] ?? [])].sort((a, b) => b.daysBefore - a.daysBefore);
+  const horizon = wedding ? 300 : 60;
+  return templates.filter((t) => !t.service || services.includes(t.service)).map((t) => {
     let due = shift(mainDate, -t.daysBefore);
     if (due < now && t.daysBefore > 0) {
       // Not enough runway: spread these across the time left.
-      due = shift(now, Math.max(1, Math.round(lead * (1 - t.daysBefore / 300) * 0.5)));
+      due = shift(now, Math.max(1, Math.round(lead * (1 - t.daysBefore / horizon) * 0.5)));
     }
     return {
       id: uid('tk'),

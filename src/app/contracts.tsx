@@ -1,6 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
-import { ScrollView, View } from 'react-native';
+import { View } from 'react-native';
 
 import { Card, EmptyBlock, StatusPill } from '@/components/kit';
 import { ToolScreen, toolStyles } from '@/components/planner/ToolScreen';
@@ -9,6 +9,7 @@ import { useDb } from '@/store/useDb';
 import { useRoleTheme } from '@/theme/RoleTheme';
 import type { Project } from '@/types/platform';
 import { formatShortDate } from '@/utils/format';
+import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
 
 function Contracts({ project }: { project: Project }) {
   const t = useRoleTheme();

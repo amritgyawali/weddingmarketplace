@@ -4,6 +4,7 @@ import { StatusBar } from 'expo-status-bar';
 import { useRoleFonts } from '@/theme/fonts';
 import { ROLE_THEMES } from '@/theme/roles';
 import { RoleThemeProvider } from '@/theme/RoleTheme';
+import { keyboardScreenLayout } from '@/components/ui/Keyboard';
 
 const t = ROLE_THEMES.freelancer;
 
@@ -15,7 +16,7 @@ export default function FreelancerLayout() {
   return (
     <RoleThemeProvider role="freelancer">
       <StatusBar style="light" />
-      <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: t.c.bg } }}>
+      <Stack screenLayout={keyboardScreenLayout} screenOptions={{ headerShown: false, contentStyle: { backgroundColor: t.c.bg } }}>
         <Stack.Screen name="(tabs)" />
         <Stack.Screen name="gig/[id]" />
         <Stack.Screen name="job/[id]" />

@@ -2,7 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
-import { Linking, Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { Linking, Pressable, StyleSheet, View } from 'react-native';
 
 import { Avatar, Card, ChoiceChips, EmptyBlock, KButton, KeyValue, KField, Segmented, StackHeader, StatusPill } from '@/components/kit';
 import { Sheet } from '@/components/ui/Sheet';
@@ -29,6 +29,7 @@ import { useRoleTheme } from '@/theme/RoleTheme';
 import type { Project, ProjectStatus, Requirement } from '@/types/platform';
 import { confirm } from '@/utils/confirm';
 import { formatLongDate, formatMoney, formatMoneyCompact, formatMoneyRange, formatPhone, formatShortDate, timeAgo } from '@/utils/format';
+import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
 
 type Tab = 'overview' | 'services' | 'quote' | 'crew' | 'events' | 'payments' | 'tasks' | 'timeline' | 'chat' | 'notes' | 'files' | 'activity';
 

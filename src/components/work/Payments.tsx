@@ -1,6 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useState } from 'react';
-import { ActivityIndicator, Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, Pressable, StyleSheet, View } from 'react-native';
 import QRCode from 'react-native-qrcode-svg';
 
 import { checkOnlinePayment, isOnlineGateway, onlinePaymentsReady, PAYMENT_STATE_TEXT, type PaymentState, SANDBOX_HINT, startOnlinePayment } from '@/backend/payments';
@@ -18,6 +18,7 @@ import { useAccount } from '@/store/useSession';
 import { useRoleTheme } from '@/theme/RoleTheme';
 import type { PaymentMethod, PaymentMilestone, Project } from '@/types/platform';
 import { formatMoney, formatShortDate, relativeDay } from '@/utils/format';
+import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
 
 export const PAYMENT_METHODS: { id: PaymentMethod; label: string; sub: string; color: string; icon: string; staffOnly?: boolean }[] = [
   { id: 'esewa', label: 'eSewa', sub: 'Wallet · instant', color: '#60BB46', icon: 'wallet' },
