@@ -17,6 +17,7 @@ Every exported symbol in `src/store/db/`, file by file. The guide that explains 
 - [`planner.ts`](#plannerts) (2 exports) · Couple planning tools and business extras: guests, RSVP, seating, budget, website, registry, boards, contracts, shortlist, staff, deals.
 - [`projects.ts`](#projectsts) (4 exports) · Wedding-project workflow: requirement intake, matching, provider bookings, crew assignments, emergency replacement, deliverables, tasks and…
 - [`quotes.ts`](#quotests) (4 exports) · Versioned quotations. A sent version is frozen into `versions`; any later change creates the next version, so the customer can always compa…
+- [`social.ts`](#socialts) (6 exports) · Social hub: a business connects Facebook, Instagram, WhatsApp and TikTok, answers every message and comment from one inbox, and publishes o…
 - [`toolkit.ts`](#toolkitts) (3 exports) · Role toolkits: generic tool records, per-owner tool settings and ops broadcasts.
 - [`trust.ts`](#trustts) (2 exports) · Reviews (category ratings, replies, moderation) and provider/freelancer verification.
 - [`types.ts`](#typests) (1 exports)
@@ -419,7 +420,7 @@ production each action becomes an API call against supabase/migrations.
 
 ### `DbData`
 
-*re-export* · [src/store/db/index.ts:30](../../../src/store/db/index.ts#L30)
+*re-export* · [src/store/db/index.ts:31](../../../src/store/db/index.ts#L31)
 
 ```ts
 DbDatafrom './types'
@@ -429,17 +430,17 @@ _No JSDoc yet._
 
 ### `Db`
 
-*type* · [src/store/db/index.ts:31](../../../src/store/db/index.ts#L31)
+*type* · [src/store/db/index.ts:32](../../../src/store/db/index.ts#L32)
 
 ```ts
-type Db = DbData & CoreActions & QuoteActions & ProjectActions & FinanceActions & GigActions & ChatActions & TrustActions & PlannerActions & ToolkitActions & PersonaActions & AdminActions
+type Db = DbData & CoreActions & QuoteActions & ProjectActions & FinanceActions & GigActions & ChatActions & TrustActions & PlannerActions & ToolkitActions & PersonaActions & AdminActions & SocialActions
 ```
 
 _No JSDoc yet._
 
 ### `useDb`
 
-*const* · [src/store/db/index.ts:81](../../../src/store/db/index.ts#L81)
+*const* · [src/store/db/index.ts:95](../../../src/store/db/index.ts#L95)
 
 ```ts
 useDb= create<Db>()( persist( (set, get) => ({ ...buildSeedData(), ...coreActions(set, get), ...…
@@ -449,7 +450,7 @@ _No JSDoc yet._
 
 ### `useInbox`
 
-*hook* · [src/store/db/index.ts:128](../../../src/store/db/index.ts#L128)
+*hook* · [src/store/db/index.ts:146](../../../src/store/db/index.ts#L146)
 
 ```ts
 useInbox(account: Account)
@@ -461,7 +462,7 @@ from a zustand selector would re-render forever.
 
 ### `useThreads`
 
-*hook* · [src/store/db/index.ts:134](../../../src/store/db/index.ts#L134)
+*hook* · [src/store/db/index.ts:152](../../../src/store/db/index.ts#L152)
 
 ```ts
 useThreads(account: Account)
@@ -471,7 +472,7 @@ Threads this account is a member of (platform staff see every thread).
 
 ### `useUnreadMessageCount`
 
-*hook* · [src/store/db/index.ts:146](../../../src/store/db/index.ts#L146)
+*hook* · [src/store/db/index.ts:164](../../../src/store/db/index.ts#L164)
 
 ```ts
 useUnreadMessageCount(account: Account)
@@ -782,6 +783,111 @@ Add a booking's line to a draft quote (quote builder "add from bookings").
 
 _No JSDoc yet._
 
+## social.ts
+
+Source: [src/store/db/social.ts](../../../src/store/db/social.ts)
+
+Social hub: a business connects Facebook, Instagram, WhatsApp and TikTok,
+answers every message and comment from one inbox, and publishes one post to
+every network. In production each action is a Supabase call:
+connect/disconnect → `social-oauth`, replies → `social-send`, publishing and
+the scheduled-post run → `social-publish`, and `receiveSocialMessage` is what
+the `social-webhook` function does when a network delivers a message. The
+demo stands in for the networks with timers (cleared on `resetDemo`).
+
+### `SocialInbound`
+
+*interface* · [src/store/db/social.ts:19](../../../src/store/db/social.ts#L19)
+
+A message or comment as a network delivers it (the webhook payload, normalised).
+
+| Member | Type | Notes |
+|---|---|---|
+| `ownerId` | `string` |  |
+| `network` | `SocialNetwork` |  |
+| `kind` | `SocialThreadKind` |  |
+| `contactName` | `string` |  |
+| `contactHandle` | `string` |  |
+| `contactPhone?` | `string` |  |
+| `text` | `string` |  |
+| `postId?` | `string` |  |
+| `postCaption?` | `string` |  |
+
+### `SocialLeadInput`
+
+*interface* · [src/store/db/social.ts:32](../../../src/store/db/social.ts#L32)
+
+What "Create lead" saves from a conversation.
+
+| Member | Type | Notes |
+|---|---|---|
+| `eventDate` | `string` |  |
+| `guests?` | `number` |  |
+| `functions` | `string[]` |  |
+| `budget?` | `number` |  |
+| `phone?` | `string` |  |
+
+### `SocialActions`
+
+*interface* · [src/store/db/social.ts:41](../../../src/store/db/social.ts#L41)
+
+Store actions of the social hub.
+
+| Member | Type | Notes |
+|---|---|---|
+| `connectSocialAccount` | `(input: { network: SocialNetwork; handle: string; name?: string }) => string \| null` | Connects a network for the signed-in business (in production: after the network's OAuth consent). Error text or null. |
+| `disconnectSocialAccount` | `(accountId: string) => string \| null` |  |
+| `reconnectSocialAccount` | `(accountId: string) => string \| null` | Renews an expired token (in production: the OAuth consent again). |
+| `receiveSocialMessage` | `(input: SocialInbound) => string \| null` | A message or comment arrives from a network (the webhook). Applies auto-replies and the away message. Returns the thread id. |
+| `syncSocialInbox` | `() => number` | Pulls anything new from the connected networks and wakes snoozed threads. Returns how many messages arrived. |
+| `sendSocialReply` | `(threadId: string, text: string, opts?: { media?: SocialMedia[]; template?: string }) => string \| null` | Replies in the thread (message or public comment reply). Outside WhatsApp's 24-hour window pass an approved template id. |
+| `addSocialNote` | `(threadId: string, text: string) => string \| null` |  |
+| `markSocialThreadRead` | `(threadId: string) => void` |  |
+| `setSocialThreadStatus` | `(threadId: string, status: SocialThreadStatus, snoozeHours?: number) => string \| null` | `pending` with `snoozeHours` hides the thread until then. |
+| `toggleSocialThreadStar` | `(threadId: string) => void` |  |
+| `setSocialThreadLabels` | `(threadId: string, labels: string[]) => void` |  |
+| `assignSocialThread` | `(threadId: string, assignee?: string) => void` |  |
+| `createLeadFromSocialThread` | `(threadId: string, input: SocialLeadInput) => { leadId?: string; error?: string }` | Turns a conversation into a CRM lead (source `social`) and links the two. Returns the lead id, or error text. |
+| `saveSocialPost` | `(input: Partial<SocialPost> & Pick<SocialPost, 'caption' \| 'networks' \| 'media'>) => { id?: string; error?: string }` | Creates or updates a draft. Returns the post id. |
+| `scheduleSocialPost` | `(postId: string, at: string) => string \| null` |  |
+| `publishSocialPost` | `(postId: string) => string \| null` | Sends the post to every chosen network now. Networks that refuse it are marked failed; the rest go out. |
+| `retrySocialPost` | `(postId: string, network: SocialNetwork) => string \| null` |  |
+| `duplicateSocialPost` | `(postId: string) => string \| null` |  |
+| `deleteSocialPost` | `(postId: string) => string \| null` |  |
+| `runDueSocialPosts` | `() => number` | Publishes scheduled posts whose time has come and wakes snoozed threads (pg_cron + social-publish in production). Returns how many posts started. |
+| `updateSocialSettings` | `(patch: Partial<SocialSettings>) => string \| null` |  |
+| `mirrorSocialData` | `(ownerId: string, data: { accounts: SocialAccount[]; threads: SocialThread[]; messages: SocialMessage[]; posts: SocialPost[]; settings?: SocialSettings }) => void` | Supabase builds: replaces one business's hub on this device with what the server holds (`syncSocialFromServer`). |
+
+### `clearSocialTimers`
+
+*function* · [src/store/db/social.ts:80](../../../src/store/db/social.ts#L80)
+
+```ts
+clearSocialTimers()
+```
+
+Stops the simulated networks (on resetDemo).
+
+### `socialSettingsFor`
+
+*function* · [src/store/db/social.ts:106](../../../src/store/db/social.ts#L106)
+
+```ts
+socialSettingsFor(all: Record<string, SocialSettings>, ownerId: string)
+```
+
+Settings for a business, with the starter set until it saves its own.
+
+### `socialActions`
+
+*function* · [src/store/db/social.ts:111](../../../src/store/db/social.ts#L111)
+
+```ts
+socialActions(set: SetDb, get: GetDb): SocialActions
+```
+
+The social hub actions for the shared store.
+
 ## toolkit.ts
 
 Source: [src/store/db/toolkit.ts](../../../src/store/db/toolkit.ts)
@@ -865,7 +971,7 @@ Source: [src/store/db/types.ts](../../../src/store/db/types.ts)
 
 ### `DbData`
 
-*interface* · [src/store/db/types.ts:44](../../../src/store/db/types.ts#L44)
+*interface* · [src/store/db/types.ts:49](../../../src/store/db/types.ts#L49)
 
 Everything the shared on-device "backend" persists. Mirrors the SQL schema.
 
@@ -911,3 +1017,8 @@ Everything the shared on-device "backend" persists. Mirrors the SQL schema.
 | `featureFlags` | `Record<string, boolean>` | Feature switches by id (`data/features.ts`); a missing id is on. |
 | `textOverrides` | `TextOverrides` | Replacement text for any English source string, per language. |
 | `announcements` | `Announcement[]` | Notices shown at the top of a role's home. |
+| `socialAccounts` | `SocialAccount[]` | Facebook pages, Instagram profiles, WhatsApp numbers and TikTok accounts a business connected. |
+| `socialThreads` | `SocialThread[]` | The unified inbox: direct messages and comments from every connected network. |
+| `socialMessages` | `SocialMessage[]` |  |
+| `socialPosts` | `SocialPost[]` | Posts sent (or scheduled) to several networks at once. |
+| `socialSettings` | `Record<string, SocialSettings>` | Saved replies, auto-replies and away message, keyed by the business account id. |

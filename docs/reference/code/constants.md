@@ -9,7 +9,7 @@ Every exported symbol in `src/constants/`, file by file. The guide that explains
 - [`brand.ts`](#brandts) (1 exports)
 - [`env.ts`](#envts) (2 exports) · Public configuration from `EXPO_PUBLIC_*` variables (`.env.local`, EAS and Vercel environment variables; see `.env.example`). Expo inlines …
 - [`images.ts`](#imagests) (3 exports)
-- [`theme.ts`](#themets) (12 exports)
+- [`theme.ts`](#themets) (13 exports)
 
 ## brand.ts
 
@@ -114,9 +114,19 @@ Rough distribution on any screen: ~65% ivory/cream, ~20% burgundy/wine,
 ~10% espresso text, ~5% champagne and dusty-rose accents. Gold never fills
 large areas, and is never used for body text (use `goldDeep` for gold text).
 
+### `socialColors`
+
+*const* · [src/constants/theme.ts:77](../../../src/constants/theme.ts#L77)
+
+```ts
+socialColors= { facebook: '#1877F2', instagram: '#C13584', whatsapp: '#128C7E', tiktok: '#161823', } as…
+```
+
+Network marks in the social hub. Small icons and hairlines only, never fills.
+
 ### `gradients`
 
-*const* · [src/constants/theme.ts:81](../../../src/constants/theme.ts#L81)
+*const* · [src/constants/theme.ts:89](../../../src/constants/theme.ts#L89)
 
 ```ts
 gradients= { … }
@@ -128,7 +138,7 @@ near-flat fills.
 
 ### `fonts`
 
-*const* · [src/constants/theme.ts:101](../../../src/constants/theme.ts#L101)
+*const* · [src/constants/theme.ts:109](../../../src/constants/theme.ts#L109)
 
 ```ts
 fonts= { regular: 'Mukta_400Regular', medium: 'Mukta_500Medium', semibold: 'Mukta_600SemiBold', …
@@ -142,7 +152,7 @@ titles on the couple app).
 
 ### `serif`
 
-*const* · [src/constants/theme.ts:109](../../../src/constants/theme.ts#L109)
+*const* · [src/constants/theme.ts:117](../../../src/constants/theme.ts#L117)
 
 ```ts
 serif= { regular: 'Martel_400Regular', medium: 'Martel_600SemiBold', semibold: 'Martel_600SemiBo…
@@ -152,7 +162,7 @@ _No JSDoc yet._
 
 ### `FontWeight`
 
-*type* · [src/constants/theme.ts:117](../../../src/constants/theme.ts#L117)
+*type* · [src/constants/theme.ts:125](../../../src/constants/theme.ts#L125)
 
 ```ts
 type FontWeight = keyof typeof fonts
@@ -162,7 +172,7 @@ _No JSDoc yet._
 
 ### `spacing`
 
-*const* · [src/constants/theme.ts:119](../../../src/constants/theme.ts#L119)
+*const* · [src/constants/theme.ts:127](../../../src/constants/theme.ts#L127)
 
 ```ts
 spacing= { xxs: 2, xs: 4, sm: 8, md: 12, lg: 16, xl: 20, xxl: 24, xxxl: 32, } as const
@@ -172,7 +182,7 @@ _No JSDoc yet._
 
 ### `radius`
 
-*const* · [src/constants/theme.ts:130](../../../src/constants/theme.ts#L130)
+*const* · [src/constants/theme.ts:138](../../../src/constants/theme.ts#L138)
 
 ```ts
 radius= { xs: 3, sm: 6, md: 8, lg: 10, xl: 12, pill: 999, } as const
@@ -182,7 +192,7 @@ _No JSDoc yet._
 
 ### `GUTTER`
 
-*const* · [src/constants/theme.ts:140](../../../src/constants/theme.ts#L140)
+*const* · [src/constants/theme.ts:148](../../../src/constants/theme.ts#L148)
 
 ```ts
 GUTTER= 16
@@ -192,7 +202,7 @@ Page gutter.
 
 ### `shadows`
 
-*const* · [src/constants/theme.ts:160](../../../src/constants/theme.ts#L160)
+*const* · [src/constants/theme.ts:168](../../../src/constants/theme.ts#L168)
 
 ```ts
 shadows= { … }
@@ -202,7 +212,7 @@ Shadows are reserved for things that genuinely float (sheets, toasts).
 
 ### `type`
 
-*const* · [src/constants/theme.ts:170](../../../src/constants/theme.ts#L170)
+*const* · [src/constants/theme.ts:178](../../../src/constants/theme.ts#L178)
 
 ```ts
 type= { display: { fontFamily: serif.bold, fontSize: 30, lineHeight: 40 }, title: { fontFamily:…
@@ -212,7 +222,7 @@ _No JSDoc yet._
 
 ### `hitSlop`
 
-*const* · [src/constants/theme.ts:181](../../../src/constants/theme.ts#L181)
+*const* · [src/constants/theme.ts:189](../../../src/constants/theme.ts#L189)
 
 ```ts
 hitSlop= { top: 10, bottom: 10, left: 10, right: 10 }
@@ -222,7 +232,7 @@ _No JSDoc yet._
 
 ### `inputReset`
 
-*const* · [src/constants/theme.ts:184](../../../src/constants/theme.ts#L184)
+*const* · [src/constants/theme.ts:192](../../../src/constants/theme.ts#L192)
 
 ```ts
 inputReset: TextStyle

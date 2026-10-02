@@ -43,6 +43,7 @@ export const FEATURES: FeatureDef[] = [
   { id: 'tab.vendor.bookings', label: 'Bookings tab', role: 'vendor', group: 'Tabs' },
   { id: 'tab.vendor.calendar', label: 'Calendar tab', role: 'vendor', group: 'Tabs' },
   { id: 'tab.vendor.account', label: 'Business tab', role: 'vendor', group: 'Tabs' },
+  { id: 'vendor.social', label: 'Social media hub', role: 'vendor', group: 'Features', hint: 'Facebook, Instagram, WhatsApp and TikTok inbox and publishing' },
   // Freelancer app
   { id: 'tab.freelancer.jobs', label: 'My jobs tab', role: 'freelancer', group: 'Tabs' },
   { id: 'tab.freelancer.calendar', label: 'Calendar tab', role: 'freelancer', group: 'Tabs' },

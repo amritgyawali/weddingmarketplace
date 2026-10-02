@@ -73,6 +73,14 @@ export const colors = {
   overlay: 'rgba(37,27,24,0.55)',
 } as const;
 
+/** Network marks in the social hub. Small icons and hairlines only, never fills. */
+export const socialColors = {
+  facebook: '#1877F2',
+  instagram: '#C13584',
+  whatsapp: '#128C7E',
+  tiktok: '#161823',
+} as const;
+
 /**
  * Only photo scrims remain; flat colour everywhere else. The remaining keys
  * are kept so older call sites still type-check, and all resolve to flat or

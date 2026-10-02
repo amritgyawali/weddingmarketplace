@@ -59,8 +59,12 @@ Deno, **no dependencies** (plain `fetch` to Supabase REST, Cloudinary, gateways,
 | `payment-verify` | gateway redirect / user JWT | Asks the gateway itself, then `rpc_settle_payment` (service role) records the payment exactly once |
 | `health` | public | `rpc_health`; for the Better Stack monitor |
 | `account-delete` | user JWT | `rpc_delete_my_account`, remove private files, soft-delete the auth user |
+| `social-oauth` | user JWT (start) / network redirect | Signed-state consent round trip for Facebook, Instagram, WhatsApp and TikTok; tokens saved by `vivah_social_save_account` into `social_account_secrets` |
+| `social-webhook` | Meta / TikTok signature | Messages, comments and receipts → `vivah_social_ingest` (stored once); TikTok publish results |
+| `social-send` | user JWT | A reply from the inbox, within the network's reply window (human agent tag, WhatsApp templates) |
+| `social-publish` | user JWT / shared secret | Publish a post to each network now, or the scheduled run (`job_social_due`) |
 
-`_shared/` modules: `env.ts` (secrets), `http.ts` (CORS, JSON, `safeEqual`), `supabase.ts` (`serviceRpc`, `userRpc`, storage), `ratelimit.ts` (`LIMITS`), `cloudinary.ts` (`PURPOSES`, `NAMED_TRANSFORMATIONS`), `fanout.ts` (`planFanout`), `payments.ts` (Khalti/eSewa request building, HMAC, outcome parsing, `safeReturnTo`).
+`_shared/` modules: `env.ts` (secrets), `http.ts` (CORS, JSON, `safeEqual`), `supabase.ts` (`serviceRpc`, `userRpc`, storage), `ratelimit.ts` (`LIMITS`), `cloudinary.ts` (`PURPOSES`, `NAMED_TRANSFORMATIONS`), `fanout.ts` (`planFanout`), `payments.ts` (Khalti/eSewa request building, HMAC, outcome parsing, `safeReturnTo`), `social.ts` (consent URLs, signed state, webhook signatures and parsing, reply requests, `publishTo` per network). The social hub is described in [21-social-hub.md](21-social-hub.md).
 
 **Writing a new function:** keep the handler thin; put logic in `_shared/` as pure functions; add Node tests in `scripts/test-functions.mjs`; document the request and response at the top of `index.ts` (it becomes the reference entry); never log secrets or personal data.
 

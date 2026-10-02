@@ -26,6 +26,8 @@ Rules: R-DB-1 … R-DB-5, R-BIZ-10, R-PROD-10 in [00-rules-and-regulations.md](0
 | 0014 | `payments` | P7 | `payment_intents`, `rpc_begin_payment`, `rpc_settle_payment` |
 | 0015 | `launch` | P8 | `rpc_health`, legal acceptances, data export, account deletion |
 | 0016 | `super_admin_vehicles` | | `admin.full`, feature flags, text overrides, announcements, vehicles trade |
+| 0017 | `social_lead_source` | | the `SOCIAL` lead source |
+| 0018 | `social_hub` | | social accounts and service-only token secrets, unified inbox threads and messages, posts with per-network targets, settings, WhatsApp opt-ins; `rpc_social_*` for the app, `vivah_social_*` for the Edge Functions, `job_social_due` ([21-social-hub.md](21-social-hub.md)) |
 
 ## 2. Conventions
 
