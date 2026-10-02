@@ -14,7 +14,7 @@ export interface ChipProps {
    * elevated — white with a hairline border (onboarding choices)
    * outline  — hairline border, ink text (popular searches)
    * filled   — quiet grey fill (filters)
-   * All three turn solid ink when selected.
+   * All three turn solid burgundy when selected.
    */
   variant?: 'elevated' | 'outline' | 'filled';
   size?: 'md' | 'lg';
@@ -39,18 +39,18 @@ export function Chip({
     { paddingHorizontal: isLg ? 16 : 12, paddingVertical: isLg ? 10 : 6, minHeight: isLg ? 44 : 34 },
   ];
 
-  let bg: string = colors.bgMuted;
+  let bg: string = colors.bgSoft;
   let fg: string = colors.text;
   let borderColor = 'transparent';
 
   if (variant === 'elevated' || variant === 'outline') {
-    bg = selected ? colors.heading : colors.white;
+    bg = selected ? colors.primary : colors.white;
     fg = selected ? colors.white : colors.text;
-    borderColor = selected ? colors.heading : colors.border;
+    borderColor = selected ? colors.primary : colors.border;
   } else {
-    bg = selected ? colors.heading : colors.bgMuted;
+    bg = selected ? colors.primary : colors.bgSoft;
     fg = selected ? colors.white : colors.text;
-    borderColor = selected ? colors.heading : colors.bgMuted;
+    borderColor = selected ? colors.primary : colors.border;
   }
 
   return (

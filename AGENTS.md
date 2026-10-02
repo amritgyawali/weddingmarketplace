@@ -41,10 +41,10 @@ These product decisions are fixed. Do not reverse them without the owner's say-s
 
 | Role (`UserRole`) | App | Routes | Theme |
 |---|---|---|---|
-| `customer`, the couple | Marketplace + **My Wedding** planning tools | `src/app/(tabs)/…` and root screens (`my-wedding`, `plan`, `guests`, `seating`, `budget`, `website`, `invitations`, `registry`, `boards`, `compare`, `deals`, `contracts`, `calendar`, `checklist`, `quote/[id]` …) | sindoor crimson |
-| `vendor`: venues and businesses | Vivah for Business: leads CRM, quote builder, bookings, crew, calendar, packages, portfolio, finance, analytics, promotions, reviews, team, verification, plus trade tools picked by the business's services (§6a) | `src/app/business/…` | pine green |
-| `freelancer`: photographers, makeup artists, crew | Gig marketplace: gigs, invites, emergency gigs, assignments, GPS check-in/out, calendar and weekly rules, earnings, profile | `src/app/freelancer/…` | slate blue |
-| `platform`: staff (coordinator, admin, support, finance) | Operations console: today view, leads kanban, 12-tab project console, matching, quote builder, control room, emergency replacement, approvals, finance, users, providers, freelancers, analytics, marketplace, audit | `src/app/platform/…` | graphite |
+| `customer`, the couple | Marketplace + **My Wedding** planning tools | `src/app/(tabs)/…` and root screens (`my-wedding`, `plan`, `guests`, `seating`, `budget`, `website`, `invitations`, `registry`, `boards`, `compare`, `deals`, `contracts`, `calendar`, `checklist`, `quote/[id]` …) | burgundy |
+| `vendor`: venues and businesses | Vivah for Business: leads CRM, quote builder, bookings, crew, calendar, packages, portfolio, finance, analytics, promotions, reviews, team, verification, plus trade tools picked by the business's services (§6a) | `src/app/business/…` | burgundy |
+| `freelancer`: photographers, makeup artists, crew | Gig marketplace: gigs, invites, emergency gigs, assignments, GPS check-in/out, calendar and weekly rules, earnings, profile | `src/app/freelancer/…` | burgundy |
+| `platform`: staff (coordinator, admin, support, finance) | Operations console: today view, leads kanban, 12-tab project console, matching, quote builder, control room, emergency replacement, approvals, finance, users, providers, freelancers, analytics, marketplace, audit | `src/app/platform/…` | wine |
 
 Public pages need no sign-in: `/w/[slug]` (the couple's wedding website and registry) and `/rsvp/[code]` (the guest RSVP).
 
@@ -351,13 +351,25 @@ Seed dates are **relative to today** (`day(n)`/`at(n)`); keep them relative.
 
 ### Visual design
 
-One design system for all four apps; only the accent colour changes per role (`src/theme/roles.ts`).
+One design system for all four apps, in the "Royal Nepali Luxury" palette (`src/constants/theme.ts`, `src/theme/roles.ts`). Couple, business and freelancer apps share the burgundy accent; the staff console uses wine. `ROLE_MARK` tells roles apart in chat labels.
 
-- **Type.** Mukta for all UI text, Martel (`<Text serif>`) for a few display lines only: couple names, onboarding and welcome headlines, big numbers like the countdown. Both are Ek Type faces with Devanagari, so Nepali text sets in the same voice. Don't add other font families.
-- **Colour.** Warm neutrals, white surfaces and dark ink do most of the work. The accent marks primary actions and the one thing that needs attention. Status colours come from `statusTone()`. No gradients except dark scrims over photos; no glows, no coloured shadows.
+| Role | Token | Hex | Use |
+| --- | --- | --- | --- |
+| Primary | `primary` | #681C2A deep burgundy | Primary buttons, selected tabs and chips, links, headings that need weight |
+| Primary dark | `wine` / `primaryDark` | #3D1018 wine | Luxury sections: the home wedding band, the planner promo, featured badges, the floating filter bar, staff accent |
+| Accent | `gold` | #C8A46B champagne | Countdown, ratings, short gilt rules, hairlines on wine (`goldLine`). Never body text on ivory: use `goldDeep` #8C6A33 |
+| Background | `bg` | #FFF9F2 warm ivory | Screen background |
+| Surface | `bgSoft` | #F5ECE2 pearl cream | Sections, filters, pressed states, role-app `surfaceAlt` |
+| Romantic accent | `rose` | #C98991 dusty rose | Wedding-category accents, sparingly |
+| Ink | `heading` | #251B18 espresso | Headings and body text |
+| Muted | `textMuted` | #796B64 warm taupe | Secondary information |
+| White | `white` | #FFFCF8 soft white | Cards and text on dark backgrounds |
+
+- **Colour.** Roughly 65% ivory/cream, 20% burgundy/wine, 10% espresso text, 5% champagne and dusty rose. Gold is a thin metallic accent, never a fill for large areas. Status colours come from `statusTone()`. No gradients except dark scrims over photos (tint them wine or espresso, not grey); no glows, no coloured shadows. Never hard-code a hex in a screen: add a token.
+- **Type.** Mukta for all UI text. Martel (`<Text serif>`) for display lines: screen and section titles, couple names, listing names, headline numbers (countdown, stat figures). Both are Ek Type faces with Devanagari, so Nepali text sets in the same voice. Don't add other font families.
 - **Shape.** Cards 10 px radius with a 1 px border and no shadow; buttons 8 px; chips and pills 4–6 px. Shadows only on things that float (sheets, toasts, the floating filter bar).
 - **Copy.** Sentence case everywhere, including labels, tabs and buttons. No all-caps eyebrows, no letter-spaced labels, no emoji in UI chrome or notifications, no "AI"/"magic"/sparkle language: the assistant is a rule-based help bot and is called "Quick help".
-- **Stats.** Label above, number below, in ink. Colour a number only when it flags a problem (overdue, risk).
+- **Stats.** Label above, number below (Martel), in ink. Colour a number only when it flags a problem (overdue, risk).
 - Keep `README.md` (the product overview) and this file current when behaviour changes.
 
 ## 9. Definition of done: run these before saying the work is finished

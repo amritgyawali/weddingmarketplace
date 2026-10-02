@@ -10,8 +10,9 @@ import { useAccount } from '@/store/useSession';
 import { daysUntil, formatDateAlt, formatLongDate } from '@/utils/format';
 
 /**
- * Top of the couple's home: their names, the date in both calendars and the
- * one thing to do next. Without a plan it invites them to start one.
+ * Top of the couple's home: a wine "luxury section" with their names, the
+ * date in both calendars and the countdown in champagne, then the one thing
+ * to do next. Without a plan it invites them to start one.
  */
 export function WeddingStrip() {
   const account = useAccount();
@@ -20,17 +21,20 @@ export function WeddingStrip() {
   if (!project) {
     return (
       <View style={styles.wrap}>
-        <Text serif size={24} weight="bold" color={colors.heading}>
-          Planning a wedding?
-        </Text>
-        <Text size={15} color={colors.textBody} style={{ marginTop: 2 }}>
-          Tell us the date, the city and what you need. A coordinator matches venues and vendors and sends one quotation.
-        </Text>
-        <Pressable onPress={() => router.push('/plan')} accessibilityRole="button" style={({ pressed }) => [styles.start, pressed && { opacity: 0.8 }]}>
-          <Text size={15} weight="semibold" color={colors.white}>
-            Start a plan
+        <View style={styles.band}>
+          <View style={styles.rule} />
+          <Text serif size={24} weight="bold" color={colors.white} lineHeight={34}>
+            Planning a wedding?
           </Text>
-        </Pressable>
+          <Text size={15} color={ON_WINE_MUTED} style={{ marginTop: 2 }}>
+            Tell us the date, the city and what you need. A coordinator matches venues and vendors and sends one quotation.
+          </Text>
+          <Pressable onPress={() => router.push('/plan')} accessibilityRole="button" style={({ pressed }) => [styles.start, pressed && { opacity: 0.85 }]}>
+            <Text size={15} weight="semibold" color={colors.wine}>
+              Start a plan
+            </Text>
+          </Pressable>
+        </View>
       </View>
     );
   }
@@ -41,25 +45,30 @@ export function WeddingStrip() {
 
   return (
     <View style={styles.wrap}>
-      <Pressable onPress={() => router.push('/my-wedding')} accessibilityRole="button" accessibilityLabel={`${project.title}, ${days} days to go. Open your wedding`}>
+      <Pressable
+        onPress={() => router.push('/my-wedding')}
+        accessibilityRole="button"
+        accessibilityLabel={`${project.title}, ${days} days to go. Open your wedding`}
+        style={({ pressed }) => [styles.band, pressed && { opacity: 0.92 }]}>
+        <View style={styles.rule} />
         <View style={styles.row}>
           <View style={{ flex: 1 }}>
-            <Text size={13} color={colors.textMuted}>
+            <Text size={13} color={colors.gold}>
               {formatLongDate(project.weddingDate)} · {formatDateAlt(project.weddingDate)}
             </Text>
-            <Text serif size={26} weight="bold" color={colors.heading} lineHeight={36} numberOfLines={1}>
+            <Text serif size={26} weight="bold" color={colors.white} lineHeight={36} numberOfLines={1}>
               {project.title}
             </Text>
-            <Text size={14} color={colors.textBody}>
+            <Text size={14} color={ON_WINE_MUTED}>
               {progress.services.confirmed} of {progress.services.total} services booked · {project.city}
             </Text>
           </View>
           {days >= 0 && (
             <View style={styles.count}>
-              <Text serif size={30} weight="bold" color={colors.primary} lineHeight={38}>
+              <Text serif size={30} weight="bold" color={colors.gold} lineHeight={38}>
                 {days}
               </Text>
-              <Text size={12} color={colors.textMuted} lineHeight={14}>
+              <Text size={12} color={ON_WINE_MUTED} lineHeight={14}>
                 {days === 1 ? 'day to go' : 'days to go'}
               </Text>
             </View>
@@ -87,8 +96,23 @@ export function WeddingStrip() {
   );
 }
 
+/** Secondary text on the wine band: soft white at reduced strength. */
+const ON_WINE_MUTED = 'rgba(255,252,248,0.74)';
+
 const styles = StyleSheet.create({
-  wrap: { paddingHorizontal: GUTTER, paddingTop: 18, paddingBottom: 6 },
+  wrap: { paddingHorizontal: GUTTER, paddingTop: 16, paddingBottom: 6 },
+  band: {
+    backgroundColor: colors.wine,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: colors.goldLine,
+    paddingHorizontal: 18,
+    paddingTop: 18,
+    paddingBottom: 18,
+    overflow: 'hidden',
+  },
+  /** A short champagne rule, like the gilt line on a wedding card. */
+  rule: { width: 28, height: 2, borderRadius: 1, backgroundColor: colors.gold, marginBottom: 12 },
   row: { flexDirection: 'row', alignItems: 'flex-end', gap: 12 },
   count: { alignItems: 'flex-end', paddingBottom: 2 },
   next: {
@@ -98,16 +122,17 @@ const styles = StyleSheet.create({
     marginTop: 14,
     paddingVertical: 10,
     paddingHorizontal: 12,
+    backgroundColor: colors.white,
     borderWidth: 1,
     borderColor: colors.border,
     borderLeftWidth: 3,
-    borderLeftColor: colors.primary,
-    borderRadius: 6,
+    borderLeftColor: colors.gold,
+    borderRadius: 8,
   },
   start: {
     alignSelf: 'flex-start',
-    marginTop: 14,
-    backgroundColor: colors.primary,
+    marginTop: 16,
+    backgroundColor: colors.gold,
     borderRadius: 8,
     paddingHorizontal: 18,
     height: 42,

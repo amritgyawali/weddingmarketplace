@@ -23,7 +23,7 @@ export function SectionHeader({
   return (
     <View style={[styles.row, inset && { paddingHorizontal: GUTTER }]}>
       <View style={styles.titleRow}>
-        <Text weight="bold" size={18} color={colors.heading} numberOfLines={1} style={{ flexShrink: 1 }}>
+        <Text serif weight="bold" size={18} color={colors.heading} numberOfLines={1} style={{ flexShrink: 1 }}>
           {title}
         </Text>
         {badge}
@@ -54,5 +54,5 @@ const styles = StyleSheet.create({
   row: { flexDirection: 'row', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 12 },
   titleRow: { flexDirection: 'row', alignItems: 'center', gap: 10, flexShrink: 1 },
   action: { flexDirection: 'row', alignItems: 'center', gap: 2 },
-  badge: { borderWidth: 1, borderColor: colors.badgeNew, borderRadius: 3, paddingHorizontal: 5, paddingVertical: 1 },
+  badge: { borderWidth: 1, borderColor: colors.gold, borderRadius: 3, paddingHorizontal: 5, paddingVertical: 1 },
 });

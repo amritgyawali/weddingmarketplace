@@ -36,9 +36,9 @@ export function ImpersonationBar() {
 }
 
 const TONE = {
-  info: { bg: '#EEF2F7', fg: '#2D4E7A', icon: 'information-circle-outline' },
-  success: { bg: '#E9F4EE', fg: '#1F5A4C', icon: 'checkmark-circle-outline' },
-  warning: { bg: '#FBF1DE', fg: '#7A5512', icon: 'warning-outline' },
+  info: { bg: colors.bgSoft, fg: colors.primary, icon: 'information-circle-outline' },
+  success: { bg: '#EAF0EA', fg: colors.success, icon: 'checkmark-circle-outline' },
+  warning: { bg: colors.goldSoft, fg: colors.warning, icon: 'warning-outline' },
 } as const;
 
 /** Announcements a super admin pinned for this role (or everyone). Dismissed ones stay hidden on this screen visit. */
@@ -80,6 +80,6 @@ export function AnnouncementBanner({ style }: { style?: object }) {
 
 const styles = StyleSheet.create({
   impHost: { position: 'absolute', left: 0, right: 0, alignItems: 'center', zIndex: 200 },
-  imp: { flexDirection: 'row', alignItems: 'center', gap: 8, backgroundColor: '#2B2E34', borderRadius: 20, paddingHorizontal: 14, paddingVertical: 7, maxWidth: '92%' },
+  imp: { flexDirection: 'row', alignItems: 'center', gap: 8, backgroundColor: colors.wine, borderWidth: 1, borderColor: colors.goldLine, borderRadius: 20, paddingHorizontal: 14, paddingVertical: 7, maxWidth: '92%' },
   ann: { flexDirection: 'row', alignItems: 'flex-start', gap: 10, padding: 12, borderWidth: 1 },
 });

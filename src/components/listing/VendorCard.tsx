@@ -26,7 +26,7 @@ export const VendorCard = memo(function VendorCard({ vendor }: { vendor: Vendor 
         <ImageCarousel images={vendor.images} width={cardWidth} height={cardWidth * 0.6} radius={radius.lg} onPressImage={open} />
         {vendor.featured && (
           <View style={styles.featured} pointerEvents="none">
-            <Text size={12} weight="semibold" color={colors.heading} lineHeight={16}>
+            <Text size={12} weight="semibold" color={colors.gold} lineHeight={16}>
               Featured
             </Text>
           </View>
@@ -36,7 +36,7 @@ export const VendorCard = memo(function VendorCard({ vendor }: { vendor: Vendor 
 
       <PressableScale onPress={open} accessibilityLabel={`${vendor.name}, open details`} style={styles.meta}>
         <View style={styles.rowBetween}>
-          <Text size={18} weight="semibold" color={colors.heading} numberOfLines={1} style={{ flex: 1 }}>
+          <Text serif size={18} weight="semibold" color={colors.heading} numberOfLines={1} style={{ flex: 1 }}>
             {vendor.name}
           </Text>
           <Rating value={vendor.rating} count={vendor.reviewCount} />
@@ -78,7 +78,7 @@ export const VendorCard = memo(function VendorCard({ vendor }: { vendor: Vendor 
 
 const styles = StyleSheet.create({
   card: { paddingHorizontal: GUTTER, paddingTop: 16, paddingBottom: 18, borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: colors.border },
-  featured: { position: 'absolute', top: 10, left: 10, backgroundColor: colors.white, borderRadius: 4, paddingHorizontal: 7, paddingVertical: 2 },
+  featured: { position: 'absolute', top: 10, left: 10, backgroundColor: colors.wine, borderWidth: 1, borderColor: colors.goldLine, borderRadius: 4, paddingHorizontal: 7, paddingVertical: 2 },
   save: { position: 'absolute', top: 10, right: 10 },
   meta: { paddingTop: 10, gap: 1 },
   rowBetween: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', gap: 10 },

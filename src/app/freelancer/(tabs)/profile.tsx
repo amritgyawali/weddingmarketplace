@@ -153,7 +153,7 @@ export default function FreelancerProfile() {
           </Text>
           <View style={styles.row}>
             <StatusPill status={status} label={status === 'VERIFIED' ? 'Verified' : status === 'UNDER_REVIEW' ? 'Verification in review' : 'Not verified'} />
-            <Ionicons name="star" size={13} color="#C98410" />
+            <Ionicons name="star" size={13} color="#C8A46B" />
             <Text size={13} weight="medium" color={t.c.textStrong}>
               {rating.toFixed(1)} ({reviews.length})
             </Text>

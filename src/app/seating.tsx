@@ -69,7 +69,7 @@ function Element({ el, scale, seated, selected, onMove, onPress }: { el: Seating
   const tap = Gesture.Tap().runOnJS(true).onEnd(() => onPress());
   const full = el.capacity > 0 && seated >= el.capacity;
   const over = el.capacity > 0 && seated > el.capacity;
-  const tint = el.capacity === 0 ? t.c.surfaceAlt : over ? '#FDE2E1' : full ? '#E3F5E8' : el.vip ? '#FFF4D6' : t.c.surface;
+  const tint = el.capacity === 0 ? t.c.surfaceAlt : over ? '#FDE2E1' : full ? '#E3F5E8' : el.vip ? '#F3E7D2' : t.c.surface;
   return (
     <GestureDetector gesture={Gesture.Exclusive(pan, tap)}>
       <View
@@ -82,7 +82,7 @@ function Element({ el, scale, seated, selected, onMove, onPress }: { el: Seating
             height: h,
             borderRadius: el.kind === 'round' ? w / 2 : 8 * scale + 4,
             backgroundColor: tint,
-            borderColor: selected ? t.c.primary : over ? t.c.danger : el.vip ? '#E0A100' : t.c.border,
+            borderColor: selected ? t.c.primary : over ? t.c.danger : el.vip ? '#C8A46B' : t.c.border,
             borderWidth: selected ? 2.5 : 1.2,
             zIndex: drag.dx || drag.dy ? 10 : 1,
           },
@@ -356,6 +356,6 @@ export default function SeatingScreen() {
 }
 
 const styles = StyleSheet.create({
-  canvas: { width: '100%', borderWidth: 1, borderRadius: 10, backgroundColor: '#FFFFFF', overflow: 'hidden' },
+  canvas: { width: '100%', borderWidth: 1, borderRadius: 10, backgroundColor: '#FFFCF8', overflow: 'hidden' },
   el: { position: 'absolute', alignItems: 'center', justifyContent: 'center', paddingHorizontal: 2 },
 });

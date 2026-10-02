@@ -19,7 +19,7 @@ import { addToGoogleCalendar } from '@/services/exporters';
 import { quoteTotals } from '@/services/quotes';
 import { useDb } from '@/store/useDb';
 import { useAccount } from '@/store/useSession';
-import { ROLE_THEMES } from '@/theme/roles';
+import { ROLE_MARK, ROLE_THEMES } from '@/theme/roles';
 import { useRoleTheme } from '@/theme/RoleTheme';
 import type { Message, Thread } from '@/types/platform';
 import { addDays, formatMoney, formatShortDate, formatTime, today } from '@/utils/format';
@@ -39,7 +39,7 @@ function Bubble({ m, mine, showName, seen }: { m: Message; mine: boolean; showNa
   const t = useRoleTheme();
   const account = useAccount();
   const quote = useDb((s) => (m.meta?.quoteId ? s.quotes.find((q) => q.id === m.meta!.quoteId) : undefined));
-  const roleColor = ROLE_THEMES[m.senderRole].c.primary;
+  const roleColor = ROLE_MARK[m.senderRole];
   const bg = mine ? t.c.primary : t.c.surface;
   const fg = mine ? t.c.onPrimary : t.c.textStrong;
 
@@ -194,7 +194,7 @@ export function ThreadView({ thread }: { thread: Thread }) {
               <Text size={12} weight="semibold" color={t.c.text}>
                 {m.id === account.id ? 'You' : m.name.split(' ')[0]}
               </Text>
-              <Text size={10} color={ROLE_THEMES[m.role].c.primary}>
+              <Text size={10} color={ROLE_MARK[m.role]}>
                 {ROLE_THEMES[m.role].label}
               </Text>
             </View>
