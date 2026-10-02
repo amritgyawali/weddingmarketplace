@@ -24,6 +24,7 @@ npm scripts and the Node scripts behind them. All run locally with no network un
 | `npm run test:telemetry` | `node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/test-telemetry.mjs` |
 | `npm run docs:generate` | `node scripts/docs/generate-reference.mjs` |
 | `npm run docs:check` | `node scripts/docs/generate-reference.mjs --check` |
+| `npm run bugs:inbox` | `node scripts/bug-inbox.cjs` |
 
 ## Script files
 

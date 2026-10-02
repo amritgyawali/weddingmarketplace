@@ -4,12 +4,15 @@ import { StyleSheet, View } from 'react-native';
 
 import { deleteMyAccount, exportMyData } from '@/backend/account';
 import { usesEmailSignIn } from '@/backend/auth';
+import { bugReportsAvailable } from '@/backend/bugReport';
 import { Card, ChoiceChips, KButton, ListRow, SectionTitle, StackHeader } from '@/components/kit';
+import { reportBug, useBugReporter } from '@/components/ui/BugReporter';
 import { Text } from '@/components/ui/Text';
 import { Toggle } from '@/components/ui/Toggle';
 import { toast } from '@/components/ui/Toast';
 import { LanguageSwitch } from '@/components/ui/LanguageSwitch';
 import { BRAND } from '@/constants/brand';
+import { useFeatures } from '@/hooks/useFeatures';
 import { usePrefs } from '@/i18n';
 import { logout } from '@/services/auth';
 import { shareText } from '@/services/exporters';
@@ -59,6 +62,10 @@ export function SettingsScreen() {
   const calendar = usePrefs((s) => s.calendar);
   const setCalendar = usePrefs((s) => s.setCalendar);
   const live = usesEmailSignIn();
+  const featureOn = useFeatures();
+  const bugReports = bugReportsAvailable() && featureOn('app.bug_report');
+  const shake = useBugReporter((s) => s.shake);
+  const setShake = useBugReporter((s) => s.setShake);
 
   const exportData = async () => {
     const db = useDb.getState();
@@ -179,6 +186,16 @@ export function SettingsScreen() {
             }
           />
         </Card>
+
+        {bugReports && (
+          <>
+            <SectionTitle title="Help" />
+            <Card padded={false} style={{ overflow: 'hidden' }}>
+              <ListRow icon="bug-outline" title="Report a problem" subtitle="Or shake your phone on the screen that went wrong" onPress={() => void reportBug({ screenshot: false })} />
+              {row('Shake to report a bug', shake, setShake, 'Takes a screenshot of the screen you are on')}
+            </Card>
+          </>
+        )}
 
         <SectionTitle title="Legal" />
         <Card padded={false} style={{ overflow: 'hidden' }}>

@@ -13,6 +13,7 @@ Every exported symbol in `src/hooks/`, file by file. The guide that explains how
 - [`useFeatures.ts`](#usefeaturests) (1 exports)
 - [`useHydrated.ts`](#usehydratedts) (1 exports)
 - [`useLayout.ts`](#uselayoutts) (1 exports)
+- [`useShake.ts`](#useshakets) (1 exports)
 - [`useTelemetry.ts`](#usetelemetryts) (1 exports)
 - [`useWorkspace.ts`](#useworkspacets) (9 exports)
 
@@ -278,6 +279,20 @@ useLayout()
 
 Breakpoints for the web-ready consoles. Phones get one column; tablets and
 desktop browsers (expo start --web) get side navigation and grids.
+
+## useShake.ts
+
+Source: [src/hooks/useShake.ts](../../../src/hooks/useShake.ts)
+
+### `useShake`
+
+*hook* · [src/hooks/useShake.ts:13](../../../src/hooks/useShake.ts#L13)
+
+```ts
+useShake(onShake: () => void, enabled = true)
+```
+
+Calls `onShake` when the phone is shaken firmly. Pass a stable function; does nothing where there is no accelerometer.
 
 ## useTelemetry.ts
 

@@ -4,7 +4,7 @@
 
 Exported symbols that have no JSDoc yet. The weekly documentation pass (see [the maintenance guide](../handbook/17-documentation-maintenance.md)) works through this list; whoever touches a file should document its exports too.
 
-**492 of 1154 exports documented (43%).** Files without a header comment: 289 of 368.
+**504 of 1168 exports documented (43%).** Files without a header comment: 290 of 371.
 
 | File | Undocumented exports |
 |---|---|
@@ -83,6 +83,7 @@ Exported symbols that have no JSDoc yet. The weekly documentation pass (see [the
 | [src/utils/links.ts](../../src/utils/links.ts) | `webUrl`, `rsvpPath`, `sitePath` |
 | [supabase/functions/_shared/cloudinary.ts](../../supabase/functions/_shared/cloudinary.ts) | `PurposeRule`, `PURPOSES`, `isPurpose` |
 | [src/backend/account.ts](../../src/backend/account.ts) | `fetchMe`, `completeSignup` |
+| [src/backend/bugReport.ts](../../src/backend/bugReport.ts) | `BugLogLine`, `BugReport` |
 | [src/components/admin/shared.tsx](../../src/components/admin/shared.tsx) | `ROLE_NAMES`, `COLLECTION_BY_KEY` |
 | [src/components/listing/VenueCard.tsx](../../src/components/listing/VenueCard.tsx) | `venuePrice`, `useStartConversation` |
 | [src/components/navigation/RoleTabBar.tsx](../../src/components/navigation/RoleTabBar.tsx) | `RoleTab`, `SidebarLink` |

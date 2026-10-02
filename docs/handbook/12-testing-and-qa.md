@@ -71,3 +71,15 @@ The open list lives in `AGENTS.md` §10 and `TEST_REPORT.md` §2. As of 2 Octobe
 ## 5. Reporting a new defect
 
 Add it to `TEST_REPORT.md` §2 under the right severity and to `AGENTS.md` §10, with: where (file and function), what happens, what should happen, how to reproduce (demo account and steps). Don't fix it inside an unrelated pull request.
+
+## 6. Shake to report a bug
+
+Testers report bugs from inside the app, and each report lands in the project's `bug-reports/` folder with a screenshot. The tester guide and the folder layout are in `bug-reports/README.md`.
+
+- **Trigger.** Shaking the phone (`useShake` in `src/hooks/useShake.ts`: three jolts above 2.1 g within one second), Alt+Shift+B on the web, or Settings → Help → Report a problem. The screenshot is taken first (`captureScreen` from `react-native-view-shot`; html2canvas on the web), so the sheet never covers it. Volume-key triggers need a native module that Expo Go lacks, so the app doesn't use them.
+- **The report.** `BugReporterHost` (`src/components/ui/BugReporter.tsx`, mounted in the root layout) shows the sheet. It sends the description, the screenshot, the screen path and params, the signed-in account, device and app details, the last 15 screens and the last 30 console errors and warnings (`src/backend/bugReport.ts`).
+- **The inbox.** `scripts/bug-inbox.cjs` writes `bug-reports/<date>_<time>_<slug>/` (`README.md`, `screenshot.png`, `report.json`) and adds a line to `bug-reports/INDEX.md`. `metro.config.js` mounts it on the dev server at `/__vivah/bug-report`, so in development nothing else needs to run. For a test build without a dev server, run `npm run bugs:inbox` (port 8790) and set `EXPO_PUBLIC_BUG_INBOX_URL`.
+- **Who sees it.** Only builds with an inbox: development builds, or builds with `EXPO_PUBLIC_BUG_INBOX_URL`. Store builds hide it. A super admin can switch it off with `app.bug_report`, and each device can turn shaking off in Settings.
+- **In Expo Go,** shaking also opens Expo's developer menu. Turn off "Shake device" in that menu if it gets in the way, or use Settings → Help → Report a problem.
+- **Privacy.** Git ignores `bug-reports/` (except its README), because screenshots can contain personal data. The inbox trusts the local network, so never expose it to the internet.
+- **Working a report:** open `bug-reports/INDEX.md`, read the report and its screenshot, reproduce as the same role, fix it on a `fix/…` branch (section 4), then tick the line.

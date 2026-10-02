@@ -1165,14 +1165,14 @@
     {
      "name": "ErrorBoundary",
      "kind": "re-export",
-     "line": 30,
+     "line": 31,
      "signature": "from '@/components/AppErrorBoundary'",
      "doc": ""
     },
     {
      "name": "RootLayout",
      "kind": "component",
-     "line": 40,
+     "line": 44,
      "signature": "()",
      "doc": ""
     }
@@ -3309,6 +3309,157 @@
      "line": 151,
      "signature": "()",
      "doc": "Ends the session on the server and on this device."
+    }
+   ]
+  },
+  {
+   "file": "src/backend/bugReport.ts",
+   "doc": "Bug reports: the payload the shake-to-report sheet sends, where it goes, and the little history kept for it (recent screens, console errors). Reports go to the bug inbox (`scripts/bug-inbox.cjs`), which writes them into the project's `bug-reports/` folder. In development the inbox runs inside `npx expo start`, so the app finds it at the dev server's address; a test build can point at `npm run bugs:inbox` with EXPO_PUBLIC_BUG_INBOX_URL. Store builds have neither, and the feature stays hidden.",
+   "exports": [
+    {
+     "name": "BUG_INBOX_PATH",
+     "kind": "const",
+     "line": 20,
+     "signature": "= '/__vivah/bug-report'",
+     "doc": "Same path as `BUG_INBOX_PATH` in scripts/bug-inbox.cjs."
+    },
+    {
+     "name": "BugLogLine",
+     "kind": "interface",
+     "line": 22,
+     "signature": "",
+     "doc": "",
+     "members": [
+      {
+       "name": "at",
+       "optional": false,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "level",
+       "optional": false,
+       "type": "'error' | 'warn'",
+       "doc": ""
+      },
+      {
+       "name": "message",
+       "optional": false,
+       "type": "string",
+       "doc": ""
+      }
+     ]
+    },
+    {
+     "name": "BugReport",
+     "kind": "interface",
+     "line": 28,
+     "signature": "",
+     "doc": "",
+     "members": [
+      {
+       "name": "description",
+       "optional": false,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "screenshot",
+       "optional": true,
+       "type": "string",
+       "doc": "PNG or JPEG as a data URI."
+      },
+      {
+       "name": "route",
+       "optional": false,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "params",
+       "optional": false,
+       "type": "Record<string, string>",
+       "doc": ""
+      },
+      {
+       "name": "capturedAt",
+       "optional": false,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "account",
+       "optional": true,
+       "type": "{ id: string; name: string; role: string; staffRole?: string }",
+       "doc": ""
+      },
+      {
+       "name": "device",
+       "optional": false,
+       "type": "{ os: string; osVersion: string; width: number; height: number; scale: number; runtime: string; userAgent?: string }",
+       "doc": ""
+      },
+      {
+       "name": "app",
+       "optional": false,
+       "type": "{ name: string; version: string; backend: string; language: string; calendar: string }",
+       "doc": ""
+      },
+      {
+       "name": "recentRoutes",
+       "optional": false,
+       "type": "{ at: string; path: string }[]",
+       "doc": ""
+      },
+      {
+       "name": "logs",
+       "optional": false,
+       "type": "BugLogLine[]",
+       "doc": ""
+      }
+     ]
+    },
+    {
+     "name": "bugInboxUrl",
+     "kind": "function",
+     "line": 43,
+     "signature": "(): string | undefined",
+     "doc": "The inbox address, or undefined when this build has nowhere to send reports."
+    },
+    {
+     "name": "bugReportsAvailable",
+     "kind": "function",
+     "line": 52,
+     "signature": "()",
+     "doc": "Can this build send bug reports at all?"
+    },
+    {
+     "name": "recordRoute",
+     "kind": "function",
+     "line": 61,
+     "signature": "(path: string)",
+     "doc": "Remembers a visited screen for the next report."
+    },
+    {
+     "name": "captureConsole",
+     "kind": "function",
+     "line": 79,
+     "signature": "()",
+     "doc": "Keeps the last console errors and warnings so a report shows what went wrong under the hood. Idempotent."
+    },
+    {
+     "name": "reportContext",
+     "kind": "function",
+     "line": 99,
+     "signature": "(): Pick<BugReport, 'device' | 'recentRoutes' | 'logs'> & { appVersion: string }",
+     "doc": "Device, app and history details that go with every report."
+    },
+    {
+     "name": "sendBugReport",
+     "kind": "function",
+     "line": 118,
+     "signature": "(report: BugReport): Promise<Result<string>>",
+     "doc": "Posts a report to the inbox. Resolves to the folder it was saved in."
     }
    ]
   },
@@ -6466,6 +6617,40 @@
    ]
   },
   {
+   "file": "src/components/ui/BugReporter.tsx",
+   "doc": "Shake to report a bug. Shaking the phone (or Alt+Shift+B on the web, or Settings → Report a problem) takes a screenshot of the screen exactly as it is, then opens a sheet to describe the problem. The report goes to the bug inbox on the developer's computer and lands in `bug-reports/` (see `backend/bugReport.ts` and `scripts/bug-inbox.cjs`). Only builds that have an inbox show it: development builds, and test builds with EXPO_PUBLIC_BUG_INBOX_URL. A super admin can switch it off (`app.bug_report`) and each device can turn shaking off in Settings.",
+   "exports": [
+    {
+     "name": "useBugReporter",
+     "kind": "const",
+     "line": 58,
+     "signature": "= create<BugReporterState>()( persist( (set) => ({ shake: true, draft: null, setShake: (sha…",
+     "doc": "The reporter's state: the open draft, and the device's shake setting (persisted)."
+    },
+    {
+     "name": "installBugReporter",
+     "kind": "function",
+     "line": 75,
+     "signature": "()",
+     "doc": "Starts keeping console errors for reports, in builds that can send them. Root layout calls it once."
+    },
+    {
+     "name": "reportBug",
+     "kind": "function",
+     "line": 80,
+     "signature": "({ screenshot = true }: { screenshot?: boolean } = {})",
+     "doc": "Screenshots the screen as it is now and opens the report sheet. `screenshot: false` opens it without one."
+    },
+    {
+     "name": "BugReporterHost",
+     "kind": "component",
+     "line": 107,
+     "signature": "()",
+     "doc": "Follows the current screen, listens for shakes and shows the report sheet. Root layout only."
+    }
+   ]
+  },
+  {
    "file": "src/components/ui/Button.tsx",
    "doc": "",
    "exports": [
@@ -7747,14 +7932,14 @@
     {
      "name": "DEFAULT_PREFS",
      "kind": "const",
-     "line": 24,
+     "line": 27,
      "signature": ": AccountPrefs",
      "doc": ""
     },
     {
      "name": "SettingsScreen",
      "kind": "component",
-     "line": 49,
+     "line": 52,
      "signature": "()",
      "doc": "Notification, language, calendar and privacy settings plus data export and account deletion."
     }
@@ -7872,7 +8057,7 @@
     {
      "name": "usesSupabase",
      "kind": "function",
-     "line": 26,
+     "line": 28,
      "signature": "()",
      "doc": "True when the real backend is switched on and configured."
     }
@@ -8665,35 +8850,35 @@
     {
      "name": "FEATURE_BY_ID",
      "kind": "const",
-     "line": 64,
+     "line": 65,
      "signature": ": Record<string, FeatureDef>",
      "doc": ""
     },
     {
      "name": "toolFeature",
      "kind": "function",
-     "line": 66,
+     "line": 67,
      "signature": "(toolId: string)",
      "doc": ""
     },
     {
      "name": "serviceFeature",
      "kind": "function",
-     "line": 67,
+     "line": 68,
      "signature": "(serviceId: string)",
      "doc": ""
     },
     {
      "name": "tabFeature",
      "kind": "function",
-     "line": 68,
+     "line": 69,
      "signature": "(role: UserRole, tab: string)",
      "doc": ""
     },
     {
      "name": "featureOn",
      "kind": "function",
-     "line": 71,
+     "line": 72,
      "signature": "(flags: Record<string, boolean> | undefined, id: string)",
      "doc": "Is the feature on? Missing ids are on."
     }
@@ -10112,6 +10297,19 @@
      "line": 7,
      "signature": "()",
      "doc": "Breakpoints for the web-ready consoles. Phones get one column; tablets and\ndesktop browsers (expo start --web) get side navigation and grids."
+    }
+   ]
+  },
+  {
+   "file": "src/hooks/useShake.ts",
+   "doc": "",
+   "exports": [
+    {
+     "name": "useShake",
+     "kind": "hook",
+     "line": 13,
+     "signature": "(onShake: () => void, enabled = true)",
+     "doc": "Calls `onShake` when the phone is shaken firmly. Pass a stable function; does nothing where there is no accelerometer."
     }
    ]
   },

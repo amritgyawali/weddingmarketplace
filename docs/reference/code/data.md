@@ -735,7 +735,7 @@ _No JSDoc yet._
 
 ### `FEATURE_BY_ID`
 
-*const* · [src/data/features.ts:64](../../../src/data/features.ts#L64)
+*const* · [src/data/features.ts:65](../../../src/data/features.ts#L65)
 
 ```ts
 FEATURE_BY_ID: Record<string, FeatureDef>
@@ -745,7 +745,7 @@ _No JSDoc yet._
 
 ### `toolFeature`
 
-*function* · [src/data/features.ts:66](../../../src/data/features.ts#L66)
+*function* · [src/data/features.ts:67](../../../src/data/features.ts#L67)
 
 ```ts
 toolFeature(toolId: string)
@@ -755,7 +755,7 @@ _No JSDoc yet._
 
 ### `serviceFeature`
 
-*function* · [src/data/features.ts:67](../../../src/data/features.ts#L67)
+*function* · [src/data/features.ts:68](../../../src/data/features.ts#L68)
 
 ```ts
 serviceFeature(serviceId: string)
@@ -765,7 +765,7 @@ _No JSDoc yet._
 
 ### `tabFeature`
 
-*function* · [src/data/features.ts:68](../../../src/data/features.ts#L68)
+*function* · [src/data/features.ts:69](../../../src/data/features.ts#L69)
 
 ```ts
 tabFeature(role: UserRole, tab: string)
@@ -775,7 +775,7 @@ _No JSDoc yet._
 
 ### `featureOn`
 
-*function* · [src/data/features.ts:71](../../../src/data/features.ts#L71)
+*function* · [src/data/features.ts:72](../../../src/data/features.ts#L72)
 
 ```ts
 featureOn(flags: Record<string, boolean> | undefined, id: string)

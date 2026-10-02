@@ -8,6 +8,7 @@ Every exported symbol in `src/backend/`, file by file. The guide that explains h
 
 - [`account.ts`](#accountts) (8 exports) · The signed-in user's own records on Supabase: who they are (rpc_me), the first-time sign-up (rpc_complete_signup), and mirroring them into …
 - [`auth.ts`](#authts) (8 exports) · Sign-in for the Supabase backend (master plan §7.3). Owner decision: email OTP only for the first year, so every role signs in with a 6-dig…
+- [`bugReport.ts`](#bugreportts) (9 exports) · Bug reports: the payload the shake-to-report sheet sends, where it goes, and the little history kept for it (recent screens, console errors…
 - [`files.ts`](#filests) (3 exports) · Private documents in Supabase Storage (master plan §7.4): KYC papers, contracts and invoices never sit on a public CDN. Each user writes un…
 - [`index.ts`](#indexts) (3 exports) · Picks the backend from EXPO_PUBLIC_BACKEND: `mock` (the default: the demo and Expo Go) or `supabase` (staging and production, once configur…
 - [`media.ts`](#mediats) (7 exports) · Images and short video on Cloudinary (master plan §7.4). Uploads are signed by the media-sign Edge Function, go straight from the phone to …
@@ -220,6 +221,120 @@ signOut()
 ```
 
 Ends the session on the server and on this device.
+
+## bugReport.ts
+
+Source: [src/backend/bugReport.ts](../../../src/backend/bugReport.ts)
+
+Bug reports: the payload the shake-to-report sheet sends, where it goes,
+and the little history kept for it (recent screens, console errors).
+
+Reports go to the bug inbox (`scripts/bug-inbox.cjs`), which writes them
+into the project's `bug-reports/` folder. In development the inbox runs
+inside `npx expo start`, so the app finds it at the dev server's address;
+a test build can point at `npm run bugs:inbox` with EXPO_PUBLIC_BUG_INBOX_URL.
+Store builds have neither, and the feature stays hidden.
+
+### `BUG_INBOX_PATH`
+
+*const* · [src/backend/bugReport.ts:20](../../../src/backend/bugReport.ts#L20)
+
+```ts
+BUG_INBOX_PATH= '/__vivah/bug-report'
+```
+
+Same path as `BUG_INBOX_PATH` in scripts/bug-inbox.cjs.
+
+### `BugLogLine`
+
+*interface* · [src/backend/bugReport.ts:22](../../../src/backend/bugReport.ts#L22)
+
+_No JSDoc yet._
+
+| Member | Type | Notes |
+|---|---|---|
+| `at` | `string` |  |
+| `level` | `'error' \| 'warn'` |  |
+| `message` | `string` |  |
+
+### `BugReport`
+
+*interface* · [src/backend/bugReport.ts:28](../../../src/backend/bugReport.ts#L28)
+
+_No JSDoc yet._
+
+| Member | Type | Notes |
+|---|---|---|
+| `description` | `string` |  |
+| `screenshot?` | `string` | PNG or JPEG as a data URI. |
+| `route` | `string` |  |
+| `params` | `Record<string, string>` |  |
+| `capturedAt` | `string` |  |
+| `account?` | `{ id: string; name: string; role: string; staffRole?: string }` |  |
+| `device` | `{ os: string; osVersion: string; width: number; height: number; scale: number; runtime: string; userAgent?: string }` |  |
+| `app` | `{ name: string; version: string; backend: string; language: string; calendar: string }` |  |
+| `recentRoutes` | `{ at: string; path: string }[]` |  |
+| `logs` | `BugLogLine[]` |  |
+
+### `bugInboxUrl`
+
+*function* · [src/backend/bugReport.ts:43](../../../src/backend/bugReport.ts#L43)
+
+```ts
+bugInboxUrl(): string | undefined
+```
+
+The inbox address, or undefined when this build has nowhere to send reports.
+
+### `bugReportsAvailable`
+
+*function* · [src/backend/bugReport.ts:52](../../../src/backend/bugReport.ts#L52)
+
+```ts
+bugReportsAvailable()
+```
+
+Can this build send bug reports at all?
+
+### `recordRoute`
+
+*function* · [src/backend/bugReport.ts:61](../../../src/backend/bugReport.ts#L61)
+
+```ts
+recordRoute(path: string)
+```
+
+Remembers a visited screen for the next report.
+
+### `captureConsole`
+
+*function* · [src/backend/bugReport.ts:79](../../../src/backend/bugReport.ts#L79)
+
+```ts
+captureConsole()
+```
+
+Keeps the last console errors and warnings so a report shows what went wrong under the hood. Idempotent.
+
+### `reportContext`
+
+*function* · [src/backend/bugReport.ts:99](../../../src/backend/bugReport.ts#L99)
+
+```ts
+reportContext(): Pick<BugReport, 'device' | 'recentRoutes' | 'logs'> & { appVersion: string }
+```
+
+Device, app and history details that go with every report.
+
+### `sendBugReport`
+
+*function* · [src/backend/bugReport.ts:118](../../../src/backend/bugReport.ts#L118)
+
+```ts
+sendBugReport(report: BugReport): Promise<Result<string>>
+```
+
+Posts a report to the inbox. Resolves to the folder it was saved in.
 
 ## files.ts
 

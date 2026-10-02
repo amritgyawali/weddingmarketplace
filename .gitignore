@@ -43,3 +43,7 @@ example
 # generated native folders
 /ios
 /android
+
+# shake-to-report bug reports (screenshots can hold personal data): local only
+bug-reports/*
+!bug-reports/README.md
