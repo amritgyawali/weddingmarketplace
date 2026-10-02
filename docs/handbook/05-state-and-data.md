@@ -114,7 +114,7 @@ Add it as optional (`field?: T`) in `src/types/platform.ts` and handle `undefine
 
 - `useDb` uses `lazyStorage` (`store/lazyStorage.ts`): writes 400 ms after the last change, and at once when the app goes to the background or the web page unloads.
 - `partialize` saves only the data keys, never functions.
-- `migrate(persisted, version)` upgrades old data. History (October 2026): v3 Nepal orchestration model (older data is replaced by the seed); v4 adds the newborn demo project, demo tool records and the nwaran function; v5 adds vehicle services to built-in occasions, feature flags, text overrides and announcements, and replaces wedding-only checklist items on non-wedding celebrations.
+- `migrate(persisted, version)` upgrades old data. History (October 2026): v3 Nepal orchestration model (older data is replaced by the seed); v4 adds the newborn demo project, demo tool records and the nwaran function; v5 adds vehicle services to built-in occasions, feature flags, text overrides and announcements, and replaces wedding-only checklist items on non-wedding celebrations; v6 adds the social hub collections (`socialAccounts`, `socialThreads`, `socialMessages`, `socialPosts`, `socialSettings`) with the demo businesses' seed.
 - Migrations must be **additive**: add missing records and fields; never delete user data.
 - **Never `setState` a persisted store at module load** (R-STATE-6): it would save the initial state over the user's data before rehydration finishes.
 - The session store has its own `version` and `migrate`; `syncDemoAccounts()` copies demo accounts and their persona fields onto older installs. Bump the session `version` when you add a demo account or persona field (R-STATE-8).

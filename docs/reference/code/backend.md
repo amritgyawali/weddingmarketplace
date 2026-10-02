@@ -14,6 +14,7 @@ Every exported symbol in `src/backend/`, file by file. The guide that explains h
 - [`mock.ts`](#mockts) (1 exports) · The demo backend: the on-device zustand store. Store actions stay the source of truth for the demo and Expo Go; this adapter only gives the…
 - [`payments.ts`](#paymentsts) (12 exports) · Online payments with Khalti and eSewa (master plan §7.5). The app never decides that money arrived: payment-initiate starts an attempt whos…
 - [`push.ts`](#pushts) (2 exports) · Push notifications (master plan §7.6). The device registers its Expo push token with rpc_register_push_token; the notify-fanout Edge Functi…
+- [`social.ts`](#socialts) (15 exports) · Social hub on Supabase builds. Connecting a network opens its own consent page through `social-oauth`; the tokens it returns are kept on th…
 - [`supabase.ts`](#supabasets) (3 exports) · The Supabase backend: each core-loop step is one RPC from supabase/migrations/0011_core_rpc.sql, called over PostgREST with plain fetch (no…
 - [`telemetry.ts`](#telemetryts) (9 exports) · Product analytics and error reports (master plan §14), without SDKs:
 - [`telemetryPayloads.ts`](#telemetrypayloadsts) (14 exports)
@@ -573,6 +574,170 @@ registerForPush(): Promise<Result<string | null>>
 ```
 
 Asks permission, gets the Expo token and registers it. Safe to call on every sign-in.
+
+## social.ts
+
+Source: [src/backend/social.ts](../../../src/backend/social.ts)
+
+Social hub on Supabase builds. Connecting a network opens its own consent
+page through `social-oauth`; the tokens it returns are kept on the server
+(`social_account_secrets`, service role only) and never reach the device.
+Replies go out through `social-send`, posts through `social-publish`, and
+the networks deliver new messages to `social-webhook`.
+
+With the mock backend none of this runs: the store's social actions stand
+in for the networks.
+
+### `socialLive`
+
+*function* · [src/backend/social.ts:23](../../../src/backend/social.ts#L23)
+
+```ts
+socialLive()
+```
+
+True when the hub talks to the real networks instead of the demo.
+
+### `socialReturnUrl`
+
+*function* · [src/backend/social.ts:26](../../../src/backend/social.ts#L26)
+
+```ts
+socialReturnUrl()
+```
+
+Where the network's consent page sends the business back to.
+
+### `startSocialConnect`
+
+*function* · [src/backend/social.ts:48](../../../src/backend/social.ts#L48)
+
+```ts
+startSocialConnect(network: SocialNetwork): Promise<Result<{ url: string }>>
+```
+
+Opens the network's consent page (Facebook Login for Facebook, Instagram and WhatsApp; TikTok Login Kit for TikTok).
+
+### `sendSocialReplyLive`
+
+*function* · [src/backend/social.ts:57](../../../src/backend/social.ts#L57)
+
+```ts
+sendSocialReplyLive(threadId: string, text: string, template?: string)
+```
+
+Sends a reply (or an approved WhatsApp template) through the network.
+
+### `publishSocialPostLive`
+
+*function* · [src/backend/social.ts:60](../../../src/backend/social.ts#L60)
+
+```ts
+publishSocialPostLive(postId: string)
+```
+
+Publishes a saved post to its networks now.
+
+### `saveSocialPostLive`
+
+*function* · [src/backend/social.ts:65](../../../src/backend/social.ts#L65)
+
+```ts
+saveSocialPostLive(post: Pick<SocialPost, 'id' | 'caption' | 'overrides' | 'media' | 'networks' | 'link' | 'firstComment' | 'campaign'>)
+```
+
+Saves a draft on the server (a new one when the id is still a device id). Returns the server's post id.
+
+### `deleteSocialPostLive`
+
+*function* · [src/backend/social.ts:71](../../../src/backend/social.ts#L71)
+
+```ts
+deleteSocialPostLive(postId: string): Promise<Result<void>>
+```
+
+Deletes a post (RLS lets members delete anything not mid-publish).
+
+### `sendSocialPostLive`
+
+*function* · [src/backend/social.ts:87](../../../src/backend/social.ts#L87)
+
+```ts
+sendSocialPostLive(post: SocialPost, when: { at?: string }): Promise<Result<string>>
+```
+
+Saves the composer's post on the server and then publishes it now or
+schedules it. Returns the server's post id.
+
+### `triageSocialLive`
+
+*function* · [src/backend/social.ts:95](../../../src/backend/social.ts#L95)
+
+```ts
+triageSocialLive(threadId: string, patch: { status?: string; snoozedUntil?: string | null; starred?: boolean; labels?: string[]; read?: boolean })
+```
+
+Inbox triage on the server: status (and snooze), star, labels, read.
+
+### `noteSocialLive`
+
+*function* · [src/backend/social.ts:99](../../../src/backend/social.ts#L99)
+
+```ts
+noteSocialLive(threadId: string, text: string)
+```
+
+An internal note on the server.
+
+### `leadSocialLive`
+
+*function* · [src/backend/social.ts:102](../../../src/backend/social.ts#L102)
+
+```ts
+leadSocialLive(threadId: string, input: { eventDate: string; guests?: number; functions: string[]; budget?: number; phone?: string })
+```
+
+Turns a server thread into a CRM lead (rpc_social_lead).
+
+### `disconnectSocialLive`
+
+*function* · [src/backend/social.ts:106](../../../src/backend/social.ts#L106)
+
+```ts
+disconnectSocialLive(accountId: string)
+```
+
+Disconnects a network on the server; its token is deleted.
+
+### `saveSocialSettingsLive`
+
+*function* · [src/backend/social.ts:109](../../../src/backend/social.ts#L109)
+
+```ts
+saveSocialSettingsLive(settings: SocialSettings)
+```
+
+Saves the automation (owners and managers).
+
+### `mapSocialInbox`
+
+*function* · [src/backend/social.ts:118](../../../src/backend/social.ts#L118)
+
+```ts
+mapSocialInbox(ownerId: string, d: { accounts?: Row[]; threads?: Row[]; messages?: Row[]; posts?: Row[]; settings?: Row | null })
+```
+
+The server's hub (rpc_social_inbox) in the app's shapes, owned by this device's business account.
+
+### `syncSocialFromServer`
+
+*function* · [src/backend/social.ts:196](../../../src/backend/social.ts#L196)
+
+```ts
+syncSocialFromServer(ownerId: string): Promise<Result<void>>
+```
+
+Reads the hub from the server into the device's mirror (on opening the hub, on refresh and after each change).
 
 ## supabase.ts
 

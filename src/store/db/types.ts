@@ -32,6 +32,11 @@ import type {
   ReviewRecord,
   SeatingLayout,
   ShortlistEntry,
+  SocialAccount,
+  SocialMessage,
+  SocialPost,
+  SocialSettings,
+  SocialThread,
   StaffMember,
   Thread,
   ToolEntry,
@@ -96,4 +101,14 @@ export interface DbData {
   textOverrides: TextOverrides;
   /** Notices shown at the top of a role's home. */
   announcements: Announcement[];
+  // social hub (business app)
+  /** Facebook pages, Instagram profiles, WhatsApp numbers and TikTok accounts a business connected. */
+  socialAccounts: SocialAccount[];
+  /** The unified inbox: direct messages and comments from every connected network. */
+  socialThreads: SocialThread[];
+  socialMessages: SocialMessage[];
+  /** Posts sent (or scheduled) to several networks at once. */
+  socialPosts: SocialPost[];
+  /** Saved replies, auto-replies and away message, keyed by the business account id. */
+  socialSettings: Record<string, SocialSettings>;
 }

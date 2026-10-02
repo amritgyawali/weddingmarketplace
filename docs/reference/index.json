@@ -226,6 +226,27 @@
    "doc": ""
   },
   {
+   "path": "/business/social",
+   "kind": "screen",
+   "file": "src/app/business/social/index.tsx",
+   "component": "SocialHub",
+   "doc": "Social media hub: Facebook, Instagram, WhatsApp and TikTok in one place. One inbox for every message and comment, one composer for every network, a content calendar, connected accounts, insights and automation."
+  },
+  {
+   "path": "/business/social/compose",
+   "kind": "screen",
+   "file": "src/app/business/social/compose.tsx",
+   "component": "ComposeSocialPost",
+   "doc": "New post (or edit a draft) for every connected network. `?at=` pre-fills the schedule."
+  },
+  {
+   "path": "/business/social/thread/[id]",
+   "kind": "screen",
+   "file": "src/app/business/social/thread/[id].tsx",
+   "component": "SocialThreadScreen",
+   "doc": "One social conversation on a phone (wide screens show it beside the inbox)."
+  },
+  {
    "path": "/business/team",
    "kind": "screen",
    "file": "src/app/business/team.tsx",
@@ -1237,7 +1258,7 @@
     {
      "name": "BusinessTabs",
      "kind": "component",
-     "line": 16,
+     "line": 18,
      "signature": "()",
      "doc": ""
     }
@@ -1250,7 +1271,7 @@
     {
      "name": "BusinessAccount",
      "kind": "component",
-     "line": 28,
+     "line": 30,
      "signature": "()",
      "doc": "Business hub: storefront, settings and every business tool."
     }
@@ -1289,7 +1310,7 @@
     {
      "name": "VendorDashboard",
      "kind": "component",
-     "line": 25,
+     "line": 26,
      "signature": "()",
      "doc": ""
     }
@@ -1552,6 +1573,45 @@
      "line": 3,
      "signature": "()",
      "doc": ""
+    }
+   ]
+  },
+  {
+   "file": "src/app/business/social/compose.tsx",
+   "doc": "",
+   "exports": [
+    {
+     "name": "ComposeSocialPost",
+     "kind": "component",
+     "line": 9,
+     "signature": "()",
+     "doc": "New post (or edit a draft) for every connected network. `?at=` pre-fills the schedule."
+    }
+   ]
+  },
+  {
+   "file": "src/app/business/social/index.tsx",
+   "doc": "",
+   "exports": [
+    {
+     "name": "SocialHub",
+     "kind": "component",
+     "line": 37,
+     "signature": "()",
+     "doc": "Social media hub: Facebook, Instagram, WhatsApp and TikTok in one place.\nOne inbox for every message and comment, one composer for every network,\na content calendar, connected accounts, insights and automation."
+    }
+   ]
+  },
+  {
+   "file": "src/app/business/social/thread/[id].tsx",
+   "doc": "",
+   "exports": [
+    {
+     "name": "SocialThreadScreen",
+     "kind": "component",
+     "line": 12,
+     "signature": "()",
+     "doc": "One social conversation on a phone (wide screens show it beside the inbox)."
     }
    ]
   },
@@ -3661,6 +3721,117 @@
    ]
   },
   {
+   "file": "src/backend/social.ts",
+   "doc": "Social hub on Supabase builds. Connecting a network opens its own consent page through `social-oauth`; the tokens it returns are kept on the server (`social_account_secrets`, service role only) and never reach the device. Replies go out through `social-send`, posts through `social-publish`, and the networks deliver new messages to `social-webhook`. With the mock backend none of this runs: the store's social actions stand in for the networks.",
+   "exports": [
+    {
+     "name": "socialLive",
+     "kind": "function",
+     "line": 23,
+     "signature": "()",
+     "doc": "True when the hub talks to the real networks instead of the demo."
+    },
+    {
+     "name": "socialReturnUrl",
+     "kind": "function",
+     "line": 26,
+     "signature": "()",
+     "doc": "Where the network's consent page sends the business back to."
+    },
+    {
+     "name": "startSocialConnect",
+     "kind": "function",
+     "line": 48,
+     "signature": "(network: SocialNetwork): Promise<Result<{ url: string }>>",
+     "doc": "Opens the network's consent page (Facebook Login for Facebook, Instagram and WhatsApp; TikTok Login Kit for TikTok)."
+    },
+    {
+     "name": "sendSocialReplyLive",
+     "kind": "function",
+     "line": 57,
+     "signature": "(threadId: string, text: string, template?: string)",
+     "doc": "Sends a reply (or an approved WhatsApp template) through the network."
+    },
+    {
+     "name": "publishSocialPostLive",
+     "kind": "function",
+     "line": 60,
+     "signature": "(postId: string)",
+     "doc": "Publishes a saved post to its networks now."
+    },
+    {
+     "name": "saveSocialPostLive",
+     "kind": "function",
+     "line": 65,
+     "signature": "(post: Pick<SocialPost, 'id' | 'caption' | 'overrides' | 'media' | 'networks' | 'link' | 'firstComment' | 'campaign'>)",
+     "doc": "Saves a draft on the server (a new one when the id is still a device id). Returns the server's post id."
+    },
+    {
+     "name": "deleteSocialPostLive",
+     "kind": "function",
+     "line": 71,
+     "signature": "(postId: string): Promise<Result<void>>",
+     "doc": "Deletes a post (RLS lets members delete anything not mid-publish)."
+    },
+    {
+     "name": "sendSocialPostLive",
+     "kind": "function",
+     "line": 87,
+     "signature": "(post: SocialPost, when: { at?: string }): Promise<Result<string>>",
+     "doc": "Saves the composer's post on the server and then publishes it now or\nschedules it. Returns the server's post id."
+    },
+    {
+     "name": "triageSocialLive",
+     "kind": "function",
+     "line": 95,
+     "signature": "(threadId: string, patch: { status?: string; snoozedUntil?: string | null; starred?: boolean; labels?: string[]; read?: boolean })",
+     "doc": "Inbox triage on the server: status (and snooze), star, labels, read."
+    },
+    {
+     "name": "noteSocialLive",
+     "kind": "function",
+     "line": 99,
+     "signature": "(threadId: string, text: string)",
+     "doc": "An internal note on the server."
+    },
+    {
+     "name": "leadSocialLive",
+     "kind": "function",
+     "line": 102,
+     "signature": "(threadId: string, input: { eventDate: string; guests?: number; functions: string[]; budget?: number; phone?: string })",
+     "doc": "Turns a server thread into a CRM lead (rpc_social_lead)."
+    },
+    {
+     "name": "disconnectSocialLive",
+     "kind": "function",
+     "line": 106,
+     "signature": "(accountId: string)",
+     "doc": "Disconnects a network on the server; its token is deleted."
+    },
+    {
+     "name": "saveSocialSettingsLive",
+     "kind": "function",
+     "line": 109,
+     "signature": "(settings: SocialSettings)",
+     "doc": "Saves the automation (owners and managers)."
+    },
+    {
+     "name": "mapSocialInbox",
+     "kind": "function",
+     "line": 118,
+     "signature": "(ownerId: string, d: { accounts?: Row[]; threads?: Row[]; messages?: Row[]; posts?: Row[]; settings?: Row | null })",
+     "doc": "The server's hub (rpc_social_inbox) in the app's shapes, owned by this device's business account."
+    },
+    {
+     "name": "syncSocialFromServer",
+     "kind": "function",
+     "line": 196,
+     "signature": "(ownerId: string): Promise<Result<void>>",
+     "doc": "Reads the hub from the server into the device's mirror (on opening the hub, on refresh and after each change)."
+    }
+   ]
+  },
+  {
    "file": "src/backend/supabase.ts",
    "doc": "The Supabase backend: each core-loop step is one RPC from supabase/migrations/0011_core_rpc.sql, called over PostgREST with plain fetch (no SDK until auth lands in P6). The server checks permissions, computes money and writes the audit log; this adapter only converts rupees to paisa and app enums to SQL enums. RLS needs a signed-in user: the token comes from the email sign-in in auth.ts (refreshed as needed); setAccessToken() overrides it for scripts.",
    "exports": [
@@ -5151,6 +5322,250 @@
      "line": 54,
      "signature": "= StyleSheet.create({ row: { flexDirection: 'row', alignItems: 'center', gap: 10 }, between…",
      "doc": ""
+    }
+   ]
+  },
+  {
+   "file": "src/components/social/Composer.tsx",
+   "doc": "",
+   "exports": [
+    {
+     "name": "SocialComposer",
+     "kind": "component",
+     "line": 50,
+     "signature": "({ postId, at }: { postId?: string; at?: string })",
+     "doc": "Write once, publish everywhere: caption with per-network versions, photos\nfrom the portfolio or the phone, hashtag and best-time suggestions, a check\nagainst every network's rules, a live preview, then publish now, schedule\nor keep as a draft."
+    }
+   ]
+  },
+  {
+   "file": "src/components/social/ConnectSheet.tsx",
+   "doc": "",
+   "exports": [
+    {
+     "name": "ConnectSheet",
+     "kind": "component",
+     "line": 29,
+     "signature": "({ network, onClose }: { network: SocialNetwork | null; onClose: () => void })",
+     "doc": "Connecting one network: what Vivah will be allowed to do, in plain words,\nthen the network's own consent page (Supabase builds) or the demo connect."
+    }
+   ]
+  },
+  {
+   "file": "src/components/social/HomeCard.tsx",
+   "doc": "",
+   "exports": [
+    {
+     "name": "SocialHomeCard",
+     "kind": "component",
+     "line": 14,
+     "signature": "()",
+     "doc": "Business home: social media at a glance, with the way into the inbox and the composer."
+    }
+   ]
+  },
+  {
+   "file": "src/components/social/Inbox.tsx",
+   "doc": "",
+   "exports": [
+    {
+     "name": "useReplyContext",
+     "kind": "hook",
+     "line": 37,
+     "signature": "(account: Account, contact: string): ReplyContext",
+     "doc": "Reply context for this business: name, city and its highest active package price."
+    },
+    {
+     "name": "SocialInbox",
+     "kind": "component",
+     "line": 44,
+     "signature": "({ onOpen, selectedId }: { onOpen: (id: string) => void; selectedId?: string })",
+     "doc": "Every message and comment from the connected networks, with filters, search and a check for new messages."
+    },
+    {
+     "name": "SocialConversation",
+     "kind": "component",
+     "line": 178,
+     "signature": "({ threadId }: { threadId: string })",
+     "doc": "One conversation: messages, reply window, suggested and saved replies, notes, labels, assignment, snooze and \"create lead\"."
+    },
+    {
+     "name": "openThreadRoute",
+     "kind": "function",
+     "line": 604,
+     "signature": "(id: string)",
+     "doc": "Opens a thread: in the side pane on wide screens, as its own screen on phones."
+    }
+   ]
+  },
+  {
+   "file": "src/components/social/Panels.tsx",
+   "doc": "",
+   "exports": [
+    {
+     "name": "SocialAccounts",
+     "kind": "component",
+     "line": 29,
+     "signature": "()",
+     "doc": "The four networks: connected or not, followers, when access needs renewing, permissions, connect and disconnect."
+    },
+    {
+     "name": "SocialInsights",
+     "kind": "component",
+     "line": 129,
+     "signature": "()",
+     "doc": "Reach, engagement, replies and leads across the networks."
+    },
+    {
+     "name": "SocialAutomation",
+     "kind": "component",
+     "line": 209,
+     "signature": "()",
+     "doc": "Away message, signature, keyword auto-replies and saved replies."
+    }
+   ]
+  },
+  {
+   "file": "src/components/social/Posts.tsx",
+   "doc": "",
+   "exports": [
+    {
+     "name": "composeHref",
+     "kind": "function",
+     "line": 41,
+     "signature": "(params: { id?: string; at?: string } = {})",
+     "doc": "Opens the composer, for a new post or to edit a draft."
+    },
+    {
+     "name": "SocialPosts",
+     "kind": "component",
+     "line": 44,
+     "signature": "()",
+     "doc": "Every post with its status on each network, numbers once published, and the actions that fit its state. Scrolls itself (the filter stays on top)."
+    },
+    {
+     "name": "PostCard",
+     "kind": "component",
+     "line": 79,
+     "signature": "({ post }: { post: SocialPost })",
+     "doc": "One post: thumbnail, caption, where it is going or went, numbers and actions."
+    },
+    {
+     "name": "PostPreview",
+     "kind": "component",
+     "line": 179,
+     "signature": "({ post, network, account }: { post: Pick<SocialPost, 'caption' | 'overrides' | 'media' | 'link'>; network: SocialNetwork; account?: SocialAccount })",
+     "doc": "How a post will look on one network: name, photo, caption cut where the network cuts it."
+    },
+    {
+     "name": "SocialCalendar",
+     "kind": "component",
+     "line": 256,
+     "signature": "()",
+     "doc": "Month view of scheduled and published posts, the selected day's posts, and this week's best times."
+    }
+   ]
+  },
+  {
+   "file": "src/components/social/live.ts",
+   "doc": "",
+   "exports": [
+    {
+     "name": "socialAct",
+     "kind": "function",
+     "line": 11,
+     "signature": "(ownerId: string, demo: () => string | null | void, server: () => Promise<Result<unknown>>): Promise<string | null>",
+     "doc": "One social hub change, in the demo or for real. The demo runs the store\naction (the networks are simulated on the device); Supabase builds call\nthe server instead, show its refusal, and re-read the hub so the device\nshows what the networks really did. Returns error text or null."
+    }
+   ]
+  },
+  {
+   "file": "src/components/social/parts.tsx",
+   "doc": "",
+   "exports": [
+    {
+     "name": "whenLabel",
+     "kind": "function",
+     "line": 19,
+     "signature": "(iso: string)",
+     "doc": "\"Tue 2 Mangsir · 7:30 PM\" for a timestamp."
+    },
+    {
+     "name": "mediaSource",
+     "kind": "function",
+     "line": 22,
+     "signature": "(m: SocialMedia)",
+     "doc": "Image source for a post or message attachment."
+    },
+    {
+     "name": "useSocialWorkspace",
+     "kind": "hook",
+     "line": 28,
+     "signature": "(account: Account)",
+     "doc": "The signed-in business's social data. Selects the raw arrays and filters in\nrender, so the selectors stay stable."
+    },
+    {
+     "name": "useSocialSummary",
+     "kind": "hook",
+     "line": 46,
+     "signature": "(account: Account)",
+     "doc": "Counts for entry points (Business tab, sidebar, home card): networks connected, unread, scheduled and failed posts."
+    },
+    {
+     "name": "useNow",
+     "kind": "hook",
+     "line": 63,
+     "signature": "(every = 60_000)",
+     "doc": "The current time, refreshed every `every` ms, so time-based states (reply windows) move on while a screen stays open."
+    },
+    {
+     "name": "useThreadMessages",
+     "kind": "hook",
+     "line": 73,
+     "signature": "(threadId: string): SocialMessage[]",
+     "doc": "Messages of one thread in order (stable selector, filtered in render)."
+    },
+    {
+     "name": "NetworkIcon",
+     "kind": "component",
+     "line": 79,
+     "signature": "({ network, size = 18, muted }: { network: SocialNetwork; size?: number; muted?: boolean })",
+     "doc": "The network's own mark in its colour."
+    },
+    {
+     "name": "ContactAvatar",
+     "kind": "component",
+     "line": 85,
+     "signature": "({ name, network, size = 42 }: { name: string; network: SocialNetwork; size?: number })",
+     "doc": "Initials avatar with the network's mark in the corner."
+    },
+    {
+     "name": "NetworkChip",
+     "kind": "component",
+     "line": 98,
+     "signature": "({ network, label, selected, onPress, count, disabled }: { network?: SocialNetwork; label: string; selected: boolean; onPress: () => void; count?: number; disabled?: boolean })",
+     "doc": "Selectable chip with a network mark (filters, composer)."
+    },
+    {
+     "name": "PostThumb",
+     "kind": "component",
+     "line": 127,
+     "signature": "({ media, size = 56, style }: { media: SocialMedia[]; size?: number; style?: StyleProp<ViewStyle> })",
+     "doc": "Small square thumbnail of the first photo of a post."
+    },
+    {
+     "name": "DeliveryTicks",
+     "kind": "component",
+     "line": 151,
+     "signature": "({ status }: { status?: SocialMessage['status'] })",
+     "doc": "One tick sent, two delivered, two in the primary colour read; a warning when it failed."
+    },
+    {
+     "name": "LabelTag",
+     "kind": "component",
+     "line": 160,
+     "signature": "({ label }: { label: string })",
+     "doc": "Thin label used on threads (\"Price asked\")."
     }
    ]
   },
@@ -7917,79 +8332,86 @@
      "doc": "Design tokens: \"Royal Nepali Luxury\". Every hard-coded colour lives here.\n\nDeep burgundy and wine are the rich dark anchors (the colour of a bridal\nsari and a temple door), champagne gold is a restrained metallic accent for\nborders, badges and ratings, and the neutrals are warm ivory and pearl cream\nso photos of red saris and brass lamps sit on them without clashing.\n\nRough distribution on any screen: ~65% ivory/cream, ~20% burgundy/wine,\n~10% espresso text, ~5% champagne and dusty-rose accents. Gold never fills\nlarge areas, and is never used for body text (use `goldDeep` for gold text)."
     },
     {
+     "name": "socialColors",
+     "kind": "const",
+     "line": 77,
+     "signature": "= { facebook: '#1877F2', instagram: '#C13584', whatsapp: '#128C7E', tiktok: '#161823', } as…",
+     "doc": "Network marks in the social hub. Small icons and hairlines only, never fills."
+    },
+    {
      "name": "gradients",
      "kind": "const",
-     "line": 81,
+     "line": 89,
      "signature": "= { … }",
      "doc": "Only photo scrims remain; flat colour everywhere else. The remaining keys\nare kept so older call sites still type-check, and all resolve to flat or\nnear-flat fills."
     },
     {
      "name": "fonts",
      "kind": "const",
-     "line": 101,
+     "line": 109,
      "signature": "= { regular: 'Mukta_400Regular', medium: 'Mukta_500Medium', semibold: 'Mukta_600SemiBold', …",
      "doc": "Mukta (Ek Type) for everything you read and tap: it was drawn for\nDevanagari and Latin together, so Nepali names and \"शुभ विवाह\" set in the\nsame voice as the English UI. Martel, its serif sibling from the same\nfoundry, is kept for a handful of display lines (couple names, screen\ntitles on the couple app)."
     },
     {
      "name": "serif",
      "kind": "const",
-     "line": 109,
+     "line": 117,
      "signature": "= { regular: 'Martel_400Regular', medium: 'Martel_600SemiBold', semibold: 'Martel_600SemiBo…",
      "doc": ""
     },
     {
      "name": "FontWeight",
      "kind": "type",
-     "line": 117,
+     "line": 125,
      "signature": "= keyof typeof fonts",
      "doc": ""
     },
     {
      "name": "spacing",
      "kind": "const",
-     "line": 119,
+     "line": 127,
      "signature": "= { xxs: 2, xs: 4, sm: 8, md: 12, lg: 16, xl: 20, xxl: 24, xxxl: 32, } as const",
      "doc": ""
     },
     {
      "name": "radius",
      "kind": "const",
-     "line": 130,
+     "line": 138,
      "signature": "= { xs: 3, sm: 6, md: 8, lg: 10, xl: 12, pill: 999, } as const",
      "doc": ""
     },
     {
      "name": "GUTTER",
      "kind": "const",
-     "line": 140,
+     "line": 148,
      "signature": "= 16",
      "doc": "Page gutter."
     },
     {
      "name": "shadows",
      "kind": "const",
-     "line": 160,
+     "line": 168,
      "signature": "= { … }",
      "doc": "Shadows are reserved for things that genuinely float (sheets, toasts)."
     },
     {
      "name": "type",
      "kind": "const",
-     "line": 170,
+     "line": 178,
      "signature": "= { display: { fontFamily: serif.bold, fontSize: 30, lineHeight: 40 }, title: { fontFamily:…",
      "doc": ""
     },
     {
      "name": "hitSlop",
      "kind": "const",
-     "line": 181,
+     "line": 189,
      "signature": "= { top: 10, bottom: 10, left: 10, right: 10 }",
      "doc": ""
     },
     {
      "name": "inputReset",
      "kind": "const",
-     "line": 184,
+     "line": 192,
      "signature": ": TextStyle",
      "doc": "Removes the browser focus ring from text inputs on web (native is unaffected)."
     }
@@ -8665,35 +9087,35 @@
     {
      "name": "FEATURE_BY_ID",
      "kind": "const",
-     "line": 64,
+     "line": 65,
      "signature": ": Record<string, FeatureDef>",
      "doc": ""
     },
     {
      "name": "toolFeature",
      "kind": "function",
-     "line": 66,
+     "line": 67,
      "signature": "(toolId: string)",
      "doc": ""
     },
     {
      "name": "serviceFeature",
      "kind": "function",
-     "line": 67,
+     "line": 68,
      "signature": "(serviceId: string)",
      "doc": ""
     },
     {
      "name": "tabFeature",
      "kind": "function",
-     "line": 68,
+     "line": 69,
      "signature": "(role: UserRole, tab: string)",
      "doc": ""
     },
     {
      "name": "featureOn",
      "kind": "function",
-     "line": 71,
+     "line": 72,
      "signature": "(flags: Record<string, boolean> | undefined, id: string)",
      "doc": "Is the feature on? Missing ids are on."
     }
@@ -9354,84 +9776,84 @@
     {
      "name": "day",
      "kind": "function",
-     "line": 51,
+     "line": 52,
      "signature": "(offset: number)",
      "doc": ""
     },
     {
      "name": "at",
      "kind": "function",
-     "line": 56,
+     "line": 57,
      "signature": "(offset: number, hour = 10, minute = 0)",
      "doc": ""
     },
     {
      "name": "DEMO_VENUE",
      "kind": "const",
-     "line": 69,
+     "line": 70,
      "signature": "= VENUES[0]",
      "doc": ""
     },
     {
      "name": "DEMO_STUDIO",
      "kind": "const",
-     "line": 70,
+     "line": 71,
      "signature": "= VENDORS.find((v) => v.id === 'wedding-story-nepal-kathmandu')!",
      "doc": ""
     },
     {
      "name": "DEMO_DECOR",
      "kind": "const",
-     "line": 71,
+     "line": 72,
      "signature": "= VENDORS.find((v) => v.id === 'phoolbari-decor-lalitpur')!",
      "doc": ""
     },
     {
      "name": "DEMO_ACCOUNTS",
      "kind": "const",
-     "line": 75,
+     "line": 76,
      "signature": ": Account[]",
      "doc": ""
     },
     {
      "name": "DEMO_PERSONA_KEYS",
      "kind": "const",
-     "line": 269,
+     "line": 270,
      "signature": "= ['services', 'primaryService', 'businessForm', 'teamSize', 'tradeProfile', 'primarySkill'…",
      "doc": "Persona fields that demo accounts on older installs are missing (filled in by the session migration)."
     },
     {
      "name": "DEMO_OTP",
      "kind": "const",
-     "line": 272,
+     "line": 273,
      "signature": "= '1234'",
      "doc": "Demo OTP for every phone number (no SMS gateway in the prototype)."
     },
     {
      "name": "PLATFORM_ACCESS_CODE",
      "kind": "const",
-     "line": 274,
+     "line": 275,
      "signature": "= 'VIVAH2026'",
      "doc": "Access code required to register a platform-team account."
     },
     {
      "name": "buildSeedData",
      "kind": "function",
-     "line": 1479,
+     "line": 1480,
      "signature": "(): DbData",
      "doc": ""
     },
     {
      "name": "contractSections",
      "kind": "function",
-     "line": 1838,
+     "line": 1840,
      "signature": "(provider: string, scope: string, amount: number): { heading: string; body: string }[]",
      "doc": ""
     },
     {
      "name": "DEMO_IMAGES",
      "kind": "const",
-     "line": 1851,
+     "line": 1853,
      "signature": ": PhotoKey[]",
      "doc": ""
     }
@@ -9684,6 +10106,174 @@
      "line": 26,
      "signature": ": Record<string, string>",
      "doc": "@deprecated use skillIcon"
+    }
+   ]
+  },
+  {
+   "file": "src/data/social.ts",
+   "doc": "The four networks of the social hub and what each one allows, as the networks' own APIs define it (Meta Graph API for Facebook, Instagram and the WhatsApp Cloud API; TikTok's Content Posting API). The publisher checks posts against these limits before anything is sent, and the inbox uses the reply windows. Also the WhatsApp templates and a business's starter saved replies and auto-replies.",
+   "exports": [
+    {
+     "name": "NetworkDef",
+     "kind": "interface",
+     "line": 12,
+     "signature": "",
+     "doc": "What one network allows: limits, inbox kinds, reply window, permissions.",
+     "members": [
+      {
+       "name": "id",
+       "optional": false,
+       "type": "SocialNetwork",
+       "doc": ""
+      },
+      {
+       "name": "label",
+       "optional": false,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "icon",
+       "optional": false,
+       "type": "'logo-facebook' | 'logo-instagram' | 'logo-whatsapp' | 'logo-tiktok'",
+       "doc": "Ionicons name."
+      },
+      {
+       "name": "postAs",
+       "optional": false,
+       "type": "string",
+       "doc": "What a post becomes on this network."
+      },
+      {
+       "name": "captionLimit",
+       "optional": false,
+       "type": "number",
+       "doc": "Longest caption the network takes."
+      },
+      {
+       "name": "hashtagLimit",
+       "optional": true,
+       "type": "number",
+       "doc": ""
+      },
+      {
+       "name": "needsMedia",
+       "optional": false,
+       "type": "boolean",
+       "doc": "The network refuses a post without a photo or video."
+      },
+      {
+       "name": "maxMedia",
+       "optional": false,
+       "type": "number",
+       "doc": ""
+      },
+      {
+       "name": "inbox",
+       "optional": false,
+       "type": "('message' | 'comment')[]",
+       "doc": "What lands in the inbox from this network."
+      },
+      {
+       "name": "replyWindowHours",
+       "optional": true,
+       "type": "number",
+       "doc": "Hours after the customer's last message during which any reply may be sent. After it: Facebook and Instagram allow a human reply for 7 days (the HUMAN_AGENT tag); WhatsApp needs an approved template."
+      },
+      {
+       "name": "humanAgentDays",
+       "optional": true,
+       "type": "number",
+       "doc": ""
+      },
+      {
+       "name": "scopes",
+       "optional": false,
+       "type": "string[]",
+       "doc": "Permissions asked for when connecting."
+      },
+      {
+       "name": "requirement",
+       "optional": false,
+       "type": "string",
+       "doc": "What connecting needs on the network's side."
+      },
+      {
+       "name": "handleHint",
+       "optional": false,
+       "type": "string",
+       "doc": "Typical audience of a Nepali wedding business, for the connect sheet."
+      }
+     ]
+    },
+    {
+     "name": "NETWORKS",
+     "kind": "const",
+     "line": 43,
+     "signature": ": NetworkDef[]",
+     "doc": "Facebook, Instagram, WhatsApp and TikTok, in display order."
+    },
+    {
+     "name": "SCOPE_TEXT",
+     "kind": "const",
+     "line": 105,
+     "signature": ": Record<string, string>",
+     "doc": "Each permission in plain words, for the connect sheet and the accounts tab."
+    },
+    {
+     "name": "NETWORK_BY_ID",
+     "kind": "const",
+     "line": 124,
+     "signature": "= Object.fromEntries(NETWORKS.map((n) => [n.id, n])) as Record<SocialNetwork, NetworkDef>",
+     "doc": "Network definitions by id."
+    },
+    {
+     "name": "NETWORK_IDS",
+     "kind": "function",
+     "line": 127,
+     "signature": "NETWORKS.map((n))",
+     "doc": "The network ids in display order."
+    },
+    {
+     "name": "WHATSAPP_TEMPLATES",
+     "kind": "const",
+     "line": 130,
+     "signature": ": { id: string; title: string; body: string }[]",
+     "doc": "WhatsApp message templates (approved in WhatsApp Manager) for replies after the 24-hour window. `{1}` is the customer's first name."
+    },
+    {
+     "name": "SOCIAL_LABELS",
+     "kind": "const",
+     "line": 137,
+     "signature": "= ['Hot lead', 'Price asked', 'Date check', 'Booked', 'Follow up', 'Complaint']",
+     "doc": "Labels offered in the inbox; businesses can type their own too."
+    },
+    {
+     "name": "DEFAULT_SOCIAL_SETTINGS",
+     "kind": "const",
+     "line": 140,
+     "signature": ": SocialSettings",
+     "doc": "Starter saved replies, auto-replies and away message for a new business. `{price}`, `{city}` and `{business}` are filled in when sent."
+    },
+    {
+     "name": "SAMPLE_INBOUND",
+     "kind": "const",
+     "line": 155,
+     "signature": ": { network: SocialNetwork; kind: 'message' | 'comment'; name: string; handle: string; text: string; phone?: string }[]",
+     "doc": "Messages the simulated networks deliver in the demo (`receiveSocialMessage` is what a real webhook calls)."
+    }
+   ]
+  },
+  {
+   "file": "src/data/socialSeed.ts",
+   "doc": "Demo records for the social hub: Everest Grand Party Palace has Facebook, Instagram and WhatsApp connected (TikTok left to connect in the demo), a busy inbox and posts in every state; Wedding Story Nepal has Instagram, Facebook and TikTok; Phoolbari Decor's Facebook access has expired.",
+   "exports": [
+    {
+     "name": "buildSocialSeed",
+     "kind": "function",
+     "line": 72,
+     "signature": "(): { socialAccounts: SocialAccount[]; socialThreads: SocialThread[]; socialMessages: SocialMessage[]; socialPosts: SocialP…",
+     "doc": "Social accounts, threads, messages, posts and settings for the demo businesses."
     }
    ]
   },
@@ -10269,14 +10859,27 @@
   },
   {
    "file": "src/i18n/ne/index.ts",
-   "doc": "",
+   "doc": "English → Nepali for everything the app shows. Keys are the English text exactly as written in the code; keys with {0}, {1}… are templates whose placeholders match any text (translated in turn). Generated from the app's strings and reviewed by hand; add new lines in the same form.",
    "exports": [
     {
      "name": "NE",
      "kind": "const",
-     "line": 7,
+     "line": 9,
      "signature": ": Record<string, string>",
-     "doc": "English → Nepali for everything the app shows. Keys are the English text\nexactly as written in the code; keys with {0}, {1}… are templates whose\nplaceholders match any text (translated in turn). Generated from the app's\nstrings and reviewed by hand; add new lines in the same form."
+     "doc": ""
+    }
+   ]
+  },
+  {
+   "file": "src/i18n/ne/social.ts",
+   "doc": "",
+   "exports": [
+    {
+     "name": "SOCIAL_NE",
+     "kind": "const",
+     "line": 6,
+     "signature": ": Record<string, string>",
+     "doc": "Nepali for the social hub (Business → Social media). Same form as the main\ndictionary: keys are the English text exactly as written in the code,\n`{0}`, `{1}`… match any text."
     }
    ]
   },
@@ -11893,6 +12496,375 @@
    ]
   },
   {
+   "file": "src/services/social.ts",
+   "doc": "Social hub rules (pure): checking a post against each network's limits, hashtag and best-time suggestions, the networks' reply windows, reading a customer's message for intent and lead details, auto-replies and the away message, and the inbox and post numbers. No React, no store.",
+   "exports": [
+    {
+     "name": "captionFor",
+     "kind": "function",
+     "line": 15,
+     "signature": "(post: Pick<SocialPost, 'caption' | 'overrides'>, network: SocialNetwork)",
+     "doc": "The caption a network gets: its own override, else the main caption."
+    },
+    {
+     "name": "hashtagsIn",
+     "kind": "function",
+     "line": 18,
+     "signature": "(text: string)",
+     "doc": "`#tags` in a caption (letters in any script, digits, underscores)."
+    },
+    {
+     "name": "PostCheck",
+     "kind": "interface",
+     "line": 21,
+     "signature": "",
+     "doc": "What one network says about a post before it goes out.",
+     "members": [
+      {
+       "name": "network",
+       "optional": false,
+       "type": "SocialNetwork",
+       "doc": ""
+      },
+      {
+       "name": "errors",
+       "optional": false,
+       "type": "string[]",
+       "doc": "Stop the post going out to this network."
+      },
+      {
+       "name": "warnings",
+       "optional": false,
+       "type": "string[]",
+       "doc": "Worth knowing; the post can still go."
+      }
+     ]
+    },
+    {
+     "name": "checkPost",
+     "kind": "function",
+     "line": 30,
+     "signature": "(post: Pick<SocialPost, 'caption' | 'overrides' | 'media' | 'networks' | 'scheduledAt'>, accounts: SocialAccount[], nowIso: string): PostCheck[]",
+     "doc": "Checks a post against every chosen network before it is published or scheduled."
+    },
+    {
+     "name": "postReady",
+     "kind": "function",
+     "line": 56,
+     "signature": "(checks: PostCheck[])",
+     "doc": "True when every chosen network accepts the post."
+    },
+    {
+     "name": "suggestHashtags",
+     "kind": "function",
+     "line": 93,
+     "signature": "(input: { services: string[]; city: string; caption: string; date: string }): string[]",
+     "doc": "Hashtags for a post: the business's services, its city, the coming wedding season and general wedding tags, minus those already used."
+    },
+    {
+     "name": "bestHourFromHistory",
+     "kind": "function",
+     "line": 136,
+     "signature": "(posts: SocialPost[]): number | null",
+     "doc": "Hour of day (0–23) at which this business's published posts earned the most engagement per reach; null with fewer than three posts."
+    },
+    {
+     "name": "nextBestSlots",
+     "kind": "function",
+     "line": 163,
+     "signature": "(networks: SocialNetwork[], from: Date, count = 3, learnedHour: number | null = null): { at: string; why: string }[]",
+     "doc": "The next good times to post to these networks, soonest first, at least an hour from `from`."
+    },
+    {
+     "name": "ReplyWindow",
+     "kind": "interface",
+     "line": 194,
+     "signature": "",
+     "doc": "Whether a conversation can still be answered, and how.",
+     "members": [
+      {
+       "name": "state",
+       "optional": false,
+       "type": "'open' | 'human_agent' | 'template' | 'closed'",
+       "doc": "`human_agent`: Meta allows a person's reply (not automation) for 7 days. `template`: WhatsApp needs an approved template."
+      },
+      {
+       "name": "hoursLeft",
+       "optional": true,
+       "type": "number",
+       "doc": ""
+      },
+      {
+       "name": "message",
+       "optional": false,
+       "type": "string",
+       "doc": ""
+      }
+     ]
+    },
+    {
+     "name": "replyWindow",
+     "kind": "function",
+     "line": 202,
+     "signature": "(thread: Pick<SocialThread, 'network' | 'kind' | 'lastInboundAt'>, nowMs: number): ReplyWindow",
+     "doc": "Whether the network still lets the business reply to this conversation, and how."
+    },
+    {
+     "name": "SocialIntent",
+     "kind": "type",
+     "line": 216,
+     "signature": "= 'price' | 'availability' | 'location' | 'visit' | 'booking' | 'complaint' | 'thanks'",
+     "doc": "What a customer message is about."
+    },
+    {
+     "name": "detectIntents",
+     "kind": "function",
+     "line": 229,
+     "signature": "(text: string): SocialIntent[]",
+     "doc": "What a customer's message is about (several can apply)."
+    },
+    {
+     "name": "ReplyContext",
+     "kind": "interface",
+     "line": 235,
+     "signature": "",
+     "doc": "The business details filled into replies.",
+     "members": [
+      {
+       "name": "business",
+       "optional": false,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "city",
+       "optional": false,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "price",
+       "optional": true,
+       "type": "string",
+       "doc": "Starting price, already formatted (\"NPR 180,000 per event\")."
+      },
+      {
+       "name": "contact",
+       "optional": false,
+       "type": "string",
+       "doc": "Customer's name; the first word is used."
+      }
+     ]
+    },
+    {
+     "name": "fillReply",
+     "kind": "function",
+     "line": 245,
+     "signature": "(text: string, ctx: ReplyContext): string",
+     "doc": "Fills `{price}`, `{city}`, `{business}` and `{1}`/`{name}` (the customer's first name) in a saved reply or template."
+    },
+    {
+     "name": "suggestReplies",
+     "kind": "function",
+     "line": 265,
+     "signature": "(text: string, ctx: ReplyContext): string[]",
+     "doc": "Up to three ready replies for what the customer asked, filled in for this business."
+    },
+    {
+     "name": "LeadHints",
+     "kind": "interface",
+     "line": 272,
+     "signature": "",
+     "doc": "Lead details read from a conversation.",
+     "members": [
+      {
+       "name": "eventDate",
+       "optional": true,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "guests",
+       "optional": true,
+       "type": "number",
+       "doc": ""
+      },
+      {
+       "name": "phone",
+       "optional": true,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "budget",
+       "optional": true,
+       "type": "number",
+       "doc": ""
+      },
+      {
+       "name": "functions",
+       "optional": false,
+       "type": "string[]",
+       "doc": ""
+      }
+     ]
+    },
+    {
+     "name": "leadHints",
+     "kind": "function",
+     "line": 303,
+     "signature": "(texts: string[], todayIso: string): LeadHints",
+     "doc": "Event date, guests, phone, budget and functions mentioned in a conversation (latest mention wins)."
+    },
+    {
+     "name": "isAway",
+     "kind": "function",
+     "line": 350,
+     "signature": "(away: SocialSettings['away'], at: Date): boolean",
+     "doc": "Is the business away (outside its hours) at this local time? Hours may span midnight."
+    },
+    {
+     "name": "matchRule",
+     "kind": "function",
+     "line": 360,
+     "signature": "(rules: SocialAutoRule[], text: string, network: SocialNetwork): SocialAutoRule | undefined",
+     "doc": "The first active auto-reply rule whose keyword the message contains, for this network."
+    },
+    {
+     "name": "engagementOf",
+     "kind": "function",
+     "line": 366,
+     "signature": "(r: SocialPostResult)",
+     "doc": "Likes + comments + shares + saves."
+    },
+    {
+     "name": "projectedMetrics",
+     "kind": "function",
+     "line": 380,
+     "signature": "(seed: string, network: SocialNetwork, followers: number, mediaCount: number): Required<Pick<SocialPostResult, 'reach' | 'likes' | 'comments' | 'shares' | 'saves'>>",
+     "doc": "Reach and engagement a network reports for a post, worked out from the\naccount's followers (the demo stands in for the networks' insights APIs).\nWhatsApp reach is the customers the broadcast was read by."
+    },
+    {
+     "name": "postUrl",
+     "kind": "function",
+     "line": 395,
+     "signature": "(network: SocialNetwork, handle: string, id: string): string | undefined",
+     "doc": "Public link of a published post (the networks return the real one; the demo builds a believable one)."
+    },
+    {
+     "name": "formatCount",
+     "kind": "function",
+     "line": 405,
+     "signature": "(n: number): string",
+     "doc": "950 → \"950\", 12,400 → \"12.4K\", 1,250,000 → \"1.3M\"."
+    },
+    {
+     "name": "InboxStats",
+     "kind": "interface",
+     "line": 412,
+     "signature": "",
+     "doc": "Inbox numbers: open, unread, unanswered, reply time, unread by network.",
+     "members": [
+      {
+       "name": "open",
+       "optional": false,
+       "type": "number",
+       "doc": ""
+      },
+      {
+       "name": "unread",
+       "optional": false,
+       "type": "number",
+       "doc": ""
+      },
+      {
+       "name": "unanswered",
+       "optional": false,
+       "type": "number",
+       "doc": "Open conversations whose last message is from the customer."
+      },
+      {
+       "name": "avgResponseMins",
+       "optional": false,
+       "type": "number | null",
+       "doc": ""
+      },
+      {
+       "name": "byNetwork",
+       "optional": false,
+       "type": "Record<SocialNetwork, number>",
+       "doc": ""
+      }
+     ]
+    },
+    {
+     "name": "inboxStats",
+     "kind": "function",
+     "line": 422,
+     "signature": "(threads: SocialThread[], messages: SocialMessage[]): InboxStats",
+     "doc": "Numbers for the inbox header and the insights tab."
+    },
+    {
+     "name": "PostStats",
+     "kind": "interface",
+     "line": 439,
+     "signature": "",
+     "doc": "Post numbers: published, scheduled, reach, engagement, by network, best post.",
+     "members": [
+      {
+       "name": "published",
+       "optional": false,
+       "type": "number",
+       "doc": ""
+      },
+      {
+       "name": "scheduled",
+       "optional": false,
+       "type": "number",
+       "doc": ""
+      },
+      {
+       "name": "reach",
+       "optional": false,
+       "type": "number",
+       "doc": ""
+      },
+      {
+       "name": "engagement",
+       "optional": false,
+       "type": "number",
+       "doc": ""
+      },
+      {
+       "name": "rate",
+       "optional": false,
+       "type": "number",
+       "doc": "Engagement per reach, 0–1."
+      },
+      {
+       "name": "byNetwork",
+       "optional": false,
+       "type": "Record<SocialNetwork, { posts: number; reach: number; engagement: number }>",
+       "doc": ""
+      },
+      {
+       "name": "top",
+       "optional": true,
+       "type": "SocialPost",
+       "doc": ""
+      }
+     ]
+    },
+    {
+     "name": "postStats",
+     "kind": "function",
+     "line": 451,
+     "signature": "(posts: SocialPost[]): PostStats",
+     "doc": "Totals across published posts, per network, and the best post by engagement."
+    }
+   ]
+  },
+  {
    "file": "src/services/toolkit.ts",
    "doc": "Pure calculators behind the role toolkits. No React, no store: every function takes plain values and returns plain values so it can move to the server unchanged. Money is whole NPR; dates are yyyy-mm-dd.",
    "exports": [
@@ -12319,14 +13291,14 @@
     {
      "name": "messageFor",
      "kind": "function",
-     "line": 178,
+     "line": 200,
      "signature": "(action: string): string | null",
      "doc": "\"addBudgetLine\" → \"Budget line added\"."
     },
     {
      "name": "installActionToasts",
      "kind": "function",
-     "line": 239,
+     "line": 261,
      "signature": "()",
      "doc": "Wraps the store actions once (root layout). Timers that call actions use `quietly()`."
     }
@@ -12974,42 +13946,42 @@
     {
      "name": "DbData",
      "kind": "re-export",
-     "line": 30,
+     "line": 31,
      "signature": "from './types'",
      "doc": ""
     },
     {
      "name": "Db",
      "kind": "type",
-     "line": 31,
-     "signature": "= DbData & CoreActions & QuoteActions & ProjectActions & FinanceActions & GigActions & ChatActions & TrustActions & PlannerActions & ToolkitActions & PersonaActions & AdminActions",
+     "line": 32,
+     "signature": "= DbData & CoreActions & QuoteActions & ProjectActions & FinanceActions & GigActions & ChatActions & TrustActions & PlannerActions & ToolkitActions & PersonaActions & AdminActions & SocialActions",
      "doc": ""
     },
     {
      "name": "useDb",
      "kind": "const",
-     "line": 81,
+     "line": 95,
      "signature": "= create<Db>()( persist( (set, get) => ({ ...buildSeedData(), ...coreActions(set, get), ...…",
      "doc": ""
     },
     {
      "name": "useInbox",
      "kind": "hook",
-     "line": 128,
+     "line": 146,
      "signature": "(account: Account)",
      "doc": "Notifications addressed to the account directly or to its whole role.\nSelects the stable array and filters in render — returning a fresh array\nfrom a zustand selector would re-render forever."
     },
     {
      "name": "useThreads",
      "kind": "hook",
-     "line": 134,
+     "line": 152,
      "signature": "(account: Account)",
      "doc": "Threads this account is a member of (platform staff see every thread)."
     },
     {
      "name": "useUnreadMessageCount",
      "kind": "hook",
-     "line": 146,
+     "line": 164,
      "signature": "(account: Account)",
      "doc": ""
     }
@@ -13802,6 +14774,276 @@
    ]
   },
   {
+   "file": "src/store/db/social.ts",
+   "doc": "Social hub: a business connects Facebook, Instagram, WhatsApp and TikTok, answers every message and comment from one inbox, and publishes one post to every network. In production each action is a Supabase call: connect/disconnect → `social-oauth`, replies → `social-send`, publishing and the scheduled-post run → `social-publish`, and `receiveSocialMessage` is what the `social-webhook` function does when a network delivers a message. The demo stands in for the networks with timers (cleared on `resetDemo`).",
+   "exports": [
+    {
+     "name": "SocialInbound",
+     "kind": "interface",
+     "line": 19,
+     "signature": "",
+     "doc": "A message or comment as a network delivers it (the webhook payload, normalised).",
+     "members": [
+      {
+       "name": "ownerId",
+       "optional": false,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "network",
+       "optional": false,
+       "type": "SocialNetwork",
+       "doc": ""
+      },
+      {
+       "name": "kind",
+       "optional": false,
+       "type": "SocialThreadKind",
+       "doc": ""
+      },
+      {
+       "name": "contactName",
+       "optional": false,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "contactHandle",
+       "optional": false,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "contactPhone",
+       "optional": true,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "text",
+       "optional": false,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "postId",
+       "optional": true,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "postCaption",
+       "optional": true,
+       "type": "string",
+       "doc": ""
+      }
+     ]
+    },
+    {
+     "name": "SocialLeadInput",
+     "kind": "interface",
+     "line": 32,
+     "signature": "",
+     "doc": "What \"Create lead\" saves from a conversation.",
+     "members": [
+      {
+       "name": "eventDate",
+       "optional": false,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "guests",
+       "optional": true,
+       "type": "number",
+       "doc": ""
+      },
+      {
+       "name": "functions",
+       "optional": false,
+       "type": "string[]",
+       "doc": ""
+      },
+      {
+       "name": "budget",
+       "optional": true,
+       "type": "number",
+       "doc": ""
+      },
+      {
+       "name": "phone",
+       "optional": true,
+       "type": "string",
+       "doc": ""
+      }
+     ]
+    },
+    {
+     "name": "SocialActions",
+     "kind": "interface",
+     "line": 41,
+     "signature": "",
+     "doc": "Store actions of the social hub.",
+     "members": [
+      {
+       "name": "connectSocialAccount",
+       "optional": false,
+       "type": "(input: { network: SocialNetwork; handle: string; name?: string }) => string | null",
+       "doc": "Connects a network for the signed-in business (in production: after the network's OAuth consent). Error text or null."
+      },
+      {
+       "name": "disconnectSocialAccount",
+       "optional": false,
+       "type": "(accountId: string) => string | null",
+       "doc": ""
+      },
+      {
+       "name": "reconnectSocialAccount",
+       "optional": false,
+       "type": "(accountId: string) => string | null",
+       "doc": "Renews an expired token (in production: the OAuth consent again)."
+      },
+      {
+       "name": "receiveSocialMessage",
+       "optional": false,
+       "type": "(input: SocialInbound) => string | null",
+       "doc": "A message or comment arrives from a network (the webhook). Applies auto-replies and the away message. Returns the thread id."
+      },
+      {
+       "name": "syncSocialInbox",
+       "optional": false,
+       "type": "() => number",
+       "doc": "Pulls anything new from the connected networks and wakes snoozed threads. Returns how many messages arrived."
+      },
+      {
+       "name": "sendSocialReply",
+       "optional": false,
+       "type": "(threadId: string, text: string, opts?: { media?: SocialMedia[]; template?: string }) => string | null",
+       "doc": "Replies in the thread (message or public comment reply). Outside WhatsApp's 24-hour window pass an approved template id."
+      },
+      {
+       "name": "addSocialNote",
+       "optional": false,
+       "type": "(threadId: string, text: string) => string | null",
+       "doc": ""
+      },
+      {
+       "name": "markSocialThreadRead",
+       "optional": false,
+       "type": "(threadId: string) => void",
+       "doc": ""
+      },
+      {
+       "name": "setSocialThreadStatus",
+       "optional": false,
+       "type": "(threadId: string, status: SocialThreadStatus, snoozeHours?: number) => string | null",
+       "doc": "`pending` with `snoozeHours` hides the thread until then."
+      },
+      {
+       "name": "toggleSocialThreadStar",
+       "optional": false,
+       "type": "(threadId: string) => void",
+       "doc": ""
+      },
+      {
+       "name": "setSocialThreadLabels",
+       "optional": false,
+       "type": "(threadId: string, labels: string[]) => void",
+       "doc": ""
+      },
+      {
+       "name": "assignSocialThread",
+       "optional": false,
+       "type": "(threadId: string, assignee?: string) => void",
+       "doc": ""
+      },
+      {
+       "name": "createLeadFromSocialThread",
+       "optional": false,
+       "type": "(threadId: string, input: SocialLeadInput) => { leadId?: string; error?: string }",
+       "doc": "Turns a conversation into a CRM lead (source `social`) and links the two. Returns the lead id, or error text."
+      },
+      {
+       "name": "saveSocialPost",
+       "optional": false,
+       "type": "(input: Partial<SocialPost> & Pick<SocialPost, 'caption' | 'networks' | 'media'>) => { id?: string; error?: string }",
+       "doc": "Creates or updates a draft. Returns the post id."
+      },
+      {
+       "name": "scheduleSocialPost",
+       "optional": false,
+       "type": "(postId: string, at: string) => string | null",
+       "doc": ""
+      },
+      {
+       "name": "publishSocialPost",
+       "optional": false,
+       "type": "(postId: string) => string | null",
+       "doc": "Sends the post to every chosen network now. Networks that refuse it are marked failed; the rest go out."
+      },
+      {
+       "name": "retrySocialPost",
+       "optional": false,
+       "type": "(postId: string, network: SocialNetwork) => string | null",
+       "doc": ""
+      },
+      {
+       "name": "duplicateSocialPost",
+       "optional": false,
+       "type": "(postId: string) => string | null",
+       "doc": ""
+      },
+      {
+       "name": "deleteSocialPost",
+       "optional": false,
+       "type": "(postId: string) => string | null",
+       "doc": ""
+      },
+      {
+       "name": "runDueSocialPosts",
+       "optional": false,
+       "type": "() => number",
+       "doc": "Publishes scheduled posts whose time has come and wakes snoozed threads (pg_cron + social-publish in production). Returns how many posts started."
+      },
+      {
+       "name": "updateSocialSettings",
+       "optional": false,
+       "type": "(patch: Partial<SocialSettings>) => string | null",
+       "doc": ""
+      },
+      {
+       "name": "mirrorSocialData",
+       "optional": false,
+       "type": "(ownerId: string, data: { accounts: SocialAccount[]; threads: SocialThread[]; messages: SocialMessage[]; posts: SocialPost[]; settings?: SocialSettings }) => void",
+       "doc": "Supabase builds: replaces one business's hub on this device with what the server holds (`syncSocialFromServer`)."
+      }
+     ]
+    },
+    {
+     "name": "clearSocialTimers",
+     "kind": "function",
+     "line": 80,
+     "signature": "()",
+     "doc": "Stops the simulated networks (on resetDemo)."
+    },
+    {
+     "name": "socialSettingsFor",
+     "kind": "function",
+     "line": 106,
+     "signature": "(all: Record<string, SocialSettings>, ownerId: string)",
+     "doc": "Settings for a business, with the starter set until it saves its own."
+    },
+    {
+     "name": "socialActions",
+     "kind": "function",
+     "line": 111,
+     "signature": "(set: SetDb, get: GetDb): SocialActions",
+     "doc": "The social hub actions for the shared store."
+    }
+   ]
+  },
+  {
    "file": "src/store/db/toolkit.ts",
    "doc": "Role toolkits: generic tool records, per-owner tool settings and ops broadcasts.",
    "exports": [
@@ -13961,7 +15203,7 @@
     {
      "name": "DbData",
      "kind": "interface",
-     "line": 44,
+     "line": 49,
      "signature": "",
      "doc": "Everything the shared on-device \"backend\" persists. Mirrors the SQL schema.",
      "members": [
@@ -14204,6 +15446,36 @@
        "optional": false,
        "type": "Announcement[]",
        "doc": "Notices shown at the top of a role's home."
+      },
+      {
+       "name": "socialAccounts",
+       "optional": false,
+       "type": "SocialAccount[]",
+       "doc": "Facebook pages, Instagram profiles, WhatsApp numbers and TikTok accounts a business connected."
+      },
+      {
+       "name": "socialThreads",
+       "optional": false,
+       "type": "SocialThread[]",
+       "doc": "The unified inbox: direct messages and comments from every connected network."
+      },
+      {
+       "name": "socialMessages",
+       "optional": false,
+       "type": "SocialMessage[]",
+       "doc": ""
+      },
+      {
+       "name": "socialPosts",
+       "optional": false,
+       "type": "SocialPost[]",
+       "doc": "Posts sent (or scheduled) to several networks at once."
+      },
+      {
+       "name": "socialSettings",
+       "optional": false,
+       "type": "Record<string, SocialSettings>",
+       "doc": "Saved replies, auto-replies and away message, keyed by the business account id."
       }
      ]
     }
@@ -16519,7 +17791,7 @@
       {
        "name": "source",
        "optional": true,
-       "type": "'marketplace' | 'platform' | 'referral' | 'walk_in'",
+       "type": "'marketplace' | 'platform' | 'referral' | 'walk_in' | 'social'",
        "doc": ""
       },
       {
@@ -21421,8 +22693,621 @@
      "name": "*",
      "kind": "re-export",
      "line": 1140,
+     "signature": "from './social'",
+     "doc": ""
+    },
+    {
+     "name": "*",
+     "kind": "re-export",
+     "line": 1142,
      "signature": "from './persona'",
      "doc": ""
+    }
+   ]
+  },
+  {
+   "file": "src/types/social.ts",
+   "doc": "Social hub (business app): the vendor's Facebook page, Instagram profile, WhatsApp Business number and TikTok account in one place. Messages and comments from every network land in one inbox; one post goes out to every network. Mirrors supabase/migrations/0017_social_hub.sql. Access tokens never live on the device: the server keeps them in `social_account_secrets` (service role only) and the app only ever sees the account row.",
+   "exports": [
+    {
+     "name": "SocialNetwork",
+     "kind": "type",
+     "line": 14,
+     "signature": "= 'facebook' | 'instagram' | 'whatsapp' | 'tiktok'",
+     "doc": "Networks a business can connect."
+    },
+    {
+     "name": "SocialAccountStatus",
+     "kind": "type",
+     "line": 17,
+     "signature": "= 'connected' | 'expired' | 'disconnected'",
+     "doc": "`expired`: the token needs renewing before replies or posts go out."
+    },
+    {
+     "name": "SocialAccount",
+     "kind": "interface",
+     "line": 20,
+     "signature": "",
+     "doc": "A connected Facebook page, Instagram profile, WhatsApp number or TikTok account.",
+     "members": [
+      {
+       "name": "id",
+       "optional": false,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "ownerId",
+       "optional": false,
+       "type": "string",
+       "doc": "The vendor account that connected it."
+      },
+      {
+       "name": "network",
+       "optional": false,
+       "type": "SocialNetwork",
+       "doc": ""
+      },
+      {
+       "name": "handle",
+       "optional": false,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "name",
+       "optional": false,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "status",
+       "optional": false,
+       "type": "SocialAccountStatus",
+       "doc": ""
+      },
+      {
+       "name": "followers",
+       "optional": false,
+       "type": "number",
+       "doc": ""
+      },
+      {
+       "name": "scopes",
+       "optional": false,
+       "type": "string[]",
+       "doc": "Permissions granted when connecting."
+      },
+      {
+       "name": "connectedAt",
+       "optional": false,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "expiresAt",
+       "optional": true,
+       "type": "string",
+       "doc": "When the access token must be renewed (Meta long-lived tokens last about 60 days)."
+      },
+      {
+       "name": "lastSyncAt",
+       "optional": true,
+       "type": "string",
+       "doc": ""
+      }
+     ]
+    },
+    {
+     "name": "SocialThreadKind",
+     "kind": "type",
+     "line": 39,
+     "signature": "= 'message' | 'comment'",
+     "doc": "A direct message conversation, or the comments one person left on a post."
+    },
+    {
+     "name": "SocialThreadStatus",
+     "kind": "type",
+     "line": 42,
+     "signature": "= 'open' | 'pending' | 'done'",
+     "doc": "`pending`: waiting on the customer (or snoozed); `done`: nothing left to do."
+    },
+    {
+     "name": "SocialMedia",
+     "kind": "interface",
+     "line": 45,
+     "signature": "",
+     "doc": "A photo or video attached to a post or a message.",
+     "members": [
+      {
+       "name": "id",
+       "optional": false,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "kind",
+       "optional": false,
+       "type": "'image' | 'video'",
+       "doc": ""
+      },
+      {
+       "name": "image",
+       "optional": true,
+       "type": "PhotoKey",
+       "doc": ""
+      },
+      {
+       "name": "uri",
+       "optional": true,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "alt",
+       "optional": true,
+       "type": "string",
+       "doc": ""
+      }
+     ]
+    },
+    {
+     "name": "SocialThread",
+     "kind": "interface",
+     "line": 54,
+     "signature": "",
+     "doc": "One conversation in the unified inbox.",
+     "members": [
+      {
+       "name": "id",
+       "optional": false,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "ownerId",
+       "optional": false,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "accountId",
+       "optional": false,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "network",
+       "optional": false,
+       "type": "SocialNetwork",
+       "doc": ""
+      },
+      {
+       "name": "kind",
+       "optional": false,
+       "type": "SocialThreadKind",
+       "doc": ""
+      },
+      {
+       "name": "contactName",
+       "optional": false,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "contactHandle",
+       "optional": false,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "contactPhone",
+       "optional": true,
+       "type": "string",
+       "doc": "WhatsApp number, or one the customer typed into a message."
+      },
+      {
+       "name": "postId",
+       "optional": true,
+       "type": "string",
+       "doc": "For comments: the post the comment is on."
+      },
+      {
+       "name": "postCaption",
+       "optional": true,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "status",
+       "optional": false,
+       "type": "SocialThreadStatus",
+       "doc": ""
+      },
+      {
+       "name": "snoozedUntil",
+       "optional": true,
+       "type": "string",
+       "doc": "A snoozed thread returns to `open` at this time."
+      },
+      {
+       "name": "starred",
+       "optional": true,
+       "type": "boolean",
+       "doc": ""
+      },
+      {
+       "name": "labels",
+       "optional": false,
+       "type": "string[]",
+       "doc": ""
+      },
+      {
+       "name": "assignee",
+       "optional": true,
+       "type": "string",
+       "doc": "Team member handling it (name)."
+      },
+      {
+       "name": "leadId",
+       "optional": true,
+       "type": "string",
+       "doc": "CRM lead made from this conversation."
+      },
+      {
+       "name": "unread",
+       "optional": false,
+       "type": "number",
+       "doc": ""
+      },
+      {
+       "name": "lastAt",
+       "optional": false,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "lastInboundAt",
+       "optional": true,
+       "type": "string",
+       "doc": "Last message from the customer; opens the networks' 24-hour reply window."
+      },
+      {
+       "name": "firstResponseMins",
+       "optional": true,
+       "type": "number",
+       "doc": "Minutes the first reply took (inbox response-time stats)."
+      }
+     ]
+    },
+    {
+     "name": "SocialMessageStatus",
+     "kind": "type",
+     "line": 85,
+     "signature": "= 'sending' | 'sent' | 'delivered' | 'read' | 'failed'",
+     "doc": "Delivery state of a reply, as the network reports it."
+    },
+    {
+     "name": "SocialMessage",
+     "kind": "interface",
+     "line": 88,
+     "signature": "",
+     "doc": "A message, a comment, or an internal note in a thread.",
+     "members": [
+      {
+       "name": "id",
+       "optional": false,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "threadId",
+       "optional": false,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "direction",
+       "optional": false,
+       "type": "'in' | 'out' | 'note'",
+       "doc": "`note` is internal: the customer never sees it."
+      },
+      {
+       "name": "text",
+       "optional": false,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "at",
+       "optional": false,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "author",
+       "optional": true,
+       "type": "string",
+       "doc": "Who wrote it: the customer, or the team member who replied."
+      },
+      {
+       "name": "media",
+       "optional": true,
+       "type": "SocialMedia[]",
+       "doc": ""
+      },
+      {
+       "name": "status",
+       "optional": true,
+       "type": "SocialMessageStatus",
+       "doc": ""
+      },
+      {
+       "name": "auto",
+       "optional": true,
+       "type": "boolean",
+       "doc": "Sent by an auto-reply rule or the away message."
+      },
+      {
+       "name": "template",
+       "optional": true,
+       "type": "string",
+       "doc": "Approved WhatsApp template used outside the 24-hour window."
+      },
+      {
+       "name": "error",
+       "optional": true,
+       "type": "string",
+       "doc": ""
+      }
+     ]
+    },
+    {
+     "name": "SocialPostStatus",
+     "kind": "type",
+     "line": 107,
+     "signature": "= 'draft' | 'scheduled' | 'publishing' | 'published' | 'partial' | 'failed'",
+     "doc": "Where a post is: draft, scheduled, publishing, published, partly published or failed."
+    },
+    {
+     "name": "SocialPostResult",
+     "kind": "interface",
+     "line": 110,
+     "signature": "",
+     "doc": "How one network took a post, and how it did there.",
+     "members": [
+      {
+       "name": "status",
+       "optional": false,
+       "type": "'queued' | 'publishing' | 'published' | 'failed'",
+       "doc": ""
+      },
+      {
+       "name": "url",
+       "optional": true,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "error",
+       "optional": true,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "at",
+       "optional": true,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "reach",
+       "optional": true,
+       "type": "number",
+       "doc": ""
+      },
+      {
+       "name": "likes",
+       "optional": true,
+       "type": "number",
+       "doc": ""
+      },
+      {
+       "name": "comments",
+       "optional": true,
+       "type": "number",
+       "doc": ""
+      },
+      {
+       "name": "shares",
+       "optional": true,
+       "type": "number",
+       "doc": ""
+      },
+      {
+       "name": "saves",
+       "optional": true,
+       "type": "number",
+       "doc": ""
+      }
+     ]
+    },
+    {
+     "name": "SocialPost",
+     "kind": "interface",
+     "line": 123,
+     "signature": "",
+     "doc": "One post sent to several networks at once (now or at a set time).",
+     "members": [
+      {
+       "name": "id",
+       "optional": false,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "ownerId",
+       "optional": false,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "caption",
+       "optional": false,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "overrides",
+       "optional": false,
+       "type": "Partial<Record<SocialNetwork, string>>",
+       "doc": "Caption for one network when it should differ from the main one."
+      },
+      {
+       "name": "media",
+       "optional": false,
+       "type": "SocialMedia[]",
+       "doc": ""
+      },
+      {
+       "name": "networks",
+       "optional": false,
+       "type": "SocialNetwork[]",
+       "doc": ""
+      },
+      {
+       "name": "link",
+       "optional": true,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "firstComment",
+       "optional": true,
+       "type": "string",
+       "doc": "Posted as the first comment (hashtags, a booking link). Facebook and Instagram."
+      },
+      {
+       "name": "status",
+       "optional": false,
+       "type": "SocialPostStatus",
+       "doc": ""
+      },
+      {
+       "name": "scheduledAt",
+       "optional": true,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "publishedAt",
+       "optional": true,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "results",
+       "optional": false,
+       "type": "Partial<Record<SocialNetwork, SocialPostResult>>",
+       "doc": ""
+      },
+      {
+       "name": "campaign",
+       "optional": true,
+       "type": "string",
+       "doc": "Free label to group posts (\"Mangsir offer\")."
+      },
+      {
+       "name": "createdAt",
+       "optional": false,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "updatedAt",
+       "optional": false,
+       "type": "string",
+       "doc": ""
+      }
+     ]
+    },
+    {
+     "name": "SocialAutoRule",
+     "kind": "interface",
+     "line": 145,
+     "signature": "",
+     "doc": "Keyword auto-reply: when an incoming message contains a keyword, reply at once.",
+     "members": [
+      {
+       "name": "id",
+       "optional": false,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "keywords",
+       "optional": false,
+       "type": "string[]",
+       "doc": ""
+      },
+      {
+       "name": "reply",
+       "optional": false,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "networks",
+       "optional": false,
+       "type": "SocialNetwork[]",
+       "doc": "Empty means every network."
+      },
+      {
+       "name": "active",
+       "optional": false,
+       "type": "boolean",
+       "doc": ""
+      },
+      {
+       "name": "hits",
+       "optional": false,
+       "type": "number",
+       "doc": ""
+      }
+     ]
+    },
+    {
+     "name": "SocialSettings",
+     "kind": "interface",
+     "line": 156,
+     "signature": "",
+     "doc": "Saved replies, auto-replies and the away message of one business.",
+     "members": [
+      {
+       "name": "savedReplies",
+       "optional": false,
+       "type": "{ id: string; title: string; text: string }[]",
+       "doc": ""
+      },
+      {
+       "name": "rules",
+       "optional": false,
+       "type": "SocialAutoRule[]",
+       "doc": ""
+      },
+      {
+       "name": "away",
+       "optional": false,
+       "type": "{ active: boolean; from: string; to: string; text: string }",
+       "doc": "Outside these hours (Nepal time, HH:MM) new conversations get the away message once."
+      },
+      {
+       "name": "signature",
+       "optional": true,
+       "type": "string",
+       "doc": "Added under every reply when set (\"— Rajesh, Everest Grand\")."
+      }
+     ]
     }
    ]
   },
@@ -22251,6 +24136,13 @@
      "line": 50,
      "signature": "()",
      "doc": "Extra web hosts the browser may be sent back to after paying (e.g. a Vercel preview)."
+    },
+    {
+     "name": "socialConfig",
+     "kind": "function",
+     "line": 58,
+     "signature": "()",
+     "doc": "The social hub's apps: a Meta app (Facebook Login, Pages, Instagram,\nWhatsApp Cloud API) and a TikTok app (Login Kit, Content Posting API).\nEach network works once its keys are set; SOCIAL_STATE_SECRET signs the\nconsent round trip."
     }
    ]
   },
@@ -22948,6 +24840,646 @@
    ]
   },
   {
+   "file": "supabase/functions/_shared/social.ts",
+   "doc": "Social hub logic shared by social-oauth, social-webhook, social-send and social-publish (no dependencies, tested in Node by npm run test:functions): the networks' consent URLs, a signed OAuth state, webhook signatures (Meta's X-Hub-Signature-256 and TikTok's TikTok-Signature), turning webhook payloads into one event shape, the reply window, the reply request for each network, and publishing one post to Facebook, Instagram, WhatsApp or TikTok. APIs: Meta Graph API (Pages, Instagram content publishing and messaging, WhatsApp Cloud API) and TikTok's Login Kit, Content Posting API and API for Bus…",
+   "exports": [
+    {
+     "name": "Network",
+     "kind": "type",
+     "line": 15,
+     "signature": "= 'facebook' | 'instagram' | 'whatsapp' | 'tiktok'",
+     "doc": "The networks the hub connects."
+    },
+    {
+     "name": "NETWORKS",
+     "kind": "const",
+     "line": 17,
+     "signature": ": Network[]",
+     "doc": "Every network id."
+    },
+    {
+     "name": "isNetwork",
+     "kind": "function",
+     "line": 19,
+     "signature": "(x: unknown): x is Network",
+     "doc": "True for a known network id."
+    },
+    {
+     "name": "META_SCOPES",
+     "kind": "const",
+     "line": 22,
+     "signature": ": Record<Exclude<Network, 'tiktok'>, string[]>",
+     "doc": "Facebook Login permissions asked for each Meta network."
+    },
+    {
+     "name": "TIKTOK_SCOPES",
+     "kind": "const",
+     "line": 28,
+     "signature": "= ['user.info.basic', 'user.info.stats', 'video.publish', 'video.list']",
+     "doc": "TikTok Login Kit scopes."
+    },
+    {
+     "name": "TIKTOK_API",
+     "kind": "const",
+     "line": 31,
+     "signature": "= 'https://open.tiktokapis.com'",
+     "doc": "TikTok Open API base URL."
+    },
+    {
+     "name": "TIKTOK_BUSINESS_API",
+     "kind": "const",
+     "line": 33,
+     "signature": "= 'https://business-api.tiktok.com/open_api/v1.3'",
+     "doc": "TikTok API for Business base URL (comment replies)."
+    },
+    {
+     "name": "graphBase",
+     "kind": "function",
+     "line": 35,
+     "signature": "(version = 'v21.0')",
+     "doc": "Meta Graph API base URL for a version."
+    },
+    {
+     "name": "hmacHex",
+     "kind": "function",
+     "line": 58,
+     "signature": "(secret: string, message: string)",
+     "doc": "HMAC-SHA256 of a message, as hex."
+    },
+    {
+     "name": "OAuthState",
+     "kind": "interface",
+     "line": 70,
+     "signature": "",
+     "doc": "What the signed OAuth state carries.",
+     "members": [
+      {
+       "name": "u",
+       "optional": false,
+       "type": "string",
+       "doc": "Supabase user id of the business owner connecting."
+      },
+      {
+       "name": "n",
+       "optional": false,
+       "type": "Network",
+       "doc": ""
+      },
+      {
+       "name": "r",
+       "optional": false,
+       "type": "string",
+       "doc": "Where to send the browser afterwards."
+      },
+      {
+       "name": "exp",
+       "optional": false,
+       "type": "number",
+       "doc": "Expiry, ms since epoch."
+      }
+     ]
+    },
+    {
+     "name": "signState",
+     "kind": "function",
+     "line": 81,
+     "signature": "(state: OAuthState, secret: string): Promise<string>",
+     "doc": "A tamper-proof state for the consent round trip: base64url(JSON).base64url(HMAC)."
+    },
+    {
+     "name": "readState",
+     "kind": "function",
+     "line": 87,
+     "signature": "(token: string | null, secret: string, nowMs = Date.now()): Promise<OAuthState | null>",
+     "doc": "The state if the signature matches and it hasn't expired, else null."
+    },
+    {
+     "name": "authorizeUrl",
+     "kind": "function",
+     "line": 100,
+     "signature": "(network: Network, cfg: { metaAppId?: string; metaConfigId?: string; tiktokClientKey?: string; graphVersion?: string }, redirectUri: string, state: string): string | null",
+     "doc": "The network's consent page. Facebook Login covers Facebook, Instagram and WhatsApp; TikTok has its own."
+    },
+    {
+     "name": "allowedReturn",
+     "kind": "function",
+     "line": 114,
+     "signature": "(url: unknown, appUrl: string, extraHosts: string[] = []): url is string",
+     "doc": "Return addresses the consent round trip may send the browser back to."
+    },
+    {
+     "name": "withQuery",
+     "kind": "function",
+     "line": 127,
+     "signature": "(url: string, values: Record<string, string>): string",
+     "doc": "Adds query values to a return address (custom schemes included)."
+    },
+    {
+     "name": "verifyMetaSignature",
+     "kind": "function",
+     "line": 135,
+     "signature": "(raw: string, header: string | null, appSecret: string): Promise<boolean>",
+     "doc": "Meta signs the raw body with the app secret: `X-Hub-Signature-256: sha256=<hex>`."
+    },
+    {
+     "name": "verifyTikTokSignature",
+     "kind": "function",
+     "line": 141,
+     "signature": "(raw: string, header: string | null, clientSecret: string, nowSec = Math.floor(Date.now() / 1000), toleranceSec = 300): Promise<boolean>",
+     "doc": "TikTok signs `<timestamp>.<raw body>` with the client secret: `TikTok-Signature: t=<ts>,s=<hex>`."
+    },
+    {
+     "name": "InboundEvent",
+     "kind": "interface",
+     "line": 150,
+     "signature": "",
+     "doc": "One inbound happening, in the shape vivah_social_ingest takes.",
+     "members": [
+      {
+       "name": "type",
+       "optional": false,
+       "type": "'message' | 'comment' | 'status'",
+       "doc": ""
+      },
+      {
+       "name": "network",
+       "optional": true,
+       "type": "Network",
+       "doc": ""
+      },
+      {
+       "name": "account",
+       "optional": true,
+       "type": "string",
+       "doc": "Our side: page id, Instagram user id or WhatsApp phone number id."
+      },
+      {
+       "name": "id",
+       "optional": false,
+       "type": "string",
+       "doc": "The network's message or comment id."
+      },
+      {
+       "name": "contact",
+       "optional": true,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "contactName",
+       "optional": true,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "contactHandle",
+       "optional": true,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "contactPhone",
+       "optional": true,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "text",
+       "optional": true,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "media",
+       "optional": true,
+       "type": "{ kind: 'image' | 'video'; uri?: string }[]",
+       "doc": ""
+      },
+      {
+       "name": "postId",
+       "optional": true,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "commentId",
+       "optional": true,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "postCaption",
+       "optional": true,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "at",
+       "optional": true,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "status",
+       "optional": true,
+       "type": "'sent' | 'delivered' | 'read' | 'failed'",
+       "doc": ""
+      }
+     ]
+    },
+    {
+     "name": "MetaWebhook",
+     "kind": "interface",
+     "line": 209,
+     "signature": "",
+     "doc": "Meta webhook payload (the parts read).",
+     "members": [
+      {
+       "name": "object",
+       "optional": true,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "entry",
+       "optional": true,
+       "type": "{ id?: string; time?: number; messaging?: MetaMessaging[]; changes?: { field?: string; value?: MetaChangeValue }[] }[]",
+       "doc": ""
+      }
+     ]
+    },
+    {
+     "name": "TikTokWebhook",
+     "kind": "interface",
+     "line": 214,
+     "signature": "",
+     "doc": "TikTok webhook payload (the parts read).",
+     "members": [
+      {
+       "name": "event",
+       "optional": true,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "content",
+       "optional": true,
+       "type": "string | { publish_id?: string; reason?: string }",
+       "doc": ""
+      }
+     ]
+    },
+    {
+     "name": "parseMetaWebhook",
+     "kind": "function",
+     "line": 243,
+     "signature": "(body: MetaWebhook | null | undefined): InboundEvent[]",
+     "doc": "Messenger, Instagram and WhatsApp Cloud API webhook payloads → events. Our own echoes and comments are dropped."
+    },
+    {
+     "name": "parseTikTokWebhook",
+     "kind": "function",
+     "line": 286,
+     "signature": "(body: TikTokWebhook | null | undefined): { publishId: string; status: 'published' | 'failed'; error?: string }[]",
+     "doc": "TikTok webhook → how a post TikTok was pulling went."
+    },
+    {
+     "name": "replyWindowState",
+     "kind": "function",
+     "line": 305,
+     "signature": "(network: Network, kind: 'message' | 'comment', lastInboundAt: string | null, nowMs = Date.now()): 'open' | 'human_agent' | 'template' | 'closed'",
+     "doc": "Same rule as the app (src/services/social.ts replyWindow)."
+    },
+    {
+     "name": "ReplyInput",
+     "kind": "interface",
+     "line": 314,
+     "signature": "",
+     "doc": "Everything needed to send one reply on its network.",
+     "members": [
+      {
+       "name": "network",
+       "optional": false,
+       "type": "Network",
+       "doc": ""
+      },
+      {
+       "name": "kind",
+       "optional": false,
+       "type": "'message' | 'comment'",
+       "doc": ""
+      },
+      {
+       "name": "accountExternalId",
+       "optional": false,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "contact",
+       "optional": false,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "commentId",
+       "optional": true,
+       "type": "string | null",
+       "doc": ""
+      },
+      {
+       "name": "postId",
+       "optional": true,
+       "type": "string | null",
+       "doc": ""
+      },
+      {
+       "name": "text",
+       "optional": false,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "token",
+       "optional": false,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "meta",
+       "optional": true,
+       "type": "Record<string, string>",
+       "doc": ""
+      },
+      {
+       "name": "humanAgent",
+       "optional": true,
+       "type": "boolean",
+       "doc": ""
+      },
+      {
+       "name": "template",
+       "optional": true,
+       "type": "{ name: string; language: string; params: string[] } | null",
+       "doc": ""
+      }
+     ]
+    },
+    {
+     "name": "HttpRequest",
+     "kind": "interface",
+     "line": 329,
+     "signature": "",
+     "doc": "A request to a network, built without sending it (testable).",
+     "members": [
+      {
+       "name": "url",
+       "optional": false,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "method",
+       "optional": false,
+       "type": "'GET' | 'POST'",
+       "doc": ""
+      },
+      {
+       "name": "headers",
+       "optional": false,
+       "type": "Record<string, string>",
+       "doc": ""
+      },
+      {
+       "name": "body",
+       "optional": true,
+       "type": "string",
+       "doc": ""
+      }
+     ]
+    },
+    {
+     "name": "replyRequest",
+     "kind": "function",
+     "line": 344,
+     "signature": "(input: ReplyInput, graphVersion = 'v21.0'): HttpRequest",
+     "doc": "The one HTTP request that sends a reply on its network."
+    },
+    {
+     "name": "replyId",
+     "kind": "function",
+     "line": 369,
+     "signature": "(network: Network, json: NetJson | null | undefined): string | undefined",
+     "doc": "The id the network gave the reply."
+    },
+    {
+     "name": "networkError",
+     "kind": "function",
+     "line": 376,
+     "signature": "(json: NetJson | null | undefined, status: number): string",
+     "doc": "The network's own words when it refuses."
+    },
+    {
+     "name": "refusedBy",
+     "kind": "function",
+     "line": 381,
+     "signature": "(res: { ok: boolean }, json: NetJson)",
+     "doc": "True when the answer is a refusal. TikTok answers every call with an `error` object whose code is \"ok\" on success."
+    },
+    {
+     "name": "PublishMedia",
+     "kind": "interface",
+     "line": 386,
+     "signature": "",
+     "doc": "A public photo or video URL the network can fetch.",
+     "members": [
+      {
+       "name": "kind",
+       "optional": false,
+       "type": "'image' | 'video'",
+       "doc": ""
+      },
+      {
+       "name": "url",
+       "optional": false,
+       "type": "string",
+       "doc": ""
+      }
+     ]
+    },
+    {
+     "name": "PublishPost",
+     "kind": "interface",
+     "line": 392,
+     "signature": "",
+     "doc": "The post as one network receives it.",
+     "members": [
+      {
+       "name": "id",
+       "optional": false,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "caption",
+       "optional": false,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "media",
+       "optional": false,
+       "type": "PublishMedia[]",
+       "doc": ""
+      },
+      {
+       "name": "link",
+       "optional": true,
+       "type": "string | null",
+       "doc": ""
+      },
+      {
+       "name": "firstComment",
+       "optional": true,
+       "type": "string | null",
+       "doc": ""
+      }
+     ]
+    },
+    {
+     "name": "PublishTarget",
+     "kind": "interface",
+     "line": 401,
+     "signature": "",
+     "doc": "The connected account a post goes to, with its token.",
+     "members": [
+      {
+       "name": "network",
+       "optional": false,
+       "type": "Network",
+       "doc": ""
+      },
+      {
+       "name": "accountExternalId",
+       "optional": false,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "handle",
+       "optional": true,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "token",
+       "optional": false,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "meta",
+       "optional": true,
+       "type": "Record<string, string>",
+       "doc": ""
+      }
+     ]
+    },
+    {
+     "name": "PublishOptions",
+     "kind": "interface",
+     "line": 410,
+     "signature": "",
+     "doc": "Per-deployment publishing settings (Graph version, TikTok privacy, WhatsApp template and contacts).",
+     "members": [
+      {
+       "name": "graphVersion",
+       "optional": true,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "tiktokPrivacy",
+       "optional": true,
+       "type": "string",
+       "doc": "TikTok privacy until the app passes TikTok's audit: SELF_ONLY."
+      },
+      {
+       "name": "whatsappTemplate",
+       "optional": true,
+       "type": "string",
+       "doc": "Approved WhatsApp marketing template with an image header and one body parameter."
+      },
+      {
+       "name": "whatsappLanguage",
+       "optional": true,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "whatsappContacts",
+       "optional": true,
+       "type": "string[]",
+       "doc": "wa_ids of customers who agreed to broadcasts."
+      },
+      {
+       "name": "sleep",
+       "optional": true,
+       "type": "(ms: number) => Promise<void>",
+       "doc": "Waits between status checks for Instagram videos (injectable for tests)."
+      }
+     ]
+    },
+    {
+     "name": "PublishResult",
+     "kind": "interface",
+     "line": 424,
+     "signature": "",
+     "doc": "How one network took a post.",
+     "members": [
+      {
+       "name": "status",
+       "optional": false,
+       "type": "'published' | 'publishing' | 'failed'",
+       "doc": "`publishing`: the network finishes later and tells us by webhook (TikTok)."
+      },
+      {
+       "name": "externalId",
+       "optional": true,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "url",
+       "optional": true,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "error",
+       "optional": true,
+       "type": "string",
+       "doc": ""
+      }
+     ]
+    },
+    {
+     "name": "publishTo",
+     "kind": "function",
+     "line": 453,
+     "signature": "(target: PublishTarget, post: PublishPost, http: Http, opts: PublishOptions = {}): Promise<PublishResult>",
+     "doc": "Publishes one post to one network, following that network's own steps. Never throws."
+    },
+    {
+     "name": "mediaUrls",
+     "kind": "function",
+     "line": 542,
+     "signature": "(media: { kind?: string; publicId?: string; uri?: string }[], cloudName?: string): PublishMedia[]",
+     "doc": "A post's media as public URLs: uploaded files are Cloudinary public ids, others already URLs."
+    }
+   ]
+  },
+  {
    "file": "supabase/functions/_shared/supabase.ts",
    "doc": "Calls into Supabase from an Edge Function over REST (no SDK).",
    "exports": [
@@ -23028,6 +25560,26 @@
   {
    "file": "supabase/functions/send-otp/index.ts",
    "doc": "send-otp: emails a one-time sign-in code (owner decision: email OTP only in year one, no SMS). Rate-limited per email and per IP on Upstash before it asks Supabase Auth to send, so nobody can flood an inbox or the 3,000-a-month email allowance. Public (no JWT): this is how people sign in. POST { \"email\": \"aakriti@example.com\" } → 200 { \"sent\": true }",
+   "exports": []
+  },
+  {
+   "file": "supabase/functions/social-oauth/index.ts",
+   "doc": "social-oauth: connects a business's Facebook page, Instagram profile, WhatsApp Business number or TikTok account. POST { \"action\": \"start\", \"network\": \"instagram\", \"returnTo\": \"<app url>\" } (Authorization: Bearer <user JWT>) → { url } the network's consent page, with a signed state GET ?code=…&state=… the network sends the browser back here → exchanges the code for tokens, finds the page / profile / number, saves it with vivah_social_save_account (tokens go to social_account_secrets, readable by the service role only) → 302 to returnTo?connected=<network> (or ?social_error=…) Meta: the code b…",
+   "exports": []
+  },
+  {
+   "file": "supabase/functions/social-publish/index.ts",
+   "doc": "social-publish: sends one post to every network it was written for. POST { \"postId\": uuid } (Authorization: Bearer <user JWT>) publish now → { status, results: { facebook: { status, url?, error? }, … } } POST { \"due\": true } (x-webhook-secret: NOTIFY_WEBHOOK_SECRET) the scheduled run (job_social_due in 0018, every five minutes through pg_cron and pg_net) → claims the due posts (vivah_social_claim_due) and publishes each Each network follows its own steps (publishTo in _shared/social.ts) and its outcome is recorded with vivah_social_target_result, which also sets the post's status: published, …",
+   "exports": []
+  },
+  {
+   "file": "supabase/functions/social-send/index.ts",
+   "doc": "social-send: a reply from the unified inbox goes out on its network. POST { \"threadId\": uuid, \"text\": \"…\", \"template\": null | \"follow_up\" } (Authorization: Bearer <user JWT>) → { messageId } The caller must belong to the business (vivah_social_send_context refuses anyone else). The networks' reply rules are enforced here as in the app: within 24 hours of the customer's last message any reply is fine; after that Messenger and Instagram allow a person's reply for 7 days with the HUMAN_AGENT tag, and WhatsApp needs an approved template. Comments can always be answered. The reply (or the network'…",
+   "exports": []
+  },
+  {
+   "file": "supabase/functions/social-webhook/index.ts",
+   "doc": "social-webhook: where the networks deliver what happens on a connected account. GET ?hub.mode=subscribe&hub.verify_token=…&hub.challenge=… Meta's subscription check POST (X-Hub-Signature-256) Meta: Messenger and Instagram messages, page and Instagram comments, WhatsApp messages and delivery receipts → vivah_social_ingest, which stores each message once (retries are matched by the network's id), wakes the thread and tells the team POST (TikTok-Signature) TikTok: how a post it was pulling went → vivah_social_publish_update Only signed requests are accepted (META_APP_SECRET, TIKTOK_CLIENT_SECRET…",
    "exports": []
   }
  ]

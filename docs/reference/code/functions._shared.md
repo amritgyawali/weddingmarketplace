@@ -7,11 +7,12 @@ Every exported symbol in `supabase/functions/_shared/`, file by file. The guide 
 ## Files
 
 - [`cloudinary.ts`](#cloudinaryts) (8 exports)
-- [`env.ts`](#envts) (11 exports) · Edge Function configuration from Supabase secrets (`supabase secrets set`).
+- [`env.ts`](#envts) (12 exports) · Edge Function configuration from Supabase secrets (`supabase secrets set`).
 - [`fanout.ts`](#fanoutts) (7 exports)
 - [`http.ts`](#httpts) (6 exports)
 - [`payments.ts`](#paymentsts) (27 exports)
 - [`ratelimit.ts`](#ratelimitts) (5 exports)
+- [`social.ts`](#socialts) (36 exports) · Social hub logic shared by social-oauth, social-webhook, social-send and social-publish (no dependencies, tested in Node by npm run test:fu…
 - [`supabase.ts`](#supabasets) (6 exports) · Calls into Supabase from an Edge Function over REST (no SDK).
 
 ## cloudinary.ts
@@ -225,6 +226,19 @@ paymentReturnHosts()
 ```
 
 Extra web hosts the browser may be sent back to after paying (e.g. a Vercel preview).
+
+### `socialConfig`
+
+*function* · [supabase/functions/_shared/env.ts:58](../../../supabase/functions/_shared/env.ts#L58)
+
+```ts
+socialConfig()
+```
+
+The social hub's apps: a Meta app (Facebook Login, Pages, Instagram,
+WhatsApp Cloud API) and a TikTok app (Login Kit, Content Posting API).
+Each network works once its keys are set; SOCIAL_STATE_SECRET signs the
+consent round trip.
 
 ## fanout.ts
 
@@ -760,6 +774,430 @@ LIMITS= { otpPerEmail: { limit: 3, windowSeconds: 600 }, otpPerIp: { limit: 10, 
 ```
 
 The limits Vivah uses, in one place.
+
+## social.ts
+
+Source: [supabase/functions/_shared/social.ts](../../../supabase/functions/_shared/social.ts)
+
+Social hub logic shared by social-oauth, social-webhook, social-send and
+social-publish (no dependencies, tested in Node by npm run test:functions):
+the networks' consent URLs, a signed OAuth state, webhook signatures (Meta's
+X-Hub-Signature-256 and TikTok's TikTok-Signature), turning webhook payloads
+into one event shape, the reply window, the reply request for each network,
+and publishing one post to Facebook, Instagram, WhatsApp or TikTok.
+
+APIs: Meta Graph API (Pages, Instagram content publishing and messaging,
+WhatsApp Cloud API) and TikTok's Login Kit, Content Posting API and API for
+Business (comment replies).
+
+### `Network`
+
+*type* · [supabase/functions/_shared/social.ts:15](../../../supabase/functions/_shared/social.ts#L15)
+
+```ts
+type Network = 'facebook' | 'instagram' | 'whatsapp' | 'tiktok'
+```
+
+The networks the hub connects.
+
+### `NETWORKS`
+
+*const* · [supabase/functions/_shared/social.ts:17](../../../supabase/functions/_shared/social.ts#L17)
+
+```ts
+NETWORKS: Network[]
+```
+
+Every network id.
+
+### `isNetwork`
+
+*function* · [supabase/functions/_shared/social.ts:19](../../../supabase/functions/_shared/social.ts#L19)
+
+```ts
+isNetwork(x: unknown): x is Network
+```
+
+True for a known network id.
+
+### `META_SCOPES`
+
+*const* · [supabase/functions/_shared/social.ts:22](../../../supabase/functions/_shared/social.ts#L22)
+
+```ts
+META_SCOPES: Record<Exclude<Network, 'tiktok'>, string[]>
+```
+
+Facebook Login permissions asked for each Meta network.
+
+### `TIKTOK_SCOPES`
+
+*const* · [supabase/functions/_shared/social.ts:28](../../../supabase/functions/_shared/social.ts#L28)
+
+```ts
+TIKTOK_SCOPES= ['user.info.basic', 'user.info.stats', 'video.publish', 'video.list']
+```
+
+TikTok Login Kit scopes.
+
+### `TIKTOK_API`
+
+*const* · [supabase/functions/_shared/social.ts:31](../../../supabase/functions/_shared/social.ts#L31)
+
+```ts
+TIKTOK_API= 'https://open.tiktokapis.com'
+```
+
+TikTok Open API base URL.
+
+### `TIKTOK_BUSINESS_API`
+
+*const* · [supabase/functions/_shared/social.ts:33](../../../supabase/functions/_shared/social.ts#L33)
+
+```ts
+TIKTOK_BUSINESS_API= 'https://business-api.tiktok.com/open_api/v1.3'
+```
+
+TikTok API for Business base URL (comment replies).
+
+### `graphBase`
+
+*function* · [supabase/functions/_shared/social.ts:35](../../../supabase/functions/_shared/social.ts#L35)
+
+```ts
+graphBase(version = 'v21.0')
+```
+
+Meta Graph API base URL for a version.
+
+### `hmacHex`
+
+*function* · [supabase/functions/_shared/social.ts:58](../../../supabase/functions/_shared/social.ts#L58)
+
+```ts
+hmacHex(secret: string, message: string)
+```
+
+HMAC-SHA256 of a message, as hex.
+
+### `OAuthState`
+
+*interface* · [supabase/functions/_shared/social.ts:70](../../../supabase/functions/_shared/social.ts#L70)
+
+What the signed OAuth state carries.
+
+| Member | Type | Notes |
+|---|---|---|
+| `u` | `string` | Supabase user id of the business owner connecting. |
+| `n` | `Network` |  |
+| `r` | `string` | Where to send the browser afterwards. |
+| `exp` | `number` | Expiry, ms since epoch. |
+
+### `signState`
+
+*function* · [supabase/functions/_shared/social.ts:81](../../../supabase/functions/_shared/social.ts#L81)
+
+```ts
+signState(state: OAuthState, secret: string): Promise<string>
+```
+
+A tamper-proof state for the consent round trip: base64url(JSON).base64url(HMAC).
+
+### `readState`
+
+*function* · [supabase/functions/_shared/social.ts:87](../../../supabase/functions/_shared/social.ts#L87)
+
+```ts
+readState(token: string | null, secret: string, nowMs = Date.now()): Promise<OAuthState | null>
+```
+
+The state if the signature matches and it hasn't expired, else null.
+
+### `authorizeUrl`
+
+*function* · [supabase/functions/_shared/social.ts:100](../../../supabase/functions/_shared/social.ts#L100)
+
+```ts
+authorizeUrl(network: Network, cfg: { metaAppId?: string; metaConfigId?: string; tiktokClientKey?: string; graphVersion?: string }, redirectUri: string, state: string): string | null
+```
+
+The network's consent page. Facebook Login covers Facebook, Instagram and WhatsApp; TikTok has its own.
+
+### `allowedReturn`
+
+*function* · [supabase/functions/_shared/social.ts:114](../../../supabase/functions/_shared/social.ts#L114)
+
+```ts
+allowedReturn(url: unknown, appUrl: string, extraHosts: string[] = []): url is string
+```
+
+Return addresses the consent round trip may send the browser back to.
+
+### `withQuery`
+
+*function* · [supabase/functions/_shared/social.ts:127](../../../supabase/functions/_shared/social.ts#L127)
+
+```ts
+withQuery(url: string, values: Record<string, string>): string
+```
+
+Adds query values to a return address (custom schemes included).
+
+### `verifyMetaSignature`
+
+*function* · [supabase/functions/_shared/social.ts:135](../../../supabase/functions/_shared/social.ts#L135)
+
+```ts
+verifyMetaSignature(raw: string, header: string | null, appSecret: string): Promise<boolean>
+```
+
+Meta signs the raw body with the app secret: `X-Hub-Signature-256: sha256=<hex>`.
+
+### `verifyTikTokSignature`
+
+*function* · [supabase/functions/_shared/social.ts:141](../../../supabase/functions/_shared/social.ts#L141)
+
+```ts
+verifyTikTokSignature(raw: string, header: string | null, clientSecret: string, nowSec = Math.floor(Date.now() / 1000), toleranceSec = 300): Promise<boolean>
+```
+
+TikTok signs `<timestamp>.<raw body>` with the client secret: `TikTok-Signature: t=<ts>,s=<hex>`.
+
+### `InboundEvent`
+
+*interface* · [supabase/functions/_shared/social.ts:150](../../../supabase/functions/_shared/social.ts#L150)
+
+One inbound happening, in the shape vivah_social_ingest takes.
+
+| Member | Type | Notes |
+|---|---|---|
+| `type` | `'message' \| 'comment' \| 'status'` |  |
+| `network?` | `Network` |  |
+| `account?` | `string` | Our side: page id, Instagram user id or WhatsApp phone number id. |
+| `id` | `string` | The network's message or comment id. |
+| `contact?` | `string` |  |
+| `contactName?` | `string` |  |
+| `contactHandle?` | `string` |  |
+| `contactPhone?` | `string` |  |
+| `text?` | `string` |  |
+| `media?` | `{ kind: 'image' \| 'video'; uri?: string }[]` |  |
+| `postId?` | `string` |  |
+| `commentId?` | `string` |  |
+| `postCaption?` | `string` |  |
+| `at?` | `string` |  |
+| `status?` | `'sent' \| 'delivered' \| 'read' \| 'failed'` |  |
+
+### `MetaWebhook`
+
+*interface* · [supabase/functions/_shared/social.ts:209](../../../supabase/functions/_shared/social.ts#L209)
+
+Meta webhook payload (the parts read).
+
+| Member | Type | Notes |
+|---|---|---|
+| `object?` | `string` |  |
+| `entry?` | `{ id?: string; time?: number; messaging?: MetaMessaging[]; changes?: { field?: string; value?: MetaChangeValue }[] }[]` |  |
+
+### `TikTokWebhook`
+
+*interface* · [supabase/functions/_shared/social.ts:214](../../../supabase/functions/_shared/social.ts#L214)
+
+TikTok webhook payload (the parts read).
+
+| Member | Type | Notes |
+|---|---|---|
+| `event?` | `string` |  |
+| `content?` | `string \| { publish_id?: string; reason?: string }` |  |
+
+### `parseMetaWebhook`
+
+*function* · [supabase/functions/_shared/social.ts:243](../../../supabase/functions/_shared/social.ts#L243)
+
+```ts
+parseMetaWebhook(body: MetaWebhook | null | undefined): InboundEvent[]
+```
+
+Messenger, Instagram and WhatsApp Cloud API webhook payloads → events. Our own echoes and comments are dropped.
+
+### `parseTikTokWebhook`
+
+*function* · [supabase/functions/_shared/social.ts:286](../../../supabase/functions/_shared/social.ts#L286)
+
+```ts
+parseTikTokWebhook(body: TikTokWebhook | null | undefined): { publishId: string; status: 'published' | 'failed'; error?: string }[]
+```
+
+TikTok webhook → how a post TikTok was pulling went.
+
+### `replyWindowState`
+
+*function* · [supabase/functions/_shared/social.ts:305](../../../supabase/functions/_shared/social.ts#L305)
+
+```ts
+replyWindowState(network: Network, kind: 'message' | 'comment', lastInboundAt: string | null, nowMs = Date.now()): 'open' | 'human_agent' | 'template' | 'closed'
+```
+
+Same rule as the app (src/services/social.ts replyWindow).
+
+### `ReplyInput`
+
+*interface* · [supabase/functions/_shared/social.ts:314](../../../supabase/functions/_shared/social.ts#L314)
+
+Everything needed to send one reply on its network.
+
+| Member | Type | Notes |
+|---|---|---|
+| `network` | `Network` |  |
+| `kind` | `'message' \| 'comment'` |  |
+| `accountExternalId` | `string` |  |
+| `contact` | `string` |  |
+| `commentId?` | `string \| null` |  |
+| `postId?` | `string \| null` |  |
+| `text` | `string` |  |
+| `token` | `string` |  |
+| `meta?` | `Record<string, string>` |  |
+| `humanAgent?` | `boolean` |  |
+| `template?` | `{ name: string; language: string; params: string[] } \| null` |  |
+
+### `HttpRequest`
+
+*interface* · [supabase/functions/_shared/social.ts:329](../../../supabase/functions/_shared/social.ts#L329)
+
+A request to a network, built without sending it (testable).
+
+| Member | Type | Notes |
+|---|---|---|
+| `url` | `string` |  |
+| `method` | `'GET' \| 'POST'` |  |
+| `headers` | `Record<string, string>` |  |
+| `body?` | `string` |  |
+
+### `replyRequest`
+
+*function* · [supabase/functions/_shared/social.ts:344](../../../supabase/functions/_shared/social.ts#L344)
+
+```ts
+replyRequest(input: ReplyInput, graphVersion = 'v21.0'): HttpRequest
+```
+
+The one HTTP request that sends a reply on its network.
+
+### `replyId`
+
+*function* · [supabase/functions/_shared/social.ts:369](../../../supabase/functions/_shared/social.ts#L369)
+
+```ts
+replyId(network: Network, json: NetJson | null | undefined): string | undefined
+```
+
+The id the network gave the reply.
+
+### `networkError`
+
+*function* · [supabase/functions/_shared/social.ts:376](../../../supabase/functions/_shared/social.ts#L376)
+
+```ts
+networkError(json: NetJson | null | undefined, status: number): string
+```
+
+The network's own words when it refuses.
+
+### `refusedBy`
+
+*function* · [supabase/functions/_shared/social.ts:381](../../../supabase/functions/_shared/social.ts#L381)
+
+```ts
+refusedBy(res: { ok: boolean }, json: NetJson)
+```
+
+True when the answer is a refusal. TikTok answers every call with an `error` object whose code is "ok" on success.
+
+### `PublishMedia`
+
+*interface* · [supabase/functions/_shared/social.ts:386](../../../supabase/functions/_shared/social.ts#L386)
+
+A public photo or video URL the network can fetch.
+
+| Member | Type | Notes |
+|---|---|---|
+| `kind` | `'image' \| 'video'` |  |
+| `url` | `string` |  |
+
+### `PublishPost`
+
+*interface* · [supabase/functions/_shared/social.ts:392](../../../supabase/functions/_shared/social.ts#L392)
+
+The post as one network receives it.
+
+| Member | Type | Notes |
+|---|---|---|
+| `id` | `string` |  |
+| `caption` | `string` |  |
+| `media` | `PublishMedia[]` |  |
+| `link?` | `string \| null` |  |
+| `firstComment?` | `string \| null` |  |
+
+### `PublishTarget`
+
+*interface* · [supabase/functions/_shared/social.ts:401](../../../supabase/functions/_shared/social.ts#L401)
+
+The connected account a post goes to, with its token.
+
+| Member | Type | Notes |
+|---|---|---|
+| `network` | `Network` |  |
+| `accountExternalId` | `string` |  |
+| `handle?` | `string` |  |
+| `token` | `string` |  |
+| `meta?` | `Record<string, string>` |  |
+
+### `PublishOptions`
+
+*interface* · [supabase/functions/_shared/social.ts:410](../../../supabase/functions/_shared/social.ts#L410)
+
+Per-deployment publishing settings (Graph version, TikTok privacy, WhatsApp template and contacts).
+
+| Member | Type | Notes |
+|---|---|---|
+| `graphVersion?` | `string` |  |
+| `tiktokPrivacy?` | `string` | TikTok privacy until the app passes TikTok's audit: SELF_ONLY. |
+| `whatsappTemplate?` | `string` | Approved WhatsApp marketing template with an image header and one body parameter. |
+| `whatsappLanguage?` | `string` |  |
+| `whatsappContacts?` | `string[]` | wa_ids of customers who agreed to broadcasts. |
+| `sleep?` | `(ms: number) => Promise<void>` | Waits between status checks for Instagram videos (injectable for tests). |
+
+### `PublishResult`
+
+*interface* · [supabase/functions/_shared/social.ts:424](../../../supabase/functions/_shared/social.ts#L424)
+
+How one network took a post.
+
+| Member | Type | Notes |
+|---|---|---|
+| `status` | `'published' \| 'publishing' \| 'failed'` | `publishing`: the network finishes later and tells us by webhook (TikTok). |
+| `externalId?` | `string` |  |
+| `url?` | `string` |  |
+| `error?` | `string` |  |
+
+### `publishTo`
+
+*function* · [supabase/functions/_shared/social.ts:453](../../../supabase/functions/_shared/social.ts#L453)
+
+```ts
+publishTo(target: PublishTarget, post: PublishPost, http: Http, opts: PublishOptions = {}): Promise<PublishResult>
+```
+
+Publishes one post to one network, following that network's own steps. Never throws.
+
+### `mediaUrls`
+
+*function* · [supabase/functions/_shared/social.ts:542](../../../supabase/functions/_shared/social.ts#L542)
+
+```ts
+mediaUrls(media: { kind?: string; publicId?: string; uri?: string }[], cloudName?: string): PublishMedia[]
+```
+
+A post's media as public URLs: uploaded files are Cloudinary public ids, others already URLs.
 
 ## supabase.ts
 

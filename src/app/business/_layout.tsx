@@ -40,6 +40,9 @@ export default function BusinessLayout() {
         <Stack.Screen name="tools" />
         <Stack.Screen name="tool/[id]" />
         <Stack.Screen name="services" />
+        <Stack.Screen name="social/index" />
+        <Stack.Screen name="social/thread/[id]" />
+        <Stack.Screen name="social/compose" options={{ presentation: 'modal' }} />
       </Stack>
     </RoleThemeProvider>
   );

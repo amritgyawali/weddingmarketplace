@@ -4,7 +4,11 @@
  * placeholders match any text (translated in turn). Generated from the app's
  * strings and reviewed by hand; add new lines in the same form.
  */
+import { SOCIAL_NE } from './social';
+
 export const NE: Record<string, string> = {
+  // The social hub (Business → Social media); entries below win where both have one.
+  ...SOCIAL_NE,
   "— kindly reply by {0}": "— कृपया {0} सम्म जवाफ दिनुहोस्",
   "…or register a new business": "…वा नयाँ व्यवसाय दर्ता गर्नुहोस्",
   "· {0} attending": "· {0} आउँदै",

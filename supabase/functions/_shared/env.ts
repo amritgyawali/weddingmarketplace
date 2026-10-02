@@ -48,3 +48,26 @@ export const esewaConfig = () => {
 
 /** Extra web hosts the browser may be sent back to after paying (e.g. a Vercel preview). */
 export const paymentReturnHosts = () => (env('PAYMENT_RETURN_HOSTS') ?? '').split(',').map((h) => h.trim()).filter(Boolean);
+
+/**
+ * The social hub's apps: a Meta app (Facebook Login, Pages, Instagram,
+ * WhatsApp Cloud API) and a TikTok app (Login Kit, Content Posting API).
+ * Each network works once its keys are set; SOCIAL_STATE_SECRET signs the
+ * consent round trip.
+ */
+export const socialConfig = () => ({
+  stateSecret: env('SOCIAL_STATE_SECRET'),
+  metaAppId: env('META_APP_ID'),
+  metaAppSecret: env('META_APP_SECRET'),
+  /** Facebook Login for Business configuration for WhatsApp Embedded Signup (optional). */
+  metaConfigId: env('META_WHATSAPP_CONFIG_ID'),
+  metaVerifyToken: env('META_VERIFY_TOKEN'),
+  graphVersion: env('META_GRAPH_VERSION') ?? 'v21.0',
+  tiktokClientKey: env('TIKTOK_CLIENT_KEY'),
+  tiktokClientSecret: env('TIKTOK_CLIENT_SECRET'),
+  /** SELF_ONLY until TikTok audits the app, then PUBLIC_TO_EVERYONE. */
+  tiktokPrivacy: env('TIKTOK_PRIVACY_LEVEL') ?? 'SELF_ONLY',
+  whatsappTemplate: env('WHATSAPP_BROADCAST_TEMPLATE'),
+  whatsappLanguage: env('WHATSAPP_TEMPLATE_LANGUAGE') ?? 'en',
+  cloudinaryCloudName: env('CLOUDINARY_CLOUD_NAME'),
+});

@@ -26,6 +26,8 @@ Dated decisions and the reasons behind them, newest last. The code shows *what* 
 | D-18 | 2026-10-02 | "Royal Nepali Luxury" palette (burgundy, wine, champagne, ivory) across all apps; supersedes per-role accents from D-4 | owner (PR #20) | The app should feel luxurious | `constants/theme.ts`, `theme/roles.ts` |
 | D-19 | 2026-10-02 | Push and open PRs only on `github.com/amritgyawali/weddingmarketplace` (`origin`), never other accounts' remotes | owner | Other remotes belong to other accounts | R-GIT-6 |
 | D-20 | 2026-10-02 | Documentation system: numbered rules (00), a handbook per area, a generated code reference (`npm run docs:generate`), `llms.txt` for AI, and a weekly documentation pass | owner | A new developer or AI must understand the app even five years from now | `docs/handbook`, `docs/reference`, `scripts/docs`, `docs-weekly.yml` |
+| D-21 | 2026-10-03 | Businesses get a social hub: Facebook, Instagram, WhatsApp and TikTok connected, one inbox for messages and comments, one-click publishing and scheduling to all of them ("like Postiz, more advanced") | owner | Couples in Nepal find and message vendors on social media first | [21-social-hub.md](21-social-hub.md), `/business/social`, 0017–0018 |
+| D-22 | 2026-10-03 | Social hub on official APIs only (Meta Graph and WhatsApp Cloud API, TikTok Login Kit, Content Posting API and API for Business), all free; tokens server-side only; WhatsApp "posts" are opted-in template broadcasts because WhatsApp has no Status API | team | Unofficial automation gets accounts banned; tokens are account keys | `_shared/social.ts`, `social_account_secrets` |
 
 ## Open questions and future deadlines
 
@@ -36,3 +38,4 @@ Dated decisions and the reasons behind them, newest last. The code shows *what* 
 | Rebrand | Planned; ~57 files still hard-code "Vivah" and move to `BRAND.name` as they are touched |
 | iOS release | Needs a paid Apple Developer account; conflicts with the free-only rule |
 | Phone OTP | Planned after about a year of email OTP |
+| Social hub go-live | Needs a Meta Business app through App Review, approved WhatsApp templates and a TikTok app audit before real (public) posting; see [SETUP_SUPABASE §6a](../SETUP_SUPABASE.md) |

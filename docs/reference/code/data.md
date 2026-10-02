@@ -24,6 +24,8 @@ Every exported symbol in `src/data/`, file by file. The guide that explains how 
 - [`seed.ts`](#seedts) (12 exports) · Demo dataset for the shared on-device backend (Nepal). Dates are relative to today so the demo always has: a new lead, projects in matching…
 - [`services.ts`](#servicests) (15 exports)
 - [`skills.ts`](#skillsts) (3 exports)
+- [`social.ts`](#socialts) (9 exports) · The four networks of the social hub and what each one allows, as the networks' own APIs define it (Meta Graph API for Facebook, Instagram a…
+- [`socialSeed.ts`](#socialseedts) (1 exports) · Demo records for the social hub: Everest Grand Party Palace has Facebook, Instagram and WhatsApp connected (TikTok left to connect in the d…
 - [`toolkitSeed.ts`](#toolkitseedts) (1 exports) · Demo records for the role toolkits, so the main tools open with a believable story.
 - [`trades.ts`](#tradests) (12 exports) · Provider trades. The 43 services in `services.ts` stay the source of truth; trades group them for onboarding tiles, navigation headings and…
 - [`vendors.ts`](#vendorsts) (2 exports)
@@ -735,7 +737,7 @@ _No JSDoc yet._
 
 ### `FEATURE_BY_ID`
 
-*const* · [src/data/features.ts:64](../../../src/data/features.ts#L64)
+*const* · [src/data/features.ts:65](../../../src/data/features.ts#L65)
 
 ```ts
 FEATURE_BY_ID: Record<string, FeatureDef>
@@ -745,7 +747,7 @@ _No JSDoc yet._
 
 ### `toolFeature`
 
-*function* · [src/data/features.ts:66](../../../src/data/features.ts#L66)
+*function* · [src/data/features.ts:67](../../../src/data/features.ts#L67)
 
 ```ts
 toolFeature(toolId: string)
@@ -755,7 +757,7 @@ _No JSDoc yet._
 
 ### `serviceFeature`
 
-*function* · [src/data/features.ts:67](../../../src/data/features.ts#L67)
+*function* · [src/data/features.ts:68](../../../src/data/features.ts#L68)
 
 ```ts
 serviceFeature(serviceId: string)
@@ -765,7 +767,7 @@ _No JSDoc yet._
 
 ### `tabFeature`
 
-*function* · [src/data/features.ts:68](../../../src/data/features.ts#L68)
+*function* · [src/data/features.ts:69](../../../src/data/features.ts#L69)
 
 ```ts
 tabFeature(role: UserRole, tab: string)
@@ -775,7 +777,7 @@ _No JSDoc yet._
 
 ### `featureOn`
 
-*function* · [src/data/features.ts:71](../../../src/data/features.ts#L71)
+*function* · [src/data/features.ts:72](../../../src/data/features.ts#L72)
 
 ```ts
 featureOn(flags: Record<string, boolean> | undefined, id: string)
@@ -1331,7 +1333,7 @@ to today so the demo always has: a new lead, projects in matching / quoting
 
 ### `day`
 
-*function* · [src/data/seed.ts:51](../../../src/data/seed.ts#L51)
+*function* · [src/data/seed.ts:52](../../../src/data/seed.ts#L52)
 
 ```ts
 day(offset: number)
@@ -1341,7 +1343,7 @@ _No JSDoc yet._
 
 ### `at`
 
-*function* · [src/data/seed.ts:56](../../../src/data/seed.ts#L56)
+*function* · [src/data/seed.ts:57](../../../src/data/seed.ts#L57)
 
 ```ts
 at(offset: number, hour = 10, minute = 0)
@@ -1351,7 +1353,7 @@ _No JSDoc yet._
 
 ### `DEMO_VENUE`
 
-*const* · [src/data/seed.ts:69](../../../src/data/seed.ts#L69)
+*const* · [src/data/seed.ts:70](../../../src/data/seed.ts#L70)
 
 ```ts
 DEMO_VENUE= VENUES[0]
@@ -1361,7 +1363,7 @@ _No JSDoc yet._
 
 ### `DEMO_STUDIO`
 
-*const* · [src/data/seed.ts:70](../../../src/data/seed.ts#L70)
+*const* · [src/data/seed.ts:71](../../../src/data/seed.ts#L71)
 
 ```ts
 DEMO_STUDIO= VENDORS.find((v) => v.id === 'wedding-story-nepal-kathmandu')!
@@ -1371,7 +1373,7 @@ _No JSDoc yet._
 
 ### `DEMO_DECOR`
 
-*const* · [src/data/seed.ts:71](../../../src/data/seed.ts#L71)
+*const* · [src/data/seed.ts:72](../../../src/data/seed.ts#L72)
 
 ```ts
 DEMO_DECOR= VENDORS.find((v) => v.id === 'phoolbari-decor-lalitpur')!
@@ -1381,7 +1383,7 @@ _No JSDoc yet._
 
 ### `DEMO_ACCOUNTS`
 
-*const* · [src/data/seed.ts:75](../../../src/data/seed.ts#L75)
+*const* · [src/data/seed.ts:76](../../../src/data/seed.ts#L76)
 
 ```ts
 DEMO_ACCOUNTS: Account[]
@@ -1391,7 +1393,7 @@ _No JSDoc yet._
 
 ### `DEMO_PERSONA_KEYS`
 
-*const* · [src/data/seed.ts:269](../../../src/data/seed.ts#L269)
+*const* · [src/data/seed.ts:270](../../../src/data/seed.ts#L270)
 
 ```ts
 DEMO_PERSONA_KEYS= ['services', 'primaryService', 'businessForm', 'teamSize', 'tradeProfile', 'primarySkill'…
@@ -1401,7 +1403,7 @@ Persona fields that demo accounts on older installs are missing (filled in by th
 
 ### `DEMO_OTP`
 
-*const* · [src/data/seed.ts:272](../../../src/data/seed.ts#L272)
+*const* · [src/data/seed.ts:273](../../../src/data/seed.ts#L273)
 
 ```ts
 DEMO_OTP= '1234'
@@ -1411,7 +1413,7 @@ Demo OTP for every phone number (no SMS gateway in the prototype).
 
 ### `PLATFORM_ACCESS_CODE`
 
-*const* · [src/data/seed.ts:274](../../../src/data/seed.ts#L274)
+*const* · [src/data/seed.ts:275](../../../src/data/seed.ts#L275)
 
 ```ts
 PLATFORM_ACCESS_CODE= 'VIVAH2026'
@@ -1421,7 +1423,7 @@ Access code required to register a platform-team account.
 
 ### `buildSeedData`
 
-*function* · [src/data/seed.ts:1479](../../../src/data/seed.ts#L1479)
+*function* · [src/data/seed.ts:1480](../../../src/data/seed.ts#L1480)
 
 ```ts
 buildSeedData(): DbData
@@ -1431,7 +1433,7 @@ _No JSDoc yet._
 
 ### `contractSections`
 
-*function* · [src/data/seed.ts:1838](../../../src/data/seed.ts#L1838)
+*function* · [src/data/seed.ts:1840](../../../src/data/seed.ts#L1840)
 
 ```ts
 contractSections(provider: string, scope: string, amount: number): { heading: string; body: string }[]
@@ -1441,7 +1443,7 @@ _No JSDoc yet._
 
 ### `DEMO_IMAGES`
 
-*const* · [src/data/seed.ts:1851](../../../src/data/seed.ts#L1851)
+*const* · [src/data/seed.ts:1853](../../../src/data/seed.ts#L1853)
 
 ```ts
 DEMO_IMAGES: PhotoKey[]
@@ -1654,6 +1656,139 @@ SKILL_ICONS: Record<string, string>
 ```
 
 @deprecated use skillIcon
+
+## social.ts
+
+Source: [src/data/social.ts](../../../src/data/social.ts)
+
+The four networks of the social hub and what each one allows, as the
+networks' own APIs define it (Meta Graph API for Facebook, Instagram and
+the WhatsApp Cloud API; TikTok's Content Posting API). The publisher checks
+posts against these limits before anything is sent, and the inbox uses the
+reply windows. Also the WhatsApp templates and a business's starter saved
+replies and auto-replies.
+
+### `NetworkDef`
+
+*interface* · [src/data/social.ts:12](../../../src/data/social.ts#L12)
+
+What one network allows: limits, inbox kinds, reply window, permissions.
+
+| Member | Type | Notes |
+|---|---|---|
+| `id` | `SocialNetwork` |  |
+| `label` | `string` |  |
+| `icon` | `'logo-facebook' \| 'logo-instagram' \| 'logo-whatsapp' \| 'logo-tiktok'` | Ionicons name. |
+| `postAs` | `string` | What a post becomes on this network. |
+| `captionLimit` | `number` | Longest caption the network takes. |
+| `hashtagLimit?` | `number` |  |
+| `needsMedia` | `boolean` | The network refuses a post without a photo or video. |
+| `maxMedia` | `number` |  |
+| `inbox` | `('message' \| 'comment')[]` | What lands in the inbox from this network. |
+| `replyWindowHours?` | `number` | Hours after the customer's last message during which any reply may be sent. After it: Facebook and Instagram allow a human reply for 7 days (the HUMAN_AGENT tag); WhatsApp needs an approved template. |
+| `humanAgentDays?` | `number` |  |
+| `scopes` | `string[]` | Permissions asked for when connecting. |
+| `requirement` | `string` | What connecting needs on the network's side. |
+| `handleHint` | `string` | Typical audience of a Nepali wedding business, for the connect sheet. |
+
+### `NETWORKS`
+
+*const* · [src/data/social.ts:43](../../../src/data/social.ts#L43)
+
+```ts
+NETWORKS: NetworkDef[]
+```
+
+Facebook, Instagram, WhatsApp and TikTok, in display order.
+
+### `SCOPE_TEXT`
+
+*const* · [src/data/social.ts:105](../../../src/data/social.ts#L105)
+
+```ts
+SCOPE_TEXT: Record<string, string>
+```
+
+Each permission in plain words, for the connect sheet and the accounts tab.
+
+### `NETWORK_BY_ID`
+
+*const* · [src/data/social.ts:124](../../../src/data/social.ts#L124)
+
+```ts
+NETWORK_BY_ID= Object.fromEntries(NETWORKS.map((n) => [n.id, n])) as Record<SocialNetwork, NetworkDef>
+```
+
+Network definitions by id.
+
+### `NETWORK_IDS`
+
+*function* · [src/data/social.ts:127](../../../src/data/social.ts#L127)
+
+```ts
+NETWORK_IDSNETWORKS.map((n))
+```
+
+The network ids in display order.
+
+### `WHATSAPP_TEMPLATES`
+
+*const* · [src/data/social.ts:130](../../../src/data/social.ts#L130)
+
+```ts
+WHATSAPP_TEMPLATES: { id: string; title: string; body: string }[]
+```
+
+WhatsApp message templates (approved in WhatsApp Manager) for replies after the 24-hour window. `{1}` is the customer's first name.
+
+### `SOCIAL_LABELS`
+
+*const* · [src/data/social.ts:137](../../../src/data/social.ts#L137)
+
+```ts
+SOCIAL_LABELS= ['Hot lead', 'Price asked', 'Date check', 'Booked', 'Follow up', 'Complaint']
+```
+
+Labels offered in the inbox; businesses can type their own too.
+
+### `DEFAULT_SOCIAL_SETTINGS`
+
+*const* · [src/data/social.ts:140](../../../src/data/social.ts#L140)
+
+```ts
+DEFAULT_SOCIAL_SETTINGS: SocialSettings
+```
+
+Starter saved replies, auto-replies and away message for a new business. `{price}`, `{city}` and `{business}` are filled in when sent.
+
+### `SAMPLE_INBOUND`
+
+*const* · [src/data/social.ts:155](../../../src/data/social.ts#L155)
+
+```ts
+SAMPLE_INBOUND: { network: SocialNetwork; kind: 'message' | 'comment'; name: string; handle: string; text: string; phone?: string }[]
+```
+
+Messages the simulated networks deliver in the demo (`receiveSocialMessage` is what a real webhook calls).
+
+## socialSeed.ts
+
+Source: [src/data/socialSeed.ts](../../../src/data/socialSeed.ts)
+
+Demo records for the social hub: Everest Grand Party Palace has Facebook,
+Instagram and WhatsApp connected (TikTok left to connect in the demo), a
+busy inbox and posts in every state; Wedding Story Nepal has Instagram,
+Facebook and TikTok; Phoolbari Decor's Facebook access has expired.
+
+### `buildSocialSeed`
+
+*function* · [src/data/socialSeed.ts:72](../../../src/data/socialSeed.ts#L72)
+
+```ts
+buildSocialSeed(): { socialAccounts: SocialAccount[]; socialThreads: SocialThread[]; socialMessages: SocialMessage[]; socialPosts: SocialP…
+```
+
+Social accounts, threads, messages, posts and settings for the demo businesses.
 
 ## toolkitSeed.ts
 

@@ -181,6 +181,9 @@ Every file in `src/app/` is a route (Expo Router). Layouts (`_layout.tsx`) defin
 | `/business/reviews` | screen | `VendorReviews` | [business/reviews.tsx](../../src/app/business/reviews.tsx) | Reviews with per-category ratings, AI summary and public replies. |
 | `/business/services` | screen | `YourServices` | [business/services.tsx](../../src/app/business/services.tsx) | Business → Your services: main service, add-ons, business form and trade essentials. |
 | `/business/settings` | screen | `Settings` | [business/settings.tsx](../../src/app/business/settings.tsx) |  |
+| `/business/social` | screen | `SocialHub` | [business/social/index.tsx](../../src/app/business/social/index.tsx) | Social media hub: Facebook, Instagram, WhatsApp and TikTok in one place. One inbox for every message and comment, one composer for every network, a content calendar, connected accounts, insights and … |
+| `/business/social/compose` | screen | `ComposeSocialPost` | [business/social/compose.tsx](../../src/app/business/social/compose.tsx) | New post (or edit a draft) for every connected network. `?at=` pre-fills the schedule. |
+| `/business/social/thread/[id]` | screen | `SocialThreadScreen` | [business/social/thread/[id].tsx](../../src/app/business/social/thread/%5Bid%5D.tsx) | One social conversation on a phone (wide screens show it beside the inbox). |
 | `/business/team` | screen | `Team` | [business/team.tsx](../../src/app/business/team.tsx) | Staff, roles, permissions and who is on which booking. |
 | `/business/tool/[id]` | screen | `BusinessTool` | [business/tool/[id].tsx](../../src/app/business/tool/%5Bid%5D.tsx) | One vendor business tool (or why it isn't available for this business). |
 | `/business/tools` | screen | `BusinessTools` | [business/tools.tsx](../../src/app/business/tools.tsx) | Business tools, picked for the services this vendor offers. |

@@ -52,6 +52,11 @@ const SILENT = new Set([
   'joinWedding',
   'migrate',
   'partialize',
+  'receiveSocialMessage',
+  'markSocialThreadRead',
+  'runDueSocialPosts',
+  'syncSocialInbox',
+  'mirrorSocialData',
 ]);
 
 /** Exact messages for the most common actions. */
@@ -160,6 +165,23 @@ const MESSAGES: Record<string, string> = {
   setBookingStatus: 'Booking updated',
   addReview: 'Review posted',
   clearRecentSearches: 'Searches cleared',
+  connectSocialAccount: 'Account connected',
+  disconnectSocialAccount: 'Account disconnected',
+  reconnectSocialAccount: 'Account reconnected',
+  sendSocialReply: 'Reply sent',
+  addSocialNote: 'Note added',
+  setSocialThreadStatus: 'Conversation updated',
+  toggleSocialThreadStar: 'Conversation updated',
+  setSocialThreadLabels: 'Labels saved',
+  assignSocialThread: 'Conversation assigned',
+  createLeadFromSocialThread: 'Lead created',
+  saveSocialPost: 'Draft saved',
+  scheduleSocialPost: 'Post scheduled',
+  publishSocialPost: 'Publishing',
+  retrySocialPost: 'Trying again',
+  duplicateSocialPost: 'Copied as a draft',
+  deleteSocialPost: 'Post deleted',
+  updateSocialSettings: 'Settings saved',
 };
 
 /** Past-tense verbs for the fallback message: removeThing → "Thing removed". */

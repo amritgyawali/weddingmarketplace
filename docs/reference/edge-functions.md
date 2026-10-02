@@ -106,3 +106,80 @@ asks Supabase Auth to send, so nobody can flood an inbox or the 3,000-a-month
 email allowance. Public (no JWT): this is how people sign in.
 
   POST { "email": "aakriti@example.com" } → 200 { "sent": true }
+
+## social-oauth
+
+Source: [supabase/functions/social-oauth/index.ts](../../supabase/functions/social-oauth/index.ts)
+
+social-oauth: connects a business's Facebook page, Instagram profile,
+WhatsApp Business number or TikTok account.
+
+  POST { "action": "start", "network": "instagram", "returnTo": "<app url>" } (Authorization: Bearer <user JWT>)
+       → { url }   the network's consent page, with a signed state
+  GET  ?code=…&state=…   the network sends the browser back here
+       → exchanges the code for tokens, finds the page / profile / number,
+         saves it with vivah_social_save_account (tokens go to
+         social_account_secrets, readable by the service role only)
+       → 302 to returnTo?connected=<network> (or ?social_error=…)
+
+Meta: the code becomes a long-lived user token (about 60 days); Facebook
+and Instagram keep the page token it gives, WhatsApp the token and the
+WhatsApp Business account it was granted. TikTok: access and refresh
+tokens (social-publish refreshes the access token as needed).
+The network calls back without a user session, so config.toml turns off
+JWT verification; the start step checks the caller itself.
+
+## social-publish
+
+Source: [supabase/functions/social-publish/index.ts](../../supabase/functions/social-publish/index.ts)
+
+social-publish: sends one post to every network it was written for.
+
+  POST { "postId": uuid } (Authorization: Bearer <user JWT>)   publish now
+       → { status, results: { facebook: { status, url?, error? }, … } }
+  POST { "due": true } (x-webhook-secret: NOTIFY_WEBHOOK_SECRET)   the scheduled run
+       (job_social_due in 0018, every five minutes through pg_cron and pg_net)
+       → claims the due posts (vivah_social_claim_due) and publishes each
+
+Each network follows its own steps (publishTo in _shared/social.ts) and
+its outcome is recorded with vivah_social_target_result, which also sets
+the post's status: published, partly published or failed. TikTok pulls the
+files itself and reports back through social-webhook. WhatsApp sends the
+approved broadcast template to customers who agreed to updates. Expired
+TikTok access tokens are refreshed with the stored refresh token first.
+
+## social-send
+
+Source: [supabase/functions/social-send/index.ts](../../supabase/functions/social-send/index.ts)
+
+social-send: a reply from the unified inbox goes out on its network.
+
+  POST { "threadId": uuid, "text": "…", "template": null | "follow_up" } (Authorization: Bearer <user JWT>)
+       → { messageId }
+
+The caller must belong to the business (vivah_social_send_context refuses
+anyone else). The networks' reply rules are enforced here as in the app:
+within 24 hours of the customer's last message any reply is fine; after
+that Messenger and Instagram allow a person's reply for 7 days with the
+HUMAN_AGENT tag, and WhatsApp needs an approved template. Comments can
+always be answered. The reply (or the network's refusal) is recorded with
+vivah_social_record_out.
+
+## social-webhook
+
+Source: [supabase/functions/social-webhook/index.ts](../../supabase/functions/social-webhook/index.ts)
+
+social-webhook: where the networks deliver what happens on a connected
+account.
+
+  GET  ?hub.mode=subscribe&hub.verify_token=…&hub.challenge=…   Meta's subscription check
+  POST (X-Hub-Signature-256)   Meta: Messenger and Instagram messages, page
+       and Instagram comments, WhatsApp messages and delivery receipts
+       → vivah_social_ingest, which stores each message once (retries are
+         matched by the network's id), wakes the thread and tells the team
+  POST (TikTok-Signature)      TikTok: how a post it was pulling went
+       → vivah_social_publish_update
+
+Only signed requests are accepted (META_APP_SECRET, TIKTOK_CLIENT_SECRET).
+Answers 200 quickly so the networks don't retry. The networks call without
+a user session, so config.toml turns off JWT verification.

@@ -375,3 +375,51 @@ NOT DEPLOYED. Never apply without the owner's say-so (AGENTS.md §1).
 - **Tables created (3):** `announcements`, `feature_flags`, `text_overrides`
 - **Triggers (2):** `feature_flags_updated`, `text_overrides_updated`
 - **Policies:** 12 · **Indexes:** 0
+
+## 0017_social_lead_source.sql
+
+Source: [supabase/migrations/0017_social_lead_source.sql](../../supabase/migrations/0017_social_lead_source.sql)
+
+```text
+Social hub, part 1: leads that start on Facebook, Instagram, WhatsApp or
+TikTok. Mirrors Lead.source 'social' (src/types/platform.ts). A new enum
+value can't be used in the transaction that adds it, so the social hub
+itself (and rpc_social_lead, which uses it) is in 0018.
+NOT DEPLOYED. Never apply without the owner's say-so (AGENTS.md §1).
+```
+
+
+## 0018_social_hub.sql
+
+Source: [supabase/migrations/0018_social_hub.sql](../../supabase/migrations/0018_social_hub.sql)
+
+```text
+Social hub, part 2: a business connects Facebook, Instagram, WhatsApp and
+TikTok, answers every message and comment from one inbox, and publishes one
+post to every network. Mirrors src/types/social.ts and src/store/db/social.ts.
+
+  social_accounts          the connected page / profile / number / account
+  social_account_secrets   access tokens; RLS on with no policies, so only
+                           the service role (Edge Functions) can read them
+  social_threads           one conversation (DM, or one person's comments
+                           on one post) in the unified inbox
+  social_messages          customer messages, replies and internal notes
+  social_posts             one post for several networks, draft → scheduled
+                           → publishing → published / partial / failed
+  social_post_targets      how each network took the post, with its numbers
+  social_settings          saved replies, keyword auto-replies, away message
+  social_contacts          WhatsApp customers who agreed to broadcasts
+
+Edge Functions: social-oauth (connect), social-webhook (networks deliver
+messages, comments and receipts), social-send (replies), social-publish
+(posts, and the scheduled run below). They call the vivah_social_* helpers
+here with the service role; the app calls the rpc_social_* functions and
+reads the tables under RLS.
+NOT DEPLOYED. Never apply without the owner's say-so (AGENTS.md §1).
+```
+
+- **Tables created (8):** `social_account_secrets`, `social_accounts`, `social_contacts`, `social_messages`, `social_post_targets`, `social_posts`, `social_settings`, `social_threads`
+- **Functions (25):** `can_manage_social`, `can_use_social`, `job_social_due`, `rpc_social_disconnect`, `rpc_social_inbox`, `rpc_social_lead`, `rpc_social_note`, `rpc_social_save_post`, `rpc_social_save_settings`, `rpc_social_schedule`, `rpc_social_triage`, `social_my_org`, `social_network_label`, `social_post_org`, `vivah_social_begin`, `vivah_social_broadcast_list`, `vivah_social_claim_due`, `vivah_social_ingest`, `vivah_social_publish_context`, `vivah_social_publish_update`, `vivah_social_record_out`, `vivah_social_save_account`, `vivah_social_send_context`, `vivah_social_target_result`, `vivah_social_update_token`
+- **Triggers (4):** `social_account_secrets_updated`, `social_post_targets_updated`, `social_posts_updated`, `social_settings_updated`
+- **Scheduled jobs (1):** `vivah-social-due`
+- **Policies:** 14 · **Indexes:** 7

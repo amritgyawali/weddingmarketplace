@@ -9,6 +9,8 @@ import { Text } from '@/components/ui/Text';
 import { Toggle } from '@/components/ui/Toggle';
 import { toast } from '@/components/ui/Toast';
 import { photos } from '@/constants/images';
+import { useSocialSummary } from '@/components/social/parts';
+import { useFeatures } from '@/hooks/useFeatures';
 import { useVisibleTools } from '@/components/toolkit/hub';
 import { VENDOR_TOOLS } from '@/components/toolkit/vendor';
 import { VENDOR_LINK_RULES } from '@/data/access';
@@ -33,6 +35,8 @@ export default function BusinessAccount() {
   const packages = useDb((s) => s.packages);
   const portfolio = useDb((s) => s.portfolio);
   const unread = useUnreadMessageCount(account);
+  const on = useFeatures();
+  const social = useSocialSummary(account);
   const exp = useExperience();
   const toolCount = useVisibleTools(VENDOR_TOOLS).length;
   const [acceptingLeads, setAcceptingLeads] = useState(true);
@@ -43,6 +47,7 @@ export default function BusinessAccount() {
 
   const rows: { icon: IconName; title: string; subtitle: string; href: Href; badge?: number }[] = [
     { icon: 'chatbubbles-outline', title: 'Messages', subtitle: 'Couples, coordinators and crew', href: '/business/inbox', badge: unread },
+    ...(on('vendor.social') ? [{ icon: 'share-social-outline' as IconName, title: 'Social media', subtitle: `${social.connected} of 4 networks connected · inbox, posts and calendar`, href: '/business/social' as Href, badge: social.unread }] : []),
     { icon: 'options-outline', title: 'Your services', subtitle: exp.services.length ? `${serviceName(exp.services[0])}${exp.services.length > 1 ? ` + ${exp.services.length - 1} more` : ''}${account.personaConfirmedAt ? '' : ' · please confirm'}` : 'Tell us what you offer', href: '/business/services' },
     { icon: 'construct-outline', title: 'Business tools', subtitle: `${toolCount} tools for your business`, href: '/business/tools' },
     { icon: 'document-text-outline', title: 'Quotations', subtitle: 'Drafts, sent, versions and wins', href: '/business/quotes' },

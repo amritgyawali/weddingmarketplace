@@ -153,7 +153,7 @@ export interface Lead {
   message?: string;
   budget?: number;
   status: LeadStatus;
-  source?: 'marketplace' | 'platform' | 'referral' | 'walk_in';
+  source?: 'marketplace' | 'platform' | 'referral' | 'walk_in' | 'social';
   priority?: 'low' | 'medium' | 'high';
   labels?: string[];
   followUp?: string;
@@ -1136,5 +1136,7 @@ export interface Announcement {
 
 // Role toolkits (generic tool records, settings and broadcasts)
 export * from './toolkit';
+// Social hub (connected networks, unified inbox, publisher)
+export * from './social';
 // Personas (occasions, trades, capabilities, permissions)
 export type * from './persona';

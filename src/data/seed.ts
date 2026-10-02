@@ -11,6 +11,7 @@ import { IDEA_PHOTOS } from '@/data/ideas';
 import { builtInOccasions } from '@/data/occasions';
 import { PROVIDERS, type Provider } from '@/data/providers';
 import { SERVICE_BY_ID, crewPlanFor, defaultDetails } from '@/data/services';
+import { buildSocialSeed } from '@/data/socialSeed';
 import { buildToolkitSeed } from '@/data/toolkitSeed';
 import { VENDORS } from '@/data/vendors';
 import { VENUES } from '@/data/venues';
@@ -1828,6 +1829,7 @@ export function buildSeedData(): DbData {
       ],
     },
     ...buildToolkitSeed(),
+    ...buildSocialSeed(),
     occasions: builtInOccasions(),
     featureFlags: {},
     textOverrides: {},
