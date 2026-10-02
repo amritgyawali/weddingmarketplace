@@ -370,6 +370,7 @@ One design system for all four apps, in the "Royal Nepali Luxury" palette (`src/
 - **Shape.** Cards 10 px radius with a 1 px border and no shadow; buttons 8 px; chips and pills 4–6 px. Shadows only on things that float (sheets, toasts, the floating filter bar).
 - **Copy.** Sentence case everywhere, including labels, tabs and buttons. No all-caps eyebrows, no letter-spaced labels, no emoji in UI chrome or notifications, no "AI"/"magic"/sparkle language: the assistant is a rule-based help bot and is called "Quick help".
 - **Stats.** Label above, number below (Martel), in ink. Colour a number only when it flags a problem (overdue, risk).
+- Open UI/UX improvements (accessibility fixes, motion, dark mode, imagery) are prioritised in `docs/UI_UX_REPORT.md`; check it before starting visual work.
 - Keep `README.md` (the product overview) and this file current when behaviour changes.
 
 ## 9. Definition of done: run these before saying the work is finished
