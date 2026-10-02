@@ -4,7 +4,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { router, useLocalSearchParams, type Href } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useRef, useState } from 'react';
-import { Linking, Pressable, ScrollView, StyleSheet, View, type NativeScrollEvent, type NativeSyntheticEvent } from 'react-native';
+import { Linking, Pressable, StyleSheet, View, type NativeScrollEvent, type NativeSyntheticEvent, type ScrollView as RNScrollView } from 'react-native';
 import Animated, { FadeIn } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -36,6 +36,7 @@ import { useDb } from '@/store/useDb';
 import { useAccount } from '@/store/useSession';
 import type { Project } from '@/types/platform';
 import { formatMoneyCompact, formatShortDate } from '@/utils/format';
+import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
 
 type Tab = 'overview' | 'timeline' | 'services' | 'functions' | 'tasks' | 'payments' | 'files' | 'team';
 
@@ -485,7 +486,7 @@ export default function MyWedding() {
   const [tab, setTab] = useState<Tab>(params.tab ?? 'overview');
   const [tabsY, setTabsY] = useState(0);
   const [collapsed, setCollapsed] = useState(false);
-  const scrollRef = useRef<ScrollView>(null);
+  const scrollRef = useRef<RNScrollView>(null);
 
   if (!project) return <EmptyWedding />;
 

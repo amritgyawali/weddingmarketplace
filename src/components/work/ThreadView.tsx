@@ -4,7 +4,7 @@ import * as ImagePicker from 'expo-image-picker';
 import * as Location from 'expo-location';
 import { router } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
-import { FlatList, KeyboardAvoidingView, Linking, Platform, Pressable, ScrollView, StyleSheet, TextInput, View } from 'react-native';
+import { FlatList, Linking, Pressable, StyleSheet, TextInput, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Avatar, ChoiceChips, KButton, KField } from '@/components/kit';
@@ -23,6 +23,8 @@ import { ROLE_THEMES } from '@/theme/roles';
 import { useRoleTheme } from '@/theme/RoleTheme';
 import type { Message, Thread } from '@/types/platform';
 import { addDays, formatMoney, formatShortDate, formatTime, today } from '@/utils/format';
+import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
+import { tr } from '@/i18n';
 
 const QUICK_REPLIES: Record<string, string[]> = {
   customer: ['Dhanyabad!', 'Can we schedule a call?', 'Please share the updated quote', 'Is this date available?'],
@@ -183,7 +185,7 @@ export function ThreadView({ thread }: { thread: Thread }) {
   };
 
   return (
-    <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined} keyboardVerticalOffset={Platform.OS === 'ios' ? 90 : 0}>
+    <View style={{ flex: 1 }}>
       <View style={[styles.members, { borderBottomColor: t.c.border }]}>
         <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 8, paddingHorizontal: 14 }}>
           {thread.members.map((m) => (
@@ -253,7 +255,7 @@ export function ThreadView({ thread }: { thread: Thread }) {
             <TextInput
               value={text}
               onChangeText={setText}
-              placeholder="Message"
+              placeholder={tr('Message')}
               placeholderTextColor={t.c.subtle}
               multiline
               style={[styles.input, inputReset, { color: t.c.textStrong, fontFamily: t.fonts.regular, backgroundColor: t.c.surfaceAlt }]}
@@ -301,7 +303,7 @@ export function ThreadView({ thread }: { thread: Thread }) {
           />
         </ScrollView>
       </Sheet>
-    </KeyboardAvoidingView>
+    </View>
   );
 }
 

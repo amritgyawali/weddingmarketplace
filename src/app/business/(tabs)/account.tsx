@@ -2,7 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import { router, type Href } from 'expo-router';
 import { useState } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 import { Card, KButton, ListRow, RoleHeader, SectionTitle, StatusPill, type IconName } from '@/components/kit';
 import { Text } from '@/components/ui/Text';
@@ -22,6 +22,7 @@ import { useAccount } from '@/store/useSession';
 import { useRoleTheme } from '@/theme/RoleTheme';
 import { confirm } from '@/utils/confirm';
 import { formatMoney, formatPhone } from '@/utils/format';
+import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
 
 /** Business hub: storefront, settings and every business tool. */
 export default function BusinessAccount() {

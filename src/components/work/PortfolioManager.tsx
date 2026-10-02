@@ -2,7 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import * as ImagePicker from 'expo-image-picker';
 import { useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 
 import { cloudMediaReady, uploadMedia } from '@/backend/media';
 import { ChoiceChips, EmptyBlock, KButton, KField, StackHeader } from '@/components/kit';
@@ -17,6 +17,7 @@ import { useAccount } from '@/store/useSession';
 import { useRoleTheme } from '@/theme/RoleTheme';
 import type { PortfolioItem } from '@/types/platform';
 import { confirm } from '@/utils/confirm';
+import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
 
 const TAGS = ['Ritual', 'Candid', 'Portrait', 'Pre-wedding', 'Reception', 'Decor', 'Drone', 'Team', 'Before/after', 'Venue'];
 

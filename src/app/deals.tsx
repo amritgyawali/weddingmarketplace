@@ -2,7 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import * as Clipboard from 'expo-clipboard';
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 import { Card, ChoiceChips, EmptyBlock, KButton } from '@/components/kit';
 import { ScreenHeader } from '@/components/ui/ScreenHeader';
@@ -16,6 +16,7 @@ import { useDb } from '@/store/useDb';
 import type { Deal } from '@/types/platform';
 import { daysUntil, formatMoney } from '@/utils/format';
 import { shareMessage } from '@/utils/links';
+import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
 
 const KIND_LABEL: Record<Deal['kind'], string> = {
   seasonal: 'Seasonal',

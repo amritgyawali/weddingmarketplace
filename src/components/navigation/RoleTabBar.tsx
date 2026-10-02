@@ -2,14 +2,17 @@ import { Ionicons } from '@expo/vector-icons';
 import { router, type Href } from 'expo-router';
 import type { BottomTabBarProps } from 'expo-router/tabs';
 import type { ComponentProps } from 'react';
-import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { triggerHaptic } from '@/components/ui/PressableScale';
 import { Text } from '@/components/ui/Text';
 import { BRAND } from '@/constants/brand';
+import { tabFeature } from '@/data/features';
+import { useFeatures } from '@/hooks/useFeatures';
 import { useLayout } from '@/hooks/useLayout';
 import { useRoleTheme } from '@/theme/RoleTheme';
+import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
 
 type IconName = ComponentProps<typeof Ionicons>['name'];
 
@@ -39,6 +42,7 @@ export function RoleTabBar({ state, navigation, tabs, links = [] }: BottomTabBar
   const t = useRoleTheme();
   const insets = useSafeAreaInsets();
   const { wide } = useLayout();
+  const on = useFeatures();
 
   const press = (routeName: string, key: string, focused: boolean) => {
     const event = navigation.emit({ type: 'tabPress', target: key, canPreventDefault: true });
@@ -50,7 +54,9 @@ export function RoleTabBar({ state, navigation, tabs, links = [] }: BottomTabBar
 
   const items = state.routes
     .map((route, index) => ({ route, index, tab: tabs.find((x) => x.name === route.name) }))
-    .filter((x): x is typeof x & { tab: RoleTab } => !!x.tab);
+    .filter((x): x is typeof x & { tab: RoleTab } => !!x.tab)
+    // The first tab and the staff "More" tab (home of the super admin console) can't be switched off.
+    .filter((x) => x.index === 0 || x.route.name === 'index' || x.route.name === 'more' || on(tabFeature(t.role, x.route.name)));
 
   if (wide) {
     return (
@@ -123,7 +129,7 @@ export function RoleTabBar({ state, navigation, tabs, links = [] }: BottomTabBar
             accessibilityRole="tab"
             accessibilityState={{ selected: focused }}
             accessibilityLabel={tab.badge ? `${tab.label}, ${tab.badge} new` : tab.label}
-            style={styles.item}>
+            style={({ pressed }) => [styles.item, pressed && { opacity: 0.6 }]}>
             <View>
               <Ionicons name={focused ? tab.activeIcon : tab.icon} size={23} color={tint} />
               {!!tab.badge && (
@@ -151,6 +157,6 @@ const styles = StyleSheet.create({
   sideDivider: { height: StyleSheet.hairlineWidth, marginVertical: 10, marginHorizontal: 20 },
   sideSection: { paddingHorizontal: 20, marginTop: 14, marginBottom: 4 },
   bar: { flexDirection: 'row', borderTopWidth: StyleSheet.hairlineWidth, paddingTop: 7 },
-  item: { flex: 1, alignItems: 'center', gap: 2 },
+  item: { flex: 1, alignItems: 'center', gap: 2, minHeight: 44, justifyContent: 'center' },
   badge: { position: 'absolute', top: -4, right: -10, minWidth: 17, height: 17, borderRadius: 9, borderWidth: 2, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 3 },
 });

@@ -1,7 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
-import { Pressable, ScrollView, View } from 'react-native';
+import { Pressable, View } from 'react-native';
 
 import { EmptyBlock, KButton, KField, StackHeader } from '@/components/kit';
 import { ScreenHeader } from '@/components/ui/ScreenHeader';
@@ -11,6 +11,7 @@ import { toast } from '@/components/ui/Toast';
 import { useDb } from '@/store/useDb';
 import { useAccount } from '@/store/useSession';
 import { useRoleTheme } from '@/theme/RoleTheme';
+import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
 
 import { InboxList } from './Collab';
 import { ThreadView } from './ThreadView';

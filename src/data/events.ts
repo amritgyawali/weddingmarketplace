@@ -1,4 +1,5 @@
 import type { EventType } from '@/types/platform';
+import { adToBs } from '@/utils/bs';
 
 export interface EventTypeDef {
   id: EventType;
@@ -260,14 +261,12 @@ export const bandFor = (guests: number): GuestBand =>
 /** Nepali (Bikram Sambat) month names, for display alongside AD dates. */
 export const BS_MONTHS = ['Baisakh', 'Jestha', 'Asar', 'Shrawan', 'Bhadra', 'Asoj', 'Kartik', 'Mangsir', 'Poush', 'Magh', 'Falgun', 'Chaitra'];
 
-/**
- * Approximate BS month for an AD date. Nepali months start mid-month
- * (Baisakh ≈ 14 April). Good enough to label wedding seasons; exact
- * conversion needs the official calendar table.
- */
+/** BS month and year for an AD date, from the official calendar table ("Mangsir 2083"). */
 export function bsMonthLabel(iso: string): string {
+  const bs = adToBs(iso);
+  if (bs) return `${BS_MONTHS[bs.month]} ${bs.year}`;
+  // Outside BS 2000–2090: Baisakh starts around 14 April.
   const [y, m, d] = iso.split('-').map(Number);
-  // Month index where Baisakh starts in mid-April (AD month 4, day ~14).
   const shifted = (m - 4 + 12 + (d >= 15 ? 0 : -1)) % 12;
   const bsYear = y + 56 + (m > 4 || (m === 4 && d >= 14) ? 1 : 0);
   return `${BS_MONTHS[(shifted + 12) % 12]} ${bsYear}`;

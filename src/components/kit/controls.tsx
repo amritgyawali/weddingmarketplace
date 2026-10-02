@@ -1,30 +1,41 @@
 import { Ionicons } from '@expo/vector-icons';
-import { forwardRef, type ReactNode } from 'react';
-import { Pressable, ScrollView, StyleSheet, TextInput, View, type TextInputProps } from 'react-native';
+import { forwardRef, useState, type ReactNode } from 'react';
+import { Pressable, StyleSheet, TextInput, View, type TextInputProps } from 'react-native';
 
 import { triggerHaptic } from '@/components/ui/PressableScale';
 import { Text } from '@/components/ui/Text';
 import { inputReset } from '@/constants/theme';
+import { useT } from '@/i18n';
 import { useRoleTheme } from '@/theme/RoleTheme';
+import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
 
 import type { IconName } from './primitives';
 
-export const KField = forwardRef<TextInput, TextInputProps & { label?: string; error?: string | null; prefix?: string }>(function KField(
-  { label, error, prefix, style, multiline, ...rest },
+/**
+ * Labelled input for the role apps. The border darkens while typing, turns
+ * red with an error, and the error (or a hint) shows under the field.
+ * Placeholders are translated with the rest of the app.
+ */
+export const KField = forwardRef<TextInput, TextInputProps & { label?: string; error?: string | null; prefix?: string; hint?: string; required?: boolean }>(function KField(
+  { label, error, prefix, hint, required, style, multiline, placeholder, onFocus, onBlur, ...rest },
   ref,
 ) {
   const t = useRoleTheme();
+  const tr = useT();
+  const [focused, setFocused] = useState(false);
   return (
     <View style={{ gap: 6 }}>
       {label && (
         <Text size={13} weight="medium" color={t.c.text}>
           {label}
+          {required ? <Text size={13} color={t.c.danger}> *</Text> : null}
         </Text>
       )}
       <View
         style={[
           styles.field,
-          { backgroundColor: t.dark ? t.c.surfaceAlt : t.c.surface, borderColor: error ? t.c.danger : t.c.border, borderRadius: t.role === 'platform' ? 6 : 8 },
+          { backgroundColor: t.dark ? t.c.surfaceAlt : t.c.surface, borderColor: error ? t.c.danger : focused ? t.c.primary : t.c.border, borderRadius: t.role === 'platform' ? 6 : 8 },
+          focused && !error && { borderWidth: 1.5 },
           multiline && { alignItems: 'flex-start', minHeight: 96 },
         ]}>
         {prefix && (
@@ -37,6 +48,15 @@ export const KField = forwardRef<TextInput, TextInputProps & { label?: string; e
           placeholderTextColor={t.c.subtle}
           selectionColor={t.c.primary}
           multiline={multiline}
+          placeholder={placeholder ? tr(placeholder) : undefined}
+          onFocus={(e) => {
+            setFocused(true);
+            onFocus?.(e);
+          }}
+          onBlur={(e) => {
+            setFocused(false);
+            onBlur?.(e);
+          }}
           style={[
             { flex: 1, fontFamily: t.fonts.regular, fontSize: 15, color: t.c.textStrong, paddingVertical: multiline ? 12 : 0, minHeight: 46, textAlignVertical: multiline ? 'top' : 'center' },
             inputReset,
@@ -44,12 +64,17 @@ export const KField = forwardRef<TextInput, TextInputProps & { label?: string; e
           ]}
           {...rest}
         />
+        {!!error && <Ionicons name="alert-circle" size={18} color={t.c.danger} style={multiline ? { marginTop: 12 } : undefined} />}
       </View>
-      {!!error && (
-        <Text size={12} color={t.c.danger}>
+      {error ? (
+        <Text size={12} color={t.c.danger} accessibilityLiveRegion="polite">
           {error}
         </Text>
-      )}
+      ) : hint ? (
+        <Text size={12} color={t.c.muted}>
+          {hint}
+        </Text>
+      ) : null}
     </View>
   );
 });

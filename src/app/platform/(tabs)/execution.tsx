@@ -1,6 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 import { staffScreen } from '@/components/persona/StaffGate';
 import { Card, EmptyBlock, KButton, ProgressBar, RoleHeader, SectionTitle, StatusPill } from '@/components/kit';
@@ -9,6 +9,7 @@ import { RunSheet } from '@/components/work/RunSheet';
 import { useDb } from '@/store/useDb';
 import { useRoleTheme } from '@/theme/RoleTheme';
 import { daysUntil, formatShortDate } from '@/utils/format';
+import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
 
 /** Wedding-day control room: every live or same-day event across the platform. */
 function ControlRoom() {

@@ -2,7 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { FlatList, ScrollView, StyleSheet, View } from 'react-native';
+import { FlatList, StyleSheet, View } from 'react-native';
 
 import { Button } from '@/components/ui/Button';
 import { Chip } from '@/components/ui/Chip';
@@ -15,6 +15,7 @@ import { useAppStore } from '@/store/useAppStore';
 import type { Booking, BookingStatus } from '@/types';
 import { formatMoney, formatLongDate, formatShortDate } from '@/utils/format';
 import { confirm } from '@/utils/confirm';
+import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
 
 const STATUS: Record<BookingStatus, { label: string; color: string; bg: string }> = {
   pending: { label: 'Awaiting response', color: colors.warning, bg: `${colors.warning}14` },

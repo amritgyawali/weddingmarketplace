@@ -1,4 +1,4 @@
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 import { staffScreen } from '@/components/persona/StaffGate';
 import { BarChart, Card, KpiCard, ProgressBar, SectionTitle, StackHeader } from '@/components/kit';
@@ -9,6 +9,7 @@ import { useDb } from '@/store/useDb';
 import { useSession } from '@/store/useSession';
 import { useRoleTheme } from '@/theme/RoleTheme';
 import { formatMoneyCompact } from '@/utils/format';
+import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
 
 const hoursBetween = (a: string, b: string) => Math.max(0, (new Date(b).getTime() - new Date(a).getTime()) / 3_600_000);
 

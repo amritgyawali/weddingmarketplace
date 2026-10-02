@@ -1,20 +1,21 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 
 import { ChoiceChips, KButton, KField } from '@/components/kit';
 import { Calendar } from '@/components/ui/Calendar';
 import { Sheet } from '@/components/ui/Sheet';
 import { Text } from '@/components/ui/Text';
 import { toast } from '@/components/ui/Toast';
-import { EVENT_TYPES, bsMonthLabel } from '@/data/events';
+import { EVENT_TYPES } from '@/data/events';
 import { runSheetHtml } from '@/services/documents';
 import { sharePdf } from '@/services/exporters';
 import { useDb } from '@/store/useDb';
 import { useRoleTheme } from '@/theme/RoleTheme';
 import type { EventType, Project, ProjectEvent } from '@/types/platform';
 import { confirm } from '@/utils/confirm';
-import { formatLongDate } from '@/utils/format';
+import { formatDateAlt, formatLongDate } from '@/utils/format';
+import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
 
 import { EventCard } from './RunSheet';
 
@@ -57,7 +58,7 @@ function EventSheet({ project, event, onClose }: { project: Project; event: Proj
         <Calendar value={date} onChange={setDate} />
         <View style={styles.row}>
           <Text size={13} color={t.c.muted} style={{ flex: 1 }}>
-            {date ? `${formatLongDate(date)} · ${bsMonthLabel(date)}` : 'Date not confirmed yet'}
+            {date ? `${formatLongDate(date)} · ${formatDateAlt(date)}` : 'Date not confirmed yet'}
           </Text>
           {date && (
             <Pressable onPress={() => setDate(null)} hitSlop={8}>

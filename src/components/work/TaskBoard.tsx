@@ -1,6 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 
 import { Card, ChoiceChips, KButton, KField, Segmented, StatusPill } from '@/components/kit';
 import { Calendar } from '@/components/ui/Calendar';
@@ -13,6 +13,7 @@ import { useAccount } from '@/store/useSession';
 import { useRoleTheme } from '@/theme/RoleTheme';
 import type { Project, ProjectTask, TaskAssignee, TaskStatus } from '@/types/platform';
 import { addDays, daysUntil, formatShortDate, today } from '@/utils/format';
+import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
 
 const COLUMNS: { status: TaskStatus; label: string }[] = [
   { status: 'IN_PROGRESS', label: 'In progress' },

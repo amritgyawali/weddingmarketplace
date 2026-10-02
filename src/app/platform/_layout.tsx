@@ -4,6 +4,7 @@ import { StatusBar } from 'expo-status-bar';
 import { useRoleFonts } from '@/theme/fonts';
 import { ROLE_THEMES } from '@/theme/roles';
 import { RoleThemeProvider } from '@/theme/RoleTheme';
+import { keyboardScreenLayout } from '@/components/ui/Keyboard';
 
 const t = ROLE_THEMES.platform;
 
@@ -15,7 +16,7 @@ export default function PlatformLayout() {
   return (
     <RoleThemeProvider role="platform">
       <StatusBar style="light" />
-      <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: t.c.bg } }}>
+      <Stack screenLayout={keyboardScreenLayout} screenOptions={{ headerShown: false, contentStyle: { backgroundColor: t.c.bg } }}>
         <Stack.Screen name="(tabs)" />
         <Stack.Screen name="project/[id]" />
         <Stack.Screen name="quote/[id]" />
@@ -40,6 +41,15 @@ export default function PlatformLayout() {
         <Stack.Screen name="tool/[id]" />
         <Stack.Screen name="occasions" />
         <Stack.Screen name="occasion/[id]" />
+        <Stack.Screen name="admin/index" />
+        <Stack.Screen name="admin/users" />
+        <Stack.Screen name="admin/user/[id]" />
+        <Stack.Screen name="admin/data" />
+        <Stack.Screen name="admin/collection/[name]" />
+        <Stack.Screen name="admin/record/[name]/[id]" />
+        <Stack.Screen name="admin/features" />
+        <Stack.Screen name="admin/texts" />
+        <Stack.Screen name="admin/announcements" />
       </Stack>
     </RoleThemeProvider>
   );

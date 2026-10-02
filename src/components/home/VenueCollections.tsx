@@ -1,7 +1,7 @@
 import { Image } from 'expo-image';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 import { PressableScale } from '@/components/ui/PressableScale';
 import { SectionHeader } from '@/components/ui/SectionHeader';
@@ -11,6 +11,7 @@ import { photos } from '@/constants/images';
 import { colors, GUTTER, radius } from '@/constants/theme';
 import { ALL_CITIES } from '@/data/cities';
 import { useCollections } from '@/hooks/queries';
+import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
 
 /** Curated venue collections: full-bleed photos with the title set on a dark scrim. */
 export function VenueCollections({ city }: { city: string }) {

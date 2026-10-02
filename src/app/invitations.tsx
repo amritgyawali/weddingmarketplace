@@ -1,22 +1,22 @@
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 import QRCode from 'react-native-qrcode-svg';
 
 import { Avatar, Card, ChoiceChips, EmptyBlock, KButton, KField, ProgressBar, SectionTitle } from '@/components/kit';
 import { ToolScreen, toolStyles } from '@/components/planner/ToolScreen';
 import { Text } from '@/components/ui/Text';
 import { toast } from '@/components/ui/Toast';
-import { bsMonthLabel } from '@/data/events';
 import { invitationHtml } from '@/services/documents';
 import { sharePdf } from '@/services/exporters';
 import { invitationText } from '@/services/planner';
 import { useDb } from '@/store/useDb';
 import { useRoleTheme } from '@/theme/RoleTheme';
 import type { Guest, Project } from '@/types/platform';
-import { formatClock, formatLongDate } from '@/utils/format';
+import { formatClock, formatDateAlt, formatLongDate } from '@/utils/format';
 import { openSms, openWhatsApp, rsvpPath, shareMessage, sitePath, webUrl } from '@/utils/links';
+import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
 
 const DESIGNS = [
   { id: 'sindoor', label: 'Sindoor & gold', colors: ['#7A0E1C', '#B3202E'] as const, accent: '#E8B94A', paper: '#FFF6E5' },
@@ -71,7 +71,7 @@ function Invitations({ project, readOnly }: { project: Project; readOnly: boolea
         <View style={[styles.divider, { backgroundColor: design.accent }]} />
         {events.slice(0, 4).map((e) => (
           <Text key={e.id} size={12} color="#fff" align="center">
-            {e.name} · {e.date ? `${formatLongDate(e.date)} (${bsMonthLabel(e.date)})` : 'date TBC'} · {formatClock(e.startTime)}
+            {e.name} · {e.date ? `${formatLongDate(e.date)} (${formatDateAlt(e.date)})` : 'date TBC'} · {formatClock(e.startTime)}
           </Text>
         ))}
         {siteUrl && (

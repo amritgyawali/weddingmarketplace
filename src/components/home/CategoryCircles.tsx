@@ -1,19 +1,23 @@
 import { Image } from 'expo-image';
 import { router } from 'expo-router';
-import { ScrollView, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
 
 import { PressableScale } from '@/components/ui/PressableScale';
 import { Text } from '@/components/ui/Text';
-import { homeCategoriesFor } from '@/data/categories';
+import { enabledServices, homeCategoriesFor } from '@/data/categories';
 import { SERVICES } from '@/data/services';
 import { useExperience } from '@/hooks/useExperience';
+import { useDb } from '@/store/useDb';
 import { photos } from '@/constants/images';
 import { colors, GUTTER } from '@/constants/theme';
+import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
 
 /** Horizontally scrolling category shortcuts: small photo tiles with a label underneath. */
 export function CategoryCircles() {
   const exp = useExperience();
-  const categories = homeCategoriesFor(exp.occasion?.services ?? SERVICES.map((s) => s.id));
+  const flags = useDb((s) => s.featureFlags);
+  const services = exp.occasion?.services ?? SERVICES.map((s) => s.id);
+  const categories = homeCategoriesFor(enabledServices(services, flags));
   return (
     <ScrollView
       horizontal

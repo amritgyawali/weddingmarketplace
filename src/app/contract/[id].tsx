@@ -1,5 +1,5 @@
 import { useLocalSearchParams } from 'expo-router';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 import { EmptyBlock } from '@/components/kit';
 import { ScreenHeader } from '@/components/ui/ScreenHeader';
@@ -8,6 +8,7 @@ import { colors } from '@/constants/theme';
 import { useCustomerWorkspace } from '@/hooks/useWorkspace';
 import { useDb } from '@/store/useDb';
 import { useAccount } from '@/store/useSession';
+import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
 
 /** Read and e-sign one service agreement. Only the couple (or an editor collaborator) signs as customer. */
 export default function ContractScreen() {

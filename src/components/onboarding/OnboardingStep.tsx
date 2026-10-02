@@ -1,6 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import type { ReactNode } from 'react';
-import { KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 import Animated, { FadeInDown, FadeInLeft, FadeInRight, useAnimatedStyle, withTiming } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -8,6 +8,7 @@ import { BackButton } from '@/components/ui/IconButton';
 import { triggerHaptic } from '@/components/ui/PressableScale';
 import { Text } from '@/components/ui/Text';
 import { colors, GUTTER } from '@/constants/theme';
+import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
 
 function Segment({ filled }: { filled: boolean }) {
   const animated = useAnimatedStyle(() => ({
@@ -80,7 +81,7 @@ export function OnboardingFrame({
         </View>
       </View>
 
-      <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+      <View style={{ flex: 1 }}>
         <ScrollView contentContainerStyle={[styles.scroll, { paddingBottom: 140 + insets.bottom }]} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
           <View style={styles.inner}>
             {crumbs.length > 0 && (
@@ -121,7 +122,7 @@ export function OnboardingFrame({
         <View style={[styles.footer, { paddingBottom: Math.max(insets.bottom, 14) }]}>
           <View style={[styles.inner, { gap: 6 }]}>{footer}</View>
         </View>
-      </KeyboardAvoidingView>
+      </View>
     </View>
   );
 }

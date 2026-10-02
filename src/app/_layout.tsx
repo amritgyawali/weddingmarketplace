@@ -8,21 +8,29 @@ import { AppState, Platform } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import { getAccessToken, usesEmailSignIn } from '@/backend/auth';
+import { ImpersonationBar } from '@/components/ui/AppBanners';
+import { DialogHost } from '@/components/ui/Dialog';
 import { ToastHost } from '@/components/ui/Toast';
 import { colors } from '@/constants/theme';
 import { useHydrated } from '@/hooks/useHydrated';
 import { useTelemetry } from '@/hooks/useTelemetry';
+import { I18nProvider, usePrefs } from '@/i18n';
+import { installActionToasts } from '@/store/actionToasts';
 import { useAppStore } from '@/store/useAppStore';
 import { useDb } from '@/store/useDb';
 import { logout } from '@/services/auth';
 import { useSession } from '@/store/useSession';
 import { APP_FONTS } from '@/theme/fonts';
+import { keyboardScreenLayout } from '@/components/ui/Keyboard';
 
 SplashScreen.preventAutoHideAsync().catch(() => {});
 SplashScreen.setOptions({ duration: 350, fade: true });
 
 // Reports render errors (PostHog, Sentry) before offering a retry.
 export { AppErrorBoundary as ErrorBoundary } from '@/components/AppErrorBoundary';
+
+// "Guest added", "Task deleted"…: a confirmation after every change.
+installActionToasts();
 
 // Refetch stale queries when the app returns to the foreground.
 AppState.addEventListener('change', (status) => {
@@ -43,7 +51,8 @@ export default function RootLayout() {
   const appHydrated = useHydrated(useAppStore);
   const sessionHydrated = useHydrated(useSession);
   const dbHydrated = useHydrated(useDb);
-  const hydrated = appHydrated && sessionHydrated && dbHydrated;
+  const prefsHydrated = useHydrated(usePrefs);
+  const hydrated = appHydrated && sessionHydrated && dbHydrated && prefsHydrated;
   const role = useSession((s) => s.session?.role ?? null);
   const hasOnboarded = useAppStore((s) => s.hasOnboarded);
   const ready = (fontsLoaded || !!fontError) && hydrated;
@@ -67,9 +76,10 @@ export default function RootLayout() {
 
   return (
     <GestureHandlerRootView style={{ flex: 1, backgroundColor: colors.white }}>
+      <I18nProvider>
       <QueryClientProvider client={queryClient}>
         <StatusBar style="dark" />
-        <Stack
+        <Stack screenLayout={keyboardScreenLayout}
           screenOptions={{
             headerShown: false,
             contentStyle: { backgroundColor: colors.white },
@@ -157,8 +167,11 @@ export default function RootLayout() {
           <Stack.Screen name="pay/esewa" options={{ animation: 'none' }} />
           <Stack.Screen name="+not-found" />
         </Stack>
+        <ImpersonationBar />
         <ToastHost />
+        <DialogHost />
       </QueryClientProvider>
+      </I18nProvider>
     </GestureHandlerRootView>
   );
 }

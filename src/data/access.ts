@@ -161,6 +161,16 @@ export const PLATFORM_ROUTE_RULES: Record<string, When> = {
   '/platform/analytics': { perms: ['project.view_all'] },
   '/platform/marketplace': { perms: ['settings.edit'] },
   '/platform/audit': { perms: ['audit.view'] },
+  // Super admin console: edit anything, switch features, rewrite text
+  '/platform/admin': { perms: ['admin.full'] },
+  '/platform/admin/users': { perms: ['admin.full'] },
+  '/platform/admin/user': { perms: ['admin.full'] },
+  '/platform/admin/data': { perms: ['admin.full'] },
+  '/platform/admin/collection': { perms: ['admin.full'] },
+  '/platform/admin/record': { perms: ['admin.full'] },
+  '/platform/admin/features': { perms: ['admin.full'] },
+  '/platform/admin/texts': { perms: ['admin.full'] },
+  '/platform/admin/announcements': { perms: ['admin.full'] },
 };
 
 /** Who a staff screen is for, in words ("finance and admins"), for the no-access message. */
@@ -179,6 +189,15 @@ export const ROUTE_AUDIENCE: Record<string, string> = {
   '/platform/analytics': 'the operations team',
   '/platform/marketplace': 'admins',
   '/platform/audit': 'finance and admins',
+  '/platform/admin': 'super admins',
+  '/platform/admin/users': 'super admins',
+  '/platform/admin/user': 'super admins',
+  '/platform/admin/data': 'super admins',
+  '/platform/admin/collection': 'super admins',
+  '/platform/admin/record': 'super admins',
+  '/platform/admin/features': 'super admins',
+  '/platform/admin/texts': 'super admins',
+  '/platform/admin/announcements': 'super admins',
 };
 
 /** The staff member's focus on the Today screen, first match wins. */

@@ -11,6 +11,7 @@ import { useVendorWorkspace } from '@/hooks/useWorkspace';
 import { useUnreadMessageCount } from '@/store/useDb';
 import { useAccount } from '@/store/useSession';
 import { ROLE_THEMES } from '@/theme/roles';
+import { keyboardScreenLayout } from '@/components/ui/Keyboard';
 
 export default function BusinessTabs() {
   const { wide } = useLayout();
@@ -47,7 +48,7 @@ export default function BusinessTabs() {
   links.push(...tradeLinks);
 
   return (
-    <Tabs
+    <Tabs screenLayout={keyboardScreenLayout}
       tabBar={(props) => <RoleTabBar {...props} tabs={tabs} links={links} />}
       screenOptions={{ headerShown: false, tabBarPosition: wide ? 'left' : 'bottom', sceneStyle: { backgroundColor: ROLE_THEMES.vendor.c.bg } }}>
       {tabs.map((tab) => (

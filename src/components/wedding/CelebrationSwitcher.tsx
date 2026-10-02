@@ -1,6 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
-import { Pressable, ScrollView, StyleSheet } from 'react-native';
+import { Pressable, StyleSheet } from 'react-native';
 
 import { triggerHaptic } from '@/components/ui/PressableScale';
 import { Text } from '@/components/ui/Text';
@@ -11,6 +11,7 @@ import { useAppStore } from '@/store/useAppStore';
 import { useDb } from '@/store/useDb';
 import { useAccount } from '@/store/useSession';
 import { formatShortDate } from '@/utils/format';
+import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
 
 /**
  * The couple's celebrations side by side (a wedding now, a pasni later). The

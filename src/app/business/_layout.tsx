@@ -4,6 +4,7 @@ import { StatusBar } from 'expo-status-bar';
 import { useRoleFonts } from '@/theme/fonts';
 import { ROLE_THEMES } from '@/theme/roles';
 import { RoleThemeProvider } from '@/theme/RoleTheme';
+import { keyboardScreenLayout } from '@/components/ui/Keyboard';
 
 const t = ROLE_THEMES.vendor;
 
@@ -15,7 +16,7 @@ export default function BusinessLayout() {
   return (
     <RoleThemeProvider role="vendor">
       <StatusBar style="light" />
-      <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: t.c.bg } }}>
+      <Stack screenLayout={keyboardScreenLayout} screenOptions={{ headerShown: false, contentStyle: { backgroundColor: t.c.bg } }}>
         <Stack.Screen name="(tabs)" />
         <Stack.Screen name="lead/[id]" />
         <Stack.Screen name="quote/[id]" />

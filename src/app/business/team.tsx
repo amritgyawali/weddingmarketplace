@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 import { Avatar, Card, ChoiceChips, EmptyBlock, KButton, KField, SectionTitle, StackHeader, StatusPill } from '@/components/kit';
 import { Sheet } from '@/components/ui/Sheet';
@@ -12,6 +12,7 @@ import { useAccount } from '@/store/useSession';
 import { useRoleTheme } from '@/theme/RoleTheme';
 import type { StaffMember } from '@/types/platform';
 import { formatPhone, formatShortDate, uid } from '@/utils/format';
+import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
 
 const PERMISSIONS: StaffMember['permissions'] = ['leads', 'quotes', 'bookings', 'finance', 'calendar'];
 

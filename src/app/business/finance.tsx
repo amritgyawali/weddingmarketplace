@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 import { Card, ChoiceChips, EmptyBlock, KButton, KField, KpiCard, Segmented, StackHeader, StatusPill } from '@/components/kit';
 import { Text } from '@/components/ui/Text';
@@ -11,6 +11,7 @@ import { useAccount } from '@/store/useSession';
 import { useRoleTheme } from '@/theme/RoleTheme';
 import type { Invoice } from '@/types/platform';
 import { addDays, formatMoney, formatMoneyCompact, formatShortDate, today, uid } from '@/utils/format';
+import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
 
 type Tab = 'settlements' | 'invoices' | 'commission';
 

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 import { Card, ChoiceChips, KButton, KField, SectionTitle, StackHeader, StatusPill } from '@/components/kit';
 import { Text } from '@/components/ui/Text';
@@ -12,6 +12,7 @@ import { useAccount } from '@/store/useSession';
 import { useRoleTheme } from '@/theme/RoleTheme';
 import type { Deal } from '@/types/platform';
 import { addDays, formatMoney, formatShortDate, today, uid } from '@/utils/format';
+import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
 
 const PLACEMENTS = [
   { id: 'home', title: 'Homepage feature', price: 15_000, blurb: '“Top rated” carousel on the couple home screen for 30 days' },

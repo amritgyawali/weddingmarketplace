@@ -3,7 +3,7 @@ import * as ImagePicker from 'expo-image-picker';
 import * as Location from 'expo-location';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
-import { Linking, ScrollView, StyleSheet, View } from 'react-native';
+import { Linking, StyleSheet, View } from 'react-native';
 
 import { Avatar, Card, ChoiceChips, EmptyBlock, KButton, KeyValue, KField, SectionTitle, StackHeader, StatusPill } from '@/components/kit';
 import { triggerHaptic } from '@/components/ui/PressableScale';
@@ -17,6 +17,7 @@ import { useAccount } from '@/store/useSession';
 import { useRoleTheme } from '@/theme/RoleTheme';
 import { confirm } from '@/utils/confirm';
 import { daysUntil, formatClock, formatLongDate, formatMoney, formatTime } from '@/utils/format';
+import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
 
 /** A freelancer's wedding assignment: confirm, check in on site, work, check out, get paid. */
 export default function AssignmentScreen() {

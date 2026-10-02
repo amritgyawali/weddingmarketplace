@@ -1,7 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
-import { KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 import Animated, { ZoomIn } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -19,6 +19,7 @@ import { useAppStore } from '@/store/useAppStore';
 import { useDb } from '@/store/useDb';
 import { useAccount } from '@/store/useSession';
 import { formatMoney, isNepalMobile } from '@/utils/format';
+import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
 
 const COUPONS: Record<string, number> = { SHUBH10: 0.1, FIRSTWED: 0.15 };
 const VAT = 0.13;
@@ -136,7 +137,7 @@ export default function GenieCheckoutScreen() {
   return (
     <View style={styles.root}>
       <ScreenHeader title="Checkout" />
-      <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+      <View style={{ flex: 1 }}>
         <ScrollView contentContainerStyle={styles.body} keyboardShouldPersistTaps="handled">
           <View style={styles.summary}>
             <Text size={12} weight="medium" color={colors.textMuted}>
@@ -204,7 +205,7 @@ export default function GenieCheckoutScreen() {
             </Text>
           </View>
         </View>
-      </KeyboardAvoidingView>
+      </View>
     </View>
   );
 }

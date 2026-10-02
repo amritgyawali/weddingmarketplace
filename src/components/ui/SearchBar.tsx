@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 
 import { colors, fonts, inputReset, radius } from '@/constants/theme';
+import { useT } from '@/i18n';
 
 import { Text } from './Text';
 
@@ -27,6 +28,7 @@ export const SearchBar = forwardRef<TextInput, SearchBarProps>(function SearchBa
   { onPressReadOnly, trailing, style, height = 42, placeholder, value, onChangeText, ...rest },
   ref,
 ) {
+  const tr = useT();
   const content = (
     <>
       <Ionicons name="search" size={17} color={colors.textMuted} />
@@ -39,7 +41,7 @@ export const SearchBar = forwardRef<TextInput, SearchBarProps>(function SearchBa
           ref={ref}
           value={value}
           onChangeText={onChangeText}
-          placeholder={placeholder}
+          placeholder={placeholder ? tr(placeholder) : undefined}
           placeholderTextColor={colors.placeholder}
           returnKeyType="search"
           autoCorrect={false}

@@ -2,7 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 import Animated, { FadeIn, FadeOut, LinearTransition, useAnimatedStyle, withTiming } from 'react-native-reanimated';
 
 import { CityHeader } from '@/components/home/CityHeader';
@@ -11,11 +11,13 @@ import { triggerHaptic } from '@/components/ui/PressableScale';
 import { Text } from '@/components/ui/Text';
 import { photos } from '@/constants/images';
 import { colors } from '@/constants/theme';
-import { categoriesFor } from '@/data/categories';
+import { categoriesFor, enabledServices } from '@/data/categories';
 import { SERVICES } from '@/data/services';
 import { useExperience } from '@/hooks/useExperience';
+import { useDb } from '@/store/useDb';
 import { selectShortlistCount, useAppStore } from '@/store/useAppStore';
 import type { VendorCategory } from '@/types';
+import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
 
 const ROW_HEIGHT = 88;
 
@@ -86,10 +88,11 @@ export default function VendorsTab() {
   const [expanded, setExpanded] = useState<string | null>(null);
   const shortlistCount = useAppStore(selectShortlistCount);
   const exp = useExperience();
+  const flags = useDb((s) => s.featureFlags);
   const all = SERVICES.map((s) => s.id);
-  const services = exp.occasion?.services ?? all;
+  const services = enabledServices(exp.occasion?.services ?? all, flags);
   const categories = categoriesFor(services);
-  const filtered = services.length < all.length;
+  const filtered = (exp.occasion?.services ?? all).length < all.length;
 
   return (
     <View style={styles.root}>
