@@ -70,17 +70,17 @@ with EXPO_PUBLIC_BUG_INBOX_URL. A super admin can switch it off
 
 ### `useBugReporter`
 
-*const* · [src/components/ui/BugReporter.tsx:58](../../../src/components/ui/BugReporter.tsx#L58)
+*const* · [src/components/ui/BugReporter.tsx:61](../../../src/components/ui/BugReporter.tsx#L61)
 
 ```ts
-useBugReporter= create<BugReporterState>()( persist( (set) => ({ shake: true, draft: null, setShake: (sha…
+useBugReporter= create<BugReporterState>()( persist( (set) => ({ shake: true, inbox: '', draft: null, set…
 ```
 
-The reporter's state: the open draft, and the device's shake setting (persisted).
+The reporter's state: the open draft, and the device's shake setting and inbox address (persisted).
 
 ### `installBugReporter`
 
-*function* · [src/components/ui/BugReporter.tsx:75](../../../src/components/ui/BugReporter.tsx#L75)
+*function* · [src/components/ui/BugReporter.tsx:83](../../../src/components/ui/BugReporter.tsx#L83)
 
 ```ts
 installBugReporter()
@@ -90,7 +90,7 @@ Starts keeping console errors for reports, in builds that can send them. Root la
 
 ### `reportBug`
 
-*function* · [src/components/ui/BugReporter.tsx:80](../../../src/components/ui/BugReporter.tsx#L80)
+*function* · [src/components/ui/BugReporter.tsx:88](../../../src/components/ui/BugReporter.tsx#L88)
 
 ```ts
 reportBug({ screenshot = true }: { screenshot?: boolean } = {})
@@ -100,7 +100,7 @@ Screenshots the screen as it is now and opens the report sheet. `screenshot: fal
 
 ### `BugReporterHost`
 
-*component* · [src/components/ui/BugReporter.tsx:107](../../../src/components/ui/BugReporter.tsx#L107)
+*component* · [src/components/ui/BugReporter.tsx:115](../../../src/components/ui/BugReporter.tsx#L115)
 
 ```ts
 BugReporterHost()

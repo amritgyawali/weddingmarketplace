@@ -5,9 +5,14 @@
  * strings and reviewed by hand; add new lines in the same form.
  */
 export const NE: Record<string, string> = {
+  "Add the bug inbox address first": "पहिले बग इनबक्सको ठेगाना थप्नुहोस्",
+  "Add the bug inbox address in Settings → Help first": "पहिले सेटिङ → सहायतामा बग इनबक्सको ठेगाना थप्नुहोस्",
   "Attach a picture": "तस्बिर जोड्नुहोस्",
+  "Bug inbox address": "बग इनबक्सको ठेगाना",
   "Bug report sent. Dhanyabad!": "बग रिपोर्ट पठाइयो। धन्यवाद!",
   "Bug reports are not set up in this build": "यो बिल्डमा बग रिपोर्ट मिलाइएको छैन",
+  "Check connection": "जडान जाँच्नुहोस्",
+  "Connected to the bug inbox": "बग इनबक्समा जडान भयो",
   "Couldn’t reach the developer’s computer. Is the dev server running on the same Wi-Fi?": "डेभलपरको कम्प्युटरसम्म पुग्न सकिएन। डेभ सर्भर उही Wi-Fi मा चलिरहेको छ?",
   "Describe what went wrong": "के गडबड भयो लेख्नुहोस्",
   "Development and test builds only: a screenshot and a description go to the developer": "विकास र परीक्षण बिल्डमा मात्र: स्क्रिनसट र विवरण डेभलपरलाई जान्छ",
@@ -20,6 +25,7 @@ export const NE: Record<string, string> = {
   "Shake to report a bug": "फोन हल्लाएर बग रिपोर्ट गर्नुहोस्",
   "Takes a screenshot of the screen you are on": "तपाईं भएको स्क्रिनको स्क्रिनसट लिन्छ",
   "The bug inbox answered {0}": "बग इनबक्सले {0} जवाफ दियो",
+  "The computer running npx expo start or npm run bugs:inbox, on the same Wi-Fi. Leave empty to use the one shown.": "उही Wi-Fi मा npx expo start वा npm run bugs:inbox चलिरहेको कम्प्युटर। देखाइएको ठेगाना नै प्रयोग गर्न खाली छोड्नुहोस्।",
   "The screenshot, this screen’s address, your account and device details go to the developer’s computer.": "स्क्रिनसट, यो स्क्रिनको ठेगाना, तपाईंको खाता र डिभाइसको विवरण डेभलपरको कम्प्युटरमा जान्छ।",
   "Use another picture": "अर्को तस्बिर राख्नुहोस्",
   "What did you tap, what did you expect, and what happened instead?": "तपाईंले के थिच्नुभयो, के हुनुपर्थ्यो, र त्यसको सट्टा के भयो?",

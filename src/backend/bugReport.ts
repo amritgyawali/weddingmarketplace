@@ -5,8 +5,10 @@
  * Reports go to the bug inbox (`scripts/bug-inbox.cjs`), which writes them
  * into the project's `bug-reports/` folder. In development the inbox runs
  * inside `npx expo start`, so the app finds it at the dev server's address;
- * a test build can point at `npm run bugs:inbox` with EXPO_PUBLIC_BUG_INBOX_URL.
- * Store builds have neither, and the feature stays hidden.
+ * an installed test build (EXPO_PUBLIC_BUG_REPORTS=on) sends to
+ * `npm run bugs:inbox` at EXPO_PUBLIC_BUG_INBOX_URL, or at the address typed in
+ * Settings → Help on the phone. Store builds have none of these, and the
+ * feature stays hidden.
  */
 import Constants, { ExecutionEnvironment } from 'expo-constants';
 import { Dimensions, PixelRatio, Platform } from 'react-native';
@@ -39,17 +41,54 @@ export interface BugReport {
   logs: BugLogLine[];
 }
 
-/** The inbox address, or undefined when this build has nowhere to send reports. */
-export function bugInboxUrl(): string | undefined {
-  if (ENV.bugInboxUrl) return ENV.bugInboxUrl.replace(/\/+$/, '') + BUG_INBOX_PATH;
+const UNREACHABLE = 'Couldn’t reach the developer’s computer. Is the dev server running on the same Wi-Fi?';
+
+let deviceInbox: string | undefined;
+/** The inbox address typed in Settings → Help on this device; it wins over the build's own. */
+export function setDeviceBugInbox(address: string | undefined) {
+  deviceInbox = address?.trim() || undefined;
+}
+
+/** `192.168.1.10:8790` → `http://192.168.1.10:8790/__vivah/bug-report`. */
+const inboxAt = (address: string) => {
+  let base = address.trim().replace(/\/+$/, '');
+  if (!/^https?:\/\//i.test(base)) base = `http://${base}`;
+  return base.endsWith(BUG_INBOX_PATH) ? base : base + BUG_INBOX_PATH;
+};
+
+/** The dev server this app was loaded from (Expo Go, development builds, `expo start --web`). */
+function devServerInbox(): string | undefined {
   if (!__DEV__) return undefined;
   if (Platform.OS === 'web') return typeof window !== 'undefined' ? window.location.origin + BUG_INBOX_PATH : undefined;
   const host = Constants.expoConfig?.hostUri;
-  return host ? `http://${host.replace(/\/.*$/, '')}${BUG_INBOX_PATH}` : undefined;
+  return host ? inboxAt(host.replace(/\/.*$/, '')) : undefined;
 }
 
-/** Can this build send bug reports at all? */
-export const bugReportsAvailable = () => !!bugInboxUrl();
+/** The address used when the device has none of its own: the dev server, else the build's EXPO_PUBLIC_BUG_INBOX_URL. */
+export const defaultBugInbox = () => devServerInbox() ?? (ENV.bugInboxUrl ? inboxAt(ENV.bugInboxUrl) : undefined);
+
+/** Where reports go, or undefined when there is nowhere to send them yet. */
+export const bugInboxUrl = (): string | undefined => (deviceInbox ? inboxAt(deviceInbox) : defaultBugInbox());
+
+/** Does this build offer bug reports? Development builds, and test builds with EXPO_PUBLIC_BUG_REPORTS=on or an inbox URL. */
+export const bugReportsAvailable = () => __DEV__ || ENV.bugReports || !!ENV.bugInboxUrl;
+
+/** Checks that the inbox answers, for Settings → Help. Resolves to the address it reached. */
+export async function pingBugInbox(): Promise<Result<string>> {
+  const url = bugInboxUrl();
+  if (!url) return failResult('Add the bug inbox address first');
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), 6000);
+  try {
+    const res = await fetch(url, { signal: controller.signal });
+    const body = (await res.json().catch(() => null)) as { ok?: boolean } | null;
+    return body?.ok ? okResult(url) : failResult(`The bug inbox answered ${res.status}`);
+  } catch {
+    return failResult(UNREACHABLE);
+  } finally {
+    clearTimeout(timer);
+  }
+}
 
 const time = () => new Date().toTimeString().slice(0, 8);
 const MAX_ROUTES = 15;
@@ -117,7 +156,7 @@ export function reportContext(): Pick<BugReport, 'device' | 'recentRoutes' | 'lo
 /** Posts a report to the inbox. Resolves to the folder it was saved in. */
 export async function sendBugReport(report: BugReport): Promise<Result<string>> {
   const url = bugInboxUrl();
-  if (!url) return failResult('Bug reports are not set up in this build');
+  if (!url) return failResult('Add the bug inbox address in Settings → Help first');
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), 30_000);
   try {
@@ -131,7 +170,7 @@ export async function sendBugReport(report: BugReport): Promise<Result<string>> 
     if (!res.ok || !body?.ok) return failResult(body?.error ?? `The bug inbox answered ${res.status}`);
     return okResult(body.folder ?? '');
   } catch {
-    return failResult('Couldn’t reach the developer’s computer. Is the dev server running on the same Wi-Fi?');
+    return failResult(UNREACHABLE);
   } finally {
     clearTimeout(timer);
   }

@@ -3314,19 +3314,19 @@
   },
   {
    "file": "src/backend/bugReport.ts",
-   "doc": "Bug reports: the payload the shake-to-report sheet sends, where it goes, and the little history kept for it (recent screens, console errors). Reports go to the bug inbox (`scripts/bug-inbox.cjs`), which writes them into the project's `bug-reports/` folder. In development the inbox runs inside `npx expo start`, so the app finds it at the dev server's address; a test build can point at `npm run bugs:inbox` with EXPO_PUBLIC_BUG_INBOX_URL. Store builds have neither, and the feature stays hidden.",
+   "doc": "Bug reports: the payload the shake-to-report sheet sends, where it goes, and the little history kept for it (recent screens, console errors). Reports go to the bug inbox (`scripts/bug-inbox.cjs`), which writes them into the project's `bug-reports/` folder. In development the inbox runs inside `npx expo start`, so the app finds it at the dev server's address; an installed test build (EXPO_PUBLIC_BUG_REPORTS=on) sends to `npm run bugs:inbox` at EXPO_PUBLIC_BUG_INBOX_URL, or at the address typed in Settings → Help on the phone. Store builds have none of these, and the feature stays hidden.",
    "exports": [
     {
      "name": "BUG_INBOX_PATH",
      "kind": "const",
-     "line": 20,
+     "line": 22,
      "signature": "= '/__vivah/bug-report'",
      "doc": "Same path as `BUG_INBOX_PATH` in scripts/bug-inbox.cjs."
     },
     {
      "name": "BugLogLine",
      "kind": "interface",
-     "line": 22,
+     "line": 24,
      "signature": "",
      "doc": "",
      "members": [
@@ -3353,7 +3353,7 @@
     {
      "name": "BugReport",
      "kind": "interface",
-     "line": 28,
+     "line": 30,
      "signature": "",
      "doc": "",
      "members": [
@@ -3420,44 +3420,65 @@
      ]
     },
     {
+     "name": "setDeviceBugInbox",
+     "kind": "function",
+     "line": 48,
+     "signature": "(address: string | undefined)",
+     "doc": "The inbox address typed in Settings → Help on this device; it wins over the build's own."
+    },
+    {
+     "name": "defaultBugInbox",
+     "kind": "function",
+     "line": 68,
+     "signature": "()",
+     "doc": "The address used when the device has none of its own: the dev server, else the build's EXPO_PUBLIC_BUG_INBOX_URL."
+    },
+    {
      "name": "bugInboxUrl",
      "kind": "function",
-     "line": 43,
+     "line": 71,
      "signature": "(): string | undefined",
-     "doc": "The inbox address, or undefined when this build has nowhere to send reports."
+     "doc": "Where reports go, or undefined when there is nowhere to send them yet."
     },
     {
      "name": "bugReportsAvailable",
      "kind": "function",
-     "line": 52,
+     "line": 74,
      "signature": "()",
-     "doc": "Can this build send bug reports at all?"
+     "doc": "Does this build offer bug reports? Development builds, and test builds with EXPO_PUBLIC_BUG_REPORTS=on or an inbox URL."
+    },
+    {
+     "name": "pingBugInbox",
+     "kind": "function",
+     "line": 77,
+     "signature": "(): Promise<Result<string>>",
+     "doc": "Checks that the inbox answers, for Settings → Help. Resolves to the address it reached."
     },
     {
      "name": "recordRoute",
      "kind": "function",
-     "line": 61,
+     "line": 100,
      "signature": "(path: string)",
      "doc": "Remembers a visited screen for the next report."
     },
     {
      "name": "captureConsole",
      "kind": "function",
-     "line": 79,
+     "line": 118,
      "signature": "()",
      "doc": "Keeps the last console errors and warnings so a report shows what went wrong under the hood. Idempotent."
     },
     {
      "name": "reportContext",
      "kind": "function",
-     "line": 99,
+     "line": 138,
      "signature": "(): Pick<BugReport, 'device' | 'recentRoutes' | 'logs'> & { appVersion: string }",
      "doc": "Device, app and history details that go with every report."
     },
     {
      "name": "sendBugReport",
      "kind": "function",
-     "line": 118,
+     "line": 157,
      "signature": "(report: BugReport): Promise<Result<string>>",
      "doc": "Posts a report to the inbox. Resolves to the folder it was saved in."
     }
@@ -6623,28 +6644,28 @@
     {
      "name": "useBugReporter",
      "kind": "const",
-     "line": 58,
-     "signature": "= create<BugReporterState>()( persist( (set) => ({ shake: true, draft: null, setShake: (sha…",
-     "doc": "The reporter's state: the open draft, and the device's shake setting (persisted)."
+     "line": 61,
+     "signature": "= create<BugReporterState>()( persist( (set) => ({ shake: true, inbox: '', draft: null, set…",
+     "doc": "The reporter's state: the open draft, and the device's shake setting and inbox address (persisted)."
     },
     {
      "name": "installBugReporter",
      "kind": "function",
-     "line": 75,
+     "line": 83,
      "signature": "()",
      "doc": "Starts keeping console errors for reports, in builds that can send them. Root layout calls it once."
     },
     {
      "name": "reportBug",
      "kind": "function",
-     "line": 80,
+     "line": 88,
      "signature": "({ screenshot = true }: { screenshot?: boolean } = {})",
      "doc": "Screenshots the screen as it is now and opens the report sheet. `screenshot: false` opens it without one."
     },
     {
      "name": "BugReporterHost",
      "kind": "component",
-     "line": 107,
+     "line": 115,
      "signature": "()",
      "doc": "Follows the current screen, listens for shakes and shows the report sheet. Root layout only."
     }
@@ -8057,7 +8078,7 @@
     {
      "name": "usesSupabase",
      "kind": "function",
-     "line": 28,
+     "line": 30,
      "signature": "()",
      "doc": "True when the real backend is switched on and configured."
     }

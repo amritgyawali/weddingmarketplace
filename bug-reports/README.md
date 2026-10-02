@@ -13,7 +13,7 @@ Testers report bugs from inside the app, and each report lands in this folder.
 The app sends the report to the bug inbox on the developer's computer (`scripts/bug-inbox.cjs`).
 
 - **Development (Expo Go, dev builds and `expo start --web`):** nothing to set up. `metro.config.js` mounts the inbox on the dev server, so the report goes to the computer running `npx expo start`. The phone must be on the same Wi-Fi.
-- **Test builds without a dev server:** run `npm run bugs:inbox` (port 8790) and build with `EXPO_PUBLIC_BUG_INBOX_URL=http://<computer-ip>:8790`. Android release builds block plain `http://`, so use an HTTPS tunnel to the inbox there.
+- **Installed test builds (the `preview` APK):** run `npm run bugs:inbox` on the computer (port 8790). The APK sends to `EXPO_PUBLIC_BUG_INBOX_URL` from `eas.json`. If the computer's Wi-Fi address changes, type the new one in **Settings → Help → Bug inbox address** on the phone (for example `192.168.1.72:8790`) and tap **Check connection**.
 - **Store builds:** the feature is hidden.
 
 A super admin can switch it off for everyone (Super admin → Features → "Shake to report a bug"). Each device can turn shaking off in Settings.

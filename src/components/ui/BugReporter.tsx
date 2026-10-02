@@ -21,7 +21,7 @@ import { captureScreen } from 'react-native-view-shot';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 
-import { bugReportsAvailable, captureConsole, recordRoute, reportContext, sendBugReport } from '@/backend/bugReport';
+import { bugReportsAvailable, captureConsole, recordRoute, reportContext, sendBugReport, setDeviceBugInbox } from '@/backend/bugReport';
 import { BRAND } from '@/constants/brand';
 import { ENV } from '@/constants/env';
 import { colors, radius } from '@/constants/theme';
@@ -48,25 +48,33 @@ interface Draft {
 interface BugReporterState {
   /** Per device: shaking opens the reporter. */
   shake: boolean;
+  /** Per device: the bug inbox address typed in Settings (empty = the build's own). */
+  inbox: string;
   draft: Draft | null;
   setShake: (shake: boolean) => void;
+  setInbox: (inbox: string) => void;
   open: (draft: Draft) => void;
   close: () => void;
 }
 
-/** The reporter's state: the open draft, and the device's shake setting (persisted). */
+/** The reporter's state: the open draft, and the device's shake setting and inbox address (persisted). */
 export const useBugReporter = create<BugReporterState>()(
   persist(
     (set) => ({
       shake: true,
+      inbox: '',
       draft: null,
       setShake: (shake) => set({ shake }),
+      setInbox: (inbox) => set({ inbox: inbox.trim() }),
       open: (draft) => set({ draft }),
       close: () => set({ draft: null }),
     }),
-    { name: 'vivah-bug-reporter', storage: createJSONStorage(() => AsyncStorage), partialize: (s) => ({ shake: s.shake }) },
+    { name: 'vivah-bug-reporter', storage: createJSONStorage(() => AsyncStorage), partialize: (s) => ({ shake: s.shake, inbox: s.inbox }) },
   ),
 );
+
+// The backend reads the device's inbox address (restored from storage, or edited in Settings).
+useBugReporter.subscribe((s) => setDeviceBugInbox(s.inbox));
 
 let current: { path: string; params: Record<string, string> } = { path: '/', params: {} };
 let capturing = false;

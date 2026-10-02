@@ -4,12 +4,12 @@ import { StyleSheet, View } from 'react-native';
 
 import { deleteMyAccount, exportMyData } from '@/backend/account';
 import { usesEmailSignIn } from '@/backend/auth';
-import { bugReportsAvailable } from '@/backend/bugReport';
-import { Card, ChoiceChips, KButton, ListRow, SectionTitle, StackHeader } from '@/components/kit';
+import { bugReportsAvailable, defaultBugInbox, pingBugInbox } from '@/backend/bugReport';
+import { Card, ChoiceChips, KButton, KField, ListRow, SectionTitle, StackHeader } from '@/components/kit';
 import { reportBug, useBugReporter } from '@/components/ui/BugReporter';
 import { Text } from '@/components/ui/Text';
 import { Toggle } from '@/components/ui/Toggle';
-import { toast } from '@/components/ui/Toast';
+import { toast, toastError } from '@/components/ui/Toast';
 import { LanguageSwitch } from '@/components/ui/LanguageSwitch';
 import { BRAND } from '@/constants/brand';
 import { useFeatures } from '@/hooks/useFeatures';
@@ -66,6 +66,19 @@ export function SettingsScreen() {
   const bugReports = bugReportsAvailable() && featureOn('app.bug_report');
   const shake = useBugReporter((s) => s.shake);
   const setShake = useBugReporter((s) => s.setShake);
+  const inbox = useBugReporter((s) => s.inbox);
+  const setInbox = useBugReporter((s) => s.setInbox);
+  const [inboxDraft, setInboxDraft] = useState(inbox);
+  const [checkingInbox, setCheckingInbox] = useState(false);
+
+  const checkInbox = async () => {
+    setInbox(inboxDraft);
+    setCheckingInbox(true);
+    const reached = await pingBugInbox();
+    setCheckingInbox(false);
+    if (reached.ok) toast('Connected to the bug inbox');
+    else toastError(reached.error);
+  };
 
   const exportData = async () => {
     const db = useDb.getState();
@@ -193,6 +206,20 @@ export function SettingsScreen() {
             <Card padded={false} style={{ overflow: 'hidden' }}>
               <ListRow icon="bug-outline" title="Report a problem" subtitle="Or shake your phone on the screen that went wrong" onPress={() => void reportBug({ screenshot: false })} />
               {row('Shake to report a bug', shake, setShake, 'Takes a screenshot of the screen you are on')}
+              <View style={[styles.inbox, { borderTopColor: t.c.border }]}>
+                <KField
+                  label="Bug inbox address"
+                  value={inboxDraft}
+                  onChangeText={setInboxDraft}
+                  onEndEditing={() => setInbox(inboxDraft)}
+                  placeholder={defaultBugInbox() ?? '192.168.1.10:8790'}
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                  keyboardType="url"
+                  hint="The computer running npx expo start or npm run bugs:inbox, on the same Wi-Fi. Leave empty to use the one shown."
+                />
+                <KButton label="Check connection" icon="wifi-outline" variant="secondary" size="sm" loading={checkingInbox} onPress={checkInbox} />
+              </View>
             </Card>
           </>
         )}
@@ -213,4 +240,5 @@ export function SettingsScreen() {
 
 const styles = StyleSheet.create({
   row: { flexDirection: 'row', alignItems: 'center', gap: 12, paddingHorizontal: 14, paddingVertical: 11, borderTopWidth: StyleSheet.hairlineWidth },
+  inbox: { gap: 10, padding: 14, borderTopWidth: StyleSheet.hairlineWidth },
 });

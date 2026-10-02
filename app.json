@@ -35,6 +35,7 @@
     },
     "plugins": [
       "expo-router",
+      "./plugins/withBugInboxCleartext",
       [
         "expo-splash-screen",
         {

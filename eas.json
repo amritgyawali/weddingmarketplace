@@ -13,6 +13,10 @@
     "preview": {
       "extends": "base",
       "distribution": "internal",
+      "env": {
+        "EXPO_PUBLIC_BUG_REPORTS": "on",
+        "EXPO_PUBLIC_BUG_INBOX_URL": "http://192.168.1.72:8790"
+      },
       "android": {
         "buildType": "apk"
       },

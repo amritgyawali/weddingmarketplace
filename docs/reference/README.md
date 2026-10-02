@@ -18,7 +18,7 @@ Generated from the source. For the *why*, read [the handbook](../handbook/README
 
 | Folder | Files | Exports | Page |
 |---|---|---|---|
-| `src/backend/` | 13 | 84 | [backend.md](code/backend.md) |
+| `src/backend/` | 13 | 87 | [backend.md](code/backend.md) |
 | `src/components/` | 1 | 1 | [components.md](code/components.md) |
 | `src/components/admin/` | 1 | 8 | [components.admin.md](code/components.admin.md) |
 | `src/components/detail/` | 1 | 6 | [components.detail.md](code/components.detail.md) |
