@@ -25,7 +25,7 @@ export const VendorCard = memo(function VendorCard({ vendor }: { vendor: Vendor 
       <View>
         <ImageCarousel images={vendor.images} width={cardWidth} height={cardWidth * 0.6} radius={radius.lg} onPressImage={open} />
         {vendor.featured && (
-          <View style={styles.featured} pointerEvents="none">
+          <View style={[styles.featured, { pointerEvents: 'none' }]}>
             <Text size={12} weight="semibold" color={colors.gold} lineHeight={16}>
               Featured
             </Text>

@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { Pressable, StyleSheet } from 'react-native';
 import Animated, { interpolateColor, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 
+import { shadow } from '@/constants/theme';
 import { useRoleTheme } from '@/theme/RoleTheme';
 
 import { triggerHaptic } from './PressableScale';
@@ -60,10 +61,6 @@ const styles = StyleSheet.create({
     height: KNOB,
     borderRadius: KNOB / 2,
     backgroundColor: '#FFFFFF',
-    shadowColor: '#000',
-    shadowOpacity: 0.15,
-    shadowRadius: 3,
-    shadowOffset: { width: 0, height: 2 },
-    elevation: 2,
+    ...shadow(2, 0.15, 3, 2, '#000000'),
   },
 });
