@@ -4,6 +4,8 @@ Every AI coding agent must read this file before changing anything in this repo.
 
 It is the single source of truth for the product strategy, the architecture, the business logic and the rules that keep existing features working. If your change alters something described here, update this file in the same change.
 
+**Documentation.** This file is the short, binding version. The long form lives in `docs/handbook/` (one guide per area, with every rule numbered and explained in `00-rules-and-regulations.md`; start at `docs/handbook/README.md`), and the generated code reference in `docs/reference/` (every route, store action, export and migration; `index.json` is the same as data). `llms.txt` maps all of it. Keep docs true in the same change: JSDoc on every new export, the matching handbook guide, then `npm run docs:generate`. Never edit `docs/reference/` by hand. A weekly documentation pass is described in `docs/handbook/17-documentation-maintenance.md`. If the handbook and this file disagree, this file wins; fix the handbook.
+
 > **Prime directive: never break existing functionality.**
 >
 > - Every change must be additive or strictly equivalent for the existing flows, roles, routes, store actions, persisted data and seed demo.
@@ -28,7 +30,7 @@ These product decisions are fixed. Do not reverse them without the owner's say-s
 | Decision | Rule |
 |---|---|
 | Market | **Nepal only.** |
-| Currency and tax | NPR, formatted `NPR 1,50,000`-style via `formatMoney`/`formatMoneyCompact`. **13% VAT** (`VAT_RATE`/`TAX_RATE`). Never use ₹, INR or GST. |
+| Currency and tax | NPR, formatted `NPR 150,000` via `formatMoney` (`NPR 45K` via `formatMoneyCompact`, "7.5 lakh" via `formatLakh`). **13% VAT** (`VAT_RATE`/`TAX_RATE`). Never use ₹, INR or GST. |
 | Places | Kathmandu valley (Kathmandu, Lalitpur, Bhaktapur, Kirtipur), Pokhara, Chitwan and other Nepal cities in `src/data/cities.ts`. |
 | Ceremonies | Nepali functions (Wedding, Reception, Mehendi, Haldi, Pasni, Bratabandha…), with Bikram Sambat months (Mangsir/Magh/Falgun/Baisakh are peak season). |
 | Payments | eSewa, Khalti, Fonepay QR, ConnectIPS, IME Pay, card, bank transfer, and cash (recorded by staff only). |
@@ -123,6 +125,9 @@ src/backend/           Backend interface for the core loop: mock (the store) and
 scripts/               check-personas.mjs + personaCheck.ts (registry check and persona matrix, §6a); ts-loader.mjs (Node imports of pure app modules)
 scripts/db/            PGlite harness: db-check (migrations apply, RLS everywhere), core-loop (the loop as each role, RLS on), parity (app money = SQL money)
 docs/MASTER_PLAN.md    persona-driven experience and the zero-cost production stack (phases P0–P8)
+docs/handbook/         the developer and AI handbook: rules (00), one guide per area, glossary, troubleshooting, decision log
+docs/reference/        GENERATED code reference (npm run docs:generate, scripts/docs/generate-reference.mjs); never edit by hand
+llms.txt               map of the docs for AI tools
 TEST_REPORT.md         last full test run + list of known defects (read before fixing bugs)
 ```
 
@@ -383,6 +388,7 @@ npm run db:test         # the core loop, sign-up, media, files, notifications an
 npm run test:parity     # money in src/services equals money in SQL
 npm run test:functions  # when you touch supabase/functions
 npm run test:telemetry  # when you touch src/backend/telemetry*
+npm run docs:generate   # after changing exports, routes, actions or SQL; commit docs/reference/ (docs:check verifies)
 npx expo-doctor         # no new failures
 npx expo start          # app loads in Expo Go; press w for web
 ```

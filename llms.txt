@@ -1,0 +1,48 @@
+# Vivah
+
+> Wedding-services orchestration marketplace for Nepal: one Expo (SDK 57) React Native app with four role apps (couple, vendor, freelancer, platform staff), an on-device demo backend (zustand) and a Supabase/Postgres production backend (SQL migrations, RPCs, Edge Functions). NPR, 13% VAT, English and Nepali, Bikram Sambat dates.
+
+Read AGENTS.md first: it holds the binding rules (never break existing functionality, Expo Go only, store actions as the API, money invariants, git workflow). If documents disagree, AGENTS.md wins, then the code, then the handbook.
+
+## Start here
+
+- [AGENTS.md](AGENTS.md): binding rules for AI agents and people
+- [Handbook index](docs/handbook/README.md): how the docs are organised and the reading order
+- [Rules and regulations](docs/handbook/00-rules-and-regulations.md): every rule with an id and a reason
+- [AI agents guide](docs/handbook/16-ai-agents-guide.md): how to load context, change code and leave docs behind
+
+## Guides
+
+- [Product and domain](docs/handbook/01-product-and-domain.md): roles, core loop, entities, demo accounts
+- [Architecture](docs/handbook/02-architecture.md): layers, folders, data flow, mock vs Supabase
+- [Frontend](docs/handbook/03-frontend.md): Expo Router, role guards, components, hooks
+- [UI and UX](docs/handbook/04-ui-ux.md): design tokens, type, copy rules
+- [State and data](docs/handbook/05-state-and-data.md): stores, actions, persistence, seed
+- [Backend](docs/handbook/06-backend.md): Backend interface, Supabase, Edge Functions, payments
+- [Database](docs/handbook/07-database.md): migrations, RLS, RPCs, local PGlite harness
+- [Business logic](docs/handbook/08-business-logic.md): quote, pricing, milestone, payable, matching formulas
+- [Personas and access](docs/handbook/09-personas-and-access.md): occasions, trades, crafts, permissions, visibility rules
+- [Role toolkits](docs/handbook/10-toolkits.md): the small tools and how to add one
+- [Language, dates and money](docs/handbook/11-i18n-dates-money.md)
+- [Testing and QA](docs/handbook/12-testing-and-qa.md): definition of done, known defects
+- [Security and privacy](docs/handbook/13-security-and-privacy.md)
+- [DevOps and release](docs/handbook/14-devops-and-release.md)
+- [Git and collaboration](docs/handbook/15-git-and-collaboration.md)
+- [Documentation maintenance](docs/handbook/17-documentation-maintenance.md): the weekly docs pass
+- [Glossary](docs/handbook/18-glossary.md), [Troubleshooting](docs/handbook/19-troubleshooting.md), [Decision log](docs/handbook/20-decision-log.md)
+
+## Generated code reference (npm run docs:generate)
+
+- [Reference index](docs/reference/README.md)
+- [Routes](docs/reference/routes.md)
+- [Store actions](docs/reference/store-actions.md): the app's API
+- [Database objects](docs/reference/database.md)
+- [Edge Functions](docs/reference/edge-functions.md)
+- [index.json](docs/reference/index.json): every route and exported symbol with kind, signature, JSDoc and line
+
+## Optional
+
+- [Master plan](docs/MASTER_PLAN.md): personas and the free production stack, phases P0–P8
+- [Supabase setup](docs/SETUP_SUPABASE.md), [Launch runbook](docs/LAUNCH.md)
+- [Test report](TEST_REPORT.md)
+- [Environment variables](.env.example)

@@ -63,7 +63,9 @@
     "test:parity": "node scripts/db/parity.mjs",
     "test:functions": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/test-functions.mjs",
     "env:functions": "node scripts/env-functions.mjs",
-    "test:telemetry": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/test-telemetry.mjs"
+    "test:telemetry": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/test-telemetry.mjs",
+    "docs:generate": "node scripts/docs/generate-reference.mjs",
+    "docs:check": "node scripts/docs/generate-reference.mjs --check"
   },
   "private": true
 }
