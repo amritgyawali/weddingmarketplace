@@ -45,4 +45,5 @@ Read AGENTS.md first: it holds the binding rules (never break existing functiona
 - [Master plan](docs/MASTER_PLAN.md): personas and the free production stack, phases P0–P8
 - [Supabase setup](docs/SETUP_SUPABASE.md), [Launch runbook](docs/LAUNCH.md)
 - [Test report](TEST_REPORT.md)
+- `docs/UI_UX_REPORT.md`: prioritised UI/UX improvements
 - [Environment variables](.env.example)

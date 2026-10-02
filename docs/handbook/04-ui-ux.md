@@ -4,6 +4,8 @@ One design system serves all four apps. Its name is **"Royal Nepali Luxury"** (a
 
 Rules: R-UI-1 … R-UI-8 in [00-rules-and-regulations.md](00-rules-and-regulations.md).
 
+Open improvements (accessibility fixes, motion, dark mode, imagery) are prioritised in `docs/UI_UX_REPORT.md` (PR #21, 2 Oct 2026); check it before starting visual work.
+
 ## 1. Principles
 
 1. **Calm and warm.** Mostly ivory and cream. Colour is used to mean something (selected, primary action, problem), not to decorate.
