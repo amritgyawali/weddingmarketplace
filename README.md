@@ -91,6 +91,13 @@ npx expo lint
 npx expo-doctor
 ```
 
+## Documentation
+
+- **[`docs/handbook/`](docs/handbook/README.md)**: the handbook for developers and AI agents. Start with the [rules and regulations](docs/handbook/00-rules-and-regulations.md), then the guide for your area (frontend, UI/UX, state, backend, database, business logic, personas, toolkits, language and dates, testing, security, devops, git).
+- **[`docs/reference/`](docs/reference/README.md)**: the generated code reference: every route, store action, export and migration. Regenerate with `npm run docs:generate`; `npm run docs:check` fails when it is stale.
+- **[`AGENTS.md`](AGENTS.md)**: the binding rules for AI agents. **[`llms.txt`](llms.txt)**: a map of the docs for AI tools.
+- The docs are reviewed every week ([how](docs/handbook/17-documentation-maintenance.md)).
+
 ## Architecture
 
 ```
