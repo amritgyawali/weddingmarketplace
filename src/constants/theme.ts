@@ -1,56 +1,76 @@
 import { Platform, type TextStyle, type ViewStyle } from 'react-native';
 
 /**
- * Couple-app design tokens. Every hard-coded colour lives here.
+ * Design tokens: "Royal Nepali Luxury". Every hard-coded colour lives here.
  *
- * The palette is taken from a Nepali wedding rather than a UI kit: sindoor
- * crimson for actions, marigold (sayapatri) for ratings and highlights, pote
- * green for "done". Neutrals are warm greys so photos of red saris and brass
- * lamps sit on them without clashing. Colour is used sparingly: most of the
- * screen is white paper, dark ink and hairlines.
+ * Deep burgundy and wine are the rich dark anchors (the colour of a bridal
+ * sari and a temple door), champagne gold is a restrained metallic accent for
+ * borders, badges and ratings, and the neutrals are warm ivory and pearl cream
+ * so photos of red saris and brass lamps sit on them without clashing.
+ *
+ * Rough distribution on any screen: ~65% ivory/cream, ~20% burgundy/wine,
+ * ~10% espresso text, ~5% champagne and dusty-rose accents. Gold never fills
+ * large areas, and is never used for body text (use `goldDeep` for gold text).
  */
 export const colors = {
-  primary: '#A3172F',
-  primaryDark: '#7E0F22',
-  primarySoft: '#F7E8EA',
-  primaryTint: '#FBF4F5',
+  // Burgundy family
+  primary: '#681C2A',
+  primaryDark: '#3D1018',
+  primarySoft: '#F0E3DE',
+  primaryTint: '#F7EEE8',
+  /** Wine / oxblood: luxury sections and dark bands. */
+  wine: '#3D1018',
 
-  heading: '#1F1C19',
-  text: '#34302C',
-  textStrong: '#1F1C19',
-  textBody: '#4A4540',
-  textMuted: '#6F6962',
-  textSubtle: '#9A948C',
-  placeholder: '#A29C94',
+  // Metallic + romantic accents
+  gold: '#C8A46B',
+  /** Champagne deepened enough to read as text on ivory. */
+  goldDeep: '#8C6A33',
+  goldSoft: '#F3E7D2',
+  /** Champagne at low opacity: hairlines on wine and on ivory. */
+  goldLine: 'rgba(200,164,107,0.45)',
+  rose: '#C98991',
+  roseSoft: '#F6E6E5',
 
-  white: '#FFFFFF',
+  // Espresso ink
+  heading: '#251B18',
+  text: '#3B2E29',
+  textStrong: '#251B18',
+  textBody: '#54463F',
+  textMuted: '#796B64',
+  textSubtle: '#A39388',
+  placeholder: '#A99A90',
+
+  /** Soft white: cards, and text on dark backgrounds. */
+  white: '#FFFCF8',
   black: '#000000',
-  bg: '#FFFFFF',
-  bgSoft: '#F5F4F1',
-  bgMuted: '#EFEDE9',
-  bgChip: '#EFEDE9',
+  /** Warm ivory: the main app background. */
+  bg: '#FFF9F2',
+  /** Pearl cream: sections, filters, pressed states. */
+  bgSoft: '#F5ECE2',
+  bgMuted: '#EDE1D3',
+  bgChip: '#EDE1D3',
 
-  border: '#DEDAD4',
-  divider: '#ECE9E4',
-  hairline: '#E4E0DA',
+  border: '#E5D6C5',
+  divider: '#EFE3D5',
+  hairline: '#E9DCCB',
 
-  stepInactive: '#B5AFA7',
-  badgeNew: '#2E6B4F',
+  stepInactive: '#BFAFA2',
+  badgeNew: '#8C6A33',
   whatsapp: '#1F9D55',
-  call: '#2E6B4F',
-  crown: '#C98410',
-  star: '#C98410',
-  marigold: '#D99A1E',
-  success: '#2E6B4F',
+  call: '#3D6B4F',
+  crown: '#C8A46B',
+  star: '#C8A46B',
+  marigold: '#C8A46B',
+  success: '#3D6B4F',
   danger: '#B42318',
-  warning: '#A86A0C',
+  warning: '#9A6412',
 
-  toolBlue: '#F2F3F1',
-  toolWarm: '#F7F2EC',
-  collectionBand: '#F5F4F1',
-  lavenderTop: '#F5F4F1',
-  lavenderBottom: '#F5F4F1',
-  overlay: 'rgba(20,16,12,0.5)',
+  toolBlue: '#F5ECE2',
+  toolWarm: '#F5ECE2',
+  collectionBand: '#F5ECE2',
+  lavenderTop: '#F5ECE2',
+  lavenderBottom: '#F5ECE2',
+  overlay: 'rgba(37,27,24,0.55)',
 } as const;
 
 /**
@@ -124,7 +144,7 @@ const shadow = (
   opacity: number,
   radiusPx: number,
   offsetY: number,
-  color = '#1F1C19',
+  color = '#251B18',
 ): ViewStyle =>
   Platform.select<ViewStyle>({
     android: { elevation, shadowColor: color },

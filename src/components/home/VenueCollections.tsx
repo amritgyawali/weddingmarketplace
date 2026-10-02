@@ -30,12 +30,12 @@ export function VenueCollections({ city }: { city: string }) {
                 onPress={() => router.push({ pathname: '/collection/[id]', params: { id: c.id } })}
                 style={styles.card}>
                 <Image source={photos[c.image]} style={StyleSheet.absoluteFill} contentFit="cover" transition={200} />
-                <LinearGradient colors={['rgba(0,0,0,0)', 'rgba(0,0,0,0.78)']} style={styles.fade} />
+                <LinearGradient colors={['rgba(37,27,24,0)', 'rgba(37,27,24,0.82)']} style={styles.fade} />
                 <View style={styles.text}>
-                  <Text size={16} lineHeight={20} color={colors.white} weight="semibold" numberOfLines={2}>
+                  <Text serif size={15} lineHeight={21} color={colors.white} weight="semibold" numberOfLines={2}>
                     {c.title}
                   </Text>
-                  <Text size={13} color="rgba(255,255,255,0.85)">
+                  <Text size={13} color={colors.gold}>
                     {c.count} venues
                   </Text>
                 </View>

@@ -34,26 +34,28 @@ export interface RoleTheme {
 }
 
 const neutral = {
-  bg: '#F5F4F1',
-  surface: '#FFFFFF',
-  surfaceAlt: '#F0EEEA',
-  border: '#E1DDD7',
-  text: '#34302C',
-  textStrong: '#1F1C19',
-  muted: '#6F6962',
-  subtle: '#9A948C',
-  header: '#FFFFFF',
-  onHeader: '#1F1C19',
-  success: '#2E6B4F',
-  warning: '#A86A0C',
-  danger: '#B42318',
-  info: '#2F5B8A',
+  bg: colors.bg,
+  surface: colors.white,
+  surfaceAlt: colors.bgSoft,
+  border: colors.border,
+  text: colors.text,
+  textStrong: colors.textStrong,
+  muted: colors.textMuted,
+  subtle: colors.textSubtle,
+  header: colors.white,
+  onHeader: colors.heading,
+  success: colors.success,
+  warning: colors.warning,
+  danger: colors.danger,
+  info: '#3E5C7E',
 } as const;
 
 /**
- * One design system, four apps. Every role shares the type (Mukta), the
- * neutrals, the spacing and the component shapes; only the accent changes, so
- * a coordinator who opens a vendor's screen still recognises it as Vivah.
+ * One design system, four apps. Every role shares the "Royal Nepali Luxury"
+ * palette (ivory and pearl neutrals, espresso ink, champagne accents), the
+ * type, the spacing and the component shapes. Couple, business and
+ * freelancer apps share the burgundy accent; the staff console uses the
+ * deeper wine so a coordinator can tell at a glance which app they are in.
  */
 export const ROLE_THEMES: Record<UserRole, RoleTheme> = {
   customer: {
@@ -82,12 +84,12 @@ export const ROLE_THEMES: Record<UserRole, RoleTheme> = {
     fonts: mukta,
     c: {
       ...neutral,
-      primary: '#1F5A4C',
-      primaryDark: '#15443A',
-      onPrimary: '#FFFFFF',
-      soft: '#E5EEEA',
+      primary: colors.primary,
+      primaryDark: colors.primaryDark,
+      onPrimary: colors.white,
+      soft: colors.primarySoft,
     },
-    gradient: ['#1F5A4C', '#1F5A4C'],
+    gradient: [colors.primary, colors.primary],
     cardRadius: 10,
   },
   freelancer: {
@@ -98,12 +100,12 @@ export const ROLE_THEMES: Record<UserRole, RoleTheme> = {
     fonts: mukta,
     c: {
       ...neutral,
-      primary: '#2D4E7A',
-      primaryDark: '#1F3859',
-      onPrimary: '#FFFFFF',
-      soft: '#E6ECF3',
+      primary: colors.primary,
+      primaryDark: colors.primaryDark,
+      onPrimary: colors.white,
+      soft: colors.primarySoft,
     },
-    gradient: ['#2D4E7A', '#2D4E7A'],
+    gradient: [colors.primary, colors.primary],
     cardRadius: 10,
   },
   platform: {
@@ -114,16 +116,25 @@ export const ROLE_THEMES: Record<UserRole, RoleTheme> = {
     fonts: mukta,
     c: {
       ...neutral,
-      primary: '#2B2E34',
-      primaryDark: '#16181C',
-      onPrimary: '#FFFFFF',
-      soft: '#ECEBE8',
-      header: '#FFFFFF',
-      onHeader: '#1F1C19',
+      primary: colors.wine,
+      primaryDark: '#260A0F',
+      onPrimary: colors.white,
+      soft: '#EDE0DC',
     },
-    gradient: ['#2B2E34', '#2B2E34'],
+    gradient: [colors.wine, colors.wine],
     cardRadius: 8,
   },
+};
+
+/**
+ * Small marks that tell roles apart where several meet on one screen (chat
+ * bubbles, member chips). Accents stay burgundy; these are only for labels.
+ */
+export const ROLE_MARK: Record<UserRole, string> = {
+  customer: colors.primary,
+  vendor: colors.goldDeep,
+  freelancer: '#8E4F58',
+  platform: colors.wine,
 };
 
 const TONES: Record<string, 'info' | 'muted' | 'warning' | 'danger' | 'success' | 'primary'> = {

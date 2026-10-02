@@ -8,15 +8,15 @@ const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replac
 
 const page = (title: string, body: string) => `<!doctype html><html><head><meta charset="utf-8"/><title>${esc(title)}</title>
 <style>
-  *{box-sizing:border-box} body{font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:#222;margin:32px;font-size:13px}
-  h1{font-size:22px;margin:0 0 4px} h2{font-size:15px;margin:22px 0 8px;color:#B8325A;text-transform:uppercase;letter-spacing:.06em}
-  .brand{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:3px solid #E72E77;padding-bottom:14px;margin-bottom:18px}
-  .muted{color:#777} table{width:100%;border-collapse:collapse} th,td{padding:8px 6px;border-bottom:1px solid #eee;text-align:left;vertical-align:top}
-  th{font-size:11px;text-transform:uppercase;color:#888} .r{text-align:right} .total td{font-weight:700;font-size:15px;border-top:2px solid #222}
-  .box{border:1px solid #eee;border-radius:10px;padding:12px;margin:10px 0} .grid{display:flex;gap:16px} .grid>div{flex:1}
-  .pill{display:inline-block;padding:2px 8px;border-radius:99px;background:#FDE8F0;color:#B8325A;font-size:11px;font-weight:700}
-  .sig{margin-top:28px;display:flex;gap:24px} .sig>div{flex:1;border-top:1px solid #999;padding-top:6px}
-  .foot{margin-top:30px;font-size:11px;color:#999;text-align:center}
+  *{box-sizing:border-box} body{font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:#251B18;background:#FFFCF8;margin:32px;font-size:13px}
+  h1{font-family:Georgia,'Times New Roman',serif;font-size:24px;color:#681C2A;margin:0 0 4px} h2{font-family:Georgia,'Times New Roman',serif;font-size:15px;margin:22px 0 8px;color:#681C2A}
+  .brand{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:2px solid #C8A46B;padding-bottom:14px;margin-bottom:18px}
+  .muted{color:#796B64} table{width:100%;border-collapse:collapse} th,td{padding:8px 6px;border-bottom:1px solid #EFE3D5;text-align:left;vertical-align:top}
+  th{font-size:11px;color:#796B64} .r{text-align:right} .total td{font-weight:700;font-size:15px;border-top:2px solid #681C2A}
+  .box{border:1px solid #E5D6C5;border-radius:10px;padding:12px;margin:10px 0} .grid{display:flex;gap:16px} .grid>div{flex:1}
+  .pill{display:inline-block;padding:2px 8px;border-radius:99px;background:#F3E7D2;color:#681C2A;font-size:11px;font-weight:700}
+  .sig{margin-top:28px;display:flex;gap:24px} .sig>div{flex:1;border-top:1px solid #C8A46B;padding-top:6px}
+  .foot{margin-top:30px;font-size:11px;color:#A39388;text-align:center}
 </style></head><body>
 <div class="brand"><div><h1>${esc(BRAND.name)} Weddings</h1><div class="muted">Vivah Weddings Pvt. Ltd. · Baneshwor, Kathmandu · PAN 609000111 · ${esc(BRAND.supportEmail)}</div></div><div class="r muted">${esc(title)}<br/>${formatLongDate(new Date().toISOString())}</div></div>
 ${body}

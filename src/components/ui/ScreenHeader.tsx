@@ -44,7 +44,7 @@ export function ScreenHeader({
       <View style={styles.side}>{left ?? (back ? <BackButton onPress={onBack} /> : null)}</View>
       <View style={styles.center}>
         {title && (
-          <Text weight="semibold" size={17} color={colors.heading} numberOfLines={1} align="center">
+          <Text serif weight="semibold" size={17} color={colors.heading} numberOfLines={1} align="center">
             {title}
           </Text>
         )}

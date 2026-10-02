@@ -41,7 +41,7 @@ export function KpiCard({
         {label}
       </Text>
       <View style={styles.kpiValueRow}>
-        <Text size={24} weight="semibold" lineHeight={30} color={alert ? t.c.danger : t.c.textStrong} numberOfLines={1} adjustsFontSizeToFit style={{ flexShrink: 1 }}>
+        <Text serif size={22} weight="semibold" lineHeight={30} color={alert ? t.c.danger : t.c.textStrong} numberOfLines={1} adjustsFontSizeToFit style={{ flexShrink: 1 }}>
           {value}
         </Text>
         {delta && (
@@ -148,7 +148,7 @@ export function RoleHeader({
               {sentenceCase(eyebrow)}
             </Text>
           )}
-          <Text size={t.role === 'platform' ? 21 : 23} weight="bold" lineHeight={t.role === 'platform' ? 28 : 30} color={t.c.textStrong} numberOfLines={1}>
+          <Text serif size={t.role === 'platform' ? 20 : 22} weight="bold" lineHeight={t.role === 'platform' ? 28 : 30} color={t.c.textStrong} numberOfLines={1}>
             {title}
           </Text>
           {subtitle && (
@@ -183,7 +183,7 @@ export function StackHeader({ title, subtitle, right, back = true }: { title: st
         </Pressable>
       )}
       <View style={{ flex: 1 }}>
-        <Text size={17} weight="semibold" color={t.c.textStrong} numberOfLines={1}>
+        <Text serif size={17} weight="semibold" color={t.c.textStrong} numberOfLines={1}>
           {title}
         </Text>
         {subtitle && (

@@ -33,10 +33,10 @@ export function SignaturePad({ onDone, height = 180 }: { onDone: (path: string) 
 
   return (
     <View style={{ gap: 10 }}>
-      <View {...responder.panHandlers} style={[styles.pad, { height, borderColor: t.c.border, backgroundColor: t.dark ? t.c.surfaceAlt : '#FFFFFF' }]}>
+      <View {...responder.panHandlers} style={[styles.pad, { height, borderColor: t.c.border, backgroundColor: t.dark ? t.c.surfaceAlt : '#FFFCF8' }]}>
         <Svg width="100%" height="100%">
           {all.map((d, i) => (
-            <Path key={i} d={d} stroke="#1F2937" strokeWidth={2.4} fill="none" strokeLinecap="round" strokeLinejoin="round" />
+            <Path key={i} d={d} stroke="#251B18" strokeWidth={2.4} fill="none" strokeLinecap="round" strokeLinejoin="round" />
           ))}
         </Svg>
         {!all.length && (
@@ -61,7 +61,7 @@ export function SignatureImage({ path, height = 60 }: { path: string; height?: n
   return (
     <View style={{ height }}>
       <Svg width="100%" height="100%" viewBox={`0 0 340 ${height * 3}`} preserveAspectRatio="xMidYMid meet">
-        <Path d={path} stroke="#1F2937" strokeWidth={3} fill="none" strokeLinecap="round" strokeLinejoin="round" />
+        <Path d={path} stroke="#251B18" strokeWidth={3} fill="none" strokeLinecap="round" strokeLinejoin="round" />
       </Svg>
     </View>
   );
