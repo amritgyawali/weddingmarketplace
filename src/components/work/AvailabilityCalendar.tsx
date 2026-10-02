@@ -3,16 +3,17 @@ import { useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 
 import { ChoiceChips, KButton, KField } from '@/components/kit';
+import { shiftCursor, useMonthTitle, weekdayLetters } from '@/components/ui/Calendar';
 import { Sheet } from '@/components/ui/Sheet';
 import { Text } from '@/components/ui/Text';
 import { toast } from '@/components/ui/Toast';
-import { BS_MONTHS, bsMonthLabel } from '@/data/events';
+import { useI18n } from '@/i18n';
 import { useDb } from '@/store/useDb';
 import { useRoleTheme } from '@/theme/RoleTheme';
 import type { AvailabilityEntry, AvailabilityStatus, DayPart } from '@/types/platform';
+import { cursorFor, monthCells, toNepaliDigits } from '@/utils/bs';
 import { toISODate } from '@/utils/format';
 
-const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 const WEEKDAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 const RANK: Record<AvailabilityStatus, number> = { AVAILABLE: 0, TENTATIVE: 1, HELD: 2, BOOKED: 3, UNAVAILABLE: 4 };
 
@@ -31,8 +32,14 @@ export function AvailabilityCalendar({ ownerKind, ownerId, onSelectDay }: { owne
   const setAvailability = useDb((s) => s.setAvailability);
   const addRule = useDb((s) => s.addAvailabilityRule);
   const removeRule = useDb((s) => s.removeAvailabilityRule);
+  const { calendar: mode, lang } = useI18n();
   const now = new Date();
-  const [cursor, setCursor] = useState({ y: now.getFullYear(), m: now.getMonth() });
+  const [cursor, setCursor] = useState(() => cursorFor(mode, toISODate(now)));
+  const [cursorMode, setCursorMode] = useState(mode);
+  if (cursorMode !== mode) {
+    setCursorMode(mode);
+    setCursor(cursorFor(mode, toISODate(now)));
+  }
   const [selected, setSelected] = useState<string[]>([]);
   const [editing, setEditing] = useState(false);
   const [status, setStatus] = useState<AvailabilityStatus>('UNAVAILABLE');
@@ -50,44 +57,46 @@ export function AvailabilityCalendar({ ownerKind, ownerId, onSelectDay }: { owne
     return { status: worst, entries: list, rule: !!rule && !list.length };
   };
 
-  const firstWeekday = new Date(cursor.y, cursor.m, 1).getDay();
-  const daysInMonth = new Date(cursor.y, cursor.m + 1, 0).getDate();
-  const cells: (number | null)[] = [...Array(firstWeekday).fill(null), ...Array.from({ length: daysInMonth }, (_, i) => i + 1)];
-  while (cells.length % 7) cells.push(null);
-  const iso = (d: number) => toISODate(new Date(cursor.y, cursor.m, d));
-  const move = (delta: number) => setCursor(({ y, m }) => ({ y: m + delta < 0 ? y - 1 : m + delta > 11 ? y + 1 : y, m: (m + delta + 12) % 12 }));
-  const counts = Array.from({ length: daysInMonth }, (_, i) => dayStatus(iso(i + 1)).status).reduce<Record<string, number>>((acc, s) => ({ ...acc, [s]: (acc[s] ?? 0) + 1 }), {});
+  const cells = monthCells(mode, cursor);
+  const { title, subtitle } = useMonthTitle(mode, cursor, cells);
+  const move = (delta: number) => setCursor((c) => shiftCursor(mode, c, delta));
+  const n = (x: number) => (lang === 'ne' && mode === 'bs' ? toNepaliDigits(x) : String(x));
+  const counts = cells.reduce<Record<string, number>>((acc, c) => {
+    if (!c) return acc;
+    const st = dayStatus(c.iso).status;
+    return { ...acc, [st]: (acc[st] ?? 0) + 1 };
+  }, {});
   const detail = selected.length === 1 ? dayStatus(selected[0]) : null;
 
   return (
     <View style={{ gap: 12 }}>
       <View style={styles.header}>
-        <Pressable onPress={() => move(-1)} hitSlop={10} accessibilityLabel="Previous month">
+        <Pressable onPress={() => move(-1)} hitSlop={12} accessibilityLabel="Previous month" style={({ pressed }) => pressed && { opacity: 0.5 }}>
           <Ionicons name="chevron-back" size={22} color={t.c.textStrong} />
         </Pressable>
-        <View style={{ alignItems: 'center' }}>
-          <Text size={16} weight="bold" color={t.c.textStrong}>
-            {MONTHS[cursor.m]} {cursor.y}
+        <View style={{ alignItems: 'center', flex: 1 }}>
+          <Text size={16} weight="bold" color={t.c.textStrong} raw>
+            {title}
           </Text>
-          <Text size={11} color={t.c.muted}>
-            {bsMonthLabel(iso(1))} – {BS_MONTHS[(BS_MONTHS.indexOf(bsMonthLabel(iso(daysInMonth)).split(' ')[0]) + 12) % 12]}
+          <Text size={11} color={t.c.muted} raw>
+            {subtitle}
           </Text>
         </View>
-        <Pressable onPress={() => move(1)} hitSlop={10} accessibilityLabel="Next month">
+        <Pressable onPress={() => move(1)} hitSlop={12} accessibilityLabel="Next month" style={({ pressed }) => pressed && { opacity: 0.5 }}>
           <Ionicons name="chevron-forward" size={22} color={t.c.textStrong} />
         </Pressable>
       </View>
       <View style={styles.week}>
-        {WEEKDAYS.map((w) => (
-          <Text key={w} size={11} weight="semibold" color={t.c.muted} align="center" style={{ flex: 1 }}>
+        {weekdayLetters(lang).map((w, i) => (
+          <Text key={i} size={11} weight="semibold" color={i === 6 ? t.c.danger : t.c.muted} align="center" style={{ flex: 1 }} raw>
             {w}
           </Text>
         ))}
       </View>
       <View style={styles.grid}>
-        {cells.map((d, i) => {
-          if (!d) return <View key={i} style={styles.cell} />;
-          const date = iso(d);
+        {cells.map((cell, i) => {
+          if (!cell) return <View key={i} style={styles.cell} />;
+          const date = cell.iso;
           const s = dayStatus(date);
           const color = statusColor(s.status, t);
           const on = selected.includes(date);
@@ -102,8 +111,11 @@ export function AvailabilityCalendar({ ownerKind, ownerId, onSelectDay }: { owne
               style={styles.cell}
               accessibilityLabel={`${date} ${s.status}`}>
               <View style={[styles.day, { backgroundColor: s.status === 'AVAILABLE' ? 'transparent' : `${color}26`, borderColor: on ? t.c.primary : isToday ? t.c.textStrong : 'transparent' }]}>
-                <Text size={14} weight={on || isToday ? 'bold' : 'medium'} color={s.status === 'AVAILABLE' ? t.c.textStrong : color}>
-                  {d}
+                <Text size={14} lineHeight={17} weight={on || isToday ? 'bold' : 'medium'} color={s.status === 'AVAILABLE' ? t.c.textStrong : color} raw>
+                  {n(cell.day)}
+                </Text>
+                <Text size={8} lineHeight={10} color={t.c.subtle} raw>
+                  {cell.alt}
                 </Text>
                 {s.status !== 'AVAILABLE' && <View style={[styles.dot, { backgroundColor: color, opacity: s.rule ? 0.5 : 1 }]} />}
               </View>

@@ -1,6 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useState } from 'react';
-import { Pressable, ScrollView, SectionList, StyleSheet, View } from 'react-native';
+import { Pressable, SectionList, StyleSheet, View } from 'react-native';
 
 import { ProgressRing } from '@/components/home/ChecklistCard';
 import { KButton, Segmented } from '@/components/kit';
@@ -18,6 +18,7 @@ import { useDb } from '@/store/useDb';
 import { useAccount } from '@/store/useSession';
 import { confirm } from '@/utils/confirm';
 import { daysUntil } from '@/utils/format';
+import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
 
 type Filter = 'all' | 'pending' | 'done';
 

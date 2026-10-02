@@ -1,7 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { FlatList, Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { FlatList, Pressable, StyleSheet, View } from 'react-native';
 
 import { EmptyBlock, RoleHeader, SectionTitle } from '@/components/kit';
 import { triggerHaptic } from '@/components/ui/PressableScale';
@@ -12,6 +12,7 @@ import { useFreelancerWorkspace } from '@/hooks/useWorkspace';
 import { useAccount } from '@/store/useSession';
 import { useRoleTheme } from '@/theme/RoleTheme';
 import { daysUntil, formatClock, formatMoney, formatMoneyCompact } from '@/utils/format';
+import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
 
 type Sort = 'match' | 'pay' | 'date' | 'distance';
 

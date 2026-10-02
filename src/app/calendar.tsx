@@ -1,7 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 
 import { Card, KButton, SectionTitle, StatusPill } from '@/components/kit';
 import { ToolScreen, toolStyles } from '@/components/planner/ToolScreen';
@@ -13,7 +13,8 @@ import { addToGoogleCalendar, type CalendarItem, exportCalendar } from '@/servic
 import { milestoneStatus } from '@/services/pricing';
 import { useRoleTheme } from '@/theme/RoleTheme';
 import type { Project } from '@/types/platform';
-import { daysUntil, formatClock, formatLongDate, formatMoney, relativeDay, today } from '@/utils/format';
+import { daysUntil, formatClock, formatDateAlt, formatLongDate, formatMoney, relativeDay, today } from '@/utils/format';
+import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
 
 interface Item {
   id: string;
@@ -58,7 +59,7 @@ function WeddingCalendar({ project }: { project: Project }) {
 
   const list = (
     <View style={{ gap: 10, flex: 1 }}>
-      <SectionTitle title={selected ? `${formatLongDate(selected)} · ${bsMonthLabel(selected)}` : 'Coming up'} action={selected ? 'Show upcoming' : undefined} onAction={() => setSelected(null)} />
+      <SectionTitle title={selected ? `${formatLongDate(selected)} · ${formatDateAlt(selected)}` : 'Coming up'} action={selected ? 'Show upcoming' : undefined} onAction={() => setSelected(null)} />
       {selected && isPeakSeason(selected) && (
         <Text size={12} color={t.c.warning}>
           Peak saait season — venues and crews book out early around this date.

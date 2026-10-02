@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Card, EmptyBlock, KButton, SectionTitle, StatusPill } from '@/components/kit';
@@ -13,6 +13,7 @@ import { addToGoogleCalendar, exportCalendar, type CalendarItem } from '@/servic
 import { useAccount } from '@/store/useSession';
 import { useRoleTheme } from '@/theme/RoleTheme';
 import { formatClock, formatLongDate, formatMoney } from '@/utils/format';
+import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
 
 interface Row {
   id: string;

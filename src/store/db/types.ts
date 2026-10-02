@@ -1,4 +1,6 @@
+import type { TextOverrides } from '@/i18n/runtime';
 import type {
+  Announcement,
   AppNotification,
   AuditEntry,
   AvailabilityEntry,
@@ -87,4 +89,11 @@ export interface DbData {
   // personas
   /** Occasions customers can plan; seeded from the built-ins, editable by a super admin. */
   occasions: OccasionDef[];
+  // super admin
+  /** Feature switches by id (`data/features.ts`); a missing id is on. */
+  featureFlags: Record<string, boolean>;
+  /** Replacement text for any English source string, per language. */
+  textOverrides: TextOverrides;
+  /** Notices shown at the top of a role's home. */
+  announcements: Announcement[];
 }

@@ -1,7 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
-import { Linking, Pressable, ScrollView, StyleSheet, useWindowDimensions, View } from 'react-native';
+import { Linking, Pressable, StyleSheet, useWindowDimensions, View } from 'react-native';
 
 import { ExpandableText, HeroControls, InfoTile, ReviewList, Section, StickyCta } from '@/components/detail/DetailParts';
 import { ImageCarousel } from '@/components/listing/ImageCarousel';
@@ -18,6 +18,7 @@ import { findCategory, findSubcategory } from '@/data/categories';
 import { useFeaturedVendors, useVendor } from '@/hooks/queries';
 import { NotFoundError } from '@/services/api';
 import { formatMoney } from '@/utils/format';
+import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
 
 export default function VendorDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();

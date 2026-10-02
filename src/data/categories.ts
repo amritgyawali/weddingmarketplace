@@ -53,6 +53,7 @@ export const HOME_CATEGORIES: {
   { id: 'dj', title: 'DJ & Music', image: 'ideaReceptionToast', categoryId: 'entertainment', subcategoryId: 'dj' },
   { id: 'mehendi', title: 'Mehendi', image: 'mehndiHands', categoryId: 'beauty', subcategoryId: 'mehendi' },
   { id: 'pandit', title: 'Pandit', image: 'ideaCeremonyHands', categoryId: 'rituals', subcategoryId: 'pandit' },
+  { id: 'wedding-car', title: 'Wedding Cars', image: 'venueResortSunset', categoryId: 'vehicles', subcategoryId: 'wedding-car' },
 ];
 
 export const VENUE_COLLECTIONS: VenueCollection[] = [
@@ -80,6 +81,9 @@ export function categoriesFor(services: readonly string[]): VendorCategory[] {
     return subcategories.length ? [{ ...c, subcategories }] : [];
   });
 }
+
+/** The services a super admin hasn't switched off (feature `service:<id>`). */
+export const enabledServices = (services: readonly string[], flags: Record<string, boolean> | undefined) => services.filter((id) => flags?.[`service:${id}`] !== false);
 
 /** Home shortcuts for an occasion's services. */
 export const homeCategoriesFor = (services: readonly string[]) => (services.length >= SERVICES.length ? HOME_CATEGORIES : HOME_CATEGORIES.filter((c) => services.includes(c.categoryId === 'venues' ? 'venue' : (c.subcategoryId ?? ''))));

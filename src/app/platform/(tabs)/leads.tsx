@@ -1,7 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 import { staffScreen } from '@/components/persona/StaffGate';
 import { Card, ChoiceChips, KField, RoleHeader } from '@/components/kit';
@@ -17,6 +17,7 @@ import { useAccount } from '@/store/useSession';
 import { useRoleTheme } from '@/theme/RoleTheme';
 import type { Project, ProjectStatus } from '@/types/platform';
 import { formatMoneyCompact, formatShortDate, timeAgo } from '@/utils/format';
+import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
 
 const COLUMNS: { title: string; statuses: ProjectStatus[] }[] = [
   { title: 'New', statuses: ['NEW'] },

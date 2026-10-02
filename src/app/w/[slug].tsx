@@ -2,7 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useState, type ReactNode } from 'react';
-import { Linking, Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { Linking, Pressable, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Card, KButton, KField } from '@/components/kit';
@@ -12,12 +12,12 @@ import { toast } from '@/components/ui/Toast';
 import { PaymentSheet } from '@/components/work/Payments';
 import { photos } from '@/constants/images';
 import { colors } from '@/constants/theme';
-import { bsMonthLabel } from '@/data/events';
 import { useLayout } from '@/hooks/useLayout';
 import { exportCalendar } from '@/services/exporters';
 import { useDb } from '@/store/useDb';
 import type { RegistryItem, WeddingWebsite } from '@/types/platform';
-import { daysUntil, formatClock, formatLongDate } from '@/utils/format';
+import { daysUntil, formatClock, formatDateAlt, formatLongDate } from '@/utils/format';
+import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
 
 const TEMPLATE: Record<WeddingWebsite['template'], { bg: string; ink: string; soft: string }> = {
   classic: { bg: '#FFFDF8', ink: '#2B2118', soft: '#F6EFE3' },
@@ -124,7 +124,7 @@ export default function WeddingSite() {
                 {site.headline}
               </Text>
               <Text size={15} color="#fff">
-                {formatLongDate(project.weddingDate)} · {bsMonthLabel(project.weddingDate)}
+                {formatLongDate(project.weddingDate)} · {formatDateAlt(project.weddingDate)}
               </Text>
               <Text size={14} color="rgba(255,255,255,0.9)">
                 {project.city}, Nepal

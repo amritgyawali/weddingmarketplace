@@ -7,6 +7,7 @@ import { SectionHeader } from '@/components/ui/SectionHeader';
 import { Text } from '@/components/ui/Text';
 import { colors, GUTTER } from '@/constants/theme';
 import { CHECKLIST_TOTAL } from '@/data/checklist';
+import { useExperience } from '@/hooks/useExperience';
 import { useCustomerWorkspace } from '@/hooks/useWorkspace';
 import { selectShortlistCount, useAppStore } from '@/store/useAppStore';
 import { useAccount } from '@/store/useSession';
@@ -35,8 +36,12 @@ export function PlanningTools() {
   const done = useAppStore((s) => s.completedTasks.length);
   const bookings = useAppStore((s) => s.bookings.length);
   const account = useAccount();
-  const { quotes } = useCustomerWorkspace(account.id);
+  const exp = useExperience();
+  const { project, quotes } = useCustomerWorkspace(account.id);
   const awaitingQuotes = quotes.filter((q) => q.status === 'sent' || q.status === 'viewed').length;
+  const wedding = !exp.occasion || exp.occasion.id === 'wedding' || exp.occasion.id === 'engagement';
+  const tasks = project?.tasks.filter((t) => t.visibility !== 'internal') ?? [];
+  const tasksDone = tasks.filter((t) => t.status === 'COMPLETED').length;
 
   return (
     <View style={styles.section}>
@@ -44,13 +49,17 @@ export function PlanningTools() {
       <View style={styles.grid}>
         <Tool
           icon="document-text-outline"
-          label="Wedding plan"
+          label={wedding ? 'Wedding plan' : exp.vocab.planTitle}
           meta={awaitingQuotes ? `${awaitingQuotes} quote${awaitingQuotes > 1 ? 's' : ''} to review` : 'Quotes, payments, run sheet'}
           alert={!!awaitingQuotes}
           href="/my-wedding"
         />
         <Tool icon="bookmark-outline" label="Shortlist" meta={shortlistCount ? `${shortlistCount} saved` : 'Nothing saved yet'} href="/shortlist" />
-        <Tool icon="checkbox-outline" label="Checklist" meta={`${done} of ${CHECKLIST_TOTAL} done`} href="/checklist" />
+        {wedding || !project ? (
+          <Tool icon="checkbox-outline" label="Checklist" meta={`${done} of ${CHECKLIST_TOTAL} done`} href="/checklist" />
+        ) : (
+          <Tool icon="checkbox-outline" label="Checklist" meta={`${tasksDone} of ${tasks.length} done`} href="/my-wedding?tab=tasks" />
+        )}
         <Tool icon="receipt-outline" label="Enquiries" meta={bookings ? `${bookings} active` : 'None yet'} href="/bookings" />
       </View>
     </View>

@@ -13,7 +13,7 @@ import { Text } from '@/components/ui/Text';
 import { photos } from '@/constants/images';
 import { colors } from '@/constants/theme';
 import { CITIES, ONBOARDING_CITIES } from '@/data/cities';
-import { EVENT_TYPE_BY_ID, GUEST_BANDS, bandFor, bsMonthLabel, isPeakSeason, type GuestBand } from '@/data/events';
+import { EVENT_TYPE_BY_ID, GUEST_BANDS, bandFor, isPeakSeason, type GuestBand } from '@/data/events';
 import { BUILT_IN_OCCASIONS, type OccasionDef } from '@/data/occasions';
 import { findService } from '@/data/services';
 import { logout } from '@/services/auth';
@@ -23,7 +23,7 @@ import { useDb } from '@/store/useDb';
 import { useAccount } from '@/store/useSession';
 import type { Role } from '@/types';
 import type { EventType, Project } from '@/types/platform';
-import { addDays, daysUntil, formatLakhRange, formatLongDate, formatShortDate } from '@/utils/format';
+import { addDays, daysUntil, formatDateAlt, formatLakhRange, formatLongDate, formatShortDate } from '@/utils/format';
 
 type StepId = 'occasion' | 'you' | 'date' | 'city' | 'guests' | 'budget' | 'review';
 const QUESTION_STEPS: StepId[] = ['you', 'date', 'city', 'guests', 'budget', 'review'];
@@ -402,7 +402,7 @@ export function CelebrationOnboarding({ another = false }: { another?: boolean }
           {date && (
             <Animated.View key={date} entering={FadeIn.duration(220)} style={styles.dateNote}>
               <Text size={15} weight="semibold" color={colors.heading}>
-                {formatLongDate(date)} · {bsMonthLabel(date)}
+                {formatLongDate(date)} · {formatDateAlt(date)}
               </Text>
               <Text size={13} color={colors.textMuted}>
                 {days} days from today.
@@ -500,7 +500,7 @@ export function CelebrationOnboarding({ another = false }: { another?: boolean }
               <LinearGradient colors={['rgba(0,0,0,0)', 'rgba(0,0,0,0.72)']} style={StyleSheet.absoluteFill} />
               <View style={styles.summaryTitle}>
                 <Text size={13} color="rgba(255,255,255,0.85)">
-                  {date ? `${formatLongDate(date)} · ${bsMonthLabel(date)}` : 'Date to be fixed'}
+                  {date ? `${formatLongDate(date)} · ${formatDateAlt(date)}` : 'Date to be fixed'}
                 </Text>
                 <Text serif size={26} weight="bold" lineHeight={34} color={colors.white} numberOfLines={2}>
                   {title}

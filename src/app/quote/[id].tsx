@@ -1,7 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Card, ChoiceChips, EmptyBlock, KButton, KField } from '@/components/kit';
@@ -18,6 +18,7 @@ import { negotiationPoints } from '@/services/planner';
 import { quoteTotals } from '@/services/quotes';
 import { useDb } from '@/store/useDb';
 import { daysUntil, formatMoney } from '@/utils/format';
+import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
 
 const CHANGE_PRESETS = ['Lower the total', 'Add a service', 'Remove a service', 'Change dates', 'Softer payment schedule'];
 

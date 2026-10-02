@@ -2,7 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { Contact, ContactField, requestPermissionsAsync } from 'expo-contacts';
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { FlatList, Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { FlatList, Pressable, StyleSheet, View } from 'react-native';
 
 import { Avatar, Card, ChoiceChips, EmptyBlock, Fab, KButton, KField, Segmented } from '@/components/kit';
 import { ToolScreen, toolStyles } from '@/components/planner/ToolScreen';
@@ -19,6 +19,7 @@ import type { Guest, Project, RsvpStatus } from '@/types/platform';
 import { confirm } from '@/utils/confirm';
 import { formatPhone, isNepalMobile } from '@/utils/format';
 import { openWhatsApp, rsvpPath, webUrl } from '@/utils/links';
+import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
 
 const CATEGORIES = ['Family', 'Relatives', 'Friends', 'Colleagues', 'Neighbours', 'Guru / Priest', 'Plus-ones'];
 const DIETARY = ['Vegetarian', 'Non-veg', 'Vegan', 'Jain', 'No alcohol', 'No buff', 'Diabetic', 'Allergies'];

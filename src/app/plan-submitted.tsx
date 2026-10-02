@@ -1,6 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import { router, useLocalSearchParams } from 'expo-router';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import Animated, { FadeIn, FadeInDown } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -11,6 +11,7 @@ import { serviceName } from '@/data/services';
 import { estimateTotal } from '@/services/planner';
 import { useDb } from '@/store/useDb';
 import { formatMoneyRange } from '@/utils/format';
+import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
 
 const STEPS = [
   { title: 'Your coordinator calls you', body: 'To confirm the dates, guest count and what matters most to you.' },

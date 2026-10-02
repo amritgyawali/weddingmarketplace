@@ -1,7 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import { useState } from 'react';
-import { FlatList, Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { FlatList, Pressable, StyleSheet, View } from 'react-native';
 
 import { Card, ChoiceChips, EmptyBlock, KButton, KField } from '@/components/kit';
 import { ToolScreen, toolStyles } from '@/components/planner/ToolScreen';
@@ -17,6 +17,7 @@ import { useRoleTheme } from '@/theme/RoleTheme';
 import type { InspirationBoard, Project } from '@/types/platform';
 import { confirm } from '@/utils/confirm';
 import { shareMessage } from '@/utils/links';
+import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
 
 const photoById = (id: string) => IDEA_PHOTOS.find((p) => p.id === id);
 const STARTERS = ['Decor & mandap', 'Bridal look', 'Groom look', 'Mehendi', 'Reception', 'Cake & desserts'];

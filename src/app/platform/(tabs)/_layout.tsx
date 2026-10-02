@@ -8,6 +8,7 @@ import { allows } from '@/services/experience';
 import { useDb, useUnreadMessageCount } from '@/store/useDb';
 import { useAccount } from '@/store/useSession';
 import { ROLE_THEMES } from '@/theme/roles';
+import { keyboardScreenLayout } from '@/components/ui/Keyboard';
 
 const ALL_TABS = ['index', 'leads', 'weddings', 'execution', 'more'];
 
@@ -48,7 +49,7 @@ export default function PlatformTabs() {
   ].filter((l) => allowed(String(l.href).split('?')[0])) as SidebarLink[];
 
   return (
-    <Tabs
+    <Tabs screenLayout={keyboardScreenLayout}
       tabBar={(props) => <RoleTabBar {...props} tabs={tabs} links={links} />}
       screenOptions={{ headerShown: false, tabBarPosition: wide ? 'left' : 'bottom', sceneStyle: { backgroundColor: ROLE_THEMES.platform.c.bg } }}>
       {ALL_TABS.map((name) => (

@@ -1,3 +1,7 @@
+import { runtime } from '@/i18n/runtime';
+
+import { adToBs, bsMonthName, toNepaliDigits, WEEKDAYS_NE } from './bs';
+
 /**
  * Money is NPR everywhere. Grouping is done by hand because Hermes' Intl
  * support varies across platforms.
@@ -63,22 +67,52 @@ const DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 /** Date-only strings are parsed as local dates to avoid time-zone drift. */
 const parseDate = (iso: string) => (/^\d{4}-\d{2}-\d{2}$/.test(iso) ? fromISODate(iso) : new Date(iso));
 
-/** "Tue 18 Aug" */
+/** Nepali digits in Nepali mode. */
+const num = (n: number | string) => (runtime.lang === 'ne' ? toNepaliDigits(n) : String(n));
+
+/** The BS date for display, or null in AD mode or outside the BS table. */
+function bsOf(iso: string) {
+  if (runtime.calendar !== 'bs') return null;
+  return adToBs(toISODate(parseDate(iso)));
+}
+
+const weekday = (d: Date) => (runtime.lang === 'ne' ? WEEKDAYS_NE[d.getDay()] : DAYS[d.getDay()]);
+
+/** "Tue 18 Aug" (AD) or "Tue 2 Mangsir" (BS, the default). */
 export function formatShortDate(iso: string): string {
   const d = parseDate(iso);
+  const bs = bsOf(iso);
+  if (bs) return `${weekday(d)} ${num(bs.day)} ${bsMonthName(bs.month, runtime.lang)}`;
   return `${DAYS[d.getDay()]} ${d.getDate()} ${MONTHS[d.getMonth()]}`;
 }
 
-/** "18 August 2026" */
+/** "18 August 2026" (AD) or "2 Mangsir 2083" (BS, the default). */
 export function formatLongDate(iso: string): string {
   const d = parseDate(iso);
+  const bs = bsOf(iso);
+  if (bs) return `${num(bs.day)} ${bsMonthName(bs.month, runtime.lang)} ${num(bs.year)}`;
   return `${d.getDate()} ${MONTHS_LONG[d.getMonth()]} ${d.getFullYear()}`;
 }
 
-/** "Dec 12" */
+/** "Dec 12" (AD) or "Mangsir 2" (BS). */
 export function formatMonthDay(iso: string): string {
   const d = parseDate(iso);
+  const bs = bsOf(iso);
+  if (bs) return `${bsMonthName(bs.month, runtime.lang)} ${num(bs.day)}`;
   return `${MONTHS[d.getMonth()]} ${d.getDate()}`;
+}
+
+/** Always Gregorian: "18 Aug 2026". */
+export function formatAdDate(iso: string): string {
+  const d = parseDate(iso);
+  return `${d.getDate()} ${MONTHS[d.getMonth()]} ${d.getFullYear()}`;
+}
+
+/** The same day in the other calendar, shown beside the main date: AD under BS, or "Mangsir 2083" under AD. */
+export function formatDateAlt(iso: string): string {
+  if (runtime.calendar === 'bs') return formatAdDate(iso);
+  const bs = adToBs(toISODate(parseDate(iso)));
+  return bs ? `${bsMonthName(bs.month, runtime.lang)} ${num(bs.year)}` : '';
 }
 
 export function formatTime(iso: string): string {

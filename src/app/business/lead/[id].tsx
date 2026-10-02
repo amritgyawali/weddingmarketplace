@@ -1,6 +1,6 @@
 import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
-import { Linking, ScrollView, StyleSheet, View } from 'react-native';
+import { Linking, StyleSheet, View } from 'react-native';
 
 import { Avatar, Card, ChoiceChips, EmptyBlock, KButton, KeyValue, KField, ListRow, SectionTitle, StackHeader, StatusPill } from '@/components/kit';
 import { Calendar } from '@/components/ui/Calendar';
@@ -14,6 +14,7 @@ import { useAccount } from '@/store/useSession';
 import { useRoleTheme } from '@/theme/RoleTheme';
 import type { LeadStatus } from '@/types/platform';
 import { daysUntil, formatLongDate, formatMoney, formatPhone, formatShortDate, timeAgo } from '@/utils/format';
+import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
 
 const STATUSES: LeadStatus[] = ['new', 'contacted', 'responded', 'quoted', 'negotiating', 'meeting', 'won', 'lost', 'archived'];
 const LABELS = ['Site visit', 'Big wedding', 'Budget', 'Repeat family', 'Destination', 'VIP'];

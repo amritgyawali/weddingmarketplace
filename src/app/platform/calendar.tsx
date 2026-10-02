@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 
 import { staffScreen } from '@/components/persona/StaffGate';
 import { Card, StackHeader, StatusPill } from '@/components/kit';
@@ -12,6 +12,7 @@ import { milestoneStatus } from '@/services/pricing';
 import { useDb } from '@/store/useDb';
 import { useRoleTheme } from '@/theme/RoleTheme';
 import { formatLongDate, formatMoney, today } from '@/utils/format';
+import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
 
 /** Operations calendar: every function, meeting and payment due across projects. */
 function OpsCalendar() {

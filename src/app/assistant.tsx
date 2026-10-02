@@ -1,16 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import { router, type Href } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
-import {
-  FlatList,
-  KeyboardAvoidingView,
-  Platform,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  TextInput,
-  View,
-} from 'react-native';
+import { FlatList, Pressable, StyleSheet, TextInput, View } from 'react-native';
 import Animated, {
   FadeInDown,
   FadeInUp,
@@ -31,6 +22,8 @@ import { colors, fonts, GUTTER, inputReset, radius } from '@/constants/theme';
 import { askAssistant, POPULAR_SUGGESTIONS, type AssistantReply } from '@/services/assistant';
 import { useAppStore } from '@/store/useAppStore';
 import { uid } from '@/utils/format';
+import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
+import { tr } from '@/i18n';
 
 type Message =
   | { id: string; role: 'user'; text: string }
@@ -205,7 +198,7 @@ export default function AssistantScreen() {
         </PressableScale>
       </View>
 
-      <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+      <View style={{ flex: 1 }}>
         <FlatList
           ref={listRef}
           data={messages}
@@ -243,7 +236,7 @@ export default function AssistantScreen() {
             <TextInput
               value={input}
               onChangeText={setInput}
-              placeholder="Ask about venues, vendors or prices"
+              placeholder={tr('Ask about venues, vendors or prices')}
               placeholderTextColor={colors.placeholder}
               style={[styles.input, inputReset]}
               multiline
@@ -264,7 +257,7 @@ export default function AssistantScreen() {
             Answers are automatic and come from our listings. Check prices with the vendor before you book.
           </Text>
         </View>
-      </KeyboardAvoidingView>
+      </View>
     </View>
   );
 }

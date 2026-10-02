@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 import { staffScreen } from '@/components/persona/StaffGate';
 import { Card, ChoiceChips, KButton, KField, SectionTitle, StackHeader, StatusPill } from '@/components/kit';
@@ -14,6 +14,7 @@ import { useDb } from '@/store/useDb';
 import { useRoleTheme } from '@/theme/RoleTheme';
 import type { Deal } from '@/types/platform';
 import { formatMoney, uid } from '@/utils/format';
+import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
 
 /** Marketplace configuration: business-model rates, cities, featured providers, deals and banners. */
 function MarketplaceSettings() {

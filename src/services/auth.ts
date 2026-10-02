@@ -34,6 +34,25 @@ export function onAccountCreated(account: Account) {
   db.notify(account.id, 'Welcome to Vivah', account.role === 'customer' ? 'Explore venues, collect quotations and track everything in My Wedding.' : 'Your workspace is ready.');
 }
 
+/** Super admin: opens the app as another user, with a bar to come back. */
+export function impersonate(account: Account) {
+  const s = useSession.getState();
+  const admin = s.accounts.find((a) => a.id === s.session?.accountId);
+  if (!admin || admin.staffRole !== 'super_admin' || admin.id === account.id) return;
+  useDb.getState().log({ id: admin.id, name: admin.name }, 'account.impersonate', 'account', account.id, `${account.role} · ${account.name}`);
+  s.setImpersonator(s.impersonatorId ?? admin.id);
+  completeLogin(account);
+}
+
+/** Ends "Sign in as" and returns to the super admin's own account. */
+export function endImpersonation() {
+  const s = useSession.getState();
+  const admin = s.accounts.find((a) => a.id === s.impersonatorId);
+  s.setImpersonator(null);
+  if (admin) completeLogin(admin);
+  else s.logout();
+}
+
 export function logout() {
   // With the Supabase backend the tokens go too; the demo has none.
   if (usesEmailSignIn()) void signOut();

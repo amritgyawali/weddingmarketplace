@@ -1,7 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import type { ComponentProps } from 'react';
-import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { BackButton } from '@/components/ui/IconButton';
@@ -9,9 +9,11 @@ import { triggerHaptic } from '@/components/ui/PressableScale';
 import { Text } from '@/components/ui/Text';
 import { BRAND } from '@/constants/brand';
 import { colors } from '@/constants/theme';
+import { useFeatures } from '@/hooks/useFeatures';
 import { useSession } from '@/store/useSession';
 import { ROLE_THEMES } from '@/theme/roles';
 import type { UserRole } from '@/types/platform';
+import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
 
 const ROLES: { role: UserRole; icon: ComponentProps<typeof Ionicons>['name']; who: string }[] = [
   { role: 'customer', icon: 'heart-outline', who: 'We’re getting married, or planning it for family' },
@@ -23,6 +25,8 @@ const ROLES: { role: UserRole; icon: ComponentProps<typeof Ionicons>['name']; wh
 export default function RolePicker() {
   const insets = useSafeAreaInsets();
   const selectRole = useSession((s) => s.selectRole);
+  const on = useFeatures();
+  const roles = ROLES.filter(({ role }) => role === 'customer' || on(`signup.${role}`));
 
   return (
     <View style={styles.root}>
@@ -40,7 +44,7 @@ export default function RolePicker() {
         </View>
 
         <View style={styles.list}>
-          {ROLES.map(({ role, icon, who }, i) => {
+          {roles.map(({ role, icon, who }, i) => {
             const theme = ROLE_THEMES[role];
             return (
               <Pressable

@@ -88,7 +88,7 @@ export const BUILT_IN_OCCASIONS: OccasionDef[] = [
     eventTypes: ['ENGAGEMENT'],
     honourees: 'couple',
     defaultServices: ['venue', 'catering', 'photography', 'decoration', 'makeup'],
-    services: ['venue', 'catering', 'cake', 'photography', 'videography', 'photo-booth', 'decoration', 'florist', 'lighting', 'makeup', 'mehendi', 'dj', 'sound', 'live-band', 'mc', 'pandit', 'bridal-wear', 'groom-wear', 'jewellery', 'invitation', 'gifts', 'transport', 'planner'],
+    services: ['venue', 'catering', 'cake', 'photography', 'videography', 'photo-booth', 'decoration', 'florist', 'lighting', 'makeup', 'mehendi', 'dj', 'sound', 'live-band', 'mc', 'pandit', 'bridal-wear', 'groom-wear', 'jewellery', 'invitation', 'gifts', 'transport', 'planner', 'wedding-car', 'luxury-car'],
     modules: ['guests', 'invitations', 'website', 'outfits', 'sait', 'samagri', 'tips', 'duties'],
     ritual: true,
     vocab: vocab('Engagement day', 'couple', 'Our engagement', 'engagement'),
@@ -104,7 +104,7 @@ export const BUILT_IN_OCCASIONS: OccasionDef[] = [
     eventTypes: ['ANNIVERSARY'],
     honourees: 'couple',
     defaultServices: ['venue', 'catering', 'photography', 'cake', 'dj'],
-    services: ['venue', 'catering', 'cake', 'bartending', 'photography', 'videography', 'photo-booth', 'decoration', 'florist', 'lighting', 'dj', 'live-band', 'sound', 'mc', 'invitation', 'gifts', 'accommodation', 'transport', 'planner'],
+    services: ['venue', 'catering', 'cake', 'bartending', 'photography', 'videography', 'photo-booth', 'decoration', 'florist', 'lighting', 'dj', 'live-band', 'sound', 'mc', 'invitation', 'gifts', 'accommodation', 'transport', 'planner', 'wedding-car', 'luxury-car'],
     modules: ['guests', 'seating', 'website', 'invitations', 'honeymoon', 'surprise'],
     ritual: false,
     vocab: vocab('Anniversary', 'couple', 'Our anniversary', 'celebration'),
@@ -152,7 +152,7 @@ export const BUILT_IN_OCCASIONS: OccasionDef[] = [
     eventTypes: ['BRATABANDHA'],
     honourees: 'person',
     defaultServices: ['pandit', 'venue', 'catering', 'photography', 'panche-baja'],
-    services: ['pandit', 'venue', 'catering', 'photography', 'videography', 'panche-baja', 'decoration', 'tent-stage', 'sound', 'generator', 'invitation', 'transport', 'gifts'],
+    services: ['pandit', 'venue', 'catering', 'photography', 'videography', 'panche-baja', 'decoration', 'tent-stage', 'sound', 'generator', 'invitation', 'transport', 'gifts', 'bus-hire', 'jeep-hire', 'baggi'],
     modules: ['guests', 'invitations', 'sait', 'samagri', 'tips', 'duties'],
     ritual: true,
     vocab: vocab('Bratabandha day', 'family', 'Bratabandha plan', 'celebration'),
@@ -184,7 +184,7 @@ export const BUILT_IN_OCCASIONS: OccasionDef[] = [
     eventTypes: ['CORPORATE_EVENT'],
     honourees: 'org',
     defaultServices: ['venue', 'catering', 'sound', 'led-screen', 'photography'],
-    services: ['venue', 'catering', 'bartending', 'sound', 'led-screen', 'lighting', 'generator', 'photography', 'videography', 'live-streaming', 'mc', 'transport', 'accommodation', 'security', 'tent-stage', 'furniture-rental', 'invitation', 'gifts', 'planner'],
+    services: ['venue', 'catering', 'bartending', 'sound', 'led-screen', 'lighting', 'generator', 'photography', 'videography', 'live-streaming', 'mc', 'transport', 'accommodation', 'security', 'tent-stage', 'furniture-rental', 'invitation', 'gifts', 'planner', 'bus-hire', 'luxury-car', 'jeep-hire'],
     modules: ['guests', 'seating', 'invitations', 'agenda'],
     ritual: false,
     vocab: vocab('Event day', 'team', 'Event plan', 'event'),
@@ -215,6 +215,9 @@ export const DEFAULT_OCCASION_ID: BuiltInOccasionId = 'wedding';
 export const PROTECTED_OCCASIONS: OccasionId[] = ['wedding', 'other'];
 
 /** Fresh copies of the built-ins (seed data must not share references). */
+/** Vehicle services added after the first release; the store's `migrate` adds them to saved built-in occasions. */
+export const VEHICLE_SERVICES = ['wedding-car', 'luxury-car', 'bus-hire', 'jeep-hire', 'baggi'];
+
 export const builtInOccasions = (): OccasionDef[] => BUILT_IN_OCCASIONS.map((o) => ({ ...o, eventTypes: [...o.eventTypes], defaultServices: [...o.defaultServices], services: [...o.services], modules: [...o.modules], vocab: { ...o.vocab } }));
 
 /** An occasion by id from a list (defaults to the built-ins). */

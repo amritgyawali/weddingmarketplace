@@ -4,13 +4,17 @@
  * crew/gig → execution → payment → payout → review stays consistent. In
  * production each action becomes an API call against supabase/migrations.
  */
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { create } from 'zustand';
-import { createJSONStorage, persist } from 'zustand/middleware';
+import { persist } from 'zustand/middleware';
 
+import { VEHICLE_SERVICES } from '@/data/occasions';
 import { buildSeedData } from '@/data/seed';
+import { occasionOf } from '@/services/experience';
+import { generateTasks, WEDDING_ONLY_TASKS } from '@/services/planner';
+import { lazyStorage } from '@/store/lazyStorage';
 import type { Account } from '@/types/platform';
 
+import { adminActions, type AdminActions } from './admin';
 import { chatActions, type ChatActions, clearReplyTimers } from './chat';
 import { coreActions, type CoreActions } from './core';
 import { financeActions, type FinanceActions } from './finance';
@@ -24,9 +28,41 @@ import { trustActions, type TrustActions } from './trust';
 import type { DbData } from './types';
 
 export type { DbData } from './types';
-export type Db = DbData & CoreActions & QuoteActions & ProjectActions & FinanceActions & GigActions & ChatActions & TrustActions & PlannerActions & ToolkitActions & PersonaActions;
+export type Db = DbData & CoreActions & QuoteActions & ProjectActions & FinanceActions & GigActions & ChatActions & TrustActions & PlannerActions & ToolkitActions & PersonaActions & AdminActions;
 
 const DATA_KEYS = Object.keys(buildSeedData()) as (keyof DbData)[];
+
+/**
+ * v5: the vehicles trade. Built-in occasions saved before it get the vehicle
+ * services their current definition lists (weddings and "something else" list
+ * every service); the super admin collections start empty. Celebrations that
+ * aren't weddings (a pasni, a bratabandha) lose the wedding-only checklist
+ * items they were created with ("guest list, bride and groom side") and get
+ * their own.
+ */
+function addVehicles(data: DbData): DbData {
+  const seed = new Map(buildSeedData().occasions.map((o) => [o.id, o]));
+  return {
+    ...data,
+    projects: (data.projects ?? []).map((p) => {
+      const occasion = occasionOf(p, data.occasions).id;
+      if (occasion === 'wedding' || occasion === 'engagement' || !p.tasks.some((t) => WEDDING_ONLY_TASKS.has(t.title))) return p;
+      const kept = p.tasks.filter((t) => t.status !== 'TODO' || !WEDDING_ONLY_TASKS.has(t.title));
+      const services = p.requirements.filter((r) => r.status !== 'CANCELLED').map((r) => r.serviceId);
+      const fresh = generateTasks(p.weddingDate, services, p.customerName, p.coordinatorName, occasion).filter((t) => !kept.some((k) => k.title === t.title));
+      return { ...p, tasks: [...kept, ...fresh] };
+    }),
+    occasions: (data.occasions ?? []).map((o) => {
+      const def = o.builtIn ? seed.get(o.id) : undefined;
+      if (!def) return o;
+      const extra = VEHICLE_SERVICES.filter((s) => def.services.includes(s) && !o.services.includes(s));
+      return extra.length ? { ...o, services: [...o.services, ...extra] } : o;
+    }),
+    featureFlags: data.featureFlags ?? {},
+    textOverrides: data.textOverrides ?? {},
+    announcements: data.announcements ?? [],
+  };
+}
 
 /** Adds seed projects and tool records an older install doesn't have, and the nwaran function to the built-in newborn occasion. Nothing existing is changed. */
 function addSeedRecords(data: DbData): DbData {
@@ -56,6 +92,7 @@ export const useDb = create<Db>()(
       ...plannerActions(set, get),
       ...toolkitActions(set, get),
       ...personaActions(set, get),
+      ...adminActions(set, get),
       resetDemo: () => {
         const denied = staffDenied('demo.reset', get);
         if (denied) return denied;
@@ -68,10 +105,17 @@ export const useDb = create<Db>()(
       name: 'vivah-db',
       // v3: Nepal orchestration model (projects → requirements → bookings → crew).
       // v4: adds the newborn demo project, the new demo tool records and the nwaran function (additive).
-      version: 4,
-      storage: createJSONStorage(() => AsyncStorage),
+      // v5: vehicle services on the built-in occasions; feature flags, text overrides, announcements (additive).
+      version: 5,
+      storage: lazyStorage<DbData>(),
       partialize: (s) => Object.fromEntries(DATA_KEYS.map((k) => [k, s[k]])) as unknown as DbData,
-      migrate: (persisted, version) => (version < 3 ? buildSeedData() : version < 4 ? addSeedRecords(persisted as DbData) : (persisted as DbData)) as Db,
+      migrate: (persisted, version) => {
+        if (version < 3) return buildSeedData() as Db;
+        let data = persisted as DbData;
+        if (version < 4) data = addSeedRecords(data);
+        if (version < 5) data = addVehicles(data);
+        return data as Db;
+      },
     },
   ),
 );

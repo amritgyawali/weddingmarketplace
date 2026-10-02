@@ -1,10 +1,11 @@
 import { useLocalSearchParams } from 'expo-router';
-import { ScrollView, View } from 'react-native';
+import { View } from 'react-native';
 
 import { EmptyBlock, StackHeader } from '@/components/kit';
 import { GigManage } from '@/components/work/ApplicantsList';
 import { useDb } from '@/store/useDb';
 import { useRoleTheme } from '@/theme/RoleTheme';
+import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
 
 export default function PlatformGigDetail() {
   const t = useRoleTheme();

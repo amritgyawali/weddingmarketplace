@@ -3,7 +3,7 @@ import { Image } from 'expo-image';
 import Constants from 'expo-constants';
 import { router, useLocalSearchParams } from 'expo-router';
 import type { ComponentProps } from 'react';
-import { Linking, Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { Linking, Pressable, StyleSheet, View } from 'react-native';
 
 import { Button } from '@/components/ui/Button';
 import { ScreenHeader } from '@/components/ui/ScreenHeader';
@@ -12,6 +12,7 @@ import { toast } from '@/components/ui/Toast';
 import { BRAND } from '@/constants/brand';
 import { photos, type PhotoKey } from '@/constants/images';
 import { colors, GUTTER, radius, shadows } from '@/constants/theme';
+import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
 
 type IconName = ComponentProps<typeof Ionicons>['name'];
 

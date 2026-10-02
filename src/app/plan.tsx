@@ -2,7 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 import Animated, { FadeInRight } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -14,7 +14,7 @@ import { Text } from '@/components/ui/Text';
 import { photos, type PhotoKey } from '@/constants/images';
 import { colors } from '@/constants/theme';
 import { CITIES, ONBOARDING_CITIES } from '@/data/cities';
-import { EVENT_TYPE_BY_ID, EVENT_TYPES, GUEST_BANDS, bandFor, bsMonthLabel, isPeakSeason } from '@/data/events';
+import { EVENT_TYPE_BY_ID, EVENT_TYPES, GUEST_BANDS, bandFor, isPeakSeason } from '@/data/events';
 import { IDEA_PHOTOS } from '@/data/ideas';
 import { SERVICE_GROUPS, SERVICES, findService } from '@/data/services';
 import { allocateBudget, estimateTotal, perUnitBudget, type PlanInput } from '@/services/planner';
@@ -22,7 +22,8 @@ import { useAppStore } from '@/store/useAppStore';
 import { useDb } from '@/store/useDb';
 import { useAccount } from '@/store/useSession';
 import type { EventType } from '@/types/platform';
-import { formatLongDate, formatMoney, formatMoneyCompact, formatMoneyRange, parseMoney } from '@/utils/format';
+import { formatDateAlt, formatLongDate, formatMoney, formatMoneyCompact, formatMoneyRange, parseMoney } from '@/utils/format';
+import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
 
 const STEPS = ['Event', 'Location', 'Dates', 'Guests', 'Services', 'Budget', 'Style', 'Details'] as const;
 
@@ -171,7 +172,7 @@ export default function PlanWizard() {
               const d = dates[e];
               return (
                 <Text key={e} size={13} color={colors.text}>
-                  • {EVENT_TYPE_BY_ID[e].label}: {d ? `${formatLongDate(d)} (${bsMonthLabel(d)})${isPeakSeason(d) ? ' · peak season' : ''}` : 'to be confirmed'}
+                  • {EVENT_TYPE_BY_ID[e].label}: {d ? `${formatLongDate(d)} (${formatDateAlt(d)})${isPeakSeason(d) ? ' · peak season' : ''}` : 'to be confirmed'}
                 </Text>
               );
             })}
@@ -367,7 +368,7 @@ export default function PlanWizard() {
           <View key={s} style={[styles.progressSeg, { backgroundColor: i <= step ? colors.primary : colors.border }]} />
         ))}
       </View>
-      <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+      <View style={{ flex: 1 }}>
         <ScrollView contentContainerStyle={{ padding: 20, paddingBottom: 120 }} keyboardShouldPersistTaps="handled">
           <Animated.View key={step} entering={FadeInRight.duration(220)}>
             {body()}
@@ -381,7 +382,7 @@ export default function PlanWizard() {
             <KButton label="Submit requirement" icon="paper-plane" loading={submitting} onPress={submit} style={{ flex: 2 }} />
           )}
         </View>
-      </KeyboardAvoidingView>
+      </View>
     </View>
   );
 }

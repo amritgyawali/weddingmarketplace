@@ -5,7 +5,7 @@
  */
 import { Ionicons } from '@expo/vector-icons';
 import { useEffect, useState, type ReactNode } from 'react';
-import { Pressable, ScrollView, StyleSheet, View, type StyleProp, type ViewStyle } from 'react-native';
+import { Pressable, StyleSheet, View, type StyleProp, type ViewStyle } from 'react-native';
 
 import { Card, ChoiceChips, EmptyBlock, KButton, KField, ProgressBar, SectionTitle, StackHeader, StatusPill } from '@/components/kit';
 import { Sheet } from '@/components/ui/Sheet';
@@ -21,6 +21,7 @@ import { useRoleTheme } from '@/theme/RoleTheme';
 import type { ToolEntry, ToolEntryInput, ToolState, ToolValue } from '@/types/platform';
 import { confirm } from '@/utils/confirm';
 import { addDays, formatMoney, formatShortDate, parseMoney, today } from '@/utils/format';
+import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
 
 // ─── Hooks ──────────────────────────────────────────────────────────────────
 

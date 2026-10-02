@@ -2,7 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useEffect, type ReactNode } from 'react';
-import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 import Animated, { FadeInDown, useAnimatedProps, useSharedValue, withTiming } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Svg, { Circle } from 'react-native-svg';
@@ -12,14 +12,14 @@ import { IconButton } from '@/components/ui/IconButton';
 import { Text } from '@/components/ui/Text';
 import { photos } from '@/constants/images';
 import { colors } from '@/constants/theme';
-import { bsMonthLabel } from '@/data/events';
 import { findService, serviceName } from '@/data/services';
 import { occasionOf } from '@/services/experience';
 import { planningProgress } from '@/services/planner';
 import { useDb } from '@/store/useDb';
 import { paymentSummary } from '@/services/pricing';
 import type { Project, ProjectEvent, RequirementStatus } from '@/types/platform';
-import { daysUntil, formatLongDate, formatMoney, formatMoneyCompact, formatShortDate, fromISODate, pluralize } from '@/utils/format';
+import { daysUntil, formatDateAlt, formatLongDate, formatMoney, formatMoneyCompact, formatShortDate, fromISODate, pluralize } from '@/utils/format';
+import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
 
 const SCRIM = ['rgba(0,0,0,0.38)', 'rgba(0,0,0,0)', 'rgba(0,0,0,0.05)', 'rgba(0,0,0,0.78)'] as const;
 const OVERLAY_BUTTON = 'rgba(20,16,12,0.34)';
@@ -45,7 +45,9 @@ export function WeddingHero({
 }) {
   const insets = useSafeAreaInsets();
   const main = mainEvent(project);
-  const cover = project.inspiration[0] ?? 'ideaCoupleGardenWalk';
+  // Couple photos suit weddings; other celebrations get a decor shot instead.
+  const weddingLike = !project.occasion || project.occasion === 'wedding' || project.occasion === 'engagement';
+  const cover = weddingLike ? (project.inspiration[0] ?? 'ideaCoupleGardenWalk') : 'decorMandapFloral';
   return (
     <View style={[styles.hero, { height: HERO_HEIGHT + insets.top }]}>
       <Image source={photos[cover]} style={StyleSheet.absoluteFill} contentFit="cover" contentPosition={{ left: '50%', top: '38%' }} transition={250} />
@@ -60,7 +62,7 @@ export function WeddingHero({
       </View>
       <Animated.View entering={FadeInDown.duration(420)} style={styles.heroBottom}>
         <Text size={13} color="rgba(255,255,255,0.86)">
-          {main?.date ? `${formatLongDate(main.date)} · ${bsMonthLabel(main.date)}` : 'Date to be fixed'}
+          {main?.date ? `${formatLongDate(main.date)} · ${formatDateAlt(main.date)}` : 'Date to be fixed'}
         </Text>
         <Text serif size={32} weight="bold" lineHeight={42} color={colors.white} numberOfLines={2}>
           {project.title}

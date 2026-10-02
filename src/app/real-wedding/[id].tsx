@@ -1,7 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import { router, useLocalSearchParams } from 'expo-router';
-import { ScrollView, StyleSheet, useWindowDimensions, View } from 'react-native';
+import { StyleSheet, useWindowDimensions, View } from 'react-native';
 
 import { EmptyState } from '@/components/ui/EmptyState';
 import { ScreenHeader } from '@/components/ui/ScreenHeader';
@@ -10,6 +10,7 @@ import { Text } from '@/components/ui/Text';
 import { photos } from '@/constants/images';
 import { colors, GUTTER, radius } from '@/constants/theme';
 import { useRealWedding } from '@/hooks/queries';
+import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
 
 export default function RealWeddingScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();

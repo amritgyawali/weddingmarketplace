@@ -1122,6 +1122,18 @@ export interface PlatformSettings {
   banners: { id: string; title: string; subtitle: string; href: string; active: boolean }[];
 }
 
+/** A notice a super admin pins to the top of one role's home, or every role's. */
+export interface Announcement {
+  id: string;
+  audience: UserRole | 'all';
+  title: string;
+  body?: string;
+  tone: 'info' | 'success' | 'warning';
+  active: boolean;
+  createdAt: string;
+  createdBy: string;
+}
+
 // Role toolkits (generic tool records, settings and broadcasts)
 export * from './toolkit';
 // Personas (occasions, trades, capabilities, permissions)

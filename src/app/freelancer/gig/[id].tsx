@@ -1,7 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
-import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Card, EmptyBlock, KButton, KeyValue, KField, StackHeader, StatusPill } from '@/components/kit';
@@ -16,6 +16,7 @@ import { useDb } from '@/store/useDb';
 import { useAccount } from '@/store/useSession';
 import { useRoleTheme } from '@/theme/RoleTheme';
 import { formatClock, formatLongDate, formatMoney } from '@/utils/format';
+import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
 
 /** Gig detail for crew: accept an invite, apply, ask a question or decline. */
 export default function FreelancerGigDetail() {
@@ -61,7 +62,7 @@ export default function FreelancerGigDetail() {
   return (
     <View style={{ flex: 1, backgroundColor: t.c.bg }}>
       <StackHeader title={gig.emergency ? 'Emergency gig' : 'Gig details'} subtitle={gig.postedByName} />
-      <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+      <View style={{ flex: 1 }}>
         <ScrollView contentContainerStyle={{ padding: 16, gap: 14, paddingBottom: 160 }} keyboardShouldPersistTaps="handled">
           <GigCard gig={gig} distance={km} />
           <Card style={{ gap: 4 }}>
@@ -197,7 +198,7 @@ export default function FreelancerGigDetail() {
             ) : null}
           </View>
         )}
-      </KeyboardAvoidingView>
+      </View>
     </View>
   );
 }

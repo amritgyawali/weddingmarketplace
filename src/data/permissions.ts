@@ -24,6 +24,7 @@ export const PERMISSIONS = [
   'audit.view',
   'demo.reset',
   'occasion.manage',
+  'admin.full',
 ] as const;
 
 export type Permission = (typeof PERMISSIONS)[number];
@@ -49,6 +50,7 @@ export const PERMISSION_LABELS: Record<Permission, string> = {
   'audit.view': 'Read the audit log',
   'demo.reset': 'Reset demo data',
   'occasion.manage': 'Add, edit and delete occasions',
+  'admin.full': 'Edit, delete and configure everything (super admin console)',
 };
 
 const ALL = [...PERMISSIONS];
@@ -61,7 +63,7 @@ export const STAFF_PERMISSIONS: Record<StaffRole, readonly Permission[]> = {
   coordinator: ['project.view_all', 'project.manage', 'quote.send', 'incident.manage', 'emergency.start'],
   support: ['project.view_all', 'incident.manage', 'emergency.start', 'broadcast.send'],
   finance: ['project.view_all', 'payment.record_cash', 'refund.approve', 'payout.release', 'payout.batch', 'audit.view'],
-  admin: ALL.filter((p) => p !== 'payout.release' && p !== 'payout.batch' && p !== 'occasion.manage'),
+  admin: ALL.filter((p) => p !== 'payout.release' && p !== 'payout.batch' && p !== 'occasion.manage' && p !== 'admin.full'),
   super_admin: ALL,
 };
 

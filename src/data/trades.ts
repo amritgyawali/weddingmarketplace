@@ -1,5 +1,5 @@
 /**
- * Provider trades. The 38 services in `services.ts` stay the source of truth;
+ * Provider trades. The 43 services in `services.ts` stay the source of truth;
  * trades group them for onboarding tiles, navigation headings and copy, and
  * each service declares the capabilities it grants. Vendors and freelancers
  * share this taxonomy (a freelancer's trade is derived from their crew roles).
@@ -11,7 +11,7 @@ import type { PhotoKey } from '@/constants/images';
 import type { ProviderCapability } from './capabilities';
 import { SERVICES } from './services';
 
-export type TradeId = 'venue' | 'photo' | 'beauty' | 'decor' | 'food' | 'music' | 'av' | 'fashion' | 'rituals' | 'transport' | 'stationery' | 'planning';
+export type TradeId = 'venue' | 'photo' | 'beauty' | 'decor' | 'food' | 'music' | 'av' | 'fashion' | 'rituals' | 'transport' | 'vehicles' | 'stationery' | 'planning';
 
 /** How a business is set up; decides team and venue tools. */
 export type BusinessForm = 'venue' | 'studio' | 'shop' | 'solo';
@@ -214,6 +214,24 @@ export const TRADES: TradeDef[] = [
     ],
   },
   {
+    id: 'vehicles',
+    label: 'Vehicles',
+    blurb: 'Wedding cars, jeeps, buses, baggi and doli',
+    icon: 'car-sport-outline',
+    image: 'venueResortSunset',
+    services: ['wedding-car', 'luxury-car', 'bus-hire', 'jeep-hire', 'baggi'],
+    core: ['wedding-car'],
+    neighbours: ['transport', 'decoration', 'florist'],
+    defaultForm: 'studio',
+    meetings: 'Vehicle viewings',
+    essentials: [
+      { key: 'vehicles', label: 'Vehicles you rent out', kind: 'number', suffix: 'vehicles' },
+      { key: 'largestSeats', label: 'Largest vehicle', kind: 'number', suffix: 'seats' },
+      { key: 'fleetTypes', label: 'Vehicle types', kind: 'choice', options: ['Sedan', 'SUV', 'Jeep', 'Bus', 'Micro / Hiace', 'Baggi', 'Doli', 'Vintage'], multi: true },
+      { key: 'decoration', label: 'Flower decoration included', kind: 'toggle' },
+    ],
+  },
+  {
     id: 'stationery',
     label: 'Stationery and gifts',
     blurb: 'Cards, e-invites, favours',
@@ -295,6 +313,11 @@ export const SERVICE_CAPABILITIES: Record<string, ProviderCapability[]> = {
   security: ['logistics.routes'],
   invitation: ['stationery.proofs', 'stationery.print_runs'],
   gifts: ['stationery.proofs', 'stationery.print_runs'],
+  'wedding-car': ['logistics.fleet', 'logistics.routes', 'decor.themes'],
+  'luxury-car': ['logistics.fleet', 'logistics.routes'],
+  'bus-hire': ['logistics.fleet', 'logistics.routes'],
+  'jeep-hire': ['logistics.fleet', 'logistics.routes'],
+  baggi: ['logistics.fleet', 'logistics.routes', 'decor.themes'],
 };
 
 /** Every vendor and freelancer gets these. */

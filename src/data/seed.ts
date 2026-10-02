@@ -1022,7 +1022,7 @@ function buildPipeline(): Project[] {
       req('rq_1040_cake', 'cake', [e1040.pasni], 'OPEN', { budgetMax: 8_000 }),
     ],
     bookings: [],
-    tasks: markTasks(generateTasks(day(35), ['pandit', 'photography', 'catering', 'decoration', 'cake'], 'Sarita Duwal', SITA.name), 2),
+    tasks: markTasks(generateTasks(day(35), ['pandit', 'photography', 'catering', 'decoration', 'cake'], 'Sarita Duwal', SITA.name, 'newborn'), 2),
     milestones: [],
     createdAt: at(-6),
   });
@@ -1829,6 +1829,9 @@ export function buildSeedData(): DbData {
     },
     ...buildToolkitSeed(),
     occasions: builtInOccasions(),
+    featureFlags: {},
+    textOverrides: {},
+    announcements: [],
   };
 }
 

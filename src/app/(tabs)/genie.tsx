@@ -1,5 +1,5 @@
 import { router } from 'expo-router';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 import { Faqs, GenieHero, PackageCard, Testimonials, WhatsAppFab } from '@/components/genie/GenieSections';
 import { ScreenHeader } from '@/components/ui/ScreenHeader';
@@ -8,6 +8,7 @@ import { BRAND } from '@/constants/brand';
 import { colors, GUTTER } from '@/constants/theme';
 import { FAQS, GENIE_PACKAGES, TESTIMONIALS } from '@/data/genie';
 import { useAppStore } from '@/store/useAppStore';
+import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
 
 export default function GenieTab() {
   const activePlanId = useAppStore(

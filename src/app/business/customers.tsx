@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { FlatList, ScrollView, StyleSheet, View } from 'react-native';
+import { FlatList, StyleSheet, View } from 'react-native';
 
 import { Avatar, Card, EmptyBlock, KField, ListRow, StackHeader, StatusPill } from '@/components/kit';
 import { Sheet } from '@/components/ui/Sheet';
@@ -11,6 +11,7 @@ import { useDb } from '@/store/useDb';
 import { useAccount } from '@/store/useSession';
 import { useRoleTheme } from '@/theme/RoleTheme';
 import { formatMoney, formatPhone, formatShortDate } from '@/utils/format';
+import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
 
 interface Customer {
   id: string;

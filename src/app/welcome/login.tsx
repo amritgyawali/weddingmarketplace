@@ -2,7 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { Link, router } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useRef, useState } from 'react';
-import { KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, TextInput, View } from 'react-native';
+import { Pressable, StyleSheet, TextInput, View } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -17,9 +17,11 @@ import { LEGAL_VERSION } from '@/data/legal';
 import { DEMO_ACCOUNTS, DEMO_OTP } from '@/data/seed';
 import { completeLogin } from '@/services/auth';
 import { useSession } from '@/store/useSession';
+import { useFeatures } from '@/hooks/useFeatures';
 import { useRoleFonts } from '@/theme/fonts';
 import { RoleThemeProvider, useRoleTheme } from '@/theme/RoleTheme';
 import { isNepalMobile } from '@/utils/format';
+import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
 
 function LoginForm() {
   const t = useRoleTheme();
@@ -37,6 +39,7 @@ function LoginForm() {
   const [busy, setBusy] = useState(false);
   const otpRef = useRef<TextInput>(null);
   const demos = DEMO_ACCOUNTS.filter((a) => a.role === t.role);
+  const demoOn = useFeatures()('login.demo');
 
   const sendOtp = async () => {
     if (emailMode) {
@@ -134,7 +137,7 @@ function LoginForm() {
         </Text>
       </View>
 
-      <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+      <View style={{ flex: 1 }}>
         <ScrollView contentContainerStyle={{ padding: 20, gap: 16, paddingBottom: insets.bottom + 30 }} keyboardShouldPersistTaps="handled">
           {step === 'phone' && emailMode ? (
             <Animated.View entering={FadeInDown.duration(300)} style={{ gap: 12 }}>
@@ -227,7 +230,7 @@ function LoginForm() {
 
           {step === 'phone' && <LegalNotice />}
 
-          {!emailMode && (
+          {!emailMode && demoOn && demos.length > 0 && (
           <View style={[styles.demo, { borderTopColor: t.c.border }]}>
             <Text size={14} weight="semibold" color={t.c.textStrong}>
               Just looking around?
@@ -243,7 +246,7 @@ function LoginForm() {
           </View>
           )}
         </ScrollView>
-      </KeyboardAvoidingView>
+      </View>
     </View>
   );
 }

@@ -5,6 +5,7 @@ import { StyleSheet, View } from 'react-native';
 import { Card, EmptyBlock, KField, ListRow, SectionTitle, type IconName } from '@/components/kit';
 import { Text } from '@/components/ui/Text';
 import { toolRole, toolRule, type ToolId } from '@/data/access';
+import { featureOn, toolFeature } from '@/data/features';
 import { BUILT_IN_OCCASIONS, type OccasionDef } from '@/data/occasions';
 import { PERMISSION_LABELS } from '@/data/permissions';
 import { SERVICE_BY_ID } from '@/data/services';
@@ -49,8 +50,12 @@ export function useVisibleTools(tools: ToolDef[]): ToolDef[] {
   const exp = useExperience();
   const owner = useToolOwner();
   const entries = useDb((s) => s.toolEntries);
+  const flags = useDb((s) => s.featureFlags);
   const used = new Set(entries.filter((e) => e.ownerId === owner).map((e) => e.tool));
-  return visibleTools(exp, tools, used).map((t) => ({ ...t, title: toolTitle(exp, t) }));
+  // A tool the super admin switched off is hidden for everyone.
+  return visibleTools(exp, tools, used)
+    .filter((t) => featureOn(flags, toolFeature(t.id)))
+    .map((t) => ({ ...t, title: toolTitle(exp, t) }));
 }
 
 /** Services that would unlock a tool, for the "why can't I see this" message. */

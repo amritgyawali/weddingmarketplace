@@ -18,6 +18,9 @@ interface SessionState {
   lastAccountId: string | null;
   /** Remembers the role picked on the "Who are you?" screen. */
   selectedRole: UserRole | null;
+  /** The super admin who is viewing the app as another user ("Sign in as"), or null. */
+  impersonatorId: string | null;
+  setImpersonator: (id: string | null) => void;
   selectRole: (role: UserRole) => void;
   findAccount: (phone: string, role: UserRole) => Account | undefined;
   login: (accountId: string) => void;
@@ -60,8 +63,10 @@ export const useSession = create<SessionState>()(
       session: null,
       lastAccountId: null,
       selectedRole: null,
+      impersonatorId: null,
 
       selectRole: (selectedRole) => set({ selectedRole }),
+      setImpersonator: (impersonatorId) => set({ impersonatorId }),
 
       findAccount: (phone, role) =>
         get().accounts.find((a) => a.role === role && normalizePhone(a.phone) === normalizePhone(phone)),
@@ -93,7 +98,7 @@ export const useSession = create<SessionState>()(
       deleteAccount: (id) =>
         set((s) => ({ accounts: s.accounts.filter((a) => a.id !== id), session: s.session?.accountId === id ? null : s.session, lastAccountId: s.lastAccountId === id ? null : s.lastAccountId })),
 
-      logout: () => set({ session: null }),
+      logout: () => set({ session: null, impersonatorId: null }),
     }),
     {
       name: 'vivah-session',
@@ -104,7 +109,7 @@ export const useSession = create<SessionState>()(
       // v6: the finance (Nisha Rai) and Vendor Success (Prakash Thapa) demo staff.
       version: 6,
       storage: createJSONStorage(() => AsyncStorage),
-      partialize: (s) => ({ accounts: s.accounts, session: s.session, lastAccountId: s.lastAccountId, selectedRole: s.selectedRole }),
+      partialize: (s) => ({ accounts: s.accounts, session: s.session, lastAccountId: s.lastAccountId, selectedRole: s.selectedRole, impersonatorId: s.impersonatorId }),
       migrate: (persisted, version) => {
         const s = persisted as Partial<SessionState>;
         return (version < 6 && s.accounts ? { ...s, accounts: syncDemoAccounts(s.accounts) } : s) as SessionState;

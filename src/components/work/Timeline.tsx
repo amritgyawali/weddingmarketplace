@@ -1,6 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 
 import { ChoiceChips, KButton, KField } from '@/components/kit';
 import { Calendar } from '@/components/ui/Calendar';
@@ -14,6 +14,7 @@ import { useDb } from '@/store/useDb';
 import { useRoleTheme } from '@/theme/RoleTheme';
 import type { Project, TimelineEntry } from '@/types/platform';
 import { addDays, daysUntil, formatClock, formatMonthDay, today } from '@/utils/format';
+import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
 
 const KIND_ICON: Record<TimelineEntry['kind'], string> = {
   milestone: 'flag',

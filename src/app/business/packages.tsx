@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 
 import { Card, ChoiceChips, EmptyBlock, KButton, KField, StackHeader, StatusPill } from '@/components/kit';
 import { Sheet } from '@/components/ui/Sheet';
@@ -15,6 +15,7 @@ import { useRoleTheme } from '@/theme/RoleTheme';
 import type { ProviderPackage } from '@/types/platform';
 import { confirm } from '@/utils/confirm';
 import { formatMoney, uid } from '@/utils/format';
+import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
 
 const lines = (s: string) => s.split('\n').map((x) => x.trim()).filter(Boolean);
 

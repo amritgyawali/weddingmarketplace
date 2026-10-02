@@ -9,7 +9,12 @@ import { SectionHeader } from '@/components/ui/SectionHeader';
 import { Text } from '@/components/ui/Text';
 import { colors, GUTTER } from '@/constants/theme';
 import { CHECKLIST, CHECKLIST_TOTAL } from '@/data/checklist';
+import { useExperience } from '@/hooks/useExperience';
+import { useCustomerWorkspace } from '@/hooks/useWorkspace';
 import { useAppStore } from '@/store/useAppStore';
+import { useDb } from '@/store/useDb';
+import { useAccount } from '@/store/useSession';
+import { formatShortDate } from '@/utils/format';
 
 /** Thin progress ring. Defaults to crimson on a light track; pass `light` over dark photos. */
 export function ProgressRing({ percent, size = 58, stroke = 3, light }: { percent: number; size?: number; stroke?: number; light?: boolean }) {
@@ -40,8 +45,82 @@ export function ProgressRing({ percent, size = 58, stroke = 3, light }: { percen
   );
 }
 
-/** Checklist progress plus the next two tasks, tickable in place. */
+/**
+ * The next tasks of a celebration that isn't a wedding (a pasni, a birthday),
+ * from its own checklist on the plan, tickable in place.
+ */
+function CelebrationTasks() {
+  const account = useAccount();
+  const exp = useExperience();
+  const { project } = useCustomerWorkspace(account.id);
+  const setTaskStatus = useDb((s) => s.setTaskStatus);
+  if (!project) return null;
+  const tasks = project.tasks.filter((t) => t.visibility !== 'internal');
+  const done = tasks.filter((t) => t.status === 'COMPLETED').length;
+  const share = tasks.length ? done / tasks.length : 0;
+  const upcoming = tasks
+    .filter((t) => t.status !== 'COMPLETED')
+    .sort((a, b) => a.due.localeCompare(b.due))
+    .slice(0, 3);
+
+  return (
+    <View style={styles.section}>
+      <SectionHeader title={`${exp.vocab.planTitle}: to do`} actionLabel="See all" onAction={() => router.push('/my-wedding?tab=tasks')} />
+      <View style={styles.card}>
+        <View style={styles.summary}>
+          <Text size={14} color={colors.textBody}>
+            {done} of {tasks.length} tasks done
+          </Text>
+          <Text size={13} color={colors.textMuted}>
+            {Math.round(share * 100)}%
+          </Text>
+        </View>
+        <View style={styles.track}>
+          <View style={[styles.fill, { width: `${Math.round(share * 100)}%` }]} />
+        </View>
+        {upcoming.length === 0 ? (
+          <Text size={15} color={colors.textBody} style={{ paddingVertical: 10 }}>
+            Every task is ticked off.
+          </Text>
+        ) : (
+          upcoming.map((task, i) => (
+            <Animated.View key={task.id} entering={FadeIn} layout={LinearTransition}>
+              <Pressable
+                onPress={() => {
+                  triggerHaptic('success');
+                  setTaskStatus(project.id, task.id, 'COMPLETED');
+                }}
+                accessibilityRole="checkbox"
+                accessibilityState={{ checked: false }}
+                accessibilityLabel={task.title}
+                style={({ pressed }) => [styles.task, i > 0 && styles.taskBorder, pressed && { opacity: 0.6 }]}>
+                <Ionicons name="square-outline" size={20} color={colors.textMuted} />
+                <View style={{ flex: 1 }}>
+                  <Text size={15} color={colors.text} numberOfLines={2}>
+                    {task.title}
+                  </Text>
+                  <Text size={12} color={colors.textMuted}>
+                    Due {formatShortDate(task.due)}
+                  </Text>
+                </View>
+              </Pressable>
+            </Animated.View>
+          ))
+        )}
+      </View>
+    </View>
+  );
+}
+
+/** Checklist progress plus the next tasks, tickable in place. Weddings use the wedding checklist; other celebrations their own. */
 export function ChecklistCard() {
+  const exp = useExperience();
+  const occasion = exp.occasion?.id ?? 'wedding';
+  if (occasion !== 'wedding' && occasion !== 'engagement') return <CelebrationTasks />;
+  return <WeddingChecklist />;
+}
+
+function WeddingChecklist() {
   const completed = useAppStore((s) => s.completedTasks);
   const toggleTask = useAppStore((s) => s.toggleTask);
   const done = completed.length;
@@ -81,9 +160,9 @@ export function ChecklistCard() {
                 accessibilityRole="checkbox"
                 accessibilityState={{ checked: false }}
                 accessibilityLabel={task.title}
-                style={[styles.task, i > 0 && styles.taskBorder]}>
+                style={({ pressed }) => [styles.task, i > 0 && styles.taskBorder, pressed && { opacity: 0.6 }]}>
                 <Ionicons name="square-outline" size={20} color={colors.textMuted} />
-                <Text size={15} color={colors.text} style={{ flex: 1 }} numberOfLines={1}>
+                <Text size={15} color={colors.text} style={{ flex: 1 }} numberOfLines={2}>
                   {task.title}
                 </Text>
               </Pressable>

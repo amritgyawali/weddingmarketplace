@@ -1,7 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { Linking, Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { Linking, Pressable, StyleSheet, View } from 'react-native';
 
 import { Avatar, Card, ChoiceChips, KButton, KField, ProgressBar, StatusPill } from '@/components/kit';
 import { triggerHaptic } from '@/components/ui/PressableScale';
@@ -16,6 +16,7 @@ import { useRoleTheme } from '@/theme/RoleTheme';
 import type { Assignment, CrewRequirement, Deliverable, Project, ServiceBooking } from '@/types/platform';
 import { confirm } from '@/utils/confirm';
 import { daysUntil, formatClock, formatMoney, formatShortDate, formatTime, relativeDay } from '@/utils/format';
+import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
 
 export type WorkMode = 'customer' | 'vendor' | 'platform' | 'freelancer';
 

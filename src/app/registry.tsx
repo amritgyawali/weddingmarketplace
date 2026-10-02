@@ -2,7 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 
 import { Card, ChoiceChips, EmptyBlock, Fab, KButton, KField } from '@/components/kit';
 import { REGISTRY_KINDS, RegistryCard, registryRaised } from '@/components/planner/RegistryCard';
@@ -17,6 +17,7 @@ import type { Project, RegistryItem } from '@/types/platform';
 import { confirm } from '@/utils/confirm';
 import { formatMoney, formatShortDate } from '@/utils/format';
 import { shareMessage, sitePath, webUrl } from '@/utils/links';
+import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
 
 const IMAGES: PhotoKey[] = ['venueDestinationBeach', 'venueResortSunset', 'venueCliffside', 'expertDesk', 'venueLawn', 'ideaReceptionToast', 'decorMandapFloral'];
 

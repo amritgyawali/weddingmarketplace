@@ -3,7 +3,7 @@ import * as Clipboard from 'expo-clipboard';
 import { Image } from 'expo-image';
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 import QRCode from 'react-native-qrcode-svg';
 
 import { Card, ChoiceChips, KButton, KField, SectionTitle } from '@/components/kit';
@@ -20,6 +20,7 @@ import { useRoleTheme } from '@/theme/RoleTheme';
 import type { Project, WeddingWebsite } from '@/types/platform';
 import { addDays, formatLongDate, uid } from '@/utils/format';
 import { shareMessage, sitePath, webUrl } from '@/utils/links';
+import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
 
 const TEMPLATES: { id: WeddingWebsite['template']; label: string; cover: PhotoKey; accent: string }[] = [
   { id: 'himalayan', label: 'Himalayan', cover: 'venueCliffside', accent: '#1F4E79' },

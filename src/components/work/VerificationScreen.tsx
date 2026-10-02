@@ -1,6 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import * as DocumentPicker from 'expo-document-picker';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 import { privateFilesReady, uploadDocument } from '@/backend/files';
 import { Card, KButton, SectionTitle, StackHeader, StatusPill } from '@/components/kit';
@@ -10,6 +10,7 @@ import { useDb } from '@/store/useDb';
 import { useAccount } from '@/store/useSession';
 import { useRoleTheme } from '@/theme/RoleTheme';
 import { formatShortDate } from '@/utils/format';
+import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
 
 const DOCS = ['PAN/VAT certificate', 'Company registration (OCR)', 'Citizenship / passport', 'Bank cheque / statement', 'Portfolio links'];
 const STEPS = ['UNVERIFIED', 'DOCUMENT_SUBMITTED', 'UNDER_REVIEW', 'VERIFIED'];

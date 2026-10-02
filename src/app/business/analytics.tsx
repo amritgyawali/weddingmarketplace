@@ -1,4 +1,4 @@
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 import { BarChart, Card, KpiCard, ProgressBar, SectionTitle, StackHeader } from '@/components/kit';
 import { Text } from '@/components/ui/Text';
@@ -10,6 +10,7 @@ import { useAccount } from '@/store/useSession';
 import { useRoleTheme } from '@/theme/RoleTheme';
 import { formatMoneyCompact } from '@/utils/format';
 import { seeded } from '@/utils/random';
+import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
 
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
