@@ -107,7 +107,7 @@ export function buildSocialSeed(): { socialAccounts: SocialAccount[]; socialThre
       [{ direction: 'in', author: 'Sabina Lama', text: 'Is this setup available in Poush?', at: ago(140) }],
     ),
     thread(
-      { id: 'st_kabita', ownerId: VENUE, accountId: 'sa_venue_wa', network: 'whatsapp', kind: 'message', contactName: 'Kabita Tamang', contactHandle: '+977 9851012345', contactPhone: '9851012345', status: 'pending', labels: ['Follow up'], firstResponseMins: 20 },
+      { id: 'st_kabita', ownerId: VENUE, accountId: 'sa_venue_wa', network: 'whatsapp', kind: 'message', contactName: 'Kabita Tamang', contactHandle: '+977 9851012345', contactPhone: '9851012345', optedIn: true, status: 'pending', labels: ['Follow up'], firstResponseMins: 20 },
       [
         { direction: 'in', author: 'Kabita Tamang', text: 'Can we visit the hall on Saturday at 11 am?', at: at(-2, 16) },
         { direction: 'out', author: 'Rajesh Pradhan', text: 'Yes of course! See you on Saturday at 11 am at the main gate.', at: at(-2, 16, 20), status: 'read' },

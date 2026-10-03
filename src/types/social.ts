@@ -47,6 +47,8 @@ export interface SocialMedia {
   kind: 'image' | 'video';
   image?: PhotoKey;
   uri?: string;
+  /** Cloudinary public id (Supabase builds): the networks fetch the file from its public URL. */
+  publicId?: string;
   alt?: string;
 }
 
@@ -61,6 +63,8 @@ export interface SocialThread {
   contactHandle: string;
   /** WhatsApp number, or one the customer typed into a message. */
   contactPhone?: string;
+  /** WhatsApp: the customer agreed to receive broadcasts (said START, or the team recorded their consent). */
+  optedIn?: boolean;
   /** For comments: the post the comment is on. */
   postId?: string;
   postCaption?: string;

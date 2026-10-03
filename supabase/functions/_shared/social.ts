@@ -548,3 +548,73 @@ export function mediaUrls(media: { kind?: string; publicId?: string; uri?: strin
     })
     .filter((m): m is PublishMedia => !!m);
 }
+
+// ─── Insights ───────────────────────────────────────────────────────────────────
+
+/** A published post on one network whose numbers are read back. */
+export interface MetricTarget {
+  network: Network;
+  /** Facebook post id, Instagram media id, or TikTok publish id. */
+  externalId: string;
+  token: string;
+}
+
+/** Numbers a network reports for a post; missing ones are left as they were. */
+export interface Metrics {
+  reach?: number;
+  likes?: number;
+  comments?: number;
+  shares?: number;
+  saves?: number;
+}
+
+/** The parts of the insights answers read here. */
+interface MetricsJson {
+  shares?: { count?: number };
+  reactions?: { summary?: { total_count?: number } };
+  comments?: { summary?: { total_count?: number } };
+  insights?: { data?: { name?: string; values?: { value?: number }[] }[] };
+  data?: { name?: string; values?: { value?: number }[] }[] | { publicaly_available_post_id?: (string | number)[]; videos?: { view_count?: number; like_count?: number; comment_count?: number; share_count?: number }[] };
+  error?: { code?: number | string; message?: string };
+}
+
+const num = (v: unknown) => (typeof v === 'number' && Number.isFinite(v) ? v : undefined);
+
+/**
+ * Reads a post's numbers back from its network: Facebook post fields and
+ * insights, Instagram media insights, TikTok's video query (after finding the
+ * public post id from the publish id). Never throws; null when unavailable.
+ */
+export async function fetchMetrics(t: MetricTarget, http: Http, graphVersion = 'v21.0'): Promise<Metrics | null> {
+  const graph = graphBase(graphVersion);
+  const ask = async (req: HttpRequest): Promise<MetricsJson | null> => {
+    try {
+      const res = await http(req.url, { method: req.method, headers: req.headers, body: req.body });
+      const json = ((await res.json().catch(() => ({}))) ?? {}) as MetricsJson;
+      return refusedBy(res, json as NetJson) ? null : json;
+    } catch {
+      return null;
+    }
+  };
+  if (t.network === 'facebook') {
+    const j = await ask(get(`${graph}/${t.externalId}?fields=shares,reactions.summary(total_count).limit(0),comments.summary(total_count).limit(0),insights.metric(post_impressions_unique)`, t.token));
+    if (!j) return null;
+    return { reach: num(j.insights?.data?.[0]?.values?.[0]?.value), likes: num(j.reactions?.summary?.total_count), comments: num(j.comments?.summary?.total_count), shares: num(j.shares?.count) ?? 0 };
+  }
+  if (t.network === 'instagram') {
+    const j = await ask(get(`${graph}/${t.externalId}/insights?metric=reach,likes,comments,shares,saved`, t.token));
+    if (!j || !Array.isArray(j.data)) return null;
+    const v = (name: string) => num((j.data as { name?: string; values?: { value?: number }[] }[]).find((d) => d.name === name)?.values?.[0]?.value);
+    return { reach: v('reach'), likes: v('likes'), comments: v('comments'), shares: v('shares'), saves: v('saved') };
+  }
+  if (t.network === 'tiktok') {
+    const status = await ask(jsonPost(`${TIKTOK_API}/v2/post/publish/status/fetch/`, t.token, { publish_id: t.externalId }));
+    const id = status && !Array.isArray(status.data) ? status.data?.publicaly_available_post_id?.[0] : undefined;
+    if (!id) return null;
+    const q = await ask(jsonPost(`${TIKTOK_API}/v2/video/query/?fields=id,view_count,like_count,comment_count,share_count`, t.token, { filters: { video_ids: [String(id)] } }));
+    const video = q && !Array.isArray(q.data) ? q.data?.videos?.[0] : undefined;
+    if (!video) return null;
+    return { reach: num(video.view_count), likes: num(video.like_count), comments: num(video.comment_count), shares: num(video.share_count) };
+  }
+  return null;
+}
