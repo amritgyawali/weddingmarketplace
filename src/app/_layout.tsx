@@ -10,6 +10,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { getAccessToken, usesEmailSignIn } from '@/backend/auth';
 import { ImpersonationBar } from '@/components/ui/AppBanners';
 import { DialogHost } from '@/components/ui/Dialog';
+import { FeatureRouteGuard } from '@/components/ui/FeatureRouteGuard';
 import { ToastHost } from '@/components/ui/Toast';
 import { colors } from '@/constants/theme';
 import { useHydrated } from '@/hooks/useHydrated';
@@ -167,6 +168,7 @@ export default function RootLayout() {
           <Stack.Screen name="pay/esewa" options={{ animation: 'none' }} />
           <Stack.Screen name="+not-found" />
         </Stack>
+        <FeatureRouteGuard />
         <ImpersonationBar />
         <ToastHost />
         <DialogHost />

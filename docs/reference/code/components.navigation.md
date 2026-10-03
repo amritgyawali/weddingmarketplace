@@ -46,7 +46,7 @@ _No JSDoc yet._
 *component* · [src/components/navigation/RoleTabBar.tsx:41](../../../src/components/navigation/RoleTabBar.tsx#L41)
 
 ```ts
-RoleTabBar({ state, navigation, tabs, links = [] }: BottomTabBarProps & { tabs: RoleTab[]; links?: SidebarLink[] })
+RoleTabBar({ state, navigation, tabs, links: allLinks = [] }: BottomTabBarProps & { tabs: RoleTab[]; links?: SidebarLink[] })
 ```
 
 Shared tab bar for the vendor, freelancer and staff apps. On phones it is a

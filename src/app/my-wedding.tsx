@@ -28,6 +28,7 @@ import { colors } from '@/constants/theme';
 import { type PlannerModule, planCap } from '@/data/capabilities';
 import { SERVICES, findService, serviceName } from '@/data/services';
 import { useExperience } from '@/hooks/useExperience';
+import { useFeatures, useLinkOn } from '@/hooks/useFeatures';
 import { useLayout } from '@/hooks/useLayout';
 import { useCustomerWorkspace } from '@/hooks/useWorkspace';
 import { missingServices, nextBestAction } from '@/services/planner';
@@ -114,7 +115,8 @@ function CoordinatorCard({ project }: { project: Project }) {
 function Overview({ project, setTab, wide }: { project: Project; setTab: (t: Tab) => void; wide: boolean }) {
   const quotes = useDb((s) => s.quotes);
   const exp = useExperience();
-  const tools = TOOLS.filter((x) => !x.module || exp.caps.has(planCap(x.module))).map((x) => (x.module === 'website' && exp.occasion?.id !== 'wedding' ? { ...x, label: 'Event page' } : x));
+  const linkOn = useLinkOn();
+  const tools = TOOLS.filter((x) => (!x.module || exp.caps.has(planCap(x.module))) && linkOn(x.href)).map((x) => (x.module === 'website' && exp.occasion?.id !== 'wedding' ? { ...x, label: 'Event page' } : x));
   const status = CUSTOMER_STATUS[project.status];
   const action = nextBestAction(project, quotes);
   const risks = projectRisks(project).filter((r) => ['PAYMENT_OVERDUE', 'EVENT_WITHIN_48H', 'DELIVERABLE_OVERDUE'].includes(r.kind));
@@ -483,6 +485,7 @@ export default function MyWedding() {
   const params = useLocalSearchParams<{ tab?: Tab }>();
   const { project, projects, isCollaborator } = useCustomerWorkspace(account.id);
   const exp = useExperience();
+  const on = useFeatures();
   const [tab, setTab] = useState<Tab>(params.tab ?? 'overview');
   const [tabsY, setTabsY] = useState(0);
   const [collapsed, setCollapsed] = useState(false);
@@ -516,8 +519,8 @@ export default function MyWedding() {
           shared={isCollaborator}
           onBack={back}
           actions={[
-            ...(exp.caps.has('plan.website') ? [{ icon: 'globe-outline' as const, label: exp.occasion?.id === 'wedding' ? 'Wedding website' : 'Event page', onPress: () => router.push('/website') }] : []),
-            { icon: 'calendar-outline', label: 'Calendar', onPress: () => router.push('/calendar') },
+            ...(exp.caps.has('plan.website') && on('couple.website') ? [{ icon: 'globe-outline' as const, label: exp.occasion?.id === 'wedding' ? 'Wedding website' : 'Event page', onPress: () => router.push('/website') }] : []),
+            ...(on('couple.calendar') ? [{ icon: 'calendar-outline' as const, label: 'Calendar', onPress: () => router.push('/calendar') }] : []),
           ]}
         />
         <View style={[styles.pad, page, { gap: 14 }]}>
@@ -550,7 +553,7 @@ export default function MyWedding() {
                 {project.title}
               </Text>
             </View>
-            <IconButton icon="calendar-outline" accessibilityLabel="Calendar" onPress={() => router.push('/calendar')} />
+            {on('couple.calendar') && <IconButton icon="calendar-outline" accessibilityLabel="Calendar" onPress={() => router.push('/calendar')} />}
           </View>
           <View style={page}>
             <Segmented options={TABS} value={tab} onChange={changeTab} counts={counts} />

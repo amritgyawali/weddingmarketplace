@@ -12,6 +12,7 @@ Every exported symbol in `src/components/ui/`, file by file. The guide that expl
 - [`Chip.tsx`](#chiptsx) (2 exports)
 - [`Dialog.tsx`](#dialogtsx) (2 exports)
 - [`EmptyState.tsx`](#emptystatetsx) (2 exports)
+- [`FeatureRouteGuard.tsx`](#featurerouteguardtsx) (1 exports)
 - [`Field.tsx`](#fieldtsx) (2 exports)
 - [`GenieFab.tsx`](#geniefabtsx) (2 exports)
 - [`IconButton.tsx`](#iconbuttontsx) (3 exports)
@@ -210,6 +211,22 @@ ErrorState({ onRetry, message }: { onRetry?: () => void; message?: string })
 ```
 
 _No JSDoc yet._
+
+## FeatureRouteGuard.tsx
+
+Source: [src/components/ui/FeatureRouteGuard.tsx](../../../src/components/ui/FeatureRouteGuard.tsx)
+
+### `FeatureRouteGuard`
+
+*component* · [src/components/ui/FeatureRouteGuard.tsx:19](../../../src/components/ui/FeatureRouteGuard.tsx#L19)
+
+```ts
+FeatureRouteGuard()
+```
+
+Covers a screen whose feature a super admin switched off (or that is an
+extra not switched on yet), so old links, notifications and typed URLs
+can't open it. Menus already hide the links; this is the safety net.
 
 ## Field.tsx
 

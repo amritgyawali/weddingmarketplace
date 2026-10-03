@@ -9,7 +9,7 @@ import { LanguageSwitch } from '@/components/ui/LanguageSwitch';
 import { Text } from '@/components/ui/Text';
 import { colors, GUTTER } from '@/constants/theme';
 import { useExperience } from '@/hooks/useExperience';
-import { useFeatures } from '@/hooks/useFeatures';
+import { useFeatures, useLinkOn } from '@/hooks/useFeatures';
 import { useCustomerWorkspace } from '@/hooks/useWorkspace';
 import { logout } from '@/services/auth';
 import { selectUnreadCount, useAppStore } from '@/store/useAppStore';
@@ -42,9 +42,10 @@ export default function ProfileMenuScreen() {
   const awaitingQuotes = quotes.filter((q) => q.status === 'sent' || q.status === 'viewed').length;
   const unreadNotifications = useInbox(account).filter((n) => !n.read).length;
   const on = useFeatures();
+  const linkOn = useLinkOn();
 
   const icon = (name: IconName) => <Ionicons name={name} size={21} color={ICON} />;
-  const sections: { title: string; items: MenuItem[] }[] = [
+  const menu: { title: string; items: MenuItem[] }[] = [
     {
       title: wedding ? 'Your wedding' : `Your ${exp.vocab.noun}`,
       items: [
@@ -89,6 +90,8 @@ export default function ProfileMenuScreen() {
       ],
     },
   ];
+  // Rows for switched-off features (extras a super admin hasn't turned on) disappear.
+  const sections = menu.map((m) => ({ ...m, items: m.items.filter((i) => !i.href || linkOn(i.href)) })).filter((m) => m.items.length);
 
   const confirmSignOut = () =>
     confirm('Log out?', 'Your shortlist, checklist and wedding plan stay saved for when you sign back in.', 'Log out', logout);

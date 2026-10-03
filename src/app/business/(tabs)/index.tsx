@@ -12,6 +12,7 @@ import { toast } from '@/components/ui/Toast';
 import { crewFill } from '@/components/work/Bookings';
 import { serviceName } from '@/data/services';
 import { useExperience } from '@/hooks/useExperience';
+import { useLinkOn } from '@/hooks/useFeatures';
 import { useLayout } from '@/hooks/useLayout';
 import { useVendorWorkspace } from '@/hooks/useWorkspace';
 import { has } from '@/services/experience';
@@ -26,6 +27,7 @@ const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', '
 export default function VendorDashboard() {
   const t = useRoleTheme();
   const { columns } = useLayout();
+  const linkOn = useLinkOn();
   const account = useAccount();
   const { leads, quotes, bookings, requests, payables, reviews, listing } = useVendorWorkspace(account);
   const respond = useDb((s) => s.respondToBooking);
@@ -150,7 +152,7 @@ export default function VendorDashboard() {
             )}
             <QuickAction icon="calendar-outline" label="Availability" onPress={() => router.navigate('/business/calendar')} />
             <QuickAction icon="pricetags-outline" label="Packages" onPress={() => router.push('/business/packages')} />
-            <QuickAction icon="rocket-outline" label="Promote" onPress={() => router.push('/business/promotions')} />
+            {linkOn('/business/promotions') && <QuickAction icon="rocket-outline" label="Promote" onPress={() => router.push('/business/promotions')} />}
           </Card>
 
           <SocialHomeCard />

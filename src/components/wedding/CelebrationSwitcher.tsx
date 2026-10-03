@@ -5,6 +5,7 @@ import { Pressable, StyleSheet } from 'react-native';
 import { triggerHaptic } from '@/components/ui/PressableScale';
 import { Text } from '@/components/ui/Text';
 import { colors } from '@/constants/theme';
+import { useFeatures } from '@/hooks/useFeatures';
 import { useCustomerWorkspace } from '@/hooks/useWorkspace';
 import { occasionOf } from '@/services/experience';
 import { useAppStore } from '@/store/useAppStore';
@@ -24,6 +25,7 @@ export function CelebrationSwitcher() {
   const setActive = useAppStore((s) => s.setActiveProject);
   const { project, projects } = useCustomerWorkspace(account.id);
   const live = projects.filter((p) => p.status !== 'CANCELLED');
+  const canAdd = useFeatures()('couple.celebrate');
   return (
     <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.row}>
       {live.map((p) => {
@@ -48,12 +50,14 @@ export function CelebrationSwitcher() {
           </Pressable>
         );
       })}
-      <Pressable onPress={() => router.push('/celebrate')} accessibilityRole="button" style={[styles.chip, styles.add]}>
-        <Ionicons name="add" size={18} color={colors.primary} />
-        <Text size={13} weight="semibold" color={colors.primary}>
-          Plan another
-        </Text>
-      </Pressable>
+      {canAdd && (
+        <Pressable onPress={() => router.push('/celebrate')} accessibilityRole="button" style={[styles.chip, styles.add]}>
+          <Ionicons name="add" size={18} color={colors.primary} />
+          <Text size={13} weight="semibold" color={colors.primary}>
+            Plan another
+          </Text>
+        </Pressable>
+      )}
     </ScrollView>
   );
 }

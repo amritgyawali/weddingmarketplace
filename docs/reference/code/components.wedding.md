@@ -15,7 +15,7 @@ Source: [src/components/wedding/CelebrationSwitcher.tsx](../../../src/components
 
 ### `CelebrationSwitcher`
 
-*component* · [src/components/wedding/CelebrationSwitcher.tsx:21](../../../src/components/wedding/CelebrationSwitcher.tsx#L21)
+*component* · [src/components/wedding/CelebrationSwitcher.tsx:22](../../../src/components/wedding/CelebrationSwitcher.tsx#L22)
 
 ```ts
 CelebrationSwitcher()

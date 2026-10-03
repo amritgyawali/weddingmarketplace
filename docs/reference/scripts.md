@@ -23,6 +23,7 @@ npm scripts and the Node scripts behind them. All run locally with no network un
 | `npm run env:functions` | `node scripts/env-functions.mjs` |
 | `npm run test:telemetry` | `node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/test-telemetry.mjs` |
 | `npm run test:social` | `node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/test-social.mjs` |
+| `npm run test:features` | `node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/test-features.mjs` |
 | `npm run docs:generate` | `node scripts/docs/generate-reference.mjs` |
 | `npm run docs:check` | `node scripts/docs/generate-reference.mjs --check` |
 
@@ -250,6 +251,18 @@ rewrite the expected matrix in `scripts/persona-matrix.json`.
 Fails when a registry references a capability, occasion, permission or
 service that does not exist, when a service has no capabilities or trade,
 or when a persona fixture ends up with fewer than three tools.
+
+### scripts/test-features.mjs
+
+Source: [scripts/test-features.mjs](../../scripts/test-features.mjs)
+
+Checks the feature switches (src/data/features.ts): each app has exactly 20
+top features, every other fixed surface and tool is an extra that starts
+off, the defaults and super admin overrides resolve as expected, and every
+screen listed in FEATURE_ROUTES exists under src/app. Node 24+ strips the
+TypeScript.
+
+  npm run test:features
 
 ### scripts/test-functions.mjs
 

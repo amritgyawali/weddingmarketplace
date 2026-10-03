@@ -52,9 +52,10 @@ export function useVisibleTools(tools: ToolDef[]): ToolDef[] {
   const entries = useDb((s) => s.toolEntries);
   const flags = useDb((s) => s.featureFlags);
   const used = new Set(entries.filter((e) => e.ownerId === owner).map((e) => e.tool));
-  // A tool the super admin switched off is hidden for everyone.
+  // A tool the super admin switched off is hidden for everyone. An extra
+  // (off by default) stays visible to someone who already has records in it.
   return visibleTools(exp, tools, used)
-    .filter((t) => featureOn(flags, toolFeature(t.id)))
+    .filter((t) => featureOn(flags, toolFeature(t.id)) || (flags[toolFeature(t.id)] === undefined && used.has(t.id)))
     .map((t) => ({ ...t, title: toolTitle(exp, t) }));
 }
 
@@ -121,7 +122,15 @@ export function ToolHub({ role, tools, title, subtitle }: { role: UserRole; tool
 export function ToolRoute({ tools, visible, settingsHref }: { tools: ToolDef[]; visible?: ToolDef[]; settingsHref?: Href }) {
   const { id } = useLocalSearchParams<{ id: string }>();
   const catalogue = useDb((s) => s.occasions);
+  const flags = useDb((s) => s.featureFlags);
   const def = tools.find((x) => x.id === id);
+  if (def && !featureOn(flags, toolFeature(def.id)) && !visible?.some((x) => x.id === def.id)) {
+    return (
+      <ToolPage title={def.title}>
+        <EmptyBlock icon="eye-off-outline" title="This tool isn’t available right now" message="Vivah has switched it off for now. Anything you saved in it is kept." action="All tools" onAction={() => (router.canGoBack() ? router.back() : undefined)} />
+      </ToolPage>
+    );
+  }
   if (def && visible && !visible.some((x) => x.id === def.id) && toolRole(def.id) === 'platform') {
     const rule = toolRule(def.id);
     const needs = [...(rule.perms ?? []), ...(rule.permsAny ?? [])].map((p) => PERMISSION_LABELS[p].toLowerCase());

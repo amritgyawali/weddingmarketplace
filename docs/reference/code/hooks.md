@@ -10,7 +10,7 @@ Every exported symbol in `src/hooks/`, file by file. The guide that explains how
 - [`useChat.ts`](#usechatts) (1 exports)
 - [`useDebounce.ts`](#usedebouncets) (1 exports)
 - [`useExperience.ts`](#useexperiencets) (1 exports)
-- [`useFeatures.ts`](#usefeaturests) (1 exports)
+- [`useFeatures.ts`](#usefeaturests) (2 exports)
 - [`useHydrated.ts`](#usehydratedts) (1 exports)
 - [`useLayout.ts`](#uselayoutts) (1 exports)
 - [`useTelemetry.ts`](#usetelemetryts) (1 exports)
@@ -248,7 +248,17 @@ Source: [src/hooks/useFeatures.ts](../../../src/hooks/useFeatures.ts)
 useFeatures()
 ```
 
-`on('home.venues')`: is a feature switched on (super admin console)? Missing ids are on.
+`on('home.venues')`: is a feature switched on (super admin console)? Missing ids take their default.
+
+### `useLinkOn`
+
+*hook* · [src/hooks/useFeatures.ts:11](../../../src/hooks/useFeatures.ts#L11)
+
+```ts
+useLinkOn()
+```
+
+`linkOn('/seating')`: does this link lead to a screen that is switched on? Use it to drop menu rows and buttons.
 
 ## useHydrated.ts
 
