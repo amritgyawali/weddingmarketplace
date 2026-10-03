@@ -17,7 +17,7 @@ npm scripts and the Node scripts behind them. All run locally with no network un
 | `npm run check:personas` | `node scripts/check-personas.mjs` |
 | `npm run env:vercel` | `node scripts/env-vercel.mjs` |
 | `npm run db:check` | `node scripts/db/db-check.mjs` |
-| `npm run db:test` | `node scripts/db/core-loop.mjs && node scripts/db/accounts.mjs && node scripts/db/payments.mjs && node scripts/db/launch.mjs && node scripts/db/social.mjs` |
+| `npm run db:test` | `node scripts/db/core-loop.mjs && node scripts/db/accounts.mjs && node scripts/db/payments.mjs && node scripts/db/launch.mjs && node scripts/db/social.mjs && node scripts/db/bugs.mjs` |
 | `npm run test:parity` | `node scripts/db/parity.mjs` |
 | `npm run test:functions` | `node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/test-functions.mjs` |
 | `npm run env:functions` | `node scripts/env-functions.mjs` |
@@ -25,6 +25,7 @@ npm scripts and the Node scripts behind them. All run locally with no network un
 | `npm run test:social` | `node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/test-social.mjs` |
 | `npm run docs:generate` | `node scripts/docs/generate-reference.mjs` |
 | `npm run docs:check` | `node scripts/docs/generate-reference.mjs --check` |
+| `npm run bugs:inbox` | `node scripts/bug-inbox.cjs` |
 
 ## Script files
 
@@ -67,6 +68,18 @@ approval gate, the access-token hook, media registration, the private
 documents bucket, push tokens and preferences, and the scheduled jobs.
 
   npm run db:test   (runs this after core-loop.mjs)
+
+### scripts/db/bugs.mjs
+
+Source: [scripts/db/bugs.mjs](../../scripts/db/bugs.mjs)
+
+Bug report checks on a real Postgres with RLS on (PGlite, in-process):
+anyone can send a report (signed in or out), the screenshot is kept only
+when it is an image, the account details are dropped for signed-out
+senders, super admins are told, only super admins read, mark and delete
+reports, and the rate limit stops a flood.
+
+  npm run db:test   (runs this after social.mjs)
 
 ### scripts/db/core-loop.mjs
 

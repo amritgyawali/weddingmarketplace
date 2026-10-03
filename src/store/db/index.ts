@@ -24,12 +24,13 @@ import { plannerActions, type PlannerActions } from './planner';
 import { projectActions, type ProjectActions } from './projects';
 import { quoteActions, type QuoteActions } from './quotes';
 import { clearSocialTimers, socialActions, type SocialActions } from './social';
+import { supportActions, type SupportActions } from './support';
 import { toolkitActions, type ToolkitActions } from './toolkit';
 import { trustActions, type TrustActions } from './trust';
 import type { DbData } from './types';
 
 export type { DbData } from './types';
-export type Db = DbData & CoreActions & QuoteActions & ProjectActions & FinanceActions & GigActions & ChatActions & TrustActions & PlannerActions & ToolkitActions & PersonaActions & AdminActions & SocialActions;
+export type Db = DbData & CoreActions & QuoteActions & ProjectActions & FinanceActions & GigActions & ChatActions & TrustActions & PlannerActions & ToolkitActions & PersonaActions & AdminActions & SocialActions & SupportActions;
 
 const DATA_KEYS = Object.keys(buildSeedData()) as (keyof DbData)[];
 
@@ -108,12 +109,14 @@ export const useDb = create<Db>()(
       ...personaActions(set, get),
       ...adminActions(set, get),
       ...socialActions(set, get),
+      ...supportActions(set, get),
       resetDemo: () => {
         const denied = staffDenied('demo.reset', get);
         if (denied) return denied;
         clearReplyTimers();
         clearSocialTimers();
-        set(buildSeedData());
+        // Bug reports are real feedback, not demo data: they survive a reset.
+        set({ ...buildSeedData(), bugReports: get().bugReports });
         return null;
       },
     }),

@@ -47,7 +47,7 @@ _No JSDoc yet._
 
 ### `usesSupabase`
 
-*function* · [src/constants/env.ts:26](../../../src/constants/env.ts#L26)
+*function* · [src/constants/env.ts:30](../../../src/constants/env.ts#L30)
 
 ```ts
 usesSupabase()

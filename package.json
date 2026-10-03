@@ -25,6 +25,7 @@
     "expo-print": "~57.0.2",
     "expo-router": "~57.0.23",
     "expo-secure-store": "~57.0.4",
+    "expo-sensors": "~57.0.3",
     "expo-sharing": "~57.0.22",
     "expo-splash-screen": "~57.0.9",
     "expo-status-bar": "~57.0.1",
@@ -38,6 +39,7 @@
     "react-native-safe-area-context": "~5.7.0",
     "react-native-screens": "~4.26.0",
     "react-native-svg": "15.15.4",
+    "react-native-view-shot": "5.1.0",
     "react-native-web": "~0.21.0",
     "react-native-worklets": "0.10.1",
     "zustand": "^5.0.15"
@@ -59,14 +61,15 @@
     "check:personas": "node scripts/check-personas.mjs",
     "env:vercel": "node scripts/env-vercel.mjs",
     "db:check": "node scripts/db/db-check.mjs",
-    "db:test": "node scripts/db/core-loop.mjs && node scripts/db/accounts.mjs && node scripts/db/payments.mjs && node scripts/db/launch.mjs && node scripts/db/social.mjs",
+    "db:test": "node scripts/db/core-loop.mjs && node scripts/db/accounts.mjs && node scripts/db/payments.mjs && node scripts/db/launch.mjs && node scripts/db/social.mjs && node scripts/db/bugs.mjs",
     "test:parity": "node scripts/db/parity.mjs",
     "test:functions": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/test-functions.mjs",
     "env:functions": "node scripts/env-functions.mjs",
     "test:telemetry": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/test-telemetry.mjs",
     "test:social": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/test-social.mjs",
     "docs:generate": "node scripts/docs/generate-reference.mjs",
-    "docs:check": "node scripts/docs/generate-reference.mjs --check"
+    "docs:check": "node scripts/docs/generate-reference.mjs --check",
+    "bugs:inbox": "node scripts/bug-inbox.cjs"
   },
   "private": true
 }

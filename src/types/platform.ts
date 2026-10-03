@@ -1134,6 +1134,42 @@ export interface Announcement {
   createdBy: string;
 }
 
+// Bug reports (shake to report)
+export interface BugLogLine {
+  at: string;
+  level: 'error' | 'warn';
+  message: string;
+}
+
+/** What the report sheet sends: the description, the screenshot and where it happened. */
+export interface BugReport {
+  description: string;
+  /** JPEG or PNG as a data URI (on this device's own copy it can be a file:// address instead). */
+  screenshot?: string;
+  route: string;
+  params: Record<string, string>;
+  capturedAt: string;
+  /** Missing when the report was sent signed out. */
+  account?: { id: string; name: string; role: string; staffRole?: string };
+  device: { os: string; osVersion: string; width: number; height: number; scale: number; runtime: string; userAgent?: string };
+  app: { name: string; version: string; backend: string; language: string; calendar: string };
+  recentRoutes: { at: string; path: string }[];
+  logs: BugLogLine[];
+}
+
+export type BugReportStatus = 'new' | 'fixed' | 'dismissed';
+
+/** A bug report as the super admin console keeps it. */
+export interface BugReportRecord extends BugReport {
+  id: string;
+  receivedAt: string;
+  status: BugReportStatus;
+  /** Who marked it fixed or dismissed, and when. */
+  resolvedBy?: string;
+  resolvedAt?: string;
+  note?: string;
+}
+
 // Role toolkits (generic tool records, settings and broadcasts)
 export * from './toolkit';
 // Social hub (connected networks, unified inbox, publisher)
