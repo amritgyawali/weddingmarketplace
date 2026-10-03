@@ -200,8 +200,18 @@ const VERBS: [RegExp, string][] = [
   [/^(complete|resolve|release|pay|record|assign|start|run|check|decide|moderate|respond|join|contribute)/, 'done'],
 ];
 
+/** Where `setTaskStatus(projectId, taskId, status)` moved the task. */
+const TASK_STATUS_MESSAGES: Record<string, string> = {
+  TODO: 'Task moved back to To do',
+  IN_PROGRESS: 'Task moved to In progress',
+  WAITING: 'Task moved to Waiting',
+  COMPLETED: 'Task marked as completed',
+  CANCELLED: 'Task cancelled',
+};
+
 /** "addBudgetLine" → "Budget line added". */
-export function messageFor(action: string): string | null {
+export function messageFor(action: string, args: unknown[] = []): string | null {
+  if (action === 'setTaskStatus' && typeof args[2] === 'string' && TASK_STATUS_MESSAGES[args[2]]) return TASK_STATUS_MESSAGES[args[2]];
   if (MESSAGES[action]) return MESSAGES[action];
   const rule = VERBS.find(([re]) => re.test(action));
   if (!rule) return null;
@@ -218,7 +228,7 @@ export function messageFor(action: string): string | null {
 /** Ids look like `gst_mfq3k2_ab12cd`; an error is a sentence. */
 const isErrorText = (x: unknown): x is string => typeof x === 'string' && /\s/.test(x.trim()) && x.trim().length > 3;
 
-function report(action: string, result: unknown, startedAt: number) {
+function report(action: string, args: unknown[], result: unknown, startedAt: number) {
   if (!featureOn(useDb.getState().featureFlags, 'app.notifications')) return;
   // The screen showed its own message for this action: keep it.
   if (lastToastAt() >= startedAt) return;
@@ -228,7 +238,7 @@ function report(action: string, result: unknown, startedAt: number) {
     return;
   }
   if (result === false) return;
-  const message = messageFor(action);
+  const message = messageFor(action, args);
   if (message) toast(message);
 }
 
@@ -249,7 +259,7 @@ function wrapStore<S extends object>(store: { getState: () => S }) {
       } finally {
         actionDepth.current--;
       }
-      if (top) setTimeout(() => report(name, result, startedAt), 0);
+      if (top) setTimeout(() => report(name, args, result, startedAt), 0);
       return result;
     };
   }

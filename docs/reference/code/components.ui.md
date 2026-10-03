@@ -11,6 +11,7 @@ Every exported symbol in `src/components/ui/`, file by file. The guide that expl
 - [`Button.tsx`](#buttontsx) (2 exports)
 - [`Calendar.tsx`](#calendartsx) (4 exports)
 - [`Chip.tsx`](#chiptsx) (2 exports)
+- [`DatePopup.tsx`](#datepopuptsx) (1 exports)
 - [`Dialog.tsx`](#dialogtsx) (2 exports)
 - [`EmptyState.tsx`](#emptystatetsx) (2 exports)
 - [`FeatureRouteGuard.tsx`](#featurerouteguardtsx) (1 exports)
@@ -294,6 +295,22 @@ Chip({ label, onPress, selected, variant = 'filled', size = 'md', bold, leading,
 ```
 
 _No JSDoc yet._
+
+## DatePopup.tsx
+
+Source: [src/components/ui/DatePopup.tsx](../../../src/components/ui/DatePopup.tsx)
+
+### `DatePopup`
+
+*component* · [src/components/ui/DatePopup.tsx:16](../../../src/components/ui/DatePopup.tsx#L16)
+
+```ts
+DatePopup({ visible, title = 'Pick a date', value, onChange, onClose, minDate, }: { visible: boolean; title?: string; value: string | null; onChange: (iso: string) => void; onClose: () => void; minDate?: Date; })
+```
+
+A date picker that opens as a centred popup over the screen (or over a
+sheet), so the person never has to scroll down to find the calendar.
+Picking a day closes it.
 
 ## Dialog.tsx
 

@@ -1,20 +1,23 @@
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { Pressable, StyleSheet, View } from 'react-native';
-import Animated, { FadeIn, LinearTransition } from 'react-native-reanimated';
+import Animated, { FadeIn } from 'react-native-reanimated';
 import Svg, { Circle } from 'react-native-svg';
 
 import { triggerHaptic } from '@/components/ui/PressableScale';
 import { SectionHeader } from '@/components/ui/SectionHeader';
 import { Text } from '@/components/ui/Text';
 import { colors, GUTTER } from '@/constants/theme';
-import { CHECKLIST, CHECKLIST_TOTAL } from '@/data/checklist';
+import { CHECKLIST_TOTAL, nextChecklistItems, PHASE_LABEL } from '@/data/checklist';
 import { useExperience } from '@/hooks/useExperience';
 import { useCustomerWorkspace } from '@/hooks/useWorkspace';
 import { useAppStore } from '@/store/useAppStore';
 import { useDb } from '@/store/useDb';
 import { useAccount } from '@/store/useSession';
-import { formatShortDate } from '@/utils/format';
+import { daysUntil, formatShortDate } from '@/utils/format';
+
+/** How many open tasks the home card lists. */
+const SHOWN = 5;
 
 /** Thin progress ring. Defaults to crimson on a light track; pass `light` over dark photos. */
 export function ProgressRing({ percent, size = 58, stroke = 3, light }: { percent: number; size?: number; stroke?: number; light?: boolean }) {
@@ -61,7 +64,7 @@ function CelebrationTasks() {
   const upcoming = tasks
     .filter((t) => t.status !== 'COMPLETED')
     .sort((a, b) => a.due.localeCompare(b.due))
-    .slice(0, 3);
+    .slice(0, SHOWN);
 
   return (
     <View style={styles.section}>
@@ -84,7 +87,9 @@ function CelebrationTasks() {
           </Text>
         ) : (
           upcoming.map((task, i) => (
-            <Animated.View key={task.id} entering={FadeIn} layout={LinearTransition}>
+            // Fade in only: a Reanimated `layout` transition here left rows at stale positions
+            // on iOS, so they drew over the progress bar and each other.
+            <Animated.View key={task.id} entering={FadeIn.duration(200)}>
               <Pressable
                 onPress={() => {
                   triggerHaptic('success');
@@ -123,13 +128,14 @@ export function ChecklistCard() {
 function WeddingChecklist() {
   const completed = useAppStore((s) => s.completedTasks);
   const toggleTask = useAppStore((s) => s.toggleTask);
+  const weddingDate = useAppStore((s) => s.weddingDate);
   const done = completed.length;
   const share = done / CHECKLIST_TOTAL;
-  const upcoming = CHECKLIST.filter((t) => !completed.includes(t.id)).slice(0, 3);
+  const upcoming = nextChecklistItems(completed, weddingDate ? daysUntil(weddingDate) : null, SHOWN);
 
   return (
     <View style={styles.section}>
-      <SectionHeader title="Checklist" actionLabel="See all" onAction={() => router.push('/checklist')} />
+      <SectionHeader title="Checklist" actionLabel="See all" onAction={() => router.push('/checklist?tab=guide')} />
       <View style={styles.card}>
         <View style={styles.summary}>
           <Text size={14} color={colors.textBody}>
@@ -151,7 +157,9 @@ function WeddingChecklist() {
           </Text>
         ) : (
           upcoming.map((task, i) => (
-            <Animated.View key={task.id} entering={FadeIn} layout={LinearTransition}>
+            // Fade in only: a Reanimated `layout` transition here left rows at stale positions
+            // on iOS, so they drew over the progress bar and each other.
+            <Animated.View key={task.id} entering={FadeIn.duration(200)}>
               <Pressable
                 onPress={() => {
                   triggerHaptic('success');
@@ -162,9 +170,14 @@ function WeddingChecklist() {
                 accessibilityLabel={task.title}
                 style={({ pressed }) => [styles.task, i > 0 && styles.taskBorder, pressed && { opacity: 0.6 }]}>
                 <Ionicons name="square-outline" size={20} color={colors.textMuted} />
-                <Text size={15} color={colors.text} style={{ flex: 1 }} numberOfLines={2}>
-                  {task.title}
-                </Text>
+                <View style={{ flex: 1 }}>
+                  <Text size={15} color={colors.text} numberOfLines={2}>
+                    {task.title}
+                  </Text>
+                  <Text size={12} color={colors.textMuted}>
+                    {PHASE_LABEL[task.phase]}
+                  </Text>
+                </View>
               </Pressable>
             </Animated.View>
           ))

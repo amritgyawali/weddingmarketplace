@@ -1741,7 +1741,7 @@
     {
      "name": "ChecklistScreen",
      "kind": "component",
-     "line": 141,
+     "line": 150,
      "signature": "()",
      "doc": "Our wedding's shared task list (from the project) plus the general planning guide."
     }
@@ -4764,14 +4764,14 @@
     {
      "name": "ProgressRing",
      "kind": "component",
-     "line": 20,
+     "line": 23,
      "signature": "({ percent, size = 58, stroke = 3, light }: { percent: number; size?: number; stroke?: number; light?: boolean })",
      "doc": "Thin progress ring. Defaults to crimson on a light track; pass `light` over dark photos."
     },
     {
      "name": "ChecklistCard",
      "kind": "component",
-     "line": 116,
+     "line": 121,
      "signature": "()",
      "doc": "Checklist progress plus the next tasks, tickable in place. Weddings use the wedding checklist; other celebrations their own."
     }
@@ -7469,6 +7469,19 @@
    ]
   },
   {
+   "file": "src/components/ui/DatePopup.tsx",
+   "doc": "",
+   "exports": [
+    {
+     "name": "DatePopup",
+     "kind": "component",
+     "line": 16,
+     "signature": "({ visible, title = 'Pick a date', value, onChange, onClose, minDate, }: { visible: boolean; title?: string; value: string | null; onChange: (iso: string) => void; onClose: () => void; minDate?: Date; })",
+     "doc": "A date picker that opens as a centred popup over the screen (or over a\nsheet), so the person never has to scroll down to find the calendar.\nPicking a day closes it."
+    }
+   ]
+  },
+  {
    "file": "src/components/ui/Dialog.tsx",
    "doc": "",
    "exports": [
@@ -8086,7 +8099,7 @@
     {
      "name": "MyWeddingScreen",
      "kind": "component",
-     "line": 486,
+     "line": 487,
      "signature": "({ inTab }: { inTab?: boolean })",
      "doc": "The couple's single workspace for the whole wedding project. It is both the\n\"My wedding\" tab (`inTab`: no back button, the tab bar sits below) and the\n`/my-wedding` stack screen that deep links and notifications open."
     }
@@ -8437,9 +8450,9 @@
     {
      "name": "PaymentsPanel",
      "kind": "component",
-     "line": 303,
-     "signature": "({ project, mode }: { project: Project; mode: 'customer' | 'platform' | 'vendor' })",
-     "doc": "Customer payment milestones, receipts and refunds for a project."
+     "line": 304,
+     "signature": "({ project, mode, openMilestoneId }: { project: Project; mode: 'customer' | 'platform' | 'vendor'; openMilestoneId?: string })",
+     "doc": "`openMilestoneId` opens that milestone's payment sheet straight away (from \"Next up\" on My Wedding)."
     }
    ]
   },
@@ -8630,9 +8643,9 @@
     {
      "name": "TaskBoard",
      "kind": "component",
-     "line": 134,
-     "signature": "({ project, mode }: { project: Project; mode: Mode })",
-     "doc": "Project task board shared by couple, coordinator and providers."
+     "line": 218,
+     "signature": "({ project, mode, openTaskId }: { project: Project; mode: Mode; openTaskId?: string })",
+     "doc": "Project task board shared by couple, coordinator and providers. `openTaskId` opens that task's sheet straight away."
     }
    ]
   },
@@ -9148,6 +9161,27 @@
      "line": 89,
      "signature": "= CHECKLIST.length",
      "doc": ""
+    },
+    {
+     "name": "PHASE_LABEL",
+     "kind": "const",
+     "line": 92,
+     "signature": ": Record<ChecklistPhase, string>",
+     "doc": "Plain-words name of each phase, as couples say it (\"1–3 months before\")."
+    },
+    {
+     "name": "currentPhase",
+     "kind": "function",
+     "line": 116,
+     "signature": "(daysToWedding: number | null): ChecklistPhase",
+     "doc": "The phase a couple is in today; the first one when the date isn't set yet."
+    },
+    {
+     "name": "nextChecklistItems",
+     "kind": "function",
+     "line": 125,
+     "signature": "(completed: string[], daysToWedding: number | null, count: number): ChecklistTask[]",
+     "doc": "Open guide items in the order to do them: this phase first, then earlier\nones still open (catch-up), then what comes later."
     }
    ]
   },
@@ -12579,16 +12613,23 @@
      "doc": "Personalised checklist for the occasion; overdue templates are compressed into the remaining time."
     },
     {
+     "name": "suggestedTasks",
+     "kind": "function",
+     "line": 306,
+     "signature": "(project: Project): ProjectTask[]",
+     "doc": "Checklist tasks for the project's date and requested services that aren't on its list yet (the \"Suggest tasks\" sheet)."
+    },
+    {
      "name": "buildTimeline",
      "kind": "function",
-     "line": 309,
+     "line": 315,
      "signature": "(project: Project, opts: { internal?: boolean } = {}): TimelineEntry[]",
      "doc": "Customer-facing timeline built from live project data plus any manual\nentries (meetings, milestones) stored on the project."
     },
     {
      "name": "NextAction",
      "kind": "interface",
-     "line": 332,
+     "line": 338,
      "signature": "",
      "doc": "",
      "members": [
@@ -12615,83 +12656,95 @@
        "optional": false,
        "type": "string",
        "doc": ""
+      },
+      {
+       "name": "tab",
+       "optional": true,
+       "type": "'payments' | 'services' | 'tasks'",
+       "doc": "My Wedding tab the action lives on; that screen switches tab in place instead of opening `href`."
+      },
+      {
+       "name": "focus",
+       "optional": true,
+       "type": "string",
+       "doc": "The milestone or task to open on that tab."
       }
      ]
     },
     {
      "name": "nextBestAction",
      "kind": "function",
-     "line": 339,
+     "line": 349,
      "signature": "(project: Project, quotes: Quotation[]): NextAction",
      "doc": ""
     },
     {
      "name": "missingServices",
      "kind": "function",
-     "line": 354,
+     "line": 364,
      "signature": "(project: Project): string[]",
      "doc": "Services couples usually need for their functions but haven't requested."
     },
     {
      "name": "planningProgress",
      "kind": "function",
-     "line": 360,
+     "line": 370,
      "signature": "(project: Project)",
      "doc": ""
     },
     {
      "name": "savingTips",
      "kind": "function",
-     "line": 372,
+     "line": 382,
      "signature": "(project: Project): string[]",
      "doc": ""
     },
     {
      "name": "invitationText",
      "kind": "function",
-     "line": 384,
+     "line": 394,
      "signature": "(project: Project, tone: 'traditional' | 'modern' | 'nepali' = 'traditional'): string",
      "doc": ""
     },
     {
      "name": "enquiryText",
      "kind": "function",
-     "line": 395,
+     "line": 405,
      "signature": "(project: Project, serviceId: string): string",
      "doc": ""
     },
     {
      "name": "QUESTIONS_TO_ASK",
      "kind": "const",
-     "line": 402,
+     "line": 412,
      "signature": ": Record<string, string[]>",
      "doc": ""
     },
     {
      "name": "questionsToAsk",
      "kind": "function",
-     "line": 411,
+     "line": 421,
      "signature": "(serviceId: string)",
      "doc": ""
     },
     {
      "name": "negotiationPoints",
      "kind": "function",
-     "line": 414,
+     "line": 424,
      "signature": "(quote: Quotation, marketMedian?: number): string[]",
      "doc": ""
     },
     {
      "name": "summarizeReviews",
      "kind": "function",
-     "line": 425,
+     "line": 435,
      "signature": "(reviews: { rating: number; text: string }[]): { average: number; highlights: string[]; concerns: string[] }",
      "doc": ""
     },
     {
      "name": "guestBandLabel",
      "kind": "function",
-     "line": 442,
+     "line": 452,
      "signature": "(guests: number)",
      "doc": ""
     }
@@ -13950,14 +14003,14 @@
     {
      "name": "messageFor",
      "kind": "function",
-     "line": 204,
-     "signature": "(action: string): string | null",
+     "line": 213,
+     "signature": "(action: string, args: unknown[] = []): string | null",
      "doc": "\"addBudgetLine\" → \"Budget line added\"."
     },
     {
      "name": "installActionToasts",
      "kind": "function",
-     "line": 265,
+     "line": 275,
      "signature": "()",
      "doc": "Wraps the store actions once (root layout). Timers that call actions use `quietly()`."
     }
@@ -15302,8 +15355,8 @@
       {
        "name": "regenerateChecklist",
        "optional": false,
-       "type": "(projectId: string) => void",
-       "doc": ""
+       "type": "(projectId: string, titles?: string[]) => number",
+       "doc": "Adds the suggested tasks not yet on the list (only those titled in `titles` when given); returns how many were added."
       },
       {
        "name": "addTimelineEntry",
@@ -15340,21 +15393,21 @@
     {
      "name": "projectActions",
      "kind": "function",
-     "line": 172,
+     "line": 173,
      "signature": "(set: SetDb, get: GetDb): ProjectActions",
      "doc": ""
     },
     {
      "name": "describeMargin",
      "kind": "function",
-     "line": 857,
+     "line": 858,
      "signature": "(clientPay: number, margin = 0.2)",
      "doc": "Readable one-liner for a payable/assignment amount split (model D)."
     },
     {
      "name": "SYSTEM_ACTOR",
      "kind": "const",
-     "line": 862,
+     "line": 863,
      "signature": "= SYSTEM",
      "doc": ""
     }

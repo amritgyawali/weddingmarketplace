@@ -699,7 +699,7 @@ _No JSDoc yet._
 | `updateTask` | `(projectId: string, taskId: string, patch: Partial<ProjectTask>) => void` |  |
 | `setTaskStatus` | `(projectId: string, taskId: string, status: TaskStatus) => void` |  |
 | `removeTask` | `(projectId: string, taskId: string) => void` |  |
-| `regenerateChecklist` | `(projectId: string) => void` |  |
+| `regenerateChecklist` | `(projectId: string, titles?: string[]) => number` | Adds the suggested tasks not yet on the list (only those titled in `titles` when given); returns how many were added. |
 | `addTimelineEntry` | `(projectId: string, entry: Omit<TimelineEntry, 'id' \| 'done'> & { done?: boolean }) => void` |  |
 | `toggleTimelineEntry` | `(projectId: string, id: string) => void` |  |
 | `inviteCollaborator` | `(projectId: string, c: Pick<Collaborator, 'name' \| 'relation' \| 'permission'> & { phone?: string }) => Collaborator` |  |
@@ -708,7 +708,7 @@ _No JSDoc yet._
 
 ### `projectActions`
 
-*function* · [src/store/db/projects.ts:172](../../../src/store/db/projects.ts#L172)
+*function* · [src/store/db/projects.ts:173](../../../src/store/db/projects.ts#L173)
 
 ```ts
 projectActions(set: SetDb, get: GetDb): ProjectActions
@@ -718,7 +718,7 @@ _No JSDoc yet._
 
 ### `describeMargin`
 
-*function* · [src/store/db/projects.ts:857](../../../src/store/db/projects.ts#L857)
+*function* · [src/store/db/projects.ts:858](../../../src/store/db/projects.ts#L858)
 
 ```ts
 describeMargin(clientPay: number, margin = 0.2)
@@ -728,7 +728,7 @@ Readable one-liner for a payable/assignment amount split (model D).
 
 ### `SYSTEM_ACTOR`
 
-*const* · [src/store/db/projects.ts:862](../../../src/store/db/projects.ts#L862)
+*const* · [src/store/db/projects.ts:863](../../../src/store/db/projects.ts#L863)
 
 ```ts
 SYSTEM_ACTOR= SYSTEM

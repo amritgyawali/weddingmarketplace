@@ -30,17 +30,17 @@ off with the `app.notifications` feature.
 
 ### `messageFor`
 
-*function* · [src/store/actionToasts.ts:204](../../../src/store/actionToasts.ts#L204)
+*function* · [src/store/actionToasts.ts:213](../../../src/store/actionToasts.ts#L213)
 
 ```ts
-messageFor(action: string): string | null
+messageFor(action: string, args: unknown[] = []): string | null
 ```
 
 "addBudgetLine" → "Budget line added".
 
 ### `installActionToasts`
 
-*function* · [src/store/actionToasts.ts:265](../../../src/store/actionToasts.ts#L265)
+*function* · [src/store/actionToasts.ts:275](../../../src/store/actionToasts.ts#L275)
 
 ```ts
 installActionToasts()

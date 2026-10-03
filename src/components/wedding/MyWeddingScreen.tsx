@@ -112,7 +112,7 @@ function CoordinatorCard({ project }: { project: Project }) {
   );
 }
 
-function Overview({ project, setTab, wide }: { project: Project; setTab: (t: Tab) => void; wide: boolean }) {
+function Overview({ project, setTab, wide }: { project: Project; setTab: (t: Tab, focus?: string) => void; wide: boolean }) {
   const quotes = useDb((s) => s.quotes);
   const exp = useExperience();
   const linkOn = useLinkOn();
@@ -125,7 +125,8 @@ function Overview({ project, setTab, wide }: { project: Project; setTab: (t: Tab
 
   const main = (
     <>
-      <Pressable onPress={() => router.push(action.href as Href)} accessibilityRole="button" style={({ pressed }) => [styles.nextUp, pressed && { backgroundColor: colors.bgSoft }]}>
+      {/* Actions on this screen's own tabs open in place, on the item itself, instead of pushing another copy of My Wedding. */}
+      <Pressable onPress={() => (action.tab ? setTab(action.tab, action.focus) : router.push(action.href as Href))} accessibilityRole="button" style={({ pressed }) => [styles.nextUp, pressed && { backgroundColor: colors.bgSoft }]}>
         <View style={styles.nextIcon}>
           <Ionicons name={`${action.icon}-outline` as never} size={20} color={colors.primary} />
         </View>
@@ -197,7 +198,7 @@ function Overview({ project, setTab, wide }: { project: Project; setTab: (t: Tab
 
       {nextTask && (
         <Section title="On your list" action="All tasks" onAction={() => setTab('tasks')}>
-          <Pressable onPress={() => setTab('tasks')} accessibilityRole="button" style={({ pressed }) => [styles.panel, styles.row, pressed && { backgroundColor: colors.bgSoft }]}>
+          <Pressable onPress={() => setTab('tasks', nextTask.id)} accessibilityRole="button" style={({ pressed }) => [styles.panel, styles.row, pressed && { backgroundColor: colors.bgSoft }]}>
             <Ionicons name="ellipse-outline" size={20} color={colors.textSubtle} />
             <View style={{ flex: 1 }}>
               <Text size={15} weight="semibold" color={colors.heading} numberOfLines={2}>
@@ -487,11 +488,13 @@ export function MyWeddingScreen({ inTab }: { inTab?: boolean }) {
   const account = useAccount();
   const insets = useSafeAreaInsets();
   const { wide, contentWidth } = useLayout();
-  const params = useLocalSearchParams<{ tab?: Tab }>();
+  const params = useLocalSearchParams<{ tab?: Tab; focus?: string }>();
   const { project, projects, isCollaborator } = useCustomerWorkspace(account.id);
   const exp = useExperience();
   const on = useFeatures();
   const [tab, setTab] = useState<Tab>(params.tab ?? 'overview');
+  // The milestone or task to open when its tab mounts (from "Next up" or a deep link).
+  const [focus, setFocus] = useState<string | undefined>(params.focus);
   const [tabsY, setTabsY] = useState(0);
   const [collapsed, setCollapsed] = useState(false);
   const scrollRef = useRef<RNScrollView>(null);
@@ -512,9 +515,11 @@ export function MyWeddingScreen({ inTab }: { inTab?: boolean }) {
     const next = e.nativeEvent.contentOffset.y >= threshold;
     if (next !== collapsed) setCollapsed(next);
   };
-  const changeTab = (next: Tab) => {
+  const changeTab = (next: Tab, focusId?: string) => {
     setTab(next);
-    if (collapsed) requestAnimationFrame(() => scrollRef.current?.scrollTo({ y: threshold, animated: false }));
+    setFocus(focusId);
+    if (focusId) requestAnimationFrame(() => scrollRef.current?.scrollTo({ y: threshold, animated: true }));
+    else if (collapsed) requestAnimationFrame(() => scrollRef.current?.scrollTo({ y: threshold, animated: false }));
   };
 
   return (
@@ -544,8 +549,8 @@ export function MyWeddingScreen({ inTab }: { inTab?: boolean }) {
           {tab === 'services' && <Services project={project} />}
           {tab === 'timeline' && <TimelineView project={project} mode="customer" />}
           {tab === 'functions' && <EventsPanel project={project} mode="customer" />}
-          {tab === 'tasks' && <TaskBoard project={project} mode="customer" />}
-          {tab === 'payments' && <PaymentsPanel project={project} mode="customer" />}
+          {tab === 'tasks' && <TaskBoard project={project} mode="customer" openTaskId={focus} />}
+          {tab === 'payments' && <PaymentsPanel project={project} mode="customer" openMilestoneId={focus} />}
           {tab === 'files' && <FilesPanel project={project} mode="customer" />}
           {tab === 'team' && <Team project={project} />}
         </View>

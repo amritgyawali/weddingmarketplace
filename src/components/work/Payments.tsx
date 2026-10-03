@@ -300,13 +300,17 @@ function MilestoneRow({ m, mode, onPay }: { m: PaymentMilestone; mode: 'customer
 }
 
 /** Customer payment milestones, receipts and refunds for a project. */
-export function PaymentsPanel({ project, mode }: { project: Project; mode: 'customer' | 'platform' | 'vendor' }) {
+/** `openMilestoneId` opens that milestone's payment sheet straight away (from "Next up" on My Wedding). */
+export function PaymentsPanel({ project, mode, openMilestoneId }: { project: Project; mode: 'customer' | 'platform' | 'vendor'; openMilestoneId?: string }) {
   const t = useRoleTheme();
   const account = useAccount();
   const payMilestone = useDb((s) => s.payMilestone);
   const requestRefund = useDb((s) => s.requestRefund);
   const allPayments = useDb((s) => s.payments);
-  const [paying, setPaying] = useState<PaymentMilestone | null>(null);
+  const [paying, setPaying] = useState<PaymentMilestone | null>(() => {
+    const m = mode === 'vendor' ? undefined : project.milestones.find((x) => x.id === openMilestoneId);
+    return m && milestoneStatus(m) !== 'PAID' && milestoneStatus(m) !== 'WAIVED' ? m : null;
+  });
   const [refundFor, setRefundFor] = useState<string | null>(null);
   const [reason, setReason] = useState('');
   const payments = allPayments.filter((p) => p.projectId === project.id && !p.registryItemId).sort((a, b) => b.at.localeCompare(a.at));

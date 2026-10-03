@@ -13,7 +13,7 @@ Every exported symbol in `src/services/`, file by file. The guide that explains 
 - [`experience.ts`](#experiencets) (16 exports) · The persona resolver: identify the user, derive what they can do, and show only that. Pure and deterministic (no React, no store), like the…
 - [`exporters.ts`](#exportersts) (11 exports) · Files the app hands to other apps: calendar (.ics), spreadsheets (.csv) and PDFs (via expo-print). Works on iOS/Android (share sheet) and w…
 - [`matching.ts`](#matchingts) (16 exports) · Matching engine. Scores providers for a requirement and freelancers for a crew slot / gig. Weights mirror supabase/migrations/0003 so on-de…
-- [`planner.ts`](#plannerts) (23 exports) · Rule-based wedding planner ("AI" without paid AI): turns the requirement wizard into a project, allocates budgets, generates checklists and…
+- [`planner.ts`](#plannerts) (24 exports) · Rule-based wedding planner ("AI" without paid AI): turns the requirement wizard into a project, allocates budgets, generates checklists and…
 - [`pricing.ts`](#pricingts) (16 exports) · Marketplace economics: the four business models, payment schedules, milestone status and payables. Customer payments and provider/freelance…
 - [`quotes.ts`](#quotests) (10 exports)
 - [`risk.ts`](#riskts) (5 exports) · Risk detection for coordinators — the same rules as the `project_risks` view in supabase/migrations/0003, evaluated on-device.
@@ -894,9 +894,19 @@ generateTasks(mainDate: string, services: string[], customerName: string, coordi
 
 Personalised checklist for the occasion; overdue templates are compressed into the remaining time.
 
+### `suggestedTasks`
+
+*function* · [src/services/planner.ts:306](../../../src/services/planner.ts#L306)
+
+```ts
+suggestedTasks(project: Project): ProjectTask[]
+```
+
+Checklist tasks for the project's date and requested services that aren't on its list yet (the "Suggest tasks" sheet).
+
 ### `buildTimeline`
 
-*function* · [src/services/planner.ts:309](../../../src/services/planner.ts#L309)
+*function* · [src/services/planner.ts:315](../../../src/services/planner.ts#L315)
 
 ```ts
 buildTimeline(project: Project, opts: { internal?: boolean } = {}): TimelineEntry[]
@@ -907,7 +917,7 @@ entries (meetings, milestones) stored on the project.
 
 ### `NextAction`
 
-*interface* · [src/services/planner.ts:332](../../../src/services/planner.ts#L332)
+*interface* · [src/services/planner.ts:338](../../../src/services/planner.ts#L338)
 
 _No JSDoc yet._
 
@@ -917,10 +927,12 @@ _No JSDoc yet._
 | `body` | `string` |  |
 | `href` | `string` |  |
 | `icon` | `string` |  |
+| `tab?` | `'payments' \| 'services' \| 'tasks'` | My Wedding tab the action lives on; that screen switches tab in place instead of opening `href`. |
+| `focus?` | `string` | The milestone or task to open on that tab. |
 
 ### `nextBestAction`
 
-*function* · [src/services/planner.ts:339](../../../src/services/planner.ts#L339)
+*function* · [src/services/planner.ts:349](../../../src/services/planner.ts#L349)
 
 ```ts
 nextBestAction(project: Project, quotes: Quotation[]): NextAction
@@ -930,7 +942,7 @@ _No JSDoc yet._
 
 ### `missingServices`
 
-*function* · [src/services/planner.ts:354](../../../src/services/planner.ts#L354)
+*function* · [src/services/planner.ts:364](../../../src/services/planner.ts#L364)
 
 ```ts
 missingServices(project: Project): string[]
@@ -940,7 +952,7 @@ Services couples usually need for their functions but haven't requested.
 
 ### `planningProgress`
 
-*function* · [src/services/planner.ts:360](../../../src/services/planner.ts#L360)
+*function* · [src/services/planner.ts:370](../../../src/services/planner.ts#L370)
 
 ```ts
 planningProgress(project: Project)
@@ -950,7 +962,7 @@ _No JSDoc yet._
 
 ### `savingTips`
 
-*function* · [src/services/planner.ts:372](../../../src/services/planner.ts#L372)
+*function* · [src/services/planner.ts:382](../../../src/services/planner.ts#L382)
 
 ```ts
 savingTips(project: Project): string[]
@@ -960,7 +972,7 @@ _No JSDoc yet._
 
 ### `invitationText`
 
-*function* · [src/services/planner.ts:384](../../../src/services/planner.ts#L384)
+*function* · [src/services/planner.ts:394](../../../src/services/planner.ts#L394)
 
 ```ts
 invitationText(project: Project, tone: 'traditional' | 'modern' | 'nepali' = 'traditional'): string
@@ -970,7 +982,7 @@ _No JSDoc yet._
 
 ### `enquiryText`
 
-*function* · [src/services/planner.ts:395](../../../src/services/planner.ts#L395)
+*function* · [src/services/planner.ts:405](../../../src/services/planner.ts#L405)
 
 ```ts
 enquiryText(project: Project, serviceId: string): string
@@ -980,7 +992,7 @@ _No JSDoc yet._
 
 ### `QUESTIONS_TO_ASK`
 
-*const* · [src/services/planner.ts:402](../../../src/services/planner.ts#L402)
+*const* · [src/services/planner.ts:412](../../../src/services/planner.ts#L412)
 
 ```ts
 QUESTIONS_TO_ASK: Record<string, string[]>
@@ -990,7 +1002,7 @@ _No JSDoc yet._
 
 ### `questionsToAsk`
 
-*function* · [src/services/planner.ts:411](../../../src/services/planner.ts#L411)
+*function* · [src/services/planner.ts:421](../../../src/services/planner.ts#L421)
 
 ```ts
 questionsToAsk(serviceId: string)
@@ -1000,7 +1012,7 @@ _No JSDoc yet._
 
 ### `negotiationPoints`
 
-*function* · [src/services/planner.ts:414](../../../src/services/planner.ts#L414)
+*function* · [src/services/planner.ts:424](../../../src/services/planner.ts#L424)
 
 ```ts
 negotiationPoints(quote: Quotation, marketMedian?: number): string[]
@@ -1010,7 +1022,7 @@ _No JSDoc yet._
 
 ### `summarizeReviews`
 
-*function* · [src/services/planner.ts:425](../../../src/services/planner.ts#L425)
+*function* · [src/services/planner.ts:435](../../../src/services/planner.ts#L435)
 
 ```ts
 summarizeReviews(reviews: { rating: number; text: string }[]): { average: number; highlights: string[]; concerns: string[] }
@@ -1020,7 +1032,7 @@ _No JSDoc yet._
 
 ### `guestBandLabel`
 
-*function* · [src/services/planner.ts:442](../../../src/services/planner.ts#L442)
+*function* · [src/services/planner.ts:452](../../../src/services/planner.ts#L452)
 
 ```ts
 guestBandLabel(guests: number)
