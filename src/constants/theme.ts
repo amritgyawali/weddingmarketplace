@@ -147,7 +147,13 @@ export const radius = {
 /** Page gutter. */
 export const GUTTER = 16;
 
-const shadow = (
+const rgba = (hex: string, alpha: number) => {
+  const n = parseInt(hex.replace('#', ''), 16);
+  return `rgba(${(n >> 16) & 255}, ${(n >> 8) & 255}, ${n & 255}, ${alpha})`;
+};
+
+/** Drop shadow for something that floats: elevation on Android, `boxShadow` on the web (shadow* props are deprecated there), shadow* on iOS. */
+export const shadow = (
   elevation: number,
   opacity: number,
   radiusPx: number,
@@ -156,6 +162,7 @@ const shadow = (
 ): ViewStyle =>
   Platform.select<ViewStyle>({
     android: { elevation, shadowColor: color },
+    web: { boxShadow: `0px ${offsetY}px ${radiusPx}px ${rgba(color, opacity)}` },
     default: {
       shadowColor: color,
       shadowOpacity: opacity,

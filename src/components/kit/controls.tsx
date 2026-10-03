@@ -4,7 +4,7 @@ import { Pressable, StyleSheet, TextInput, View, type TextInputProps } from 'rea
 
 import { triggerHaptic } from '@/components/ui/PressableScale';
 import { Text } from '@/components/ui/Text';
-import { inputReset } from '@/constants/theme';
+import { inputReset, shadow } from '@/constants/theme';
 import { useT } from '@/i18n';
 import { useRoleTheme } from '@/theme/RoleTheme';
 import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
@@ -246,10 +246,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     gap: 8,
-    shadowColor: '#251B18',
-    shadowOpacity: 0.18,
-    shadowRadius: 8,
-    shadowOffset: { width: 0, height: 3 },
-    elevation: 4,
+    ...shadow(4, 0.18, 8, 3),
   },
 });
