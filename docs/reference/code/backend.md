@@ -14,7 +14,7 @@ Every exported symbol in `src/backend/`, file by file. The guide that explains h
 - [`mock.ts`](#mockts) (1 exports) · The demo backend: the on-device zustand store. Store actions stay the source of truth for the demo and Expo Go; this adapter only gives the…
 - [`payments.ts`](#paymentsts) (12 exports) · Online payments with Khalti and eSewa (master plan §7.5). The app never decides that money arrived: payment-initiate starts an attempt whos…
 - [`push.ts`](#pushts) (2 exports) · Push notifications (master plan §7.6). The device registers its Expo push token with rpc_register_push_token; the notify-fanout Edge Functi…
-- [`social.ts`](#socialts) (15 exports) · Social hub on Supabase builds. Connecting a network opens its own consent page through `social-oauth`; the tokens it returns are kept on th…
+- [`social.ts`](#socialts) (16 exports) · Social hub on Supabase builds. Connecting a network opens its own consent page through `social-oauth`; the tokens it returns are kept on th…
 - [`supabase.ts`](#supabasets) (3 exports) · The Supabase backend: each core-loop step is one RPC from supabase/migrations/0011_core_rpc.sql, called over PostgREST with plain fetch (no…
 - [`telemetry.ts`](#telemetryts) (9 exports) · Product analytics and error reports (master plan §14), without SDKs:
 - [`telemetryPayloads.ts`](#telemetrypayloadsts) (14 exports)
@@ -674,7 +674,7 @@ schedules it. Returns the server's post id.
 *function* · [src/backend/social.ts:95](../../../src/backend/social.ts#L95)
 
 ```ts
-triageSocialLive(threadId: string, patch: { status?: string; snoozedUntil?: string | null; starred?: boolean; labels?: string[]; read?: boolean })
+triageSocialLive(threadId: string, patch: { status?: string; snoozedUntil?: string | null; starred?: boolean; labels?: string[]; read?: boolean; assignee?: string | null })
 ```
 
 Inbox triage on the server: status (and snooze), star, labels, read.
@@ -699,9 +699,19 @@ leadSocialLive(threadId: string, input: { eventDate: string; guests?: number; fu
 
 Turns a server thread into a CRM lead (rpc_social_lead).
 
-### `disconnectSocialLive`
+### `optInSocialLive`
 
 *function* · [src/backend/social.ts:106](../../../src/backend/social.ts#L106)
+
+```ts
+optInSocialLive(threadId: string, on: boolean)
+```
+
+Records (or withdraws) a WhatsApp customer's consent to broadcasts.
+
+### `disconnectSocialLive`
+
+*function* · [src/backend/social.ts:109](../../../src/backend/social.ts#L109)
 
 ```ts
 disconnectSocialLive(accountId: string)
@@ -711,7 +721,7 @@ Disconnects a network on the server; its token is deleted.
 
 ### `saveSocialSettingsLive`
 
-*function* · [src/backend/social.ts:109](../../../src/backend/social.ts#L109)
+*function* · [src/backend/social.ts:112](../../../src/backend/social.ts#L112)
 
 ```ts
 saveSocialSettingsLive(settings: SocialSettings)
@@ -721,7 +731,7 @@ Saves the automation (owners and managers).
 
 ### `mapSocialInbox`
 
-*function* · [src/backend/social.ts:118](../../../src/backend/social.ts#L118)
+*function* · [src/backend/social.ts:121](../../../src/backend/social.ts#L121)
 
 ```ts
 mapSocialInbox(ownerId: string, d: { accounts?: Row[]; threads?: Row[]; messages?: Row[]; posts?: Row[]; settings?: Row | null })
@@ -731,7 +741,7 @@ The server's hub (rpc_social_inbox) in the app's shapes, owned by this device's 
 
 ### `syncSocialFromServer`
 
-*function* · [src/backend/social.ts:196](../../../src/backend/social.ts#L196)
+*function* · [src/backend/social.ts:201](../../../src/backend/social.ts#L201)
 
 ```ts
 syncSocialFromServer(ownerId: string): Promise<Result<void>>

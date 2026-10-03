@@ -14,7 +14,7 @@ A business connects its **Facebook page, Instagram profile, WhatsApp Business nu
 | Types | `src/types/social.ts` (re-exported by `types/platform.ts`) |
 | Demo data | `src/data/socialSeed.ts` |
 | Supabase client | `src/backend/social.ts` |
-| SQL | `supabase/migrations/0017_social_lead_source.sql`, `0018_social_hub.sql` |
+| SQL | `supabase/migrations/0017_social_lead_source.sql`, `0018_social_hub.sql`, `0019_social_live.sql` |
 | Edge Functions | `supabase/functions/social-oauth`, `social-webhook`, `social-send`, `social-publish`, logic in `_shared/social.ts` |
 | Nepali | `src/i18n/ne/social.ts` |
 | Tests | `npm run test:social` (rules and seed), `scripts/db/social.mjs` in `npm run db:test` (SQL as each role), the social section of `npm run test:functions` |
@@ -55,9 +55,16 @@ The **composer** writes one caption with optional per-network versions, adds pho
 - Scheduled posts: `job_social_due()` (pg_cron, every five minutes) calls `social-publish` with the shared `notify_webhook_secret` from Vault; `vivah_social_claim_due` claims due posts with `skip locked`, wakes snoozed threads and marks expired tokens.
 - Webhooks are only accepted when signed: Meta's `X-Hub-Signature-256` with the app secret, TikTok's `TikTok-Signature` (`t=…,s=…`, five-minute tolerance). The OAuth round trip carries an HMAC-signed state (user, network, return address, 15-minute expiry) and only returns to the app, Expo Go, the app's web host or localhost.
 
+## 5a. Live extras (0019)
+
+- **Assignment** is stored by name (`assignee_name`), because team members in the business app are names, not always sign-in profiles; `rpc_social_triage` takes `assignee`.
+- **WhatsApp broadcast consent.** WhatsApp only allows marketing messages to people who agreed. A customer who writes START, SUBSCRIBE or सुरु joins the list; STOP, UNSUBSCRIBE or बन्द leaves it at once (trigger `social_messages_consent`, the same words as `optInKeyword()`). A member can record consent given another way from the conversation ("Add to updates", `rpc_social_optin`, audited). The WhatsApp account's audience is the opted-in count; `social-publish` broadcasts only to them.
+- **Insights** are read back from the networks every six hours for posts published in the last 30 days (`job_social_metrics` → `social-publish { metrics: true }` → `fetchMetrics()`): Facebook post insights and reaction, comment and share counts; Instagram media insights; TikTok's video query after finding the public post from the publish id.
+- **Media.** The networks fetch files from public URLs, so in Supabase builds files picked from the device are uploaded to Cloudinary first (they also land in the portfolio), and portfolio items carry their Cloudinary id. Publishing refuses files that exist only on the device.
+
 ## 6. Changing it safely
 
-- Keep `replyWindow()` and `replyWindowState()` identical; both have tests.
+- Keep `replyWindow()` and `replyWindowState()` identical, and `optInKeyword()` and `social_optin_keyword()`; all have tests.
 - A new network: add it to `SocialNetwork`, `NETWORKS`, the SQL `check` lists, `socialColors`, `_shared/social.ts` (consent, webhook parsing, reply and publish), and the tests.
 - Never store or log a token on the device or in a non-secret table. Never let a client mark a post published or insert an outgoing message: those come from the Edge Functions after the network answers.
 - New UI text needs its line in `src/i18n/ne/social.ts`.

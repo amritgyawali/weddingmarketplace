@@ -29,7 +29,7 @@ off with the `app.notifications` feature.
 
 ### `messageFor`
 
-*function* · [src/store/actionToasts.ts:200](../../../src/store/actionToasts.ts#L200)
+*function* · [src/store/actionToasts.ts:201](../../../src/store/actionToasts.ts#L201)
 
 ```ts
 messageFor(action: string): string | null
@@ -39,7 +39,7 @@ messageFor(action: string): string | null
 
 ### `installActionToasts`
 
-*function* · [src/store/actionToasts.ts:261](../../../src/store/actionToasts.ts#L261)
+*function* · [src/store/actionToasts.ts:262](../../../src/store/actionToasts.ts#L262)
 
 ```ts
 installActionToasts()

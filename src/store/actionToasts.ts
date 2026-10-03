@@ -182,6 +182,7 @@ const MESSAGES: Record<string, string> = {
   duplicateSocialPost: 'Copied as a draft',
   deleteSocialPost: 'Post deleted',
   updateSocialSettings: 'Settings saved',
+  setSocialOptIn: 'WhatsApp updates saved',
 };
 
 /** Past-tense verbs for the fallback message: removeThing → "Thing removed". */

@@ -18,7 +18,7 @@ Every exported symbol in `src/services/`, file by file. The guide that explains 
 - [`quotes.ts`](#quotests) (10 exports)
 - [`risk.ts`](#riskts) (5 exports) · Risk detection for coordinators — the same rules as the `project_risks` view in supabase/migrations/0003, evaluated on-device.
 - [`segments.ts`](#segmentsts) (7 exports) · Segments for the operations console (master plan §4.4): every list can be cut by occasion × trade × city, so Vendor Success can open "decor…
-- [`social.ts`](#socialts) (27 exports) · Social hub rules (pure): checking a post against each network's limits, hashtag and best-time suggestions, the networks' reply windows, rea…
+- [`social.ts`](#socialts) (28 exports) · Social hub rules (pure): checking a post against each network's limits, hashtag and best-time suggestions, the networks' reply windows, rea…
 - [`toolkit.ts`](#toolkitts) (34 exports) · Pure calculators behind the role toolkits. No React, no store: every function takes plain values and returns plain values so it can move to…
 
 ## api.ts
@@ -1761,6 +1761,16 @@ postStats(posts: SocialPost[]): PostStats
 ```
 
 Totals across published posts, per network, and the best post by engagement.
+
+### `optInKeyword`
+
+*function* · [src/services/social.ts:483](../../../src/services/social.ts#L483)
+
+```ts
+optInKeyword(text: string): 'in' | 'out' | null
+```
+
+WhatsApp broadcast consent by keyword: "START"/"SUBSCRIBE" opts in, "STOP"/"UNSUBSCRIBE" opts out (also in Nepali). Same words as the SQL trigger in 0019.
 
 ## toolkit.ts
 

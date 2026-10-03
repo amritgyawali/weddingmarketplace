@@ -10,7 +10,7 @@ import { SearchBar } from '@/components/ui/SearchBar';
 import { Sheet } from '@/components/ui/Sheet';
 import { Text } from '@/components/ui/Text';
 import { toast, toastError } from '@/components/ui/Toast';
-import { leadSocialLive, noteSocialLive, sendSocialReplyLive, socialLive, syncSocialFromServer, triageSocialLive } from '@/backend/social';
+import { leadSocialLive, noteSocialLive, optInSocialLive, sendSocialReplyLive, socialLive, syncSocialFromServer, triageSocialLive } from '@/backend/social';
 import { inputReset } from '@/constants/theme';
 import { NETWORK_BY_ID, NETWORKS, SOCIAL_LABELS, WHATSAPP_TEMPLATES } from '@/data/social';
 import { useVendorWorkspace } from '@/hooks/useWorkspace';
@@ -20,6 +20,7 @@ import { useDb } from '@/store/useDb';
 import { useAccount } from '@/store/useSession';
 import { useRoleTheme } from '@/theme/RoleTheme';
 import type { Account, SocialNetwork, SocialThread } from '@/types/platform';
+import { confirm } from '@/utils/confirm';
 import { formatDateAlt, formatLongDate, formatMoney, formatTime, parseMoney, timeAgo, today } from '@/utils/format';
 
 import { socialAct } from './live';
@@ -137,9 +138,10 @@ export function SocialInbox({ onOpen, selectedId }: { onOpen: (id: string) => vo
                     {last?.direction === 'out' ? `${tr(last.auto ? 'Auto-reply' : 'You')}: ` : ''}
                     {last?.text ?? ''}
                   </Text>
-                  {(th.labels.length > 0 || th.leadId || th.assignee || th.snoozedUntil) && (
+                  {(th.labels.length > 0 || th.leadId || th.assignee || th.snoozedUntil || th.optedIn) && (
                     <View style={styles.tags}>
                       {th.leadId && <LabelTag label="Lead" />}
+                      {th.optedIn && <LabelTag label="Gets updates" />}
                       {th.labels.slice(0, 3).map((l) => (
                         <LabelTag key={l} label={l} />
                       ))}
@@ -188,6 +190,7 @@ export function SocialConversation({ threadId }: { threadId: string }) {
   const addNote = useDb((s) => s.addSocialNote);
   const setStatus = useDb((s) => s.setSocialThreadStatus);
   const star = useDb((s) => s.toggleSocialThreadStar);
+  const optIn = useDb((s) => s.setSocialOptIn);
   const [draft, setDraft] = useState('');
   const [mode, setMode] = useState<'reply' | 'note'>('reply');
   const [sheet, setSheet] = useState<SheetKind>(null);
@@ -228,6 +231,13 @@ export function SocialConversation({ threadId }: { threadId: string }) {
     { icon: 'alarm-outline', label: 'Snooze', onPress: () => setSheet('snooze') },
     { icon: 'pricetag-outline', label: 'Labels', onPress: () => setSheet('labels') },
     { icon: 'person-add-outline', label: thread.assignee ?? 'Assign', onPress: () => setSheet('assign') },
+    ...(thread.network === 'whatsapp' && thread.kind === 'message'
+      ? [
+          thread.optedIn
+            ? { icon: 'notifications' as IconName, label: 'Gets updates', onPress: () => confirm('Stop WhatsApp updates?', 'They will no longer get your broadcasts. They can write START to join again.', 'Stop updates', () => void socialAct(account.id, () => optIn(threadId, false), () => optInSocialLive(threadId, false))), on: true }
+            : { icon: 'notifications-outline' as IconName, label: 'Add to updates', onPress: () => confirm('Add to WhatsApp updates?', 'Only if this customer agreed to receive your offers on WhatsApp. Customers can also write START or STOP themselves.', 'They agreed', () => void socialAct(account.id, () => optIn(threadId, true), () => optInSocialLive(threadId, true))) },
+        ]
+      : []),
     lead ? { icon: 'flash', label: 'Open lead', onPress: () => router.push({ pathname: '/business/lead/[id]', params: { id: lead.id } }), on: true } : { icon: 'flash-outline', label: 'Create lead', onPress: () => setSheet('lead') },
   ];
 
@@ -452,7 +462,7 @@ function AssignSheet({ visible, onClose, thread }: { visible: boolean; onClose: 
           <Pressable
             key={name}
             onPress={() => {
-              assign(thread.id, name);
+              void socialAct(account.id, () => assign(thread.id, name), () => triageSocialLive(thread.id, { assignee: name }));
               onClose();
             }}
             accessibilityRole="button"
@@ -468,7 +478,7 @@ function AssignSheet({ visible, onClose, thread }: { visible: boolean; onClose: 
             label="Unassign"
             variant="ghost"
             onPress={() => {
-              assign(thread.id, undefined);
+              void socialAct(account.id, () => assign(thread.id, undefined), () => triageSocialLive(thread.id, { assignee: null }));
               onClose();
             }}
           />
