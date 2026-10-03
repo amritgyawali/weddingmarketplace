@@ -4,7 +4,11 @@
  * placeholders match any text (translated in turn). Generated from the app's
  * strings and reviewed by hand; add new lines in the same form.
  */
+import { SOCIAL_NE } from './social';
+
 export const NE: Record<string, string> = {
+  // The social hub (Business → Social media); entries below win where both have one.
+  ...SOCIAL_NE,
   "Add the bug inbox address first": "पहिले बग इनबक्सको ठेगाना थप्नुहोस्",
   "Add the bug inbox address in Settings → Help first": "पहिले सेटिङ → सहायतामा बग इनबक्सको ठेगाना थप्नुहोस्",
   "Attach a picture": "तस्बिर जोड्नुहोस्",

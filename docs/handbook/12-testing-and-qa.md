@@ -17,6 +17,7 @@ npm run db:test         # the core loop and P6–P8 features on Postgres, as eac
 npm run test:parity     # money in src/services equals money in SQL
 npm run test:functions  # when you touch supabase/functions
 npm run test:telemetry  # when you touch src/backend/telemetry*
+npm run test:social     # when you touch the social hub
 npm run docs:check      # docs/reference matches the code (run docs:generate if not); not in CI, the weekly pass catches drift
 npx expo-doctor         # no new failures
 npx expo start          # loads in Expo Go; press w for web
@@ -30,10 +31,11 @@ npx expo start          # loads in Expo Go; press w for web
 | `expo lint` | Hooks rules, imports, common bugs | Design rules |
 | `check:personas` | Registries are consistent; each persona fixture sees exactly the expected tools and staff routes (`scripts/persona-matrix.json`) | That the tools work |
 | `db:check` | Every migration applies on fresh Postgres; RLS on every table | Policies are right |
-| `db:test` | Core loop, sign-up, staff approval, media, private files, notifications, jobs, payments, account deletion, as each role with RLS on; each fixed SQL defect has a check | The app UI |
+| `db:test` | Core loop, sign-up, staff approval, media, private files, notifications, jobs, payments, account deletion, the social hub (tokens, webhooks, triage, posts, leads), as each role with RLS on; each fixed SQL defect has a check | The app UI |
 | `test:parity` | `src/services` money = SQL money on fixtures + generated cases | Store actions |
 | `test:functions` | Edge Function shared logic and handlers with fake Supabase/Upstash/Cloudinary/Expo/Resend | Real gateways |
 | `test:telemetry` | Payload shapes; no contact details leak | Delivery |
+| `test:social` | Social hub rules: each network's post limits, reply windows, reading BS/AD dates, guests, budget and phone from messages, auto-replies, away hours, best times, hashtags, and the demo seed | The networks' live APIs |
 | `docs:check` | The generated reference is current | Handbook prose is current (that is the weekly pass) |
 | `expo export -p web` (CI) | The web build compiles; `_headers`, `robots.txt`, `sitemap.xml` ship | Runtime errors |
 

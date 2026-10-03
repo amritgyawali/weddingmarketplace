@@ -1,6 +1,8 @@
 import { Tabs } from 'expo-router';
 
 import { RoleTabBar, type RoleTab, type SidebarLink } from '@/components/navigation/RoleTabBar';
+import { useSocialSummary } from '@/components/social/parts';
+import { useFeatures } from '@/hooks/useFeatures';
 import { toolHref, useVisibleTools } from '@/components/toolkit/hub';
 import { VENDOR_TOOLS } from '@/components/toolkit/vendor';
 import { VENDOR_LINK_RULES } from '@/data/access';
@@ -18,6 +20,8 @@ export default function BusinessTabs() {
   const account = useAccount();
   const { leads, requests, payables } = useVendorWorkspace(account);
   const unread = useUnreadMessageCount(account);
+  const on = useFeatures();
+  const social = useSocialSummary(account);
   const exp = useExperience();
   const tools = useVisibleTools(VENDOR_TOOLS);
   /** Trade tools get their own heading in the sidebar ("Catering: Menu, Tastings"). */
@@ -33,6 +37,7 @@ export default function BusinessTabs() {
   ];
   const links: SidebarLink[] = [
     { label: 'Messages', icon: 'chatbubbles-outline', href: '/business/inbox', badge: unread || undefined },
+    ...(on('vendor.social') ? [{ label: 'Social media', icon: 'share-social-outline', href: '/business/social', badge: social.unread || undefined }] : []),
     { label: 'Quotations', icon: 'document-text-outline', href: '/business/quotes' },
     { label: 'Hire crew (gigs)', icon: 'megaphone-outline', href: '/business/gigs' },
     { label: 'Packages & services', icon: 'pricetags-outline', href: '/business/packages' },

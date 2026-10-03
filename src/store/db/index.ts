@@ -23,12 +23,13 @@ import { personaActions, type PersonaActions, staffDenied } from './personas';
 import { plannerActions, type PlannerActions } from './planner';
 import { projectActions, type ProjectActions } from './projects';
 import { quoteActions, type QuoteActions } from './quotes';
+import { clearSocialTimers, socialActions, type SocialActions } from './social';
 import { toolkitActions, type ToolkitActions } from './toolkit';
 import { trustActions, type TrustActions } from './trust';
 import type { DbData } from './types';
 
 export type { DbData } from './types';
-export type Db = DbData & CoreActions & QuoteActions & ProjectActions & FinanceActions & GigActions & ChatActions & TrustActions & PlannerActions & ToolkitActions & PersonaActions & AdminActions;
+export type Db = DbData & CoreActions & QuoteActions & ProjectActions & FinanceActions & GigActions & ChatActions & TrustActions & PlannerActions & ToolkitActions & PersonaActions & AdminActions & SocialActions;
 
 const DATA_KEYS = Object.keys(buildSeedData()) as (keyof DbData)[];
 
@@ -78,6 +79,19 @@ function addSeedRecords(data: DbData): DbData {
   };
 }
 
+/** v6: the social hub collections, with the demo businesses' accounts, inbox and posts. Nothing existing is changed. */
+function addSocial(data: DbData): DbData {
+  const seed = buildSeedData();
+  return {
+    ...data,
+    socialAccounts: data.socialAccounts ?? seed.socialAccounts,
+    socialThreads: data.socialThreads ?? seed.socialThreads,
+    socialMessages: data.socialMessages ?? seed.socialMessages,
+    socialPosts: data.socialPosts ?? seed.socialPosts,
+    socialSettings: data.socialSettings ?? seed.socialSettings,
+  };
+}
+
 export const useDb = create<Db>()(
   persist(
     (set, get) => ({
@@ -93,10 +107,12 @@ export const useDb = create<Db>()(
       ...toolkitActions(set, get),
       ...personaActions(set, get),
       ...adminActions(set, get),
+      ...socialActions(set, get),
       resetDemo: () => {
         const denied = staffDenied('demo.reset', get);
         if (denied) return denied;
         clearReplyTimers();
+        clearSocialTimers();
         set(buildSeedData());
         return null;
       },
@@ -106,7 +122,8 @@ export const useDb = create<Db>()(
       // v3: Nepal orchestration model (projects → requirements → bookings → crew).
       // v4: adds the newborn demo project, the new demo tool records and the nwaran function (additive).
       // v5: vehicle services on the built-in occasions; feature flags, text overrides, announcements (additive).
-      version: 5,
+      // v6: the social hub (connected networks, unified inbox, posts), seeded for the demo businesses (additive).
+      version: 6,
       storage: lazyStorage<DbData>(),
       partialize: (s) => Object.fromEntries(DATA_KEYS.map((k) => [k, s[k]])) as unknown as DbData,
       migrate: (persisted, version) => {
@@ -114,6 +131,7 @@ export const useDb = create<Db>()(
         let data = persisted as DbData;
         if (version < 4) data = addSeedRecords(data);
         if (version < 5) data = addVehicles(data);
+        if (version < 6) data = addSocial(data);
         return data as Db;
       },
     },

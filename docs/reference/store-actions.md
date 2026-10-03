@@ -225,6 +225,35 @@ Source: [src/store/db/quotes.ts:17](../../src/store/db/quotes.ts#L17) · Version
 | `respondToQuote` | `(id: string, action: 'accept' \| 'decline' \| 'revision', note?: string) => void` | _No JSDoc yet._ |
 | `draftProjectQuote` | `(projectId: string) => Quotation \| null` | _No JSDoc yet._ |
 
+## SocialActions
+
+Source: [src/store/db/social.ts:41](../../src/store/db/social.ts#L41) · Social hub: a business connects Facebook, Instagram, WhatsApp and TikTok, answers every message and comment from one inbox, and publishes one post to every network. In production each action is a Sup…
+
+| Action | Signature | What it does |
+|---|---|---|
+| `connectSocialAccount` | `(input: { network: SocialNetwork; handle: string; name?: string }) => string \| null` | Connects a network for the signed-in business (in production: after the network's OAuth consent). Error text or null. |
+| `disconnectSocialAccount` | `(accountId: string) => string \| null` | _No JSDoc yet._ |
+| `reconnectSocialAccount` | `(accountId: string) => string \| null` | Renews an expired token (in production: the OAuth consent again). |
+| `receiveSocialMessage` | `(input: SocialInbound) => string \| null` | A message or comment arrives from a network (the webhook). Applies auto-replies and the away message. Returns the thread id. |
+| `syncSocialInbox` | `() => number` | Pulls anything new from the connected networks and wakes snoozed threads. Returns how many messages arrived. |
+| `sendSocialReply` | `(threadId: string, text: string, opts?: { media?: SocialMedia[]; template?: string }) => string \| null` | Replies in the thread (message or public comment reply). Outside WhatsApp's 24-hour window pass an approved template id. |
+| `addSocialNote` | `(threadId: string, text: string) => string \| null` | _No JSDoc yet._ |
+| `markSocialThreadRead` | `(threadId: string) => void` | _No JSDoc yet._ |
+| `setSocialThreadStatus` | `(threadId: string, status: SocialThreadStatus, snoozeHours?: number) => string \| null` | `pending` with `snoozeHours` hides the thread until then. |
+| `toggleSocialThreadStar` | `(threadId: string) => void` | _No JSDoc yet._ |
+| `setSocialThreadLabels` | `(threadId: string, labels: string[]) => void` | _No JSDoc yet._ |
+| `assignSocialThread` | `(threadId: string, assignee?: string) => void` | _No JSDoc yet._ |
+| `createLeadFromSocialThread` | `(threadId: string, input: SocialLeadInput) => { leadId?: string; error?: string }` | Turns a conversation into a CRM lead (source `social`) and links the two. Returns the lead id, or error text. |
+| `saveSocialPost` | `(input: Partial<SocialPost> & Pick<SocialPost, 'caption' \| 'networks' \| 'media'>) => { id?: string; error?: string }` | Creates or updates a draft. Returns the post id. |
+| `scheduleSocialPost` | `(postId: string, at: string) => string \| null` | _No JSDoc yet._ |
+| `publishSocialPost` | `(postId: string) => string \| null` | Sends the post to every chosen network now. Networks that refuse it are marked failed; the rest go out. |
+| `retrySocialPost` | `(postId: string, network: SocialNetwork) => string \| null` | _No JSDoc yet._ |
+| `duplicateSocialPost` | `(postId: string) => string \| null` | _No JSDoc yet._ |
+| `deleteSocialPost` | `(postId: string) => string \| null` | _No JSDoc yet._ |
+| `runDueSocialPosts` | `() => number` | Publishes scheduled posts whose time has come and wakes snoozed threads (pg_cron + social-publish in production). Returns how many posts started. |
+| `updateSocialSettings` | `(patch: Partial<SocialSettings>) => string \| null` | _No JSDoc yet._ |
+| `mirrorSocialData` | `(ownerId: string, data: { accounts: SocialAccount[]; threads: SocialThread[]; messages: SocialMessage[]; posts: SocialPost[]; settings?: SocialSettings }) => void` | Supabase builds: replaces one business's hub on this device with what the server holds (`syncSocialFromServer`). |
+
 ## ToolkitActions
 
 Source: [src/store/db/toolkit.ts:9](../../src/store/db/toolkit.ts#L9) · Role toolkits: generic tool records, per-owner tool settings and ops broadcasts.

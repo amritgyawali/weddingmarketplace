@@ -58,6 +58,7 @@ This handbook explains how Vivah works, why it is built the way it is, and the r
 | 18 | [Glossary](18-glossary.md) | Product, Nepali and technical terms |
 | 19 | [Troubleshooting](19-troubleshooting.md) | Known problems and their fixes |
 | 20 | [Decision log](20-decision-log.md) | Dated decisions and why they were made |
+| 21 | [Social hub](21-social-hub.md) | Facebook, Instagram, WhatsApp and TikTok: unified inbox, publishing, scheduling, automation |
 
 ## Conventions used in these guides
 

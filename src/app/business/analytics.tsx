@@ -41,6 +41,7 @@ export default function VendorAnalytics() {
     { label: 'Marketplace search', value: leads.filter((l) => l.source === 'marketplace').length },
     { label: 'Vivah coordinators', value: bookings.filter((b) => b.project.managedBy === 'platform').length },
     { label: 'Referrals', value: leads.filter((l) => l.source === 'referral').length },
+    { label: 'Social media', value: leads.filter((l) => l.source === 'social').length },
   ];
   const funnel = [
     { label: 'Search impressions', value: impressions },

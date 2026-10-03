@@ -8,7 +8,7 @@ backend, which runs on the device for the demo, and one Postgres/Supabase schema
 | User type | App | What it does |
 |---|---|---|
 | **Couple** (customer) | Marketplace + **My Wedding** | Covers the whole wedding: a "Plan my wedding" wizard (8 steps, multi-function Nepali ceremonies), versioned quotes, payments, guests & RSVP, seating, budget, website, invitations, registry, mood boards, compare, deals, contracts, calendar and checklist. Onboarding asks what is being celebrated first (wedding, engagement, anniversary, baby shower, newborn ceremony, bratabandha, birthday, corporate or something else); the questions, marketplace categories and tools follow the occasion, and one account can plan several celebrations. |
-| **Vendor** (venues & businesses) | Vivah for Business | Covers running a business on Vivah: lead CRM, a quote builder, and bookings with crew and deliverables. It also has an availability calendar, packages, portfolio, finance/payables, analytics, promotions, reviews, team, customers and verification. |
+| **Vendor** (venues & businesses) | Vivah for Business | Covers running a business on Vivah: lead CRM, a quote builder, and bookings with crew and deliverables. It also has an availability calendar, packages, portfolio, finance/payables, analytics, promotions, reviews, team, customers and verification. **Social media**: connect Facebook, Instagram, WhatsApp and TikTok, answer every message and comment from one inbox (turn a conversation into a lead in one tap), and publish or schedule one post to all of them, with best times, hashtags, insights and auto-replies. |
 | **Freelancer** (photographers, MUAs, crew) | Gig marketplace | Covers crew work: discovering gigs and invites, including emergency gigs. Crew can manage assignments (confirm, GPS check-in, check-out with proof), keep a calendar with weekly rules, and track earnings and payouts. They also maintain a profile with kit, rates and reliability. Sign-up asks the craft first, and the profile, rate model, equipment, tools and gig feed follow it. |
 | **Platform team** | Operations console (web-ready) | Covers running the platform: leads kanban, a 12-tab project console, a matching engine and quote builder, a control room and emergency replacement. It also covers approvals, finance (revenue, payables, refunds, disputes), users, providers, freelancers, analytics, the marketplace and the audit log. Each staff role sees only what its permissions allow (coordinator, support, Vendor Success, finance, admin), with its own Today focus and an occasion × trade × city filter on the lists. |
 
@@ -66,7 +66,7 @@ Sign in with any Nepali mobile number (`98XXXXXXXX`); the OTP is **1234**. Each 
 | Role | Demo account (phone) | Try |
 |---|---|---|
 | Couple | Aakriti Shrestha (9800000001) | My Wedding WP-1021: quote v1 → v2, payments, guests, seating, website `/w/aakriti-weds-sujan` |
-| Vendor | Rajesh Pradhan, Everest Grand Party Palace (9800000002) | Leads → quote → booking → crew & payables |
+| Vendor | Rajesh Pradhan, Everest Grand Party Palace (9800000002) | Leads → quote → booking → crew & payables; social media inbox and posts |
 | Vendor | Anil Gurung, Wedding Story Nepal (9800000005) | Photography studio with packages, portfolio, gigs, gallery delivery |
 | Vendor | Sunita Maharjan, Phoolbari Decor (9800000007) | Decor studio: themes, rentals, setup sheets and the setup checklist |
 | Freelancer | Raj Maharjan (9800000003) | Assignments, emergency gig in Pokhara, earnings |

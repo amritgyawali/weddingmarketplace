@@ -55,7 +55,7 @@ insert into user_roles (user_id, role) select id, 'SUPER_ADMIN' from auth.users 
 ## 3. Edge Functions
 
 ```bash
-npm run test:functions                                   # 59 checks, locally
+npm run test:functions                                   # 122 checks, locally
 npm run env:functions                                    # writes supabase/.env.functions.local
 npx supabase secrets set --env-file supabase/.env.functions.local
 npx supabase functions deploy send-otp
@@ -63,6 +63,7 @@ npx supabase functions deploy media-sign
 npx supabase functions deploy notify-fanout
 npx supabase functions deploy payment-initiate
 npx supabase functions deploy payment-verify            # no JWT check: the gateways call it (config.toml)
+npx supabase functions deploy social-oauth social-webhook social-send social-publish   # social hub (§6a)
 ```
 
 Also run the `do $$ … $$` block at the end of `0014_payments.sql` once pg_cron is on (it closes abandoned payment attempts hourly).
@@ -96,6 +97,17 @@ Push notifications need a development build (they don't work in Expo Go since SD
 - Going live: merchant accounts first (master plan §9), then `KHALTI_BASE_URL=https://khalti.com/api/v2`, your eSewa product code and secret with `ESEWA_BASE_URL=https://epay.esewa.com.np`, and `EXPO_PUBLIC_PAYMENT_MODE=live` (hides the test-account hint).
 
 Check (master plan P7 "done when"): pay a milestone with each gateway, then in the SQL editor `select status, receipt_no from payment_intents i join payments p on p.id = i.payment_id order by i.created_at desc limit 5;`. Opening the gateway's return link again (a duplicate callback) must not add a second payment.
+
+## 6a. Social hub: Facebook, Instagram, WhatsApp and TikTok
+
+The business app's **Social media** screen (`/business/social`) works in the demo with no keys. For real accounts:
+
+1. **Meta app** (developers.facebook.com, type Business): add Facebook Login for Business, Webhooks, Instagram and WhatsApp. Valid OAuth redirect URI: `https://<project>.supabase.co/functions/v1/social-oauth`. Webhooks callback: `https://<project>.supabase.co/functions/v1/social-webhook` with your `META_VERIFY_TOKEN`; subscribe **Page** (`messages`, `feed`), **Instagram** (`messages`, `comments`) and **WhatsApp Business Account** (`messages`). Ask for the permissions in `META_SCOPES` (`supabase/functions/_shared/social.ts`) in App Review; until then only app roles (admins, developers, testers) can connect.
+2. **WhatsApp:** create a marketing template with an image header and one body variable, get it approved, and put its name in `WHATSAPP_BROADCAST_TEMPLATE`. Replies after 24 hours use the utility templates `follow_up`, `quote_ready` and `visit_reminder` (`src/data/social.ts`); create those too, with the customer's first name as `{{1}}`.
+3. **TikTok app** (developers.tiktok.com): Login Kit and Content Posting API, redirect URI as above, webhook URL `…/social-webhook`. Verify the domain your media is served from (Cloudinary or your own) for `PULL_FROM_URL`. Posts stay private (`SELF_ONLY`) until TikTok audits the app. Comment replies use the TikTok API for Business.
+4. Paste the keys into `.env.local`, run `npm run env:functions`, set the secrets, deploy the four functions. The scheduled run uses the same Vault secrets as notifications (`functions_url`, `notify_webhook_secret`); run the `do $$ … $$` block at the end of `0018_social_hub.sql` once pg_cron is on.
+
+Check: connect a page from Business → Social media → Accounts, send it a Messenger message from another account (it appears in the inbox within seconds), reply, then publish a post with a photo to Facebook and Instagram. `select network, status, url, error from social_post_targets order by updated_at desc limit 5;` shows each network's result.
 
 ## 7. Check it works (master plan P6 "done when")
 

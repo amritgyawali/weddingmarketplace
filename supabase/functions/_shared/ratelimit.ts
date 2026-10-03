@@ -59,4 +59,7 @@ export const LIMITS = {
   uploadsPerUser: { limit: 60, windowSeconds: 3600 },
   paymentsPerUser: { limit: 20, windowSeconds: 3600 },
   paymentChecksPerIp: { limit: 120, windowSeconds: 600 },
+  socialConnectsPerUser: { limit: 10, windowSeconds: 3600 },
+  socialRepliesPerUser: { limit: 300, windowSeconds: 3600 },
+  socialPublishesPerUser: { limit: 30, windowSeconds: 3600 },
 } satisfies Record<string, Limit>;
