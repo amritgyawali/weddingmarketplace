@@ -54,7 +54,7 @@ Public pages need no sign-in: `/w/[slug]` (the couple's wedding website and regi
 
 | Role | Hub → tool route | Entry point | Registry |
 |---|---|---|---|
-| Couple | `/tools` → `/tool/[id]` | Profile menu → Planning tools | `components/toolkit/couple` |
+| Couple | `/tools` → `/tool/[id]` | My Wedding → More tools, or Profile menu → All planning tools | `components/toolkit/couple` |
 | Vendor | `/business/tools` → `/business/tool/[id]` | Business tab → Business tools | `components/toolkit/vendor` |
 | Freelancer | `/freelancer/tools` → `/freelancer/tool/[id]` | Profile tab → Freelancer tools | `components/toolkit/freelancer` |
 | Platform | `/platform/tools` → `/platform/tool/[id]` | More → Operations tools | `components/toolkit/platform` |
