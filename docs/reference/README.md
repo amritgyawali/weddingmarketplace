@@ -38,7 +38,7 @@ Generated from the source. For the *why*, read [the handbook](../handbook/README
 | `src/components/toolkit/platform/` | 3 | 21 | [components.toolkit.platform.md](code/components.toolkit.platform.md) |
 | `src/components/toolkit/vendor/` | 5 | 36 | [components.toolkit.vendor.md](code/components.toolkit.vendor.md) |
 | `src/components/tour/` | 1 | 3 | [components.tour.md](code/components.tour.md) |
-| `src/components/ui/` | 24 | 56 | [components.ui.md](code/components.ui.md) |
+| `src/components/ui/` | 24 | 62 | [components.ui.md](code/components.ui.md) |
 | `src/components/wedding/` | 3 | 12 | [components.wedding.md](code/components.wedding.md) |
 | `src/components/work/` | 26 | 52 | [components.work.md](code/components.work.md) |
 | `src/constants/` | 4 | 20 | [constants.md](code/constants.md) |

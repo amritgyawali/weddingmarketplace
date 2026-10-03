@@ -6,7 +6,7 @@ import { deleteMyAccount, exportMyData } from '@/backend/account';
 import { usesEmailSignIn } from '@/backend/auth';
 import { bugReportsAvailable, defaultBugInbox, devInboxOffered, pingBugInbox } from '@/backend/bugReport';
 import { Card, ChoiceChips, KButton, KField, ListRow, SectionTitle, StackHeader } from '@/components/kit';
-import { reportBug, useBugReporter } from '@/components/ui/BugReporter';
+import { bugButtonOn, reportBug, screenshotToReportWorks, shakeToReportWorks, useBugReporter } from '@/components/ui/BugReporter';
 import { Text } from '@/components/ui/Text';
 import { Toggle } from '@/components/ui/Toggle';
 import { toast, toastError } from '@/components/ui/Toast';
@@ -66,6 +66,12 @@ export function SettingsScreen() {
   const bugReports = bugReportsAvailable() && featureOn('app.bug_report');
   const shake = useBugReporter((s) => s.shake);
   const setShake = useBugReporter((s) => s.setShake);
+  const screenshots = useBugReporter((s) => s.screenshots);
+  const setScreenshots = useBugReporter((s) => s.setScreenshots);
+  const threeFingers = useBugReporter((s) => s.threeFingers);
+  const setThreeFingers = useBugReporter((s) => s.setThreeFingers);
+  const bugButton = useBugReporter((s) => s.button);
+  const setBugButton = useBugReporter((s) => s.setButton);
   const inbox = useBugReporter((s) => s.inbox);
   const setInbox = useBugReporter((s) => s.setInbox);
   const [inboxDraft, setInboxDraft] = useState(inbox);
@@ -204,8 +210,11 @@ export function SettingsScreen() {
           <>
             <SectionTitle title="Help" />
             <Card padded={false} style={{ overflow: 'hidden' }}>
-              <ListRow icon="bug-outline" title="Report a problem" subtitle="Or shake your phone on the screen that went wrong" onPress={() => void reportBug({ screenshot: false })} />
-              {row('Shake to report a bug', shake, setShake, 'Takes a screenshot of the screen you are on')}
+              <ListRow icon="bug-outline" title="Report a problem" subtitle="Or, on the screen that went wrong, take a screenshot or hold three fingers on it" onPress={() => void reportBug({ screenshot: false })} />
+              {screenshotToReportWorks() && row('Screenshot to report a bug', screenshots, setScreenshots, 'Taking a phone screenshot (side and volume buttons) opens a bug report with it')}
+              {row('Hold three fingers to report a bug', threeFingers, setThreeFingers, 'Hold three fingers on any screen for half a second')}
+              {row('Bug button', bugButtonOn(bugButton), setBugButton, 'A small button on every screen; drag it out of the way')}
+              {shakeToReportWorks() && row('Shake to report a bug', shake, setShake, 'Takes a screenshot of the screen you are on')}
               {devInboxOffered() && (
                 <View style={[styles.inbox, { borderTopColor: t.c.border }]}>
                   <KField
