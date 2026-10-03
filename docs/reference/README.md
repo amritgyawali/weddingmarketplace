@@ -18,7 +18,7 @@ Generated from the source. For the *why*, read [the handbook](../handbook/README
 
 | Folder | Files | Exports | Page |
 |---|---|---|---|
-| `src/backend/` | 14 | 106 | [backend.md](code/backend.md) |
+| `src/backend/` | 14 | 107 | [backend.md](code/backend.md) |
 | `src/components/` | 1 | 1 | [components.md](code/components.md) |
 | `src/components/admin/` | 2 | 10 | [components.admin.md](code/components.admin.md) |
 | `src/components/detail/` | 1 | 6 | [components.detail.md](code/components.detail.md) |
@@ -46,13 +46,13 @@ Generated from the source. For the *why*, read [the handbook](../handbook/README
 | `src/hooks/` | 12 | 39 | [hooks.md](code/hooks.md) |
 | `src/i18n/` | 2 | 14 | [i18n.md](code/i18n.md) |
 | `src/i18n/ne/` | 2 | 2 | [i18n.ne.md](code/i18n.ne.md) |
-| `src/services/` | 14 | 187 | [services.md](code/services.md) |
+| `src/services/` | 14 | 188 | [services.md](code/services.md) |
 | `src/store/` | 7 | 19 | [store.md](code/store.md) |
 | `src/store/db/` | 16 | 69 | [store.db.md](code/store.db.md) |
 | `src/theme/` | 3 | 10 | [theme.md](code/theme.md) |
 | `src/types/` | 5 | 154 | [types.md](code/types.md) |
 | `src/utils/` | 5 | 56 | [utils.md](code/utils.md) |
-| `supabase/functions/_shared/` | 8 | 107 | [functions._shared.md](code/functions._shared.md) |
+| `supabase/functions/_shared/` | 8 | 110 | [functions._shared.md](code/functions._shared.md) |
 | `supabase/functions/account-delete/` | 1 | 0 | [functions.account-delete.md](code/functions.account-delete.md) |
 | `supabase/functions/health/` | 1 | 0 | [functions.health.md](code/functions.health.md) |
 | `supabase/functions/media-sign/` | 1 | 0 | [functions.media-sign.md](code/functions.media-sign.md) |

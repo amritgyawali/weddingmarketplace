@@ -159,6 +159,29 @@ ok('the owner can', !refused(await as(U.owner, `select rpc_social_save_settings(
 await service(`select vivah_social_target_result($1, 'facebook', 'publishing', 'tt_pub_1') as s`, [saved[0]?.id]);
 ok('a network’s later answer (TikTok-style publish id) settles the target', (await service(`select vivah_social_publish_update('facebook', 'tt_pub_1', 'published', 'https://x/1') as s`))[0]?.s === 'published');
 
+// ─── 0020: assignment, WhatsApp consent, insights ─────────────────────────────
+const nirmala = (await one(`select id from social_threads where contact_external_id = '9779841556677'`)).id;
+ok('triage assigns a team member by name', !refused(await as(U.staff, `select rpc_social_triage($1, '{"assignee":"Hari Staff"}'::jsonb)`, [nirmala])) && (await one(`select assignee_name from social_threads where id = $1`, [nirmala])).assignee_name === 'Hari Staff');
+const waFollowers = async () => (await one(`select followers from social_accounts where network = 'whatsapp' and status <> 'disconnected'`)).followers;
+await service(`select vivah_social_ingest($1::jsonb)`, [JSON.stringify([{ type: 'message', network: 'whatsapp', account: 'phone-1', id: 'wamid.start', contact: '9779841556677', contactName: 'Nirmala Joshi', text: 'START' }])]);
+ok('a customer who writes START joins the broadcast list', (await service(`select vivah_social_broadcast_list($1) as l`, [org]))[0]?.l?.join() === '9779841556677');
+ok('and the WhatsApp audience counts them', (await waFollowers()) === 1);
+ok('the inbox shows who agreed and who handles it', (await as(U.staff, `select rpc_social_inbox() as d`))[0]?.d?.threads?.some((t) => t.id === nirmala && t.opted_in === true && t.assignee_name === 'Hari Staff'));
+await service(`select vivah_social_ingest($1::jsonb)`, [JSON.stringify([{ type: 'message', network: 'whatsapp', account: 'phone-1', id: 'wamid.stop', contact: '9779841556677', contactName: 'Nirmala Joshi', text: 'Stop.' }])]);
+ok('STOP takes them off at once', (await service(`select vivah_social_broadcast_list($1) as l`, [org]))[0]?.l?.length === 0 && (await waFollowers()) === 0);
+ok('a member records consent given in person', !refused(await as(U.staff, `select rpc_social_optin($1, true)`, [nirmala])) && (await waFollowers()) === 1);
+ok('consent is only for WhatsApp customers', refused(await as(U.staff, `select rpc_social_optin($1, true)`, [rohan.id])));
+ok('another business cannot record consent', refused(await as(U.other, `select rpc_social_optin($1, true)`, [nirmala])));
+ok('the app cannot edit the broadcast list directly', refused(await as(U.staff, `insert into social_contacts (org_id, external_id, opted_in_at) values ($1, '977000', now())`, [org])) || (await one(`select count(*)::int as n from social_contacts where external_id = '977000'`)).n === 0);
+
+await db.exec(`set session_replication_role = replica; update social_post_targets set published_at = now() - interval '2 days', updated_at = now() - interval '6 hours' where network = 'facebook' and external_id = 'fb_post_1'; set session_replication_role = origin;`);
+const metricTargets = (await service(`select vivah_social_metric_targets(10) as t`))[0]?.t ?? [];
+ok('insights: published posts whose numbers are old are read back, with the page token', metricTargets.length === 1 && metricTargets[0].externalId === 'fb_post_1' && metricTargets[0].token === 'tok-facebook', JSON.stringify(metricTargets));
+await service(`select vivah_social_record_metrics($1, 'facebook', 1200, 80, 9, 4, null)`, [postId]);
+const fbTarget = await one(`select reach, likes, comments, shares, saves from social_post_targets where post_id = $1 and network = 'facebook'`, [postId]);
+ok('insights: the numbers are stored and not read again for five hours', fbTarget.reach === 1200 && fbTarget.likes === 80 && fbTarget.saves === null && (await service(`select vivah_social_metric_targets(10) as t`))[0]?.t?.length === 0);
+ok('insights: only the service reads tokens for them', refused(await as(U.owner, `select vivah_social_metric_targets(10)`)));
+
 // ─── Disconnect ────────────────────────────────────────────────────────────────
 const waId = (await one(`select id from social_accounts where network = 'whatsapp'`)).id;
 ok('staff cannot disconnect', refused(await as(U.staff, `select rpc_social_disconnect($1)`, [waId])));

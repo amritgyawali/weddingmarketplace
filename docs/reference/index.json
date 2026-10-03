@@ -3962,7 +3962,7 @@
      "name": "triageSocialLive",
      "kind": "function",
      "line": 95,
-     "signature": "(threadId: string, patch: { status?: string; snoozedUntil?: string | null; starred?: boolean; labels?: string[]; read?: boolean })",
+     "signature": "(threadId: string, patch: { status?: string; snoozedUntil?: string | null; starred?: boolean; labels?: string[]; read?: boolean; assignee?: string | null })",
      "doc": "Inbox triage on the server: status (and snooze), star, labels, read."
     },
     {
@@ -3980,30 +3980,37 @@
      "doc": "Turns a server thread into a CRM lead (rpc_social_lead)."
     },
     {
-     "name": "disconnectSocialLive",
+     "name": "optInSocialLive",
      "kind": "function",
      "line": 106,
+     "signature": "(threadId: string, on: boolean)",
+     "doc": "Records (or withdraws) a WhatsApp customer's consent to broadcasts."
+    },
+    {
+     "name": "disconnectSocialLive",
+     "kind": "function",
+     "line": 109,
      "signature": "(accountId: string)",
      "doc": "Disconnects a network on the server; its token is deleted."
     },
     {
      "name": "saveSocialSettingsLive",
      "kind": "function",
-     "line": 109,
+     "line": 112,
      "signature": "(settings: SocialSettings)",
      "doc": "Saves the automation (owners and managers)."
     },
     {
      "name": "mapSocialInbox",
      "kind": "function",
-     "line": 118,
+     "line": 121,
      "signature": "(ownerId: string, d: { accounts?: Row[]; threads?: Row[]; messages?: Row[]; posts?: Row[]; settings?: Row | null })",
      "doc": "The server's hub (rpc_social_inbox) in the app's shapes, owned by this device's business account."
     },
     {
      "name": "syncSocialFromServer",
      "kind": "function",
-     "line": 196,
+     "line": 201,
      "signature": "(ownerId: string): Promise<Result<void>>",
      "doc": "Reads the hub from the server into the device's mirror (on opening the hub, on refresh and after each change)."
     }
@@ -5543,7 +5550,7 @@
     {
      "name": "SocialComposer",
      "kind": "component",
-     "line": 50,
+     "line": 51,
      "signature": "({ postId, at }: { postId?: string; at?: string })",
      "doc": "Write once, publish everywhere: caption with per-network versions, photos\nfrom the portfolio or the phone, hashtag and best-time suggestions, a check\nagainst every network's rules, a live preview, then publish now, schedule\nor keep as a draft."
     }
@@ -5582,28 +5589,28 @@
     {
      "name": "useReplyContext",
      "kind": "hook",
-     "line": 37,
+     "line": 38,
      "signature": "(account: Account, contact: string): ReplyContext",
      "doc": "Reply context for this business: name, city and its highest active package price."
     },
     {
      "name": "SocialInbox",
      "kind": "component",
-     "line": 44,
+     "line": 45,
      "signature": "({ onOpen, selectedId }: { onOpen: (id: string) => void; selectedId?: string })",
      "doc": "Every message and comment from the connected networks, with filters, search and a check for new messages."
     },
     {
      "name": "SocialConversation",
      "kind": "component",
-     "line": 178,
+     "line": 180,
      "signature": "({ threadId }: { threadId: string })",
      "doc": "One conversation: messages, reply window, suggested and saved replies, notes, labels, assignment, snooze and \"create lead\"."
     },
     {
      "name": "openThreadRoute",
      "kind": "function",
-     "line": 604,
+     "line": 614,
      "signature": "(id: string)",
      "doc": "Opens a thread: in the side pane on wide screens, as its own screen on phones."
     }
@@ -13265,6 +13272,13 @@
      "line": 451,
      "signature": "(posts: SocialPost[]): PostStats",
      "doc": "Totals across published posts, per network, and the best post by engagement."
+    },
+    {
+     "name": "optInKeyword",
+     "kind": "function",
+     "line": 483,
+     "signature": "(text: string): 'in' | 'out' | null",
+     "doc": "WhatsApp broadcast consent by keyword: \"START\"/\"SUBSCRIBE\" opts in, \"STOP\"/\"UNSUBSCRIBE\" opts out (also in Nepali). Same words as the SQL trigger in 0020."
     }
    ]
   },
@@ -13695,14 +13709,14 @@
     {
      "name": "messageFor",
      "kind": "function",
-     "line": 203,
+     "line": 204,
      "signature": "(action: string): string | null",
      "doc": "\"addBudgetLine\" → \"Budget line added\"."
     },
     {
      "name": "installActionToasts",
      "kind": "function",
-     "line": 264,
+     "line": 265,
      "signature": "()",
      "doc": "Wraps the store actions once (root layout). Timers that call actions use `quietly()`."
     }
@@ -15363,6 +15377,12 @@
        "doc": ""
       },
       {
+       "name": "setSocialOptIn",
+       "optional": false,
+       "type": "(threadId: string, optedIn: boolean) => string | null",
+       "doc": "WhatsApp: records that the customer agreed (or no longer agrees) to broadcasts. The opted-in count is the WhatsApp audience."
+      },
+      {
        "name": "createLeadFromSocialThread",
        "optional": false,
        "type": "(threadId: string, input: SocialLeadInput) => { leadId?: string; error?: string }",
@@ -15427,21 +15447,21 @@
     {
      "name": "clearSocialTimers",
      "kind": "function",
-     "line": 80,
+     "line": 82,
      "signature": "()",
      "doc": "Stops the simulated networks (on resetDemo)."
     },
     {
      "name": "socialSettingsFor",
      "kind": "function",
-     "line": 106,
+     "line": 108,
      "signature": "(all: Record<string, SocialSettings>, ownerId: string)",
      "doc": "Settings for a business, with the starter set until it saves its own."
     },
     {
      "name": "socialActions",
      "kind": "function",
-     "line": 111,
+     "line": 113,
      "signature": "(set: SetDb, get: GetDb): SocialActions",
      "doc": "The social hub actions for the shared store."
     }
@@ -23476,6 +23496,12 @@
        "doc": ""
       },
       {
+       "name": "publicId",
+       "optional": true,
+       "type": "string",
+       "doc": "Cloudinary public id (Supabase builds): the networks fetch the file from its public URL."
+      },
+      {
        "name": "alt",
        "optional": true,
        "type": "string",
@@ -23486,7 +23512,7 @@
     {
      "name": "SocialThread",
      "kind": "interface",
-     "line": 54,
+     "line": 56,
      "signature": "",
      "doc": "One conversation in the unified inbox.",
      "members": [
@@ -23537,6 +23563,12 @@
        "optional": true,
        "type": "string",
        "doc": "WhatsApp number, or one the customer typed into a message."
+      },
+      {
+       "name": "optedIn",
+       "optional": true,
+       "type": "boolean",
+       "doc": "WhatsApp: the customer agreed to receive broadcasts (said START, or the team recorded their consent)."
       },
       {
        "name": "postId",
@@ -23615,14 +23647,14 @@
     {
      "name": "SocialMessageStatus",
      "kind": "type",
-     "line": 85,
+     "line": 89,
      "signature": "= 'sending' | 'sent' | 'delivered' | 'read' | 'failed'",
      "doc": "Delivery state of a reply, as the network reports it."
     },
     {
      "name": "SocialMessage",
      "kind": "interface",
-     "line": 88,
+     "line": 92,
      "signature": "",
      "doc": "A message, a comment, or an internal note in a thread.",
      "members": [
@@ -23697,14 +23729,14 @@
     {
      "name": "SocialPostStatus",
      "kind": "type",
-     "line": 107,
+     "line": 111,
      "signature": "= 'draft' | 'scheduled' | 'publishing' | 'published' | 'partial' | 'failed'",
      "doc": "Where a post is: draft, scheduled, publishing, published, partly published or failed."
     },
     {
      "name": "SocialPostResult",
      "kind": "interface",
-     "line": 110,
+     "line": 114,
      "signature": "",
      "doc": "How one network took a post, and how it did there.",
      "members": [
@@ -23767,7 +23799,7 @@
     {
      "name": "SocialPost",
      "kind": "interface",
-     "line": 123,
+     "line": 127,
      "signature": "",
      "doc": "One post sent to several networks at once (now or at a set time).",
      "members": [
@@ -23866,7 +23898,7 @@
     {
      "name": "SocialAutoRule",
      "kind": "interface",
-     "line": 145,
+     "line": 149,
      "signature": "",
      "doc": "Keyword auto-reply: when an incoming message contains a keyword, reply at once.",
      "members": [
@@ -23911,7 +23943,7 @@
     {
      "name": "SocialSettings",
      "kind": "interface",
-     "line": 156,
+     "line": 160,
      "signature": "",
      "doc": "Saved replies, auto-replies and the away message of one business.",
      "members": [
@@ -26108,6 +26140,79 @@
      "line": 542,
      "signature": "(media: { kind?: string; publicId?: string; uri?: string }[], cloudName?: string): PublishMedia[]",
      "doc": "A post's media as public URLs: uploaded files are Cloudinary public ids, others already URLs."
+    },
+    {
+     "name": "MetricTarget",
+     "kind": "interface",
+     "line": 555,
+     "signature": "",
+     "doc": "A published post on one network whose numbers are read back.",
+     "members": [
+      {
+       "name": "network",
+       "optional": false,
+       "type": "Network",
+       "doc": ""
+      },
+      {
+       "name": "externalId",
+       "optional": false,
+       "type": "string",
+       "doc": "Facebook post id, Instagram media id, or TikTok publish id."
+      },
+      {
+       "name": "token",
+       "optional": false,
+       "type": "string",
+       "doc": ""
+      }
+     ]
+    },
+    {
+     "name": "Metrics",
+     "kind": "interface",
+     "line": 563,
+     "signature": "",
+     "doc": "Numbers a network reports for a post; missing ones are left as they were.",
+     "members": [
+      {
+       "name": "reach",
+       "optional": true,
+       "type": "number",
+       "doc": ""
+      },
+      {
+       "name": "likes",
+       "optional": true,
+       "type": "number",
+       "doc": ""
+      },
+      {
+       "name": "comments",
+       "optional": true,
+       "type": "number",
+       "doc": ""
+      },
+      {
+       "name": "shares",
+       "optional": true,
+       "type": "number",
+       "doc": ""
+      },
+      {
+       "name": "saves",
+       "optional": true,
+       "type": "number",
+       "doc": ""
+      }
+     ]
+    },
+    {
+     "name": "fetchMetrics",
+     "kind": "function",
+     "line": 588,
+     "signature": "(t: MetricTarget, http: Http, graphVersion = 'v21.0'): Promise<Metrics | null>",
+     "doc": "Reads a post's numbers back from its network: Facebook post fields and\ninsights, Instagram media insights, TikTok's video query (after finding the\npublic post id from the publish id). Never throws; null when unavailable."
     }
    ]
   },
@@ -26201,7 +26306,7 @@
   },
   {
    "file": "supabase/functions/social-publish/index.ts",
-   "doc": "social-publish: sends one post to every network it was written for. POST { \"postId\": uuid } (Authorization: Bearer <user JWT>) publish now → { status, results: { facebook: { status, url?, error? }, … } } POST { \"due\": true } (x-webhook-secret: NOTIFY_WEBHOOK_SECRET) the scheduled run (job_social_due in 0018, every five minutes through pg_cron and pg_net) → claims the due posts (vivah_social_claim_due) and publishes each Each network follows its own steps (publishTo in _shared/social.ts) and its outcome is recorded with vivah_social_target_result, which also sets the post's status: published, …",
+   "doc": "social-publish: sends one post to every network it was written for. POST { \"postId\": uuid } (Authorization: Bearer <user JWT>) publish now → { status, results: { facebook: { status, url?, error? }, … } } POST { \"due\": true } (x-webhook-secret: NOTIFY_WEBHOOK_SECRET) the scheduled run (job_social_due in 0018, every five minutes through pg_cron and pg_net) → claims the due posts (vivah_social_claim_due) and publishes each POST { \"metrics\": true } (x-webhook-secret) job_social_metrics in 0020, every six hours → reads reach, likes, comments, shares and saves back for recent posts Each network fol…",
    "exports": []
   },
   {

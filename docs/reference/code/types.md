@@ -2361,11 +2361,12 @@ A photo or video attached to a post or a message.
 | `kind` | `'image' \| 'video'` |  |
 | `image?` | `PhotoKey` |  |
 | `uri?` | `string` |  |
+| `publicId?` | `string` | Cloudinary public id (Supabase builds): the networks fetch the file from its public URL. |
 | `alt?` | `string` |  |
 
 ### `SocialThread`
 
-*interface* · [src/types/social.ts:54](../../../src/types/social.ts#L54)
+*interface* · [src/types/social.ts:56](../../../src/types/social.ts#L56)
 
 One conversation in the unified inbox.
 
@@ -2379,6 +2380,7 @@ One conversation in the unified inbox.
 | `contactName` | `string` |  |
 | `contactHandle` | `string` |  |
 | `contactPhone?` | `string` | WhatsApp number, or one the customer typed into a message. |
+| `optedIn?` | `boolean` | WhatsApp: the customer agreed to receive broadcasts (said START, or the team recorded their consent). |
 | `postId?` | `string` | For comments: the post the comment is on. |
 | `postCaption?` | `string` |  |
 | `status` | `SocialThreadStatus` |  |
@@ -2394,7 +2396,7 @@ One conversation in the unified inbox.
 
 ### `SocialMessageStatus`
 
-*type* · [src/types/social.ts:85](../../../src/types/social.ts#L85)
+*type* · [src/types/social.ts:89](../../../src/types/social.ts#L89)
 
 ```ts
 type SocialMessageStatus = 'sending' | 'sent' | 'delivered' | 'read' | 'failed'
@@ -2404,7 +2406,7 @@ Delivery state of a reply, as the network reports it.
 
 ### `SocialMessage`
 
-*interface* · [src/types/social.ts:88](../../../src/types/social.ts#L88)
+*interface* · [src/types/social.ts:92](../../../src/types/social.ts#L92)
 
 A message, a comment, or an internal note in a thread.
 
@@ -2424,7 +2426,7 @@ A message, a comment, or an internal note in a thread.
 
 ### `SocialPostStatus`
 
-*type* · [src/types/social.ts:107](../../../src/types/social.ts#L107)
+*type* · [src/types/social.ts:111](../../../src/types/social.ts#L111)
 
 ```ts
 type SocialPostStatus = 'draft' | 'scheduled' | 'publishing' | 'published' | 'partial' | 'failed'
@@ -2434,7 +2436,7 @@ Where a post is: draft, scheduled, publishing, published, partly published or fa
 
 ### `SocialPostResult`
 
-*interface* · [src/types/social.ts:110](../../../src/types/social.ts#L110)
+*interface* · [src/types/social.ts:114](../../../src/types/social.ts#L114)
 
 How one network took a post, and how it did there.
 
@@ -2452,7 +2454,7 @@ How one network took a post, and how it did there.
 
 ### `SocialPost`
 
-*interface* · [src/types/social.ts:123](../../../src/types/social.ts#L123)
+*interface* · [src/types/social.ts:127](../../../src/types/social.ts#L127)
 
 One post sent to several networks at once (now or at a set time).
 
@@ -2476,7 +2478,7 @@ One post sent to several networks at once (now or at a set time).
 
 ### `SocialAutoRule`
 
-*interface* · [src/types/social.ts:145](../../../src/types/social.ts#L145)
+*interface* · [src/types/social.ts:149](../../../src/types/social.ts#L149)
 
 Keyword auto-reply: when an incoming message contains a keyword, reply at once.
 
@@ -2491,7 +2493,7 @@ Keyword auto-reply: when an incoming message contains a keyword, reply at once.
 
 ### `SocialSettings`
 
-*interface* · [src/types/social.ts:156](../../../src/types/social.ts#L156)
+*interface* · [src/types/social.ts:160](../../../src/types/social.ts#L160)
 
 Saved replies, auto-replies and the away message of one business.
 

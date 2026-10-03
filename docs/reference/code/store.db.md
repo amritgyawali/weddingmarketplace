@@ -848,6 +848,7 @@ Store actions of the social hub.
 | `toggleSocialThreadStar` | `(threadId: string) => void` |  |
 | `setSocialThreadLabels` | `(threadId: string, labels: string[]) => void` |  |
 | `assignSocialThread` | `(threadId: string, assignee?: string) => void` |  |
+| `setSocialOptIn` | `(threadId: string, optedIn: boolean) => string \| null` | WhatsApp: records that the customer agreed (or no longer agrees) to broadcasts. The opted-in count is the WhatsApp audience. |
 | `createLeadFromSocialThread` | `(threadId: string, input: SocialLeadInput) => { leadId?: string; error?: string }` | Turns a conversation into a CRM lead (source `social`) and links the two. Returns the lead id, or error text. |
 | `saveSocialPost` | `(input: Partial<SocialPost> & Pick<SocialPost, 'caption' \| 'networks' \| 'media'>) => { id?: string; error?: string }` | Creates or updates a draft. Returns the post id. |
 | `scheduleSocialPost` | `(postId: string, at: string) => string \| null` |  |
@@ -861,7 +862,7 @@ Store actions of the social hub.
 
 ### `clearSocialTimers`
 
-*function* · [src/store/db/social.ts:80](../../../src/store/db/social.ts#L80)
+*function* · [src/store/db/social.ts:82](../../../src/store/db/social.ts#L82)
 
 ```ts
 clearSocialTimers()
@@ -871,7 +872,7 @@ Stops the simulated networks (on resetDemo).
 
 ### `socialSettingsFor`
 
-*function* · [src/store/db/social.ts:106](../../../src/store/db/social.ts#L106)
+*function* · [src/store/db/social.ts:108](../../../src/store/db/social.ts#L108)
 
 ```ts
 socialSettingsFor(all: Record<string, SocialSettings>, ownerId: string)
@@ -881,7 +882,7 @@ Settings for a business, with the starter set until it saves its own.
 
 ### `socialActions`
 
-*function* · [src/store/db/social.ts:111](../../../src/store/db/social.ts#L111)
+*function* · [src/store/db/social.ts:113](../../../src/store/db/social.ts#L113)
 
 ```ts
 socialActions(set: SetDb, get: GetDb): SocialActions
