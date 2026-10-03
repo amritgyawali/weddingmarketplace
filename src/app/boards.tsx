@@ -9,6 +9,7 @@ import { Sheet } from '@/components/ui/Sheet';
 import { Text } from '@/components/ui/Text';
 import { toast } from '@/components/ui/Toast';
 import { photos } from '@/constants/images';
+import { colors } from '@/constants/theme';
 import { IDEA_PHOTOS } from '@/data/ideas';
 import { useLayout } from '@/hooks/useLayout';
 import { useAppStore } from '@/store/useAppStore';
@@ -79,7 +80,7 @@ function BoardView({ board, readOnly, onBack }: { board: InspirationBoard; readO
                   </Text>
                   {!readOnly && (
                     <Pressable onPress={() => toggle(board.id, id)} style={styles.remove} accessibilityLabel="Remove from board" hitSlop={6}>
-                      <Ionicons name="close" size={14} color="#fff" />
+                      <Ionicons name="close" size={14} color={colors.white} />
                     </Pressable>
                   )}
                 </View>

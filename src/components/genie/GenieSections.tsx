@@ -181,7 +181,9 @@ export function WhatsAppFab({ bottom = 20 }: { bottom?: number }) {
         )
       }
       style={[styles.wa, { bottom }, shadows.fab]}>
-      <Ionicons name="logo-whatsapp" size={20} color={colors.white} />
+      <View style={styles.waMark}>
+        <Ionicons name="logo-whatsapp" size={16} color={colors.whatsapp} />
+      </View>
       <Text size={14} weight="semibold" color={colors.white}>
         WhatsApp us
       </Text>
@@ -221,13 +223,18 @@ const styles = StyleSheet.create({
   wa: {
     position: 'absolute',
     right: 16,
-    height: 44,
-    borderRadius: 22,
-    paddingHorizontal: 16,
+    height: 46,
+    borderRadius: 23,
+    paddingLeft: 8,
+    paddingRight: 18,
     flexDirection: 'row',
-    gap: 8,
-    backgroundColor: colors.whatsapp,
+    gap: 9,
+    backgroundColor: colors.wine,
+    borderWidth: 1,
+    borderColor: colors.goldLine,
     alignItems: 'center',
     justifyContent: 'center',
   },
+  /** WhatsApp's own green, kept to a small mark on soft white so the pill stays on-palette. */
+  waMark: { width: 30, height: 30, borderRadius: 15, backgroundColor: colors.white, alignItems: 'center', justifyContent: 'center' },
 });

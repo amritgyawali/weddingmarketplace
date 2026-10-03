@@ -114,10 +114,10 @@ export default function RsvpScreen() {
         <View>
           <Photo source={photos[site?.cover ?? 'ideaCoupleGardenWalk']} style={{ width: '100%', height: 220 }} contentFit="cover" />
           <View style={[styles.veil, { paddingTop: insets.top + 12 }]}>
-            <Text size={13} weight="bold" color="#fff">
+            <Text size={13} weight="bold" color={colors.white}>
               You’re invited
             </Text>
-            <Text serif size={30} weight="bold" color="#fff" lineHeight={40}>
+            <Text serif size={30} weight="bold" color={colors.white} lineHeight={40}>
               {site?.headline ?? project.title}
             </Text>
             <Text size={14} color="rgba(255,255,255,0.9)">
@@ -153,7 +153,7 @@ export default function RsvpScreen() {
                     <Pressable
                       key={c.id}
                       onPress={() => setAnswer(event!.id, { rsvp: c.id, attending: c.id === 'no' ? 0 : a.attending || size })}
-                      style={[styles.choice, { borderColor: a.rsvp === c.id ? accent : colors.border, backgroundColor: a.rsvp === c.id ? `${accent}14` : '#fff' }]}>
+                      style={[styles.choice, { borderColor: a.rsvp === c.id ? accent : colors.border, backgroundColor: a.rsvp === c.id ? `${accent}14` : colors.white }]}>
                       <Ionicons name={a.rsvp === c.id ? 'radio-button-on' : 'radio-button-off'} size={20} color={a.rsvp === c.id ? accent : colors.textSubtle} />
                       <Text size={15} weight="semibold" color={colors.textStrong}>
                         {c.label}

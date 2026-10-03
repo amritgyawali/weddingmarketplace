@@ -81,6 +81,8 @@ export const colors = {
   /** Amber ink: 5.0 : 1 even on its own 10% tint (status pills). */
   warning: '#8A5A10',
   info: '#3E5C7E',
+  /** Soft success fill (seated tables, success banners). */
+  successSoft: '#E6F0E8',
   /** Soft danger fill behind a destructive icon. */
   dangerSoft: '#FBE9E7',
   /** Dark surfaces for warning and error toasts. */
@@ -123,6 +125,8 @@ export const gradients = {
   collectionDestination: ['rgba(0,0,0,0)', 'rgba(0,0,0,0.7)'] as const,
   collectionHeritage: ['rgba(0,0,0,0)', 'rgba(0,0,0,0.7)'] as const,
   collectionGarden: ['rgba(0,0,0,0)', 'rgba(0,0,0,0.7)'] as const,
+  /** Wine-tinted scrim under captions on photo cards (never grey). */
+  photoCaption: ['rgba(37,14,18,0)', 'rgba(37,14,18,0.35)', 'rgba(37,14,18,0.86)'] as const,
 };
 
 /**

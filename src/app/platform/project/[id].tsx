@@ -17,6 +17,7 @@ import { nextStatuses, PipelineStepper, STATUS_LABEL } from '@/components/work/P
 import { TaskBoard } from '@/components/work/TaskBoard';
 import { TimelineView } from '@/components/work/Timeline';
 import { photos } from '@/constants/images';
+import { colors } from '@/constants/theme';
 import { EVENT_TYPE_BY_ID } from '@/data/events';
 import { findService, serviceName, SERVICES } from '@/data/services';
 import { useLayout } from '@/hooks/useLayout';
@@ -94,7 +95,7 @@ function Summary({ project }: { project: Project }) {
             <Ionicons name="call" size={18} color={t.c.success} />
           </Pressable>
           <Pressable onPress={() => Linking.openURL(`https://wa.me/977${phone}`)} hitSlop={6} accessibilityLabel="WhatsApp customer">
-            <Ionicons name="logo-whatsapp" size={18} color="#25D366" />
+            <Ionicons name="logo-whatsapp" size={18} color={colors.whatsapp} />
           </Pressable>
         </View>
         <Pressable onPress={() => setCoordOpen(true)} style={[styles.person, { backgroundColor: project.coordinatorName ? t.c.surfaceAlt : `${t.c.danger}1A` }]} accessibilityLabel="Assign coordinator">

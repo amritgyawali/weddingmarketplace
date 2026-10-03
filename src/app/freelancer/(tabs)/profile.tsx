@@ -12,6 +12,7 @@ import { Toggle } from '@/components/ui/Toggle';
 import { toast } from '@/components/ui/Toast';
 import { photos } from '@/constants/images';
 import { craftProfileLines } from '@/components/persona/FreelancerPersona';
+import { colors } from '@/constants/theme';
 import { CRAFT_BY_ID, CRAFTS } from '@/data/crafts';
 import { reliabilityScore } from '@/data/freelancers';
 import { useExperience } from '@/hooks/useExperience';
@@ -153,7 +154,7 @@ export default function FreelancerProfile() {
           </Text>
           <View style={styles.row}>
             <StatusPill status={status} label={status === 'VERIFIED' ? 'Verified' : status === 'UNDER_REVIEW' ? 'Verification in review' : 'Not verified'} />
-            <Ionicons name="star" size={13} color="#C8A46B" />
+            <Ionicons name="star" size={13} color={colors.star} />
             <Text size={13} weight="medium" color={t.c.textStrong}>
               {rating.toFixed(1)} ({reviews.length})
             </Text>

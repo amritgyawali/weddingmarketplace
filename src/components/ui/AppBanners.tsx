@@ -27,7 +27,7 @@ export function ImpersonationBar() {
         <Text size={12} weight="semibold" color={colors.white} numberOfLines={1} style={{ flexShrink: 1 }}>
           Viewing as {viewing?.businessName ?? viewing?.name ?? 'user'}
         </Text>
-        <Text size={12} weight="bold" color="#FFD27A">
+        <Text size={12} weight="bold" color={colors.warningOnDark}>
           Back to admin
         </Text>
       </Pressable>
@@ -37,7 +37,7 @@ export function ImpersonationBar() {
 
 const TONE = {
   info: { bg: colors.bgSoft, fg: colors.primary, icon: 'information-circle-outline' },
-  success: { bg: '#EAF0EA', fg: colors.success, icon: 'checkmark-circle-outline' },
+  success: { bg: colors.successSoft, fg: colors.success, icon: 'checkmark-circle-outline' },
   warning: { bg: colors.goldSoft, fg: colors.warning, icon: 'warning-outline' },
 } as const;
 

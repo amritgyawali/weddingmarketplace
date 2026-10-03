@@ -4,6 +4,8 @@ import type { ReactNode } from 'react';
 import { Pressable, StyleSheet, View, type StyleProp, type ViewStyle } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { Ornament } from '@/components/ui/Ornament';
+import { triggerHaptic } from '@/components/ui/PressableScale';
 import { Text } from '@/components/ui/Text';
 import { colors } from '@/constants/theme';
 import { useInbox } from '@/store/useDb';
@@ -12,8 +14,6 @@ import { useRoleTheme } from '@/theme/RoleTheme';
 
 import { Card, type IconName } from './primitives';
 
-/** Legacy danger hexes some call sites still pass as `tone`; any of them flags the figure. */
-const ALERT_TONES = ['#DC2626', '#EF4444', '#E11D48', colors.danger];
 
 /** Text-only stat tile: label on top, figure below. `tone` only matters when it flags a problem. */
 export function KpiCard({
@@ -36,7 +36,7 @@ export function KpiCard({
 }) {
   const t = useRoleTheme();
   const negative = delta?.startsWith('-');
-  const alert = !!tone && (tone === t.c.danger || ALERT_TONES.includes(tone.toUpperCase())) && value !== '0';
+  const alert = !!tone && (tone === t.c.danger || tone === colors.danger) && value !== '0';
   return (
     <Card style={[styles.kpi, style]} onPress={onPress} accessibilityLabel={`${label}: ${value}`}>
       <Text size={13} color={t.c.muted} numberOfLines={1} maxFontSizeMultiplier={1.3}>
@@ -53,6 +53,90 @@ export function KpiCard({
         )}
       </View>
     </Card>
+  );
+}
+
+/**
+ * The one thing that needs the user now, at the top of a dashboard: a wine
+ * band with the gilt ornament, a serif title and at most two actions (the
+ * first in champagne). Everything else on the screen sits below it, quieter.
+ */
+export function FocusBand({
+  eyebrow,
+  title,
+  body,
+  figure,
+  figureLabel,
+  primary,
+  secondary,
+  onPress,
+}: {
+  eyebrow: string;
+  title: string;
+  body?: string;
+  /** A headline number on the right (an amount, a count). */
+  figure?: string;
+  figureLabel?: string;
+  primary?: { label: string; onPress: () => void; icon?: IconName };
+  secondary?: { label: string; onPress: () => void };
+  onPress?: () => void;
+}) {
+  return (
+    <View style={styles.focus}>
+      <Pressable onPress={onPress} disabled={!onPress} accessibilityRole={onPress ? 'button' : undefined} accessibilityLabel={`${eyebrow}. ${title}`} style={({ pressed }) => [styles.focusTop, pressed && { opacity: 0.85 }]}>
+        <View style={{ flex: 1, gap: 2 }}>
+          <Ornament width={56} style={{ marginBottom: 8 }} />
+          <Text size={13} weight="medium" color={colors.gold}>
+            {eyebrow}
+          </Text>
+          <Text serif size={19} weight="bold" color={colors.white} lineHeight={26} numberOfLines={2}>
+            {title}
+          </Text>
+          {body && (
+            <Text size={13} color={colors.onWineMuted} numberOfLines={2}>
+              {body}
+            </Text>
+          )}
+        </View>
+        {figure && (
+          <View style={{ alignItems: 'flex-end' }}>
+            {figureLabel && (
+              <Text size={12} color={colors.onWineMuted}>
+                {figureLabel}
+              </Text>
+            )}
+            <Text serif size={20} weight="bold" color={colors.gold} lineHeight={28} numeric>
+              {figure}
+            </Text>
+          </View>
+        )}
+      </Pressable>
+      {(primary || secondary) && (
+        <View style={styles.focusActions}>
+          {secondary && (
+            <Pressable onPress={secondary.onPress} accessibilityRole="button" style={({ pressed }) => [styles.focusBtn, styles.focusBtnGhost, pressed && { opacity: 0.75 }]}>
+              <Text size={14} weight="semibold" color={colors.white} numberOfLines={1}>
+                {secondary.label}
+              </Text>
+            </Pressable>
+          )}
+          {primary && (
+            <Pressable
+              onPress={() => {
+                triggerHaptic('light');
+                primary.onPress();
+              }}
+              accessibilityRole="button"
+              style={({ pressed }) => [styles.focusBtn, { backgroundColor: colors.gold, flex: 1.3 }, pressed && { opacity: 0.85 }]}>
+              {primary.icon && <Ionicons name={primary.icon} size={16} color={colors.wine} />}
+              <Text size={14} weight="semibold" color={colors.wine} numberOfLines={1}>
+                {primary.label}
+              </Text>
+            </Pressable>
+          )}
+        </View>
+      )}
+    </View>
   );
 }
 
@@ -242,7 +326,12 @@ export function QuickAction({ icon, label, onPress }: { icon: IconName; label: s
 const styles = StyleSheet.create({
   kpi: { flex: 1, minWidth: '46%', gap: 0, paddingVertical: 12, paddingHorizontal: 14 },
   kpiValueRow: { flexDirection: 'row', alignItems: 'baseline', gap: 8 },
-  tile: { flex: 1, minWidth: 0, gap: 0, paddingVertical: 10, paddingHorizontal: 10 },
+  tile: { flex: 1, minWidth: 0, gap: 0, paddingVertical: 10, paddingHorizontal: 8 },
+  focus: { backgroundColor: colors.wine, borderRadius: 12, borderWidth: 1, borderColor: colors.goldLine, padding: 16, gap: 14 },
+  focusTop: { flexDirection: 'row', alignItems: 'flex-end', gap: 12 },
+  focusActions: { flexDirection: 'row', gap: 10 },
+  focusBtn: { flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6, height: 42, borderRadius: 8, paddingHorizontal: 12 },
+  focusBtnGhost: { borderWidth: 1, borderColor: colors.goldLine },
   bars: { flexDirection: 'row', alignItems: 'flex-end' },
   barCol: { flex: 1, alignItems: 'center', justifyContent: 'flex-end' },
   labels: { flexDirection: 'row', paddingTop: 6, borderTopWidth: StyleSheet.hairlineWidth },

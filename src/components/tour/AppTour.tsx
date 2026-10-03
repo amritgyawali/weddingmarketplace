@@ -223,7 +223,7 @@ const styles = StyleSheet.create({
     padding: 16,
     borderRadius: 10,
     backgroundColor: colors.white,
-    ...shadow(8, 0.18, 16, 6, '#000000'),
+    ...shadow(8, 0.18, 16, 6, colors.black),
   },
   arrow: { position: 'absolute', width: 14, height: 14, backgroundColor: colors.white, transform: [{ rotate: '45deg' }] },
   footer: { flexDirection: 'row', alignItems: 'center', gap: 8, marginTop: 8 },

@@ -58,7 +58,8 @@ export function ImageCarousel({
 }
 
 const styles = StyleSheet.create({
-  dots: { position: 'absolute', left: 0, right: 0, flexDirection: 'row', justifyContent: 'center', gap: 12 },
-  dot: { width: 10, height: 10, borderRadius: 5, backgroundColor: 'rgba(255,255,255,0.6)' },
-  dotActive: { backgroundColor: colors.white },
+  dots: { position: 'absolute', left: 0, right: 0, flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 6 },
+  dot: { width: 7, height: 7, borderRadius: 4, backgroundColor: colors.onWineMuted },
+  /** The current photo: a champagne pill, so it reads on light and dark photos alike. */
+  dotActive: { width: 20, backgroundColor: colors.gold },
 });
