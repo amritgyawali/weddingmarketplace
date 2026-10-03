@@ -13,7 +13,7 @@ Every exported symbol in `src/data/`, file by file. The guide that explains how 
 - [`cities.ts`](#citiests) (8 exports)
 - [`crafts.ts`](#craftsts) (7 exports) · Freelancer crafts. The crew roles in `services.ts` stay the source of truth (a freelancer's skills are crew roles, and their trade and capa…
 - [`events.ts`](#eventsts) (11 exports)
-- [`features.ts`](#featurests) (7 exports) · Feature switches a super admin flips from the console (Platform → More → Super admin → Features), with no code change. Each switch hides a …
+- [`features.ts`](#featurests) (19 exports) · Feature switches a super admin flips from the console (Platform → More → Super admin → Features), with no code change. Each switch hides a …
 - [`freelancers.ts`](#freelancersts) (3 exports)
 - [`genie.ts`](#geniets) (4 exports)
 - [`ideas.ts`](#ideasts) (5 exports)
@@ -707,14 +707,19 @@ Source: [src/data/features.ts](../../../src/data/features.ts)
 Feature switches a super admin flips from the console (Platform → More →
 Super admin → Features), with no code change. Each switch hides a surface
 for everyone: a tab, a home section, a marketplace category, a tool, a
-sign-up path. State lives in `DbData.featureFlags`; a missing id is on.
+sign-up path. State lives in `DbData.featureFlags`; a missing id takes its
+default (`featureDefault`).
+
+Out of the box each app shows only its 20 most-used features
+(`TOP_FEATURES`); everything else is an extra that stays hidden until a
+super admin switches it on, so new users aren't buried in options.
 
 Tools are switched by `tool:<ToolId>` and marketplace services by
 `service:<serviceId>`, so this list holds only the fixed surfaces.
 
 ### `FeatureDef`
 
-*interface* · [src/data/features.ts:12](../../../src/data/features.ts#L12)
+*interface* · [src/data/features.ts:17](../../../src/data/features.ts#L17)
 
 _No JSDoc yet._
 
@@ -728,7 +733,7 @@ _No JSDoc yet._
 
 ### `FEATURES`
 
-*const* · [src/data/features.ts:21](../../../src/data/features.ts#L21)
+*const* · [src/data/features.ts:26](../../../src/data/features.ts#L26)
 
 ```ts
 FEATURES: FeatureDef[]
@@ -738,7 +743,7 @@ _No JSDoc yet._
 
 ### `FEATURE_BY_ID`
 
-*const* · [src/data/features.ts:68](../../../src/data/features.ts#L68)
+*const* · [src/data/features.ts:101](../../../src/data/features.ts#L101)
 
 ```ts
 FEATURE_BY_ID: Record<string, FeatureDef>
@@ -748,7 +753,7 @@ _No JSDoc yet._
 
 ### `toolFeature`
 
-*function* · [src/data/features.ts:70](../../../src/data/features.ts#L70)
+*function* · [src/data/features.ts:103](../../../src/data/features.ts#L103)
 
 ```ts
 toolFeature(toolId: string)
@@ -758,7 +763,7 @@ _No JSDoc yet._
 
 ### `serviceFeature`
 
-*function* · [src/data/features.ts:71](../../../src/data/features.ts#L71)
+*function* · [src/data/features.ts:104](../../../src/data/features.ts#L104)
 
 ```ts
 serviceFeature(serviceId: string)
@@ -768,7 +773,7 @@ _No JSDoc yet._
 
 ### `tabFeature`
 
-*function* · [src/data/features.ts:72](../../../src/data/features.ts#L72)
+*function* · [src/data/features.ts:105](../../../src/data/features.ts#L105)
 
 ```ts
 tabFeature(role: UserRole, tab: string)
@@ -776,15 +781,142 @@ tabFeature(role: UserRole, tab: string)
 
 _No JSDoc yet._
 
+### `TopFeature`
+
+*interface* · [src/data/features.ts:107](../../../src/data/features.ts#L107)
+
+_No JSDoc yet._
+
+| Member | Type | Notes |
+|---|---|---|
+| `id` | `string` | The switch behind it: a feature id, `tool:<ToolId>`, or `core.<role>.<name>` for parts that can't be switched off (the plan, account set-up, the staff screens behind permissions). |
+| `label` | `string` |  |
+
+### `TOP_FEATURES`
+
+*const* · [src/data/features.ts:123](../../../src/data/features.ts#L123)
+
+```ts
+TOP_FEATURES: Record<UserRole, TopFeature[]>
+```
+
+The 20 features each app shows out of the box, in the order people meet
+them. Account basics (home, notifications, settings, profile, language,
+support, log out) come with every app and aren't counted. Tools listed here
+are on by default; every other tool is an extra.
+
+### `TRADE_TOOLS`
+
+*const* · [src/data/features.ts:215](../../../src/data/features.ts#L215)
+
+```ts
+TRADE_TOOLS= [ … 9 items ]
+```
+
+The one trade tool each business gets by default ("core.vendor.trade"); a business sees only its own trade's.
+
+### `CRAFT_TOOLS`
+
+*const* · [src/data/features.ts:217](../../../src/data/features.ts#L217)
+
+```ts
+CRAFT_TOOLS= ['freelancer.backup', 'freelancer.kit', 'freelancer.setlist', 'freelancer.vehicle']
+```
+
+The kit tool each craft gets by default ("core.freelancer.craftkit"); crew see only their craft's.
+
+### `BASIC_FEATURES`
+
+*const* · [src/data/features.ts:223](../../../src/data/features.ts#L223)
+
+```ts
+BASIC_FEATURES= new Set(['couple.tour'])
+```
+
+Switches that come with the app like the account basics: on by default and
+not counted in the top 20. The first-run tour only explains the app.
+
+### `EXTRA_FEATURES`
+
+*const* · [src/data/features.ts:226](../../../src/data/features.ts#L226)
+
+```ts
+EXTRA_FEATURES= new Set([ 'home.collections', 'home.makeup', 'home.real_weddings', 'couple.celebrate', 'c…
+```
+
+Fixed surfaces that start hidden: extras a super admin can switch on.
+
+### `featureDefault`
+
+*function* · [src/data/features.ts:256](../../../src/data/features.ts#L256)
+
+```ts
+featureDefault(id: string)
+```
+
+On or off before a super admin touches it: tools only if they are top features, fixed surfaces unless they are extras.
+
 ### `featureOn`
 
-*function* · [src/data/features.ts:75](../../../src/data/features.ts#L75)
+*function* · [src/data/features.ts:259](../../../src/data/features.ts#L259)
 
 ```ts
 featureOn(flags: Record<string, boolean> | undefined, id: string)
 ```
 
-Is the feature on? Missing ids are on.
+Is the feature on? A missing id takes its default.
+
+### `FEATURE_ROUTES`
+
+*const* · [src/data/features.ts:266](../../../src/data/features.ts#L266)
+
+```ts
+FEATURE_ROUTES: Record<string, string[]>
+```
+
+The screens behind a feature. When a feature is off its links disappear
+and these screens show a "switched off" page (`FeatureRouteGuard`), so an
+old link or notification can't open them. `*` matches one path segment.
+
+### `featureForPath`
+
+*function* · [src/data/features.ts:307](../../../src/data/features.ts#L307)
+
+```ts
+featureForPath(path: string): string | undefined
+```
+
+The feature a path belongs to (`/contract/c1` → `couple.contracts`), if any.
+
+### `FeatureLink`
+
+*type* · [src/data/features.ts:313](../../../src/data/features.ts#L313)
+
+```ts
+type FeatureLink = string | { pathname: string; params?: Record<string, unknown> }
+```
+
+A link as expo-router takes it: a path, or a pathname with params.
+
+### `linkPath`
+
+*function* · [src/data/features.ts:316](../../../src/data/features.ts#L316)
+
+```ts
+linkPath(href: FeatureLink)
+```
+
+The path a link opens, with `[param]` segments filled in.
+
+### `linkOn`
+
+*function* · [src/data/features.ts:320](../../../src/data/features.ts#L320)
+
+```ts
+linkOn(flags: Record<string, boolean> | undefined, href: FeatureLink)
+```
+
+Can this link open? False when the screen it leads to belongs to a switched-off feature.
 
 ## freelancers.ts
 

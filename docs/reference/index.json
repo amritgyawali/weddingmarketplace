@@ -1227,14 +1227,14 @@
     {
      "name": "ErrorBoundary",
      "kind": "re-export",
-     "line": 31,
+     "line": 32,
      "signature": "from '@/components/AppErrorBoundary'",
      "doc": ""
     },
     {
      "name": "RootLayout",
      "kind": "component",
-     "line": 44,
+     "line": 45,
      "signature": "()",
      "doc": ""
     }
@@ -1338,7 +1338,7 @@
     {
      "name": "VendorCalendar",
      "kind": "component",
-     "line": 18,
+     "line": 19,
      "signature": "()",
      "doc": "Availability calendar that feeds the matching engine, plus bookings by day."
     }
@@ -1351,7 +1351,7 @@
     {
      "name": "VendorDashboard",
      "kind": "component",
-     "line": 26,
+     "line": 27,
      "signature": "()",
      "doc": ""
     }
@@ -2495,7 +2495,7 @@
     {
      "name": "default",
      "kind": "default",
-     "line": 131,
+     "line": 135,
      "signature": "staffScreen('/platform/admin/features', Features)",
      "doc": ""
     }
@@ -3002,7 +3002,7 @@
     {
      "name": "ShortlistScreen",
      "kind": "component",
-     "line": 38,
+     "line": 39,
      "signature": "()",
      "doc": "Shortlist as a mini-CRM: stages, notes and tags per vendor, compare, and liked photos."
     }
@@ -4533,6 +4533,67 @@
    ]
   },
   {
+   "file": "src/components/admin/featureCatalogue.ts",
+   "doc": "",
+   "exports": [
+    {
+     "name": "FeatureScope",
+     "kind": "type",
+     "line": 10,
+     "signature": "= UserRole | 'all'",
+     "doc": ""
+    },
+    {
+     "name": "FeatureItem",
+     "kind": "interface",
+     "line": 12,
+     "signature": "",
+     "doc": "",
+     "members": [
+      {
+       "name": "id",
+       "optional": false,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "label",
+       "optional": false,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "hint",
+       "optional": true,
+       "type": "string",
+       "doc": ""
+      }
+     ]
+    },
+    {
+     "name": "featureGroups",
+     "kind": "function",
+     "line": 21,
+     "signature": "(scope: FeatureScope): { title: string; items: FeatureItem[] }[]",
+     "doc": "Every switch the super admin can flip for one app, grouped as the Features screen shows them."
+    },
+    {
+     "name": "ALL_FEATURE_IDS",
+     "kind": "const",
+     "line": 40,
+     "signature": ": string[]",
+     "doc": "Every switch id across the four apps."
+    },
+    {
+     "name": "hiddenFeatureCount",
+     "kind": "function",
+     "line": 43,
+     "signature": "(flags: Record<string, boolean>)",
+     "doc": "How many switches are off right now, defaults included."
+    }
+   ]
+  },
+  {
    "file": "src/components/admin/shared.tsx",
    "doc": "Building blocks of the super admin console: role names, collection metadata and a generic record editor.",
    "exports": [
@@ -5203,7 +5264,7 @@
      "name": "RoleTabBar",
      "kind": "component",
      "line": 41,
-     "signature": "({ state, navigation, tabs, links = [] }: BottomTabBarProps & { tabs: RoleTab[]; links?: SidebarLink[] })",
+     "signature": "({ state, navigation, tabs, links: allLinks = [] }: BottomTabBarProps & { tabs: RoleTab[]; links?: SidebarLink[] })",
      "doc": "Shared tab bar for the vendor, freelancer and staff apps. On phones it is a\nplain bottom bar; at desktop widths it becomes a sidebar that also lists\nthe deep links. The same component in every role, only the accent differs."
     }
    ]
@@ -6638,14 +6699,14 @@
     {
      "name": "ToolHub",
      "kind": "component",
-     "line": 87,
+     "line": 88,
      "signature": "({ role, tools, title, subtitle }: { role: UserRole; tools: ToolDef[]; title: string; subtitle: string })",
      "doc": "Searchable, grouped index of a role's toolkit."
     },
     {
      "name": "ToolRoute",
      "kind": "component",
-     "line": 121,
+     "line": 122,
      "signature": "({ tools, visible, settingsHref }: { tools: ToolDef[]; visible?: ToolDef[]; settingsHref?: Href })",
      "doc": "Renders one tool from the `[id]` route param, or an empty state for an\nunknown id. With `visible`, a tool this persona doesn't get explains why\nand how to unlock it instead of opening."
     }
@@ -7448,6 +7509,19 @@
    ]
   },
   {
+   "file": "src/components/ui/FeatureRouteGuard.tsx",
+   "doc": "",
+   "exports": [
+    {
+     "name": "FeatureRouteGuard",
+     "kind": "component",
+     "line": 19,
+     "signature": "()",
+     "doc": "Covers a screen whose feature a super admin switched off (or that is an\nextra not switched on yet), so old links, notifications and typed URLs\ncan't open it. Menus already hide the links; this is the safety net."
+    }
+   ]
+  },
+  {
    "file": "src/components/ui/Field.tsx",
    "doc": "",
    "exports": [
@@ -7999,7 +8073,7 @@
     {
      "name": "CelebrationSwitcher",
      "kind": "component",
-     "line": 21,
+     "line": 22,
      "signature": "()",
      "doc": "The couple's celebrations side by side (a wedding now, a pasni later). The\nplanner works on the one picked here; \"Plan another\" runs the onboarding\nquestions again and adds a project."
     }
@@ -8012,7 +8086,7 @@
     {
      "name": "MyWeddingScreen",
      "kind": "component",
-     "line": 484,
+     "line": 486,
      "signature": "({ inTab }: { inTab?: boolean })",
      "doc": "The couple's single workspace for the whole wedding project. It is both the\n\"My wedding\" tab (`inTab`: no back button, the tab bar sits below) and the\n`/my-wedding` stack screen that deep links and notifications open."
     }
@@ -9397,12 +9471,12 @@
   },
   {
    "file": "src/data/features.ts",
-   "doc": "Feature switches a super admin flips from the console (Platform → More → Super admin → Features), with no code change. Each switch hides a surface for everyone: a tab, a home section, a marketplace category, a tool, a sign-up path. State lives in `DbData.featureFlags`; a missing id is on. Tools are switched by `tool:<ToolId>` and marketplace services by `service:<serviceId>`, so this list holds only the fixed surfaces.",
+   "doc": "Feature switches a super admin flips from the console (Platform → More → Super admin → Features), with no code change. Each switch hides a surface for everyone: a tab, a home section, a marketplace category, a tool, a sign-up path. State lives in `DbData.featureFlags`; a missing id takes its default (`featureDefault`). Out of the box each app shows only its 20 most-used features (`TOP_FEATURES`); everything else is an extra that stays hidden until a super admin switches it on, so new users aren't buried in options. Tools are switched by `tool:<ToolId>` and marketplace services by `service:<se…",
    "exports": [
     {
      "name": "FeatureDef",
      "kind": "interface",
-     "line": 12,
+     "line": 17,
      "signature": "",
      "doc": "",
      "members": [
@@ -9441,44 +9515,142 @@
     {
      "name": "FEATURES",
      "kind": "const",
-     "line": 21,
+     "line": 26,
      "signature": ": FeatureDef[]",
      "doc": ""
     },
     {
      "name": "FEATURE_BY_ID",
      "kind": "const",
-     "line": 68,
+     "line": 101,
      "signature": ": Record<string, FeatureDef>",
      "doc": ""
     },
     {
      "name": "toolFeature",
      "kind": "function",
-     "line": 70,
+     "line": 103,
      "signature": "(toolId: string)",
      "doc": ""
     },
     {
      "name": "serviceFeature",
      "kind": "function",
-     "line": 71,
+     "line": 104,
      "signature": "(serviceId: string)",
      "doc": ""
     },
     {
      "name": "tabFeature",
      "kind": "function",
-     "line": 72,
+     "line": 105,
      "signature": "(role: UserRole, tab: string)",
      "doc": ""
     },
     {
+     "name": "TopFeature",
+     "kind": "interface",
+     "line": 107,
+     "signature": "",
+     "doc": "",
+     "members": [
+      {
+       "name": "id",
+       "optional": false,
+       "type": "string",
+       "doc": "The switch behind it: a feature id, `tool:<ToolId>`, or `core.<role>.<name>` for parts that can't be switched off (the plan, account set-up, the staff screens behind permissions)."
+      },
+      {
+       "name": "label",
+       "optional": false,
+       "type": "string",
+       "doc": ""
+      }
+     ]
+    },
+    {
+     "name": "TOP_FEATURES",
+     "kind": "const",
+     "line": 123,
+     "signature": ": Record<UserRole, TopFeature[]>",
+     "doc": "The 20 features each app shows out of the box, in the order people meet\nthem. Account basics (home, notifications, settings, profile, language,\nsupport, log out) come with every app and aren't counted. Tools listed here\nare on by default; every other tool is an extra."
+    },
+    {
+     "name": "TRADE_TOOLS",
+     "kind": "const",
+     "line": 215,
+     "signature": "= [ … 9 items ]",
+     "doc": "The one trade tool each business gets by default (\"core.vendor.trade\"); a business sees only its own trade's."
+    },
+    {
+     "name": "CRAFT_TOOLS",
+     "kind": "const",
+     "line": 217,
+     "signature": "= ['freelancer.backup', 'freelancer.kit', 'freelancer.setlist', 'freelancer.vehicle']",
+     "doc": "The kit tool each craft gets by default (\"core.freelancer.craftkit\"); crew see only their craft's."
+    },
+    {
+     "name": "BASIC_FEATURES",
+     "kind": "const",
+     "line": 223,
+     "signature": "= new Set(['couple.tour'])",
+     "doc": "Switches that come with the app like the account basics: on by default and\nnot counted in the top 20. The first-run tour only explains the app."
+    },
+    {
+     "name": "EXTRA_FEATURES",
+     "kind": "const",
+     "line": 226,
+     "signature": "= new Set([ 'home.collections', 'home.makeup', 'home.real_weddings', 'couple.celebrate', 'c…",
+     "doc": "Fixed surfaces that start hidden: extras a super admin can switch on."
+    },
+    {
+     "name": "featureDefault",
+     "kind": "function",
+     "line": 256,
+     "signature": "(id: string)",
+     "doc": "On or off before a super admin touches it: tools only if they are top features, fixed surfaces unless they are extras."
+    },
+    {
      "name": "featureOn",
      "kind": "function",
-     "line": 75,
+     "line": 259,
      "signature": "(flags: Record<string, boolean> | undefined, id: string)",
-     "doc": "Is the feature on? Missing ids are on."
+     "doc": "Is the feature on? A missing id takes its default."
+    },
+    {
+     "name": "FEATURE_ROUTES",
+     "kind": "const",
+     "line": 266,
+     "signature": ": Record<string, string[]>",
+     "doc": "The screens behind a feature. When a feature is off its links disappear\nand these screens show a \"switched off\" page (`FeatureRouteGuard`), so an\nold link or notification can't open them. `*` matches one path segment."
+    },
+    {
+     "name": "featureForPath",
+     "kind": "function",
+     "line": 307,
+     "signature": "(path: string): string | undefined",
+     "doc": "The feature a path belongs to (`/contract/c1` → `couple.contracts`), if any."
+    },
+    {
+     "name": "FeatureLink",
+     "kind": "type",
+     "line": 313,
+     "signature": "= string | { pathname: string; params?: Record<string, unknown> }",
+     "doc": "A link as expo-router takes it: a path, or a pathname with params."
+    },
+    {
+     "name": "linkPath",
+     "kind": "function",
+     "line": 316,
+     "signature": "(href: FeatureLink)",
+     "doc": "The path a link opens, with `[param]` segments filled in."
+    },
+    {
+     "name": "linkOn",
+     "kind": "function",
+     "line": 320,
+     "signature": "(flags: Record<string, boolean> | undefined, href: FeatureLink)",
+     "doc": "Can this link open? False when the screen it leads to belongs to a switched-off feature."
     }
    ]
   },
@@ -11115,7 +11287,14 @@
      "kind": "hook",
      "line": 5,
      "signature": "()",
-     "doc": "`on('home.venues')`: is a feature switched on (super admin console)? Missing ids are on."
+     "doc": "`on('home.venues')`: is a feature switched on (super admin console)? Missing ids take their default."
+    },
+    {
+     "name": "useLinkOn",
+     "kind": "hook",
+     "line": 11,
+     "signature": "()",
+     "doc": "`linkOn('/seating')`: does this link lead to a screen that is switched on? Use it to drop menu rows and buttons."
     }
    ]
   },

@@ -17,6 +17,7 @@ import { IDEA_PHOTOS } from '@/data/ideas';
 import { findProvider, type Provider } from '@/data/providers';
 import { serviceName } from '@/data/services';
 import { useStartChat } from '@/hooks/useChat';
+import { useFeatures } from '@/hooks/useFeatures';
 import { useAppStore } from '@/store/useAppStore';
 import { useDb } from '@/store/useDb';
 import { useAccount } from '@/store/useSession';
@@ -49,6 +50,7 @@ export default function ShortlistScreen() {
   const [tab, setTab] = useState<Tab>(params.tab === 'photos' ? 'photos' : 'vendors');
   const [stage, setStage] = useState<ShortlistEntry['status'] | 'all'>('all');
   const [compare, setCompare] = useState<string[]>([]);
+  const canCompare = useFeatures()('couple.compare');
   const [editing, setEditing] = useState<string | null>(null);
   const [notes, setNotes] = useState('');
 
@@ -88,9 +90,11 @@ export default function ShortlistScreen() {
             list.length ? (
               <View style={{ gap: 10 }}>
                 <ChoiceChips options={['All', ...STAGES.map((s) => `${s.label} (${list.filter((x) => x.e.status === s.id).length})`)]} selected={[stage === 'all' ? 'All' : `${STAGES.find((s) => s.id === stage)!.label} (${list.filter((x) => x.e.status === stage).length})`]} onToggle={(v) => setStage(v === 'All' ? 'all' : STAGES.find((s) => v.startsWith(s.label))!.id)} />
-                <Text size={12} color={colors.textMuted}>
-                  Tick up to four to compare side by side.
-                </Text>
+                {canCompare && (
+                  <Text size={12} color={colors.textMuted}>
+                    Tick up to four to compare side by side.
+                  </Text>
+                )}
               </View>
             ) : null
           }
@@ -116,9 +120,11 @@ export default function ShortlistScreen() {
                       {e.tags.length ? ` · ${e.tags.join(', ')}` : ''}
                     </Text>
                   </View>
-                  <Pressable onPress={() => setCompare((c) => (ticked ? c.filter((x) => x !== p.id) : [...c, p.id].slice(-4)))} hitSlop={10} accessibilityLabel="Compare">
-                    <Ionicons name={ticked ? 'checkbox' : 'square-outline'} size={24} color={ticked ? colors.primary : colors.textSubtle} />
-                  </Pressable>
+                  {canCompare && (
+                    <Pressable onPress={() => setCompare((c) => (ticked ? c.filter((x) => x !== p.id) : [...c, p.id].slice(-4)))} hitSlop={10} accessibilityLabel="Compare">
+                      <Ionicons name={ticked ? 'checkbox' : 'square-outline'} size={24} color={ticked ? colors.primary : colors.textSubtle} />
+                    </Pressable>
+                  )}
                 </Pressable>
                 {!!e.notes && (
                   <Text size={13} color={colors.text} style={{ paddingHorizontal: 12, paddingBottom: 8 }}>

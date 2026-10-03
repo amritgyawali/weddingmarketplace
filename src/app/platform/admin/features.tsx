@@ -1,26 +1,19 @@
 import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
+import { ALL_FEATURE_IDS, featureGroups, hiddenFeatureCount, type FeatureScope } from '@/components/admin/featureCatalogue';
 import { Card, KButton, KField, Segmented, SectionTitle } from '@/components/kit';
 import { staffScreen } from '@/components/persona/StaffGate';
-import { COUPLE_TOOLS } from '@/components/toolkit/couple';
-import { FREELANCER_TOOLS } from '@/components/toolkit/freelancer';
-import type { ToolDef } from '@/components/toolkit/hub';
 import { Hint, ToolPage } from '@/components/toolkit/core';
-import { PLATFORM_TOOLS } from '@/components/toolkit/platform';
-import { VENDOR_TOOLS } from '@/components/toolkit/vendor';
 import { Text } from '@/components/ui/Text';
 import { Toggle } from '@/components/ui/Toggle';
 import { toastError } from '@/components/ui/Toast';
-import { featureOn, FEATURES, serviceFeature, toolFeature } from '@/data/features';
-import { SERVICE_GROUPS, SERVICES } from '@/data/services';
+import { featureDefault, featureOn, TOP_FEATURES } from '@/data/features';
 import { useDb } from '@/store/useDb';
 import { useRoleTheme } from '@/theme/RoleTheme';
-import type { UserRole } from '@/types/platform';
 import { confirm } from '@/utils/confirm';
 
-type Scope = UserRole | 'all';
-const SCOPES: { id: Scope; label: string }[] = [
+const SCOPES: { id: FeatureScope; label: string }[] = [
   { id: 'customer', label: 'Couples' },
   { id: 'vendor', label: 'Businesses' },
   { id: 'freelancer', label: 'Freelancers' },
@@ -28,18 +21,11 @@ const SCOPES: { id: Scope; label: string }[] = [
   { id: 'all', label: 'Everyone' },
 ];
 
-const TOOLS: Record<UserRole, ToolDef[]> = { customer: COUPLE_TOOLS, vendor: VENDOR_TOOLS, freelancer: FREELANCER_TOOLS, platform: PLATFORM_TOOLS };
-
-interface Item {
-  id: string;
-  label: string;
-  hint?: string;
-}
-
 /**
  * Show or hide any part of the app for everyone: tabs, home sections,
- * marketplace services, each of the 80 tools, sign-up paths. Hidden things
- * disappear at once; switching them back on restores them with their data.
+ * marketplace services, each of the 80 tools, sign-up paths. Each app starts
+ * with its top 20 features on and the extras off; hidden things disappear at
+ * once, and switching them back on restores them with their data.
  */
 function Features() {
   const t = useRoleTheme();
@@ -47,36 +33,52 @@ function Features() {
   const setFeature = useDb((s) => s.setFeature);
   const setFeatures = useDb((s) => s.setFeatures);
   const resetFeatures = useDb((s) => s.resetFeatures);
-  const [scope, setScope] = useState<Scope>('customer');
+  const [scope, setScope] = useState<FeatureScope>('customer');
   const [query, setQuery] = useState('');
   const q = query.trim().toLowerCase();
 
-  const groups: { title: string; items: Item[] }[] = [];
-  const fixed = FEATURES.filter((f) => f.role === scope);
-  for (const g of [...new Set(fixed.map((f) => f.group))]) groups.push({ title: g, items: fixed.filter((f) => f.group === g).map((f) => ({ id: f.id, label: f.label, hint: f.hint })) });
-  if (scope === 'customer') {
-    for (const g of SERVICE_GROUPS) {
-      groups.push({ title: `Marketplace: ${g.title}`, items: SERVICES.filter((s) => s.group === g.id).map((s) => ({ id: serviceFeature(s.id), label: s.name, hint: 'Hidden from browsing, search results and home shortcuts' })) });
-    }
-  }
-  if (scope !== 'all') {
-    const tools = TOOLS[scope];
-    for (const g of [...new Set(tools.map((x) => x.group))]) groups.push({ title: `Tools: ${g}`, items: tools.filter((x) => x.group === g).map((x) => ({ id: toolFeature(x.id), label: x.title, hint: x.subtitle })) });
-  }
-  const visible = groups
+  const visible = featureGroups(scope)
     .map((g) => ({ ...g, items: g.items.filter((i) => !q || i.label.toLowerCase().includes(q) || g.title.toLowerCase().includes(q)) }))
     .filter((g) => g.items.length);
-  const offCount = Object.values(flags).filter((v) => v === false).length;
+  const hidden = hiddenFeatureCount(flags);
+  const changed = Object.keys(flags).length;
+  const top = scope === 'all' ? [] : TOP_FEATURES[scope];
 
   const flip = (id: string, on: boolean) => {
     const err = setFeature(id, on);
     if (err) toastError(err);
   };
+  const recommended = () =>
+    confirm('Go back to the recommended set?', 'Each app shows its top 20 features again and the extras are hidden. Nothing is deleted.', 'Use recommended', () => {
+      const err = resetFeatures();
+      if (err) toastError(err);
+    });
+  const everything = () =>
+    confirm('Switch every feature on?', 'Every tab, tool, service and section becomes visible in all four apps. People may find the apps busier.', 'Switch all on', () => {
+      const err = setFeatures(Object.fromEntries(ALL_FEATURE_IDS.map((id) => [id, true])));
+      if (err) toastError(err);
+    });
 
   return (
-    <ToolPage title="Features" subtitle={offCount ? `${offCount} switched off` : 'Everything is on'} right={offCount ? <KButton label="All on" size="sm" variant="secondary" onPress={() => confirm('Turn every feature back on?', 'Every tab, tool, service and section becomes visible again.', 'Turn on', () => { const err = resetFeatures(); if (err) toastError(err); })} /> : undefined}>
-      <Hint>Switch something off to hide it from everyone in that app. Records stay: switch it back on and they return.</Hint>
+    <ToolPage
+      title="Features"
+      subtitle={changed ? `${hidden} hidden · ${changed} changed by you` : `${hidden} extras hidden · recommended set`}
+      right={changed ? <KButton label="Recommended" size="sm" variant="secondary" onPress={recommended} /> : undefined}>
+      <Hint>Each app starts with its 20 most-used features so new people aren’t lost. Extras stay hidden until you switch them on here. Records stay when you hide something: switch it back on and they return.</Hint>
       <Segmented options={SCOPES} value={scope} onChange={setScope} />
+      {top.length > 0 && !q && (
+        <View>
+          <SectionTitle title={`Top ${top.length}: on out of the box`} />
+          <Card style={{ gap: 4 }}>
+            {top.map((f, n) => (
+              <Text key={f.id} size={13} color={featureOn(flags, f.id) ? t.c.text : t.c.muted}>
+                {n + 1}. {f.label}
+                {featureOn(flags, f.id) ? '' : ' (switched off)'}
+              </Text>
+            ))}
+          </Card>
+        </View>
+      )}
       <KField placeholder="Find a feature, tool or service" value={query} onChangeText={setQuery} autoCorrect={false} />
       {visible.map((g) => {
         const allOn = g.items.every((i) => featureOn(flags, i.id));
@@ -99,15 +101,16 @@ function Features() {
             <Card padded={false} style={{ overflow: 'hidden' }}>
               {g.items.map((i, n) => {
                 const on = featureOn(flags, i.id);
+                const extra = !featureDefault(i.id);
                 return (
                   <View key={i.id} style={[styles.row, n > 0 && { borderTopWidth: StyleSheet.hairlineWidth, borderTopColor: t.c.border }]}>
                     <View style={{ flex: 1, gap: 1 }}>
                       <Text size={14} weight="medium" color={on ? t.c.textStrong : t.c.muted}>
                         {i.label}
                       </Text>
-                      {!!i.hint && (
+                      {(!!i.hint || extra) && (
                         <Text size={12} color={t.c.muted} numberOfLines={2}>
-                          {i.hint}
+                          {[extra ? 'Extra, off by default' : '', i.hint ?? ''].filter(Boolean).join(' · ')}
                         </Text>
                       )}
                     </View>
@@ -124,6 +127,7 @@ function Features() {
           Nothing matches “{query}”.
         </Text>
       )}
+      <KButton label="Switch every feature on" variant="ghost" icon="eye-outline" onPress={everything} />
     </ToolPage>
   );
 }

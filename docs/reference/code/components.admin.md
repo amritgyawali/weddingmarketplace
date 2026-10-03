@@ -7,6 +7,7 @@ Every exported symbol in `src/components/admin/`, file by file. The guide that e
 ## Files
 
 - [`bugs.ts`](#bugsts) (2 exports)
+- [`featureCatalogue.ts`](#featurecataloguets) (5 exports)
 - [`shared.tsx`](#sharedtsx) (8 exports) · Building blocks of the super admin console: role names, collection metadata and a generic record editor.
 
 ## bugs.ts
@@ -32,6 +33,62 @@ reporterLine(r: BugReportRecord)
 ```
 
 "Aakriti Shrestha · Couple", or "Signed out".
+
+## featureCatalogue.ts
+
+Source: [src/components/admin/featureCatalogue.ts](../../../src/components/admin/featureCatalogue.ts)
+
+### `FeatureScope`
+
+*type* · [src/components/admin/featureCatalogue.ts:10](../../../src/components/admin/featureCatalogue.ts#L10)
+
+```ts
+type FeatureScope = UserRole | 'all'
+```
+
+_No JSDoc yet._
+
+### `FeatureItem`
+
+*interface* · [src/components/admin/featureCatalogue.ts:12](../../../src/components/admin/featureCatalogue.ts#L12)
+
+_No JSDoc yet._
+
+| Member | Type | Notes |
+|---|---|---|
+| `id` | `string` |  |
+| `label` | `string` |  |
+| `hint?` | `string` |  |
+
+### `featureGroups`
+
+*function* · [src/components/admin/featureCatalogue.ts:21](../../../src/components/admin/featureCatalogue.ts#L21)
+
+```ts
+featureGroups(scope: FeatureScope): { title: string; items: FeatureItem[] }[]
+```
+
+Every switch the super admin can flip for one app, grouped as the Features screen shows them.
+
+### `ALL_FEATURE_IDS`
+
+*const* · [src/components/admin/featureCatalogue.ts:40](../../../src/components/admin/featureCatalogue.ts#L40)
+
+```ts
+ALL_FEATURE_IDS: string[]
+```
+
+Every switch id across the four apps.
+
+### `hiddenFeatureCount`
+
+*function* · [src/components/admin/featureCatalogue.ts:43](../../../src/components/admin/featureCatalogue.ts#L43)
+
+```ts
+hiddenFeatureCount(flags: Record<string, boolean>)
+```
+
+How many switches are off right now, defaults included.
 
 ## shared.tsx
 

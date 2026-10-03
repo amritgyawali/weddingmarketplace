@@ -10,7 +10,7 @@ import { Toggle } from '@/components/ui/Toggle';
 import { toast } from '@/components/ui/Toast';
 import { photos } from '@/constants/images';
 import { useSocialSummary } from '@/components/social/parts';
-import { useFeatures } from '@/hooks/useFeatures';
+import { useFeatures, useLinkOn } from '@/hooks/useFeatures';
 import { useVisibleTools } from '@/components/toolkit/hub';
 import { VENDOR_TOOLS } from '@/components/toolkit/vendor';
 import { VENDOR_LINK_RULES } from '@/data/access';
@@ -36,6 +36,7 @@ export default function BusinessAccount() {
   const portfolio = useDb((s) => s.portfolio);
   const unread = useUnreadMessageCount(account);
   const on = useFeatures();
+  const linkOn = useLinkOn();
   const social = useSocialSummary(account);
   const exp = useExperience();
   const toolCount = useVisibleTools(VENDOR_TOOLS).length;
@@ -62,7 +63,7 @@ export default function BusinessAccount() {
     { icon: 'star-outline', title: 'Reviews', subtitle: `${reviews.length} reviews · reply publicly`, href: '/business/reviews' },
     { icon: 'shield-checkmark-outline', title: 'Verification', subtitle: vc ? vc.status.replace('_', ' ').toLowerCase() : 'Submit documents', href: '/business/verification' },
   ];
-  const tools = rows.filter((row) => allows(exp, VENDOR_LINK_RULES[String(row.href)]));
+  const tools = rows.filter((row) => allows(exp, VENDOR_LINK_RULES[String(row.href)]) && linkOn(row.href));
 
   return (
     <View style={{ flex: 1, backgroundColor: t.c.bg }}>

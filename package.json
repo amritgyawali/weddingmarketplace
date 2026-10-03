@@ -68,6 +68,7 @@
     "env:functions": "node scripts/env-functions.mjs",
     "test:telemetry": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/test-telemetry.mjs",
     "test:social": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/test-social.mjs",
+    "test:features": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/test-features.mjs",
     "docs:generate": "node scripts/docs/generate-reference.mjs",
     "docs:check": "node scripts/docs/generate-reference.mjs --check",
     "bugs:inbox": "node scripts/bug-inbox.cjs"

@@ -9,7 +9,7 @@ import { triggerHaptic } from '@/components/ui/PressableScale';
 import { Text } from '@/components/ui/Text';
 import { BRAND } from '@/constants/brand';
 import { tabFeature } from '@/data/features';
-import { useFeatures } from '@/hooks/useFeatures';
+import { useFeatures, useLinkOn } from '@/hooks/useFeatures';
 import { useLayout } from '@/hooks/useLayout';
 import { useRoleTheme } from '@/theme/RoleTheme';
 import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
@@ -38,11 +38,14 @@ export interface SidebarLink {
  * plain bottom bar; at desktop widths it becomes a sidebar that also lists
  * the deep links. The same component in every role, only the accent differs.
  */
-export function RoleTabBar({ state, navigation, tabs, links = [] }: BottomTabBarProps & { tabs: RoleTab[]; links?: SidebarLink[] }) {
+export function RoleTabBar({ state, navigation, tabs, links: allLinks = [] }: BottomTabBarProps & { tabs: RoleTab[]; links?: SidebarLink[] }) {
   const t = useRoleTheme();
   const insets = useSafeAreaInsets();
   const { wide } = useLayout();
   const on = useFeatures();
+  const linkOn = useLinkOn();
+  // Sidebar links to switched-off features (and extras not switched on) disappear.
+  const links = allLinks.filter((l) => linkOn(l.href));
 
   const press = (routeName: string, key: string, focused: boolean) => {
     const event = navigation.emit({ type: 'tabPress', target: key, canPreventDefault: true });

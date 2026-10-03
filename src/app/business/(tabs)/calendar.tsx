@@ -6,6 +6,7 @@ import { Card, EmptyBlock, KButton, ListRow, RoleHeader, SectionTitle, StatusPil
 import { Text } from '@/components/ui/Text';
 import { AvailabilityCalendar } from '@/components/work/AvailabilityCalendar';
 import { serviceName } from '@/data/services';
+import { useLinkOn } from '@/hooks/useFeatures';
 import { useLayout } from '@/hooks/useLayout';
 import { useVendorWorkspace } from '@/hooks/useWorkspace';
 import { exportCalendar } from '@/services/exporters';
@@ -18,6 +19,7 @@ import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard'
 export default function VendorCalendar() {
   const t = useRoleTheme();
   const { wide } = useLayout();
+  const linkOn = useLinkOn();
   const account = useAccount();
   const { bookings, staff } = useVendorWorkspace(account);
   const [day, setDay] = useState<string | null>(null);
@@ -62,7 +64,7 @@ export default function VendorCalendar() {
                 ))}
               </Card>
             ) : (
-              <EmptyBlock icon="people-outline" title="No team yet" action="Add team" onAction={() => router.push('/business/team')} />
+              <EmptyBlock icon="people-outline" title="No team yet" action={linkOn('/business/team') ? 'Add team' : undefined} onAction={() => router.push('/business/team')} />
             )}
           </View>
           <KButton

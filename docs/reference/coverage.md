@@ -4,7 +4,7 @@
 
 Exported symbols that have no JSDoc yet. The weekly documentation pass (see [the maintenance guide](../handbook/17-documentation-maintenance.md)) works through this list; whoever touches a file should document its exports too.
 
-**681 of 1351 exports documented (50%).** Files without a header comment: 313 of 407.
+**697 of 1370 exports documented (51%).** Files without a header comment: 315 of 409.
 
 | File | Undocumented exports |
 |---|---|
@@ -29,6 +29,7 @@ Exported symbols that have no JSDoc yet. The weekly documentation pass (see [the
 | [src/components/kit/primitives.tsx](../../src/components/kit/primitives.tsx) | `IconName`, `KButton`, `StatusPill`, `Avatar`, `ProgressBar`, `SectionTitle`, `EmptyBlock`, `Divider` |
 | [src/services/pricing.ts](../../src/services/pricing.ts) | `PRICING_MODELS`, `pricingModel`, `Split`, `splitBooking`, `SCHEDULE_TEMPLATES`, `DEFAULT_SCHEDULE`, `dueDateFor`, `paymentSummary` |
 | [src/data/events.ts](../../src/data/events.ts) | `EventTypeDef`, `EVENT_TYPES`, `EVENT_TYPE_BY_ID`, `eventLabel`, `GUEST_BANDS`, `GuestBand`, `bandFor` |
+| [src/data/features.ts](../../src/data/features.ts) | `FeatureDef`, `FEATURES`, `FEATURE_BY_ID`, `toolFeature`, `serviceFeature`, `tabFeature`, `TopFeature` |
 | [src/data/occasions.ts](../../src/data/occasions.ts) | `BuiltInOccasionId`, `HonoureeKind`, `VocabKey`, `OccasionDef`, `BUILT_IN_OCCASIONS`, `DEFAULT_OCCASION_ID`, `builtInOccasions` |
 | [src/services/exporters.ts](../../src/services/exporters.ts) | `shareText`, `CalendarItem`, `buildIcs`, `googleCalendarUrl`, `addToGoogleCalendar`, `toCsv`, `exportCsv` |
 | [src/backend/telemetryPayloads.ts](../../src/backend/telemetryPayloads.ts) | `Props`, `PosthogEvent`, `ErrorInfo`, `posthogEvent`, `Dsn`, `SentryContext` |
@@ -38,7 +39,6 @@ Exported symbols that have no JSDoc yet. The weekly documentation pass (see [the
 | [src/components/toolkit/vendor/ops.tsx](../../src/components/toolkit/vendor/ops.tsx) | `Inventory`, `Suppliers`, `StaffRoster`, `Halls`, `EventPrep`, `TeamTasks` |
 | [src/constants/theme.ts](../../src/constants/theme.ts) | `serif`, `FontWeight`, `spacing`, `radius`, `type`, `hitSlop` |
 | [src/data/capabilities.ts](../../src/data/capabilities.ts) | `ProviderCapability`, `PlannerModule`, `PlanCapability`, `Capability`, `planCap`, `isCapability` |
-| [src/data/features.ts](../../src/data/features.ts) | `FeatureDef`, `FEATURES`, `FEATURE_BY_ID`, `toolFeature`, `serviceFeature`, `tabFeature` |
 | [src/data/trades.ts](../../src/data/trades.ts) | `TradeId`, `EssentialField`, `TradeDef`, `TRADES`, `TRADE_BY_ID`, `BUSINESS_FORMS` |
 | [src/services/api.ts](../../src/services/api.ts) | `NotFoundError`, `DEFAULT_VENUE_FILTERS`, `countActiveFilters`, `VenueQuery`, `filterVenues`, `api` |
 | [src/services/documents.ts](../../src/services/documents.ts) | `quoteHtml`, `receiptHtml`, `contractHtml`, `guestListHtml`, `seatingHtml`, `runSheetHtml` |
@@ -83,6 +83,7 @@ Exported symbols that have no JSDoc yet. The weekly documentation pass (see [the
 | [src/utils/links.ts](../../src/utils/links.ts) | `webUrl`, `rsvpPath`, `sitePath` |
 | [supabase/functions/_shared/cloudinary.ts](../../supabase/functions/_shared/cloudinary.ts) | `PurposeRule`, `PURPOSES`, `isPurpose` |
 | [src/backend/account.ts](../../src/backend/account.ts) | `fetchMe`, `completeSignup` |
+| [src/components/admin/featureCatalogue.ts](../../src/components/admin/featureCatalogue.ts) | `FeatureScope`, `FeatureItem` |
 | [src/components/admin/shared.tsx](../../src/components/admin/shared.tsx) | `ROLE_NAMES`, `COLLECTION_BY_KEY` |
 | [src/components/listing/VenueCard.tsx](../../src/components/listing/VenueCard.tsx) | `venuePrice`, `useStartConversation` |
 | [src/components/navigation/RoleTabBar.tsx](../../src/components/navigation/RoleTabBar.tsx) | `RoleTab`, `SidebarLink` |
