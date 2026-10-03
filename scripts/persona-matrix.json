@@ -919,6 +919,8 @@
     "platform.workload",
     "route:/platform/admin",
     "route:/platform/admin/announcements",
+    "route:/platform/admin/bug",
+    "route:/platform/admin/bugs",
     "route:/platform/admin/collection",
     "route:/platform/admin/data",
     "route:/platform/admin/features",

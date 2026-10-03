@@ -11,7 +11,7 @@
 import { BRAND } from '@/constants/brand';
 
 /** The date of the current Terms and Privacy policy; stored with each acceptance. */
-export const LEGAL_VERSION = '2026-10-01';
+export const LEGAL_VERSION = '2026-10-03';
 
 export type LegalDocId = 'terms' | 'privacy' | 'refunds' | 'delete-account';
 
@@ -56,6 +56,7 @@ const PRIVACY: LegalDoc = {
         '- Payments: the amount, method, date and the gateway’s transaction reference. Card numbers, wallet PINs and bank logins are entered on Khalti’s, eSewa’s or your bank’s own pages; we never see or store them.',
         '- Messages, quotations, contracts, reviews and files you send or receive in the app.',
         '- Device and usage: a push notification token, app version, device model, the screens you open and crash reports. Location is used only while the app is open and only when you allow it.',
+        '- Bug reports you choose to send (by shaking your phone or from Settings → Help): a screenshot of the screen you were on, what you write, the screen’s address, your account, device details and the app’s recent error messages. Nothing is sent until you tap Send report, and you can remove the screenshot first.',
       ],
     },
     {

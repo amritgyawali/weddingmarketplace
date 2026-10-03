@@ -141,7 +141,7 @@ function OccasionEditor({ existing }: { existing?: OccasionDef }) {
           </Text>
         </Card>
       )}
-      <View pointerEvents={manage ? 'auto' : 'none'} style={{ gap: 14, opacity: manage ? 1 : 0.6 }}>
+      <View style={{ gap: 14, opacity: manage ? 1 : 0.6, pointerEvents: manage ? 'auto' : 'none' }}>
         <Card style={{ gap: 12 }}>
           <Cols>
             <Col>

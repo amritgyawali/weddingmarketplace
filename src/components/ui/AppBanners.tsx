@@ -21,7 +21,7 @@ export function ImpersonationBar() {
   if (!impersonatorId || !session) return null;
   const viewing = accounts.find((a) => a.id === session.accountId);
   return (
-    <View pointerEvents="box-none" style={[styles.impHost, { top: insets.top + 4 }]}>
+    <View style={[styles.impHost, { top: insets.top + 4, pointerEvents: 'box-none' }]}>
       <Pressable onPress={endImpersonation} accessibilityRole="button" style={({ pressed }) => [styles.imp, pressed && { opacity: 0.85 }]}>
         <Ionicons name="eye-outline" size={15} color={colors.white} />
         <Text size={12} weight="semibold" color={colors.white} numberOfLines={1} style={{ flexShrink: 1 }}>

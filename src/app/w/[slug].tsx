@@ -255,7 +255,7 @@ export default function WeddingSite() {
       </ScrollView>
 
       {gift && (
-        <View style={StyleSheet.absoluteFill} pointerEvents="box-none">
+        <View style={[StyleSheet.absoluteFill, { pointerEvents: 'box-none' }]}>
           <Pressable style={[StyleSheet.absoluteFill, { backgroundColor: 'rgba(0,0,0,0.4)' }]} onPress={() => setGift(null)} />
           <View style={[styles.giftCard, { paddingBottom: insets.bottom + 16 }]}>
             <Text size={18} weight="bold" color={colors.textStrong}>
