@@ -57,7 +57,7 @@ function FreelancerDirectory() {
               <Text size={12} color={t.c.muted} numberOfLines={1}>
                 {item.skills.join(' · ')} · {item.city} ({item.travelRadiusKm} km)
               </Text>
-              <Text size={11} color={t.c.subtle} numberOfLines={1}>
+              <Text size={11} color={t.c.muted} numberOfLines={1}>
                 {item.rating}★ · {item.completedGigs} gigs · reliability {item.reliability} · {formatMoney(item.dayRate)}/day
               </Text>
             </View>

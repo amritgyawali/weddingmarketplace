@@ -114,7 +114,7 @@ export function AvailabilityCalendar({ ownerKind, ownerId, onSelectDay }: { owne
                 <Text size={14} lineHeight={17} weight={on || isToday ? 'bold' : 'medium'} color={s.status === 'AVAILABLE' ? t.c.textStrong : color} raw>
                   {n(cell.day)}
                 </Text>
-                <Text size={8} lineHeight={10} color={t.c.subtle} raw>
+                <Text size={8} lineHeight={10} color={t.c.muted} raw>
                   {cell.alt}
                 </Text>
                 {s.status !== 'AVAILABLE' && <View style={[styles.dot, { backgroundColor: color, opacity: s.rule ? 0.5 : 1 }]} />}

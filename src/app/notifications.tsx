@@ -50,7 +50,7 @@ function NotificationList() {
                 <Text size={13} color={t.c.muted}>
                   {item.body}
                 </Text>
-                <Text size={11} color={t.c.subtle}>
+                <Text size={11} color={t.c.muted}>
                   {isToday(item.at) ? formatTime(item.at) : formatShortDate(item.at)}
                 </Text>
               </View>

@@ -140,7 +140,7 @@ export function Calendar({
                     raw>
                     {n(cell.day)}
                   </Text>
-                  <Text size={9} lineHeight={11} color={selected ? t.c.onPrimary : t.c.subtle} raw>
+                  <Text size={9} lineHeight={11} color={selected ? t.c.onPrimary : t.c.muted} raw>
                     {cell.alt}
                   </Text>
                   {peak && !selected && <View style={[styles.dot, styles.peakDot, { backgroundColor: t.c.primary }]} />}

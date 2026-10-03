@@ -314,7 +314,7 @@ export function MenuPlanner() {
               <Line label="Per plate" value={formatMoney(perPlate)} />
               <Line label="Veg / non-veg dishes" value={`${entries.filter((e) => e.fields?.diet !== 'Non-veg').length} / ${entries.filter((e) => e.fields?.diet === 'Non-veg').length}`} />
               <Line label="Estimated food cost" value={formatMoney(perPlate * Number(guests.guests))} strong note="Before VAT and service charge; caterers usually add 10% for extra plates" />
-              <Text size={12} color={t.c.subtle}>
+              <Text size={12} color={t.c.muted}>
                 Share this with your caterer before the tasting so they can quote against it.
               </Text>
             </Card>

@@ -111,7 +111,7 @@ export function Segmented<T extends string>({
               {o.label}
             </Text>
             {count !== undefined && (
-              <Text size={13} color={t.c.subtle}>
+              <Text size={13} color={t.c.muted}>
                 {count}
               </Text>
             )}

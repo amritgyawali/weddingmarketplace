@@ -149,7 +149,7 @@ function StoriesPane() {
           <Text size={14} color={colors.textMuted} style={{ marginTop: 4 }} numberOfLines={2}>
             {item.excerpt}
           </Text>
-          <Text size={12} color={colors.textSubtle} style={{ marginTop: 6 }}>
+          <Text size={12} color={colors.textMuted} style={{ marginTop: 6 }}>
             {item.author} · {item.readMinutes} min read
           </Text>
         </PressableScale>

@@ -61,7 +61,7 @@ export function PackageCard({ pkg, active, onBuy }: { pkg: GeniePackage; active?
           <Text size={18} weight="bold" color={colors.heading}>
             NPR {formatNumber(pkg.price)}
           </Text>
-          <Text size={13} color={colors.textSubtle} style={{ textDecorationLine: 'line-through' }}>
+          <Text size={13} color={colors.textMuted} style={{ textDecorationLine: 'line-through' }}>
             NPR {formatNumber(pkg.mrp)}
           </Text>
         </View>

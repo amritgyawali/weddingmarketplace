@@ -59,7 +59,7 @@ export function SavedReplies() {
         ) : (
           <Hint>No open enquiries — placeholders will be left generic.</Hint>
         )}
-        <Text size={12} color={t.c.subtle}>
+        <Text size={12} color={t.c.muted}>
           Placeholders: {'{name}'}, {'{date}'}, {'{guests}'}, {'{business}'}
         </Text>
       </Card>
@@ -139,7 +139,7 @@ export function FollowUps() {
           />
         )}
       />
-      <Text size={12} color={t.c.subtle}>
+      <Text size={12} color={t.c.muted}>
         Couples who hear back within a day are about three times more likely to book a visit.
       </Text>
     </ToolPage>
@@ -236,7 +236,7 @@ export function ResponseTime() {
           </Card>
         </View>
       )}
-      <Text size={12} color={t.c.subtle}>
+      <Text size={12} color={t.c.muted}>
         Measured from the enquiry to the first time you moved it past “new”.
       </Text>
     </ToolPage>

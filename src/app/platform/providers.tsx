@@ -65,7 +65,7 @@ function ProvidersDirectory() {
               <Text size={12} color={t.c.muted} numberOfLines={1}>
                 {SERVICES.find((s) => s.id === item.serviceId)?.name} · {item.city} · {item.rating}★ · from {formatMoneyCompact(item.startingPrice)}
               </Text>
-              <Text size={11} color={t.c.subtle}>
+              <Text size={11} color={t.c.muted}>
                 Reliability {item.internal.reliability} · replies ~{item.internal.responseMinutes}m · cancels {Math.round(item.internal.cancellationRate * 100)}% · {bookingsBy.get(item.id) ?? 0} bookings
               </Text>
             </View>

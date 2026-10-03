@@ -86,7 +86,7 @@ function Texts() {
                   <Text size={14} weight="medium" color={t.c.textStrong} raw>
                     {o?.en ?? k}
                   </Text>
-                  <Text size={13} color={nep === k ? t.c.subtle : t.c.text} raw>
+                  <Text size={13} color={nep === k ? t.c.muted : t.c.text} raw>
                     {nep === k ? '—' : nep}
                   </Text>
                 </View>

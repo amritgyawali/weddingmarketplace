@@ -48,7 +48,7 @@ function DisputeCard({ d }: { d: Dispute }) {
         {d.paymentFrozen ? 'Settlement frozen' : 'Settlement not frozen'} · {timeAgo(d.at)}
       </Text>
       {d.log.map((l, i) => (
-        <Text key={i} size={11} color={t.c.subtle}>
+        <Text key={i} size={11} color={t.c.muted}>
           {formatShortDate(l.at)} · {l.by}: {l.text}
         </Text>
       ))}

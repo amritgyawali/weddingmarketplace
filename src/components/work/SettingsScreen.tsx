@@ -241,7 +241,7 @@ export function SettingsScreen() {
           <ListRow icon="shield-checkmark-outline" title="Privacy policy" onPress={() => router.push({ pathname: '/legal/[doc]', params: { doc: 'privacy' } })} />
           <ListRow icon="receipt-outline" title="Cancellation and refunds" onPress={() => router.push({ pathname: '/legal/[doc]', params: { doc: 'refunds' } })} />
         </Card>
-        <Text size={11} color={t.c.subtle} align="center">
+        <Text size={11} color={t.c.muted} align="center">
           {BRAND.name} · support {BRAND.supportPhone} · {BRAND.supportEmail}
         </Text>
       </ScrollView>

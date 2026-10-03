@@ -41,7 +41,7 @@ export function SignaturePad({ onDone, height = 180 }: { onDone: (path: string) 
         </Svg>
         {!all.length && (
           <View style={[styles.hint, { pointerEvents: 'none' }]}>
-            <Text size={13} color={t.c.subtle}>
+            <Text size={13} color={t.c.muted}>
               Sign here with your finger
             </Text>
           </View>

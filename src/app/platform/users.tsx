@@ -69,7 +69,7 @@ function UsersDirectory() {
                     {ROLE_THEMES[item.role].label}
                     {item.staffRole ? ` (${item.staffRole})` : ''} · {item.city} · {formatPhone(item.phone)}
                   </Text>
-                  <Text size={11} color={t.c.subtle}>
+                  <Text size={11} color={t.c.muted}>
                     Joined {formatShortDate(item.createdAt)}
                     {item.role === 'customer' ? ` · ${weddings} project${weddings === 1 ? '' : 's'}` : ''}
                     {item.skills?.length ? ` · ${item.skills.join(', ')}` : ''}

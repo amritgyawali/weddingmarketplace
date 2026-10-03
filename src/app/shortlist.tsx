@@ -115,7 +115,7 @@ export default function ShortlistScreen() {
                     <Text size={12} color={colors.textMuted} numberOfLines={1}>
                       ★ {p.rating.toFixed(1)} · {p.city} · from {formatMoney(p.startingPrice)}
                     </Text>
-                    <Text size={11} color={colors.textSubtle}>
+                    <Text size={11} color={colors.textMuted}>
                       Saved {timeAgo(e.addedAt)}
                       {e.tags.length ? ` · ${e.tags.join(', ')}` : ''}
                     </Text>

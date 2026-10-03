@@ -164,7 +164,7 @@ export default function InfoScreen() {
               <Row icon="receipt-outline" title="Cancellation and refunds" onPress={() => router.push({ pathname: '/legal/[doc]', params: { doc: 'refunds' } })} />
               <Row icon="help-circle-outline" title="FAQs" onPress={() => router.navigate('/genie')} />
               <Row icon="storefront-outline" title="List your business" subtitle="Are you a vendor? Join us" onPress={() => Linking.openURL(`mailto:${BRAND.supportEmail}?subject=Vendor%20listing`)} />
-              <Text size={12} color={colors.textSubtle} align="center" style={{ marginTop: 30 }}>
+              <Text size={12} color={colors.textMuted} align="center" style={{ marginTop: 30 }}>
                 {BRAND.name} v{Constants.expoConfig?.version ?? '1.0.0'}
               </Text>
             </View>

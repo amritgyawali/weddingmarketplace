@@ -48,7 +48,7 @@ export function ApplicantsList({ gig }: { gig: Gig }) {
                   </Text>
                 </View>
                 {profile && (
-                  <Text size={11} color={t.c.subtle} numberOfLines={1}>
+                  <Text size={11} color={t.c.muted} numberOfLines={1}>
                     {profile.city} · {profile.equipment.map((e) => e.name).join(', ') || 'no equipment listed'}
                   </Text>
                 )}
@@ -60,7 +60,7 @@ export function ApplicantsList({ gig }: { gig: Gig }) {
                 “{a.message}”
               </Text>
             )}
-            <Text size={11} color={t.c.subtle}>
+            <Text size={11} color={t.c.muted}>
               Applied {formatShortDate(a.appliedAt)}
               {a.checkInAt ? ` · checked in ${formatTime(a.checkInAt)}` : ''}
               {a.checkOutAt ? ` · out ${formatTime(a.checkOutAt)}` : ''}

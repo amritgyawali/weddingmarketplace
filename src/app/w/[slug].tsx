@@ -248,7 +248,7 @@ export default function WeddingSite() {
             </Section>
           )}
 
-          <Text size={12} color={colors.textSubtle} align="center">
+          <Text size={12} color={colors.textMuted} align="center">
             Made on Vivah
           </Text>
         </View>

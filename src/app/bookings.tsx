@@ -83,7 +83,7 @@ function BookingCard({ booking }: { booking: Booking }) {
             </Text>
           </View>
         )}
-        <Text size={12} color={colors.textSubtle}>
+        <Text size={12} color={colors.textMuted}>
           Requested {formatShortDate(booking.createdAt)}
         </Text>
       </View>

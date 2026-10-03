@@ -70,7 +70,7 @@ export function TimelineView({ project, mode }: { project: Project; mode: 'custo
                 <Text size={12} weight="bold" color={isNext ? t.c.primary : t.c.textStrong}>
                   {formatMonthDay(e.date)}
                 </Text>
-                <Text size={10} color={t.c.subtle}>
+                <Text size={10} color={t.c.muted}>
                   {bsMonthLabel(e.date).split(' ')[0]}
                 </Text>
               </View>
@@ -100,7 +100,7 @@ export function TimelineView({ project, mode }: { project: Project; mode: 'custo
           );
         })}
       </View>
-      <Text size={11} color={t.c.subtle} align="center">
+      <Text size={11} color={t.c.muted} align="center">
         Long-press any item to add it to Google Calendar.
       </Text>
 

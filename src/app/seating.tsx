@@ -194,7 +194,7 @@ function Planner({ project, readOnly }: { project: Project; readOnly: boolean })
                   />
                 ))}
             </View>
-            <Text size={11} color={t.c.subtle} align="center">
+            <Text size={11} color={t.c.muted} align="center">
               Drag to arrange · tap a table to seat guests
             </Text>
             {!readOnly && (

@@ -375,7 +375,7 @@ export default function FreelancerProfile() {
               <Text size={13} color={t.c.text} lineHeight={19}>
                 {r.text}
               </Text>
-              <Text size={11} color={t.c.subtle}>
+              <Text size={11} color={t.c.muted}>
                 {Object.entries(r.criteria)
                   .map(([k, v]) => `${k} ${v}`)
                   .join(' · ')}

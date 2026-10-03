@@ -325,7 +325,7 @@ function Services({ project }: { project: Project }) {
                   {r.candidates.length ? `${r.candidates.length} providers matched — your coordinator is checking availability.` : 'Your coordinator is matching the best providers for your date and budget.'}
                 </Text>
                 {r.styles.length > 0 && (
-                  <Text size={12} color={colors.textSubtle}>
+                  <Text size={12} color={colors.textMuted}>
                     Style: {r.styles.join(', ')}
                   </Text>
                 )}

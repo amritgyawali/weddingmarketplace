@@ -134,7 +134,7 @@ function PlanningGuide({ hasProject }: { hasProject: boolean }) {
                 <Text size={15} color={checked ? colors.textMuted : colors.text} style={checked ? { textDecorationLine: 'line-through' } : undefined}>
                   {item.title}
                 </Text>
-                <Text size={12} color={colors.textSubtle}>
+                <Text size={12} color={colors.textMuted}>
                   {item.category}
                 </Text>
               </View>

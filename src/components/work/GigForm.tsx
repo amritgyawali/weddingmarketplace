@@ -131,7 +131,7 @@ export function GigForm({ projects, defaultCity, initialProjectId, onSubmit }: {
           </Text>
           <Pressable onPress={() => setDateOpen(true)} style={[styles.date, { borderColor: errors.date ? t.c.danger : t.c.border, backgroundColor: t.dark ? t.c.surfaceAlt : t.c.surface }]}>
             <Ionicons name="calendar-outline" size={18} color={t.c.primary} />
-            <Text size={15} color={date ? t.c.textStrong : t.c.subtle}>
+            <Text size={15} color={date ? t.c.textStrong : t.c.muted}>
               {date ? formatLongDate(date) : 'Select date'}
             </Text>
           </Pressable>

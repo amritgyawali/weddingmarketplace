@@ -107,7 +107,7 @@ export function ToolHub({ role, tools, title, subtitle }: { role: UserRole; tool
           </Card>
         </View>
       ))}
-      <Text size={12} color={t.c.subtle} align="center" style={styles.foot}>
+      <Text size={12} color={t.c.muted} align="center" style={styles.foot}>
         Changes save automatically.
       </Text>
     </ToolPage>

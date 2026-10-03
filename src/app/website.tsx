@@ -116,7 +116,7 @@ function Builder({ project, readOnly }: { project: Project; readOnly: boolean })
               {url}
             </Text>
             {saved && (
-              <Text size={11} color={t.c.subtle}>
+              <Text size={11} color={t.c.muted}>
                 {saved.views} visits · updated {formatLongDate(saved.updatedAt)}
               </Text>
             )}

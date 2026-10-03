@@ -48,7 +48,7 @@ export default function Team() {
                 </View>
                 <StatusPill status={m.active ? 'confirmed' : 'draft'} label={m.active ? 'Active' : 'Inactive'} />
               </View>
-              <Text size={11} color={t.c.subtle}>
+              <Text size={11} color={t.c.muted}>
                 Access: {m.permissions.join(', ') || 'none'}
               </Text>
               {upcoming.map(({ project, a }) => (
