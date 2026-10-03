@@ -45,6 +45,7 @@ Every file in `src/app/` is a route (Expo Router). Layouts (`_layout.tsx`) defin
 | `/quote/[id]` | screen | `CustomerQuote` | [quote/[id].tsx](../../src/app/quote/%5Bid%5D.tsx) | Couple's quotation: compare versions, accept (books everything), ask for changes or decline. |
 | `/real-wedding/[id]` | screen | `RealWeddingScreen` | [real-wedding/[id].tsx](../../src/app/real-wedding/%5Bid%5D.tsx) |  |
 | `/registry` | screen | `RegistryScreen` | [registry.tsx](../../src/app/registry.tsx) | Gift registry: cash, honeymoon and charity funds, gifts and store wishlists, with thank-you tracking. |
+| `/report-bug` | screen | `ReportBug` | [report-bug.tsx](../../src/app/report-bug.tsx) | Report a bug: opened by a phone screenshot, three fingers held on the screen, the bug button, a shake or Settings. Public, every role. |
 | `/search` | screen | `SearchScreen` | [search.tsx](../../src/app/search.tsx) |  |
 | `/seating` | screen | `SeatingScreen` | [seating.tsx](../../src/app/seating.tsx) | Drag-and-drop seating planner per function with auto-seating, capacity warnings and printable charts. |
 | `/select-city` | screen | `SelectCityScreen` | [select-city.tsx](../../src/app/select-city.tsx) |  |

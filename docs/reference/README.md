@@ -37,7 +37,7 @@ Generated from the source. For the *why*, read [the handbook](../handbook/README
 | `src/components/toolkit/freelancer/` | 6 | 26 | [components.toolkit.freelancer.md](code/components.toolkit.freelancer.md) |
 | `src/components/toolkit/platform/` | 3 | 21 | [components.toolkit.platform.md](code/components.toolkit.platform.md) |
 | `src/components/toolkit/vendor/` | 5 | 36 | [components.toolkit.vendor.md](code/components.toolkit.vendor.md) |
-| `src/components/ui/` | 23 | 55 | [components.ui.md](code/components.ui.md) |
+| `src/components/ui/` | 23 | 61 | [components.ui.md](code/components.ui.md) |
 | `src/components/wedding/` | 2 | 11 | [components.wedding.md](code/components.wedding.md) |
 | `src/components/work/` | 26 | 52 | [components.work.md](code/components.work.md) |
 | `src/constants/` | 4 | 19 | [constants.md](code/constants.md) |
