@@ -7,12 +7,14 @@ Every exported symbol in `src/hooks/`, file by file. The guide that explains how
 ## Files
 
 - [`queries.ts`](#queriests) (17 exports)
+- [`useBugReports.ts`](#usebugreportsts) (3 exports)
 - [`useChat.ts`](#usechatts) (1 exports)
 - [`useDebounce.ts`](#usedebouncets) (1 exports)
 - [`useExperience.ts`](#useexperiencets) (1 exports)
 - [`useFeatures.ts`](#usefeaturests) (1 exports)
 - [`useHydrated.ts`](#usehydratedts) (1 exports)
 - [`useLayout.ts`](#uselayoutts) (1 exports)
+- [`useShake.ts`](#useshakets) (1 exports)
 - [`useTelemetry.ts`](#usetelemetryts) (1 exports)
 - [`useWorkspace.ts`](#useworkspacets) (9 exports)
 
@@ -190,6 +192,40 @@ useShortlistedVendors(ids: string[])
 
 _No JSDoc yet._
 
+## useBugReports.ts
+
+Source: [src/hooks/useBugReports.ts](../../../src/hooks/useBugReports.ts)
+
+### `useBugReports`
+
+*hook* · [src/hooks/useBugReports.ts:18](../../../src/hooks/useBugReports.ts#L18)
+
+```ts
+useBugReports(): { reports: BugReportRecord[]; loading: boolean; error?: string; refresh: () => void }
+```
+
+Bug reports for the super admin console: the server's on Supabase builds, the store's in the demo.
+
+### `useBugReport`
+
+*hook* · [src/hooks/useBugReports.ts:27](../../../src/hooks/useBugReports.ts#L27)
+
+```ts
+useBugReport(id: string | undefined): { report?: BugReportRecord; loading: boolean; error?: string }
+```
+
+One report, with its screenshot.
+
+### `useBugReportActions`
+
+*hook* · [src/hooks/useBugReports.ts:36](../../../src/hooks/useBugReports.ts#L36)
+
+```ts
+useBugReportActions()
+```
+
+Mark fixed / dismissed / new and delete; each resolves to an error to show, or null.
+
 ## useChat.ts
 
 Source: [src/hooks/useChat.ts](../../../src/hooks/useChat.ts)
@@ -278,6 +314,20 @@ useLayout()
 
 Breakpoints for the web-ready consoles. Phones get one column; tablets and
 desktop browsers (expo start --web) get side navigation and grids.
+
+## useShake.ts
+
+Source: [src/hooks/useShake.ts](../../../src/hooks/useShake.ts)
+
+### `useShake`
+
+*hook* · [src/hooks/useShake.ts:13](../../../src/hooks/useShake.ts#L13)
+
+```ts
+useShake(onShake: () => void, enabled = true)
+```
+
+Calls `onShake` when the phone is shaken firmly. Pass a stable function; does nothing where there is no accelerometer.
 
 ## useTelemetry.ts
 

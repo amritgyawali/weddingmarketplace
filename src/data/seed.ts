@@ -1834,6 +1834,7 @@ export function buildSeedData(): DbData {
     featureFlags: {},
     textOverrides: {},
     announcements: [],
+    bugReports: [],
   };
 }
 

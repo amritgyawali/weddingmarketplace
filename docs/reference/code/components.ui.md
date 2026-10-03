@@ -7,6 +7,7 @@ Every exported symbol in `src/components/ui/`, file by file. The guide that expl
 ## Files
 
 - [`AppBanners.tsx`](#appbannerstsx) (2 exports)
+- [`BugReporter.tsx`](#bugreportertsx) (4 exports) · Shake to report a bug. Shaking the phone (or Alt+Shift+B on the web, or Settings → Report a problem) takes a screenshot of the screen exact…
 - [`Button.tsx`](#buttontsx) (2 exports)
 - [`Calendar.tsx`](#calendartsx) (4 exports)
 - [`Chip.tsx`](#chiptsx) (2 exports)
@@ -52,6 +53,61 @@ AnnouncementBanner({ style }: { style?: object })
 ```
 
 Announcements a super admin pinned for this role (or everyone). Dismissed ones stay hidden on this screen visit.
+
+## BugReporter.tsx
+
+Source: [src/components/ui/BugReporter.tsx](../../../src/components/ui/BugReporter.tsx)
+
+Shake to report a bug. Shaking the phone (or Alt+Shift+B on the web, or
+Settings → Report a problem) takes a screenshot of the screen exactly as it
+is, then opens a sheet to describe the problem. It works on every screen of
+every role app, signed in or not, in every build. The report is saved in the
+app's backend for the super admins (Super admin → Bug reports) and, in
+development and test builds, also lands in the developer's `bug-reports/`
+folder (see `backend/bugReport.ts` and `scripts/bug-inbox.cjs`).
+
+A super admin can switch it off (`app.bug_report`) and each device can turn
+shaking off in Settings.
+
+### `useBugReporter`
+
+*const* · [src/components/ui/BugReporter.tsx:62](../../../src/components/ui/BugReporter.tsx#L62)
+
+```ts
+useBugReporter= create<BugReporterState>()( persist( (set) => ({ shake: true, inbox: '', draft: null, set…
+```
+
+The reporter's state: the open draft, and the device's shake setting and inbox address (persisted).
+
+### `installBugReporter`
+
+*function* · [src/components/ui/BugReporter.tsx:84](../../../src/components/ui/BugReporter.tsx#L84)
+
+```ts
+installBugReporter()
+```
+
+Starts keeping console errors for reports. Root layout calls it once.
+
+### `reportBug`
+
+*function* · [src/components/ui/BugReporter.tsx:89](../../../src/components/ui/BugReporter.tsx#L89)
+
+```ts
+reportBug({ screenshot = true }: { screenshot?: boolean } = {})
+```
+
+Screenshots the screen as it is now and opens the report sheet. `screenshot: false` opens it without one.
+
+### `BugReporterHost`
+
+*component* · [src/components/ui/BugReporter.tsx:117](../../../src/components/ui/BugReporter.tsx#L117)
+
+```ts
+BugReporterHost()
+```
+
+Follows the current screen, listens for shakes and shows the report sheet. Root layout only.
 
 ## Button.tsx
 

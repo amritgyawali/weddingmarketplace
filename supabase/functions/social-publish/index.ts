@@ -6,7 +6,7 @@
  *   POST { "due": true } (x-webhook-secret: NOTIFY_WEBHOOK_SECRET)   the scheduled run
  *        (job_social_due in 0018, every five minutes through pg_cron and pg_net)
  *        → claims the due posts (vivah_social_claim_due) and publishes each
- *   POST { "metrics": true } (x-webhook-secret)   job_social_metrics in 0019, every six hours
+ *   POST { "metrics": true } (x-webhook-secret)   job_social_metrics in 0020, every six hours
  *        → reads reach, likes, comments, shares and saves back for recent posts
  *
  * Each network follows its own steps (publishTo in _shared/social.ts) and

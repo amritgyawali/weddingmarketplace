@@ -479,7 +479,7 @@ ok('social-send: the template goes out and is recorded with WhatsApp’s id', se
 ok('social-send: someone outside the business gets not found', (await send(post({ threadId: '00000000-0000-4000-8000-0000000000bb', text: 'x' }, { Authorization: 'Bearer good' }))).status === 404);
 globalThis.fetch = prevFetch;
 
-// ─── Social hub: insights from the networks (0019) ─────────────────────────────
+// ─── Social hub: insights from the networks (0020) ─────────────────────────────
 const fbM = scripted([[/\/page-1_100\?fields=shares/, [200, { shares: { count: 4 }, reactions: { summary: { total_count: 80 } }, comments: { summary: { total_count: 9 } }, insights: { data: [{ name: 'post_impressions_unique', values: [{ value: 1200 }] }] } }]]]);
 const fbMetrics = await so.fetchMetrics({ network: 'facebook', externalId: 'page-1_100', token: 'pt' }, fbM.http);
 ok('insights Facebook: reach from post insights, reactions, comments and shares', JSON.stringify(fbMetrics) === JSON.stringify({ reach: 1200, likes: 80, comments: 9, shares: 4 }), JSON.stringify(fbMetrics));

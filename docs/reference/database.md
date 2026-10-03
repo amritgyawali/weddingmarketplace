@@ -424,9 +424,34 @@ NOT DEPLOYED. Never apply without the owner's say-so (AGENTS.md §1).
 - **Scheduled jobs (1):** `vivah-social-due`
 - **Policies:** 14 · **Indexes:** 7
 
-## 0019_social_live.sql
+## 0019_bug_reports.sql
 
-Source: [supabase/migrations/0019_social_live.sql](../../supabase/migrations/0019_social_live.sql)
+Source: [supabase/migrations/0019_bug_reports.sql](../../supabase/migrations/0019_bug_reports.sql)
+
+```text
+Bug reports (shake to report).
+
+  bug_reports               what anyone using the app sends by shaking the
+                            phone (or Settings → Help → Report a problem):
+                            the description, a screenshot, the screen, the
+                            account, device and app details, recent screens
+                            and console errors. Mirrors BugReportRecord in
+                            types/platform.ts and store/db/support.ts.
+  rpc_submit_bug_report     signed in or signed out; rate limited.
+  rpc_list_bug_reports      super admins (admin.full): newest first, no screenshots.
+  rpc_get_bug_report        super admins: one report with its screenshot.
+  rpc_set_bug_report_status super admins: new / fixed / dismissed, audited.
+  rpc_delete_bug_reports    super admins, audited.
+NOT DEPLOYED. Never apply without the owner's say-so (AGENTS.md §1).
+```
+
+- **Tables created (1):** `bug_reports`
+- **Functions (6):** `rpc_delete_bug_reports`, `rpc_get_bug_report`, `rpc_list_bug_reports`, `rpc_set_bug_report_status`, `rpc_submit_bug_report`, `vivah_bug_report_json`
+- **Policies:** 1 · **Indexes:** 2
+
+## 0020_social_live.sql
+
+Source: [supabase/migrations/0020_social_live.sql](../../supabase/migrations/0020_social_live.sql)
 
 ```text
 Social hub, part 3: what the live networks need beyond 0018.

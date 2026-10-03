@@ -1770,7 +1770,7 @@ Totals across published posts, per network, and the best post by engagement.
 optInKeyword(text: string): 'in' | 'out' | null
 ```
 
-WhatsApp broadcast consent by keyword: "START"/"SUBSCRIBE" opts in, "STOP"/"UNSUBSCRIBE" opts out (also in Nepali). Same words as the SQL trigger in 0019.
+WhatsApp broadcast consent by keyword: "START"/"SUBSCRIBE" opts in, "STOP"/"UNSUBSCRIBE" opts out (also in Nepali). Same words as the SQL trigger in 0020.
 
 ## toolkit.ts
 

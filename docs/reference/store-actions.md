@@ -255,6 +255,16 @@ Source: [src/store/db/social.ts:41](../../src/store/db/social.ts#L41) · Social 
 | `updateSocialSettings` | `(patch: Partial<SocialSettings>) => string \| null` | _No JSDoc yet._ |
 | `mirrorSocialData` | `(ownerId: string, data: { accounts: SocialAccount[]; threads: SocialThread[]; messages: SocialMessage[]; posts: SocialPost[]; settings?: SocialSettings }) => void` | Supabase builds: replaces one business's hub on this device with what the server holds (`syncSocialFromServer`). |
 
+## SupportActions
+
+Source: [src/store/db/support.ts:21](../../src/store/db/support.ts#L21) · Bug reports from shake to report. Anyone can send one, signed in or not, in every build; super admins read them in the console (Super admin → Bug reports), mark them fixed or dismissed and delete the…
+
+| Action | Signature | What it does |
+|---|---|---|
+| `submitBugReport` | `(report: BugReport) => { id?: string; error?: string }` | Saves a report from the report sheet and tells the super admins. Returns its id, or an error. |
+| `setBugReportStatus` | `(id: string, status: BugReportStatus, note?: string) => string \| null` | Marks a report new, fixed or dismissed (super admins). Returns an error to show, or null. |
+| `removeBugReports` | `(ids: string[]) => string \| null` | Deletes reports (super admins). |
+
 ## ToolkitActions
 
 Source: [src/store/db/toolkit.ts:9](../../src/store/db/toolkit.ts#L9) · Role toolkits: generic tool records, per-owner tool settings and ops broadcasts.

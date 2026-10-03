@@ -20,6 +20,10 @@ export const ENV = {
   turnstileSiteKey: read(process.env.EXPO_PUBLIC_TURNSTILE_SITE_KEY),
   easProjectId: read(process.env.EXPO_PUBLIC_EAS_PROJECT_ID),
   paymentMode: read(process.env.EXPO_PUBLIC_PAYMENT_MODE) === 'live' ? ('live' as const) : ('sandbox' as const),
+  /** `on` shows shake-to-report in an installed test build (development builds always have it). */
+  bugReports: read(process.env.EXPO_PUBLIC_BUG_REPORTS) === 'on',
+  /** A bug inbox (`npm run bugs:inbox`) for builds without a dev server. Development builds use the dev server's own inbox. */
+  bugInboxUrl: read(process.env.EXPO_PUBLIC_BUG_INBOX_URL),
 };
 
 /** True when the real backend is switched on and configured. */

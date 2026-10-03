@@ -8,7 +8,7 @@ Every exported symbol in `src/types/`, file by file. The guide that explains how
 
 - [`index.ts`](#indexts) (26 exports)
 - [`persona.ts`](#personats) (10 exports) · Persona model: who a user is (taxonomy), what they can do (capabilities and permissions) and what they see (surfaces). See docs/MASTER_PLAN…
-- [`platform.ts`](#platformts) (95 exports) · Shared domain model for the wedding-services orchestration marketplace. Every role (couple, provider, freelancer, platform team) reads and …
+- [`platform.ts`](#platformts) (99 exports) · Shared domain model for the wedding-services orchestration marketplace. Every role (couple, provider, freelancer, platform team) reads and …
 - [`social.ts`](#socialts) (14 exports) · Social hub (business app): the vendor's Facebook page, Instagram profile, WhatsApp Business number and TikTok account in one place. Message…
 - [`toolkit.ts`](#toolkitts) (5 exports) · Role toolkits: the smaller planning, business, freelance and operations tools each app offers on top of the core orchestration loop. They s…
 
@@ -2188,9 +2188,67 @@ A notice a super admin pins to the top of one role's home, or every role's.
 | `createdAt` | `string` |  |
 | `createdBy` | `string` |  |
 
+### `BugLogLine`
+
+*interface* · [src/types/platform.ts:1138](../../../src/types/platform.ts#L1138)
+
+_No JSDoc yet._
+
+| Member | Type | Notes |
+|---|---|---|
+| `at` | `string` |  |
+| `level` | `'error' \| 'warn'` |  |
+| `message` | `string` |  |
+
+### `BugReport`
+
+*interface* · [src/types/platform.ts:1145](../../../src/types/platform.ts#L1145)
+
+What the report sheet sends: the description, the screenshot and where it happened.
+
+| Member | Type | Notes |
+|---|---|---|
+| `description` | `string` |  |
+| `screenshot?` | `string` | JPEG or PNG as a data URI (on this device's own copy it can be a file:// address instead). |
+| `route` | `string` |  |
+| `params` | `Record<string, string>` |  |
+| `capturedAt` | `string` |  |
+| `account?` | `{ id: string; name: string; role: string; staffRole?: string }` | Missing when the report was sent signed out. |
+| `device` | `{ os: string; osVersion: string; width: number; height: number; scale: number; runtime: string; userAgent?: string }` |  |
+| `app` | `{ name: string; version: string; backend: string; language: string; calendar: string }` |  |
+| `recentRoutes` | `{ at: string; path: string }[]` |  |
+| `logs` | `BugLogLine[]` |  |
+
+### `BugReportStatus`
+
+*type* · [src/types/platform.ts:1160](../../../src/types/platform.ts#L1160)
+
+```ts
+type BugReportStatus = 'new' | 'fixed' | 'dismissed'
+```
+
+_No JSDoc yet._
+
+### `BugReportRecord`
+
+*interface* · [src/types/platform.ts:1163](../../../src/types/platform.ts#L1163)
+
+`extends BugReport`
+
+A bug report as the super admin console keeps it.
+
+| Member | Type | Notes |
+|---|---|---|
+| `id` | `string` |  |
+| `receivedAt` | `string` |  |
+| `status` | `BugReportStatus` |  |
+| `resolvedBy?` | `string` | Who marked it fixed or dismissed, and when. |
+| `resolvedAt?` | `string` |  |
+| `note?` | `string` |  |
+
 ### `*`
 
-*re-export* · [src/types/platform.ts:1138](../../../src/types/platform.ts#L1138)
+*re-export* · [src/types/platform.ts:1174](../../../src/types/platform.ts#L1174)
 
 ```ts
 *from './toolkit'
@@ -2200,7 +2258,7 @@ _No JSDoc yet._
 
 ### `*`
 
-*re-export* · [src/types/platform.ts:1140](../../../src/types/platform.ts#L1140)
+*re-export* · [src/types/platform.ts:1176](../../../src/types/platform.ts#L1176)
 
 ```ts
 *from './social'
@@ -2210,7 +2268,7 @@ _No JSDoc yet._
 
 ### `*`
 
-*re-export* · [src/types/platform.ts:1142](../../../src/types/platform.ts#L1142)
+*re-export* · [src/types/platform.ts:1178](../../../src/types/platform.ts#L1178)
 
 ```ts
 *from './persona'

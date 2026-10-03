@@ -171,6 +171,8 @@ export const PLATFORM_ROUTE_RULES: Record<string, When> = {
   '/platform/admin/features': { perms: ['admin.full'] },
   '/platform/admin/texts': { perms: ['admin.full'] },
   '/platform/admin/announcements': { perms: ['admin.full'] },
+  '/platform/admin/bugs': { perms: ['admin.full'] },
+  '/platform/admin/bug': { perms: ['admin.full'] },
 };
 
 /** Who a staff screen is for, in words ("finance and admins"), for the no-access message. */

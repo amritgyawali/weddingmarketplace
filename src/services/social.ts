@@ -479,7 +479,7 @@ export function postStats(posts: SocialPost[]): PostStats {
   };
 }
 
-/** WhatsApp broadcast consent by keyword: "START"/"SUBSCRIBE" opts in, "STOP"/"UNSUBSCRIBE" opts out (also in Nepali). Same words as the SQL trigger in 0019. */
+/** WhatsApp broadcast consent by keyword: "START"/"SUBSCRIBE" opts in, "STOP"/"UNSUBSCRIBE" opts out (also in Nepali). Same words as the SQL trigger in 0020. */
 export function optInKeyword(text: string): 'in' | 'out' | null {
   const word = text.trim().toLowerCase().replace(/[.!।]+$/, '');
   if (['start', 'subscribe', 'सुरु', 'yes updates'].includes(word)) return 'in';

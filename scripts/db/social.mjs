@@ -159,7 +159,7 @@ ok('the owner can', !refused(await as(U.owner, `select rpc_social_save_settings(
 await service(`select vivah_social_target_result($1, 'facebook', 'publishing', 'tt_pub_1') as s`, [saved[0]?.id]);
 ok('a network’s later answer (TikTok-style publish id) settles the target', (await service(`select vivah_social_publish_update('facebook', 'tt_pub_1', 'published', 'https://x/1') as s`))[0]?.s === 'published');
 
-// ─── 0019: assignment, WhatsApp consent, insights ─────────────────────────────
+// ─── 0020: assignment, WhatsApp consent, insights ─────────────────────────────
 const nirmala = (await one(`select id from social_threads where contact_external_id = '9779841556677'`)).id;
 ok('triage assigns a team member by name', !refused(await as(U.staff, `select rpc_social_triage($1, '{"assignee":"Hari Staff"}'::jsonb)`, [nirmala])) && (await one(`select assignee_name from social_threads where id = $1`, [nirmala])).assignee_name === 'Hari Staff');
 const waFollowers = async () => (await one(`select followers from social_accounts where network = 'whatsapp' and status <> 'disconnected'`)).followers;
