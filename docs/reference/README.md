@@ -20,7 +20,7 @@ Generated from the source. For the *why*, read [the handbook](../handbook/README
 |---|---|---|---|
 | `src/backend/` | 14 | 107 | [backend.md](code/backend.md) |
 | `src/components/` | 1 | 1 | [components.md](code/components.md) |
-| `src/components/admin/` | 2 | 10 | [components.admin.md](code/components.admin.md) |
+| `src/components/admin/` | 3 | 15 | [components.admin.md](code/components.admin.md) |
 | `src/components/detail/` | 1 | 6 | [components.detail.md](code/components.detail.md) |
 | `src/components/genie/` | 1 | 5 | [components.genie.md](code/components.genie.md) |
 | `src/components/home/` | 8 | 9 | [components.home.md](code/components.home.md) |
@@ -38,12 +38,12 @@ Generated from the source. For the *why*, read [the handbook](../handbook/README
 | `src/components/toolkit/platform/` | 3 | 21 | [components.toolkit.platform.md](code/components.toolkit.platform.md) |
 | `src/components/toolkit/vendor/` | 5 | 36 | [components.toolkit.vendor.md](code/components.toolkit.vendor.md) |
 | `src/components/tour/` | 1 | 3 | [components.tour.md](code/components.tour.md) |
-| `src/components/ui/` | 23 | 55 | [components.ui.md](code/components.ui.md) |
+| `src/components/ui/` | 24 | 56 | [components.ui.md](code/components.ui.md) |
 | `src/components/wedding/` | 3 | 12 | [components.wedding.md](code/components.wedding.md) |
 | `src/components/work/` | 26 | 52 | [components.work.md](code/components.work.md) |
 | `src/constants/` | 4 | 20 | [constants.md](code/constants.md) |
-| `src/data/` | 25 | 171 | [data.md](code/data.md) |
-| `src/hooks/` | 12 | 39 | [hooks.md](code/hooks.md) |
+| `src/data/` | 25 | 183 | [data.md](code/data.md) |
+| `src/hooks/` | 12 | 40 | [hooks.md](code/hooks.md) |
 | `src/i18n/` | 2 | 14 | [i18n.md](code/i18n.md) |
 | `src/i18n/ne/` | 2 | 2 | [i18n.ne.md](code/i18n.ne.md) |
 | `src/services/` | 14 | 188 | [services.md](code/services.md) |

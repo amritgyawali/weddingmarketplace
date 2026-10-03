@@ -259,7 +259,7 @@ has records in stay visible even if their services changed.
 
 ### `ToolHub`
 
-*component* · [src/components/toolkit/hub.tsx:87](../../../src/components/toolkit/hub.tsx#L87)
+*component* · [src/components/toolkit/hub.tsx:88](../../../src/components/toolkit/hub.tsx#L88)
 
 ```ts
 ToolHub({ role, tools, title, subtitle }: { role: UserRole; tools: ToolDef[]; title: string; subtitle: string })
@@ -269,7 +269,7 @@ Searchable, grouped index of a role's toolkit.
 
 ### `ToolRoute`
 
-*component* · [src/components/toolkit/hub.tsx:121](../../../src/components/toolkit/hub.tsx#L121)
+*component* · [src/components/toolkit/hub.tsx:122](../../../src/components/toolkit/hub.tsx#L122)
 
 ```ts
 ToolRoute({ tools, visible, settingsHref }: { tools: ToolDef[]; visible?: ToolDef[]; settingsHref?: Href })

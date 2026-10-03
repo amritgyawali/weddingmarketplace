@@ -16,7 +16,7 @@ Source: [src/components/wedding/CelebrationSwitcher.tsx](../../../src/components
 
 ### `CelebrationSwitcher`
 
-*component* · [src/components/wedding/CelebrationSwitcher.tsx:21](../../../src/components/wedding/CelebrationSwitcher.tsx#L21)
+*component* · [src/components/wedding/CelebrationSwitcher.tsx:22](../../../src/components/wedding/CelebrationSwitcher.tsx#L22)
 
 ```ts
 CelebrationSwitcher()
@@ -32,7 +32,7 @@ Source: [src/components/wedding/MyWeddingScreen.tsx](../../../src/components/wed
 
 ### `MyWeddingScreen`
 
-*component* · [src/components/wedding/MyWeddingScreen.tsx:484](../../../src/components/wedding/MyWeddingScreen.tsx#L484)
+*component* · [src/components/wedding/MyWeddingScreen.tsx:486](../../../src/components/wedding/MyWeddingScreen.tsx#L486)
 
 ```ts
 MyWeddingScreen({ inTab }: { inTab?: boolean })

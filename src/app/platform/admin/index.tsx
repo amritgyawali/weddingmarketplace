@@ -1,13 +1,13 @@
 import { router, type Href } from 'expo-router';
 import { View } from 'react-native';
 
+import { hiddenFeatureCount } from '@/components/admin/featureCatalogue';
 import { Card, ListRow, SectionTitle, type IconName } from '@/components/kit';
 import { staffScreen } from '@/components/persona/StaffGate';
 import { Hint, StatRow, ToolPage } from '@/components/toolkit/core';
 import { Text } from '@/components/ui/Text';
 import { toast } from '@/components/ui/Toast';
 import { usesSupabase } from '@/constants/env';
-import { FEATURES } from '@/data/features';
 import { useDb } from '@/store/useDb';
 import { useSession } from '@/store/useSession';
 import { useRoleTheme } from '@/theme/RoleTheme';
@@ -27,7 +27,7 @@ function AdminHome() {
   const projects = useDb((s) => s.projects);
   const bugReports = useDb((s) => s.bugReports);
   const resetDemo = useDb((s) => s.resetDemo);
-  const off = Object.values(flags).filter((v) => v === false).length;
+  const off = hiddenFeatureCount(flags);
   const count = (role: string) => accounts.filter((a) => a.role === role).length;
 
   const sections: { title: string; rows: { icon: IconName; title: string; subtitle: string; href: Href }[] }[] = [
@@ -41,7 +41,7 @@ function AdminHome() {
     {
       title: 'What people see',
       rows: [
-        { icon: 'toggle-outline', title: 'Features', subtitle: off ? `${off} switched off · tabs, tools, services, home sections, sign-up` : `All ${FEATURES.length}+ features on · tabs, tools, services, home sections`, href: '/platform/admin/features' },
+        { icon: 'toggle-outline', title: 'Features', subtitle: off ? `${off} hidden · each app shows its top 20, extras are off until you switch them on` : 'Everything is on · tabs, tools, services, home sections', href: '/platform/admin/features' },
         { icon: 'language-outline', title: 'Text and translations', subtitle: `${Object.keys(overrides).length} changed · rewrite any English or Nepali text`, href: '/platform/admin/texts' },
         { icon: 'megaphone-outline', title: 'Announcements', subtitle: `${announcements.filter((a) => a.active).length} live · pin a notice on any role's home`, href: '/platform/admin/announcements' },
         { icon: 'calendar-number-outline', title: 'Occasions', subtitle: 'What families can plan and the services each one shows', href: '/platform/occasions' },
@@ -65,7 +65,7 @@ function AdminHome() {
         items={[
           { label: 'Accounts', value: String(accounts.length) },
           { label: 'Projects', value: String(projects.length) },
-          { label: 'Features off', value: String(off), alert: off > 0 },
+          { label: 'Features hidden', value: String(off) },
         ]}
       />
       {sections.map((section) => (

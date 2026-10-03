@@ -22,7 +22,7 @@ registry entry (ToolDef)            components/toolkit/<role>/index.ts
    { id: 'vendor.menu', title, subtitle, icon, group, Component: MenuBuilder }
         │
         ├─ visibility rule          TOOL_RULES['vendor.menu'] in data/access.ts   (required: ToolId is typed)
-        ├─ feature switch            'tool:vendor.menu' in DbData.featureFlags   (super admin, optional)
+        ├─ feature switch            'tool:vendor.menu' in DbData.featureFlags   (super admin; off by default unless a top-20 feature, see 09 §8)
         │
 hub screen   /business/tools        ToolHub + useVisibleTools(VENDOR_TOOLS)
 tool screen  /business/tool/[id]    ToolRoute: renders Component, or explains why it's hidden
@@ -31,7 +31,7 @@ data         toolEntries (records) + toolState (settings) via store/db/toolkit.t
 ```
 
 - `ToolDef.id` is the registry id, the route param and the `ToolEntry.tool` value. Format: `<role>.<name>` (`couple.gifts`, `vendor.expenses`).
-- `useVisibleTools(tools)` applies `TOOL_RULES` and feature switches; tools the owner already has records in stay visible (no data disappears).
+- `useVisibleTools(tools)` applies `TOOL_RULES` and feature switches; tools the owner already has records in stay visible (no data disappears), unless a super admin switched the tool off explicitly. Only the top-20 tools (`TOP_FEATURES`, plus one per trade and craft) are on by default.
 
 ## 3. Data: two generic collections, no new keys
 

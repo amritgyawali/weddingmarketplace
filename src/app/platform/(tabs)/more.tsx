@@ -48,7 +48,7 @@ export default function PlatformMore() {
         { icon: 'calendar-outline', title: 'Operations calendar', subtitle: 'Every function by date with service status', href: '/platform/calendar' },
         { icon: 'megaphone-outline', title: 'Crew gigs', subtitle: 'Staffing and emergency replacements', href: '/platform/gigs' },
         { icon: 'document-text-outline', title: 'Quotations', subtitle: 'Package and vendor quotes', href: '/platform/quotes' },
-        { icon: 'construct-outline', title: 'Operations tools', subtitle: 'SLAs, helpdesk, cash flow, payout batches and 16 more', href: '/platform/tools' },
+        { icon: 'construct-outline', title: 'Operations tools', subtitle: 'Helpdesk, SLA monitor and more', href: '/platform/tools' },
       ],
     },
     {
