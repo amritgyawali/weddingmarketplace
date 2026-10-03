@@ -1,5 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
-import { Link, router } from 'expo-router';
+import { Link, router, useLocalSearchParams } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useRef, useState } from 'react';
 import { Pressable, StyleSheet, TextInput, View } from 'react-native';
@@ -20,8 +20,11 @@ import { useSession } from '@/store/useSession';
 import { useFeatures } from '@/hooks/useFeatures';
 import { useRoleFonts } from '@/theme/fonts';
 import { RoleThemeProvider, useRoleTheme } from '@/theme/RoleTheme';
+import type { Account } from '@/types/platform';
 import { isNepalMobile } from '@/utils/format';
 import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
+
+const NOT_SUPER_ADMIN = 'This isn’t a super admin account. Log in as Vivah staff, or ask a super admin to give you access.';
 
 function LoginForm() {
   const t = useRoleTheme();
@@ -38,7 +41,14 @@ function LoginForm() {
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const otpRef = useRef<TextInput>(null);
-  const demos = DEMO_ACCOUNTS.filter((a) => a.role === t.role);
+  // "Super admin" on the role picker: a staff login that only lets super admins in and never signs anyone up.
+  const superAdmin = useLocalSearchParams<{ as?: string }>().as === 'super_admin';
+  // Super admins land straight in their console once the role guard has switched to the staff app.
+  const signIn = (account: Account) => {
+    completeLogin(account);
+    if (superAdmin) setTimeout(() => router.push('/platform/admin'), 0);
+  };
+  const demos = DEMO_ACCOUNTS.filter((a) => a.role === t.role && (!superAdmin || a.staffRole === 'super_admin'));
   const demoOn = useFeatures()('login.demo');
 
   const sendOtp = async () => {
@@ -81,6 +91,7 @@ function LoginForm() {
     const me = await fetchMe();
     setBusy(false);
     if (!me.ok) return setError(me.error);
+    if (superAdmin && !me.value.signedUp) return setError(NOT_SUPER_ADMIN);
     if (!me.value.signedUp) {
       router.push({ pathname: '/welcome/setup', params: { email: email.trim().toLowerCase() } });
       return;
@@ -95,8 +106,9 @@ function LoginForm() {
     // Continuing past the notice below accepts the current Terms and Privacy policy.
     if (me.value.legal !== LEGAL_VERSION) void acceptLegal(LEGAL_VERSION);
     const account = accountFromMe(me.value, role);
+    if (superAdmin && account.staffRole !== 'super_admin') return setError(NOT_SUPER_ADMIN);
     upsertAccount(account);
-    completeLogin(account);
+    signIn(account);
     void registerForPush();
   };
 
@@ -115,7 +127,12 @@ function LoginForm() {
       setError('This account is suspended. Contact Vivah support to restore access.');
       return;
     }
-    if (existing) completeLogin(existing);
+    if (superAdmin && existing?.staffRole !== 'super_admin') {
+      setError(NOT_SUPER_ADMIN);
+      triggerHaptic('medium');
+      return;
+    }
+    if (existing) signIn(existing);
     else router.push({ pathname: '/welcome/setup', params: { phone } });
   };
 
@@ -127,7 +144,7 @@ function LoginForm() {
           <Ionicons name="chevron-back" size={24} color={t.c.textStrong} />
         </Pressable>
         <Text size={14} color={t.c.muted}>
-          {t.label}
+          {superAdmin ? 'Super admin' : t.label}
         </Text>
         <Text serif size={26} weight="bold" color={t.c.textStrong} lineHeight={36}>
           {step === 'phone' ? (emailMode ? 'Log in with your email' : 'Log in with your mobile number') : 'Enter the code we sent'}
@@ -240,7 +257,7 @@ function LoginForm() {
             </Text>
             <View style={styles.demoButtons}>
               {demos.map((demo) => (
-                <KButton key={demo.id} label={`Continue as ${demo.businessName ?? demo.name}`} variant="secondary" size="sm" onPress={() => completeLogin(demo)} />
+                <KButton key={demo.id} label={`Continue as ${demo.businessName ?? demo.name}`} variant="secondary" size="sm" onPress={() => signIn(demo)} />
               ))}
             </View>
           </View>

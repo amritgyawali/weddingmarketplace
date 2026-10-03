@@ -17,6 +17,7 @@ npm run db:test         # the core loop and P6–P8 features on Postgres, as eac
 npm run test:parity     # money in src/services equals money in SQL
 npm run test:functions  # when you touch supabase/functions
 npm run test:telemetry  # when you touch src/backend/telemetry*
+npm run test:social     # when you touch the social hub
 npm run docs:check      # docs/reference matches the code (run docs:generate if not); not in CI, the weekly pass catches drift
 npx expo-doctor         # no new failures
 npx expo start          # loads in Expo Go; press w for web
@@ -30,10 +31,11 @@ npx expo start          # loads in Expo Go; press w for web
 | `expo lint` | Hooks rules, imports, common bugs | Design rules |
 | `check:personas` | Registries are consistent; each persona fixture sees exactly the expected tools and staff routes (`scripts/persona-matrix.json`) | That the tools work |
 | `db:check` | Every migration applies on fresh Postgres; RLS on every table | Policies are right |
-| `db:test` | Core loop, sign-up, staff approval, media, private files, notifications, jobs, payments, account deletion, as each role with RLS on; each fixed SQL defect has a check | The app UI |
+| `db:test` | Core loop, sign-up, staff approval, media, private files, notifications, jobs, payments, account deletion, the social hub (tokens, webhooks, triage, posts, leads), as each role with RLS on; each fixed SQL defect has a check | The app UI |
 | `test:parity` | `src/services` money = SQL money on fixtures + generated cases | Store actions |
 | `test:functions` | Edge Function shared logic and handlers with fake Supabase/Upstash/Cloudinary/Expo/Resend | Real gateways |
 | `test:telemetry` | Payload shapes; no contact details leak | Delivery |
+| `test:social` | Social hub rules: each network's post limits, reply windows, reading BS/AD dates, guests, budget and phone from messages, auto-replies, away hours, best times, hashtags, and the demo seed | The networks' live APIs |
 | `docs:check` | The generated reference is current | Handbook prose is current (that is the weekly pass) |
 | `expo export -p web` (CI) | The web build compiles; `_headers`, `robots.txt`, `sitemap.xml` ship | Runtime errors |
 
@@ -71,3 +73,17 @@ The open list lives in `AGENTS.md` §10 and `TEST_REPORT.md` §2. As of 2 Octobe
 ## 5. Reporting a new defect
 
 Add it to `TEST_REPORT.md` §2 under the right severity and to `AGENTS.md` §10, with: where (file and function), what happens, what should happen, how to reproduce (demo account and steps). Don't fix it inside an unrelated pull request.
+
+## 6. Shake to report a bug
+
+Everyone using the app (every role, signed in or out, every build) can report a bug from any screen. Each report is saved in the app's backend for the super admins, and in development and test builds it also lands in the project's `bug-reports/` folder with a screenshot. The tester guide and the folder layout are in `bug-reports/README.md`.
+
+- **Trigger.** Shaking the phone (`useShake` in `src/hooks/useShake.ts`: three jolts above 1.8 g within 1.2 seconds), Alt+Shift+B on the web, or Settings → Help → Report a problem. The screenshot is taken first, as a JPEG at quality 0.7 (`captureScreen` from `react-native-view-shot`; html2canvas on the web), so the sheet never covers it. Volume-key triggers need a native module that Expo Go lacks, so the app doesn't use them.
+- **The report.** `BugReporterHost` (`src/components/ui/BugReporter.tsx`, mounted in the root layout) shows the sheet. It sends the description, the screenshot, the screen path and params, the signed-in account, device and app details, the last 15 screens and the last 30 console errors and warnings (`src/backend/bugReport.ts`).
+- **Where it is saved.** `sendBugReport` always saves it in the backend: on the demo backend the store action `submitBugReport` (`src/store/db/support.ts`) keeps the newest 200 reports, the screenshot as a file under the app's documents folder (`bug-reports/`, only the newest 20 keep one; the web demo keeps none because browser storage is small), and notifies every super admin; Reset demo data keeps them. On Supabase builds it calls `rpc_submit_bug_report` (`0019_bug_reports.sql`) with the user's token or, signed out, the publishable key; the RPC drops anything that isn't an image, ignores a signed-out caller's claimed account, rate-limits (10 per person, 30 for all signed-out visitors, per 10 minutes) and notifies the super admins. `npm run db:test` checks it (`scripts/db/bugs.mjs`).
+- **Reading them.** Super admin → Bug reports (`/platform/admin/bugs`, `admin.full`) lists them by status (new, fixed, dismissed) with a thumbnail; a report (`/platform/admin/bug/[id]`) shows the screenshot, the screen and its params, who sent it, device and app, the screens before it and the logged errors, with Mark fixed, Dismiss, Reopen (optional note) and Delete. On the demo there is also "Sign in as …" to reproduce it as that account. `src/hooks/useBugReports.ts` reads the store on the demo and the RPCs on Supabase.
+- **The developer inbox (development and test builds only).** `scripts/bug-inbox.cjs` writes `bug-reports/<date>_<time>_<slug>/` (`README.md`, `screenshot.jpg`, `report.json`) and adds a line to `bug-reports/INDEX.md`. `metro.config.js` mounts it on the dev server at `/__vivah/bug-report`, so in development nothing else needs to run. For a test build without a dev server, run `npm run bugs:inbox` (port 8790) and set `EXPO_PUBLIC_BUG_INBOX_URL`.
+- **Who sees it.** Development builds (Expo Go, dev builds, `expo start --web`) send to the dev server they were loaded from. Installed test builds post to the inbox when `EXPO_PUBLIC_BUG_REPORTS=on` (the `preview` EAS profile sets it, with `EXPO_PUBLIC_BUG_INBOX_URL` pointing at `npm run bugs:inbox` on the owner's computer). Settings → Help → Bug inbox address overrides the address per phone, and Check connection tests it. `plugins/withBugInboxCleartext.js` lets those builds use plain `http://` on the local Wi-Fi; store builds skip the inbox (and its Settings field) and keep cleartext blocked, but still save reports in the backend. A super admin can switch it off with `app.bug_report`, and each device can turn shaking off in Settings.
+- **In Expo Go,** shaking also opens Expo's developer menu. Turn off "Shake device" in that menu if it gets in the way, or use Settings → Help → Report a problem.
+- **Privacy.** Git ignores `bug-reports/` (except its README), because screenshots can contain personal data. The inbox trusts the local network, so never expose it to the internet.
+- **Working a report:** open `bug-reports/INDEX.md`, read the report and its screenshot, reproduce as the same role, fix it on a `fix/…` branch (section 4), then tick the line.

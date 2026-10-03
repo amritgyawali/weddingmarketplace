@@ -44,7 +44,7 @@ These product decisions are fixed. Do not reverse them without the owner's say-s
 | Role (`UserRole`) | App | Routes | Theme |
 |---|---|---|---|
 | `customer`, the couple | Marketplace + **My Wedding** planning tools | `src/app/(tabs)/…` and root screens (`my-wedding`, `plan`, `guests`, `seating`, `budget`, `website`, `invitations`, `registry`, `boards`, `compare`, `deals`, `contracts`, `calendar`, `checklist`, `quote/[id]` …) | burgundy |
-| `vendor`: venues and businesses | Vivah for Business: leads CRM, quote builder, bookings, crew, calendar, packages, portfolio, finance, analytics, promotions, reviews, team, verification, plus trade tools picked by the business's services (§6a) | `src/app/business/…` | burgundy |
+| `vendor`: venues and businesses | Vivah for Business: leads CRM, quote builder, bookings, crew, calendar, packages, portfolio, finance, analytics, promotions, reviews, team, verification, **social media hub** (§6c), plus trade tools picked by the business's services (§6a) | `src/app/business/…` | burgundy |
 | `freelancer`: photographers, makeup artists, crew | Gig marketplace: gigs, invites, emergency gigs, assignments, GPS check-in/out, calendar and weekly rules, earnings, profile | `src/app/freelancer/…` | burgundy |
 | `platform`: staff (coordinator, admin, support, finance) | Operations console: today view, leads kanban, 12-tab project console, matching, quote builder, control room, emergency replacement, approvals, finance, users, providers, freelancers, analytics, marketplace, audit | `src/app/platform/…` | wine |
 
@@ -95,11 +95,12 @@ src/
                        Bookings, Payments, TaskBoard, Timeline, ThreadView, AvailabilityCalendar, RunSheet,
                        ContractView, SignaturePad, GigForm, ApplicantsList, VerificationScreen…
     toolkit/           role toolkits: core.tsx (EntryList, ToolPage, hooks), hub.tsx (ToolHub/ToolRoute), couple/ vendor/ freelancer/ platform/
+    social/            the business social hub (§6c): Inbox, Posts, Panels, Composer, ConnectSheet, HomeCard, live.ts
     persona/           <Gate> (render by capability, permission or occasion)
     planner/ home/ listing/ detail/ genie/ ideas/ navigation/ onboarding/ wedding/
   store/
     useDb.ts           re-export of store/db — THE shared backend (all 4 roles)
-    db/                backend split by domain: core, quotes, projects, finance, gigs, chat, trust, planner, toolkit, personas
+    db/                backend split by domain: core, quotes, projects, finance, gigs, chat, trust, planner, toolkit, personas, admin, social
                        + helpers.ts (now/today, currentActor, mapProject, mapBooking, nextNumber…) + types.ts (DbData)
     useSession.ts      accounts + session (mock auth). useAccount()/useCurrentAccount()
     useAppStore.ts     per-device couple marketplace state (onboarding, city, shortlist, likes, legacy bookings/chats)
@@ -115,8 +116,8 @@ src/
   theme/ constants/    role themes/fonts, colours, images, brand
   types/platform.ts    the domain model (mirrors the SQL schema). types/persona.ts = When/Experience. types/index.ts = catalogue/legacy types
   utils/               format (money/dates/phone), confirm, links, random
-supabase/migrations/   0001 core schema · 0002 RLS · 0003 matching, reliability, risk · 0004 toolkits · 0005 personas · 0006 freelancer crafts · 0007–0008 customer occasions · 0009 platform RBAC · 0010 SQL defect fixes · 0011 core-loop RPCs · 0012 auth, media, notifications · 0013 scheduled jobs · 0014 gateway payments · 0015 launch (health, consent, export, account deletion) · 0016 super admin console and vehicles trade
-supabase/functions/    Edge Functions (Deno, no dependencies): send-otp, media-sign, notify-fanout, payment-initiate, payment-verify, health, account-delete; pure logic in _shared/ (tested in Node by npm run test:functions)
+supabase/migrations/   0001 core schema · 0002 RLS · 0003 matching, reliability, risk · 0004 toolkits · 0005 personas · 0006 freelancer crafts · 0007–0008 customer occasions · 0009 platform RBAC · 0010 SQL defect fixes · 0011 core-loop RPCs · 0012 auth, media, notifications · 0013 scheduled jobs · 0014 gateway payments · 0015 launch (health, consent, export, account deletion) · 0016 super admin console and vehicles trade · 0017–0018 social hub · 0019 bug reports
+supabase/functions/    Edge Functions (Deno, no dependencies): send-otp, media-sign, notify-fanout, payment-initiate, payment-verify, health, account-delete, social-oauth, social-webhook, social-send, social-publish; pure logic in _shared/ (tested in Node by npm run test:functions)
 docs/SETUP_SUPABASE.md putting the app on a Supabase staging project, step by step
 docs/LAUNCH.md         going live (P8): production project, GitHub environments, backups and restore rehearsal, Cloudflare Pages, monitoring, Play Store
 scripts/ops/           backup row counts (dump-counts.awk) and the restore check (verify-restore.sh) used by the backup workflows
@@ -328,6 +329,18 @@ Rules:
 6. **Celebrations other than weddings** get their own checklist (`generateTasks(..., occasion)`, `CELEBRATION_TEMPLATES` + `OCCASION_TASKS`), a home without wedding-only sections (collections, bridal makeup, real weddings, planner packages) and a tab bar without Ideas and Planner. The DB `migrate` v5 drops the old wedding-only TODO tasks from such plans.
 7. **Super admin console** (`/platform/admin/*`, permission `admin.full`, super admins only): all accounts of every role (edit, create, delete, "Sign in as" with a bar to come back: `impersonate`/`endImpersonation`), every `DbData` collection as editable records (`adminSaveRecord`/`adminInsertRecord`/`adminDeleteRecords`), feature switches (`DbData.featureFlags`, catalogue in `data/features.ts`, plus `tool:<ToolId>` and `service:<id>`; read with `useFeatures()`), text overrides in either language (`DbData.textOverrides`) and announcements (`DbData.announcements`, shown by `AnnouncementBanner`). Store actions live in `store/db/admin.ts`, check `admin.full` themselves and are audited. SQL mirror: `0016_super_admin_vehicles.sql`.
 8. **Vehicles trade.** Service group `vehicles` with `wedding-car`, `luxury-car`, `bus-hire`, `jeep-hire`, `baggi` (crew role Driver); trade `vehicles` in `data/trades.ts`.
+9. **Shake to report a bug, for everyone.** On every screen of every role app, signed in or out, in every build, shaking the phone (Alt+Shift+B on the web, or Settings → Help → Report a problem) screenshots the screen as it is (JPEG) and opens a sheet for a description (`components/ui/BugReporter.tsx`, `backend/bugReport.ts`, `hooks/useShake.ts`). `sendBugReport` saves it in the backend: the store's `bugReports` via `submitBugReport` (`store/db/support.ts`; the screenshot is a file in the app's documents folder, only the newest 20 keep one, the web demo keeps none, `resetDemo` keeps them) or `rpc_submit_bug_report` on Supabase (0019: signed out allowed, rate limited, super admins notified). Super admins read, mark fixed/dismissed and delete them at **Super admin → Bug reports** (`/platform/admin/bugs`, `/platform/admin/bug/[id]`, `hooks/useBugReports.ts`). Development and test builds (`EXPO_PUBLIC_BUG_REPORTS=on`, the `preview` EAS profile) also post it to the bug inbox (`scripts/bug-inbox.cjs`, mounted on the dev server by `metro.config.js`, or `npm run bugs:inbox` with `EXPO_PUBLIC_BUG_INBOX_URL`), which writes `bug-reports/<date>_<slug>/` with `README.md`, the screenshot and `report.json`, listed in `bug-reports/INDEX.md`; only those builds show the inbox address in Settings → Help. Super admin switch `app.bug_report`; each device can turn shaking off. The privacy policy lists what a report contains. **When asked to fix reported bugs, start at `bug-reports/INDEX.md` (or the console).** Git ignores the reports.
+
+## 6c. Social hub (business app)
+
+Business → **Social media** (`/business/social`, feature flag `vendor.social`) connects the business's Facebook page, Instagram profile, WhatsApp Business number and TikTok account. Long form: `docs/handbook/21-social-hub.md`.
+
+1. **One inbox, one composer.** Tabs: Inbox (messages and comments from every network, filters, search, labels, assignment, snooze, notes, saved and suggested replies, **Create lead** → `createLead` with source `social`), Posts, Calendar (BS month grid, best times), Accounts, Insights, Automation (away message, signature, keyword auto-replies, saved replies). Composer: per-network captions, portfolio or device media, hashtag and best-time suggestions, checks, previews, publish now / schedule / draft. Entry points: home card, Business tab row, wide sidebar.
+2. **Data.** `DbData.socialAccounts`, `socialThreads`, `socialMessages`, `socialPosts`, `socialSettings` (keyed by the vendor account id); types in `src/types/social.ts`; actions in `store/db/social.ts` (owner-checked, connect/disconnect/schedule/publish/lead audited); DB `version` 6 adds them with the demo seed (`data/socialSeed.ts`).
+3. **Networks' rules are enforced, never bypassed.** `checkPost()` (caption limits, media required on Instagram/TikTok, 30 hashtags, file counts), `replyWindow()` (24 h; then Meta's 7-day `HUMAN_AGENT` tag; WhatsApp needs an approved template; comments always open). The same rule lives in `_shared/social.ts` (`replyWindowState`); change both together. WhatsApp has no Status API: a WhatsApp "post" is an approved template broadcast to opted-in customers.
+4. **Demo vs live.** The mock backend simulates the networks with timers (cleared by `resetDemo`): sample inbound messages, delivery ticks, publishing with deterministic reach (`projectedMetrics`), scheduled posts and snoozes run by `runDueSocialPosts` while the hub is open. Supabase builds go through `socialAct()` (`components/social/live.ts`) → server, then `syncSocialFromServer()` mirrors `rpc_social_inbox` (`mirrorSocialData`).
+5. **Server (0018).** Tokens live only in `social_account_secrets` (RLS on, no policies; service role only). Clients may triage threads (column grants), add notes, and write drafts/schedules; only the Edge Functions record replies and mark posts published. Webhooks must be signed (Meta `X-Hub-Signature-256`, TikTok `TikTok-Signature`); the OAuth state is HMAC-signed and only returns to allowed addresses. Scheduled posts: `job_social_due` (pg_cron) → `social-publish`.
+6. **Copy.** Network brand colours are tokens (`socialColors`) for small marks only. New UI text goes into `src/i18n/ne/social.ts`.
 
 ## 7. Seed and demo contract (don't break the demo)
 
@@ -338,7 +351,8 @@ Rules:
 - WP-1017: live today, with the emergency replacement;
 - the other seeded projects cover every status;
 - the Everest Grand Party Palace venue and Wedding Story Nepal studio listings;
-- the demo accounts' persona fields (Everest: venue + catering, form venue; Wedding Story: five photo and film services, form studio; Phoolbari Decor: decoration + florist + lighting, form studio, with the `phoolbari-decor-lalitpur` listing; Raj: primary skill Photographer with a photo craft profile; DJ Suman: DJ + MC with sound gear and a setlist; Bikram: `super_admin`). `syncDemoAccounts()` in `useSession.ts` copies them onto older installs through the session `migrate`; bump the session `version` when you add a demo account or persona field.
+- the demo accounts' persona fields (Everest: venue + catering, form venue; Wedding Story: five photo and film services, form studio; Phoolbari Decor: decoration + florist + lighting, form studio, with the `phoolbari-decor-lalitpur` listing; Raj: primary skill Photographer with a photo craft profile; DJ Suman: DJ + MC with sound gear and a setlist; Bikram: `super_admin`). `syncDemoAccounts()` in `useSession.ts` copies them onto older installs through the session `migrate`; bump the session `version` when you add a demo account or persona field;
+- the social hub seed (`data/socialSeed.ts`, added to older installs by the DB `migrate` v6): Everest Grand has Facebook, Instagram (access renews within the week) and WhatsApp connected with TikTok left to connect, an inbox with a WhatsApp thread past the 24-hour window (template demo) and posts in every state (published, partly published with a retry, scheduled, draft); Wedding Story Nepal has Instagram, Facebook and TikTok; Phoolbari Decor's Facebook access has expired. Today's messages are minutes before now, so they are never in the future.
 
 Seed dates are **relative to today** (`day(n)`/`at(n)`); keep them relative.
 
@@ -389,6 +403,7 @@ npm run db:test         # the core loop, sign-up, media, files, notifications an
 npm run test:parity     # money in src/services equals money in SQL
 npm run test:functions  # when you touch supabase/functions
 npm run test:telemetry  # when you touch src/backend/telemetry*
+npm run test:social     # when you touch the social hub (rules, seed); its SQL is in db:test, its functions in test:functions
 npm run docs:generate   # after changing exports, routes, actions or SQL; commit docs/reference/ (docs:check verifies)
 npx expo-doctor         # no new failures
 npx expo start          # app loads in Expo Go; press w for web

@@ -29,7 +29,7 @@ Read AGENTS.md first: it holds the binding rules (never break existing functiona
 - [DevOps and release](docs/handbook/14-devops-and-release.md)
 - [Git and collaboration](docs/handbook/15-git-and-collaboration.md)
 - [Documentation maintenance](docs/handbook/17-documentation-maintenance.md): the weekly docs pass
-- [Glossary](docs/handbook/18-glossary.md), [Troubleshooting](docs/handbook/19-troubleshooting.md), [Decision log](docs/handbook/20-decision-log.md)
+- [Glossary](docs/handbook/18-glossary.md), [Troubleshooting](docs/handbook/19-troubleshooting.md), [Decision log](docs/handbook/20-decision-log.md), [Social hub](docs/handbook/21-social-hub.md)
 
 ## Generated code reference (npm run docs:generate)
 

@@ -4,11 +4,11 @@
 
 Exported symbols that have no JSDoc yet. The weekly documentation pass (see [the maintenance guide](../handbook/17-documentation-maintenance.md)) works through this list; whoever touches a file should document its exports too.
 
-**493 of 1155 exports documented (43%).** Files without a header comment: 289 of 368.
+**660 of 1329 exports documented (50%).** Files without a header comment: 305 of 399.
 
 | File | Undocumented exports |
 |---|---|
-| [src/types/platform.ts](../../src/types/platform.ts) | `UserRole`, `PlatformTeam`, `VerificationStatus`, `Equipment`, `AccountPrefs`, `Account`, `EventType`, `ProjectStatus`, `LeadSource`, `LeadStatus`, `Lead`, `PricingModel`, `MilestoneRule`, `QuoteItem`, `ScheduleStep`, `QuoteStatus`, `Quotation`, `StatusChange`, `Collaborator`, `RunStatus`, `RunItem`, `EventStatus`, `ProjectEvent`, `RequirementStatus`, `ScoreBreakdown`, `MatchCandidate`, `Requirement`, `BookingStatus`, `CrewRequirement`, `AssignmentStatus`, `Assignment`, `DeliverableStatus`, `Deliverable`, `ServiceBooking`, `TaskStatus`, `TaskAssignee`, `ProjectTask`, `TimelineEntry`, `MilestoneStatus`, `PaymentMilestone`, `Incident`, `Project`, `PaymentMethod`, `Payment`, `PayableStatus`, `Payable`, `RevenueKind`, `RevenueEntry`, `Refund`, `Dispute`, `AvailabilityStatus`, `DayPart`, `AvailabilityEntry`, `AvailabilityRule`, `FreelancerProfile`, `GigStatus`, `ApplicationStatus`, `GigApplication`, `GigQuestion`, `Gig`, `ThreadMember`, `Thread`, `MessageKind`, `Message`, `InternalNote`, `FileRef`, `AuditEntry`, `AppNotification`, `ReviewRecord`, `CheckState`, `VerificationCase`, `RsvpStatus`, `GuestInvite`, `Guest`, `SeatingElement`, `SeatingLayout`, `BudgetLine`, `WeddingWebsite`, `RegistryItem`, `InspirationBoard`, `Contract`, `ShortlistEntry`, `Deal`, `ProviderPackage`, `PortfolioItem`, `StaffMember`, `Invoice`, `PlatformSettings` |
+| [src/types/platform.ts](../../src/types/platform.ts) | `UserRole`, `PlatformTeam`, `VerificationStatus`, `Equipment`, `AccountPrefs`, `Account`, `EventType`, `ProjectStatus`, `LeadSource`, `LeadStatus`, `Lead`, `PricingModel`, `MilestoneRule`, `QuoteItem`, `ScheduleStep`, `QuoteStatus`, `Quotation`, `StatusChange`, `Collaborator`, `RunStatus`, `RunItem`, `EventStatus`, `ProjectEvent`, `RequirementStatus`, `ScoreBreakdown`, `MatchCandidate`, `Requirement`, `BookingStatus`, `CrewRequirement`, `AssignmentStatus`, `Assignment`, `DeliverableStatus`, `Deliverable`, `ServiceBooking`, `TaskStatus`, `TaskAssignee`, `ProjectTask`, `TimelineEntry`, `MilestoneStatus`, `PaymentMilestone`, `Incident`, `Project`, `PaymentMethod`, `Payment`, `PayableStatus`, `Payable`, `RevenueKind`, `RevenueEntry`, `Refund`, `Dispute`, `AvailabilityStatus`, `DayPart`, `AvailabilityEntry`, `AvailabilityRule`, `FreelancerProfile`, `GigStatus`, `ApplicationStatus`, `GigApplication`, `GigQuestion`, `Gig`, `ThreadMember`, `Thread`, `MessageKind`, `Message`, `InternalNote`, `FileRef`, `AuditEntry`, `AppNotification`, `ReviewRecord`, `CheckState`, `VerificationCase`, `RsvpStatus`, `GuestInvite`, `Guest`, `SeatingElement`, `SeatingLayout`, `BudgetLine`, `WeddingWebsite`, `RegistryItem`, `InspirationBoard`, `Contract`, `ShortlistEntry`, `Deal`, `ProviderPackage`, `PortfolioItem`, `StaffMember`, `Invoice`, `PlatformSettings`, `BugLogLine`, `BugReportStatus` |
 | [src/types/index.ts](../../src/types/index.ts) | `Role`, `CityGroup`, `City`, `VenueType`, `Review`, `Venue`, `CollectionId`, `VenueCollection`, `VendorCategory`, `VendorPackage`, `Vendor`, `IdeaCategory`, `IdeaPhoto`, `Story`, `RealWedding`, `GeniePackage`, `Testimonial`, `Faq`, `ChecklistPhase`, `ChecklistTask`, `BookingStatus`, `Booking`, `ChatMessage`, `Conversation`, `SearchResult`, `VenueFilters` |
 | [src/hooks/queries.ts](../../src/hooks/queries.ts) | `queryKeys`, `useVenues`, `useVenue`, `useSimilarVenues`, `useCollections`, `useVendors`, `useVendor`, `useFeaturedVendors`, `useIdeas`, `useIdea`, `useStories`, `useStory`, `useRealWeddings`, `useRealWedding`, `useSearch`, `useShortlistedVenues`, `useShortlistedVendors` |
 | [src/services/planner.ts](../../src/services/planner.ts) | `PlanInput`, `estimateTotal`, `runSheetFor`, `buildEvents`, `buildRequirements`, `NextAction`, `nextBestAction`, `planningProgress`, `savingTips`, `invitationText`, `enquiryText`, `QUESTIONS_TO_ASK`, `questionsToAsk`, `negotiationPoints`, `summarizeReviews`, `guestBandLabel` |
@@ -105,6 +105,7 @@ Exported symbols that have no JSDoc yet. The weekly documentation pass (see [the
 | [src/store/db/personas.ts](../../src/store/db/personas.ts) | `PersonaActions`, `personaActions` |
 | [src/store/db/planner.ts](../../src/store/db/planner.ts) | `PlannerActions`, `plannerActions` |
 | [src/store/db/quotes.ts](../../src/store/db/quotes.ts) | `QuoteActions`, `quoteActions` |
+| [src/store/db/support.ts](../../src/store/db/support.ts) | `SupportActions`, `supportActions` |
 | [src/store/db/trust.ts](../../src/store/db/trust.ts) | `TrustActions`, `trustActions` |
 | [src/theme/roles.ts](../../src/theme/roles.ts) | `RolePalette`, `RoleTheme` |
 | [supabase/functions/_shared/http.ts](../../supabase/functions/_shared/http.ts) | `json`, `preflight` |
@@ -113,6 +114,8 @@ Exported symbols that have no JSDoc yet. The weekly documentation pass (see [the
 | [src/app/platform/(tabs)/leads.tsx](../../src/app/platform/%28tabs%29/leads.tsx) | `default` |
 | [src/app/platform/(tabs)/weddings.tsx](../../src/app/platform/%28tabs%29/weddings.tsx) | `default` |
 | [src/app/platform/admin/announcements.tsx](../../src/app/platform/admin/announcements.tsx) | `default` |
+| [src/app/platform/admin/bug/[id].tsx](../../src/app/platform/admin/bug/%5Bid%5D.tsx) | `default` |
+| [src/app/platform/admin/bugs.tsx](../../src/app/platform/admin/bugs.tsx) | `default` |
 | [src/app/platform/admin/collection/[name].tsx](../../src/app/platform/admin/collection/%5Bname%5D.tsx) | `default` |
 | [src/app/platform/admin/data.tsx](../../src/app/platform/admin/data.tsx) | `default` |
 | [src/app/platform/admin/features.tsx](../../src/app/platform/admin/features.tsx) | `default` |
@@ -164,6 +167,7 @@ Exported symbols that have no JSDoc yet. The weekly documentation pass (see [the
 | [src/data/skills.ts](../../src/data/skills.ts) | `skillIcon` |
 | [src/data/toolkitSeed.ts](../../src/data/toolkitSeed.ts) | `buildToolkitSeed` |
 | [src/hooks/useDebounce.ts](../../src/hooks/useDebounce.ts) | `useDebounce` |
+| [src/i18n/ne/index.ts](../../src/i18n/ne/index.ts) | `NE` |
 | [src/services/auth.ts](../../src/services/auth.ts) | `logout` |
 | [src/theme/RoleTheme.tsx](../../src/theme/RoleTheme.tsx) | `useRoleTheme` |
 | [src/types/persona.ts](../../src/types/persona.ts) | `RateModel` |

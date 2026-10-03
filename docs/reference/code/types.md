@@ -8,7 +8,8 @@ Every exported symbol in `src/types/`, file by file. The guide that explains how
 
 - [`index.ts`](#indexts) (26 exports)
 - [`persona.ts`](#personats) (10 exports) · Persona model: who a user is (taxonomy), what they can do (capabilities and permissions) and what they see (surfaces). See docs/MASTER_PLAN…
-- [`platform.ts`](#platformts) (94 exports) · Shared domain model for the wedding-services orchestration marketplace. Every role (couple, provider, freelancer, platform team) reads and …
+- [`platform.ts`](#platformts) (99 exports) · Shared domain model for the wedding-services orchestration marketplace. Every role (couple, provider, freelancer, platform team) reads and …
+- [`social.ts`](#socialts) (14 exports) · Social hub (business app): the vendor's Facebook page, Instagram profile, WhatsApp Business number and TikTok account in one place. Message…
 - [`toolkit.ts`](#toolkitts) (5 exports) · Role toolkits: the smaller planning, business, freelance and operations tools each app offers on top of the core orchestration loop. They s…
 
 ## index.ts
@@ -740,7 +741,7 @@ _No JSDoc yet._
 | `message?` | `string` |  |
 | `budget?` | `number` |  |
 | `status` | `LeadStatus` |  |
-| `source?` | `'marketplace' \| 'platform' \| 'referral' \| 'walk_in'` |  |
+| `source?` | `'marketplace' \| 'platform' \| 'referral' \| 'walk_in' \| 'social'` |  |
 | `priority?` | `'low' \| 'medium' \| 'high'` |  |
 | `labels?` | `string[]` |  |
 | `followUp?` | `string` |  |
@@ -2187,9 +2188,67 @@ A notice a super admin pins to the top of one role's home, or every role's.
 | `createdAt` | `string` |  |
 | `createdBy` | `string` |  |
 
+### `BugLogLine`
+
+*interface* · [src/types/platform.ts:1138](../../../src/types/platform.ts#L1138)
+
+_No JSDoc yet._
+
+| Member | Type | Notes |
+|---|---|---|
+| `at` | `string` |  |
+| `level` | `'error' \| 'warn'` |  |
+| `message` | `string` |  |
+
+### `BugReport`
+
+*interface* · [src/types/platform.ts:1145](../../../src/types/platform.ts#L1145)
+
+What the report sheet sends: the description, the screenshot and where it happened.
+
+| Member | Type | Notes |
+|---|---|---|
+| `description` | `string` |  |
+| `screenshot?` | `string` | JPEG or PNG as a data URI (on this device's own copy it can be a file:// address instead). |
+| `route` | `string` |  |
+| `params` | `Record<string, string>` |  |
+| `capturedAt` | `string` |  |
+| `account?` | `{ id: string; name: string; role: string; staffRole?: string }` | Missing when the report was sent signed out. |
+| `device` | `{ os: string; osVersion: string; width: number; height: number; scale: number; runtime: string; userAgent?: string }` |  |
+| `app` | `{ name: string; version: string; backend: string; language: string; calendar: string }` |  |
+| `recentRoutes` | `{ at: string; path: string }[]` |  |
+| `logs` | `BugLogLine[]` |  |
+
+### `BugReportStatus`
+
+*type* · [src/types/platform.ts:1160](../../../src/types/platform.ts#L1160)
+
+```ts
+type BugReportStatus = 'new' | 'fixed' | 'dismissed'
+```
+
+_No JSDoc yet._
+
+### `BugReportRecord`
+
+*interface* · [src/types/platform.ts:1163](../../../src/types/platform.ts#L1163)
+
+`extends BugReport`
+
+A bug report as the super admin console keeps it.
+
+| Member | Type | Notes |
+|---|---|---|
+| `id` | `string` |  |
+| `receivedAt` | `string` |  |
+| `status` | `BugReportStatus` |  |
+| `resolvedBy?` | `string` | Who marked it fixed or dismissed, and when. |
+| `resolvedAt?` | `string` |  |
+| `note?` | `string` |  |
+
 ### `*`
 
-*re-export* · [src/types/platform.ts:1138](../../../src/types/platform.ts#L1138)
+*re-export* · [src/types/platform.ts:1174](../../../src/types/platform.ts#L1174)
 
 ```ts
 *from './toolkit'
@@ -2199,13 +2258,249 @@ _No JSDoc yet._
 
 ### `*`
 
-*re-export* · [src/types/platform.ts:1140](../../../src/types/platform.ts#L1140)
+*re-export* · [src/types/platform.ts:1176](../../../src/types/platform.ts#L1176)
+
+```ts
+*from './social'
+```
+
+_No JSDoc yet._
+
+### `*`
+
+*re-export* · [src/types/platform.ts:1178](../../../src/types/platform.ts#L1178)
 
 ```ts
 *from './persona'
 ```
 
 _No JSDoc yet._
+
+## social.ts
+
+Source: [src/types/social.ts](../../../src/types/social.ts)
+
+Social hub (business app): the vendor's Facebook page, Instagram profile,
+WhatsApp Business number and TikTok account in one place. Messages and
+comments from every network land in one inbox; one post goes out to every
+network. Mirrors supabase/migrations/0017_social_hub.sql.
+
+Access tokens never live on the device: the server keeps them in
+`social_account_secrets` (service role only) and the app only ever sees
+the account row.
+
+### `SocialNetwork`
+
+*type* · [src/types/social.ts:14](../../../src/types/social.ts#L14)
+
+```ts
+type SocialNetwork = 'facebook' | 'instagram' | 'whatsapp' | 'tiktok'
+```
+
+Networks a business can connect.
+
+### `SocialAccountStatus`
+
+*type* · [src/types/social.ts:17](../../../src/types/social.ts#L17)
+
+```ts
+type SocialAccountStatus = 'connected' | 'expired' | 'disconnected'
+```
+
+`expired`: the token needs renewing before replies or posts go out.
+
+### `SocialAccount`
+
+*interface* · [src/types/social.ts:20](../../../src/types/social.ts#L20)
+
+A connected Facebook page, Instagram profile, WhatsApp number or TikTok account.
+
+| Member | Type | Notes |
+|---|---|---|
+| `id` | `string` |  |
+| `ownerId` | `string` | The vendor account that connected it. |
+| `network` | `SocialNetwork` |  |
+| `handle` | `string` |  |
+| `name` | `string` |  |
+| `status` | `SocialAccountStatus` |  |
+| `followers` | `number` |  |
+| `scopes` | `string[]` | Permissions granted when connecting. |
+| `connectedAt` | `string` |  |
+| `expiresAt?` | `string` | When the access token must be renewed (Meta long-lived tokens last about 60 days). |
+| `lastSyncAt?` | `string` |  |
+
+### `SocialThreadKind`
+
+*type* · [src/types/social.ts:39](../../../src/types/social.ts#L39)
+
+```ts
+type SocialThreadKind = 'message' | 'comment'
+```
+
+A direct message conversation, or the comments one person left on a post.
+
+### `SocialThreadStatus`
+
+*type* · [src/types/social.ts:42](../../../src/types/social.ts#L42)
+
+```ts
+type SocialThreadStatus = 'open' | 'pending' | 'done'
+```
+
+`pending`: waiting on the customer (or snoozed); `done`: nothing left to do.
+
+### `SocialMedia`
+
+*interface* · [src/types/social.ts:45](../../../src/types/social.ts#L45)
+
+A photo or video attached to a post or a message.
+
+| Member | Type | Notes |
+|---|---|---|
+| `id` | `string` |  |
+| `kind` | `'image' \| 'video'` |  |
+| `image?` | `PhotoKey` |  |
+| `uri?` | `string` |  |
+| `alt?` | `string` |  |
+
+### `SocialThread`
+
+*interface* · [src/types/social.ts:54](../../../src/types/social.ts#L54)
+
+One conversation in the unified inbox.
+
+| Member | Type | Notes |
+|---|---|---|
+| `id` | `string` |  |
+| `ownerId` | `string` |  |
+| `accountId` | `string` |  |
+| `network` | `SocialNetwork` |  |
+| `kind` | `SocialThreadKind` |  |
+| `contactName` | `string` |  |
+| `contactHandle` | `string` |  |
+| `contactPhone?` | `string` | WhatsApp number, or one the customer typed into a message. |
+| `postId?` | `string` | For comments: the post the comment is on. |
+| `postCaption?` | `string` |  |
+| `status` | `SocialThreadStatus` |  |
+| `snoozedUntil?` | `string` | A snoozed thread returns to `open` at this time. |
+| `starred?` | `boolean` |  |
+| `labels` | `string[]` |  |
+| `assignee?` | `string` | Team member handling it (name). |
+| `leadId?` | `string` | CRM lead made from this conversation. |
+| `unread` | `number` |  |
+| `lastAt` | `string` |  |
+| `lastInboundAt?` | `string` | Last message from the customer; opens the networks' 24-hour reply window. |
+| `firstResponseMins?` | `number` | Minutes the first reply took (inbox response-time stats). |
+
+### `SocialMessageStatus`
+
+*type* · [src/types/social.ts:85](../../../src/types/social.ts#L85)
+
+```ts
+type SocialMessageStatus = 'sending' | 'sent' | 'delivered' | 'read' | 'failed'
+```
+
+Delivery state of a reply, as the network reports it.
+
+### `SocialMessage`
+
+*interface* · [src/types/social.ts:88](../../../src/types/social.ts#L88)
+
+A message, a comment, or an internal note in a thread.
+
+| Member | Type | Notes |
+|---|---|---|
+| `id` | `string` |  |
+| `threadId` | `string` |  |
+| `direction` | `'in' \| 'out' \| 'note'` | `note` is internal: the customer never sees it. |
+| `text` | `string` |  |
+| `at` | `string` |  |
+| `author?` | `string` | Who wrote it: the customer, or the team member who replied. |
+| `media?` | `SocialMedia[]` |  |
+| `status?` | `SocialMessageStatus` |  |
+| `auto?` | `boolean` | Sent by an auto-reply rule or the away message. |
+| `template?` | `string` | Approved WhatsApp template used outside the 24-hour window. |
+| `error?` | `string` |  |
+
+### `SocialPostStatus`
+
+*type* · [src/types/social.ts:107](../../../src/types/social.ts#L107)
+
+```ts
+type SocialPostStatus = 'draft' | 'scheduled' | 'publishing' | 'published' | 'partial' | 'failed'
+```
+
+Where a post is: draft, scheduled, publishing, published, partly published or failed.
+
+### `SocialPostResult`
+
+*interface* · [src/types/social.ts:110](../../../src/types/social.ts#L110)
+
+How one network took a post, and how it did there.
+
+| Member | Type | Notes |
+|---|---|---|
+| `status` | `'queued' \| 'publishing' \| 'published' \| 'failed'` |  |
+| `url?` | `string` |  |
+| `error?` | `string` |  |
+| `at?` | `string` |  |
+| `reach?` | `number` |  |
+| `likes?` | `number` |  |
+| `comments?` | `number` |  |
+| `shares?` | `number` |  |
+| `saves?` | `number` |  |
+
+### `SocialPost`
+
+*interface* · [src/types/social.ts:123](../../../src/types/social.ts#L123)
+
+One post sent to several networks at once (now or at a set time).
+
+| Member | Type | Notes |
+|---|---|---|
+| `id` | `string` |  |
+| `ownerId` | `string` |  |
+| `caption` | `string` |  |
+| `overrides` | `Partial<Record<SocialNetwork, string>>` | Caption for one network when it should differ from the main one. |
+| `media` | `SocialMedia[]` |  |
+| `networks` | `SocialNetwork[]` |  |
+| `link?` | `string` |  |
+| `firstComment?` | `string` | Posted as the first comment (hashtags, a booking link). Facebook and Instagram. |
+| `status` | `SocialPostStatus` |  |
+| `scheduledAt?` | `string` |  |
+| `publishedAt?` | `string` |  |
+| `results` | `Partial<Record<SocialNetwork, SocialPostResult>>` |  |
+| `campaign?` | `string` | Free label to group posts ("Mangsir offer"). |
+| `createdAt` | `string` |  |
+| `updatedAt` | `string` |  |
+
+### `SocialAutoRule`
+
+*interface* · [src/types/social.ts:145](../../../src/types/social.ts#L145)
+
+Keyword auto-reply: when an incoming message contains a keyword, reply at once.
+
+| Member | Type | Notes |
+|---|---|---|
+| `id` | `string` |  |
+| `keywords` | `string[]` |  |
+| `reply` | `string` |  |
+| `networks` | `SocialNetwork[]` | Empty means every network. |
+| `active` | `boolean` |  |
+| `hits` | `number` |  |
+
+### `SocialSettings`
+
+*interface* · [src/types/social.ts:156](../../../src/types/social.ts#L156)
+
+Saved replies, auto-replies and the away message of one business.
+
+| Member | Type | Notes |
+|---|---|---|
+| `savedReplies` | `{ id: string; title: string; text: string }[]` |  |
+| `rules` | `SocialAutoRule[]` |  |
+| `away` | `{ active: boolean; from: string; to: string; text: string }` | Outside these hours (Nepal time, HH:MM) new conversations get the away message once. |
+| `signature?` | `string` | Added under every reply when set ("— Rajesh, Everest Grand"). |
 
 ## toolkit.ts
 

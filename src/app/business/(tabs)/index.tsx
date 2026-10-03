@@ -4,6 +4,7 @@ import { StyleSheet, View } from 'react-native';
 
 import { BarChart, Card, KButton, KpiCard, ListRow, QuickAction, RoleHeader, SectionTitle, StatusPill } from '@/components/kit';
 import { SetupChecklist } from '@/components/persona/SetupChecklist';
+import { SocialHomeCard } from '@/components/social/HomeCard';
 import { toolHref, useVisibleTools } from '@/components/toolkit/hub';
 import { VENDOR_TOOLS } from '@/components/toolkit/vendor';
 import { Text } from '@/components/ui/Text';
@@ -151,6 +152,8 @@ export default function VendorDashboard() {
             <QuickAction icon="pricetags-outline" label="Packages" onPress={() => router.push('/business/packages')} />
             <QuickAction icon="rocket-outline" label="Promote" onPress={() => router.push('/business/promotions')} />
           </Card>
+
+          <SocialHomeCard />
 
           {(crewGaps.length > 0 || dueDeliverables.length > 0) && (
             <View>

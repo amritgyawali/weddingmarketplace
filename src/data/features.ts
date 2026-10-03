@@ -43,6 +43,7 @@ export const FEATURES: FeatureDef[] = [
   { id: 'tab.vendor.bookings', label: 'Bookings tab', role: 'vendor', group: 'Tabs' },
   { id: 'tab.vendor.calendar', label: 'Calendar tab', role: 'vendor', group: 'Tabs' },
   { id: 'tab.vendor.account', label: 'Business tab', role: 'vendor', group: 'Tabs' },
+  { id: 'vendor.social', label: 'Social media hub', role: 'vendor', group: 'Features', hint: 'Facebook, Instagram, WhatsApp and TikTok inbox and publishing' },
   // Freelancer app
   { id: 'tab.freelancer.jobs', label: 'My jobs tab', role: 'freelancer', group: 'Tabs' },
   { id: 'tab.freelancer.calendar', label: 'Calendar tab', role: 'freelancer', group: 'Tabs' },
@@ -59,6 +60,7 @@ export const FEATURES: FeatureDef[] = [
   { id: 'login.demo', label: 'One-tap demo accounts', role: 'all', group: 'Sign-up', hint: 'The "Continue as …" buttons on the login screens' },
   { id: 'app.announcements', label: 'Announcements on home screens', role: 'all', group: 'Content' },
   { id: 'app.notifications', label: 'Pop-up confirmations', role: 'all', group: 'Content', hint: 'The short message after adding, deleting or finishing something' },
+  { id: 'app.bug_report', label: 'Shake to report a bug', role: 'all', group: 'Content', hint: 'Everyone, on every screen: shaking the phone sends a screenshot and a description to Super admin → Bug reports' },
 ];
 
 export const FEATURE_BY_ID: Record<string, FeatureDef> = Object.fromEntries(FEATURES.map((f) => [f.id, f]));

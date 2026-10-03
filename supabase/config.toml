@@ -55,3 +55,21 @@ verify_jwt = false
 # Closes the signed-in user's account (Settings → Delete my account).
 [functions.account-delete]
 verify_jwt = true
+
+# Social hub. The network sends the browser back to social-oauth without a
+# session (the start step checks the caller's JWT itself).
+[functions.social-oauth]
+verify_jwt = false
+
+# Meta and TikTok deliver messages here, signed with the app secret.
+[functions.social-webhook]
+verify_jwt = false
+
+# Replies from the inbox, as the signed-in business member.
+[functions.social-send]
+verify_jwt = true
+
+# "Publish now" sends the member's JWT; the scheduled run sends the shared
+# secret from the database, so the function checks either itself.
+[functions.social-publish]
+verify_jwt = false

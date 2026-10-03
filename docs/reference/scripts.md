@@ -17,13 +17,15 @@ npm scripts and the Node scripts behind them. All run locally with no network un
 | `npm run check:personas` | `node scripts/check-personas.mjs` |
 | `npm run env:vercel` | `node scripts/env-vercel.mjs` |
 | `npm run db:check` | `node scripts/db/db-check.mjs` |
-| `npm run db:test` | `node scripts/db/core-loop.mjs && node scripts/db/accounts.mjs && node scripts/db/payments.mjs && node scripts/db/launch.mjs` |
+| `npm run db:test` | `node scripts/db/core-loop.mjs && node scripts/db/accounts.mjs && node scripts/db/payments.mjs && node scripts/db/launch.mjs && node scripts/db/social.mjs && node scripts/db/bugs.mjs` |
 | `npm run test:parity` | `node scripts/db/parity.mjs` |
 | `npm run test:functions` | `node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/test-functions.mjs` |
 | `npm run env:functions` | `node scripts/env-functions.mjs` |
 | `npm run test:telemetry` | `node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/test-telemetry.mjs` |
+| `npm run test:social` | `node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/test-social.mjs` |
 | `npm run docs:generate` | `node scripts/docs/generate-reference.mjs` |
 | `npm run docs:check` | `node scripts/docs/generate-reference.mjs --check` |
+| `npm run bugs:inbox` | `node scripts/bug-inbox.cjs` |
 
 ## Script files
 
@@ -66,6 +68,18 @@ approval gate, the access-token hook, media registration, the private
 documents bucket, push tokens and preferences, and the scheduled jobs.
 
   npm run db:test   (runs this after core-loop.mjs)
+
+### scripts/db/bugs.mjs
+
+Source: [scripts/db/bugs.mjs](../../scripts/db/bugs.mjs)
+
+Bug report checks on a real Postgres with RLS on (PGlite, in-process):
+anyone can send a report (signed in or out), the screenshot is kept only
+when it is an image, the account details are dropped for signed-out
+senders, super admins are told, only super admins read, mark and delete
+reports, and the rate limit stops a flood.
+
+  npm run db:test   (runs this after social.mjs)
 
 ### scripts/db/core-loop.mjs
 
@@ -151,6 +165,20 @@ comes from the milestone, duplicate callbacks record one payment, and money
 the milestone can no longer take is kept as REFUND_DUE for finance.
 
   npm run db:test   (runs this after accounts.mjs)
+
+### scripts/db/social.mjs
+
+Source: [scripts/db/social.mjs](../../scripts/db/social.mjs)
+
+Social hub checks on a real Postgres with RLS on (PGlite, in-process):
+connecting a network (service role only, one business per network
+account), tokens nobody but the service can read, webhook messages stored
+once however often a network retries, receipts that only move forward,
+triage limited to the triage columns, notes but no forged replies, drafts
+that can't be marked published by a client, scheduling, the scheduled run,
+the post status following its networks, and "create lead".
+
+  npm run db:test   (runs this after launch.mjs)
 
 ### scripts/docs/generate-reference.mjs
 
@@ -247,6 +275,19 @@ that plays Supabase Auth, Upstash, Cloudinary, Expo and Resend. Nothing
 leaves the machine.
 
   npm run test:functions
+
+### scripts/test-social.mjs
+
+Source: [scripts/test-social.mjs](../../scripts/test-social.mjs)
+
+Checks the social hub's rules (src/services/social.ts) and its demo seed:
+each network's posting limits, the reply windows (24 hours, Meta's 7-day
+human agent tag, WhatsApp templates), reading dates, guests, budget and
+phone from a message (BS and AD dates), auto-replies and the away message,
+best times, hashtags, and the inbox and post numbers. Node 24+ strips the
+TypeScript.
+
+  npm run test:social
 
 ### scripts/test-telemetry.mjs
 
