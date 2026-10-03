@@ -8643,7 +8643,7 @@
     {
      "name": "TaskBoard",
      "kind": "component",
-     "line": 236,
+     "line": 238,
      "signature": "({ project, mode, openTaskId }: { project: Project; mode: Mode; openTaskId?: string })",
      "doc": "Project task board shared by couple, coordinator and providers. `openTaskId` opens that task's sheet straight away."
     }
@@ -12629,21 +12629,21 @@
     {
      "name": "guideSuggestions",
      "kind": "function",
-     "line": 317,
-     "signature": "(project: Project): ProjectTask[]",
-     "doc": "Items of the month-by-month guide for the phase the couple is in and the\nones after it, not on the wedding's task list yet, as tasks for the couple\ndue by the end of their phase. Weddings and engagements only."
+     "line": 318,
+     "signature": "(project: Project, ticked: string[] = []): ProjectTask[]",
+     "doc": "Items of the month-by-month guide for the phase the couple is in and the\nones after it, not on the wedding's task list yet, as tasks for the couple\ndue by the end of their phase. Items already ticked in the guide (`ticked`,\nchecklist ids) are left out. Weddings and engagements only."
     },
     {
      "name": "buildTimeline",
      "kind": "function",
-     "line": 344,
+     "line": 345,
      "signature": "(project: Project, opts: { internal?: boolean } = {}): TimelineEntry[]",
      "doc": "Customer-facing timeline built from live project data plus any manual\nentries (meetings, milestones) stored on the project."
     },
     {
      "name": "NextAction",
      "kind": "interface",
-     "line": 367,
+     "line": 368,
      "signature": "",
      "doc": "",
      "members": [
@@ -12688,77 +12688,77 @@
     {
      "name": "nextBestAction",
      "kind": "function",
-     "line": 378,
+     "line": 379,
      "signature": "(project: Project, quotes: Quotation[]): NextAction",
      "doc": ""
     },
     {
      "name": "missingServices",
      "kind": "function",
-     "line": 393,
+     "line": 394,
      "signature": "(project: Project): string[]",
      "doc": "Services couples usually need for their functions but haven't requested."
     },
     {
      "name": "planningProgress",
      "kind": "function",
-     "line": 399,
+     "line": 400,
      "signature": "(project: Project)",
      "doc": ""
     },
     {
      "name": "savingTips",
      "kind": "function",
-     "line": 411,
+     "line": 412,
      "signature": "(project: Project): string[]",
      "doc": ""
     },
     {
      "name": "invitationText",
      "kind": "function",
-     "line": 423,
+     "line": 424,
      "signature": "(project: Project, tone: 'traditional' | 'modern' | 'nepali' = 'traditional'): string",
      "doc": ""
     },
     {
      "name": "enquiryText",
      "kind": "function",
-     "line": 434,
+     "line": 435,
      "signature": "(project: Project, serviceId: string): string",
      "doc": ""
     },
     {
      "name": "QUESTIONS_TO_ASK",
      "kind": "const",
-     "line": 441,
+     "line": 442,
      "signature": ": Record<string, string[]>",
      "doc": ""
     },
     {
      "name": "questionsToAsk",
      "kind": "function",
-     "line": 450,
+     "line": 451,
      "signature": "(serviceId: string)",
      "doc": ""
     },
     {
      "name": "negotiationPoints",
      "kind": "function",
-     "line": 453,
+     "line": 454,
      "signature": "(quote: Quotation, marketMedian?: number): string[]",
      "doc": ""
     },
     {
      "name": "summarizeReviews",
      "kind": "function",
-     "line": 464,
+     "line": 465,
      "signature": "(reviews: { rating: number; text: string }[]): { average: number; highlights: string[]; concerns: string[] }",
      "doc": ""
     },
     {
      "name": "guestBandLabel",
      "kind": "function",
-     "line": 481,
+     "line": 482,
      "signature": "(guests: number)",
      "doc": ""
     }

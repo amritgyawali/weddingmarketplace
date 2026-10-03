@@ -9,6 +9,7 @@ import { Sheet } from '@/components/ui/Sheet';
 import { Text } from '@/components/ui/Text';
 import { toast } from '@/components/ui/Toast';
 import { guideSuggestions, suggestedTasks } from '@/services/planner';
+import { useAppStore } from '@/store/useAppStore';
 import { useDb } from '@/store/useDb';
 import { useAccount } from '@/store/useSession';
 import { useRoleTheme } from '@/theme/RoleTheme';
@@ -158,8 +159,9 @@ function TaskSheet({ project, mode, task, onClose }: { project: Project; mode: M
 function SuggestSheet({ project, visible, onClose }: { project: Project; visible: boolean; onClose: () => void }) {
   const t = useRoleTheme();
   const regenerate = useDb((s) => s.regenerateChecklist);
+  const ticked = useAppStore((s) => s.completedTasks);
   const forServices = visible ? suggestedTasks(project) : [];
-  const fromGuide = visible ? guideSuggestions(project) : [];
+  const fromGuide = visible ? guideSuggestions(project, ticked) : [];
   const suggestions = [...forServices, ...fromGuide];
   // Titles whose tick differs from the default (services ticked, guide unticked).
   const [flipped, setFlipped] = useState<string[]>([]);

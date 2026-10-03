@@ -608,7 +608,7 @@ Source: [src/components/work/TaskBoard.tsx](../../../src/components/work/TaskBoa
 
 ### `TaskBoard`
 
-*component* · [src/components/work/TaskBoard.tsx:236](../../../src/components/work/TaskBoard.tsx#L236)
+*component* · [src/components/work/TaskBoard.tsx:238](../../../src/components/work/TaskBoard.tsx#L238)
 
 ```ts
 TaskBoard({ project, mode, openTaskId }: { project: Project; mode: Mode; openTaskId?: string })

@@ -312,14 +312,15 @@ export function suggestedTasks(project: Project): ProjectTask[] {
 /**
  * Items of the month-by-month guide for the phase the couple is in and the
  * ones after it, not on the wedding's task list yet, as tasks for the couple
- * due by the end of their phase. Weddings and engagements only.
+ * due by the end of their phase. Items already ticked in the guide (`ticked`,
+ * checklist ids) are left out. Weddings and engagements only.
  */
-export function guideSuggestions(project: Project): ProjectTask[] {
+export function guideSuggestions(project: Project, ticked: string[] = []): ProjectTask[] {
   if (!WEDDING_LIKE.has(project.occasion ?? 'wedding')) return [];
   const from = CHECKLIST_PHASES.indexOf(currentPhase(daysUntil(project.weddingDate)));
   const have = new Set([...project.tasks, ...suggestedTasks(project)].map((t) => t.title.toLowerCase()));
   const now = today();
-  return CHECKLIST.filter((t) => CHECKLIST_PHASES.indexOf(t.phase) >= from && !have.has(t.title.toLowerCase())).map((t) => {
+  return CHECKLIST.filter((t) => CHECKLIST_PHASES.indexOf(t.phase) >= from && !ticked.includes(t.id) && !have.has(t.title.toLowerCase())).map((t) => {
     const due = shift(project.weddingDate, -PHASE_DUE[t.phase]);
     return {
       id: uid('tk'),

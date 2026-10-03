@@ -906,19 +906,20 @@ Checklist tasks for the project's date and requested services that aren't on its
 
 ### `guideSuggestions`
 
-*function* · [src/services/planner.ts:317](../../../src/services/planner.ts#L317)
+*function* · [src/services/planner.ts:318](../../../src/services/planner.ts#L318)
 
 ```ts
-guideSuggestions(project: Project): ProjectTask[]
+guideSuggestions(project: Project, ticked: string[] = []): ProjectTask[]
 ```
 
 Items of the month-by-month guide for the phase the couple is in and the
 ones after it, not on the wedding's task list yet, as tasks for the couple
-due by the end of their phase. Weddings and engagements only.
+due by the end of their phase. Items already ticked in the guide (`ticked`,
+checklist ids) are left out. Weddings and engagements only.
 
 ### `buildTimeline`
 
-*function* · [src/services/planner.ts:344](../../../src/services/planner.ts#L344)
+*function* · [src/services/planner.ts:345](../../../src/services/planner.ts#L345)
 
 ```ts
 buildTimeline(project: Project, opts: { internal?: boolean } = {}): TimelineEntry[]
@@ -929,7 +930,7 @@ entries (meetings, milestones) stored on the project.
 
 ### `NextAction`
 
-*interface* · [src/services/planner.ts:367](../../../src/services/planner.ts#L367)
+*interface* · [src/services/planner.ts:368](../../../src/services/planner.ts#L368)
 
 _No JSDoc yet._
 
@@ -944,7 +945,7 @@ _No JSDoc yet._
 
 ### `nextBestAction`
 
-*function* · [src/services/planner.ts:378](../../../src/services/planner.ts#L378)
+*function* · [src/services/planner.ts:379](../../../src/services/planner.ts#L379)
 
 ```ts
 nextBestAction(project: Project, quotes: Quotation[]): NextAction
@@ -954,7 +955,7 @@ _No JSDoc yet._
 
 ### `missingServices`
 
-*function* · [src/services/planner.ts:393](../../../src/services/planner.ts#L393)
+*function* · [src/services/planner.ts:394](../../../src/services/planner.ts#L394)
 
 ```ts
 missingServices(project: Project): string[]
@@ -964,7 +965,7 @@ Services couples usually need for their functions but haven't requested.
 
 ### `planningProgress`
 
-*function* · [src/services/planner.ts:399](../../../src/services/planner.ts#L399)
+*function* · [src/services/planner.ts:400](../../../src/services/planner.ts#L400)
 
 ```ts
 planningProgress(project: Project)
@@ -974,7 +975,7 @@ _No JSDoc yet._
 
 ### `savingTips`
 
-*function* · [src/services/planner.ts:411](../../../src/services/planner.ts#L411)
+*function* · [src/services/planner.ts:412](../../../src/services/planner.ts#L412)
 
 ```ts
 savingTips(project: Project): string[]
@@ -984,7 +985,7 @@ _No JSDoc yet._
 
 ### `invitationText`
 
-*function* · [src/services/planner.ts:423](../../../src/services/planner.ts#L423)
+*function* · [src/services/planner.ts:424](../../../src/services/planner.ts#L424)
 
 ```ts
 invitationText(project: Project, tone: 'traditional' | 'modern' | 'nepali' = 'traditional'): string
@@ -994,7 +995,7 @@ _No JSDoc yet._
 
 ### `enquiryText`
 
-*function* · [src/services/planner.ts:434](../../../src/services/planner.ts#L434)
+*function* · [src/services/planner.ts:435](../../../src/services/planner.ts#L435)
 
 ```ts
 enquiryText(project: Project, serviceId: string): string
@@ -1004,7 +1005,7 @@ _No JSDoc yet._
 
 ### `QUESTIONS_TO_ASK`
 
-*const* · [src/services/planner.ts:441](../../../src/services/planner.ts#L441)
+*const* · [src/services/planner.ts:442](../../../src/services/planner.ts#L442)
 
 ```ts
 QUESTIONS_TO_ASK: Record<string, string[]>
@@ -1014,7 +1015,7 @@ _No JSDoc yet._
 
 ### `questionsToAsk`
 
-*function* · [src/services/planner.ts:450](../../../src/services/planner.ts#L450)
+*function* · [src/services/planner.ts:451](../../../src/services/planner.ts#L451)
 
 ```ts
 questionsToAsk(serviceId: string)
@@ -1024,7 +1025,7 @@ _No JSDoc yet._
 
 ### `negotiationPoints`
 
-*function* · [src/services/planner.ts:453](../../../src/services/planner.ts#L453)
+*function* · [src/services/planner.ts:454](../../../src/services/planner.ts#L454)
 
 ```ts
 negotiationPoints(quote: Quotation, marketMedian?: number): string[]
@@ -1034,7 +1035,7 @@ _No JSDoc yet._
 
 ### `summarizeReviews`
 
-*function* · [src/services/planner.ts:464](../../../src/services/planner.ts#L464)
+*function* · [src/services/planner.ts:465](../../../src/services/planner.ts#L465)
 
 ```ts
 summarizeReviews(reviews: { rating: number; text: string }[]): { average: number; highlights: string[]; concerns: string[] }
@@ -1044,7 +1045,7 @@ _No JSDoc yet._
 
 ### `guestBandLabel`
 
-*function* · [src/services/planner.ts:481](../../../src/services/planner.ts#L481)
+*function* · [src/services/planner.ts:482](../../../src/services/planner.ts#L482)
 
 ```ts
 guestBandLabel(guests: number)
