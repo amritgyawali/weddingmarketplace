@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
     minHeight: 48,
     borderRadius: radius.md,
     borderWidth: 1,
-    borderColor: colors.border,
+    borderColor: colors.borderStrong,
     backgroundColor: colors.white,
     paddingHorizontal: 14,
     fontFamily: fonts.regular,
@@ -70,7 +70,7 @@ const styles = StyleSheet.create({
     color: colors.textStrong,
   },
   multiline: { minHeight: 110, paddingTop: 12, textAlignVertical: 'top' },
-  inputFocused: { borderColor: colors.heading, borderWidth: 1.5 },
+  inputFocused: { borderColor: colors.primary, borderWidth: 2, paddingHorizontal: 13 },
   inputError: { borderColor: colors.danger },
   errorRow: { flexDirection: 'row', alignItems: 'center', gap: 5 },
 });

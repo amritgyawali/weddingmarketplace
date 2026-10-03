@@ -1,5 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
-import { Image } from 'expo-image';
+import { Photo } from '@/components/ui/Photo';
 import { router } from 'expo-router';
 import { memo } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
@@ -32,7 +32,7 @@ export const PhotoTile = memo(function PhotoTile({ photo, width }: { photo: Idea
         onPress={() => router.push({ pathname: '/idea/[id]', params: { id: photo.id } })}
         accessibilityLabel={photo.title}
         style={StyleSheet.absoluteFill}>
-        <Image source={photos[photo.image]} style={StyleSheet.absoluteFill} contentFit="cover" transition={200} recyclingKey={photo.id} />
+        <Photo source={photos[photo.image]} style={StyleSheet.absoluteFill} contentFit="cover" transition={200} recyclingKey={photo.id} />
       </Pressable>
       <Pressable onPress={like} hitSlop={8} accessibilityLabel={liked ? 'Unlike photo' : 'Like photo'} style={styles.likes}>
         <Animated.View style={heartStyle}>

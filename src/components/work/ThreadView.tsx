@@ -1,5 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
-import { Image } from 'expo-image';
+import { Photo } from '@/components/ui/Photo';
 import * as ImagePicker from 'expo-image-picker';
 import * as Location from 'expo-location';
 import { router } from 'expo-router';
@@ -106,7 +106,7 @@ function Bubble({ m, mine, showName, seen }: { m: Message; mine: boolean; showNa
       );
     }
     if (m.kind === 'image' && (m.meta?.uri || m.meta?.image)) {
-      return <Image source={m.meta.uri ? { uri: m.meta.uri } : photos[m.meta.image!]} style={styles.image} contentFit="cover" />;
+      return <Photo source={m.meta.uri ? { uri: m.meta.uri } : photos[m.meta.image!]} style={styles.image} contentFit="cover" />;
     }
     return (
       <Text size={15} color={fg} lineHeight={21}>

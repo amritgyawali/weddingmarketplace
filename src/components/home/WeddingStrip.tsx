@@ -2,6 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { router, type Href } from 'expo-router';
 import { Pressable, StyleSheet, View } from 'react-native';
 
+import { Ornament } from '@/components/ui/Ornament';
 import { Text } from '@/components/ui/Text';
 import { colors, GUTTER } from '@/constants/theme';
 import { useOpenMyWedding } from '@/hooks/useOpenMyWedding';
@@ -24,7 +25,7 @@ export function WeddingStrip() {
     return (
       <View style={styles.wrap}>
         <View style={styles.band}>
-          <View style={styles.rule} />
+          <Ornament width={64} style={styles.ornament} />
           <Text serif size={24} weight="bold" color={colors.white} lineHeight={34}>
             Planning a wedding?
           </Text>
@@ -52,7 +53,7 @@ export function WeddingStrip() {
         accessibilityRole="button"
         accessibilityLabel={`${project.title}, ${days} days to go. Open your wedding`}
         style={({ pressed }) => [styles.band, pressed && { opacity: 0.92 }]}>
-        <View style={styles.rule} />
+        <Ornament width={64} style={styles.ornament} />
         <View style={styles.row}>
           <View style={{ flex: 1 }}>
             <Text size={13} color={colors.gold}>
@@ -67,7 +68,7 @@ export function WeddingStrip() {
           </View>
           {days >= 0 && (
             <View style={styles.count}>
-              <Text serif size={30} weight="bold" color={colors.gold} lineHeight={38}>
+              <Text serif size={30} weight="bold" color={colors.gold} lineHeight={38} numeric>
                 {days}
               </Text>
               <Text size={12} color={ON_WINE_MUTED} lineHeight={14}>
@@ -75,6 +76,9 @@ export function WeddingStrip() {
               </Text>
             </View>
           )}
+        </View>
+        <View style={styles.track} accessibilityElementsHidden>
+          <View style={[styles.fill, { width: `${Math.round((progress.services.total ? progress.services.confirmed / progress.services.total : 0) * 100)}%` }]} />
         </View>
       </Pressable>
       <Pressable
@@ -99,7 +103,7 @@ export function WeddingStrip() {
 }
 
 /** Secondary text on the wine band: soft white at reduced strength. */
-const ON_WINE_MUTED = 'rgba(255,252,248,0.74)';
+const ON_WINE_MUTED = colors.onWineMuted;
 
 const styles = StyleSheet.create({
   wrap: { paddingHorizontal: GUTTER, paddingTop: 16, paddingBottom: 6 },
@@ -113,8 +117,11 @@ const styles = StyleSheet.create({
     paddingBottom: 18,
     overflow: 'hidden',
   },
-  /** A short champagne rule, like the gilt line on a wedding card. */
-  rule: { width: 28, height: 2, borderRadius: 1, backgroundColor: colors.gold, marginBottom: 12 },
+  /** The gilt Dhaka divider, like the line on a printed wedding card. */
+  ornament: { marginBottom: 12 },
+  /** Services booked, as a fine champagne line along the foot of the band. */
+  track: { height: 2, borderRadius: 1, backgroundColor: colors.goldTrack, marginTop: 16, overflow: 'hidden' },
+  fill: { height: 2, borderRadius: 1, backgroundColor: colors.gold },
   row: { flexDirection: 'row', alignItems: 'flex-end', gap: 12 },
   count: { alignItems: 'flex-end', paddingBottom: 2 },
   next: {

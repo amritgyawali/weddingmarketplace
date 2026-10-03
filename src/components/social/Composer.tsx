@@ -1,6 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
-import { Image } from 'expo-image';
+import { Photo } from '@/components/ui/Photo';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
@@ -230,7 +230,7 @@ export function SocialComposer({ postId, at }: { postId?: string; at?: string })
               const src = mediaSource(m);
               return (
                 <View key={m.id} style={[styles.thumb, { backgroundColor: t.c.surfaceAlt }]}>
-                  {src && <Image source={src} style={StyleSheet.absoluteFill} contentFit="cover" />}
+                  {src && <Photo source={src} style={StyleSheet.absoluteFill} contentFit="cover" />}
                   {m.kind === 'video' && <Ionicons name="videocam" size={18} color={t.c.onPrimary} style={{ position: 'absolute', left: 6, bottom: 6 }} />}
                   <Pressable onPress={() => setMedia(media.filter((x) => x.id !== m.id))} hitSlop={6} accessibilityLabel={`Remove file ${i + 1}`} style={[styles.remove, { backgroundColor: t.c.surface }]}>
                     <Ionicons name="close" size={14} color={t.c.textStrong} />
@@ -414,7 +414,7 @@ export function SocialComposer({ postId, at }: { postId?: string; at?: string })
                 accessibilityState={{ checked: picked }}
                 accessibilityLabel={p.caption}
                 style={[styles.libItem, { borderColor: picked ? t.c.primary : t.c.border }]}>
-                {src && <Image source={src} style={StyleSheet.absoluteFill} contentFit="cover" />}
+                {src && <Photo source={src} style={StyleSheet.absoluteFill} contentFit="cover" />}
                 {picked && (
                   <View style={[styles.check, { backgroundColor: t.c.primary }]}>
                     <Ionicons name="checkmark" size={14} color={t.c.onPrimary} />

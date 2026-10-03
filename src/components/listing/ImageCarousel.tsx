@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Photo } from '@/components/ui/Photo';
 import { useState } from 'react';
 import { FlatList, Pressable, StyleSheet, View, type NativeScrollEvent, type NativeSyntheticEvent } from 'react-native';
 
@@ -42,7 +42,7 @@ export function ImageCarousel({
         getItemLayout={(_, i) => ({ length: width, offset: width * i, index: i })}
         renderItem={({ item, index: i }) => (
           <Pressable onPress={() => onPressImage?.(i)} disabled={!onPressImage}>
-            <Image source={photos[item]} style={{ width, height }} contentFit="cover" transition={200} recyclingKey={`${item}-${i}`} />
+            <Photo source={photos[item]} style={{ width, height }} contentFit="cover" transition={200} recyclingKey={`${item}-${i}`} />
           </Pressable>
         )}
       />

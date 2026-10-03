@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { StyleSheet, View, type DimensionValue, type StyleProp, type ViewStyle } from 'react-native';
-import Animated, { useAnimatedStyle, useSharedValue, withRepeat, withTiming } from 'react-native-reanimated';
+import Animated, { useAnimatedStyle, useReducedMotion, useSharedValue, withRepeat, withTiming } from 'react-native-reanimated';
 
 import { colors, GUTTER, radius } from '@/constants/theme';
 
@@ -15,10 +15,12 @@ export function Skeleton({
   borderRadius?: number;
   style?: StyleProp<ViewStyle>;
 }) {
-  const opacity = useSharedValue(0.55);
+  const reduced = useReducedMotion();
+  const opacity = useSharedValue(reduced ? 0.8 : 0.55);
+  // A slow breathe while loading; held still when the device asks for reduced motion.
   useEffect(() => {
-    opacity.set(withRepeat(withTiming(1, { duration: 700 }), -1, true));
-  }, [opacity]);
+    if (!reduced) opacity.set(withRepeat(withTiming(1, { duration: 900 }), -1, true));
+  }, [opacity, reduced]);
   const animated = useAnimatedStyle(() => ({ opacity: opacity.get() }));
 
   return <Animated.View style={[{ width, height, borderRadius, backgroundColor: colors.bgMuted }, animated, style]} />;

@@ -1,5 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
-import { Image } from 'expo-image';
+import { Photo } from '@/components/ui/Photo';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router, useIsFocused, useLocalSearchParams, type Href } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
@@ -439,7 +439,7 @@ function EmptyWedding({ inTab }: { inTab?: boolean }) {
       {focused && <StatusBar style="light" />}
       <ScrollView contentContainerStyle={{ paddingBottom: insets.bottom + 30 }}>
         <View style={[styles.emptyHero, { paddingTop: insets.top + 6 }]}>
-          <Image source={photos.ideaBrideParasol} style={StyleSheet.absoluteFill} contentFit="cover" contentPosition={{ left: '50%', top: '40%' }} />
+          <Photo source={photos.ideaBrideParasol} style={StyleSheet.absoluteFill} contentFit="cover" contentPosition={{ left: '50%', top: '40%' }} />
           <LinearGradient colors={['rgba(0,0,0,0.35)', 'rgba(0,0,0,0)', 'rgba(0,0,0,0.8)']} locations={[0, 0.35, 1]} style={StyleSheet.absoluteFill} />
           <View style={{ paddingHorizontal: 12 }}>
             {!inTab && <IconButton icon="chevron-back" color={colors.white} background="rgba(20,16,12,0.34)" accessibilityLabel="Go back" onPress={() => (router.canGoBack() ? router.back() : router.replace('/'))} />}

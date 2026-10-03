@@ -5,13 +5,15 @@ import { Pressable, StyleSheet, View, type StyleProp, type ViewStyle } from 'rea
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Text } from '@/components/ui/Text';
+import { colors } from '@/constants/theme';
 import { useInbox } from '@/store/useDb';
 import { useAccount } from '@/store/useSession';
 import { useRoleTheme } from '@/theme/RoleTheme';
 
 import { Card, type IconName } from './primitives';
 
-const ALERT_TONES = ['#DC2626', '#EF4444', '#E11D48', '#B42318'];
+/** Legacy danger hexes some call sites still pass as `tone`; any of them flags the figure. */
+const ALERT_TONES = ['#DC2626', '#EF4444', '#E11D48', colors.danger];
 
 /** Text-only stat tile: label on top, figure below. `tone` only matters when it flags a problem. */
 export function KpiCard({
@@ -37,11 +39,11 @@ export function KpiCard({
   const alert = !!tone && (tone === t.c.danger || ALERT_TONES.includes(tone.toUpperCase())) && value !== '0';
   return (
     <Card style={[styles.kpi, style]} onPress={onPress} accessibilityLabel={`${label}: ${value}`}>
-      <Text size={13} color={t.c.muted} numberOfLines={1}>
+      <Text size={13} color={t.c.muted} numberOfLines={1} maxFontSizeMultiplier={1.3}>
         {label}
       </Text>
       <View style={styles.kpiValueRow}>
-        <Text serif size={22} weight="semibold" lineHeight={30} color={alert ? t.c.danger : t.c.textStrong} numberOfLines={1} adjustsFontSizeToFit style={{ flexShrink: 1 }}>
+        <Text serif size={22} weight="semibold" lineHeight={30} color={alert ? t.c.danger : t.c.textStrong} numberOfLines={1} adjustsFontSizeToFit numeric maxFontSizeMultiplier={1.3} style={{ flexShrink: 1 }}>
           {value}
         </Text>
         {delta && (
@@ -50,6 +52,30 @@ export function KpiCard({
           </Text>
         )}
       </View>
+    </Card>
+  );
+}
+
+/**
+ * Compact stat for rows of three or four (guests, seating, registry):
+ * label above on one line, the Martel figure below, an optional note.
+ * `alert` colours the figure only when it flags a problem.
+ */
+export function StatTile({ label, value, sub, alert, style }: { label: string; value: string; sub?: string; alert?: boolean; style?: StyleProp<ViewStyle> }) {
+  const t = useRoleTheme();
+  return (
+    <Card style={[styles.tile, style]} accessibilityLabel={`${label}: ${value}${sub ? `, ${sub}` : ''}`}>
+      <Text size={12} weight="medium" color={t.c.muted} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.8} maxFontSizeMultiplier={1.3}>
+        {label}
+      </Text>
+      <Text serif size={20} weight="semibold" lineHeight={28} color={alert ? t.c.warning : t.c.textStrong} numberOfLines={1} adjustsFontSizeToFit numeric maxFontSizeMultiplier={1.3}>
+        {value}
+      </Text>
+      {sub && (
+        <Text size={11} color={t.c.muted} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.85} maxFontSizeMultiplier={1.3}>
+          {sub}
+        </Text>
+      )}
     </Card>
   );
 }
@@ -66,17 +92,18 @@ export function BarChart({ data, height = 120, format }: { data: { label: string
           return (
             <View key={d.label} style={styles.barCol} accessibilityLabel={`${d.label}: ${format ? format(d.value) : d.value}`}>
               {last && (
-                <Text size={11} weight="semibold" color={t.c.textStrong} style={{ marginBottom: 4 }}>
+                <Text size={12} weight="semibold" color={t.c.textStrong} numeric style={{ marginBottom: 4 }}>
                   {format ? format(d.value) : d.value}
                 </Text>
               )}
               <View
                 style={{
                   width: '56%',
+                  maxWidth: 40,
                   height: Math.max(3, (d.value / max) * (height - 20)),
-                  borderTopLeftRadius: 2,
-                  borderTopRightRadius: 2,
-                  backgroundColor: last ? t.c.primary : t.c.border,
+                  borderTopLeftRadius: 3,
+                  borderTopRightRadius: 3,
+                  backgroundColor: last ? t.c.primary : t.c.soft,
                 }}
               />
             </View>
@@ -85,7 +112,7 @@ export function BarChart({ data, height = 120, format }: { data: { label: string
       </View>
       <View style={[styles.labels, { borderTopColor: t.c.border }]}>
         {data.map((d) => (
-          <Text key={d.label} size={11} color={t.c.muted} align="center" style={{ flex: 1 }}>
+          <Text key={d.label} size={12} color={t.c.muted} align="center" style={{ flex: 1 }} maxFontSizeMultiplier={1.2}>
             {d.label}
           </Text>
         ))}
@@ -107,7 +134,7 @@ function BellButton() {
       <Ionicons name="notifications-outline" size={23} color={t.c.textStrong} />
       {unread > 0 && (
         <View style={[styles.badge, { backgroundColor: t.c.danger, borderColor: t.c.header }]}>
-          <Text size={10} weight="bold" color="#FFFFFF" lineHeight={12}>
+          <Text size={10} weight="bold" color={t.c.onPrimary} lineHeight={12} maxFontSizeMultiplier={1}>
             {unread > 9 ? '9+' : unread}
           </Text>
         </View>
@@ -148,7 +175,7 @@ export function RoleHeader({
               {sentenceCase(eyebrow)}
             </Text>
           )}
-          <Text serif size={t.role === 'platform' ? 20 : 22} weight="bold" lineHeight={t.role === 'platform' ? 28 : 30} color={t.c.textStrong} numberOfLines={1}>
+          <Text serif size={t.role === 'platform' ? 20 : 22} weight="bold" lineHeight={t.role === 'platform' ? 28 : 30} color={t.c.textStrong} numberOfLines={1} accessibilityRole="header">
             {title}
           </Text>
           {subtitle && (
@@ -183,7 +210,7 @@ export function StackHeader({ title, subtitle, right, back = true }: { title: st
         </Pressable>
       )}
       <View style={{ flex: 1 }}>
-        <Text serif size={17} weight="semibold" color={t.c.textStrong} numberOfLines={1}>
+        <Text serif size={17} weight="semibold" color={t.c.textStrong} numberOfLines={1} accessibilityRole="header">
           {title}
         </Text>
         {subtitle && (
@@ -201,11 +228,11 @@ export function StackHeader({ title, subtitle, right, back = true }: { title: st
 export function QuickAction({ icon, label, onPress }: { icon: IconName; label: string; onPress: () => void }) {
   const t = useRoleTheme();
   return (
-    <Pressable onPress={onPress} accessibilityRole="button" style={({ pressed }) => [styles.quick, { opacity: pressed ? 0.6 : 1 }]}>
-      <View style={styles.quickIcon}>
-        <Ionicons name={icon} size={23} color={t.c.textStrong} />
+    <Pressable onPress={onPress} accessibilityRole="button" accessibilityLabel={label} style={({ pressed }) => [styles.quick, { opacity: pressed ? 0.6 : 1 }]}>
+      <View style={[styles.quickIcon, { backgroundColor: t.c.soft }]}>
+        <Ionicons name={icon} size={22} color={t.c.primary} />
       </View>
-      <Text size={13} color={t.c.text} align="center" numberOfLines={2}>
+      <Text size={13} weight="medium" color={t.c.text} align="center" numberOfLines={2} maxFontSizeMultiplier={1.3}>
         {label}
       </Text>
     </Pressable>
@@ -215,6 +242,7 @@ export function QuickAction({ icon, label, onPress }: { icon: IconName; label: s
 const styles = StyleSheet.create({
   kpi: { flex: 1, minWidth: '46%', gap: 0, paddingVertical: 12, paddingHorizontal: 14 },
   kpiValueRow: { flexDirection: 'row', alignItems: 'baseline', gap: 8 },
+  tile: { flex: 1, minWidth: 0, gap: 0, paddingVertical: 10, paddingHorizontal: 10 },
   bars: { flexDirection: 'row', alignItems: 'flex-end' },
   barCol: { flex: 1, alignItems: 'center', justifyContent: 'flex-end' },
   labels: { flexDirection: 'row', paddingTop: 6, borderTopWidth: StyleSheet.hairlineWidth },
@@ -222,9 +250,9 @@ const styles = StyleSheet.create({
   headerRow: { flexDirection: 'row', alignItems: 'center', gap: 12 },
   headerActions: { flexDirection: 'row', alignItems: 'center', gap: 4 },
   iconBtn: { width: 40, height: 40, alignItems: 'center', justifyContent: 'center' },
-  backBtn: { width: 30, height: 40, alignItems: 'flex-start', justifyContent: 'center', marginLeft: -4 },
+  backBtn: { width: 40, height: 44, alignItems: 'flex-start', justifyContent: 'center', marginLeft: -4, marginRight: -6 },
   badge: { position: 'absolute', top: 4, right: 3, minWidth: 18, height: 18, borderRadius: 9, borderWidth: 2, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 3 },
   stack: { flexDirection: 'row', alignItems: 'center', gap: 8, paddingHorizontal: 14, paddingBottom: 10, borderBottomWidth: StyleSheet.hairlineWidth },
-  quick: { flex: 1, alignItems: 'center', gap: 2, paddingVertical: 4 },
-  quickIcon: { width: 44, height: 34, alignItems: 'center', justifyContent: 'center' },
+  quick: { flex: 1, alignItems: 'center', gap: 6, paddingVertical: 2 },
+  quickIcon: { width: 46, height: 46, borderRadius: 23, alignItems: 'center', justifyContent: 'center' },
 });

@@ -1,5 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
-import { Image } from 'expo-image';
+import { Photo } from '@/components/ui/Photo';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
@@ -38,7 +38,7 @@ function BookingCard({ booking }: { booking: Booking }) {
     <View style={[styles.card, shadows.card]}>
       <View style={styles.cardTop}>
         {booking.image ? (
-          <Image source={photos[booking.image]} style={styles.image} contentFit="cover" />
+          <Photo source={photos[booking.image]} style={styles.image} contentFit="cover" />
         ) : (
           <View style={[styles.image, styles.genieIcon]}>
             <Ionicons name="clipboard-outline" size={26} color={colors.textMuted} />

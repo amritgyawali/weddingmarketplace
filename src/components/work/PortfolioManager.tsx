@@ -1,5 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
-import { Image } from 'expo-image';
+import { Photo } from '@/components/ui/Photo';
 import * as ImagePicker from 'expo-image-picker';
 import { useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
@@ -72,7 +72,7 @@ export function PortfolioManager() {
         <View style={styles.grid}>
           {items.map((p, i) => (
             <Pressable key={p.id} onPress={() => setEditing(p)} style={{ width: size }}>
-              <Image source={p.uri ? { uri: p.uri } : photos[p.image!]} style={styles.image} contentFit="cover" />
+              <Photo source={p.uri ? { uri: p.uri } : photos[p.image!]} style={styles.image} contentFit="cover" />
               {p.featured && (
                 <View style={[styles.badge, { backgroundColor: t.c.primary }]}>
                   <Ionicons name="star" size={11} color="#fff" />

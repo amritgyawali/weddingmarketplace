@@ -1,5 +1,5 @@
 import * as ImagePicker from 'expo-image-picker';
-import { Image } from 'expo-image';
+import { Photo } from '@/components/ui/Photo';
 import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
@@ -62,7 +62,7 @@ export function ReviewComposer({
       <View style={{ gap: 8 }}>
         <View style={styles.photos}>
           {photos.map((uri) => (
-            <Image key={uri} source={{ uri }} style={styles.photo} contentFit="cover" />
+            <Photo key={uri} source={{ uri }} style={styles.photo} contentFit="cover" />
           ))}
         </View>
         <KButton label="Add photos" icon="images-outline" variant="ghost" size="sm" onPress={addPhoto} />

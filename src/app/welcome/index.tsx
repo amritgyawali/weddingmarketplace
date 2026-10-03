@@ -1,4 +1,5 @@
-import { Image, type ImageContentPosition } from 'expo-image';
+import type { ImageContentPosition } from 'expo-image';
+import { Photo } from '@/components/ui/Photo';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
@@ -94,7 +95,7 @@ export default function WelcomeCarousel() {
         onScrollBeginDrag={() => setInteracting(true)}
         onMomentumScrollEnd={onMomentumEnd}
         renderItem={({ item }) => (
-          <Image
+          <Photo
             source={photos[item.image]}
             style={{ width, height }}
             contentFit="cover"

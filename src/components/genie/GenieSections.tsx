@@ -1,5 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
-import { Image } from 'expo-image';
+import { Photo } from '@/components/ui/Photo';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { Linking, Pressable, StyleSheet, View } from 'react-native';
@@ -20,7 +20,7 @@ export function GenieHero() {
   return (
     <View>
       <View style={styles.hero}>
-        <Image source={photos.virtualPlanningCouple} style={StyleSheet.absoluteFill} contentFit="cover" />
+        <Photo source={photos.virtualPlanningCouple} style={StyleSheet.absoluteFill} contentFit="cover" />
       </View>
       <View style={styles.heroContent}>
         <Text serif size={24} weight="bold" color={colors.heading} lineHeight={34}>

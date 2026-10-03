@@ -1,5 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
-import { Image } from 'expo-image';
+import { Photo } from '@/components/ui/Photo';
 import { useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 
@@ -65,7 +65,7 @@ function CandidateRow({
   return (
     <View style={[styles.candidate, { borderColor: t.c.border }]}>
       <Pressable onPress={onOpen} style={styles.candidateTop} accessibilityRole="button" accessibilityLabel={`${candidate.providerName}, ${candidate.score}% fit`}>
-        {provider && <Image source={photos[provider.image]} style={styles.thumb} contentFit="cover" />}
+        {provider && <Photo source={photos[provider.image]} style={styles.thumb} contentFit="cover" />}
         <View style={{ flex: 1, gap: 2 }}>
           <Text size={14} weight="bold" color={t.c.textStrong} numberOfLines={1}>
             {candidate.providerName}

@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Photo } from '@/components/ui/Photo';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 import { useRef, useState } from 'react';
@@ -496,7 +496,7 @@ export function CelebrationOnboarding({ another = false }: { another?: boolean }
           }>
           <Animated.View entering={FadeInDown.duration(320)} style={styles.summary}>
             <View style={styles.summaryPhoto}>
-              <Image source={photos.ideaCoupleGardenWalk} style={StyleSheet.absoluteFill} contentFit="cover" contentPosition={{ left: '50%', top: '40%' }} />
+              <Photo source={photos.ideaCoupleGardenWalk} style={StyleSheet.absoluteFill} contentFit="cover" contentPosition={{ left: '50%', top: '40%' }} />
               <LinearGradient colors={['rgba(0,0,0,0)', 'rgba(0,0,0,0.72)']} style={StyleSheet.absoluteFill} />
               <View style={styles.summaryTitle}>
                 <Text size={13} color="rgba(255,255,255,0.85)">

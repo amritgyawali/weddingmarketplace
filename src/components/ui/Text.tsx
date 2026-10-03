@@ -17,7 +17,16 @@ export interface TextProps extends RNTextProps {
   serif?: boolean;
   /** Render the children exactly as given (names, codes, user-written text). */
   raw?: boolean;
+  /** Tabular figures, so money and counts line up in columns and don't jiggle as they change. */
+  numeric?: boolean;
 }
+
+/**
+ * Largest system text size the app follows. High enough for readers who
+ * set large text (parents and grandparents planning a wedding); dense
+ * chrome (tab labels, badges, pills) passes a lower cap of its own.
+ */
+export const MAX_FONT_SCALE = 1.6;
 
 /**
  * Translates plain-text children. A run of strings and numbers is joined
@@ -48,6 +57,7 @@ export function Text({
   tracking,
   serif,
   raw,
+  numeric,
   style,
   children,
   ...rest
@@ -58,7 +68,7 @@ export function Text({
   return (
     <RNText
       allowFontScaling
-      maxFontSizeMultiplier={1.3}
+      maxFontSizeMultiplier={MAX_FONT_SCALE}
       {...rest}
       style={[
         {
@@ -70,6 +80,7 @@ export function Text({
           lineHeight: lineHeight ?? Math.round(size * (serif ? 1.3 : nepali ? 1.48 : 1.38)),
           textTransform: uppercase ? 'uppercase' : undefined,
           letterSpacing: tracking,
+          fontVariant: numeric ? ['tabular-nums'] : undefined,
         },
         style,
       ]}>

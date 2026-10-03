@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { type LayoutChangeEvent, Pressable, StyleSheet, View } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 
-import { Avatar, Card, ChoiceChips, EmptyBlock, KButton, KField, SectionTitle } from '@/components/kit';
+import { Avatar, Card, ChoiceChips, EmptyBlock, KButton, KField, SectionTitle, StatTile } from '@/components/kit';
 import { ToolScreen, toolStyles } from '@/components/planner/ToolScreen';
 import { triggerHaptic } from '@/components/ui/PressableScale';
 import { Sheet } from '@/components/ui/Sheet';
@@ -148,14 +148,7 @@ function Planner({ project, readOnly }: { project: Project; readOnly: boolean })
             { label: 'Seats', value: seats },
             { label: 'Unseated', value: unseated.reduce((s, g) => s + heads(g), 0) },
           ].map((s) => (
-            <Card key={s.label} style={toolStyles.stat}>
-              <Text size={20} weight="semibold" color={s.label === 'Unseated' && s.value ? t.c.warning : t.c.textStrong}>
-                {s.value}
-              </Text>
-              <Text size={12} color={t.c.muted}>
-                {s.label}
-              </Text>
-            </Card>
+            <StatTile key={s.label} label={s.label} value={String(s.value)} alert={s.label === 'Unseated' && !!s.value} />
           ))}
         </View>
         {seats > 0 && seats < people && (

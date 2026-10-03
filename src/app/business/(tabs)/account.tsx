@@ -1,5 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
-import { Image } from 'expo-image';
+import { Photo } from '@/components/ui/Photo';
 import { router, type Href } from 'expo-router';
 import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
@@ -71,7 +71,7 @@ export default function BusinessAccount() {
       <ScrollView contentContainerStyle={{ padding: 16, gap: 16, paddingBottom: 40 }}>
         <Card padded={false} style={{ overflow: 'hidden' }}>
           {cover?.image || listing ? (
-            <Image source={cover?.uri ? { uri: cover.uri } : photos[cover?.image ?? listing!.image]} style={styles.cover} contentFit="cover" />
+            <Photo source={cover?.uri ? { uri: cover.uri } : photos[cover?.image ?? listing!.image]} style={styles.cover} contentFit="cover" />
           ) : (
             <View style={[styles.cover, { backgroundColor: t.c.soft, alignItems: 'center', justifyContent: 'center' }]}>
               <Ionicons name="images-outline" size={36} color={t.c.primary} />

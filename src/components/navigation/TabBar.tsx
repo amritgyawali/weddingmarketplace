@@ -12,6 +12,8 @@ import { serviceFeature, tabFeature } from '@/data/features';
 import { useExperience } from '@/hooks/useExperience';
 import { useFeatures } from '@/hooks/useFeatures';
 
+import { TabMark } from './TabMark';
+
 type IconName = ComponentProps<typeof Ionicons>['name'];
 
 const TABS: Record<string, { label: string; icon: IconName; active: IconName }> = {
@@ -26,7 +28,8 @@ const TABS: Record<string, { label: string; icon: IconName; active: IconName }> 
 const WEDDING_TABS = new Set(['ideas']);
 
 /**
- * Couple-app bottom bar: outline icons, filled + crimson when active, short
+ * Couple-app bottom bar: a champagne hairline on top, outline icons, filled
+ * burgundy with a champagne mark over the active tab, short
  * sentence-case labels. Browse (venues, vendors, ideas) on the left, the
  * couple's own plan on the right. Follows the celebration (a pasni has no
  * wedding ideas and says "My plan") and the super admin's feature switches.
@@ -69,8 +72,9 @@ export function TabBar({ state, navigation }: BottomTabBarProps) {
                   navigation.navigate(route.name, route.params);
                 }
               }}>
+              <TabMark active={active} />
               <Ionicons name={active ? meta.active : meta.icon} size={23} color={tint} />
-              <Text size={11} weight={active ? 'semibold' : 'regular'} color={tint} lineHeight={15} numberOfLines={1}>
+              <Text size={11} weight={active ? 'semibold' : 'medium'} color={tint} lineHeight={15} numberOfLines={1} maxFontSizeMultiplier={1.2}>
                 {meta.label}
               </Text>
             </Pressable>
@@ -85,10 +89,9 @@ const styles = StyleSheet.create({
   bar: {
     flexDirection: 'row',
     backgroundColor: colors.white,
-    borderTopWidth: StyleSheet.hairlineWidth,
-    borderTopColor: colors.border,
-    paddingTop: 7,
+    borderTopWidth: 1,
+    borderTopColor: colors.goldLine,
   },
   slot: { flex: 1 },
-  item: { flex: 1, alignItems: 'center', gap: 2, minHeight: 44, justifyContent: 'center' },
+  item: { flex: 1, alignItems: 'center', gap: 2, minHeight: 52, paddingTop: 8, justifyContent: 'center' },
 });

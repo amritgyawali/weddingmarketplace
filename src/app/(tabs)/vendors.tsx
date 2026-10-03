@@ -1,5 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
-import { Image } from 'expo-image';
+import { Photo } from '@/components/ui/Photo';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
@@ -48,7 +48,7 @@ function CategoryRow({ category, expanded, onToggle }: { category: VendorCategor
         accessibilityState={{ expanded }}
         accessibilityLabel={`${category.title}. ${category.subtitle}`}
         style={({ pressed }) => [styles.row, pressed && { backgroundColor: colors.bgSoft }]}>
-        <Image source={photos[category.image]} style={styles.image} contentFit="cover" transition={200} />
+        <Photo source={photos[category.image]} style={styles.image} contentFit="cover" transition={200} />
         <View style={styles.text}>
           <Text size={17} weight="semibold" color={colors.heading}>
             {category.title}

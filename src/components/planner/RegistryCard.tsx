@@ -1,5 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
-import { Image } from 'expo-image';
+import { Photo } from '@/components/ui/Photo';
 import { Linking, Pressable, StyleSheet, View } from 'react-native';
 
 import { Card, KButton, ProgressBar } from '@/components/kit';
@@ -30,7 +30,7 @@ export function RegistryCard({ item, accent = colors.primary, onContribute, onPr
   return (
     <Card padded={false} style={{ overflow: 'hidden' }}>
       <Pressable disabled={!onPress} onPress={onPress} accessibilityRole={onPress ? 'button' : undefined} accessibilityLabel={item.title}>
-      {item.image && <Image source={photos[item.image]} style={styles.image} contentFit="cover" />}
+      {item.image && <Photo source={photos[item.image]} style={styles.image} contentFit="cover" />}
       <View style={{ padding: 14, paddingBottom: 0, gap: 8 }}>
         <View style={styles.row}>
           <Ionicons name={kind.icon} size={16} color={accent} />

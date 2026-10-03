@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Photo } from '@/components/ui/Photo';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { RefreshControl, StyleSheet, View } from 'react-native';
@@ -217,7 +217,7 @@ export default function ForYouScreen() {
                   accessibilityLabel={`${w.couple} real wedding`}
                   onPress={() => router.push({ pathname: '/real-wedding/[id]', params: { id: w.id } })}
                   style={styles.realCard}>
-                  <Image source={photos[w.cover]} style={styles.realImage} contentFit="cover" transition={200} />
+                  <Photo source={photos[w.cover]} style={styles.realImage} contentFit="cover" transition={200} />
                   <Text size={15} weight="semibold" color={colors.heading} numberOfLines={1} raw>
                     {w.couple}
                   </Text>

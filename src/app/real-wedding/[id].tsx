@@ -1,5 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
-import { Image } from 'expo-image';
+import { Photo } from '@/components/ui/Photo';
 import { router, useLocalSearchParams } from 'expo-router';
 import { StyleSheet, useWindowDimensions, View } from 'react-native';
 
@@ -30,7 +30,7 @@ export default function RealWeddingScreen() {
         <EmptyState title="Wedding not found" actionLabel="Back" onAction={() => router.back()} />
       ) : (
         <ScrollView contentContainerStyle={{ paddingBottom: 40 }}>
-          <Image source={photos[wedding.cover]} style={{ width, height: width * 0.8 }} contentFit="cover" />
+          <Photo source={photos[wedding.cover]} style={{ width, height: width * 0.8 }} contentFit="cover" />
           <View style={styles.body}>
             <Text serif size={26} weight="bold" color={colors.heading} lineHeight={36}>
               {wedding.couple}
@@ -55,7 +55,7 @@ export default function RealWeddingScreen() {
             </Text>
             <View style={styles.gallery}>
               {wedding.gallery.map((g, i) => (
-                <Image key={`${g}${i}`} source={photos[g]} style={{ width: tile, height: tile * 1.25, borderRadius: radius.md }} contentFit="cover" />
+                <Photo key={`${g}${i}`} source={photos[g]} style={{ width: tile, height: tile * 1.25, borderRadius: radius.md }} contentFit="cover" />
               ))}
             </View>
 

@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Photo } from '@/components/ui/Photo';
 import { router, useLocalSearchParams } from 'expo-router';
 import { StyleSheet, View } from 'react-native';
 
@@ -45,7 +45,7 @@ export default function PlatformProvider() {
       <StackHeader title={provider.name} subtitle={`${serviceName(provider.serviceId)} · ${provider.city}`} right={<StatusPill status={provider.verification} />} />
       <ScrollView contentContainerStyle={{ padding: 14, gap: 14, paddingBottom: 40 }}>
         <Card padded={false} style={{ overflow: 'hidden' }}>
-          <Image source={photos[provider.image]} style={{ width: '100%', height: 150 }} contentFit="cover" />
+          <Photo source={photos[provider.image]} style={{ width: '100%', height: 150 }} contentFit="cover" />
           <View style={{ padding: 14, gap: 4 }}>
             <KeyValue label="Rating" value={`${provider.rating}★ (${provider.reviewCount})`} />
             <KeyValue label="Starting price" value={`${formatMoney(provider.startingPrice)} ${provider.priceUnit}`} />

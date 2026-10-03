@@ -3,7 +3,7 @@ import { Modal, Pressable, StyleSheet, View } from 'react-native';
 import Animated, { FadeIn, FadeOut, SlideInDown, SlideOutDown } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { colors, radius } from '@/constants/theme';
+import { colors } from '@/constants/theme';
 import { useRoleTheme } from '@/theme/RoleTheme';
 
 import { IconButton } from './IconButton';
@@ -38,10 +38,10 @@ export function Sheet({
             entering={SlideInDown.duration(240)}
             exiting={SlideOutDown.duration(200)}
             style={[styles.sheet, { paddingBottom: Math.max(insets.bottom, 16), backgroundColor: t.c.surface }]}>
-            <View style={[styles.handle, { backgroundColor: t.c.border }]} />
+            <View style={[styles.handle, { backgroundColor: t.c.borderStrong }]} />
             {title && (
               <View style={styles.header}>
-                <Text weight="bold" size={18} color={t.c.textStrong} style={{ flex: 1 }} numberOfLines={2}>
+                <Text serif weight="bold" size={18} color={t.c.textStrong} style={{ flex: 1 }} numberOfLines={2} accessibilityRole="header">
                   {title}
                 </Text>
                 <IconButton icon="close" size={34} iconSize={22} accessibilityLabel="Close" onPress={onClose} color={t.c.textStrong} />
@@ -61,8 +61,8 @@ const styles = StyleSheet.create({
   backdrop: { flex: 1, backgroundColor: colors.overlay },
   sheet: {
     backgroundColor: colors.white,
-    borderTopLeftRadius: radius.xl,
-    borderTopRightRadius: radius.xl,
+    borderTopLeftRadius: 16,
+    borderTopRightRadius: 16,
     maxHeight: '88%',
   },
   handle: {

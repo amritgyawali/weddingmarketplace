@@ -1,5 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
-import { Image } from 'expo-image';
+import { Photo } from '@/components/ui/Photo';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router, useLocalSearchParams } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
@@ -38,7 +38,7 @@ export default function IdeaViewer() {
         keyExtractor={(p) => p.id}
         onMomentumScrollEnd={(e) => setIndex(Math.round(e.nativeEvent.contentOffset.x / width))}
         renderItem={({ item }) => (
-          <Image source={photos[item.image]} style={{ width, height }} contentFit="contain" transition={150} />
+          <Photo source={photos[item.image]} style={{ width, height }} contentFit="contain" transition={150} />
         )}
       />
 

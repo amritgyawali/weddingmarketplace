@@ -1,5 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
-import { Image } from 'expo-image';
+import { Photo } from '@/components/ui/Photo';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
@@ -112,7 +112,7 @@ export default function RsvpScreen() {
     <View style={styles.root}>
       <ScrollView contentContainerStyle={{ paddingBottom: insets.bottom + 40 }} keyboardShouldPersistTaps="handled">
         <View>
-          <Image source={photos[site?.cover ?? 'ideaCoupleGardenWalk']} style={{ width: '100%', height: 220 }} contentFit="cover" />
+          <Photo source={photos[site?.cover ?? 'ideaCoupleGardenWalk']} style={{ width: '100%', height: 220 }} contentFit="cover" />
           <View style={[styles.veil, { paddingTop: insets.top + 12 }]}>
             <Text size={13} weight="bold" color="#fff">
               You’re invited

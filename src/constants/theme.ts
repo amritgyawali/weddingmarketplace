@@ -34,6 +34,8 @@ export const colors = {
   goldSoft: '#F3E7D2',
   /** Champagne at low opacity: hairlines on wine and on ivory. */
   goldLine: 'rgba(200,164,107,0.45)',
+  /** Champagne at very low opacity: progress tracks on wine. */
+  goldTrack: 'rgba(200,164,107,0.22)',
   rose: '#C98991',
   roseSoft: '#F6E6E5',
   /** Dusty rose deepened for small marks (freelancer role mark, avatar tone). */
@@ -79,6 +81,15 @@ export const colors = {
   /** Amber ink: 5.0 : 1 even on its own 10% tint (status pills). */
   warning: '#8A5A10',
   info: '#3E5C7E',
+  /** Soft danger fill behind a destructive icon. */
+  dangerSoft: '#FBE9E7',
+  /** Dark surfaces for warning and error toasts. */
+  warningDeep: '#3A2E12',
+  dangerDeep: '#4A1515',
+  /** Status accents that read on dark toasts and wine bands. */
+  successOnDark: '#7FC49B',
+  warningOnDark: '#E0B04C',
+  dangerOnDark: '#F09A90',
 
   toolBlue: '#F5ECE2',
   toolWarm: '#F5ECE2',

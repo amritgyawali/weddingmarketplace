@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Photo } from '@/components/ui/Photo';
 import { router } from 'expo-router';
 import { StyleSheet } from 'react-native';
 
@@ -37,7 +37,7 @@ export function CategoryCircles() {
                 })
           }
           style={styles.item}>
-          <Image source={photos[c.image]} style={styles.circle} contentFit="cover" transition={200} />
+          <Photo source={photos[c.image]} style={styles.circle} contentFit="cover" transition={200} />
           <Text size={13} color={colors.text} align="center" numberOfLines={2} lineHeight={16}>
             {c.title}
           </Text>

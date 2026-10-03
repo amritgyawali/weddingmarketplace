@@ -1,5 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
-import { Image } from 'expo-image';
+import { Photo } from '@/components/ui/Photo';
 import { useState } from 'react';
 import { FlatList, Pressable, StyleSheet, View } from 'react-native';
 
@@ -73,7 +73,7 @@ function BoardView({ board, readOnly, onBack }: { board: InspirationBoard; readO
               if (!p) return null;
               return (
                 <View key={id} style={{ width: size }}>
-                  <Image source={photos[p.image]} style={{ width: size, height: size * 1.25, borderRadius: 8 }} contentFit="cover" />
+                  <Photo source={photos[p.image]} style={{ width: size, height: size * 1.25, borderRadius: 8 }} contentFit="cover" />
                   <Text size={12} color={t.c.text} numberOfLines={2} style={{ marginTop: 4 }}>
                     {p.title}
                   </Text>
@@ -117,7 +117,7 @@ function BoardView({ board, readOnly, onBack }: { board: InspirationBoard; readO
               const on = board.items.includes(item.id);
               return (
                 <Pressable onPress={() => toggle(board.id, item.id)} style={{ flex: 1 / 3 }}>
-                  <Image source={photos[item.image]} style={{ width: '100%', aspectRatio: 0.8, borderRadius: 10, opacity: on ? 0.6 : 1 }} contentFit="cover" />
+                  <Photo source={photos[item.image]} style={{ width: '100%', aspectRatio: 0.8, borderRadius: 10, opacity: on ? 0.6 : 1 }} contentFit="cover" />
                   {on && <Ionicons name="checkmark-circle" size={24} color={t.c.primary} style={styles.tick} />}
                 </Pressable>
               );
@@ -176,7 +176,7 @@ function Boards({ project, readOnly }: { project: Project; readOnly: boolean }) 
               <Card key={b.id} onPress={() => setOpenId(b.id)} padded={false} style={{ width: columns > 1 ? '31.5%' : '48%', overflow: 'hidden' }}>
                 <View style={styles.cover}>
                   {covers.length ? (
-                    covers.map((p) => <Image key={p!.id} source={photos[p!.image]} style={{ flex: 1, height: '100%' }} contentFit="cover" />)
+                    covers.map((p) => <Photo key={p!.id} source={photos[p!.image]} style={{ flex: 1, height: '100%' }} contentFit="cover" />)
                   ) : (
                     <View style={[styles.placeholder, { backgroundColor: t.c.soft }]}>
                       <Ionicons name="images-outline" size={28} color={t.c.primary} />

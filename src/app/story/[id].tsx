@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Photo } from '@/components/ui/Photo';
 import { router, useLocalSearchParams } from 'expo-router';
 import { Share, StyleSheet, useWindowDimensions, View } from 'react-native';
 
@@ -37,7 +37,7 @@ export default function StoryScreen() {
         <EmptyState title="Story not found" actionLabel="Back to ideas" onAction={() => router.back()} />
       ) : (
         <ScrollView contentContainerStyle={{ paddingBottom: 40 }}>
-          <Image source={photos[story.image]} style={{ width, height: width * 0.66 }} contentFit="cover" />
+          <Photo source={photos[story.image]} style={{ width, height: width * 0.66 }} contentFit="cover" />
           <View style={styles.body}>
             <Text size={12} weight="medium" color={colors.textMuted}>
               {story.category}

@@ -1,5 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
-import { Image } from 'expo-image';
+import { Photo } from '@/components/ui/Photo';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
@@ -348,7 +348,7 @@ export default function FreelancerProfile() {
         ) : (
           <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 8 }}>
             {work.slice(0, 10).map((p) => (
-              <Image key={p.id} source={p.uri ? { uri: p.uri } : photos[p.image!]} style={styles.thumb} contentFit="cover" />
+              <Photo key={p.id} source={p.uri ? { uri: p.uri } : photos[p.image!]} style={styles.thumb} contentFit="cover" />
             ))}
           </ScrollView>
         )}

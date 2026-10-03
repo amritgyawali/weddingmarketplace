@@ -1,5 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
-import { Image } from 'expo-image';
+import { Photo } from '@/components/ui/Photo';
 import Constants from 'expo-constants';
 import { router, useLocalSearchParams } from 'expo-router';
 import type { ComponentProps } from 'react';
@@ -73,7 +73,7 @@ export default function InfoScreen() {
               <View style={styles.grid}>
                 {INVITE_TEMPLATES.map((t) => (
                   <Pressable key={t.id} style={[styles.tile, shadows.card]} onPress={() => toast(`${t.title} template selected`, 'sparkles')}>
-                    <Image source={photos[t.image]} style={styles.tileImage} contentFit="cover" />
+                    <Photo source={photos[t.image]} style={styles.tileImage} contentFit="cover" />
                     <View style={{ padding: 10 }}>
                       <Text size={14} weight="semibold" color={colors.heading} numberOfLines={1}>
                         {t.title}
@@ -95,7 +95,7 @@ export default function InfoScreen() {
             <View style={styles.grid}>
               {SHOP.map((s) => (
                 <Pressable key={s.title} style={[styles.tile, shadows.card]} onPress={() => toast('Shop launching soon — stay tuned!', 'bag-handle')}>
-                  <Image source={photos[s.image]} style={styles.tileImage} contentFit="cover" />
+                  <Photo source={photos[s.image]} style={styles.tileImage} contentFit="cover" />
                   <View style={{ padding: 10 }}>
                     <Text size={14} weight="semibold" color={colors.heading} numberOfLines={2}>
                       {s.title}

@@ -1,5 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
-import { Image } from 'expo-image';
+import { Photo } from '@/components/ui/Photo';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { Linking, Pressable, StyleSheet, View } from 'react-native';
@@ -125,7 +125,7 @@ function Summary({ project }: { project: Project }) {
       {project.inspiration.length > 0 && (
         <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 6 }}>
           {project.inspiration.map((p) => (
-            <Image key={p} source={photos[p]} style={styles.inspo} contentFit="cover" />
+            <Photo key={p} source={photos[p]} style={styles.inspo} contentFit="cover" />
           ))}
         </ScrollView>
       )}

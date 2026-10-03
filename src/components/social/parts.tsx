@@ -1,5 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
-import { Image } from 'expo-image';
+import { Photo } from '@/components/ui/Photo';
 import { useEffect, useState } from 'react';
 import { Pressable, StyleSheet, View, type StyleProp, type ViewStyle } from 'react-native';
 
@@ -130,7 +130,7 @@ export function PostThumb({ media, size = 56, style }: { media: SocialMedia[]; s
   const src = first ? mediaSource(first) : undefined;
   return (
     <View style={[{ width: size, height: size, borderRadius: 6, overflow: 'hidden', backgroundColor: t.c.surfaceAlt, alignItems: 'center', justifyContent: 'center' }, style]}>
-      {src ? <Image source={src} style={{ width: size, height: size }} contentFit="cover" /> : <Ionicons name="text-outline" size={size * 0.4} color={t.c.subtle} />}
+      {src ? <Photo source={src} style={{ width: size, height: size }} contentFit="cover" /> : <Ionicons name="text-outline" size={size * 0.4} color={t.c.subtle} />}
       {first?.kind === 'video' && (
         <View style={styles.play}>
           <Ionicons name="play" size={14} color={colors.white} />

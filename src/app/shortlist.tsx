@@ -1,5 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
-import { Image } from 'expo-image';
+import { Photo } from '@/components/ui/Photo';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { FlatList, Pressable, StyleSheet, useWindowDimensions, View } from 'react-native';
@@ -104,7 +104,7 @@ export default function ShortlistScreen() {
             return (
               <Card padded={false} style={{ overflow: 'hidden' }}>
                 <Pressable onPress={() => router.push(p.kind === 'venue' ? { pathname: '/venue/[id]', params: { id: p.id } } : { pathname: '/vendor/[id]', params: { id: p.id } })} style={styles.row}>
-                  <Image source={photos[p.image]} style={styles.image} contentFit="cover" />
+                  <Photo source={photos[p.image]} style={styles.image} contentFit="cover" />
                   <View style={{ flex: 1, gap: 2 }}>
                     <Text size={12} weight="medium" color={colors.textMuted}>
                       {serviceName(p.serviceId)}

@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Photo } from '@/components/ui/Photo';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
@@ -57,7 +57,7 @@ function ProvidersDirectory() {
         contentContainerStyle={{ paddingHorizontal: 14, gap: 10, paddingBottom: 30 }}
         renderItem={({ item }) => (
           <Card onPress={() => router.push({ pathname: '/platform/provider/[id]', params: { id: item.id } })} style={[styles.row, { flex: 1 }]}>
-            <Image source={photos[item.image]} style={styles.thumb} contentFit="cover" />
+            <Photo source={photos[item.image]} style={styles.thumb} contentFit="cover" />
             <View style={{ flex: 1, gap: 2 }}>
               <Text size={14} weight="bold" color={t.c.textStrong} numberOfLines={1}>
                 {item.name}{featured.includes(item.id) ? ' · Featured' : ''}

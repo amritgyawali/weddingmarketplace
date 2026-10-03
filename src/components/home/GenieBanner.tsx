@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Photo } from '@/components/ui/Photo';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 import { StyleSheet, View } from 'react-native';
@@ -14,7 +14,7 @@ export function GenieBanner() {
   return (
     <PressableScale onPress={() => router.navigate('/genie')} accessibilityLabel={`${BRAND.genieService}. Plans from NPR 2,999`} style={styles.card}>
       <View style={styles.photoWrap}>
-        <Image source={photos.virtualPlanningCouple} style={StyleSheet.absoluteFill} contentFit="cover" />
+        <Photo source={photos.virtualPlanningCouple} style={StyleSheet.absoluteFill} contentFit="cover" />
         <LinearGradient colors={['rgba(61,16,24,0)', 'rgba(61,16,24,0.7)']} style={StyleSheet.absoluteFill} />
         <Text size={13} weight="medium" color={colors.gold} style={styles.caption}>
           {BRAND.genieService}

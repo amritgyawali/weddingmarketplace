@@ -1,5 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
-import { Image } from 'expo-image';
+import { Photo } from '@/components/ui/Photo';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { FlatList, Pressable, StyleSheet, useWindowDimensions, View } from 'react-native';
@@ -139,7 +139,7 @@ function StoriesPane() {
       ListEmptyComponent={isLoading ? <Skeleton height={260} borderRadius={radius.lg} /> : null}
       renderItem={({ item }) => (
         <PressableScale onPress={() => router.push({ pathname: '/story/[id]', params: { id: item.id } })} accessibilityLabel={item.title}>
-          <Image source={photos[item.image]} style={styles.storyImage} contentFit="cover" transition={200} />
+          <Photo source={photos[item.image]} style={styles.storyImage} contentFit="cover" transition={200} />
           <Text size={13} weight="medium" color={colors.primary} style={{ marginTop: 10 }}>
             {item.category}
           </Text>
@@ -168,10 +168,10 @@ function RealWeddingsPane() {
       ListEmptyComponent={isLoading ? <Skeleton height={300} borderRadius={radius.lg} /> : null}
       renderItem={({ item }) => (
         <PressableScale onPress={() => router.push({ pathname: '/real-wedding/[id]', params: { id: item.id } })} accessibilityLabel={`${item.couple} wedding`}>
-          <Image source={photos[item.cover]} style={styles.realCover} contentFit="cover" transition={200} />
+          <Photo source={photos[item.cover]} style={styles.realCover} contentFit="cover" transition={200} />
           <View style={styles.thumbs}>
             {item.gallery.slice(0, 3).map((g, i) => (
-              <Image key={`${g}${i}`} source={photos[g]} style={styles.thumb} contentFit="cover" />
+              <Photo key={`${g}${i}`} source={photos[g]} style={styles.thumb} contentFit="cover" />
             ))}
           </View>
           <Text serif size={19} weight="bold" color={colors.heading} lineHeight={27} style={{ marginTop: 10 }}>
