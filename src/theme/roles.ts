@@ -10,6 +10,12 @@ export interface RolePalette {
   surface: string;
   surfaceAlt: string;
   border: string;
+  /** Control boundaries (inputs, toggles, outline buttons): 3 : 1 on the background. */
+  borderStrong: string;
+  /** Champagne: thin rules, the active tab mark, ratings. Never text on light surfaces. */
+  accent: string;
+  /** Champagne deep enough for text on light surfaces. */
+  accentText: string;
   text: string;
   textStrong: string;
   muted: string;
@@ -38,6 +44,9 @@ const neutral = {
   surface: colors.white,
   surfaceAlt: colors.bgSoft,
   border: colors.border,
+  borderStrong: colors.borderStrong,
+  accent: colors.gold,
+  accentText: colors.goldDeep,
   text: colors.text,
   textStrong: colors.textStrong,
   muted: colors.textMuted,
@@ -47,7 +56,7 @@ const neutral = {
   success: colors.success,
   warning: colors.warning,
   danger: colors.danger,
-  info: '#3E5C7E',
+  info: colors.info,
 } as const;
 
 /**
@@ -117,9 +126,9 @@ export const ROLE_THEMES: Record<UserRole, RoleTheme> = {
     c: {
       ...neutral,
       primary: colors.wine,
-      primaryDark: '#260A0F',
+      primaryDark: colors.wineDeep,
       onPrimary: colors.white,
-      soft: '#EDE0DC',
+      soft: colors.wineSoft,
     },
     gradient: [colors.wine, colors.wine],
     cardRadius: 8,
@@ -133,7 +142,7 @@ export const ROLE_THEMES: Record<UserRole, RoleTheme> = {
 export const ROLE_MARK: Record<UserRole, string> = {
   customer: colors.primary,
   vendor: colors.goldDeep,
-  freelancer: '#8E4F58',
+  freelancer: colors.roseDeep,
   platform: colors.wine,
 };
 

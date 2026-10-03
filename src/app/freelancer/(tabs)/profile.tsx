@@ -1,5 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
-import { Image } from 'expo-image';
+import { Photo } from '@/components/ui/Photo';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
@@ -12,6 +12,7 @@ import { Toggle } from '@/components/ui/Toggle';
 import { toast } from '@/components/ui/Toast';
 import { photos } from '@/constants/images';
 import { craftProfileLines } from '@/components/persona/FreelancerPersona';
+import { colors } from '@/constants/theme';
 import { CRAFT_BY_ID, CRAFTS } from '@/data/crafts';
 import { reliabilityScore } from '@/data/freelancers';
 import { useExperience } from '@/hooks/useExperience';
@@ -153,7 +154,7 @@ export default function FreelancerProfile() {
           </Text>
           <View style={styles.row}>
             <StatusPill status={status} label={status === 'VERIFIED' ? 'Verified' : status === 'UNDER_REVIEW' ? 'Verification in review' : 'Not verified'} />
-            <Ionicons name="star" size={13} color="#C8A46B" />
+            <Ionicons name="star" size={13} color={colors.star} />
             <Text size={13} weight="medium" color={t.c.textStrong}>
               {rating.toFixed(1)} ({reviews.length})
             </Text>
@@ -348,7 +349,7 @@ export default function FreelancerProfile() {
         ) : (
           <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 8 }}>
             {work.slice(0, 10).map((p) => (
-              <Image key={p.id} source={p.uri ? { uri: p.uri } : photos[p.image!]} style={styles.thumb} contentFit="cover" />
+              <Photo key={p.id} source={p.uri ? { uri: p.uri } : photos[p.image!]} style={styles.thumb} contentFit="cover" />
             ))}
           </ScrollView>
         )}
@@ -375,7 +376,7 @@ export default function FreelancerProfile() {
               <Text size={13} color={t.c.text} lineHeight={19}>
                 {r.text}
               </Text>
-              <Text size={11} color={t.c.subtle}>
+              <Text size={11} color={t.c.muted}>
                 {Object.entries(r.criteria)
                   .map(([k, v]) => `${k} ${v}`)
                   .join(' · ')}

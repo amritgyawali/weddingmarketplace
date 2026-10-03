@@ -1,5 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
-import { Image } from 'expo-image';
+import { Photo } from '@/components/ui/Photo';
 import * as Linking from 'expo-linking';
 import { router } from 'expo-router';
 import { useState } from 'react';
@@ -203,7 +203,7 @@ export function PostPreview({ post, network, account }: { post: Pick<SocialPost,
       </View>
       {network === 'whatsapp' ? (
         <View style={[styles.waBubble, { backgroundColor: t.c.soft }]}>
-          {src && <Image source={src} style={{ width: '100%', aspectRatio: 4 / 3, borderRadius: 6 }} contentFit="cover" />}
+          {src && <Photo source={src} style={{ width: '100%', aspectRatio: 4 / 3, borderRadius: 6 }} contentFit="cover" />}
           <Text size={14} color={t.c.textStrong} raw>
             {caption || ' '}
           </Text>
@@ -217,7 +217,7 @@ export function PostPreview({ post, network, account }: { post: Pick<SocialPost,
           )}
           {src ? (
             <View>
-              <Image source={src} style={{ width: '100%', aspectRatio: tall ? 9 / 14 : square ? 1 : 4 / 3 }} contentFit="cover" />
+              <Photo source={src} style={{ width: '100%', aspectRatio: tall ? 9 / 14 : square ? 1 : 4 / 3 }} contentFit="cover" />
               {post.media.length > 1 && (
                 <View style={[styles.multi, { backgroundColor: t.c.surface }]}>
                   <Text size={11} weight="semibold" color={t.c.textStrong}>

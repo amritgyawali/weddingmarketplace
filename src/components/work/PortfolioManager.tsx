@@ -1,5 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
-import { Image } from 'expo-image';
+import { Photo } from '@/components/ui/Photo';
 import * as ImagePicker from 'expo-image-picker';
 import { useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
@@ -10,6 +10,7 @@ import { Sheet } from '@/components/ui/Sheet';
 import { Text } from '@/components/ui/Text';
 import { toast } from '@/components/ui/Toast';
 import { photos } from '@/constants/images';
+import { colors } from '@/constants/theme';
 import { EVENT_TYPES } from '@/data/events';
 import { useLayout } from '@/hooks/useLayout';
 import { useDb } from '@/store/useDb';
@@ -72,15 +73,15 @@ export function PortfolioManager() {
         <View style={styles.grid}>
           {items.map((p, i) => (
             <Pressable key={p.id} onPress={() => setEditing(p)} style={{ width: size }}>
-              <Image source={p.uri ? { uri: p.uri } : photos[p.image!]} style={styles.image} contentFit="cover" />
+              <Photo source={p.uri ? { uri: p.uri } : photos[p.image!]} style={styles.image} contentFit="cover" />
               {p.featured && (
                 <View style={[styles.badge, { backgroundColor: t.c.primary }]}>
-                  <Ionicons name="star" size={11} color="#fff" />
+                  <Ionicons name="star" size={11} color={colors.white} />
                 </View>
               )}
               {i === 0 && (
                 <View style={[styles.cover, { backgroundColor: 'rgba(0,0,0,0.6)' }]}>
-                  <Text size={10} weight="bold" color="#fff">
+                  <Text size={10} weight="bold" color={colors.white}>
                     Cover
                   </Text>
                 </View>

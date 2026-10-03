@@ -82,7 +82,7 @@ export default function LeadDetail() {
           <ChoiceChips options={LABELS} selected={lead.labels ?? []} onToggle={(l) => updateLead(lead.id, { labels: (lead.labels ?? []).includes(l) ? (lead.labels ?? []).filter((x) => x !== l) : [...(lead.labels ?? []), l] })} />
           <ListRow icon="alarm-outline" title={lead.followUp ? `Follow up ${formatShortDate(lead.followUp)}` : 'Set a follow-up reminder'} subtitle={lead.followUp ? (daysUntil(lead.followUp) <= 0 ? 'Due today' : `In ${daysUntil(lead.followUp)} days`) : undefined} onPress={() => setFollowOpen(true)} />
           {lead.history && lead.history.length > 1 && (
-            <Text size={11} color={t.c.subtle}>
+            <Text size={11} color={t.c.muted}>
               {lead.history.map((h) => `${h.status} ${formatShortDate(h.at)}`).join(' → ')}
             </Text>
           )}

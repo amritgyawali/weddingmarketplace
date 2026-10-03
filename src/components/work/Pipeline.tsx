@@ -76,11 +76,11 @@ export function PipelineStepper({ project, compact }: { project: Project; compac
                 <View style={[styles.node, { borderColor: color, backgroundColor: done ? color : t.c.surface }, current && styles.nodeCurrent]} />
                 {i < arr.length - 1 && <View style={[styles.bar, { backgroundColor: done ? t.c.textStrong : t.c.border }]} />}
               </View>
-              <Text size={12} weight={current ? 'semibold' : 'regular'} color={current ? t.c.textStrong : done ? t.c.text : t.c.subtle} numberOfLines={2} lineHeight={15} style={{ width: 78 }}>
+              <Text size={12} weight={current ? 'semibold' : 'regular'} color={current ? t.c.textStrong : done ? t.c.text : t.c.muted} numberOfLines={2} lineHeight={15} style={{ width: 78 }}>
                 {STATUS_LABEL[s]}
               </Text>
               {at && (
-                <Text size={11} color={t.c.subtle}>
+                <Text size={11} color={t.c.muted}>
                   {formatShortDate(at).slice(4)}
                 </Text>
               )}

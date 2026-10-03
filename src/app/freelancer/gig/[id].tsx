@@ -71,7 +71,7 @@ export default function FreelancerGigDetail() {
             <KeyValue label="Location" value={`${gig.location ? `${gig.location}, ` : ''}${gig.city}${km !== null ? ` · ${km} km from you` : ''}`} />
             <KeyValue label="You receive" value={`${formatMoney(gig.pay)} per person`} />
             <KeyValue label="Openings" value={`${Math.max(0, gig.slots - hired)} of ${gig.slots}`} />
-            <Text size={11} color={t.c.subtle}>
+            <Text size={11} color={t.c.muted}>
               Billed to the client at {formatMoney(client.pay + client.margin)}; Vivah keeps {formatMoney(client.margin)} for insurance, escrow and payouts.
             </Text>
           </Card>

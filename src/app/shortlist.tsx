@@ -1,5 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
-import { Image } from 'expo-image';
+import { Photo } from '@/components/ui/Photo';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { FlatList, Pressable, StyleSheet, useWindowDimensions, View } from 'react-native';
@@ -98,13 +98,13 @@ export default function ShortlistScreen() {
               </View>
             ) : null
           }
-          ListEmptyComponent={<EmptyState icon="bookmark-outline" title="No vendors saved yet" message="Tap the bookmark icon on any venue or vendor to save it here and track your conversations." actionLabel="Browse vendors" onAction={() => router.navigate('/vendors')} />}
+          ListEmptyComponent={<EmptyState icon="bookmark-outline" art="garland" title="No vendors saved yet" message="Tap the bookmark icon on any venue or vendor to save it here and track your conversations." actionLabel="Browse vendors" onAction={() => router.navigate('/vendors')} />}
           renderItem={({ item: { e, p } }) => {
             const ticked = compare.includes(p.id);
             return (
               <Card padded={false} style={{ overflow: 'hidden' }}>
                 <Pressable onPress={() => router.push(p.kind === 'venue' ? { pathname: '/venue/[id]', params: { id: p.id } } : { pathname: '/vendor/[id]', params: { id: p.id } })} style={styles.row}>
-                  <Image source={photos[p.image]} style={styles.image} contentFit="cover" />
+                  <Photo source={photos[p.image]} style={styles.image} contentFit="cover" />
                   <View style={{ flex: 1, gap: 2 }}>
                     <Text size={12} weight="medium" color={colors.textMuted}>
                       {serviceName(p.serviceId)}
@@ -115,7 +115,7 @@ export default function ShortlistScreen() {
                     <Text size={12} color={colors.textMuted} numberOfLines={1}>
                       ★ {p.rating.toFixed(1)} · {p.city} · from {formatMoney(p.startingPrice)}
                     </Text>
-                    <Text size={11} color={colors.textSubtle}>
+                    <Text size={11} color={colors.textMuted}>
                       Saved {timeAgo(e.addedAt)}
                       {e.tags.length ? ` · ${e.tags.join(', ')}` : ''}
                     </Text>

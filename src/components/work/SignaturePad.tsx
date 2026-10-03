@@ -4,6 +4,7 @@ import Svg, { Path } from 'react-native-svg';
 
 import { KButton } from '@/components/kit';
 import { Text } from '@/components/ui/Text';
+import { colors } from '@/constants/theme';
 import { useRoleTheme } from '@/theme/RoleTheme';
 
 /** Finger/mouse signature capture; returns an SVG path string. */
@@ -33,15 +34,15 @@ export function SignaturePad({ onDone, height = 180 }: { onDone: (path: string) 
 
   return (
     <View style={{ gap: 10 }}>
-      <View {...responder.panHandlers} style={[styles.pad, { height, borderColor: t.c.border, backgroundColor: t.dark ? t.c.surfaceAlt : '#FFFCF8' }]}>
+      <View {...responder.panHandlers} style={[styles.pad, { height, borderColor: t.c.border, backgroundColor: t.dark ? t.c.surfaceAlt : colors.white }]}>
         <Svg width="100%" height="100%">
           {all.map((d, i) => (
-            <Path key={i} d={d} stroke="#251B18" strokeWidth={2.4} fill="none" strokeLinecap="round" strokeLinejoin="round" />
+            <Path key={i} d={d} stroke={colors.heading} strokeWidth={2.4} fill="none" strokeLinecap="round" strokeLinejoin="round" />
           ))}
         </Svg>
         {!all.length && (
           <View style={[styles.hint, { pointerEvents: 'none' }]}>
-            <Text size={13} color={t.c.subtle}>
+            <Text size={13} color={t.c.muted}>
               Sign here with your finger
             </Text>
           </View>
@@ -61,7 +62,7 @@ export function SignatureImage({ path, height = 60 }: { path: string; height?: n
   return (
     <View style={{ height }}>
       <Svg width="100%" height="100%" viewBox={`0 0 340 ${height * 3}`} preserveAspectRatio="xMidYMid meet">
-        <Path d={path} stroke="#251B18" strokeWidth={3} fill="none" strokeLinecap="round" strokeLinejoin="round" />
+        <Path d={path} stroke={colors.heading} strokeWidth={3} fill="none" strokeLinecap="round" strokeLinejoin="round" />
       </Svg>
     </View>
   );

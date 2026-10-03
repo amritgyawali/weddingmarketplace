@@ -1,6 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import * as Clipboard from 'expo-clipboard';
-import { Image } from 'expo-image';
+import { Photo } from '@/components/ui/Photo';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
@@ -116,7 +116,7 @@ function Builder({ project, readOnly }: { project: Project; readOnly: boolean })
               {url}
             </Text>
             {saved && (
-              <Text size={11} color={t.c.subtle}>
+              <Text size={11} color={t.c.muted}>
                 {saved.views} visits · updated {formatLongDate(saved.updatedAt)}
               </Text>
             )}
@@ -128,7 +128,7 @@ function Builder({ project, readOnly }: { project: Project; readOnly: boolean })
         <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 10 }}>
           {TEMPLATES.map((tp) => (
             <Pressable key={tp.id} disabled={readOnly} onPress={() => set({ template: tp.id, accent: tp.accent })} style={[styles.template, { borderColor: site.template === tp.id ? t.c.primary : t.c.border }]}>
-              <Image source={photos[tp.cover]} style={styles.templateImg} contentFit="cover" />
+              <Photo source={photos[tp.cover]} style={styles.templateImg} contentFit="cover" />
               <Text size={13} weight="semibold" color={t.c.textStrong} style={{ padding: 8 }}>
                 {tp.label}
               </Text>
@@ -152,7 +152,7 @@ function Builder({ project, readOnly }: { project: Project; readOnly: boolean })
         <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 8 }}>
           {PHOTO_CHOICES.map((p) => (
             <Pressable key={p} disabled={readOnly} onPress={() => set({ cover: p })}>
-              <Image source={photos[p]} style={[styles.thumb, { borderColor: site.cover === p ? t.c.primary : 'transparent' }]} contentFit="cover" />
+              <Photo source={photos[p]} style={[styles.thumb, { borderColor: site.cover === p ? t.c.primary : 'transparent' }]} contentFit="cover" />
             </Pressable>
           ))}
         </ScrollView>
@@ -164,7 +164,7 @@ function Builder({ project, readOnly }: { project: Project; readOnly: boolean })
             const on = site.gallery.includes(p);
             return (
               <Pressable key={p} disabled={readOnly} onPress={() => set({ gallery: on ? site.gallery.filter((x) => x !== p) : [...site.gallery, p] })}>
-                <Image source={photos[p]} style={[styles.thumb, { borderColor: on ? t.c.primary : 'transparent', opacity: on ? 1 : 0.55 }]} contentFit="cover" />
+                <Photo source={photos[p]} style={[styles.thumb, { borderColor: on ? t.c.primary : 'transparent', opacity: on ? 1 : 0.55 }]} contentFit="cover" />
                 {on && <Ionicons name="checkmark-circle" size={20} color={t.c.primary} style={styles.check} />}
               </Pressable>
             );

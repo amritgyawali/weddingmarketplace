@@ -3,8 +3,7 @@ import { router } from 'expo-router';
 import { useState } from 'react';
 import { FlatList, Pressable, StyleSheet, View } from 'react-native';
 
-import { EmptyBlock, RoleHeader, SectionTitle } from '@/components/kit';
-import { triggerHaptic } from '@/components/ui/PressableScale';
+import { EmptyBlock, FilterChip, RoleHeader, SectionTitle } from '@/components/kit';
 import { Text } from '@/components/ui/Text';
 import { GigCard } from '@/components/work/GigCard';
 import { cityDistanceKm } from '@/data/cities';
@@ -112,31 +111,15 @@ export default function DiscoverGigs() {
       )}
 
       <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.filters}>
-        <Pressable onPress={() => { triggerHaptic('selection'); setNearMe((v) => !v); }} style={[styles.filter, { borderColor: nearMe ? t.c.textStrong : t.c.border, backgroundColor: nearMe ? t.c.textStrong : t.c.surface }]}>
-          <Ionicons name="location-outline" size={14} color={nearMe ? t.c.surface : t.c.muted} />
-          <Text size={13} weight="medium" color={nearMe ? t.c.surface : t.c.text}>
-            Within {radius} km
-          </Text>
-        </Pressable>
+        <FilterChip label={`Within ${radius} km`} icon="location-outline" selected={nearMe} onPress={() => setNearMe((v) => !v)} />
         {(['match', 'pay', 'date', 'distance'] as Sort[]).map((s) => (
-          <Pressable key={s} onPress={() => setSort(s)} style={[styles.filter, { borderColor: sort === s ? t.c.textStrong : t.c.border, backgroundColor: t.c.surface }]}>
-            <Text size={13} weight={sort === s ? 'semibold' : 'regular'} color={sort === s ? t.c.textStrong : t.c.muted}>
-              {s === 'match' ? 'Best match' : s === 'pay' ? 'Highest pay' : s === 'date' ? 'Soonest' : 'Nearest'}
-            </Text>
-          </Pressable>
+          <FilterChip key={s} label={s === 'match' ? 'Best match' : s === 'pay' ? 'Highest pay' : s === 'date' ? 'Soonest' : 'Nearest'} selected={sort === s} onPress={() => setSort(s)} />
         ))}
       </ScrollView>
       <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.filters}>
-        {skillOrder.map((s) => {
-          const on = skill === s;
-          return (
-            <Pressable key={s} onPress={() => { triggerHaptic('selection'); setSkill(on ? null : s); }} style={[styles.filter, { borderColor: on ? t.c.textStrong : t.c.border, backgroundColor: on ? t.c.textStrong : t.c.surface }]}>
-              <Text size={13} weight="medium" color={on ? t.c.surface : t.c.text}>
-                {s}
-              </Text>
-            </Pressable>
-          );
-        })}
+        {skillOrder.map((s) => (
+          <FilterChip key={s} label={s} selected={skill === s} onPress={() => setSkill(skill === s ? null : s)} />
+        ))}
       </ScrollView>
       <View style={{ paddingHorizontal: 16 }}>
         <SectionTitle title={skill ? `${skill} gigs` : 'Recommended for you'} />
@@ -174,5 +157,4 @@ const styles = StyleSheet.create({
   today: { marginHorizontal: 16, borderRadius: 8, borderWidth: 1, borderLeftWidth: 3, padding: 14, flexDirection: 'row', alignItems: 'center', gap: 12 },
   statsRow: { flexDirection: 'row', flexWrap: 'wrap', columnGap: 14, marginTop: 10 },
   filters: { gap: 8, paddingHorizontal: 16 },
-  filter: { flexDirection: 'row', alignItems: 'center', gap: 5, height: 34, borderRadius: 6, borderWidth: 1, paddingHorizontal: 12 },
 });

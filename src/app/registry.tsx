@@ -1,10 +1,10 @@
 import { Ionicons } from '@expo/vector-icons';
-import { Image } from 'expo-image';
+import { Photo } from '@/components/ui/Photo';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 
-import { Card, ChoiceChips, EmptyBlock, Fab, KButton, KField } from '@/components/kit';
+import { Card, ChoiceChips, EmptyBlock, Fab, KButton, KField, StatTile } from '@/components/kit';
 import { REGISTRY_KINDS, RegistryCard, registryRaised } from '@/components/planner/RegistryCard';
 import { ToolScreen, toolStyles } from '@/components/planner/ToolScreen';
 import { Sheet } from '@/components/ui/Sheet';
@@ -58,14 +58,7 @@ function Registry({ project, readOnly }: { project: Project; readOnly: boolean }
             { label: 'Gifts', value: String(gifts.length) },
             { label: 'To thank', value: String(unthanked.length) },
           ].map((s) => (
-            <Card key={s.label} style={toolStyles.stat}>
-              <Text size={16} weight="semibold" color={t.c.textStrong}>
-                {s.value}
-              </Text>
-              <Text size={12} color={t.c.muted}>
-                {s.label}
-              </Text>
-            </Card>
+            <StatTile key={s.label} label={s.label} value={s.value} />
           ))}
         </View>
         <Card style={[toolStyles.row, { gap: 12 }]}>
@@ -82,7 +75,7 @@ function Registry({ project, readOnly }: { project: Project; readOnly: boolean }
         </Card>
 
         {items.length === 0 ? (
-          <EmptyBlock icon="gift-outline" title="Create your registry" message="Add a honeymoon fund, home essentials, a charity you love or a link to your Daraz wishlist." />
+          <EmptyBlock icon="gift-outline" art="kalash" title="Create your registry" message="Add a honeymoon fund, home essentials, a charity you love or a link to your Daraz wishlist." />
         ) : (
           items.map((item) => <RegistryCard key={item.id} item={item} onPress={() => setViewing(item.id)} />)
         )}
@@ -168,7 +161,7 @@ function Registry({ project, readOnly }: { project: Project; readOnly: boolean }
             <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 8 }}>
               {IMAGES.map((img) => (
                 <Pressable key={img} onPress={() => setDraft({ ...draft, image: img })}>
-                  <Image source={photos[img]} style={[styles.thumb, { borderColor: draft.image === img ? t.c.primary : 'transparent' }]} contentFit="cover" />
+                  <Photo source={photos[img]} style={[styles.thumb, { borderColor: draft.image === img ? t.c.primary : 'transparent' }]} contentFit="cover" />
                 </Pressable>
               ))}
             </ScrollView>

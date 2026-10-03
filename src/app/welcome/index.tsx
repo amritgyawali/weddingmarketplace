@@ -1,4 +1,5 @@
-import { Image, type ImageContentPosition } from 'expo-image';
+import type { ImageContentPosition } from 'expo-image';
+import { Photo } from '@/components/ui/Photo';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
@@ -12,15 +13,18 @@ import {
   type NativeScrollEvent,
   type NativeSyntheticEvent,
 } from 'react-native';
-import Animated, { FadeIn, FadeInUp, useAnimatedStyle, withTiming } from 'react-native-reanimated';
+import { Ionicons } from '@expo/vector-icons';
+import Animated, { FadeIn, FadeInUp, useAnimatedStyle, useReducedMotion, withTiming } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { LanguageSwitch } from '@/components/ui/LanguageSwitch';
+import { Ornament } from '@/components/ui/Ornament';
 import { PressableScale } from '@/components/ui/PressableScale';
 import { Text } from '@/components/ui/Text';
 import { BRAND } from '@/constants/brand';
 import { photos, type PhotoKey } from '@/constants/images';
 import { colors, gradients } from '@/constants/theme';
+import { useT } from '@/i18n';
 
 const SLIDES: { image: PhotoKey; credit: string; headline: string; focus: ImageContentPosition }[] = [
   {
@@ -48,7 +52,7 @@ const AUTOPLAY_MS = 4500;
 function Dot({ active }: { active: boolean }) {
   const style = useAnimatedStyle(() => ({
     width: withTiming(active ? 22 : 10, { duration: 200 }),
-    backgroundColor: withTiming(active ? colors.white : 'rgba(255,255,255,0.45)', { duration: 200 }),
+    backgroundColor: withTiming(active ? colors.gold : 'rgba(255,255,255,0.45)', { duration: 200 }),
   }));
   return <Animated.View style={[styles.dot, style]} />;
 }
@@ -57,19 +61,23 @@ export default function WelcomeCarousel() {
   const { width, height } = useWindowDimensions();
   const insets = useSafeAreaInsets();
   const listRef = useRef<FlatList<(typeof SLIDES)[number]>>(null);
+  const tr = useT();
+  const reduced = useReducedMotion();
   const [index, setIndex] = useState(1);
   const [interacting, setInteracting] = useState(false);
+  // Reduce Motion starts it paused; the pause button stops it for anyone.
+  const [paused, setPaused] = useState(reduced);
 
-  // Auto-advance the carousel; pauses while the user is swiping.
+  // Auto-advance the carousel; pauses while the user is swiping or after they tap pause.
   useEffect(() => {
-    if (interacting) return;
+    if (interacting || paused) return;
     const id = setTimeout(() => {
       const next = (index + 1) % SLIDES.length;
       listRef.current?.scrollToOffset({ offset: next * width, animated: true });
       setIndex(next);
     }, AUTOPLAY_MS);
     return () => clearTimeout(id);
-  }, [index, interacting, width]);
+  }, [index, interacting, paused, width]);
 
   const onMomentumEnd = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
     setIndex(Math.round(e.nativeEvent.contentOffset.x / width));
@@ -94,7 +102,7 @@ export default function WelcomeCarousel() {
         onScrollBeginDrag={() => setInteracting(true)}
         onMomentumScrollEnd={onMomentumEnd}
         renderItem={({ item }) => (
-          <Image
+          <Photo
             source={photos[item.image]}
             style={{ width, height }}
             contentFit="cover"
@@ -111,12 +119,14 @@ export default function WelcomeCarousel() {
       />
 
       <View style={[styles.top, { paddingTop: insets.top + 14, pointerEvents: 'none' }]}>
-        <Text serif size={24} weight="bold" color={colors.white} lineHeight={32}>
-          {BRAND.name}
-        </Text>
-        <Text size={12} color="rgba(255,255,255,0.7)">
-          Photo: {slide.credit}
-        </Text>
+        <View>
+          <Text serif size={24} weight="bold" color={colors.white} lineHeight={32}>
+            {BRAND.name}
+          </Text>
+          <Text serif size={13} color={colors.gold} lineHeight={18} raw>
+            विवाह
+          </Text>
+        </View>
       </View>
 
       <View style={[styles.lang, { top: insets.top + 16 }]}>
@@ -124,8 +134,9 @@ export default function WelcomeCarousel() {
       </View>
 
       <View style={[styles.bottom, { paddingBottom: insets.bottom + 18 }]}>
-        <Animated.View key={index} entering={FadeIn.duration(450)}>
-          <Text serif size={24} lineHeight={34} weight="bold" color={colors.white} style={styles.headline}>
+        <Ornament width={72} style={styles.ornament} />
+        <Animated.View key={index} entering={reduced ? undefined : FadeIn.duration(450)}>
+          <Text serif size={24} lineHeight={34} weight="bold" color={colors.white} style={styles.headline} accessibilityLiveRegion={paused ? 'polite' : 'none'}>
             {slide.headline}
           </Text>
         </Animated.View>
@@ -156,10 +167,23 @@ export default function WelcomeCarousel() {
           </View>
         </Animated.View>
 
-        <View style={styles.dots}>
-          {SLIDES.map((s, i) => (
-            <Dot key={s.image} active={i === index} />
-          ))}
+        <View style={styles.footer}>
+          <View style={styles.dots}>
+            {SLIDES.map((s, i) => (
+              <Dot key={s.image} active={i === index} />
+            ))}
+          </View>
+          <Text size={12} color={colors.onWineMuted} numberOfLines={1} style={{ flex: 1 }}>
+            Photo: {slide.credit}
+          </Text>
+          <Pressable
+            onPress={() => setPaused((p) => !p)}
+            hitSlop={12}
+            accessibilityRole="button"
+            accessibilityLabel={tr(paused ? 'Play slideshow' : 'Pause slideshow')}
+            style={({ pressed }) => [styles.pause, pressed && { opacity: 0.7 }]}>
+            <Ionicons name={paused ? 'play' : 'pause'} size={14} color={colors.white} />
+          </Pressable>
         </View>
       </View>
     </View>
@@ -180,6 +204,7 @@ const styles = StyleSheet.create({
   },
   bottom: { position: 'absolute', left: 0, right: 0, bottom: 0, paddingHorizontal: 20 },
   headline: { marginBottom: 22, maxWidth: 380 },
+  ornament: { marginBottom: 14 },
   actions: { alignItems: 'stretch', gap: 18 },
   primary: {
     height: 50,
@@ -190,6 +215,8 @@ const styles = StyleSheet.create({
   },
   links: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 14 },
   sep: { width: 1, height: 14, backgroundColor: 'rgba(255,255,255,0.45)' },
-  dots: { flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: 26 },
+  footer: { flexDirection: 'row', alignItems: 'center', gap: 14, marginTop: 24 },
+  dots: { flexDirection: 'row', alignItems: 'center', gap: 6 },
+  pause: { width: 30, height: 30, borderRadius: 15, borderWidth: 1, borderColor: 'rgba(255,255,255,0.45)', alignItems: 'center', justifyContent: 'center' },
   dot: { height: 3, borderRadius: 2 },
 });

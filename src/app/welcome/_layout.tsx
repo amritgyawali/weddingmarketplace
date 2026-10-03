@@ -1,6 +1,7 @@
 import { Stack } from 'expo-router';
 import { Platform } from 'react-native';
 
+import { colors } from '@/constants/theme';
 import { useRoleFonts } from '@/theme/fonts';
 import { keyboardScreenLayout } from '@/components/ui/Keyboard';
 
@@ -11,7 +12,7 @@ export default function WelcomeLayout() {
 
   return (
     <Stack screenLayout={keyboardScreenLayout} screenOptions={{ headerShown: false, animation: Platform.OS === 'android' ? 'slide_from_right' : 'default' }}>
-      <Stack.Screen name="index" options={{ contentStyle: { backgroundColor: '#000' } }} />
+      <Stack.Screen name="index" options={{ contentStyle: { backgroundColor: colors.black } }} />
       <Stack.Screen name="role" />
       <Stack.Screen name="login" />
       <Stack.Screen name="setup" />

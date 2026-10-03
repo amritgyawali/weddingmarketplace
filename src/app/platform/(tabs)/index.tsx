@@ -2,7 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { Pressable, StyleSheet, View } from 'react-native';
 
-import { Avatar, BarChart, Card, KButton, KpiCard, RoleHeader, SectionTitle, StatusPill } from '@/components/kit';
+import { Avatar, BarChart, Card, FocusBand, KButton, KpiCard, RoleHeader, SectionTitle, StatusPill } from '@/components/kit';
 import { Text } from '@/components/ui/Text';
 import { toast } from '@/components/ui/Toast';
 import { RiskList } from '@/components/work/Collab';
@@ -88,6 +88,15 @@ export default function PlatformToday() {
     <View style={{ flex: 1, backgroundColor: t.c.bg }}>
       <RoleHeader eyebrow={`${formatLongDate(now)} · ${formatDateAlt(now)}`} title={`Namaste, ${account.name.split(' ')[0]}`} subtitle={`${account.team ?? 'Operations'} · ${active.length} active projects`} />
       <ScrollView contentContainerStyle={{ padding: 14, gap: 16, paddingBottom: 40 }}>
+        {todayEvents.length > 0 && (
+          <FocusBand
+            eyebrow="Live today"
+            title={todayEvents.length === 1 ? '1 function today' : `${todayEvents.length} functions today`}
+            body={todayEvents.map(({ e, p }) => `${p.code} ${e.name}`).join(' · ')}
+            primary={{ label: 'Open control room', icon: 'radio-outline', onPress: () => router.navigate('/platform/execution') }}
+            onPress={() => router.navigate('/platform/execution')}
+          />
+        )}
         <TodayFocus />
         {can(exp, 'admin.full') && (
           <Card onPress={() => router.push('/platform/admin')} style={[styles.row, { borderLeftColor: t.c.primary, borderLeftWidth: 3 }]}>
@@ -114,23 +123,6 @@ export default function PlatformToday() {
             <KpiCard label="Gigs unfilled (7d)" value={String(unfilled.length)} icon="megaphone-outline" tone={t.c.info} onPress={() => router.push('/platform/gigs')} style={{ minWidth: columns > 1 ? '15%' : '46%' }} />
           </View>
         </View>
-
-        {todayEvents.length > 0 && (
-          <Card onPress={() => router.navigate('/platform/execution')} style={[styles.row, { borderLeftColor: t.c.danger, borderLeftWidth: 3 }]}>
-            <View style={[styles.liveDot, { backgroundColor: t.c.danger }]} />
-            <View style={{ flex: 1 }}>
-              <Text size={14} weight="bold" color={t.c.textStrong}>
-                {todayEvents.length} function{todayEvents.length > 1 ? 's' : ''} today
-              </Text>
-              <Text size={12} color={t.c.muted} numberOfLines={1}>
-                {todayEvents.map(({ e, p }) => `${p.code} ${e.name}`).join(' · ')}
-              </Text>
-            </View>
-            <Text size={13} weight="semibold" color={t.c.danger}>
-              Open control room
-            </Text>
-          </Card>
-        )}
 
         <View style={[styles.cols, columns > 1 && { flexDirection: 'row' }]}>
           <View style={{ flex: 1, gap: 16 }}>
@@ -254,7 +246,6 @@ export default function PlatformToday() {
 const styles = StyleSheet.create({
   kpis: { flexDirection: 'row', flexWrap: 'wrap', gap: 10 },
   row: { flexDirection: 'row', alignItems: 'center', gap: 12 },
-  liveDot: { width: 8, height: 8, borderRadius: 4 },
   cols: { gap: 16 },
   serviceLine: { flexDirection: 'row', flexWrap: 'wrap', gap: 5 },
   svc: { borderRadius: 6, paddingHorizontal: 7, paddingVertical: 2 },

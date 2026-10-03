@@ -93,7 +93,7 @@ export function SlaMonitor() {
           </Col>
         </Cols>
       </Card>
-      <Text size={12} color={t.c.subtle}>
+      <Text size={12} color={t.c.muted}>
         Targets are shared by the whole operations team.
       </Text>
     </ToolPage>

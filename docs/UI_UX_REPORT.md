@@ -186,6 +186,37 @@ From the `ui-ux-pro-max` pro-rules, adapted to Vivah:
 
 ---
 
+## 6. Status after the 3 October 2026 pass
+
+The finish-and-craft pass worked through the roadmap at the component level, so every screen of all four apps changed at once, then redesigned the screens the report singled out. Before and after screenshots were taken of 29 screens at 390 px and 1280 px.
+
+| # | Item | Status | Where |
+| --- | --- | --- | --- |
+| 1 | Text contrast | **Done.** `textMuted` #6F625B (5.6 : 1 ivory, 5.0 : 1 pearl); `textSubtle` #8F7F74 kept for icons, disabled states and large numbers; the 54 places that set small text in it now use `textMuted`. `warning` (#8A5A10) and `goldDeep` (#7F5F2C) deepened so pills on their own tint pass 5 : 1 | `constants/theme.ts` |
+| 2 | `borderStrong` | **Done**, at #9F8A75: the report's suggested #B9A48E measures only 2.3 : 1, this is 3.2 : 1. Inputs, search, toggles, outline and secondary buttons; focus is a 2 px burgundy border | `Field`, `KField`, `SearchBar`, `Toggle`, `Button`, `KButton`, `Dialog` |
+| 3 | Gilt tab bar | **Done.** Champagne hairline on top, animated champagne `TabMark` over the active tab; the sidebar marks its active item down the left edge and shows counts as pills | `navigation/TabMark.tsx`, `TabBar`, `RoleTabBar` |
+| 4 | Serif `SectionTitle`, palette avatars, shared filter chip | **Done.** `FilterChip` replaces the freelancer feed's hand-built chips; `ChoiceChips` selects in burgundy | `kit/primitives.tsx`, `kit/controls.tsx` |
+| 5 | Image placeholders | **Done.** `ui/Photo` (pearl placeholder, cross-dissolve) now renders every photo | 48 files |
+| 6 | Reduce Motion, carousel pause | **Done.** `hooks/useMotion`; the welcome slideshow starts paused under Reduce Motion and has a pause/play button | `welcome/index.tsx` |
+| 7 | WhatsApp pill | **Done.** Wine pill with a gold hairline and a small WhatsApp mark on soft white | `GenieSections.tsx` |
+| 8 | Hex lint rule | **Done.** `no-restricted-syntax` in `eslint.config.js`; allow-list: website and invitation themes, payment brands. The other stray hex values became tokens | `eslint.config.js` |
+| 9 | Motion system | **Partly.** Timing tokens (`motion`), one ease-out curve, `enter`/`fade`, the tab mark, the Vendors entrance. Shared-element transitions and the heart spring are still open | `hooks/useMotion.ts` |
+| 10 | Editorial Vendors tab | **Done.** Serif intro, featured category, 2/3/4-column photo grid with Martel captions over a wine scrim, services in a sheet | `(tabs)/vendors.tsx` |
+| 11 | Detail pages | **Partly.** Champagne page dots on every photo carousel; the sticky price bar already existed. "Verified by Vivah" seal and review photos still open | `ImageCarousel.tsx` |
+| 12 | Dashboard hierarchy | **Done** for business and staff: `FocusBand` leads with the one urgent thing (first booking request or new enquiries; weddings live today). The business home is two columns on desktop | `kit/dashboard.tsx` |
+| 13 | Ornament | **Partly.** `ui/Ornament` on the home wedding band, the welcome headline, the Vendors feature and `FocusBand`. The quotation PDF and invitation are still open | `ui/Ornament.tsx` |
+| 14 | Numerals | **Done** in the components: `<Text numeric>` (tabular figures) on KPI and stat figures, pills, key-value rows, countdown and focus-band amounts | `ui/Text.tsx` |
+| 15 | Empty states with character | **Done.** Pearl medallion with a champagne ring on every empty state; five line drawings (mandap, marigold garland, kalash, diya, rings) on the couple's first-run lists | `ui/Illustration.tsx`, `EmptyState`, `EmptyBlock` |
+| 16 | FlashList, skeletons | Open | |
+| 17 | Dark mode | Open | |
+| 18 | Photography | Open (non-code) | |
+| 19 | Wordmark | **Partly.** Devanagari "विवाह" under "Vivah" on the welcome screen and a gilt rule under the sidebar brand | |
+| 20 | Signature tier | Open (product) | |
+| 21 | Nepali typography | Open; every new string has its Nepali line | |
+| 22 | Tablet and desktop | **Partly.** Business home main column + side rail; Vendors grid widens to 3 and 4 columns | |
+
+Also fixed: Guests & RSVP broke "Attending" mid-word at phone width (new `StatTile`, also used by Seating and Registry); text follows the system size up to 1.6× (was 1.3×); dialog, toast and sheet use palette tokens only; screen and section titles are announced as headers.
+
 ## Appendix: contrast of palette pairs
 
 | Pair | Ratio | Use |
@@ -197,13 +228,14 @@ From the `ui-ux-pro-max` pro-rules, adapted to Vivah:
 | Gold on wine | 7.0 | Pass, text on wine sections |
 | Danger on ivory | 6.3 | Pass |
 | Success on ivory | 5.9 | Pass |
-| Taupe on ivory | 4.9 | Pass |
-| Warning on ivory | 4.8 | Pass |
-| Gold deep on ivory | 4.8 | Pass |
-| Taupe on pearl | 4.4 | Fails for small text |
-| Text subtle on ivory | 2.8 | Fails, icons only |
+| Taupe (`textMuted`, now #6F625B) on ivory | 5.6 | Pass |
+| Warning (now #8A5A10) on ivory | 5.7 | Pass; 5.0 on its own pill tint |
+| Gold deep (now #7F5F2C) on ivory | 5.6 | Pass; 5.0 on pearl |
+| Taupe on pearl | 5.0 | Pass (was 4.4 before the 3 Oct pass) |
+| Text subtle (now #8F7F74) on ivory | 3.7 | Icons, disabled states and large numbers only |
 | Dusty rose on ivory | 2.7 | Decoration only |
-| Placeholder on soft white | 2.7 | Fails; placeholders are exempt but should be raised |
+| Placeholder (now #8E7F75) on soft white | 3.8 | Placeholders are exempt; raised from 2.7 |
 | Soft white on gold | 2.3 | Never use; put wine text on gold instead (7.0) |
 | Gold on ivory | 2.2 | Decoration only |
-| Border on ivory | 1.4 | Fine for cards, too faint for inputs |
+| Border on ivory | 1.4 | Cards only |
+| Border strong (#9F8A75) on ivory | 3.2 | Inputs, toggles, outline buttons |

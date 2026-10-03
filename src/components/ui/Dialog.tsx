@@ -40,10 +40,10 @@ export function DialogHost() {
       <Animated.View entering={FadeIn.duration(140)} style={styles.backdrop}>
         <Pressable style={StyleSheet.absoluteFill} onPress={() => { close(); current.onCancel?.(); }} accessibilityLabel="Cancel" />
         <Animated.View entering={ZoomIn.duration(180)} style={styles.card} accessibilityRole="alert">
-          <View style={[styles.icon, { backgroundColor: destructive ? '#FBE9E9' : '#EEF1F5' }]}>
-            <Ionicons name={destructive ? 'alert-circle-outline' : 'help-circle-outline'} size={24} color={destructive ? colors.danger : colors.heading} />
+          <View style={[styles.icon, { backgroundColor: destructive ? colors.dangerSoft : colors.primarySoft }]}>
+            <Ionicons name={destructive ? 'alert-circle-outline' : 'help-circle-outline'} size={24} color={destructive ? colors.danger : colors.primary} />
           </View>
-          <Text size={18} weight="bold" color={colors.heading} align="center">
+          <Text serif size={18} weight="bold" color={colors.heading} align="center">
             {current.title}
           </Text>
           {!!current.message && (
@@ -70,7 +70,7 @@ export function DialogHost() {
                 current.onConfirm();
               }}
               accessibilityRole="button"
-              style={({ pressed }) => [styles.button, { backgroundColor: destructive ? colors.danger : colors.heading }, pressed && { opacity: 0.8 }]}>
+              style={({ pressed }) => [styles.button, { backgroundColor: destructive ? colors.danger : colors.primary }, pressed && { opacity: 0.8 }]}>
               <Text size={15} weight="semibold" color={colors.white} numberOfLines={1}>
                 {current.confirmLabel}
               </Text>
@@ -83,10 +83,10 @@ export function DialogHost() {
 }
 
 const styles = StyleSheet.create({
-  backdrop: { flex: 1, backgroundColor: 'rgba(20,18,16,0.5)', alignItems: 'center', justifyContent: 'center', padding: 24 },
-  card: { width: '100%', maxWidth: 400, backgroundColor: colors.white, borderRadius: radius.lg, padding: 22, gap: 8, alignItems: 'center', ...shadows.raised },
+  backdrop: { flex: 1, backgroundColor: colors.overlay, alignItems: 'center', justifyContent: 'center', padding: 24 },
+  card: { width: '100%', maxWidth: 400, backgroundColor: colors.white, borderRadius: radius.xl, padding: 24, gap: 8, alignItems: 'center', ...shadows.raised },
   icon: { width: 46, height: 46, borderRadius: 23, alignItems: 'center', justifyContent: 'center', marginBottom: 4 },
   actions: { flexDirection: 'row', gap: 10, marginTop: 12, alignSelf: 'stretch' },
   button: { flex: 1, height: 46, borderRadius: 8, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 12 },
-  secondary: { borderWidth: 1, borderColor: colors.border, backgroundColor: colors.white },
+  secondary: { borderWidth: 1, borderColor: colors.borderStrong, backgroundColor: colors.white },
 });

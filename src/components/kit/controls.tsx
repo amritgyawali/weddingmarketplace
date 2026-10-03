@@ -34,8 +34,8 @@ export const KField = forwardRef<TextInput, TextInputProps & { label?: string; e
       <View
         style={[
           styles.field,
-          { backgroundColor: t.dark ? t.c.surfaceAlt : t.c.surface, borderColor: error ? t.c.danger : focused ? t.c.primary : t.c.border, borderRadius: t.role === 'platform' ? 6 : 8 },
-          focused && !error && { borderWidth: 1.5 },
+          { backgroundColor: t.dark ? t.c.surfaceAlt : t.c.surface, borderColor: error ? t.c.danger : focused ? t.c.primary : t.c.borderStrong, borderRadius: t.role === 'platform' ? 6 : 8 },
+          focused && !error && { borderWidth: 2, paddingHorizontal: 11 },
           multiline && { alignItems: 'flex-start', minHeight: 96 },
         ]}>
         {prefix && (
@@ -111,9 +111,11 @@ export function Segmented<T extends string>({
               {o.label}
             </Text>
             {count !== undefined && (
-              <Text size={13} color={t.c.subtle}>
-                {count}
-              </Text>
+              <View style={[styles.segCount, { backgroundColor: active ? t.c.soft : t.c.surfaceAlt }]}>
+                <Text size={12} weight="semibold" color={active ? t.c.primary : t.c.muted} lineHeight={16} numeric maxFontSizeMultiplier={1.2}>
+                  {count}
+                </Text>
+              </View>
             )}
           </Pressable>
         );
@@ -146,15 +148,46 @@ export function ChoiceChips({
             }}
             accessibilityRole="checkbox"
             accessibilityState={{ checked: on }}
-            style={[styles.chip, { borderColor: on ? t.c.textStrong : t.c.border, backgroundColor: on ? t.c.textStrong : t.c.surface }]}>
-            {on && <Ionicons name="checkmark" size={14} color={t.c.surface} />}
-            <Text size={14} weight={on ? 'semibold' : 'regular'} color={on ? t.c.surface : t.c.text}>
+            style={[styles.chip, { borderColor: on ? t.c.primary : t.c.border, backgroundColor: on ? t.c.primary : t.c.surface }]}>
+            {on && <Ionicons name="checkmark" size={14} color={t.c.onPrimary} />}
+            <Text size={14} weight={on ? 'semibold' : 'regular'} color={on ? t.c.onPrimary : t.c.text}>
               {o}
             </Text>
           </Pressable>
         );
       })}
     </View>
+  );
+}
+
+/**
+ * One filter or sort chip, the same in every role app: pearl at rest,
+ * burgundy with a check when selected (so the state never rests on colour
+ * alone). Use for ad-hoc chip rows instead of styling a Pressable by hand.
+ */
+export function FilterChip({ label, selected, onPress, icon }: { label: string; selected?: boolean; onPress: () => void; icon?: IconName }) {
+  const t = useRoleTheme();
+  const fg = selected ? t.c.onPrimary : t.c.text;
+  return (
+    <Pressable
+      onPress={() => {
+        triggerHaptic('selection');
+        onPress();
+      }}
+      accessibilityRole="button"
+      accessibilityState={{ selected: !!selected }}
+      accessibilityLabel={label}
+      hitSlop={4}
+      style={({ pressed }) => [
+        styles.chip,
+        { borderColor: selected ? t.c.primary : t.c.border, backgroundColor: selected ? t.c.primary : t.c.surface },
+        pressed && { opacity: 0.75 },
+      ]}>
+      {selected ? <Ionicons name="checkmark" size={14} color={fg} /> : icon ? <Ionicons name={icon} size={14} color={t.c.muted} /> : null}
+      <Text size={14} weight={selected ? 'semibold' : 'medium'} color={fg} numberOfLines={1}>
+        {label}
+      </Text>
+    </Pressable>
   );
 }
 
@@ -185,8 +218,8 @@ export function ListRow({
       style={({ pressed }) => [styles.row, pressed && { backgroundColor: t.c.surfaceAlt }]}>
       {leading ??
         (icon && (
-          <View style={styles.rowIcon}>
-            <Ionicons name={icon} size={21} color={t.c.muted} />
+          <View style={[styles.rowIcon, { backgroundColor: t.c.surfaceAlt }]}>
+            <Ionicons name={icon} size={19} color={t.c.primary} />
           </View>
         ))}
       <View style={{ flex: 1, gap: 2 }}>
@@ -233,11 +266,12 @@ export function Fab({ icon = 'add', label, onPress, bottom = 20 }: { icon?: Icon
 const styles = StyleSheet.create({
   field: { flexDirection: 'row', alignItems: 'center', gap: 8, borderWidth: 1, paddingHorizontal: 12 },
   segRow: { gap: 20, paddingHorizontal: 16, borderBottomWidth: StyleSheet.hairlineWidth, flexGrow: 1 },
-  seg: { flexDirection: 'row', alignItems: 'center', gap: 5, height: 40, borderBottomWidth: 2, marginBottom: -StyleSheet.hairlineWidth },
+  seg: { flexDirection: 'row', alignItems: 'center', gap: 6, height: 44, borderBottomWidth: 2, marginBottom: -StyleSheet.hairlineWidth },
+  segCount: { minWidth: 20, paddingHorizontal: 6, borderRadius: 10, alignItems: 'center' },
   chips: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
-  chip: { flexDirection: 'row', alignItems: 'center', gap: 4, borderWidth: 1, borderRadius: 6, paddingHorizontal: 11, paddingVertical: 6 },
+  chip: { flexDirection: 'row', alignItems: 'center', gap: 5, borderWidth: 1, borderRadius: 6, paddingHorizontal: 12, minHeight: 36 },
   row: { flexDirection: 'row', alignItems: 'center', gap: 12, paddingHorizontal: 16, paddingVertical: 12 },
-  rowIcon: { width: 28, alignItems: 'center', justifyContent: 'center' },
+  rowIcon: { width: 36, height: 36, borderRadius: 8, alignItems: 'center', justifyContent: 'center' },
   fab: {
     position: 'absolute',
     right: 16,

@@ -55,7 +55,7 @@ export function RunSheet({ project, event, editable, compact }: { project: Proje
             </Text>
             <View style={styles.rail}>
               <View style={[styles.node, { backgroundColor: item.status === 'pending' ? t.c.surface : tone.fg, borderColor: tone.fg }]}>
-                {item.status === 'done' && <Ionicons name="checkmark" size={10} color={t.dark ? '#000' : '#fff'} />}
+                {item.status === 'done' && <Ionicons name="checkmark" size={10} color={t.c.onPrimary} />}
               </View>
               {!last && <View style={[styles.line, { backgroundColor: t.c.border }]} />}
             </View>

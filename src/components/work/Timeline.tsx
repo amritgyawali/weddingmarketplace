@@ -70,13 +70,13 @@ export function TimelineView({ project, mode }: { project: Project; mode: 'custo
                 <Text size={12} weight="bold" color={isNext ? t.c.primary : t.c.textStrong}>
                   {formatMonthDay(e.date)}
                 </Text>
-                <Text size={10} color={t.c.subtle}>
+                <Text size={10} color={t.c.muted}>
                   {bsMonthLabel(e.date).split(' ')[0]}
                 </Text>
               </View>
               <View style={styles.rail}>
                 <View style={[styles.node, { backgroundColor: e.done || isNext ? color : t.c.surface, borderColor: color }]}>
-                  <Ionicons name={(KIND_ICON[e.kind] + (e.done || isNext ? '' : '-outline')) as never} size={11} color={e.done || isNext ? '#fff' : color} />
+                  <Ionicons name={(KIND_ICON[e.kind] + (e.done || isNext ? '' : '-outline')) as never} size={11} color={e.done || isNext ? t.c.onPrimary : color} />
                 </View>
                 {i < entries.length - 1 && <View style={[styles.line, { backgroundColor: t.c.border }]} />}
               </View>
@@ -100,7 +100,7 @@ export function TimelineView({ project, mode }: { project: Project; mode: 'custo
           );
         })}
       </View>
-      <Text size={11} color={t.c.subtle} align="center">
+      <Text size={11} color={t.c.muted} align="center">
         Long-press any item to add it to Google Calendar.
       </Text>
 

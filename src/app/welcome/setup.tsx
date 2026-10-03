@@ -279,7 +279,7 @@ function SetupForm({ phone, signInEmail }: { phone: string; signInEmail?: string
                   );
                 })}
                 {!listings.length && (
-                  <Text size={12} color={t.c.subtle}>
+                  <Text size={12} color={t.c.muted}>
                     No listings match in {city}.
                   </Text>
                 )}

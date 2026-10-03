@@ -244,7 +244,7 @@ export function EventPrep() {
         subtitle={(e) => [e.fields?.owner, e.note].filter(Boolean).join(' · ') || undefined}
         emptyTitle="No prep tasks for this booking yet"
       />
-      <Text size={12} color={t.c.subtle}>
+      <Text size={12} color={t.c.muted}>
         {current.project.code} · {current.project.city} · {current.project.guests} guests
       </Text>
     </ToolPage>

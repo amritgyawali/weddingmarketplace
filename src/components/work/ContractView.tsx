@@ -73,7 +73,7 @@ export function ContractView({ contract, party, signerName }: { contract: Contra
                 <Text size={14} weight="semibold" color={t.c.textStrong}>
                   {sig ? sig.name : contract.parties[p]}
                 </Text>
-                <Text size={12} color={sig ? t.c.success : t.c.subtle}>
+                <Text size={12} color={sig ? t.c.success : t.c.muted}>
                   {sig ? `Signed ${formatLongDate(sig.at)} · ${formatTime(sig.at)}` : 'Awaiting signature'}
                 </Text>
               </View>
@@ -106,7 +106,7 @@ export function ContractView({ contract, party, signerName }: { contract: Contra
               toast('Contract signed', 'document-lock');
             }}
           />
-          <Text size={11} color={t.c.subtle}>
+          <Text size={11} color={t.c.muted}>
             Your signature, name and time are recorded in the audit log. Electronic signatures are valid under Nepal’s Electronic Transactions Act, 2063.
           </Text>
         </Card>

@@ -13,6 +13,9 @@ import { useFeatures, useLinkOn } from '@/hooks/useFeatures';
 import { useLayout } from '@/hooks/useLayout';
 import { useRoleTheme } from '@/theme/RoleTheme';
 import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
+import { colors } from '@/constants/theme';
+
+import { TabMark } from './TabMark';
 
 type IconName = ComponentProps<typeof Ionicons>['name'];
 
@@ -68,6 +71,7 @@ export function RoleTabBar({ state, navigation, tabs, links: allLinks = [] }: Bo
           <Text size={20} weight="bold" serif color={t.c.textStrong} lineHeight={26}>
             {BRAND.name}
           </Text>
+          <View style={styles.sideRule} />
           <Text size={13} color={t.c.muted}>
             {t.label}
           </Text>
@@ -80,15 +84,18 @@ export function RoleTabBar({ state, navigation, tabs, links: allLinks = [] }: Bo
               onPress={() => press(route.name, route.key, focused)}
               accessibilityRole="tab"
               accessibilityState={{ selected: focused }}
-              style={({ pressed }) => [styles.sideItem, focused && { backgroundColor: t.c.surfaceAlt }, pressed && !focused && { opacity: 0.7 }]}>
+              style={({ pressed }) => [styles.sideItem, focused && { backgroundColor: t.c.surfaceAlt }, pressed && !focused && { backgroundColor: t.c.surfaceAlt }]}>
+              <TabMark active={focused} vertical />
               <Ionicons name={focused ? tab.activeIcon : tab.icon} size={19} color={focused ? t.c.primary : t.c.muted} />
               <Text size={14} weight={focused ? 'semibold' : 'regular'} color={focused ? t.c.textStrong : t.c.text} style={{ flex: 1 }}>
                 {tab.label}
               </Text>
               {!!tab.badge && (
-                <Text size={12} weight="semibold" color={t.c.danger}>
-                  {tab.badge > 99 ? '99+' : tab.badge}
-                </Text>
+                <View style={[styles.sideBadge, { backgroundColor: t.c.danger }]}>
+                  <Text size={11} weight="bold" color={t.c.onPrimary} lineHeight={15} numeric maxFontSizeMultiplier={1}>
+                    {tab.badge > 99 ? '99+' : tab.badge}
+                  </Text>
+                </View>
               )}
             </Pressable>
           );
@@ -102,15 +109,17 @@ export function RoleTabBar({ state, navigation, tabs, links: allLinks = [] }: Bo
                   {l.section}
                 </Text>
               )}
-              <Pressable onPress={() => router.push(l.href)} style={({ pressed }) => [styles.sideItem, pressed && { opacity: 0.7 }]}>
+              <Pressable onPress={() => router.push(l.href)} accessibilityRole="link" style={({ pressed }) => [styles.sideItem, pressed && { backgroundColor: t.c.surfaceAlt }]}>
                 <Ionicons name={l.icon} size={18} color={t.c.muted} />
                 <Text size={14} color={t.c.text} style={{ flex: 1 }}>
                   {l.label}
                 </Text>
                 {!!l.badge && (
-                  <Text size={12} weight="semibold" color={t.c.danger}>
-                    {l.badge}
-                  </Text>
+                  <View style={[styles.sideBadge, { backgroundColor: t.c.soft }]}>
+                    <Text size={11} weight="bold" color={t.c.primary} lineHeight={15} numeric maxFontSizeMultiplier={1}>
+                      {l.badge}
+                    </Text>
+                  </View>
                 )}
               </Pressable>
             </View>
@@ -121,7 +130,7 @@ export function RoleTabBar({ state, navigation, tabs, links: allLinks = [] }: Bo
   }
 
   return (
-    <View style={[styles.bar, { backgroundColor: t.c.surface, borderTopColor: t.c.border, paddingBottom: Math.max(insets.bottom, 8) }]}>
+    <View style={[styles.bar, { backgroundColor: t.c.surface, paddingBottom: Math.max(insets.bottom, 8) }]}>
       {items.map(({ route, index, tab }) => {
         const focused = state.index === index;
         const tint = focused ? t.c.primary : t.c.muted;
@@ -133,17 +142,18 @@ export function RoleTabBar({ state, navigation, tabs, links: allLinks = [] }: Bo
             accessibilityState={{ selected: focused }}
             accessibilityLabel={tab.badge ? `${tab.label}, ${tab.badge} new` : tab.label}
             style={({ pressed }) => [styles.item, pressed && { opacity: 0.6 }]}>
+            <TabMark active={focused} />
             <View>
               <Ionicons name={focused ? tab.activeIcon : tab.icon} size={23} color={tint} />
               {!!tab.badge && (
                 <View style={[styles.badge, { backgroundColor: t.c.danger, borderColor: t.c.surface }]}>
-                  <Text size={9} weight="bold" color="#FFFFFF" lineHeight={11}>
+                  <Text size={9} weight="bold" color={t.c.onPrimary} lineHeight={11} maxFontSizeMultiplier={1}>
                     {tab.badge > 9 ? '9+' : tab.badge}
                   </Text>
                 </View>
               )}
             </View>
-            <Text size={11} weight={focused ? 'semibold' : 'regular'} color={tint} lineHeight={14} numberOfLines={1}>
+            <Text size={11} weight={focused ? 'semibold' : 'medium'} color={tint} lineHeight={14} numberOfLines={1} maxFontSizeMultiplier={1.2}>
               {tab.label}
             </Text>
           </Pressable>
@@ -156,10 +166,12 @@ export function RoleTabBar({ state, navigation, tabs, links: allLinks = [] }: Bo
 const styles = StyleSheet.create({
   sidebar: { width: 228, borderRightWidth: StyleSheet.hairlineWidth, paddingBottom: 18, gap: 1 },
   sideBrand: { paddingHorizontal: 20, marginBottom: 16 },
-  sideItem: { flexDirection: 'row', alignItems: 'center', gap: 12, marginHorizontal: 8, paddingHorizontal: 12, paddingVertical: 8, borderRadius: 6 },
+  sideRule: { width: 24, height: 1, backgroundColor: colors.gold, marginTop: 4, marginBottom: 6 },
+  sideItem: { flexDirection: 'row', alignItems: 'center', gap: 12, marginHorizontal: 8, paddingHorizontal: 12, minHeight: 38, borderRadius: 6, overflow: 'hidden' },
+  sideBadge: { minWidth: 20, paddingHorizontal: 6, borderRadius: 10, alignItems: 'center' },
   sideDivider: { height: StyleSheet.hairlineWidth, marginVertical: 10, marginHorizontal: 20 },
   sideSection: { paddingHorizontal: 20, marginTop: 14, marginBottom: 4 },
-  bar: { flexDirection: 'row', borderTopWidth: StyleSheet.hairlineWidth, paddingTop: 7 },
-  item: { flex: 1, alignItems: 'center', gap: 2, minHeight: 44, justifyContent: 'center' },
+  bar: { flexDirection: 'row', borderTopWidth: 1, borderTopColor: colors.goldLine },
+  item: { flex: 1, alignItems: 'center', gap: 2, minHeight: 52, paddingTop: 8, justifyContent: 'center' },
   badge: { position: 'absolute', top: -4, right: -10, minWidth: 17, height: 17, borderRadius: 9, borderWidth: 2, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 3 },
 });

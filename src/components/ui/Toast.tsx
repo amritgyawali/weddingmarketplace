@@ -67,11 +67,12 @@ useToastStore.subscribe((s, prev) => {
   if (s.key !== prev.key) lastShown = Date.now();
 });
 
+/** Wine for good news with a champagne mark, espresso for information, then amber and red for problems. */
 const TONES: Record<ToastTone, { bg: string; accent: string }> = {
-  success: { bg: colors.heading, accent: '#4CAF7A' },
-  info: { bg: colors.heading, accent: '#8FB3E0' },
-  warning: { bg: '#3A2E12', accent: '#E0B04C' },
-  error: { bg: '#4A1515', accent: '#F07A7A' },
+  success: { bg: colors.wine, accent: colors.gold },
+  info: { bg: colors.heading, accent: colors.gold },
+  warning: { bg: colors.warningDeep, accent: colors.warningOnDark },
+  error: { bg: colors.dangerDeep, accent: colors.dangerOnDark },
 };
 
 export function ToastHost() {
@@ -109,8 +110,8 @@ const styles = StyleSheet.create({
     gap: 10,
     paddingLeft: 16,
     paddingRight: 16,
-    paddingVertical: 12,
-    borderRadius: radius.md,
+    paddingVertical: 13,
+    borderRadius: radius.lg,
     maxWidth: 440,
     marginHorizontal: 16,
     overflow: 'hidden',

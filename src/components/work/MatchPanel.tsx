@@ -1,5 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
-import { Image } from 'expo-image';
+import { Photo } from '@/components/ui/Photo';
 import { useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 
@@ -65,7 +65,7 @@ function CandidateRow({
   return (
     <View style={[styles.candidate, { borderColor: t.c.border }]}>
       <Pressable onPress={onOpen} style={styles.candidateTop} accessibilityRole="button" accessibilityLabel={`${candidate.providerName}, ${candidate.score}% fit`}>
-        {provider && <Image source={photos[provider.image]} style={styles.thumb} contentFit="cover" />}
+        {provider && <Photo source={photos[provider.image]} style={styles.thumb} contentFit="cover" />}
         <View style={{ flex: 1, gap: 2 }}>
           <Text size={14} weight="bold" color={t.c.textStrong} numberOfLines={1}>
             {candidate.providerName}
@@ -131,7 +131,7 @@ function ProposeSheet({ project, requirement, providerId, onClose }: { project: 
             Business model
           </Text>
           <ChoiceChips options={PRICING_MODELS.filter((m) => m.id !== 'FREELANCER_MARGIN').map((m) => m.label)} selected={[PRICING_MODELS.find((m) => m.id === model)!.label]} onToggle={(label) => setModel(PRICING_MODELS.find((m) => m.label === label)!.id)} />
-          <Text size={12} color={t.c.subtle}>
+          <Text size={12} color={t.c.muted}>
             {PRICING_MODELS.find((m) => m.id === model)?.blurb}
           </Text>
         </View>
@@ -233,7 +233,7 @@ export function MatchPanel({ project, requirement }: { project: Project; require
         <KButton label={showAll ? 'Show fewer' : `Show all ${candidates.length}`} variant="ghost" size="sm" onPress={() => setShowAll((v) => !v)} />
       )}
       {excluded.length > 0 && (
-        <Text size={12} color={t.c.subtle}>
+        <Text size={12} color={t.c.muted}>
           {excluded.length} provider(s) excluded — {excluded.slice(0, 2).map((e) => `${e.provider.name}: ${e.excluded}`).join('; ')}
         </Text>
       )}

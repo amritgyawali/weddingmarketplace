@@ -1,5 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
-import { Image } from 'expo-image';
+import { Photo } from '@/components/ui/Photo';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
@@ -38,7 +38,7 @@ function BookingCard({ booking }: { booking: Booking }) {
     <View style={[styles.card, shadows.card]}>
       <View style={styles.cardTop}>
         {booking.image ? (
-          <Image source={photos[booking.image]} style={styles.image} contentFit="cover" />
+          <Photo source={photos[booking.image]} style={styles.image} contentFit="cover" />
         ) : (
           <View style={[styles.image, styles.genieIcon]}>
             <Ionicons name="clipboard-outline" size={26} color={colors.textMuted} />
@@ -83,7 +83,7 @@ function BookingCard({ booking }: { booking: Booking }) {
             </Text>
           </View>
         )}
-        <Text size={12} color={colors.textSubtle}>
+        <Text size={12} color={colors.textMuted}>
           Requested {formatShortDate(booking.createdAt)}
         </Text>
       </View>
@@ -129,6 +129,7 @@ export default function BookingsScreen() {
         ListEmptyComponent={
           <EmptyState
             icon="calendar-outline"
+            art="rings"
             title="No bookings yet"
             message="Check availability with venues or send enquiries to vendors — they'll all be tracked here."
             actionLabel="Explore venues"

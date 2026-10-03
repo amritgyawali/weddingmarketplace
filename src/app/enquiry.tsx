@@ -1,5 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
-import { Image } from 'expo-image';
+import { Photo } from '@/components/ui/Photo';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
@@ -120,7 +120,7 @@ export default function EnquiryScreen() {
         <ScrollView contentContainerStyle={styles.body} keyboardShouldPersistTaps="handled">
           {item && (
             <View style={styles.itemCard}>
-              <Image source={photos[item.images[0]]} style={styles.itemImage} contentFit="cover" />
+              <Photo source={photos[item.images[0]]} style={styles.itemImage} contentFit="cover" />
               <View style={{ flex: 1 }}>
                 <Text size={16} weight="semibold" color={colors.heading} numberOfLines={1}>
                   {item.name}

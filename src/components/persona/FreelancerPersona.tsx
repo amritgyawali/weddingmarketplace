@@ -4,7 +4,7 @@
  * and by Profile → Your craft (all together).
  */
 import { Ionicons } from '@expo/vector-icons';
-import { Image } from 'expo-image';
+import { Photo } from '@/components/ui/Photo';
 import { useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 
@@ -55,7 +55,7 @@ export function CraftTiles({ value, onChange }: { value?: CraftId; onChange: (c:
             accessibilityState={{ selected: on }}
             accessibilityLabel={craft.label}
             style={[styles.tile, { width: medium ? '31.5%' : '48%', borderColor: on ? t.c.primary : t.c.border, backgroundColor: t.c.surface }]}>
-            <Image source={photos[craft.image]} style={styles.tileImage} contentFit="cover" />
+            <Photo source={photos[craft.image]} style={styles.tileImage} contentFit="cover" />
             <View style={styles.tileText}>
               <View style={styles.row}>
                 <Text size={14} weight="semibold" color={t.c.textStrong} style={{ flex: 1 }} numberOfLines={1}>

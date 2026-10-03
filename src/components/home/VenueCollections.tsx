@@ -1,4 +1,4 @@
-import { Image } from 'expo-image';
+import { Photo } from '@/components/ui/Photo';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 import { StyleSheet, View } from 'react-native';
@@ -30,7 +30,7 @@ export function VenueCollections({ city }: { city: string }) {
                 accessibilityLabel={`${c.title}, ${c.count} venues`}
                 onPress={() => router.push({ pathname: '/collection/[id]', params: { id: c.id } })}
                 style={styles.card}>
-                <Image source={photos[c.image]} style={StyleSheet.absoluteFill} contentFit="cover" transition={200} />
+                <Photo source={photos[c.image]} style={StyleSheet.absoluteFill} contentFit="cover" transition={200} />
                 <LinearGradient colors={['rgba(37,27,24,0)', 'rgba(37,27,24,0.82)']} style={styles.fade} />
                 <View style={styles.text}>
                   <Text serif size={15} lineHeight={21} color={colors.white} weight="semibold" numberOfLines={2}>

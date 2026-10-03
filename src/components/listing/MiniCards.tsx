@@ -1,5 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
-import { Image } from 'expo-image';
+import { Photo } from '@/components/ui/Photo';
 import { router } from 'expo-router';
 import type { ReactNode } from 'react';
 import { StyleSheet, View } from 'react-native';
@@ -38,7 +38,7 @@ function MiniCard({
     <View style={{ width }}>
       <PressableScale accessibilityLabel={label} onPress={onPress}>
         <View style={[styles.imageWrap, { height: imageHeight }]}>
-          <Image source={photos[image]} style={StyleSheet.absoluteFill} contentFit="cover" transition={200} />
+          <Photo source={photos[image]} style={StyleSheet.absoluteFill} contentFit="cover" transition={200} />
         </View>
         <View style={styles.meta}>{children}</View>
       </PressableScale>

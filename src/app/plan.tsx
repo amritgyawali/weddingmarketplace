@@ -1,5 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
-import { Image } from 'expo-image';
+import { Photo } from '@/components/ui/Photo';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
@@ -340,7 +340,7 @@ export default function PlanWizard() {
                 const on = inspiration.includes(i.image);
                 return (
                   <Pressable key={i.id} onPress={() => setInspiration((cur) => (on ? cur.filter((x) => x !== i.image) : [...cur, i.image]))}>
-                    <Image source={photos[i.image]} style={[styles.inspo, { borderColor: on ? colors.primary : 'transparent' }]} contentFit="cover" />
+                    <Photo source={photos[i.image]} style={[styles.inspo, { borderColor: on ? colors.primary : 'transparent' }]} contentFit="cover" />
                     {on && <Ionicons name="checkmark-circle" size={22} color={colors.primary} style={styles.inspoCheck} />}
                   </Pressable>
                 );

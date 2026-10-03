@@ -4,7 +4,7 @@ import { router } from 'expo-router';
 import { useState } from 'react';
 import { FlatList, Pressable, StyleSheet, View } from 'react-native';
 
-import { Avatar, Card, ChoiceChips, EmptyBlock, Fab, KButton, KField, Segmented } from '@/components/kit';
+import { Avatar, Card, ChoiceChips, EmptyBlock, Fab, KButton, KField, Segmented, StatTile } from '@/components/kit';
 import { ToolScreen, toolStyles } from '@/components/planner/ToolScreen';
 import { Sheet } from '@/components/ui/Sheet';
 import { Text } from '@/components/ui/Text';
@@ -429,17 +429,7 @@ function GuestList({ project, readOnly }: { project: Project; readOnly: boolean 
                 { label: 'Pending', value: `${count('pending') + count('maybe')}`, sub: 'no reply' },
                 { label: 'Declined', value: `${count('no')}`, sub: 'regrets' },
               ].map((s) => (
-                <Card key={s.label} style={toolStyles.stat}>
-                  <Text size={20} weight="semibold" color={t.c.textStrong}>
-                    {s.value}
-                  </Text>
-                  <Text size={12} weight="semibold" color={t.c.textStrong}>
-                    {s.label}
-                  </Text>
-                  <Text size={10} color={t.c.muted}>
-                    {s.sub}
-                  </Text>
-                </Card>
+                <StatTile key={s.label} label={s.label} value={s.value} sub={s.sub} />
               ))}
             </View>
             {heads > capacity && (
@@ -477,6 +467,7 @@ function GuestList({ project, readOnly }: { project: Project; readOnly: boolean 
         ListEmptyComponent={
           <EmptyBlock
             icon="people-outline"
+            art={guests.length ? undefined : 'kalash'}
             title={guests.length ? 'No guests match' : 'Start your guest list'}
             message={guests.length ? 'Try another filter.' : 'Add guests one by one, import your phone contacts or upload a CSV from Excel/Google Sheets.'}
           />

@@ -52,7 +52,7 @@ function LeadCard({ project }: { project: Project }) {
         <Text size={11} color={project.coordinatorName ? t.c.muted : t.c.danger}>
           {project.coordinatorName ?? 'Unassigned'}
         </Text>
-        <Text size={11} color={t.c.subtle}>
+        <Text size={11} color={t.c.muted}>
           {STATUS_LABEL[project.status]} · {timeAgo(project.statusHistory[project.statusHistory.length - 1]?.at ?? project.createdAt)}
         </Text>
       </View>
@@ -104,7 +104,7 @@ function LeadsPipeline() {
                   <LeadCard key={p.id} project={p} />
                 ))}
                 {!items.length && (
-                  <Text size={12} color={t.c.subtle} align="center" style={{ paddingVertical: 16 }}>
+                  <Text size={12} color={t.c.muted} align="center" style={{ paddingVertical: 16 }}>
                     Empty
                   </Text>
                 )}

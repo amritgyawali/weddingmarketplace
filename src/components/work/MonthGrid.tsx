@@ -61,7 +61,7 @@ export function MonthGrid({ marks, selected, onSelect, initial }: { marks: Recor
                   <Text size={14} lineHeight={17} weight={on || dots.length ? 'bold' : 'regular'} color={on ? t.c.onPrimary : t.c.textStrong} raw>
                     {n(cell.day)}
                   </Text>
-                  <Text size={8} lineHeight={10} color={on ? t.c.onPrimary : t.c.subtle} raw>
+                  <Text size={8} lineHeight={10} color={on ? t.c.onPrimary : t.c.muted} raw>
                     {cell.alt}
                   </Text>
                   <View style={styles.dots}>

@@ -1,5 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
-import { Image } from 'expo-image';
+import { Photo } from '@/components/ui/Photo';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
@@ -104,7 +104,7 @@ export default function CompareScreen() {
                 <View style={styles.labelCol} />
                 {chosen.map((p) => (
                   <View key={p.id} style={[styles.col, { gap: 6 }]}>
-                    <Image source={photos[p.image]} style={styles.image} contentFit="cover" />
+                    <Photo source={photos[p.image]} style={styles.image} contentFit="cover" />
                     <Text size={14} weight="bold" color={colors.textStrong} numberOfLines={2}>
                       {p.name}
                     </Text>

@@ -169,7 +169,7 @@ export function JantiPlanner() {
         subtitle={(e) => [`${e.qty ?? 0} seats`, e.fields?.driver, e.fields?.phone, e.note].filter(Boolean).join(' · ')}
         emptyMessage="Add each bus, micro or car you have booked so you know exactly how many seats are covered."
       />
-      <Text size={12} color={t.c.subtle}>
+      <Text size={12} color={t.c.muted}>
         Tip: plan to leave 45 minutes earlier than you think. Panche baja, traffic and the swagat always take longer.
       </Text>
     </ToolPage>

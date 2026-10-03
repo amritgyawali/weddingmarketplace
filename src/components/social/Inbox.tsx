@@ -129,7 +129,7 @@ export function SocialInbox({ onOpen, selectedId }: { onOpen: (id: string) => vo
                       {th.contactName}
                     </Text>
                     {th.starred && <Ionicons name="star" size={13} color={t.c.warning} />}
-                    <Text size={12} color={th.unread ? t.c.primary : t.c.subtle}>
+                    <Text size={12} color={th.unread ? t.c.primary : t.c.muted}>
                       {timeAgo(th.lastAt)}
                     </Text>
                   </View>
@@ -303,7 +303,7 @@ export function SocialConversation({ threadId }: { threadId: string }) {
                     Auto-reply ·
                   </Text>
                 )}
-                <Text size={11} color={t.c.subtle}>
+                <Text size={11} color={t.c.muted}>
                   {whenLabel(m.at)}
                 </Text>
                 {mine && <DeliveryTicks status={m.status} />}
@@ -581,7 +581,7 @@ function LeadForm({ onClose, thread, texts }: { onClose: () => void; thread: Soc
           </Text>
           <Pressable onPress={() => setPickDate(!pickDate)} accessibilityRole="button" style={[styles.dateBtn, { borderColor: t.c.border }]}>
             <Ionicons name="calendar-outline" size={18} color={t.c.muted} />
-            <Text size={15} color={date ? t.c.textStrong : t.c.subtle} style={{ flex: 1 }}>
+            <Text size={15} color={date ? t.c.textStrong : t.c.muted} style={{ flex: 1 }}>
               {date ? `${formatLongDate(date)} · ${formatDateAlt(date)}` : 'Pick a date'}
             </Text>
           </Pressable>

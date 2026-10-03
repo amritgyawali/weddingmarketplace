@@ -4,7 +4,7 @@
  * sign-up (one step each) and by Business → Your services (all together).
  */
 import { Ionicons } from '@expo/vector-icons';
-import { Image } from 'expo-image';
+import { Photo } from '@/components/ui/Photo';
 import { Pressable, StyleSheet, View } from 'react-native';
 
 import { ChoiceChips, KField } from '@/components/kit';
@@ -58,7 +58,7 @@ export function TradeTiles({ value, onChange }: { value?: TradeId; onChange: (t:
             accessibilityState={{ selected: on }}
             accessibilityLabel={trade.label}
             style={[styles.tile, { width: medium ? '31.5%' : '48%', borderColor: on ? t.c.primary : t.c.border, backgroundColor: t.c.surface }]}>
-            <Image source={photos[trade.image]} style={styles.tileImage} contentFit="cover" />
+            <Photo source={photos[trade.image]} style={styles.tileImage} contentFit="cover" />
             <View style={styles.tileText}>
               <View style={styles.row}>
                 <Text size={14} weight="semibold" color={t.c.textStrong} style={{ flex: 1 }} numberOfLines={1}>

@@ -1,8 +1,8 @@
 import { useEffect } from 'react';
 import { Pressable, StyleSheet } from 'react-native';
-import Animated, { interpolateColor, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
+import Animated, { interpolateColor, useAnimatedStyle, useReducedMotion, useSharedValue, withTiming } from 'react-native-reanimated';
 
-import { shadow } from '@/constants/theme';
+import { colors, shadow } from '@/constants/theme';
 import { useRoleTheme } from '@/theme/RoleTheme';
 
 import { triggerHaptic } from './PressableScale';
@@ -23,12 +23,13 @@ export function Toggle({
 }) {
   const t = useRoleTheme();
   const on = t.c.primary;
-  const off = t.dark ? t.c.surfaceAlt : t.c.border;
+  const off = t.dark ? t.c.surfaceAlt : t.c.borderStrong;
   const progress = useSharedValue(value ? 1 : 0);
 
+  const reduced = useReducedMotion();
   useEffect(() => {
-    progress.set(withTiming(value ? 1 : 0, { duration: 180 }));
-  }, [value, progress]);
+    progress.set(withTiming(value ? 1 : 0, { duration: reduced ? 0 : 180 }));
+  }, [value, progress, reduced]);
 
   const trackStyle = useAnimatedStyle(() => ({
     backgroundColor: interpolateColor(progress.get(), [0, 1], [off, on]),
@@ -60,7 +61,7 @@ const styles = StyleSheet.create({
     width: KNOB,
     height: KNOB,
     borderRadius: KNOB / 2,
-    backgroundColor: '#FFFFFF',
-    ...shadow(2, 0.15, 3, 2, '#000000'),
+    backgroundColor: colors.white,
+    ...shadow(2, 0.15, 3, 2, colors.black),
   },
 });

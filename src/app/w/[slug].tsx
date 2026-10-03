@@ -1,5 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
-import { Image } from 'expo-image';
+import { Photo } from '@/components/ui/Photo';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useState, type ReactNode } from 'react';
 import { Linking, Pressable, StyleSheet, View } from 'react-native';
@@ -104,7 +104,7 @@ export default function WeddingSite() {
     <View style={{ flex: 1, backgroundColor: theme.bg }}>
       <ScrollView contentContainerStyle={{ paddingBottom: insets.bottom + 40 }}>
         <View>
-          <Image source={photos[site.cover]} style={{ width: '100%', height: wide ? 460 : 380 }} contentFit="cover" />
+          <Photo source={photos[site.cover]} style={{ width: '100%', height: wide ? 460 : 380 }} contentFit="cover" />
           <View style={[styles.veil, { paddingTop: insets.top + 12 }]}>
             {preview ? (
               <Pressable onPress={() => router.back()} style={styles.previewBar}>
@@ -216,7 +216,7 @@ export default function WeddingSite() {
             <Section theme={theme} serif={serif} accent={site.accent} title="Gallery">
               <View style={styles.gallery}>
                 {site.gallery.map((g) => (
-                  <Image key={g} source={photos[g]} style={[styles.photo, { width: wide ? '32%' : '48.5%' }]} contentFit="cover" />
+                  <Photo key={g} source={photos[g]} style={[styles.photo, { width: wide ? '32%' : '48.5%' }]} contentFit="cover" />
                 ))}
               </View>
             </Section>
@@ -248,7 +248,7 @@ export default function WeddingSite() {
             </Section>
           )}
 
-          <Text size={12} color={colors.textSubtle} align="center">
+          <Text size={12} color={colors.textMuted} align="center">
             Made on Vivah
           </Text>
         </View>

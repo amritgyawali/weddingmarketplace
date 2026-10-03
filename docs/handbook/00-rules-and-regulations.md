@@ -64,7 +64,7 @@ These are the binding rules of the Vivah codebase. Each has an id, the rule, and
 
 | Id | Rule | Why |
 |---|---|---|
-| R-UI-1 | Colours come from tokens (`src/constants/theme.ts`, `src/theme/roles.ts`). MUST NOT hard-code a hex in a screen; add a token instead. | The palette changed once already (2 Oct 2026); tokens made it a one-file change. |
+| R-UI-1 | Colours come from tokens (`src/constants/theme.ts`, `src/theme/roles.ts`). MUST NOT hard-code a hex in a screen; add a token instead. ESLint enforces this in `src/app` and `src/components` (allow-list in `eslint.config.js`). | The palette changed once already (2 Oct 2026); tokens made it a one-file change. |
 | R-UI-2 | No gradients except dark scrims over photos; no glows; no coloured shadows. Shadows only on things that float (sheets, toasts, floating filter bar). | The owner rejected the "AI template" look. |
 | R-UI-3 | Fonts: Mukta for all UI, Martel (`<Text serif>`) for display lines only. MUST NOT add another font family. | Both have Devanagari, so Nepali sets in the same voice. |
 | R-UI-4 | Cards: 10 px radius, 1 px border, no shadow. Buttons 8 px. Chips 4–6 px. | Consistency; see [04-ui-ux.md](04-ui-ux.md). |

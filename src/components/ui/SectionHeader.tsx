@@ -23,7 +23,7 @@ export function SectionHeader({
   return (
     <View style={[styles.row, inset && { paddingHorizontal: GUTTER }]}>
       <View style={styles.titleRow}>
-        <Text serif weight="bold" size={18} color={colors.heading} numberOfLines={1} style={{ flexShrink: 1 }}>
+        <Text serif weight="bold" size={18} color={colors.heading} numberOfLines={1} style={{ flexShrink: 1 }} accessibilityRole="header">
           {title}
         </Text>
         {badge}

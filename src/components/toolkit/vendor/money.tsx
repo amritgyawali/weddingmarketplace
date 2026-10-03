@@ -215,7 +215,7 @@ export function PriceCalculator() {
             <NumberField label="Last-minute discount %" value={Number(s.lastMinute)} onChange={(n) => set({ lastMinute: Math.min(90, n) })} />
           </Col>
         </Cols>
-        <Text size={12} color={t.c.subtle}>
+        <Text size={12} color={t.c.muted}>
           Peak season is Mangsir, Magh, Falgun and Baisakh. Last-minute applies to dates within 30 days.
         </Text>
       </Card>

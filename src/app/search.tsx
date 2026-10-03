@@ -1,5 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
-import { Image } from 'expo-image';
+import { Photo } from '@/components/ui/Photo';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { ActivityIndicator, Pressable, SectionList, StyleSheet, TextInput, View } from 'react-native';
@@ -71,7 +71,7 @@ function ResultRow({ result }: { result: SearchResult }) {
       accessibilityRole="button"
       style={({ pressed }) => [styles.row, pressed && { backgroundColor: colors.bgSoft }]}>
       {image ? (
-        <Image source={image} style={styles.thumb} contentFit="cover" />
+        <Photo source={image} style={styles.thumb} contentFit="cover" />
       ) : (
         <View style={[styles.thumb, styles.catThumb]}>
           <Ionicons name="grid-outline" size={20} color={colors.primary} />

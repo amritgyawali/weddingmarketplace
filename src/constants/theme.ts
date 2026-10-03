@@ -20,25 +20,37 @@ export const colors = {
   primaryTint: '#F7EEE8',
   /** Wine / oxblood: luxury sections and dark bands. */
   wine: '#3D1018',
+  /** Deeper wine: the staff console's pressed and dark states. */
+  wineDeep: '#260A0F',
+  /** Soft wine tint: the staff console's selected and soft fills. */
+  wineSoft: '#EDE0DC',
+  /** Secondary text on wine bands (8.7 : 1). */
+  onWineMuted: 'rgba(255,252,248,0.72)',
 
   // Metallic + romantic accents
   gold: '#C8A46B',
-  /** Champagne deepened enough to read as text on ivory. */
-  goldDeep: '#8C6A33',
+  /** Champagne deepened enough to read as text on ivory and pearl (5.0 : 1 on pearl). */
+  goldDeep: '#7F5F2C',
   goldSoft: '#F3E7D2',
   /** Champagne at low opacity: hairlines on wine and on ivory. */
   goldLine: 'rgba(200,164,107,0.45)',
+  /** Champagne at very low opacity: progress tracks on wine. */
+  goldTrack: 'rgba(200,164,107,0.22)',
   rose: '#C98991',
   roseSoft: '#F6E6E5',
+  /** Dusty rose deepened for small marks (freelancer role mark, avatar tone). */
+  roseDeep: '#8E4F58',
 
   // Espresso ink
   heading: '#251B18',
   text: '#3B2E29',
   textStrong: '#251B18',
   textBody: '#54463F',
-  textMuted: '#796B64',
-  textSubtle: '#A39388',
-  placeholder: '#A99A90',
+  /** Secondary text: 5.6 : 1 on ivory, 5.0 : 1 on pearl. */
+  textMuted: '#6F625B',
+  /** Icons, disabled states and large display numbers only (3.7 : 1); never small text. */
+  textSubtle: '#8F7F74',
+  placeholder: '#8E7F75',
 
   /** Soft white: cards, and text on dark backgrounds. */
   white: '#FFFCF8',
@@ -50,12 +62,15 @@ export const colors = {
   bgMuted: '#EDE1D3',
   bgChip: '#EDE1D3',
 
+  /** Card and section borders (decorative). */
   border: '#E5D6C5',
+  /** Control boundaries: inputs, toggles, outline buttons (3.2 : 1, WCAG 1.4.11). */
+  borderStrong: '#9F8A75',
   divider: '#EFE3D5',
   hairline: '#E9DCCB',
 
   stepInactive: '#BFAFA2',
-  badgeNew: '#8C6A33',
+  badgeNew: '#7F5F2C',
   whatsapp: '#1F9D55',
   call: '#3D6B4F',
   crown: '#C8A46B',
@@ -63,7 +78,20 @@ export const colors = {
   marigold: '#C8A46B',
   success: '#3D6B4F',
   danger: '#B42318',
-  warning: '#9A6412',
+  /** Amber ink: 5.0 : 1 even on its own 10% tint (status pills). */
+  warning: '#8A5A10',
+  info: '#3E5C7E',
+  /** Soft success fill (seated tables, success banners). */
+  successSoft: '#E6F0E8',
+  /** Soft danger fill behind a destructive icon. */
+  dangerSoft: '#FBE9E7',
+  /** Dark surfaces for warning and error toasts. */
+  warningDeep: '#3A2E12',
+  dangerDeep: '#4A1515',
+  /** Status accents that read on dark toasts and wine bands. */
+  successOnDark: '#7FC49B',
+  warningOnDark: '#E0B04C',
+  dangerOnDark: '#F09A90',
 
   toolBlue: '#F5ECE2',
   toolWarm: '#F5ECE2',
@@ -97,6 +125,8 @@ export const gradients = {
   collectionDestination: ['rgba(0,0,0,0)', 'rgba(0,0,0,0.7)'] as const,
   collectionHeritage: ['rgba(0,0,0,0)', 'rgba(0,0,0,0.7)'] as const,
   collectionGarden: ['rgba(0,0,0,0)', 'rgba(0,0,0,0.7)'] as const,
+  /** Wine-tinted scrim under captions on photo cards (never grey). */
+  photoCaption: ['rgba(37,14,18,0)', 'rgba(37,14,18,0.35)', 'rgba(37,14,18,0.86)'] as const,
 };
 
 /**
@@ -192,6 +222,19 @@ export const type = {
   caption: { fontFamily: fonts.medium, fontSize: 12, lineHeight: 16 },
   micro: { fontFamily: fonts.semibold, fontSize: 11, lineHeight: 14 },
 } satisfies Record<string, TextStyle>;
+
+/** Figures that line up in columns (money, counts, countdowns). */
+export const tabular: TextStyle = { fontVariant: ['tabular-nums'] };
+
+/** Icon sizes: snap every Ionicon to one of these. */
+export const iconSize = { xs: 14, sm: 16, md: 20, lg: 24, xl: 28 } as const;
+
+/**
+ * Motion timing (ms). One or two things move per screen, always with the
+ * ease-out curve in `hooks/useMotion`, and nothing moves when the device asks
+ * for reduced motion.
+ */
+export const motion = { fast: 150, base: 240, slow: 360, stagger: 45 } as const;
 
 export const hitSlop = { top: 10, bottom: 10, left: 10, right: 10 };
 

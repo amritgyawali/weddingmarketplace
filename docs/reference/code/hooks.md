@@ -14,6 +14,7 @@ Every exported symbol in `src/hooks/`, file by file. The guide that explains how
 - [`useFeatures.ts`](#usefeaturests) (2 exports)
 - [`useHydrated.ts`](#usehydratedts) (1 exports)
 - [`useLayout.ts`](#uselayoutts) (1 exports)
+- [`useMotion.ts`](#usemotionts) (2 exports)
 - [`useOpenMyWedding.ts`](#useopenmyweddingts) (2 exports)
 - [`useShake.ts`](#useshakets) (1 exports)
 - [`useTelemetry.ts`](#usetelemetryts) (1 exports)
@@ -325,6 +326,33 @@ useLayout()
 
 Breakpoints for the web-ready consoles. Phones get one column; tablets and
 desktop browsers (expo start --web) get side navigation and grids.
+
+## useMotion.ts
+
+Source: [src/hooks/useMotion.ts](../../../src/hooks/useMotion.ts)
+
+### `easeOut`
+
+*const* · [src/hooks/useMotion.ts:6](../../../src/hooks/useMotion.ts#L6)
+
+```ts
+easeOut= Easing.bezier(0.2, 0, 0, 1)
+```
+
+The one ease-out curve every animation uses (quick start, soft landing).
+
+### `useMotion`
+
+*hook* · [src/hooks/useMotion.ts:14](../../../src/hooks/useMotion.ts#L14)
+
+```ts
+useMotion()
+```
+
+Motion that respects the device's Reduce Motion setting. `enter(i)` is a
+fade-and-rise for the i-th section of a screen (staggered, capped so long
+lists don't wait), `fade` a plain fade; both are `undefined` when the user
+asked for less motion, so the content simply appears.
 
 ## useOpenMyWedding.ts
 

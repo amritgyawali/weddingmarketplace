@@ -41,7 +41,7 @@ export function Button({
   const tint = color ?? colors.primary;
   const palette: Record<Variant, { bg: string; fg: string; border?: string }> = {
     primary: { bg: tint, fg: colors.white },
-    outline: { bg: colors.white, fg: colors.heading, border: colors.border },
+    outline: { bg: colors.white, fg: colors.heading, border: colors.borderStrong },
     white: { bg: colors.white, fg: colors.heading },
     ghost: { bg: 'transparent', fg: tint },
     soft: { bg: colors.primarySoft, fg: tint },
