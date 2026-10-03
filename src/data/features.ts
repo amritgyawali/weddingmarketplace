@@ -23,7 +23,8 @@ export const FEATURES: FeatureDef[] = [
   { id: 'tab.customer.venues', label: 'Venues tab', role: 'customer', group: 'Tabs' },
   { id: 'tab.customer.vendors', label: 'Vendors tab', role: 'customer', group: 'Tabs' },
   { id: 'tab.customer.ideas', label: 'Ideas tab', role: 'customer', group: 'Tabs' },
-  { id: 'tab.customer.genie', label: 'Planner tab', role: 'customer', group: 'Tabs', hint: 'Paid planner packages' },
+  { id: 'tab.customer.wedding', label: 'My wedding tab', role: 'customer', group: 'Tabs', hint: "The couple's plan, quotes and payments" },
+  { id: 'tab.customer.genie', label: 'Planner packages', role: 'customer', group: 'Tabs', hint: 'Paid planner packages: the home banner and the menu entry' },
   { id: 'home.categories', label: 'Category shortcuts', role: 'customer', group: 'Home' },
   { id: 'home.planning', label: 'Your planning grid', role: 'customer', group: 'Home' },
   { id: 'home.venues', label: 'Venues carousel', role: 'customer', group: 'Home' },
@@ -38,6 +39,7 @@ export const FEATURES: FeatureDef[] = [
   { id: 'couple.messages', label: 'Messages', role: 'customer', group: 'Features' },
   { id: 'couple.tools', label: 'Planning tools hub', role: 'customer', group: 'Features' },
   { id: 'couple.celebrate', label: 'Plan another celebration', role: 'customer', group: 'Features' },
+  { id: 'couple.tour', label: 'First-run app tour', role: 'customer', group: 'Features', hint: 'Small cards that explain search, the tabs, messages and the menu on first open' },
   // Business app
   { id: 'tab.vendor.leads', label: 'Leads tab', role: 'vendor', group: 'Tabs' },
   { id: 'tab.vendor.bookings', label: 'Bookings tab', role: 'vendor', group: 'Tabs' },

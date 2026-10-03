@@ -17,7 +17,8 @@ export default function GenieTab() {
 
   return (
     <View style={styles.root}>
-      <ScreenHeader title={BRAND.genieService} back={false} />
+      {/* Opened from the home banner or the menu, not the tab bar: give it a way home. */}
+      <ScreenHeader title={BRAND.genieService} onBack={() => (router.canGoBack() ? router.back() : router.navigate('/'))} />
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 90 }}>
         <GenieHero />

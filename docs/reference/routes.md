@@ -35,7 +35,7 @@ Every file in `src/app/` is a route (Expo Router). Layouts (`_layout.tsx`) defin
 | `/info/[slug]` | screen | `InfoScreen` | [info/[slug].tsx](../../src/app/info/%5Bslug%5D.tsx) |  |
 | `/invitations` | screen | `InvitationsScreen` | [invitations.tsx](../../src/app/invitations.tsx) | Invitation studio: card designs, bilingual wording, printable PDF, QR to the website and per-guest RSVP links. |
 | `/join-wedding` | screen | `JoinWeddingScreen` | [join-wedding.tsx](../../src/app/join-wedding.tsx) | Invite codes let family & friends join a couple's wedding planning space. |
-| `/my-wedding` | screen | `MyWedding` | [my-wedding.tsx](../../src/app/my-wedding.tsx) | The couple's single workspace for the whole wedding project. |
+| `/my-wedding` | screen | `MyWedding` | [my-wedding.tsx](../../src/app/my-wedding.tsx) | `/my-wedding`: the stack version of the "My wedding" tab, opened by deep links and notifications. |
 | `/notifications` | screen | `NotificationsScreen` | [notifications.tsx](../../src/app/notifications.tsx) |  |
 | `/pay/esewa` | screen | `EsewaCheckoutScreen` | [pay/esewa.tsx](../../src/app/pay/esewa.tsx) | eSewa only accepts a form POST, which a phone can't open as a link. The app opens this web page instead, with the form payment-initiate signed; the page posts it straight on to eSewa. |
 | `/pay/result` | screen | `PaymentResultScreen` | [pay/result.tsx](../../src/app/pay/result.tsx) | Where Khalti and eSewa send the couple back to (through payment-verify, which has already asked the gateway). The status in the link is only a hint: a signed-in couple's attempt is checked again here. |
@@ -59,6 +59,7 @@ Every file in `src/app/` is a route (Expo Router). Layouts (`_layout.tsx`) defin
 | `/venue/[id]` | screen | `VenueDetailScreen` | [venue/[id].tsx](../../src/app/venue/%5Bid%5D.tsx) |  |
 | `/venues` (tabs) | screen | `VenuesTab` | [(tabs)/venues.tsx](../../src/app/%28tabs%29/venues.tsx) |  |
 | `/website` | screen | `WebsiteScreen` | [website.tsx](../../src/app/website.tsx) | Wedding website builder: templates, story, schedule, travel, FAQ, registry, RSVP questions, privacy and publishing. |
+| `/wedding` (tabs) | screen | `WeddingTab` | [(tabs)/wedding.tsx](../../src/app/%28tabs%29/wedding.tsx) | "My wedding" tab: the couple's plan, quotes, payments and team, one tap from anywhere. |
 | `/write-review` | screen | `WriteReviewScreen` | [write-review.tsx](../../src/app/write-review.tsx) | Category-specific reviews tied to real bookings (verified badge), with photos and moderation. |
 | `+not-found` | special | `NotFoundScreen` | [+not-found.tsx](../../src/app/+not-found.tsx) |  |
 

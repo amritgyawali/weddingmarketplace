@@ -4,7 +4,7 @@
 
 Exported symbols that have no JSDoc yet. The weekly documentation pass (see [the maintenance guide](../handbook/17-documentation-maintenance.md)) works through this list; whoever touches a file should document its exports too.
 
-**630 of 1293 exports documented (49%).** Files without a header comment: 300 of 391.
+**640 of 1304 exports documented (49%).** Files without a header comment: 307 of 398.
 
 | File | Undocumented exports |
 |---|---|
@@ -163,6 +163,7 @@ Exported symbols that have no JSDoc yet. The weekly documentation pass (see [the
 | [src/constants/env.ts](../../src/constants/env.ts) | `ENV` |
 | [src/data/skills.ts](../../src/data/skills.ts) | `skillIcon` |
 | [src/data/toolkitSeed.ts](../../src/data/toolkitSeed.ts) | `buildToolkitSeed` |
+| [src/data/tour.ts](../../src/data/tour.ts) | `COUPLE_TOUR` |
 | [src/hooks/useDebounce.ts](../../src/hooks/useDebounce.ts) | `useDebounce` |
 | [src/i18n/ne/index.ts](../../src/i18n/ne/index.ts) | `NE` |
 | [src/services/auth.ts](../../src/services/auth.ts) | `logout` |

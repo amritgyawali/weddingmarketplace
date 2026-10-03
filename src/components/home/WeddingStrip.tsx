@@ -4,6 +4,7 @@ import { Pressable, StyleSheet, View } from 'react-native';
 
 import { Text } from '@/components/ui/Text';
 import { colors, GUTTER } from '@/constants/theme';
+import { useOpenMyWedding } from '@/hooks/useOpenMyWedding';
 import { useCustomerWorkspace } from '@/hooks/useWorkspace';
 import { nextBestAction, planningProgress } from '@/services/planner';
 import { useAccount } from '@/store/useSession';
@@ -17,6 +18,7 @@ import { daysUntil, formatDateAlt, formatLongDate } from '@/utils/format';
 export function WeddingStrip() {
   const account = useAccount();
   const { project, quotes } = useCustomerWorkspace(account.id);
+  const openMyWedding = useOpenMyWedding();
 
   if (!project) {
     return (
@@ -46,7 +48,7 @@ export function WeddingStrip() {
   return (
     <View style={styles.wrap}>
       <Pressable
-        onPress={() => router.push('/my-wedding')}
+        onPress={openMyWedding}
         accessibilityRole="button"
         accessibilityLabel={`${project.title}, ${days} days to go. Open your wedding`}
         style={({ pressed }) => [styles.band, pressed && { opacity: 0.92 }]}>

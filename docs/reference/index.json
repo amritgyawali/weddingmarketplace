@@ -552,7 +552,7 @@
    "kind": "screen",
    "file": "src/app/my-wedding.tsx",
    "component": "MyWedding",
-   "doc": "The couple's single workspace for the whole wedding project."
+   "doc": "`/my-wedding`: the stack version of the \"My wedding\" tab, opened by deep links and notifications."
   },
   {
    "path": "/notifications",
@@ -1038,6 +1038,13 @@
    "doc": "Wedding website builder: templates, story, schedule, travel, FAQ, registry, RSVP questions, privacy and publishing."
   },
   {
+   "path": "/wedding",
+   "kind": "screen",
+   "file": "src/app/(tabs)/wedding.tsx",
+   "component": "WeddingTab",
+   "doc": "\"My wedding\" tab: the couple's plan, quotes, payments and team, one tap from anywhere."
+  },
+  {
    "path": "/welcome",
    "kind": "layout",
    "file": "src/app/welcome/_layout.tsx",
@@ -1095,7 +1102,7 @@
     {
      "name": "TabsLayout",
      "kind": "component",
-     "line": 7,
+     "line": 9,
      "signature": "()",
      "doc": ""
     }
@@ -1134,7 +1141,7 @@
     {
      "name": "ForYouScreen",
      "kind": "component",
-     "line": 82,
+     "line": 84,
      "signature": "()",
      "doc": "The couple's home. It follows the active celebration: a pasni or a\nbirthday shows its own services and checklist, and the wedding-only\nsections (collections, bridal makeup, real weddings, planner packages)\nstay with weddings. A super admin can switch any section off."
     }
@@ -1163,6 +1170,19 @@
      "line": 7,
      "signature": "()",
      "doc": ""
+    }
+   ]
+  },
+  {
+   "file": "src/app/(tabs)/wedding.tsx",
+   "doc": "",
+   "exports": [
+    {
+     "name": "WeddingTab",
+     "kind": "component",
+     "line": 4,
+     "signature": "()",
+     "doc": "\"My wedding\" tab: the couple's plan, quotes, payments and team, one tap from anywhere."
     }
    ]
   },
@@ -2155,9 +2175,9 @@
     {
      "name": "MyWedding",
      "kind": "component",
-     "line": 479,
+     "line": 4,
      "signature": "()",
-     "doc": "The couple's single workspace for the whole wedding project."
+     "doc": "`/my-wedding`: the stack version of the \"My wedding\" tab, opened by deep links and notifications."
     }
    ]
   },
@@ -2805,7 +2825,7 @@
     {
      "name": "ProfileMenuScreen",
      "kind": "component",
-     "line": 32,
+     "line": 35,
      "signature": "()",
      "doc": ""
     }
@@ -4524,9 +4544,22 @@
     {
      "name": "PlanningTools",
      "kind": "component",
-     "line": 34,
+     "line": 35,
      "signature": "()",
      "doc": "Two-column grid of the couple's planning tools, each with a live count."
+    }
+   ]
+  },
+  {
+   "file": "src/components/home/SearchPrompt.tsx",
+   "doc": "",
+   "exports": [
+    {
+     "name": "SearchPrompt",
+     "kind": "component",
+     "line": 10,
+     "signature": "()",
+     "doc": "A search field at the top of home that opens the search screen: easier to find than an icon."
     }
    ]
   },
@@ -4550,7 +4583,7 @@
     {
      "name": "WeddingStrip",
      "kind": "component",
-     "line": 17,
+     "line": 18,
      "signature": "()",
      "doc": "Top of the couple's home: a wine \"luxury section\" with their names, the\ndate in both calendars and the countdown in champagne, then the one thing\nto do next. Without a plan it invites them to start one."
     }
@@ -4977,9 +5010,9 @@
     {
      "name": "TabBar",
      "kind": "component",
-     "line": 32,
+     "line": 35,
      "signature": "({ state, navigation }: BottomTabBarProps)",
-     "doc": "Couple-app bottom bar: outline icons, filled + crimson when active, short\nsentence-case labels. Follows the celebration (a pasni has no wedding ideas\nor planner packages) and the super admin's feature switches."
+     "doc": "Couple-app bottom bar: outline icons, filled + crimson when active, short\nsentence-case labels. Browse (venues, vendors, ideas) on the left, the\ncouple's own plan on the right. Follows the celebration (a pasni has no\nwedding ideas and says \"My plan\") and the super admin's feature switches.\nRoutes without an entry in `TABS` (planner packages) stay reachable by link."
     }
    ]
   },
@@ -6861,6 +6894,33 @@
    ]
   },
   {
+   "file": "src/components/tour/AppTour.tsx",
+   "doc": "",
+   "exports": [
+    {
+     "name": "TourTarget",
+     "kind": "component",
+     "line": 35,
+     "signature": "({ id, style, children }: { id: string; style?: StyleProp<ViewStyle>; children: ReactNode })",
+     "doc": "Marks an element the tour can point at. Renders a plain wrapper view."
+    },
+    {
+     "name": "useCoupleTourOnFirstVisit",
+     "kind": "hook",
+     "line": 51,
+     "signature": "()",
+     "doc": "Starts the couple's tour the first time the screen that calls this is shown."
+    },
+    {
+     "name": "CoupleTour",
+     "kind": "component",
+     "line": 79,
+     "signature": "()",
+     "doc": "The couple's first-run tour: a dimmed screen with a window around one\nfeature and a small card that says what it does. Next, back and skip;\nthe last card offers to start a plan. Mounted once over the couple tabs."
+    }
+   ]
+  },
+  {
    "file": "src/components/ui/AppBanners.tsx",
    "doc": "",
    "exports": [
@@ -7665,6 +7725,19 @@
    ]
   },
   {
+   "file": "src/components/wedding/MyWeddingScreen.tsx",
+   "doc": "",
+   "exports": [
+    {
+     "name": "MyWeddingScreen",
+     "kind": "component",
+     "line": 484,
+     "signature": "({ inTab }: { inTab?: boolean })",
+     "doc": "The couple's single workspace for the whole wedding project. It is both the\n\"My wedding\" tab (`inTab`: no back button, the tab bar sits below) and the\n`/my-wedding` stack screen that deep links and notifications open."
+    }
+   ]
+  },
+  {
    "file": "src/components/wedding/WeddingParts.tsx",
    "doc": "",
    "exports": [
@@ -7686,55 +7759,55 @@
      "name": "WeddingHero",
      "kind": "component",
      "line": 35,
-     "signature": "({ project, shared, onBack, actions, }: { project: Project; shared?: boolean; onBack: () => void; actions?: { icon: 'calendar-outline' | 'globe-outline' | 'share-outline'; label: string; onPress: () => void }[]; })",
+     "signature": "({ project, shared, onBack, actions, }: { project: Project; shared?: boolean; /** Omit when the screen is a tab: there is nowhere to go back to. */ onBack?: () => void; actions?: { icon: 'calendar-outline' | 'globe-outli…)",
      "doc": "Full-bleed photo header with the couple's names set over a dark scrim."
     },
     {
      "name": "ProgressRing",
      "kind": "component",
-     "line": 83,
+     "line": 84,
      "signature": "({ value, size = 68, stroke = 6, children }: { value: number; size?: number; stroke?: number; children?: ReactNode })",
      "doc": "Circular progress; animates to its value on mount and on change."
     },
     {
      "name": "CountdownCard",
      "kind": "component",
-     "line": 126,
+     "line": 127,
      "signature": "({ project, onSetDate }: { project: Project; onSetDate: () => void })",
      "doc": "Countdown, overall progress and the four numbers couples check most."
     },
     {
      "name": "Section",
      "kind": "component",
-     "line": 190,
+     "line": 191,
      "signature": "({ title, action, onAction, children }: { title: string; action?: string; onAction?: () => void; children: ReactNode })",
      "doc": "Section heading with an optional text action on the right."
     },
     {
      "name": "FunctionsStrip",
      "kind": "component",
-     "line": 211,
+     "line": 212,
      "signature": "({ project, onOpen }: { project: Project; onOpen: () => void })",
      "doc": "Horizontal run of the wedding functions, next one highlighted."
     },
     {
      "name": "ServicesSummary",
      "kind": "component",
-     "line": 271,
+     "line": 272,
      "signature": "({ project, onOpen, limit = 5 }: { project: Project; onOpen: () => void; limit?: number })",
      "doc": "Booked / in progress / searching, as one bar plus the first few services."
     },
     {
      "name": "MoneyCard",
      "kind": "component",
-     "line": 345,
+     "line": 346,
      "signature": "({ project, onOpen }: { project: Project; onOpen: () => void })",
      "doc": "Paid vs. total and the next instalment; the budget before a quotation exists."
     },
     {
      "name": "PeopleRow",
      "kind": "component",
-     "line": 404,
+     "line": 405,
      "signature": "({ project, onOpen }: { project: Project; onOpen: () => void })",
      "doc": "The couple, family collaborators and an invite affordance."
     }
@@ -9087,35 +9160,35 @@
     {
      "name": "FEATURE_BY_ID",
      "kind": "const",
-     "line": 65,
+     "line": 67,
      "signature": ": Record<string, FeatureDef>",
      "doc": ""
     },
     {
      "name": "toolFeature",
      "kind": "function",
-     "line": 67,
+     "line": 69,
      "signature": "(toolId: string)",
      "doc": ""
     },
     {
      "name": "serviceFeature",
      "kind": "function",
-     "line": 68,
+     "line": 70,
      "signature": "(serviceId: string)",
      "doc": ""
     },
     {
      "name": "tabFeature",
      "kind": "function",
-     "line": 69,
+     "line": 71,
      "signature": "(role: UserRole, tab: string)",
      "doc": ""
     },
     {
      "name": "featureOn",
      "kind": "function",
-     "line": 72,
+     "line": 74,
      "signature": "(flags: Record<string, boolean> | undefined, id: string)",
      "doc": "Is the feature on? Missing ids are on."
     }
@@ -10291,6 +10364,58 @@
    ]
   },
   {
+   "file": "src/data/tour.ts",
+   "doc": "",
+   "exports": [
+    {
+     "name": "TourStep",
+     "kind": "interface",
+     "line": 6,
+     "signature": "",
+     "doc": "The steps of the couple's first-run tour. A step with a `target` points at\nthe element wrapped in `<TourTarget id=…>`; when that element isn't on\nscreen (a tab switched off, no Ideas for a pasni) the step is skipped.",
+     "members": [
+      {
+       "name": "id",
+       "optional": false,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "target",
+       "optional": true,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "title",
+       "optional": false,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "body",
+       "optional": false,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "bodyWithPlan",
+       "optional": true,
+       "type": "string",
+       "doc": "Shown instead of `body` when the couple already has a plan."
+      }
+     ]
+    },
+    {
+     "name": "COUPLE_TOUR",
+     "kind": "const",
+     "line": 15,
+     "signature": ": TourStep[]",
+     "doc": ""
+    }
+   ]
+  },
+  {
    "file": "src/data/trades.ts",
    "doc": "Provider trades. The 43 services in `services.ts` stay the source of truth; trades group them for onboarding tiles, navigation headings and copy, and each service declares the capabilities it grants. Vendors and freelancers share this taxonomy (a freelancer's trade is derived from their crew roles). Mirrored by `service_capabilities` in supabase/migrations/0005_personas.sql.",
    "exports": [
@@ -10702,6 +10827,26 @@
      "line": 7,
      "signature": "()",
      "doc": "Breakpoints for the web-ready consoles. Phones get one column; tablets and\ndesktop browsers (expo start --web) get side navigation and grids."
+    }
+   ]
+  },
+  {
+   "file": "src/hooks/useOpenMyWedding.ts",
+   "doc": "",
+   "exports": [
+    {
+     "name": "goToCoupleTab",
+     "kind": "function",
+     "line": 7,
+     "signature": "(tab: '/' | '/wedding')",
+     "doc": "Closes any screens stacked over the couple tabs, then switches to `tab`, instead of pushing a second set of tabs."
+    },
+    {
+     "name": "useOpenMyWedding",
+     "kind": "hook",
+     "line": 13,
+     "signature": "(): () => void",
+     "doc": "Opens the couple's plan: the \"My wedding\" tab, or the stack screen when a super admin has switched the tab off."
     }
    ]
   },
@@ -15671,6 +15816,26 @@
      "line": 130,
      "signature": "(): Account",
      "doc": "Non-null account for screens that only render inside a role app. During\nlogout a screen may render once more before its protected route unmounts,\nso this falls back to the last signed-in account instead of throwing."
+    }
+   ]
+  },
+  {
+   "file": "src/store/useTour.ts",
+   "doc": "",
+   "exports": [
+    {
+     "name": "TourId",
+     "kind": "type",
+     "line": 6,
+     "signature": "= 'couple'",
+     "doc": "Guided tours; one per app that has one."
+    },
+    {
+     "name": "useTour",
+     "kind": "const",
+     "line": 22,
+     "signature": "= create<TourState>()( persist( (set, get) => ({ seen: [], running: null, start: (id) => { …",
+     "doc": "First-run guided tours, persisted per device apart from the couple's data."
     }
    ]
   },

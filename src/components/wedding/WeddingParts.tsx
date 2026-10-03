@@ -40,7 +40,8 @@ export function WeddingHero({
 }: {
   project: Project;
   shared?: boolean;
-  onBack: () => void;
+  /** Omit when the screen is a tab: there is nowhere to go back to. */
+  onBack?: () => void;
   actions?: { icon: 'calendar-outline' | 'globe-outline' | 'share-outline'; label: string; onPress: () => void }[];
 }) {
   const insets = useSafeAreaInsets();
@@ -53,7 +54,7 @@ export function WeddingHero({
       <Image source={photos[cover]} style={StyleSheet.absoluteFill} contentFit="cover" contentPosition={{ left: '50%', top: '38%' }} transition={250} />
       <LinearGradient colors={SCRIM} locations={[0, 0.3, 0.5, 1]} style={StyleSheet.absoluteFill} pointerEvents="none" />
       <View style={[styles.heroTop, { paddingTop: insets.top + 6 }]}>
-        <IconButton icon="chevron-back" iconSize={22} color={colors.white} background={OVERLAY_BUTTON} accessibilityLabel="Go back" onPress={onBack} />
+        {onBack ? <IconButton icon="chevron-back" iconSize={22} color={colors.white} background={OVERLAY_BUTTON} accessibilityLabel="Go back" onPress={onBack} /> : <View />}
         <View style={{ flexDirection: 'row', gap: 8 }}>
           {actions?.map((a) => (
             <IconButton key={a.label} icon={a.icon} iconSize={20} color={colors.white} background={OVERLAY_BUTTON} accessibilityLabel={a.label} onPress={a.onPress} />

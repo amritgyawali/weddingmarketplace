@@ -8,15 +8,16 @@ import { Text } from '@/components/ui/Text';
 import { colors, GUTTER } from '@/constants/theme';
 import { CHECKLIST_TOTAL } from '@/data/checklist';
 import { useExperience } from '@/hooks/useExperience';
+import { useOpenMyWedding } from '@/hooks/useOpenMyWedding';
 import { useCustomerWorkspace } from '@/hooks/useWorkspace';
 import { selectShortlistCount, useAppStore } from '@/store/useAppStore';
 import { useAccount } from '@/store/useSession';
 
 type IconName = ComponentProps<typeof Ionicons>['name'];
 
-function Tool({ icon, label, meta, alert, href }: { icon: IconName; label: string; meta: string; alert?: boolean; href: Href }) {
+function Tool({ icon, label, meta, alert, href, onPress }: { icon: IconName; label: string; meta: string; alert?: boolean; href?: Href; onPress?: () => void }) {
   return (
-    <Pressable onPress={() => router.push(href)} accessibilityRole="button" accessibilityLabel={`${label}, ${meta}`} style={({ pressed }) => [styles.tool, pressed && { backgroundColor: colors.bgSoft }]}>
+    <Pressable onPress={onPress ?? (() => href && router.push(href))} accessibilityRole="button" accessibilityLabel={`${label}, ${meta}`} style={({ pressed }) => [styles.tool, pressed && { backgroundColor: colors.bgSoft }]}>
       <Ionicons name={icon} size={20} color={colors.textBody} />
       <View style={{ flex: 1 }}>
         <Text size={15} weight="medium" color={colors.heading} numberOfLines={1}>
@@ -42,6 +43,7 @@ export function PlanningTools() {
   const wedding = !exp.occasion || exp.occasion.id === 'wedding' || exp.occasion.id === 'engagement';
   const tasks = project?.tasks.filter((t) => t.visibility !== 'internal') ?? [];
   const tasksDone = tasks.filter((t) => t.status === 'COMPLETED').length;
+  const openMyWedding = useOpenMyWedding();
 
   return (
     <View style={styles.section}>
@@ -52,7 +54,7 @@ export function PlanningTools() {
           label={wedding ? 'Wedding plan' : exp.vocab.planTitle}
           meta={awaitingQuotes ? `${awaitingQuotes} quote${awaitingQuotes > 1 ? 's' : ''} to review` : 'Quotes, payments, run sheet'}
           alert={!!awaitingQuotes}
-          href="/my-wedding"
+          onPress={openMyWedding}
         />
         <Tool icon="bookmark-outline" label="Shortlist" meta={shortlistCount ? `${shortlistCount} saved` : 'Nothing saved yet'} href="/shortlist" />
         {wedding || !project ? (
