@@ -379,7 +379,7 @@ export function nextBestAction(project: Project, quotes: Quotation[]): NextActio
   const pendingQuote = quotes.find((q) => q.projectId === project.id && (q.status === 'sent' || q.status === 'viewed'));
   if (pendingQuote) return { title: 'Review your quotation', body: `${pendingQuote.number} from ${pendingQuote.fromName} is waiting for you.`, href: `/quote/${pendingQuote.id}`, icon: 'document-text' };
   const { next } = paymentSummary(project);
-  if (next && milestoneStatus(next) !== 'UPCOMING') return { title: `Pay ${formatMoney(next.amount)}`, body: `${next.label} is due ${formatShortDate(next.due)}.`, href: `/my-wedding?tab=payments&focus=${next.id}`, icon: 'card', tab: 'payments', focus: next.id };
+  if (next && milestoneStatus(next) !== 'UPCOMING') return { title: `Pay ${formatMoney(next.amount - next.paidAmount)}`, body: `${next.label} is due ${formatShortDate(next.due)}.`, href: `/my-wedding?tab=payments&focus=${next.id}`, icon: 'card', tab: 'payments', focus: next.id };
   const review = project.bookings.flatMap((b) => b.deliverables.map((d) => ({ b, d }))).find(({ d }) => d.status === 'READY_FOR_REVIEW');
   if (review) return { title: `Review ${review.d.title}`, body: `${review.b.providerName} marked it ready.`, href: '/my-wedding?tab=services', icon: 'eye', tab: 'services' };
   const task = project.tasks
