@@ -20,6 +20,19 @@ Also set `NOTIFY_WEBHOOK_SECRET` to any long random string.
 
 Name the Supabase project `vivah-staging`, region Mumbai (`ap-south-1`, closest to Nepal).
 
+## One command (recommended)
+
+Once `SUPABASE_ACCESS_TOKEN` and `SUPABASE_PROJECT_REF` (or `EXPO_PUBLIC_SUPABASE_URL`) are in `.env.local`, this does §2, §3 and §5 for you through the Supabase Management API, with no database password and no Docker:
+
+```bash
+npm run setup:supabase                                   # dry run: shows what it would change
+npm run setup:supabase -- --apply --staff-code <A-LONG-CODE>
+```
+
+It reads the publishable key into `.env.local`, turns on `pg_cron` and `pg_net`, applies the migrations (recorded like `supabase db push`), stores the Vault secrets, configures Auth (6-digit codes, the OTP template, the access-token hook, Resend SMTP), sets the function secrets, deploys every function, checks `/functions/v1/health`, and then switches the app to `EXPO_PUBLIC_BACKEND=supabase`. It is safe to re-run. After you sign up in the app as staff with that code, make yourself super admin with `npm run setup:supabase -- --super-admin <your email>`.
+
+The manual steps below do the same thing by hand.
+
 ## 2. Database
 
 ```bash
