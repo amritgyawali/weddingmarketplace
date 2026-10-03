@@ -479,6 +479,41 @@ ok('social-send: the template goes out and is recorded with WhatsApp’s id', se
 ok('social-send: someone outside the business gets not found', (await send(post({ threadId: '00000000-0000-4000-8000-0000000000bb', text: 'x' }, { Authorization: 'Bearer good' }))).status === 404);
 globalThis.fetch = prevFetch;
 
+// ─── Social hub: insights from the networks (0020) ─────────────────────────────
+const fbM = scripted([[/\/page-1_100\?fields=shares/, [200, { shares: { count: 4 }, reactions: { summary: { total_count: 80 } }, comments: { summary: { total_count: 9 } }, insights: { data: [{ name: 'post_impressions_unique', values: [{ value: 1200 }] }] } }]]]);
+const fbMetrics = await so.fetchMetrics({ network: 'facebook', externalId: 'page-1_100', token: 'pt' }, fbM.http);
+ok('insights Facebook: reach from post insights, reactions, comments and shares', JSON.stringify(fbMetrics) === JSON.stringify({ reach: 1200, likes: 80, comments: 9, shares: 4 }), JSON.stringify(fbMetrics));
+const igM = scripted([[/\/media_9\/insights\?metric=/, [200, { data: [{ name: 'reach', values: [{ value: 900 }] }, { name: 'likes', values: [{ value: 70 }] }, { name: 'comments', values: [{ value: 5 }] }, { name: 'shares', values: [{ value: 2 }] }, { name: 'saved', values: [{ value: 11 }] }] }]]]);
+const igMetrics = await so.fetchMetrics({ network: 'instagram', externalId: 'media_9', token: 'pt' }, igM.http);
+ok('insights Instagram: reach, likes, comments, shares and saves', igMetrics?.reach === 900 && igMetrics.saves === 11 && igMetrics.shares === 2, JSON.stringify(igMetrics));
+const ttM = scripted([
+  [/status\/fetch\/$/, [200, { data: { status: 'PUBLISH_COMPLETE', publicaly_available_post_id: [7300000000001] }, error: { code: 'ok' } }]],
+  [/video\/query\//, (u, init) => [200, { data: { videos: [{ id: JSON.parse(init.body).filters.video_ids[0], view_count: 5400, like_count: 610, comment_count: 22, share_count: 31 }] }, error: { code: 'ok' } }]],
+]);
+const ttMetrics = await so.fetchMetrics({ network: 'tiktok', externalId: 'p_77', token: 'tt' }, ttM.http);
+ok('insights TikTok: the publish id leads to the public video, views count as reach', ttMetrics?.reach === 5400 && ttMetrics.likes === 610 && ttM.log[1].body.filters.video_ids[0] === '7300000000001', JSON.stringify(ttMetrics));
+const ttPending = scripted([[/status\/fetch\/$/, [200, { data: { status: 'PROCESSING_DOWNLOAD' }, error: { code: 'ok' } }]]]);
+ok('insights: not public yet, or refused, means nothing to record (never throws)', (await so.fetchMetrics({ network: 'tiktok', externalId: 'p_1', token: 't' }, ttPending.http)) === null && (await so.fetchMetrics({ network: 'facebook', externalId: 'x', token: 't' }, fbDenied.http)) === null && (await so.fetchMetrics({ network: 'instagram', externalId: 'x', token: 't' }, async () => { throw new Error('offline'); })) === null);
+
+const metricNet = { recorded: [] };
+const prevFetch2 = globalThis.fetch;
+globalThis.fetch = async (url, init = {}) => {
+  const u = String(url);
+  if (u.endsWith('/rest/v1/rpc/vivah_social_metric_targets')) return new Response(JSON.stringify([{ postId: 'post-1', network: 'facebook', externalId: 'page-1_100', token: 'pt', refreshToken: null, accountId: 'acc-1', meta: {} }]));
+  if (u.endsWith('/rest/v1/rpc/vivah_social_record_metrics')) {
+    metricNet.recorded.push(JSON.parse(init.body));
+    return new Response('');
+  }
+  if (u.includes('graph.facebook.com')) return new Response(JSON.stringify({ shares: { count: 1 }, reactions: { summary: { total_count: 12 } }, comments: { summary: { total_count: 3 } }, insights: { data: [{ values: [{ value: 400 }] }] } }));
+  return new Response('not found', { status: 404 });
+};
+await load('social-publish/index.ts');
+const publishFn = handler;
+ok('social-publish: the insights run needs the shared secret', (await publishFn(post({ metrics: true }, { 'x-webhook-secret': 'nope' }))).status === 403);
+const metricsRun = await (await publishFn(post({ metrics: true }, { 'x-webhook-secret': 'hook-secret' }))).json();
+ok('social-publish: the insights run records what each network reports', metricsRun.updated === 1 && metricNet.recorded[0]?.p_reach === 400 && metricNet.recorded[0]?.p_likes === 12 && metricNet.recorded[0]?.p_saves === null, JSON.stringify(metricNet.recorded));
+globalThis.fetch = prevFetch2;
+
 const failed = results.filter((r) => !r.pass);
 results.forEach((r) => console.log(`${r.pass ? 'pass' : 'FAIL'}  ${r.name}${!r.pass && r.detail ? `  (${r.detail})` : ''}`));
 console.log(`\n${results.length - failed.length} of ${results.length} checks passed.`);

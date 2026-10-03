@@ -47,7 +47,7 @@ export function ImageCarousel({
         )}
       />
       {images.length > 1 && (
-        <View pointerEvents="none" style={[styles.dots, { bottom: dotsBottom }]}>
+        <View style={[styles.dots, { bottom: dotsBottom, pointerEvents: 'none' }]}>
           {images.map((img, i) => (
             <View key={`${img}-${i}`} style={[styles.dot, i === index && styles.dotActive]} />
           ))}

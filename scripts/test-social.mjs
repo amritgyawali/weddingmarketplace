@@ -18,6 +18,7 @@ const { buildSocialSeed } = await importApp('@/data/socialSeed');
 const { adToBs, bsToAd } = await importApp('@/utils/bs');
 const { toISODate } = await importApp('@/utils/format');
 
+const seed0 = buildSocialSeed();
 const results = [];
 const ok = (name, pass, detail = '') => results.push({ name, pass: !!pass, detail });
 
@@ -95,6 +96,9 @@ ok('rules: the starter price rule matches romanised Nepali', s.matchRule(DEFAULT
 const filled = s.fillReply('Namaste {name}! {business} in {city} from {price}.', { business: 'Everest Grand', city: 'Kathmandu', price: 'NPR 1,250 per plate', contact: '@asmita.karki' });
 ok('replies: placeholders are filled, the handle becomes a first name', filled === 'Namaste Asmita! Everest Grand in Kathmandu from NPR 1,250 per plate.', filled);
 ok('replies: suggestions answer what was asked', s.suggestReplies('rate kati ho? parking?', { business: 'B', city: 'Pokhara', contact: 'Ram' }).length === 2);
+
+ok('consent: START / SUBSCRIBE / सुरु opt in, STOP / बन्द opt out, anything else is a message', s.optInKeyword(' Start. ') === 'in' && s.optInKeyword('SUBSCRIBE') === 'in' && s.optInKeyword('सुरु') === 'in' && s.optInKeyword('stop!') === 'out' && s.optInKeyword('बन्द') === 'out' && s.optInKeyword('please stop calling') === null);
+ok('seed: the WhatsApp follow-up customer agreed to updates', seed0.socialThreads.find((t) => t.id === 'st_kabita')?.optedIn === true);
 
 // ─── Timing and hashtags ────────────────────────────────────────────────────────
 const from = new Date(2026, 9, 3, 12, 0);

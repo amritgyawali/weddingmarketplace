@@ -8,13 +8,14 @@ Every exported symbol in `src/backend/`, file by file. The guide that explains h
 
 - [`account.ts`](#accountts) (8 exports) · The signed-in user's own records on Supabase: who they are (rpc_me), the first-time sign-up (rpc_complete_signup), and mirroring them into …
 - [`auth.ts`](#authts) (8 exports) · Sign-in for the Supabase backend (master plan §7.3). Owner decision: email OTP only for the first year, so every role signs in with a 6-dig…
+- [`bugReport.ts`](#bugreportts) (16 exports) · Bug reports: the payload the shake-to-report sheet sends, where it goes, and the little history kept for it (recent screens, console errors…
 - [`files.ts`](#filests) (3 exports) · Private documents in Supabase Storage (master plan §7.4): KYC papers, contracts and invoices never sit on a public CDN. Each user writes un…
 - [`index.ts`](#indexts) (3 exports) · Picks the backend from EXPO_PUBLIC_BACKEND: `mock` (the default: the demo and Expo Go) or `supabase` (staging and production, once configur…
 - [`media.ts`](#mediats) (7 exports) · Images and short video on Cloudinary (master plan §7.4). Uploads are signed by the media-sign Edge Function, go straight from the phone to …
 - [`mock.ts`](#mockts) (1 exports) · The demo backend: the on-device zustand store. Store actions stay the source of truth for the demo and Expo Go; this adapter only gives the…
 - [`payments.ts`](#paymentsts) (12 exports) · Online payments with Khalti and eSewa (master plan §7.5). The app never decides that money arrived: payment-initiate starts an attempt whos…
 - [`push.ts`](#pushts) (2 exports) · Push notifications (master plan §7.6). The device registers its Expo push token with rpc_register_push_token; the notify-fanout Edge Functi…
-- [`social.ts`](#socialts) (15 exports) · Social hub on Supabase builds. Connecting a network opens its own consent page through `social-oauth`; the tokens it returns are kept on th…
+- [`social.ts`](#socialts) (16 exports) · Social hub on Supabase builds. Connecting a network opens its own consent page through `social-oauth`; the tokens it returns are kept on th…
 - [`supabase.ts`](#supabasets) (3 exports) · The Supabase backend: each core-loop step is one RPC from supabase/migrations/0011_core_rpc.sql, called over PostgREST with plain fetch (no…
 - [`telemetry.ts`](#telemetryts) (9 exports) · Product analytics and error reports (master plan §14), without SDKs:
 - [`telemetryPayloads.ts`](#telemetrypayloadsts) (14 exports)
@@ -221,6 +222,190 @@ signOut()
 ```
 
 Ends the session on the server and on this device.
+
+## bugReport.ts
+
+Source: [src/backend/bugReport.ts](../../../src/backend/bugReport.ts)
+
+Bug reports: the payload the shake-to-report sheet sends, where it goes,
+and the little history kept for it (recent screens, console errors).
+
+Every build, for everyone (signed in or not), saves the report in the app's
+backend, where super admins read it (Super admin → Bug reports):
+
+  - mock (the demo, Expo Go): the store's `bugReports`, with the screenshot
+    as a file in the app's documents folder (`submitBugReport`);
+  - supabase: `rpc_submit_bug_report` (supabase/migrations/0019_bug_reports.sql).
+
+Development and test builds also send it to the bug inbox on the
+developer's computer (`scripts/bug-inbox.cjs`), which writes it into the
+project's `bug-reports/` folder. In development the inbox runs inside
+`npx expo start`, so the app finds it at the dev server's address; an
+installed test build (EXPO_PUBLIC_BUG_REPORTS=on) sends to
+`npm run bugs:inbox` at EXPO_PUBLIC_BUG_INBOX_URL, or at the address typed in
+Settings → Help on the phone.
+
+### `BugLogLine, BugReport`
+
+*re-export* · [src/backend/bugReport.ts:34](../../../src/backend/bugReport.ts#L34)
+
+```ts
+BugLogLine, BugReportfrom '@/types/platform'
+```
+
+_No JSDoc yet._
+
+### `BUG_INBOX_PATH`
+
+*const* · [src/backend/bugReport.ts:37](../../../src/backend/bugReport.ts#L37)
+
+```ts
+BUG_INBOX_PATH= '/__vivah/bug-report'
+```
+
+Same path as `BUG_INBOX_PATH` in scripts/bug-inbox.cjs.
+
+### `setDeviceBugInbox`
+
+*function* · [src/backend/bugReport.ts:46](../../../src/backend/bugReport.ts#L46)
+
+```ts
+setDeviceBugInbox(address: string | undefined)
+```
+
+The inbox address typed in Settings → Help on this device; it wins over the build's own.
+
+### `defaultBugInbox`
+
+*function* · [src/backend/bugReport.ts:66](../../../src/backend/bugReport.ts#L66)
+
+```ts
+defaultBugInbox()
+```
+
+The address used when the device has none of its own: the dev server, else the build's EXPO_PUBLIC_BUG_INBOX_URL.
+
+### `bugInboxUrl`
+
+*function* · [src/backend/bugReport.ts:69](../../../src/backend/bugReport.ts#L69)
+
+```ts
+bugInboxUrl(): string | undefined
+```
+
+Where reports go, or undefined when there is nowhere to send them yet.
+
+### `bugReportsAvailable`
+
+*function* · [src/backend/bugReport.ts:72](../../../src/backend/bugReport.ts#L72)
+
+```ts
+bugReportsAvailable()
+```
+
+Every build offers bug reports, to everyone: they are saved in the app's backend. A super admin can switch them off (`app.bug_report`).
+
+### `devInboxOffered`
+
+*function* · [src/backend/bugReport.ts:75](../../../src/backend/bugReport.ts#L75)
+
+```ts
+devInboxOffered()
+```
+
+Do reports also go to a developer's computer? Development builds, and test builds with EXPO_PUBLIC_BUG_REPORTS=on or an inbox URL. Settings → Help shows the inbox address only then.
+
+### `pingBugInbox`
+
+*function* · [src/backend/bugReport.ts:78](../../../src/backend/bugReport.ts#L78)
+
+```ts
+pingBugInbox(): Promise<Result<string>>
+```
+
+Checks that the inbox answers, for Settings → Help. Resolves to the address it reached.
+
+### `recordRoute`
+
+*function* · [src/backend/bugReport.ts:101](../../../src/backend/bugReport.ts#L101)
+
+```ts
+recordRoute(path: string)
+```
+
+Remembers a visited screen for the next report.
+
+### `captureConsole`
+
+*function* · [src/backend/bugReport.ts:119](../../../src/backend/bugReport.ts#L119)
+
+```ts
+captureConsole()
+```
+
+Keeps the last console errors and warnings so a report shows what went wrong under the hood. Idempotent.
+
+### `reportContext`
+
+*function* · [src/backend/bugReport.ts:139](../../../src/backend/bugReport.ts#L139)
+
+```ts
+reportContext(): Pick<BugReport, 'device' | 'recentRoutes' | 'logs'> & { appVersion: string }
+```
+
+Device, app and history details that go with every report.
+
+### `sendBugReport`
+
+*function* · [src/backend/bugReport.ts:243](../../../src/backend/bugReport.ts#L243)
+
+```ts
+sendBugReport(report: BugReport): Promise<Result<string>>
+```
+
+Sends a report: saved in the app's backend (super admin console) and, in
+development and test builds, also posted to the developer's bug inbox.
+Resolves once at least one of them has it.
+
+### `fetchBugReports`
+
+*function* · [src/backend/bugReport.ts:261](../../../src/backend/bugReport.ts#L261)
+
+```ts
+fetchBugReports(limit = 200): Promise<Result<BugReportRecord[]>>
+```
+
+The newest reports without their screenshots (super admins).
+
+### `fetchBugReport`
+
+*function* · [src/backend/bugReport.ts:267](../../../src/backend/bugReport.ts#L267)
+
+```ts
+fetchBugReport(id: string): Promise<Result<BugReportRecord | null>>
+```
+
+One report with its screenshot (super admins).
+
+### `saveBugReportStatus`
+
+*function* · [src/backend/bugReport.ts:273](../../../src/backend/bugReport.ts#L273)
+
+```ts
+saveBugReportStatus(id: string, status: BugReportStatus, note?: string): Promise<Result<void>>
+```
+
+Marks a report new, fixed or dismissed on the server (super admins).
+
+### `deleteBugReports`
+
+*function* · [src/backend/bugReport.ts:279](../../../src/backend/bugReport.ts#L279)
+
+```ts
+deleteBugReports(ids: string[]): Promise<Result<void>>
+```
+
+Deletes reports on the server (super admins).
 
 ## files.ts
 
@@ -674,7 +859,7 @@ schedules it. Returns the server's post id.
 *function* · [src/backend/social.ts:95](../../../src/backend/social.ts#L95)
 
 ```ts
-triageSocialLive(threadId: string, patch: { status?: string; snoozedUntil?: string | null; starred?: boolean; labels?: string[]; read?: boolean })
+triageSocialLive(threadId: string, patch: { status?: string; snoozedUntil?: string | null; starred?: boolean; labels?: string[]; read?: boolean; assignee?: string | null })
 ```
 
 Inbox triage on the server: status (and snooze), star, labels, read.
@@ -699,9 +884,19 @@ leadSocialLive(threadId: string, input: { eventDate: string; guests?: number; fu
 
 Turns a server thread into a CRM lead (rpc_social_lead).
 
-### `disconnectSocialLive`
+### `optInSocialLive`
 
 *function* · [src/backend/social.ts:106](../../../src/backend/social.ts#L106)
+
+```ts
+optInSocialLive(threadId: string, on: boolean)
+```
+
+Records (or withdraws) a WhatsApp customer's consent to broadcasts.
+
+### `disconnectSocialLive`
+
+*function* · [src/backend/social.ts:109](../../../src/backend/social.ts#L109)
 
 ```ts
 disconnectSocialLive(accountId: string)
@@ -711,7 +906,7 @@ Disconnects a network on the server; its token is deleted.
 
 ### `saveSocialSettingsLive`
 
-*function* · [src/backend/social.ts:109](../../../src/backend/social.ts#L109)
+*function* · [src/backend/social.ts:112](../../../src/backend/social.ts#L112)
 
 ```ts
 saveSocialSettingsLive(settings: SocialSettings)
@@ -721,7 +916,7 @@ Saves the automation (owners and managers).
 
 ### `mapSocialInbox`
 
-*function* · [src/backend/social.ts:118](../../../src/backend/social.ts#L118)
+*function* · [src/backend/social.ts:121](../../../src/backend/social.ts#L121)
 
 ```ts
 mapSocialInbox(ownerId: string, d: { accounts?: Row[]; threads?: Row[]; messages?: Row[]; posts?: Row[]; settings?: Row | null })
@@ -731,7 +926,7 @@ The server's hub (rpc_social_inbox) in the app's shapes, owned by this device's 
 
 ### `syncSocialFromServer`
 
-*function* · [src/backend/social.ts:196](../../../src/backend/social.ts#L196)
+*function* · [src/backend/social.ts:201](../../../src/backend/social.ts#L201)
 
 ```ts
 syncSocialFromServer(ownerId: string): Promise<Result<void>>

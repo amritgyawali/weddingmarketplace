@@ -9,6 +9,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import { getAccessToken, usesEmailSignIn } from '@/backend/auth';
 import { ImpersonationBar } from '@/components/ui/AppBanners';
+import { BugReporterHost, installBugReporter } from '@/components/ui/BugReporter';
 import { DialogHost } from '@/components/ui/Dialog';
 import { FeatureRouteGuard } from '@/components/ui/FeatureRouteGuard';
 import { ToastHost } from '@/components/ui/Toast';
@@ -32,6 +33,9 @@ export { AppErrorBoundary as ErrorBoundary } from '@/components/AppErrorBoundary
 
 // "Guest added", "Task deleted"…: a confirmation after every change.
 installActionToasts();
+
+// Shake to report a bug (development and test builds): keep recent console errors for the report.
+installBugReporter();
 
 // Refetch stale queries when the app returns to the foreground.
 AppState.addEventListener('change', (status) => {
@@ -172,6 +176,7 @@ export default function RootLayout() {
         <ImpersonationBar />
         <ToastHost />
         <DialogHost />
+        <BugReporterHost />
       </QueryClientProvider>
       </I18nProvider>
     </GestureHandlerRootView>

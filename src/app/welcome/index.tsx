@@ -105,13 +105,12 @@ export default function WelcomeCarousel() {
       />
 
       <LinearGradient
-        pointerEvents="none"
         colors={gradients.heroFade}
         locations={[0, 0.18, 0.42, 0.62, 1]}
-        style={StyleSheet.absoluteFill}
+        style={[StyleSheet.absoluteFill, { pointerEvents: 'none' }]}
       />
 
-      <View pointerEvents="none" style={[styles.top, { paddingTop: insets.top + 14 }]}>
+      <View style={[styles.top, { paddingTop: insets.top + 14, pointerEvents: 'none' }]}>
         <Text serif size={24} weight="bold" color={colors.white} lineHeight={32}>
           {BRAND.name}
         </Text>

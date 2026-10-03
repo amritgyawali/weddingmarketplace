@@ -93,6 +93,7 @@ export const FEATURES: FeatureDef[] = [
   { id: 'login.demo', label: 'One-tap demo accounts', role: 'all', group: 'Sign-up', hint: 'The "Continue as …" buttons on the login screens' },
   { id: 'app.announcements', label: 'Announcements on home screens', role: 'all', group: 'Content' },
   { id: 'app.notifications', label: 'Pop-up confirmations', role: 'all', group: 'Content', hint: 'The short message after adding, deleting or finishing something' },
+  { id: 'app.bug_report', label: 'Shake to report a bug', role: 'all', group: 'Content', hint: 'Everyone, on every screen: shaking the phone sends a screenshot and a description to Super admin → Bug reports' },
 ];
 
 export const FEATURE_BY_ID: Record<string, FeatureDef> = Object.fromEntries(FEATURES.map((f) => [f.id, f]));

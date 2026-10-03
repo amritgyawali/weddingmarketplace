@@ -12,7 +12,7 @@ Every exported symbol in `supabase/functions/_shared/`, file by file. The guide 
 - [`http.ts`](#httpts) (6 exports)
 - [`payments.ts`](#paymentsts) (27 exports)
 - [`ratelimit.ts`](#ratelimitts) (5 exports)
-- [`social.ts`](#socialts) (36 exports) · Social hub logic shared by social-oauth, social-webhook, social-send and social-publish (no dependencies, tested in Node by npm run test:fu…
+- [`social.ts`](#socialts) (39 exports) · Social hub logic shared by social-oauth, social-webhook, social-send and social-publish (no dependencies, tested in Node by npm run test:fu…
 - [`supabase.ts`](#supabasets) (6 exports) · Calls into Supabase from an Edge Function over REST (no SDK).
 
 ## cloudinary.ts
@@ -1198,6 +1198,44 @@ mediaUrls(media: { kind?: string; publicId?: string; uri?: string }[], cloudName
 ```
 
 A post's media as public URLs: uploaded files are Cloudinary public ids, others already URLs.
+
+### `MetricTarget`
+
+*interface* · [supabase/functions/_shared/social.ts:555](../../../supabase/functions/_shared/social.ts#L555)
+
+A published post on one network whose numbers are read back.
+
+| Member | Type | Notes |
+|---|---|---|
+| `network` | `Network` |  |
+| `externalId` | `string` | Facebook post id, Instagram media id, or TikTok publish id. |
+| `token` | `string` |  |
+
+### `Metrics`
+
+*interface* · [supabase/functions/_shared/social.ts:563](../../../supabase/functions/_shared/social.ts#L563)
+
+Numbers a network reports for a post; missing ones are left as they were.
+
+| Member | Type | Notes |
+|---|---|---|
+| `reach?` | `number` |  |
+| `likes?` | `number` |  |
+| `comments?` | `number` |  |
+| `shares?` | `number` |  |
+| `saves?` | `number` |  |
+
+### `fetchMetrics`
+
+*function* · [supabase/functions/_shared/social.ts:588](../../../supabase/functions/_shared/social.ts#L588)
+
+```ts
+fetchMetrics(t: MetricTarget, http: Http, graphVersion = 'v21.0'): Promise<Metrics | null>
+```
+
+Reads a post's numbers back from its network: Facebook post fields and
+insights, Instagram media insights, TikTok's video query (after finding the
+public post id from the publish id). Never throws; null when unavailable.
 
 ## supabase.ts
 

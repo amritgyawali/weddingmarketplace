@@ -660,6 +660,20 @@
    "doc": ""
   },
   {
+   "path": "/platform/admin/bug/[id]",
+   "kind": "screen",
+   "file": "src/app/platform/admin/bug/[id].tsx",
+   "component": "",
+   "doc": ""
+  },
+  {
+   "path": "/platform/admin/bugs",
+   "kind": "screen",
+   "file": "src/app/platform/admin/bugs.tsx",
+   "component": "",
+   "doc": ""
+  },
+  {
    "path": "/platform/admin/collection/[name]",
    "kind": "screen",
    "file": "src/app/platform/admin/collection/[name].tsx",
@@ -1186,14 +1200,14 @@
     {
      "name": "ErrorBoundary",
      "kind": "re-export",
-     "line": 31,
+     "line": 32,
      "signature": "from '@/components/AppErrorBoundary'",
      "doc": ""
     },
     {
      "name": "RootLayout",
      "kind": "component",
-     "line": 41,
+     "line": 45,
      "signature": "()",
      "doc": ""
     }
@@ -2396,6 +2410,32 @@
    ]
   },
   {
+   "file": "src/app/platform/admin/bug/[id].tsx",
+   "doc": "",
+   "exports": [
+    {
+     "name": "default",
+     "kind": "default",
+     "line": 166,
+     "signature": "staffScreen('/platform/admin/bug', BugReportDetail)",
+     "doc": ""
+    }
+   ]
+  },
+  {
+   "file": "src/app/platform/admin/bugs.tsx",
+   "doc": "",
+   "exports": [
+    {
+     "name": "default",
+     "kind": "default",
+     "line": 86,
+     "signature": "staffScreen('/platform/admin/bugs', BugReports)",
+     "doc": ""
+    }
+   ]
+  },
+  {
    "file": "src/app/platform/admin/collection/[name].tsx",
    "doc": "",
    "exports": [
@@ -2441,7 +2481,7 @@
     {
      "name": "default",
      "kind": "default",
-     "line": 101,
+     "line": 104,
      "signature": "staffScreen('/platform/admin', AdminHome)",
      "doc": ""
     }
@@ -3065,7 +3105,7 @@
     {
      "name": "LoginScreen",
      "kind": "component",
-     "line": 269,
+     "line": 286,
      "signature": "()",
      "doc": ""
     }
@@ -3369,6 +3409,124 @@
      "line": 151,
      "signature": "()",
      "doc": "Ends the session on the server and on this device."
+    }
+   ]
+  },
+  {
+   "file": "src/backend/bugReport.ts",
+   "doc": "Bug reports: the payload the shake-to-report sheet sends, where it goes, and the little history kept for it (recent screens, console errors). Every build, for everyone (signed in or not), saves the report in the app's backend, where super admins read it (Super admin → Bug reports): - mock (the demo, Expo Go): the store's `bugReports`, with the screenshot as a file in the app's documents folder (`submitBugReport`); - supabase: `rpc_submit_bug_report` (supabase/migrations/0019_bug_reports.sql). Development and test builds also send it to the bug inbox on the developer's computer (`scripts/bug-i…",
+   "exports": [
+    {
+     "name": "BugLogLine, BugReport",
+     "kind": "re-export",
+     "line": 34,
+     "signature": "from '@/types/platform'",
+     "doc": ""
+    },
+    {
+     "name": "BUG_INBOX_PATH",
+     "kind": "const",
+     "line": 37,
+     "signature": "= '/__vivah/bug-report'",
+     "doc": "Same path as `BUG_INBOX_PATH` in scripts/bug-inbox.cjs."
+    },
+    {
+     "name": "setDeviceBugInbox",
+     "kind": "function",
+     "line": 46,
+     "signature": "(address: string | undefined)",
+     "doc": "The inbox address typed in Settings → Help on this device; it wins over the build's own."
+    },
+    {
+     "name": "defaultBugInbox",
+     "kind": "function",
+     "line": 66,
+     "signature": "()",
+     "doc": "The address used when the device has none of its own: the dev server, else the build's EXPO_PUBLIC_BUG_INBOX_URL."
+    },
+    {
+     "name": "bugInboxUrl",
+     "kind": "function",
+     "line": 69,
+     "signature": "(): string | undefined",
+     "doc": "Where reports go, or undefined when there is nowhere to send them yet."
+    },
+    {
+     "name": "bugReportsAvailable",
+     "kind": "function",
+     "line": 72,
+     "signature": "()",
+     "doc": "Every build offers bug reports, to everyone: they are saved in the app's backend. A super admin can switch them off (`app.bug_report`)."
+    },
+    {
+     "name": "devInboxOffered",
+     "kind": "function",
+     "line": 75,
+     "signature": "()",
+     "doc": "Do reports also go to a developer's computer? Development builds, and test builds with EXPO_PUBLIC_BUG_REPORTS=on or an inbox URL. Settings → Help shows the inbox address only then."
+    },
+    {
+     "name": "pingBugInbox",
+     "kind": "function",
+     "line": 78,
+     "signature": "(): Promise<Result<string>>",
+     "doc": "Checks that the inbox answers, for Settings → Help. Resolves to the address it reached."
+    },
+    {
+     "name": "recordRoute",
+     "kind": "function",
+     "line": 101,
+     "signature": "(path: string)",
+     "doc": "Remembers a visited screen for the next report."
+    },
+    {
+     "name": "captureConsole",
+     "kind": "function",
+     "line": 119,
+     "signature": "()",
+     "doc": "Keeps the last console errors and warnings so a report shows what went wrong under the hood. Idempotent."
+    },
+    {
+     "name": "reportContext",
+     "kind": "function",
+     "line": 139,
+     "signature": "(): Pick<BugReport, 'device' | 'recentRoutes' | 'logs'> & { appVersion: string }",
+     "doc": "Device, app and history details that go with every report."
+    },
+    {
+     "name": "sendBugReport",
+     "kind": "function",
+     "line": 243,
+     "signature": "(report: BugReport): Promise<Result<string>>",
+     "doc": "Sends a report: saved in the app's backend (super admin console) and, in\ndevelopment and test builds, also posted to the developer's bug inbox.\nResolves once at least one of them has it."
+    },
+    {
+     "name": "fetchBugReports",
+     "kind": "function",
+     "line": 261,
+     "signature": "(limit = 200): Promise<Result<BugReportRecord[]>>",
+     "doc": "The newest reports without their screenshots (super admins)."
+    },
+    {
+     "name": "fetchBugReport",
+     "kind": "function",
+     "line": 267,
+     "signature": "(id: string): Promise<Result<BugReportRecord | null>>",
+     "doc": "One report with its screenshot (super admins)."
+    },
+    {
+     "name": "saveBugReportStatus",
+     "kind": "function",
+     "line": 273,
+     "signature": "(id: string, status: BugReportStatus, note?: string): Promise<Result<void>>",
+     "doc": "Marks a report new, fixed or dismissed on the server (super admins)."
+    },
+    {
+     "name": "deleteBugReports",
+     "kind": "function",
+     "line": 279,
+     "signature": "(ids: string[]): Promise<Result<void>>",
+     "doc": "Deletes reports on the server (super admins)."
     }
    ]
   },
@@ -3784,7 +3942,7 @@
      "name": "triageSocialLive",
      "kind": "function",
      "line": 95,
-     "signature": "(threadId: string, patch: { status?: string; snoozedUntil?: string | null; starred?: boolean; labels?: string[]; read?: boolean })",
+     "signature": "(threadId: string, patch: { status?: string; snoozedUntil?: string | null; starred?: boolean; labels?: string[]; read?: boolean; assignee?: string | null })",
      "doc": "Inbox triage on the server: status (and snooze), star, labels, read."
     },
     {
@@ -3802,30 +3960,37 @@
      "doc": "Turns a server thread into a CRM lead (rpc_social_lead)."
     },
     {
-     "name": "disconnectSocialLive",
+     "name": "optInSocialLive",
      "kind": "function",
      "line": 106,
+     "signature": "(threadId: string, on: boolean)",
+     "doc": "Records (or withdraws) a WhatsApp customer's consent to broadcasts."
+    },
+    {
+     "name": "disconnectSocialLive",
+     "kind": "function",
+     "line": 109,
      "signature": "(accountId: string)",
      "doc": "Disconnects a network on the server; its token is deleted."
     },
     {
      "name": "saveSocialSettingsLive",
      "kind": "function",
-     "line": 109,
+     "line": 112,
      "signature": "(settings: SocialSettings)",
      "doc": "Saves the automation (owners and managers)."
     },
     {
      "name": "mapSocialInbox",
      "kind": "function",
-     "line": 118,
+     "line": 121,
      "signature": "(ownerId: string, d: { accounts?: Row[]; threads?: Row[]; messages?: Row[]; posts?: Row[]; settings?: Row | null })",
      "doc": "The server's hub (rpc_social_inbox) in the app's shapes, owned by this device's business account."
     },
     {
      "name": "syncSocialFromServer",
      "kind": "function",
-     "line": 196,
+     "line": 201,
      "signature": "(ownerId: string): Promise<Result<void>>",
      "doc": "Reads the hub from the server into the device's mirror (on opening the hub, on refresh and after each change)."
     }
@@ -4308,6 +4473,26 @@
    ]
   },
   {
+   "file": "src/components/admin/bugs.ts",
+   "doc": "",
+   "exports": [
+    {
+     "name": "BUG_PILL",
+     "kind": "const",
+     "line": 5,
+     "signature": ": Record<BugReportStatus, { status: string; label: string }>",
+     "doc": "The status pill for a bug report (StatusPill colours by its own status names)."
+    },
+    {
+     "name": "reporterLine",
+     "kind": "function",
+     "line": 12,
+     "signature": "(r: BugReportRecord)",
+     "doc": "\"Aakriti Shrestha · Couple\", or \"Signed out\"."
+    }
+   ]
+  },
+  {
    "file": "src/components/admin/featureCatalogue.ts",
    "doc": "",
    "exports": [
@@ -4389,42 +4574,42 @@
     {
      "name": "COLLECTION_BY_KEY",
      "kind": "const",
-     "line": 59,
+     "line": 60,
      "signature": "= Object.fromEntries(COLLECTIONS.map((c) => [c.key, c])) as Record<keyof DbData, (typeof CO…",
      "doc": ""
     },
     {
      "name": "recordsOf",
      "kind": "function",
-     "line": 62,
+     "line": 63,
      "signature": "(value: unknown): [string, unknown][]",
      "doc": "Records of a collection as [id, value] pairs, whatever its shape."
     },
     {
      "name": "recordTitle",
      "kind": "function",
-     "line": 69,
+     "line": 70,
      "signature": "(id: string, value: unknown): string",
      "doc": "A one-line, human label for any record: its name, title, label… or its id."
     },
     {
      "name": "recordSubtitle",
      "kind": "function",
-     "line": 79,
+     "line": 80,
      "signature": "(value: unknown): string",
      "doc": "Second line under a record: a few short fields that help tell records apart."
     },
     {
      "name": "FieldEditor",
      "kind": "component",
-     "line": 96,
+     "line": 97,
      "signature": "({ name, value, onChange, locked }: { name: string; value: Value; onChange: (v: Value) => void; locked?: boolean })",
      "doc": "Edits one field of a record by its type: text, number, on/off, or JSON for\nlists and nested objects. Calls `onChange` with the parsed value, or\nreports the JSON error under the field."
     },
     {
      "name": "RecordFields",
      "kind": "component",
-     "line": 150,
+     "line": 151,
      "signature": "({ record, onChange, lockedKeys = [] }: { record: Record<string, Value>; onChange: (next: Record<string, Value>) => void; lockedKeys?: string[] })",
      "doc": "Groups a record's fields: simple ones first, then lists and nested objects."
     }
@@ -5393,7 +5578,7 @@
     {
      "name": "SocialComposer",
      "kind": "component",
-     "line": 50,
+     "line": 51,
      "signature": "({ postId, at }: { postId?: string; at?: string })",
      "doc": "Write once, publish everywhere: caption with per-network versions, photos\nfrom the portfolio or the phone, hashtag and best-time suggestions, a check\nagainst every network's rules, a live preview, then publish now, schedule\nor keep as a draft."
     }
@@ -5432,28 +5617,28 @@
     {
      "name": "useReplyContext",
      "kind": "hook",
-     "line": 37,
+     "line": 38,
      "signature": "(account: Account, contact: string): ReplyContext",
      "doc": "Reply context for this business: name, city and its highest active package price."
     },
     {
      "name": "SocialInbox",
      "kind": "component",
-     "line": 44,
+     "line": 45,
      "signature": "({ onOpen, selectedId }: { onOpen: (id: string) => void; selectedId?: string })",
      "doc": "Every message and comment from the connected networks, with filters, search and a check for new messages."
     },
     {
      "name": "SocialConversation",
      "kind": "component",
-     "line": 178,
+     "line": 180,
      "signature": "({ threadId }: { threadId: string })",
      "doc": "One conversation: messages, reply window, suggested and saved replies, notes, labels, assignment, snooze and \"create lead\"."
     },
     {
      "name": "openThreadRoute",
      "kind": "function",
-     "line": 604,
+     "line": 614,
      "signature": "(id: string)",
      "doc": "Opens a thread: in the side pane on wide screens, as its own screen on phones."
     }
@@ -6942,6 +7127,40 @@
    ]
   },
   {
+   "file": "src/components/ui/BugReporter.tsx",
+   "doc": "Shake to report a bug. Shaking the phone (or Alt+Shift+B on the web, or Settings → Report a problem) takes a screenshot of the screen exactly as it is, then opens a sheet to describe the problem. It works on every screen of every role app, signed in or not, in every build. The report is saved in the app's backend for the super admins (Super admin → Bug reports) and, in development and test builds, also lands in the developer's `bug-reports/` folder (see `backend/bugReport.ts` and `scripts/bug-inbox.cjs`). A super admin can switch it off (`app.bug_report`) and each device can turn shaking off …",
+   "exports": [
+    {
+     "name": "useBugReporter",
+     "kind": "const",
+     "line": 62,
+     "signature": "= create<BugReporterState>()( persist( (set) => ({ shake: true, inbox: '', draft: null, set…",
+     "doc": "The reporter's state: the open draft, and the device's shake setting and inbox address (persisted)."
+    },
+    {
+     "name": "installBugReporter",
+     "kind": "function",
+     "line": 84,
+     "signature": "()",
+     "doc": "Starts keeping console errors for reports. Root layout calls it once."
+    },
+    {
+     "name": "reportBug",
+     "kind": "function",
+     "line": 89,
+     "signature": "({ screenshot = true }: { screenshot?: boolean } = {})",
+     "doc": "Screenshots the screen as it is now and opens the report sheet. `screenshot: false` opens it without one."
+    },
+    {
+     "name": "BugReporterHost",
+     "kind": "component",
+     "line": 117,
+     "signature": "()",
+     "doc": "Follows the current screen, listens for shakes and shows the report sheet. Root layout only."
+    }
+   ]
+  },
+  {
    "file": "src/components/ui/Button.tsx",
    "doc": "",
    "exports": [
@@ -7719,7 +7938,7 @@
     {
      "name": "Toggle",
      "kind": "component",
-     "line": 14,
+     "line": 15,
      "signature": "({ value, onValueChange, accessibilityLabel, }: { value: boolean; onValueChange: (v: boolean) => void; accessibilityLabel: string; })",
      "doc": "On/off switch."
     }
@@ -8236,14 +8455,14 @@
     {
      "name": "DEFAULT_PREFS",
      "kind": "const",
-     "line": 24,
+     "line": 27,
      "signature": ": AccountPrefs",
      "doc": ""
     },
     {
      "name": "SettingsScreen",
      "kind": "component",
-     "line": 49,
+     "line": 52,
      "signature": "()",
      "doc": "Notification, language, calendar and privacy settings plus data export and account deletion."
     }
@@ -8361,7 +8580,7 @@
     {
      "name": "usesSupabase",
      "kind": "function",
-     "line": 26,
+     "line": 30,
      "signature": "()",
      "doc": "True when the real backend is switched on and configured."
     }
@@ -8462,30 +8681,37 @@
      "doc": "Page gutter."
     },
     {
+     "name": "shadow",
+     "kind": "function",
+     "line": 156,
+     "signature": "(elevation: number, opacity: number, radiusPx: number, offsetY: number, color = '#251B18'): ViewStyle",
+     "doc": "Drop shadow for something that floats: elevation on Android, `boxShadow` on the web (shadow* props are deprecated there), shadow* on iOS."
+    },
+    {
      "name": "shadows",
      "kind": "const",
-     "line": 168,
+     "line": 175,
      "signature": "= { … }",
      "doc": "Shadows are reserved for things that genuinely float (sheets, toasts)."
     },
     {
      "name": "type",
      "kind": "const",
-     "line": 178,
+     "line": 185,
      "signature": "= { display: { fontFamily: serif.bold, fontSize: 30, lineHeight: 40 }, title: { fontFamily:…",
      "doc": ""
     },
     {
      "name": "hitSlop",
      "kind": "const",
-     "line": 189,
+     "line": 196,
      "signature": "= { top: 10, bottom: 10, left: 10, right: 10 }",
      "doc": ""
     },
     {
      "name": "inputReset",
      "kind": "const",
-     "line": 192,
+     "line": 199,
      "signature": ": TextStyle",
      "doc": "Removes the browser focus ring from text inputs on web (native is unaffected)."
     }
@@ -8540,21 +8766,21 @@
     {
      "name": "ROUTE_AUDIENCE",
      "kind": "const",
-     "line": 177,
+     "line": 179,
      "signature": ": Record<string, string>",
      "doc": "Who a staff screen is for, in words (\"finance and admins\"), for the no-access message."
     },
     {
      "name": "TODAY_FOCUS",
      "kind": "const",
-     "line": 204,
+     "line": 206,
      "signature": ": { id: 'admin' | 'finance' | 'vendor_success' | 'support' | 'coordinator'; when: When }[]",
      "doc": "The staff member's focus on the Today screen, first match wins."
     },
     {
      "name": "SetupStepDef",
      "kind": "interface",
-     "line": 213,
+     "line": 215,
      "signature": "",
      "doc": "A step on the vendor home's setup checklist, shown until it is done.",
      "members": [
@@ -8605,14 +8831,14 @@
     {
      "name": "VENDOR_SETUP_STEPS",
      "kind": "const",
-     "line": 225,
+     "line": 227,
      "signature": ": SetupStepDef[]",
      "doc": ""
     },
     {
      "name": "UNIVERSAL_TOOLS",
      "kind": "function",
-     "line": 241,
+     "line": 243,
      "signature": "(Object.keys(TOOL_RULES) as ToolId[]).filter((id))",
      "doc": "Tool ids that are universal for their role on purpose (the registry check lists them)."
     }
@@ -9161,35 +9387,35 @@
     {
      "name": "FEATURE_BY_ID",
      "kind": "const",
-     "line": 98,
+     "line": 99,
      "signature": ": Record<string, FeatureDef>",
      "doc": ""
     },
     {
      "name": "toolFeature",
      "kind": "function",
-     "line": 100,
+     "line": 101,
      "signature": "(toolId: string)",
      "doc": ""
     },
     {
      "name": "serviceFeature",
      "kind": "function",
-     "line": 101,
+     "line": 102,
      "signature": "(serviceId: string)",
      "doc": ""
     },
     {
      "name": "tabFeature",
      "kind": "function",
-     "line": 102,
+     "line": 103,
      "signature": "(role: UserRole, tab: string)",
      "doc": ""
     },
     {
      "name": "TopFeature",
      "kind": "interface",
-     "line": 104,
+     "line": 105,
      "signature": "",
      "doc": "",
      "members": [
@@ -9210,77 +9436,77 @@
     {
      "name": "TOP_FEATURES",
      "kind": "const",
-     "line": 120,
+     "line": 121,
      "signature": ": Record<UserRole, TopFeature[]>",
      "doc": "The 20 features each app shows out of the box, in the order people meet\nthem. Account basics (home, notifications, settings, profile, language,\nsupport, log out) come with every app and aren't counted. Tools listed here\nare on by default; every other tool is an extra."
     },
     {
      "name": "TRADE_TOOLS",
      "kind": "const",
-     "line": 212,
+     "line": 213,
      "signature": "= [ … 9 items ]",
      "doc": "The one trade tool each business gets by default (\"core.vendor.trade\"); a business sees only its own trade's."
     },
     {
      "name": "CRAFT_TOOLS",
      "kind": "const",
-     "line": 214,
+     "line": 215,
      "signature": "= ['freelancer.backup', 'freelancer.kit', 'freelancer.setlist', 'freelancer.vehicle']",
      "doc": "The kit tool each craft gets by default (\"core.freelancer.craftkit\"); crew see only their craft's."
     },
     {
      "name": "EXTRA_FEATURES",
      "kind": "const",
-     "line": 217,
+     "line": 218,
      "signature": "= new Set([ 'home.collections', 'home.makeup', 'home.real_weddings', 'couple.celebrate', 'c…",
      "doc": "Fixed surfaces that start hidden: extras a super admin can switch on."
     },
     {
      "name": "featureDefault",
      "kind": "function",
-     "line": 247,
+     "line": 248,
      "signature": "(id: string)",
      "doc": "On or off before a super admin touches it: tools only if they are top features, fixed surfaces unless they are extras."
     },
     {
      "name": "featureOn",
      "kind": "function",
-     "line": 250,
+     "line": 251,
      "signature": "(flags: Record<string, boolean> | undefined, id: string)",
      "doc": "Is the feature on? A missing id takes its default."
     },
     {
      "name": "FEATURE_ROUTES",
      "kind": "const",
-     "line": 257,
+     "line": 258,
      "signature": ": Record<string, string[]>",
      "doc": "The screens behind a feature. When a feature is off its links disappear\nand these screens show a \"switched off\" page (`FeatureRouteGuard`), so an\nold link or notification can't open them. `*` matches one path segment."
     },
     {
      "name": "featureForPath",
      "kind": "function",
-     "line": 298,
+     "line": 299,
      "signature": "(path: string): string | undefined",
      "doc": "The feature a path belongs to (`/contract/c1` → `couple.contracts`), if any."
     },
     {
      "name": "FeatureLink",
      "kind": "type",
-     "line": 304,
+     "line": 305,
      "signature": "= string | { pathname: string; params?: Record<string, unknown> }",
      "doc": "A link as expo-router takes it: a path, or a pathname with params."
     },
     {
      "name": "linkPath",
      "kind": "function",
-     "line": 307,
+     "line": 308,
      "signature": "(href: FeatureLink)",
      "doc": "The path a link opens, with `[param]` segments filled in."
     },
     {
      "name": "linkOn",
      "kind": "function",
-     "line": 311,
+     "line": 312,
      "signature": "(flags: Record<string, boolean> | undefined, href: FeatureLink)",
      "doc": "Can this link open? False when the screen it leads to belongs to a switched-off feature."
     }
@@ -9396,7 +9622,7 @@
      "name": "LEGAL_VERSION",
      "kind": "const",
      "line": 14,
-     "signature": "= '2026-10-01'",
+     "signature": "= '2026-10-03'",
      "doc": "The date of the current Terms and Privacy policy; stored with each acceptance."
     },
     {
@@ -9469,14 +9695,14 @@
     {
      "name": "LEGAL_DOCS",
      "kind": "const",
-     "line": 319,
+     "line": 320,
      "signature": ": Record<LegalDocId, LegalDoc>",
      "doc": ""
     },
     {
      "name": "isLegalDoc",
      "kind": "function",
-     "line": 321,
+     "line": 322,
      "signature": "(x: unknown): x is LegalDocId",
      "doc": ""
     }
@@ -10011,14 +10237,14 @@
     {
      "name": "contractSections",
      "kind": "function",
-     "line": 1840,
+     "line": 1841,
      "signature": "(provider: string, scope: string, amount: number): { heading: string; body: string }[]",
      "doc": ""
     },
     {
      "name": "DEMO_IMAGES",
      "kind": "const",
-     "line": 1853,
+     "line": 1854,
      "signature": ": PhotoKey[]",
      "doc": ""
     }
@@ -10793,6 +11019,33 @@
    ]
   },
   {
+   "file": "src/hooks/useBugReports.ts",
+   "doc": "",
+   "exports": [
+    {
+     "name": "useBugReports",
+     "kind": "hook",
+     "line": 18,
+     "signature": "(): { reports: BugReportRecord[]; loading: boolean; error?: string; refresh: () => void }",
+     "doc": "Bug reports for the super admin console: the server's on Supabase builds, the store's in the demo."
+    },
+    {
+     "name": "useBugReport",
+     "kind": "hook",
+     "line": 27,
+     "signature": "(id: string | undefined): { report?: BugReportRecord; loading: boolean; error?: string }",
+     "doc": "One report, with its screenshot."
+    },
+    {
+     "name": "useBugReportActions",
+     "kind": "hook",
+     "line": 36,
+     "signature": "()",
+     "doc": "Mark fixed / dismissed / new and delete; each resolves to an error to show, or null."
+    }
+   ]
+  },
+  {
    "file": "src/hooks/useChat.ts",
    "doc": "",
    "exports": [
@@ -10874,6 +11127,19 @@
      "line": 7,
      "signature": "()",
      "doc": "Breakpoints for the web-ready consoles. Phones get one column; tablets and\ndesktop browsers (expo start --web) get side navigation and grids."
+    }
+   ]
+  },
+  {
+   "file": "src/hooks/useShake.ts",
+   "doc": "",
+   "exports": [
+    {
+     "name": "useShake",
+     "kind": "hook",
+     "line": 13,
+     "signature": "(onShake: () => void, enabled = true)",
+     "doc": "Calls `onShake` when the phone is shaken firmly. Pass a stable function; does nothing where there is no accelerometer."
     }
    ]
   },
@@ -13033,6 +13299,13 @@
      "line": 451,
      "signature": "(posts: SocialPost[]): PostStats",
      "doc": "Totals across published posts, per network, and the best post by engagement."
+    },
+    {
+     "name": "optInKeyword",
+     "kind": "function",
+     "line": 483,
+     "signature": "(text: string): 'in' | 'out' | null",
+     "doc": "WhatsApp broadcast consent by keyword: \"START\"/\"SUBSCRIBE\" opts in, \"STOP\"/\"UNSUBSCRIBE\" opts out (also in Nepali). Same words as the SQL trigger in 0020."
     }
    ]
   },
@@ -13463,14 +13736,14 @@
     {
      "name": "messageFor",
      "kind": "function",
-     "line": 200,
+     "line": 204,
      "signature": "(action: string): string | null",
      "doc": "\"addBudgetLine\" → \"Budget line added\"."
     },
     {
      "name": "installActionToasts",
      "kind": "function",
-     "line": 261,
+     "line": 265,
      "signature": "()",
      "doc": "Wraps the store actions once (root layout). Timers that call actions use `quietly()`."
     }
@@ -14118,42 +14391,42 @@
     {
      "name": "DbData",
      "kind": "re-export",
-     "line": 31,
+     "line": 32,
      "signature": "from './types'",
      "doc": ""
     },
     {
      "name": "Db",
      "kind": "type",
-     "line": 32,
-     "signature": "= DbData & CoreActions & QuoteActions & ProjectActions & FinanceActions & GigActions & ChatActions & TrustActions & PlannerActions & ToolkitActions & PersonaActions & AdminActions & SocialActions",
+     "line": 33,
+     "signature": "= DbData & CoreActions & QuoteActions & ProjectActions & FinanceActions & GigActions & ChatActions & TrustActions & PlannerActions & ToolkitActions & PersonaActions & AdminActions & SocialActions & SupportActions",
      "doc": ""
     },
     {
      "name": "useDb",
      "kind": "const",
-     "line": 95,
+     "line": 96,
      "signature": "= create<Db>()( persist( (set, get) => ({ ...buildSeedData(), ...coreActions(set, get), ...…",
      "doc": ""
     },
     {
      "name": "useInbox",
      "kind": "hook",
-     "line": 146,
+     "line": 149,
      "signature": "(account: Account)",
      "doc": "Notifications addressed to the account directly or to its whole role.\nSelects the stable array and filters in render — returning a fresh array\nfrom a zustand selector would re-render forever."
     },
     {
      "name": "useThreads",
      "kind": "hook",
-     "line": 152,
+     "line": 155,
      "signature": "(account: Account)",
      "doc": "Threads this account is a member of (platform staff see every thread)."
     },
     {
      "name": "useUnreadMessageCount",
      "kind": "hook",
-     "line": 164,
+     "line": 167,
      "signature": "(account: Account)",
      "doc": ""
     }
@@ -15131,6 +15404,12 @@
        "doc": ""
       },
       {
+       "name": "setSocialOptIn",
+       "optional": false,
+       "type": "(threadId: string, optedIn: boolean) => string | null",
+       "doc": "WhatsApp: records that the customer agreed (or no longer agrees) to broadcasts. The opted-in count is the WhatsApp audience."
+      },
+      {
        "name": "createLeadFromSocialThread",
        "optional": false,
        "type": "(threadId: string, input: SocialLeadInput) => { leadId?: string; error?: string }",
@@ -15195,23 +15474,77 @@
     {
      "name": "clearSocialTimers",
      "kind": "function",
-     "line": 80,
+     "line": 82,
      "signature": "()",
      "doc": "Stops the simulated networks (on resetDemo)."
     },
     {
      "name": "socialSettingsFor",
      "kind": "function",
-     "line": 106,
+     "line": 108,
      "signature": "(all: Record<string, SocialSettings>, ownerId: string)",
      "doc": "Settings for a business, with the starter set until it saves its own."
     },
     {
      "name": "socialActions",
      "kind": "function",
-     "line": 111,
+     "line": 113,
      "signature": "(set: SetDb, get: GetDb): SocialActions",
      "doc": "The social hub actions for the shared store."
+    }
+   ]
+  },
+  {
+   "file": "src/store/db/support.ts",
+   "doc": "Bug reports from shake to report. Anyone can send one, signed in or not, in every build; super admins read them in the console (Super admin → Bug reports), mark them fixed or dismissed and delete them. On Supabase builds the same use cases are rpc_submit_bug_report and friends (supabase/migrations/0019_bug_reports.sql).",
+   "exports": [
+    {
+     "name": "MAX_BUG_REPORTS",
+     "kind": "const",
+     "line": 16,
+     "signature": "= 200",
+     "doc": "Reports kept on the device; the oldest go first."
+    },
+    {
+     "name": "MAX_BUG_SCREENSHOTS",
+     "kind": "const",
+     "line": 18,
+     "signature": "= 20",
+     "doc": "Only the newest reports keep their screenshot, so the saved data stays small."
+    },
+    {
+     "name": "SupportActions",
+     "kind": "interface",
+     "line": 21,
+     "signature": "",
+     "doc": "",
+     "members": [
+      {
+       "name": "submitBugReport",
+       "optional": false,
+       "type": "(report: BugReport) => { id?: string; error?: string }",
+       "doc": "Saves a report from the report sheet and tells the super admins. Returns its id, or an error."
+      },
+      {
+       "name": "setBugReportStatus",
+       "optional": false,
+       "type": "(id: string, status: BugReportStatus, note?: string) => string | null",
+       "doc": "Marks a report new, fixed or dismissed (super admins). Returns an error to show, or null."
+      },
+      {
+       "name": "removeBugReports",
+       "optional": false,
+       "type": "(ids: string[]) => string | null",
+       "doc": "Deletes reports (super admins)."
+      }
+     ]
+    },
+    {
+     "name": "supportActions",
+     "kind": "function",
+     "line": 30,
+     "signature": "(set: SetDb, get: GetDb): SupportActions",
+     "doc": ""
     }
    ]
   },
@@ -15375,7 +15708,7 @@
     {
      "name": "DbData",
      "kind": "interface",
-     "line": 49,
+     "line": 50,
      "signature": "",
      "doc": "Everything the shared on-device \"backend\" persists. Mirrors the SQL schema.",
      "members": [
@@ -15648,6 +15981,12 @@
        "optional": false,
        "type": "Record<string, SocialSettings>",
        "doc": "Saved replies, auto-replies and away message, keyed by the business account id."
+      },
+      {
+       "name": "bugReports",
+       "optional": false,
+       "type": "BugReportRecord[]",
+       "doc": "Bug reports sent with shake to report, newest first (super admin console → Bug reports)."
       }
      ]
     }
@@ -22855,23 +23194,171 @@
      ]
     },
     {
+     "name": "BugLogLine",
+     "kind": "interface",
+     "line": 1138,
+     "signature": "",
+     "doc": "",
+     "members": [
+      {
+       "name": "at",
+       "optional": false,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "level",
+       "optional": false,
+       "type": "'error' | 'warn'",
+       "doc": ""
+      },
+      {
+       "name": "message",
+       "optional": false,
+       "type": "string",
+       "doc": ""
+      }
+     ]
+    },
+    {
+     "name": "BugReport",
+     "kind": "interface",
+     "line": 1145,
+     "signature": "",
+     "doc": "What the report sheet sends: the description, the screenshot and where it happened.",
+     "members": [
+      {
+       "name": "description",
+       "optional": false,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "screenshot",
+       "optional": true,
+       "type": "string",
+       "doc": "JPEG or PNG as a data URI (on this device's own copy it can be a file:// address instead)."
+      },
+      {
+       "name": "route",
+       "optional": false,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "params",
+       "optional": false,
+       "type": "Record<string, string>",
+       "doc": ""
+      },
+      {
+       "name": "capturedAt",
+       "optional": false,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "account",
+       "optional": true,
+       "type": "{ id: string; name: string; role: string; staffRole?: string }",
+       "doc": "Missing when the report was sent signed out."
+      },
+      {
+       "name": "device",
+       "optional": false,
+       "type": "{ os: string; osVersion: string; width: number; height: number; scale: number; runtime: string; userAgent?: string }",
+       "doc": ""
+      },
+      {
+       "name": "app",
+       "optional": false,
+       "type": "{ name: string; version: string; backend: string; language: string; calendar: string }",
+       "doc": ""
+      },
+      {
+       "name": "recentRoutes",
+       "optional": false,
+       "type": "{ at: string; path: string }[]",
+       "doc": ""
+      },
+      {
+       "name": "logs",
+       "optional": false,
+       "type": "BugLogLine[]",
+       "doc": ""
+      }
+     ]
+    },
+    {
+     "name": "BugReportStatus",
+     "kind": "type",
+     "line": 1160,
+     "signature": "= 'new' | 'fixed' | 'dismissed'",
+     "doc": ""
+    },
+    {
+     "name": "BugReportRecord",
+     "kind": "interface",
+     "line": 1163,
+     "signature": "extends BugReport",
+     "doc": "A bug report as the super admin console keeps it.",
+     "members": [
+      {
+       "name": "id",
+       "optional": false,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "receivedAt",
+       "optional": false,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "status",
+       "optional": false,
+       "type": "BugReportStatus",
+       "doc": ""
+      },
+      {
+       "name": "resolvedBy",
+       "optional": true,
+       "type": "string",
+       "doc": "Who marked it fixed or dismissed, and when."
+      },
+      {
+       "name": "resolvedAt",
+       "optional": true,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "note",
+       "optional": true,
+       "type": "string",
+       "doc": ""
+      }
+     ]
+    },
+    {
      "name": "*",
      "kind": "re-export",
-     "line": 1138,
+     "line": 1174,
      "signature": "from './toolkit'",
      "doc": ""
     },
     {
      "name": "*",
      "kind": "re-export",
-     "line": 1140,
+     "line": 1176,
      "signature": "from './social'",
      "doc": ""
     },
     {
      "name": "*",
      "kind": "re-export",
-     "line": 1142,
+     "line": 1178,
      "signature": "from './persona'",
      "doc": ""
     }
@@ -23016,6 +23503,12 @@
        "doc": ""
       },
       {
+       "name": "publicId",
+       "optional": true,
+       "type": "string",
+       "doc": "Cloudinary public id (Supabase builds): the networks fetch the file from its public URL."
+      },
+      {
        "name": "alt",
        "optional": true,
        "type": "string",
@@ -23026,7 +23519,7 @@
     {
      "name": "SocialThread",
      "kind": "interface",
-     "line": 54,
+     "line": 56,
      "signature": "",
      "doc": "One conversation in the unified inbox.",
      "members": [
@@ -23077,6 +23570,12 @@
        "optional": true,
        "type": "string",
        "doc": "WhatsApp number, or one the customer typed into a message."
+      },
+      {
+       "name": "optedIn",
+       "optional": true,
+       "type": "boolean",
+       "doc": "WhatsApp: the customer agreed to receive broadcasts (said START, or the team recorded their consent)."
       },
       {
        "name": "postId",
@@ -23155,14 +23654,14 @@
     {
      "name": "SocialMessageStatus",
      "kind": "type",
-     "line": 85,
+     "line": 89,
      "signature": "= 'sending' | 'sent' | 'delivered' | 'read' | 'failed'",
      "doc": "Delivery state of a reply, as the network reports it."
     },
     {
      "name": "SocialMessage",
      "kind": "interface",
-     "line": 88,
+     "line": 92,
      "signature": "",
      "doc": "A message, a comment, or an internal note in a thread.",
      "members": [
@@ -23237,14 +23736,14 @@
     {
      "name": "SocialPostStatus",
      "kind": "type",
-     "line": 107,
+     "line": 111,
      "signature": "= 'draft' | 'scheduled' | 'publishing' | 'published' | 'partial' | 'failed'",
      "doc": "Where a post is: draft, scheduled, publishing, published, partly published or failed."
     },
     {
      "name": "SocialPostResult",
      "kind": "interface",
-     "line": 110,
+     "line": 114,
      "signature": "",
      "doc": "How one network took a post, and how it did there.",
      "members": [
@@ -23307,7 +23806,7 @@
     {
      "name": "SocialPost",
      "kind": "interface",
-     "line": 123,
+     "line": 127,
      "signature": "",
      "doc": "One post sent to several networks at once (now or at a set time).",
      "members": [
@@ -23406,7 +23905,7 @@
     {
      "name": "SocialAutoRule",
      "kind": "interface",
-     "line": 145,
+     "line": 149,
      "signature": "",
      "doc": "Keyword auto-reply: when an incoming message contains a keyword, reply at once.",
      "members": [
@@ -23451,7 +23950,7 @@
     {
      "name": "SocialSettings",
      "kind": "interface",
-     "line": 156,
+     "line": 160,
      "signature": "",
      "doc": "Saved replies, auto-replies and the away message of one business.",
      "members": [
@@ -25648,6 +26147,79 @@
      "line": 542,
      "signature": "(media: { kind?: string; publicId?: string; uri?: string }[], cloudName?: string): PublishMedia[]",
      "doc": "A post's media as public URLs: uploaded files are Cloudinary public ids, others already URLs."
+    },
+    {
+     "name": "MetricTarget",
+     "kind": "interface",
+     "line": 555,
+     "signature": "",
+     "doc": "A published post on one network whose numbers are read back.",
+     "members": [
+      {
+       "name": "network",
+       "optional": false,
+       "type": "Network",
+       "doc": ""
+      },
+      {
+       "name": "externalId",
+       "optional": false,
+       "type": "string",
+       "doc": "Facebook post id, Instagram media id, or TikTok publish id."
+      },
+      {
+       "name": "token",
+       "optional": false,
+       "type": "string",
+       "doc": ""
+      }
+     ]
+    },
+    {
+     "name": "Metrics",
+     "kind": "interface",
+     "line": 563,
+     "signature": "",
+     "doc": "Numbers a network reports for a post; missing ones are left as they were.",
+     "members": [
+      {
+       "name": "reach",
+       "optional": true,
+       "type": "number",
+       "doc": ""
+      },
+      {
+       "name": "likes",
+       "optional": true,
+       "type": "number",
+       "doc": ""
+      },
+      {
+       "name": "comments",
+       "optional": true,
+       "type": "number",
+       "doc": ""
+      },
+      {
+       "name": "shares",
+       "optional": true,
+       "type": "number",
+       "doc": ""
+      },
+      {
+       "name": "saves",
+       "optional": true,
+       "type": "number",
+       "doc": ""
+      }
+     ]
+    },
+    {
+     "name": "fetchMetrics",
+     "kind": "function",
+     "line": 588,
+     "signature": "(t: MetricTarget, http: Http, graphVersion = 'v21.0'): Promise<Metrics | null>",
+     "doc": "Reads a post's numbers back from its network: Facebook post fields and\ninsights, Instagram media insights, TikTok's video query (after finding the\npublic post id from the publish id). Never throws; null when unavailable."
     }
    ]
   },
@@ -25741,7 +26313,7 @@
   },
   {
    "file": "supabase/functions/social-publish/index.ts",
-   "doc": "social-publish: sends one post to every network it was written for. POST { \"postId\": uuid } (Authorization: Bearer <user JWT>) publish now → { status, results: { facebook: { status, url?, error? }, … } } POST { \"due\": true } (x-webhook-secret: NOTIFY_WEBHOOK_SECRET) the scheduled run (job_social_due in 0018, every five minutes through pg_cron and pg_net) → claims the due posts (vivah_social_claim_due) and publishes each Each network follows its own steps (publishTo in _shared/social.ts) and its outcome is recorded with vivah_social_target_result, which also sets the post's status: published, …",
+   "doc": "social-publish: sends one post to every network it was written for. POST { \"postId\": uuid } (Authorization: Bearer <user JWT>) publish now → { status, results: { facebook: { status, url?, error? }, … } } POST { \"due\": true } (x-webhook-secret: NOTIFY_WEBHOOK_SECRET) the scheduled run (job_social_due in 0018, every five minutes through pg_cron and pg_net) → claims the due posts (vivah_social_claim_due) and publishes each POST { \"metrics\": true } (x-webhook-secret) job_social_metrics in 0020, every six hours → reads reach, likes, comments, shares and saves back for recent posts Each network fol…",
    "exports": []
   },
   {

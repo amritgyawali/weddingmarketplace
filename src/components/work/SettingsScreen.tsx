@@ -4,12 +4,15 @@ import { StyleSheet, View } from 'react-native';
 
 import { deleteMyAccount, exportMyData } from '@/backend/account';
 import { usesEmailSignIn } from '@/backend/auth';
-import { Card, ChoiceChips, KButton, ListRow, SectionTitle, StackHeader } from '@/components/kit';
+import { bugReportsAvailable, defaultBugInbox, devInboxOffered, pingBugInbox } from '@/backend/bugReport';
+import { Card, ChoiceChips, KButton, KField, ListRow, SectionTitle, StackHeader } from '@/components/kit';
+import { reportBug, useBugReporter } from '@/components/ui/BugReporter';
 import { Text } from '@/components/ui/Text';
 import { Toggle } from '@/components/ui/Toggle';
-import { toast } from '@/components/ui/Toast';
+import { toast, toastError } from '@/components/ui/Toast';
 import { LanguageSwitch } from '@/components/ui/LanguageSwitch';
 import { BRAND } from '@/constants/brand';
+import { useFeatures } from '@/hooks/useFeatures';
 import { usePrefs } from '@/i18n';
 import { logout } from '@/services/auth';
 import { shareText } from '@/services/exporters';
@@ -59,6 +62,23 @@ export function SettingsScreen() {
   const calendar = usePrefs((s) => s.calendar);
   const setCalendar = usePrefs((s) => s.setCalendar);
   const live = usesEmailSignIn();
+  const featureOn = useFeatures();
+  const bugReports = bugReportsAvailable() && featureOn('app.bug_report');
+  const shake = useBugReporter((s) => s.shake);
+  const setShake = useBugReporter((s) => s.setShake);
+  const inbox = useBugReporter((s) => s.inbox);
+  const setInbox = useBugReporter((s) => s.setInbox);
+  const [inboxDraft, setInboxDraft] = useState(inbox);
+  const [checkingInbox, setCheckingInbox] = useState(false);
+
+  const checkInbox = async () => {
+    setInbox(inboxDraft);
+    setCheckingInbox(true);
+    const reached = await pingBugInbox();
+    setCheckingInbox(false);
+    if (reached.ok) toast('Connected to the bug inbox');
+    else toastError(reached.error);
+  };
 
   const exportData = async () => {
     const db = useDb.getState();
@@ -180,6 +200,32 @@ export function SettingsScreen() {
           />
         </Card>
 
+        {bugReports && (
+          <>
+            <SectionTitle title="Help" />
+            <Card padded={false} style={{ overflow: 'hidden' }}>
+              <ListRow icon="bug-outline" title="Report a problem" subtitle="Or shake your phone on the screen that went wrong" onPress={() => void reportBug({ screenshot: false })} />
+              {row('Shake to report a bug', shake, setShake, 'Takes a screenshot of the screen you are on')}
+              {devInboxOffered() && (
+                <View style={[styles.inbox, { borderTopColor: t.c.border }]}>
+                  <KField
+                    label="Bug inbox address"
+                    value={inboxDraft}
+                    onChangeText={setInboxDraft}
+                    onEndEditing={() => setInbox(inboxDraft)}
+                    placeholder={defaultBugInbox() ?? '192.168.1.10:8790'}
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                    keyboardType="url"
+                    hint="Test builds also send each report to this computer (npx expo start or npm run bugs:inbox, on the same Wi-Fi). Leave empty to use the one shown."
+                  />
+                  <KButton label="Check connection" icon="wifi-outline" variant="secondary" size="sm" loading={checkingInbox} onPress={checkInbox} />
+                </View>
+              )}
+            </Card>
+          </>
+        )}
+
         <SectionTitle title="Legal" />
         <Card padded={false} style={{ overflow: 'hidden' }}>
           <ListRow icon="document-text-outline" title="Terms of use" onPress={() => router.push({ pathname: '/legal/[doc]', params: { doc: 'terms' } })} />
@@ -196,4 +242,5 @@ export function SettingsScreen() {
 
 const styles = StyleSheet.create({
   row: { flexDirection: 'row', alignItems: 'center', gap: 12, paddingHorizontal: 14, paddingVertical: 11, borderTopWidth: StyleSheet.hairlineWidth },
+  inbox: { gap: 10, padding: 14, borderTopWidth: StyleSheet.hairlineWidth },
 });

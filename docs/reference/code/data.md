@@ -105,7 +105,7 @@ staff member can't use shows who it is for instead of opening.
 
 ### `ROUTE_AUDIENCE`
 
-*const* · [src/data/access.ts:177](../../../src/data/access.ts#L177)
+*const* · [src/data/access.ts:179](../../../src/data/access.ts#L179)
 
 ```ts
 ROUTE_AUDIENCE: Record<string, string>
@@ -115,7 +115,7 @@ Who a staff screen is for, in words ("finance and admins"), for the no-access me
 
 ### `TODAY_FOCUS`
 
-*const* · [src/data/access.ts:204](../../../src/data/access.ts#L204)
+*const* · [src/data/access.ts:206](../../../src/data/access.ts#L206)
 
 ```ts
 TODAY_FOCUS: { id: 'admin' | 'finance' | 'vendor_success' | 'support' | 'coordinator'; when: When }[]
@@ -125,7 +125,7 @@ The staff member's focus on the Today screen, first match wins.
 
 ### `SetupStepDef`
 
-*interface* · [src/data/access.ts:213](../../../src/data/access.ts#L213)
+*interface* · [src/data/access.ts:215](../../../src/data/access.ts#L215)
 
 A step on the vendor home's setup checklist, shown until it is done.
 
@@ -141,7 +141,7 @@ A step on the vendor home's setup checklist, shown until it is done.
 
 ### `VENDOR_SETUP_STEPS`
 
-*const* · [src/data/access.ts:225](../../../src/data/access.ts#L225)
+*const* · [src/data/access.ts:227](../../../src/data/access.ts#L227)
 
 ```ts
 VENDOR_SETUP_STEPS: SetupStepDef[]
@@ -151,7 +151,7 @@ _No JSDoc yet._
 
 ### `UNIVERSAL_TOOLS`
 
-*function* · [src/data/access.ts:241](../../../src/data/access.ts#L241)
+*function* · [src/data/access.ts:243](../../../src/data/access.ts#L243)
 
 ```ts
 UNIVERSAL_TOOLS(Object.keys(TOOL_RULES) as ToolId[]).filter((id))
@@ -742,7 +742,7 @@ _No JSDoc yet._
 
 ### `FEATURE_BY_ID`
 
-*const* · [src/data/features.ts:98](../../../src/data/features.ts#L98)
+*const* · [src/data/features.ts:99](../../../src/data/features.ts#L99)
 
 ```ts
 FEATURE_BY_ID: Record<string, FeatureDef>
@@ -752,7 +752,7 @@ _No JSDoc yet._
 
 ### `toolFeature`
 
-*function* · [src/data/features.ts:100](../../../src/data/features.ts#L100)
+*function* · [src/data/features.ts:101](../../../src/data/features.ts#L101)
 
 ```ts
 toolFeature(toolId: string)
@@ -762,7 +762,7 @@ _No JSDoc yet._
 
 ### `serviceFeature`
 
-*function* · [src/data/features.ts:101](../../../src/data/features.ts#L101)
+*function* · [src/data/features.ts:102](../../../src/data/features.ts#L102)
 
 ```ts
 serviceFeature(serviceId: string)
@@ -772,7 +772,7 @@ _No JSDoc yet._
 
 ### `tabFeature`
 
-*function* · [src/data/features.ts:102](../../../src/data/features.ts#L102)
+*function* · [src/data/features.ts:103](../../../src/data/features.ts#L103)
 
 ```ts
 tabFeature(role: UserRole, tab: string)
@@ -782,7 +782,7 @@ _No JSDoc yet._
 
 ### `TopFeature`
 
-*interface* · [src/data/features.ts:104](../../../src/data/features.ts#L104)
+*interface* · [src/data/features.ts:105](../../../src/data/features.ts#L105)
 
 _No JSDoc yet._
 
@@ -793,7 +793,7 @@ _No JSDoc yet._
 
 ### `TOP_FEATURES`
 
-*const* · [src/data/features.ts:120](../../../src/data/features.ts#L120)
+*const* · [src/data/features.ts:121](../../../src/data/features.ts#L121)
 
 ```ts
 TOP_FEATURES: Record<UserRole, TopFeature[]>
@@ -806,7 +806,7 @@ are on by default; every other tool is an extra.
 
 ### `TRADE_TOOLS`
 
-*const* · [src/data/features.ts:212](../../../src/data/features.ts#L212)
+*const* · [src/data/features.ts:213](../../../src/data/features.ts#L213)
 
 ```ts
 TRADE_TOOLS= [ … 9 items ]
@@ -816,7 +816,7 @@ The one trade tool each business gets by default ("core.vendor.trade"); a busine
 
 ### `CRAFT_TOOLS`
 
-*const* · [src/data/features.ts:214](../../../src/data/features.ts#L214)
+*const* · [src/data/features.ts:215](../../../src/data/features.ts#L215)
 
 ```ts
 CRAFT_TOOLS= ['freelancer.backup', 'freelancer.kit', 'freelancer.setlist', 'freelancer.vehicle']
@@ -826,7 +826,7 @@ The kit tool each craft gets by default ("core.freelancer.craftkit"); crew see o
 
 ### `EXTRA_FEATURES`
 
-*const* · [src/data/features.ts:217](../../../src/data/features.ts#L217)
+*const* · [src/data/features.ts:218](../../../src/data/features.ts#L218)
 
 ```ts
 EXTRA_FEATURES= new Set([ 'home.collections', 'home.makeup', 'home.real_weddings', 'couple.celebrate', 'c…
@@ -836,7 +836,7 @@ Fixed surfaces that start hidden: extras a super admin can switch on.
 
 ### `featureDefault`
 
-*function* · [src/data/features.ts:247](../../../src/data/features.ts#L247)
+*function* · [src/data/features.ts:248](../../../src/data/features.ts#L248)
 
 ```ts
 featureDefault(id: string)
@@ -846,7 +846,7 @@ On or off before a super admin touches it: tools only if they are top features, 
 
 ### `featureOn`
 
-*function* · [src/data/features.ts:250](../../../src/data/features.ts#L250)
+*function* · [src/data/features.ts:251](../../../src/data/features.ts#L251)
 
 ```ts
 featureOn(flags: Record<string, boolean> | undefined, id: string)
@@ -856,7 +856,7 @@ Is the feature on? A missing id takes its default.
 
 ### `FEATURE_ROUTES`
 
-*const* · [src/data/features.ts:257](../../../src/data/features.ts#L257)
+*const* · [src/data/features.ts:258](../../../src/data/features.ts#L258)
 
 ```ts
 FEATURE_ROUTES: Record<string, string[]>
@@ -868,7 +868,7 @@ old link or notification can't open them. `*` matches one path segment.
 
 ### `featureForPath`
 
-*function* · [src/data/features.ts:298](../../../src/data/features.ts#L298)
+*function* · [src/data/features.ts:299](../../../src/data/features.ts#L299)
 
 ```ts
 featureForPath(path: string): string | undefined
@@ -878,7 +878,7 @@ The feature a path belongs to (`/contract/c1` → `couple.contracts`), if any.
 
 ### `FeatureLink`
 
-*type* · [src/data/features.ts:304](../../../src/data/features.ts#L304)
+*type* · [src/data/features.ts:305](../../../src/data/features.ts#L305)
 
 ```ts
 type FeatureLink = string | { pathname: string; params?: Record<string, unknown> }
@@ -888,7 +888,7 @@ A link as expo-router takes it: a path, or a pathname with params.
 
 ### `linkPath`
 
-*function* · [src/data/features.ts:307](../../../src/data/features.ts#L307)
+*function* · [src/data/features.ts:308](../../../src/data/features.ts#L308)
 
 ```ts
 linkPath(href: FeatureLink)
@@ -898,7 +898,7 @@ The path a link opens, with `[param]` segments filled in.
 
 ### `linkOn`
 
-*function* · [src/data/features.ts:311](../../../src/data/features.ts#L311)
+*function* · [src/data/features.ts:312](../../../src/data/features.ts#L312)
 
 ```ts
 linkOn(flags: Record<string, boolean> | undefined, href: FeatureLink)
@@ -1056,7 +1056,7 @@ sign-in (rpc_accept_legal).
 *const* · [src/data/legal.ts:14](../../../src/data/legal.ts#L14)
 
 ```ts
-LEGAL_VERSION= '2026-10-01'
+LEGAL_VERSION= '2026-10-03'
 ```
 
 The date of the current Terms and Privacy policy; stored with each acceptance.
@@ -1098,7 +1098,7 @@ _No JSDoc yet._
 
 ### `LEGAL_DOCS`
 
-*const* · [src/data/legal.ts:319](../../../src/data/legal.ts#L319)
+*const* · [src/data/legal.ts:320](../../../src/data/legal.ts#L320)
 
 ```ts
 LEGAL_DOCS: Record<LegalDocId, LegalDoc>
@@ -1108,7 +1108,7 @@ _No JSDoc yet._
 
 ### `isLegalDoc`
 
-*function* · [src/data/legal.ts:321](../../../src/data/legal.ts#L321)
+*function* · [src/data/legal.ts:322](../../../src/data/legal.ts#L322)
 
 ```ts
 isLegalDoc(x: unknown): x is LegalDocId
@@ -1554,7 +1554,7 @@ _No JSDoc yet._
 
 ### `contractSections`
 
-*function* · [src/data/seed.ts:1840](../../../src/data/seed.ts#L1840)
+*function* · [src/data/seed.ts:1841](../../../src/data/seed.ts#L1841)
 
 ```ts
 contractSections(provider: string, scope: string, amount: number): { heading: string; body: string }[]
@@ -1564,7 +1564,7 @@ _No JSDoc yet._
 
 ### `DEMO_IMAGES`
 
-*const* · [src/data/seed.ts:1853](../../../src/data/seed.ts#L1853)
+*const* · [src/data/seed.ts:1854](../../../src/data/seed.ts#L1854)
 
 ```ts
 DEMO_IMAGES: PhotoKey[]

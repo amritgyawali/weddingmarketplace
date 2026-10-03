@@ -52,6 +52,7 @@ export const COLLECTIONS: { key: keyof DbData; label: string; group: string; hin
   { key: 'occasions', label: 'Occasions', group: 'Catalogue', hint: 'Also editable from Occasions' },
   { key: 'settings', label: 'Platform settings', group: 'Catalogue', hint: 'Rates, fees, cities, banners' },
   { key: 'announcements', label: 'Announcements', group: 'Console', hint: '' },
+  { key: 'bugReports', label: 'Bug reports', group: 'Console', hint: 'Shake to report' },
   { key: 'featureFlags', label: 'Feature switches', group: 'Console', hint: 'false hides a feature' },
   { key: 'textOverrides', label: 'Text changes', group: 'Console', hint: '' },
 ];

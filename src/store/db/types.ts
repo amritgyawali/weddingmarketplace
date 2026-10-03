@@ -6,6 +6,7 @@ import type {
   AvailabilityEntry,
   AvailabilityRule,
   Broadcast,
+  BugReportRecord,
   BudgetLine,
   Contract,
   Deal,
@@ -111,4 +112,7 @@ export interface DbData {
   socialPosts: SocialPost[];
   /** Saved replies, auto-replies and away message, keyed by the business account id. */
   socialSettings: Record<string, SocialSettings>;
+  // support
+  /** Bug reports sent with shake to report, newest first (super admin console → Bug reports). */
+  bugReports: BugReportRecord[];
 }

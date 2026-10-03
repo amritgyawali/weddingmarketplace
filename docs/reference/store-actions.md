@@ -243,6 +243,7 @@ Source: [src/store/db/social.ts:41](../../src/store/db/social.ts#L41) · Social 
 | `toggleSocialThreadStar` | `(threadId: string) => void` | _No JSDoc yet._ |
 | `setSocialThreadLabels` | `(threadId: string, labels: string[]) => void` | _No JSDoc yet._ |
 | `assignSocialThread` | `(threadId: string, assignee?: string) => void` | _No JSDoc yet._ |
+| `setSocialOptIn` | `(threadId: string, optedIn: boolean) => string \| null` | WhatsApp: records that the customer agreed (or no longer agrees) to broadcasts. The opted-in count is the WhatsApp audience. |
 | `createLeadFromSocialThread` | `(threadId: string, input: SocialLeadInput) => { leadId?: string; error?: string }` | Turns a conversation into a CRM lead (source `social`) and links the two. Returns the lead id, or error text. |
 | `saveSocialPost` | `(input: Partial<SocialPost> & Pick<SocialPost, 'caption' \| 'networks' \| 'media'>) => { id?: string; error?: string }` | Creates or updates a draft. Returns the post id. |
 | `scheduleSocialPost` | `(postId: string, at: string) => string \| null` | _No JSDoc yet._ |
@@ -253,6 +254,16 @@ Source: [src/store/db/social.ts:41](../../src/store/db/social.ts#L41) · Social 
 | `runDueSocialPosts` | `() => number` | Publishes scheduled posts whose time has come and wakes snoozed threads (pg_cron + social-publish in production). Returns how many posts started. |
 | `updateSocialSettings` | `(patch: Partial<SocialSettings>) => string \| null` | _No JSDoc yet._ |
 | `mirrorSocialData` | `(ownerId: string, data: { accounts: SocialAccount[]; threads: SocialThread[]; messages: SocialMessage[]; posts: SocialPost[]; settings?: SocialSettings }) => void` | Supabase builds: replaces one business's hub on this device with what the server holds (`syncSocialFromServer`). |
+
+## SupportActions
+
+Source: [src/store/db/support.ts:21](../../src/store/db/support.ts#L21) · Bug reports from shake to report. Anyone can send one, signed in or not, in every build; super admins read them in the console (Super admin → Bug reports), mark them fixed or dismissed and delete the…
+
+| Action | Signature | What it does |
+|---|---|---|
+| `submitBugReport` | `(report: BugReport) => { id?: string; error?: string }` | Saves a report from the report sheet and tells the super admins. Returns its id, or an error. |
+| `setBugReportStatus` | `(id: string, status: BugReportStatus, note?: string) => string \| null` | Marks a report new, fixed or dismissed (super admins). Returns an error to show, or null. |
+| `removeBugReports` | `(ids: string[]) => string \| null` | Deletes reports (super admins). |
 
 ## ToolkitActions
 

@@ -21,7 +21,7 @@ Source: [src/components/social/Composer.tsx](../../../src/components/social/Comp
 
 ### `SocialComposer`
 
-*component* · [src/components/social/Composer.tsx:50](../../../src/components/social/Composer.tsx#L50)
+*component* · [src/components/social/Composer.tsx:51](../../../src/components/social/Composer.tsx#L51)
 
 ```ts
 SocialComposer({ postId, at }: { postId?: string; at?: string })
@@ -67,7 +67,7 @@ Source: [src/components/social/Inbox.tsx](../../../src/components/social/Inbox.t
 
 ### `useReplyContext`
 
-*hook* · [src/components/social/Inbox.tsx:37](../../../src/components/social/Inbox.tsx#L37)
+*hook* · [src/components/social/Inbox.tsx:38](../../../src/components/social/Inbox.tsx#L38)
 
 ```ts
 useReplyContext(account: Account, contact: string): ReplyContext
@@ -77,7 +77,7 @@ Reply context for this business: name, city and its highest active package price
 
 ### `SocialInbox`
 
-*component* · [src/components/social/Inbox.tsx:44](../../../src/components/social/Inbox.tsx#L44)
+*component* · [src/components/social/Inbox.tsx:45](../../../src/components/social/Inbox.tsx#L45)
 
 ```ts
 SocialInbox({ onOpen, selectedId }: { onOpen: (id: string) => void; selectedId?: string })
@@ -87,7 +87,7 @@ Every message and comment from the connected networks, with filters, search and 
 
 ### `SocialConversation`
 
-*component* · [src/components/social/Inbox.tsx:178](../../../src/components/social/Inbox.tsx#L178)
+*component* · [src/components/social/Inbox.tsx:180](../../../src/components/social/Inbox.tsx#L180)
 
 ```ts
 SocialConversation({ threadId }: { threadId: string })
@@ -97,7 +97,7 @@ One conversation: messages, reply window, suggested and saved replies, notes, la
 
 ### `openThreadRoute`
 
-*function* · [src/components/social/Inbox.tsx:604](../../../src/components/social/Inbox.tsx#L604)
+*function* · [src/components/social/Inbox.tsx:614](../../../src/components/social/Inbox.tsx#L614)
 
 ```ts
 openThreadRoute(id: string)

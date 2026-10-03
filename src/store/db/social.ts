@@ -8,7 +8,7 @@
  * demo stands in for the networks with timers (cleared on `resetDemo`).
  */
 import { DEFAULT_SOCIAL_SETTINGS, NETWORK_BY_ID, SAMPLE_INBOUND, SOCIAL_LABELS } from '@/data/social';
-import { checkPost, detectIntents, fillReply, isAway, matchRule, postUrl, projectedMetrics, replyWindow } from '@/services/social';
+import { checkPost, detectIntents, fillReply, isAway, matchRule, optInKeyword, postUrl, projectedMetrics, replyWindow } from '@/services/social';
 import { useSession } from '@/store/useSession';
 import type { Account, SocialAccount, SocialMedia, SocialMessage, SocialNetwork, SocialPost, SocialPostResult, SocialSettings, SocialThread, SocialThreadKind, SocialThreadStatus } from '@/types/platform';
 import { addDays, formatMoney, isNepalMobile, today, uid } from '@/utils/format';
@@ -57,6 +57,8 @@ export interface SocialActions {
   toggleSocialThreadStar: (threadId: string) => void;
   setSocialThreadLabels: (threadId: string, labels: string[]) => void;
   assignSocialThread: (threadId: string, assignee?: string) => void;
+  /** WhatsApp: records that the customer agreed (or no longer agrees) to broadcasts. The opted-in count is the WhatsApp audience. */
+  setSocialOptIn: (threadId: string, optedIn: boolean) => string | null;
   /** Turns a conversation into a CRM lead (source `social`) and links the two. Returns the lead id, or error text. */
   createLeadFromSocialThread: (threadId: string, input: SocialLeadInput) => { leadId?: string; error?: string };
   /** Creates or updates a draft. Returns the post id. */
@@ -249,6 +251,11 @@ export const socialActions = (set: SetDb, get: GetDb): SocialActions => {
         ? { ...existing, status: 'open', snoozedUntil: undefined, unread: existing.unread + 1, lastAt: at, lastInboundAt: at, labels: [...new Set([...existing.labels, ...autoLabels])] }
         : { id: threadId, ownerId: input.ownerId, accountId: account.id, network: input.network, kind: input.kind, contactName: input.contactName, contactHandle: input.contactHandle, contactPhone: input.contactPhone, postId: input.postId, postCaption: input.postCaption, status: 'open', labels: autoLabels, unread: 1, lastAt: at, lastInboundAt: at };
       set((st) => ({ socialMessages: [...st.socialMessages, message], socialThreads: existing ? st.socialThreads.map((t) => (t.id === threadId ? thread : t)) : [thread, ...st.socialThreads] }));
+      const consent = input.network === 'whatsapp' && input.kind === 'message' ? optInKeyword(text) : null;
+      if (consent && !!thread.optedIn !== (consent === 'in')) {
+        mapThread(threadId, (t) => ({ ...t, optedIn: consent === 'in' }));
+        set((st) => ({ socialAccounts: st.socialAccounts.map((a) => (a.id === account.id ? { ...a, followers: Math.max(0, a.followers + (consent === 'in' ? 1 : -1)) } : a)) }));
+      }
       const label = NETWORK_BY_ID[input.network].label;
       get().notify(input.ownerId, `${label}: ${input.contactName}`, text, `/business/social/thread/${threadId}`, 'message');
 
@@ -339,6 +346,18 @@ export const socialActions = (set: SetDb, get: GetDb): SocialActions => {
     setSocialThreadLabels: (threadId, labels) => mapThread(threadId, (t) => ({ ...t, labels: [...new Set(labels.map((l) => l.trim()).filter(Boolean))].slice(0, 8) })),
 
     assignSocialThread: (threadId, assignee) => mapThread(threadId, (t) => ({ ...t, assignee: assignee?.trim() || undefined })),
+
+    setSocialOptIn: (threadId, optedIn) => {
+      const own = ownThread(threadId);
+      if (typeof own === 'string') return own;
+      const { thread } = own;
+      if (thread.network !== 'whatsapp') return 'Broadcast consent is for WhatsApp customers';
+      if (!!thread.optedIn === optedIn) return null;
+      mapThread(threadId, (t) => ({ ...t, optedIn }));
+      set((s) => ({ socialAccounts: s.socialAccounts.map((a) => (a.id === thread.accountId ? { ...a, followers: Math.max(0, a.followers + (optedIn ? 1 : -1)) } : a)) }));
+      get().log(currentActor(), optedIn ? 'social.optin' : 'social.optout', 'social_thread', threadId, thread.contactHandle);
+      return null;
+    },
 
     createLeadFromSocialThread: (threadId, input) => {
       const own = ownThread(threadId);

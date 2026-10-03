@@ -8,7 +8,7 @@ Every exported symbol in `src/types/`, file by file. The guide that explains how
 
 - [`index.ts`](#indexts) (26 exports)
 - [`persona.ts`](#personats) (10 exports) · Persona model: who a user is (taxonomy), what they can do (capabilities and permissions) and what they see (surfaces). See docs/MASTER_PLAN…
-- [`platform.ts`](#platformts) (95 exports) · Shared domain model for the wedding-services orchestration marketplace. Every role (couple, provider, freelancer, platform team) reads and …
+- [`platform.ts`](#platformts) (99 exports) · Shared domain model for the wedding-services orchestration marketplace. Every role (couple, provider, freelancer, platform team) reads and …
 - [`social.ts`](#socialts) (14 exports) · Social hub (business app): the vendor's Facebook page, Instagram profile, WhatsApp Business number and TikTok account in one place. Message…
 - [`toolkit.ts`](#toolkitts) (5 exports) · Role toolkits: the smaller planning, business, freelance and operations tools each app offers on top of the core orchestration loop. They s…
 
@@ -2188,9 +2188,67 @@ A notice a super admin pins to the top of one role's home, or every role's.
 | `createdAt` | `string` |  |
 | `createdBy` | `string` |  |
 
+### `BugLogLine`
+
+*interface* · [src/types/platform.ts:1138](../../../src/types/platform.ts#L1138)
+
+_No JSDoc yet._
+
+| Member | Type | Notes |
+|---|---|---|
+| `at` | `string` |  |
+| `level` | `'error' \| 'warn'` |  |
+| `message` | `string` |  |
+
+### `BugReport`
+
+*interface* · [src/types/platform.ts:1145](../../../src/types/platform.ts#L1145)
+
+What the report sheet sends: the description, the screenshot and where it happened.
+
+| Member | Type | Notes |
+|---|---|---|
+| `description` | `string` |  |
+| `screenshot?` | `string` | JPEG or PNG as a data URI (on this device's own copy it can be a file:// address instead). |
+| `route` | `string` |  |
+| `params` | `Record<string, string>` |  |
+| `capturedAt` | `string` |  |
+| `account?` | `{ id: string; name: string; role: string; staffRole?: string }` | Missing when the report was sent signed out. |
+| `device` | `{ os: string; osVersion: string; width: number; height: number; scale: number; runtime: string; userAgent?: string }` |  |
+| `app` | `{ name: string; version: string; backend: string; language: string; calendar: string }` |  |
+| `recentRoutes` | `{ at: string; path: string }[]` |  |
+| `logs` | `BugLogLine[]` |  |
+
+### `BugReportStatus`
+
+*type* · [src/types/platform.ts:1160](../../../src/types/platform.ts#L1160)
+
+```ts
+type BugReportStatus = 'new' | 'fixed' | 'dismissed'
+```
+
+_No JSDoc yet._
+
+### `BugReportRecord`
+
+*interface* · [src/types/platform.ts:1163](../../../src/types/platform.ts#L1163)
+
+`extends BugReport`
+
+A bug report as the super admin console keeps it.
+
+| Member | Type | Notes |
+|---|---|---|
+| `id` | `string` |  |
+| `receivedAt` | `string` |  |
+| `status` | `BugReportStatus` |  |
+| `resolvedBy?` | `string` | Who marked it fixed or dismissed, and when. |
+| `resolvedAt?` | `string` |  |
+| `note?` | `string` |  |
+
 ### `*`
 
-*re-export* · [src/types/platform.ts:1138](../../../src/types/platform.ts#L1138)
+*re-export* · [src/types/platform.ts:1174](../../../src/types/platform.ts#L1174)
 
 ```ts
 *from './toolkit'
@@ -2200,7 +2258,7 @@ _No JSDoc yet._
 
 ### `*`
 
-*re-export* · [src/types/platform.ts:1140](../../../src/types/platform.ts#L1140)
+*re-export* · [src/types/platform.ts:1176](../../../src/types/platform.ts#L1176)
 
 ```ts
 *from './social'
@@ -2210,7 +2268,7 @@ _No JSDoc yet._
 
 ### `*`
 
-*re-export* · [src/types/platform.ts:1142](../../../src/types/platform.ts#L1142)
+*re-export* · [src/types/platform.ts:1178](../../../src/types/platform.ts#L1178)
 
 ```ts
 *from './persona'
@@ -2303,11 +2361,12 @@ A photo or video attached to a post or a message.
 | `kind` | `'image' \| 'video'` |  |
 | `image?` | `PhotoKey` |  |
 | `uri?` | `string` |  |
+| `publicId?` | `string` | Cloudinary public id (Supabase builds): the networks fetch the file from its public URL. |
 | `alt?` | `string` |  |
 
 ### `SocialThread`
 
-*interface* · [src/types/social.ts:54](../../../src/types/social.ts#L54)
+*interface* · [src/types/social.ts:56](../../../src/types/social.ts#L56)
 
 One conversation in the unified inbox.
 
@@ -2321,6 +2380,7 @@ One conversation in the unified inbox.
 | `contactName` | `string` |  |
 | `contactHandle` | `string` |  |
 | `contactPhone?` | `string` | WhatsApp number, or one the customer typed into a message. |
+| `optedIn?` | `boolean` | WhatsApp: the customer agreed to receive broadcasts (said START, or the team recorded their consent). |
 | `postId?` | `string` | For comments: the post the comment is on. |
 | `postCaption?` | `string` |  |
 | `status` | `SocialThreadStatus` |  |
@@ -2336,7 +2396,7 @@ One conversation in the unified inbox.
 
 ### `SocialMessageStatus`
 
-*type* · [src/types/social.ts:85](../../../src/types/social.ts#L85)
+*type* · [src/types/social.ts:89](../../../src/types/social.ts#L89)
 
 ```ts
 type SocialMessageStatus = 'sending' | 'sent' | 'delivered' | 'read' | 'failed'
@@ -2346,7 +2406,7 @@ Delivery state of a reply, as the network reports it.
 
 ### `SocialMessage`
 
-*interface* · [src/types/social.ts:88](../../../src/types/social.ts#L88)
+*interface* · [src/types/social.ts:92](../../../src/types/social.ts#L92)
 
 A message, a comment, or an internal note in a thread.
 
@@ -2366,7 +2426,7 @@ A message, a comment, or an internal note in a thread.
 
 ### `SocialPostStatus`
 
-*type* · [src/types/social.ts:107](../../../src/types/social.ts#L107)
+*type* · [src/types/social.ts:111](../../../src/types/social.ts#L111)
 
 ```ts
 type SocialPostStatus = 'draft' | 'scheduled' | 'publishing' | 'published' | 'partial' | 'failed'
@@ -2376,7 +2436,7 @@ Where a post is: draft, scheduled, publishing, published, partly published or fa
 
 ### `SocialPostResult`
 
-*interface* · [src/types/social.ts:110](../../../src/types/social.ts#L110)
+*interface* · [src/types/social.ts:114](../../../src/types/social.ts#L114)
 
 How one network took a post, and how it did there.
 
@@ -2394,7 +2454,7 @@ How one network took a post, and how it did there.
 
 ### `SocialPost`
 
-*interface* · [src/types/social.ts:123](../../../src/types/social.ts#L123)
+*interface* · [src/types/social.ts:127](../../../src/types/social.ts#L127)
 
 One post sent to several networks at once (now or at a set time).
 
@@ -2418,7 +2478,7 @@ One post sent to several networks at once (now or at a set time).
 
 ### `SocialAutoRule`
 
-*interface* · [src/types/social.ts:145](../../../src/types/social.ts#L145)
+*interface* · [src/types/social.ts:149](../../../src/types/social.ts#L149)
 
 Keyword auto-reply: when an incoming message contains a keyword, reply at once.
 
@@ -2433,7 +2493,7 @@ Keyword auto-reply: when an incoming message contains a keyword, reply at once.
 
 ### `SocialSettings`
 
-*interface* · [src/types/social.ts:156](../../../src/types/social.ts#L156)
+*interface* · [src/types/social.ts:160](../../../src/types/social.ts#L160)
 
 Saved replies, auto-replies and the away message of one business.
 

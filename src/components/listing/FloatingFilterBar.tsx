@@ -19,7 +19,7 @@ export function FloatingFilterBar({
   bottom?: number;
 }) {
   return (
-    <Animated.View entering={FadeIn.delay(200)} style={[styles.wrap, { bottom }]} pointerEvents="box-none">
+    <Animated.View entering={FadeIn.delay(200)} style={[styles.wrap, { bottom, pointerEvents: 'box-none' }]}>
       <View style={styles.bar}>
         <PressableScale haptic onPress={onFilter} accessibilityLabel={`Filters, ${count} active`} style={styles.half}>
           <Ionicons name="options-outline" size={19} color={colors.white} />

@@ -423,3 +423,54 @@ NOT DEPLOYED. Never apply without the owner's say-so (AGENTS.md §1).
 - **Triggers (4):** `social_account_secrets_updated`, `social_post_targets_updated`, `social_posts_updated`, `social_settings_updated`
 - **Scheduled jobs (1):** `vivah-social-due`
 - **Policies:** 14 · **Indexes:** 7
+
+## 0019_bug_reports.sql
+
+Source: [supabase/migrations/0019_bug_reports.sql](../../supabase/migrations/0019_bug_reports.sql)
+
+```text
+Bug reports (shake to report).
+
+  bug_reports               what anyone using the app sends by shaking the
+                            phone (or Settings → Help → Report a problem):
+                            the description, a screenshot, the screen, the
+                            account, device and app details, recent screens
+                            and console errors. Mirrors BugReportRecord in
+                            types/platform.ts and store/db/support.ts.
+  rpc_submit_bug_report     signed in or signed out; rate limited.
+  rpc_list_bug_reports      super admins (admin.full): newest first, no screenshots.
+  rpc_get_bug_report        super admins: one report with its screenshot.
+  rpc_set_bug_report_status super admins: new / fixed / dismissed, audited.
+  rpc_delete_bug_reports    super admins, audited.
+NOT DEPLOYED. Never apply without the owner's say-so (AGENTS.md §1).
+```
+
+- **Tables created (1):** `bug_reports`
+- **Functions (6):** `rpc_delete_bug_reports`, `rpc_get_bug_report`, `rpc_list_bug_reports`, `rpc_set_bug_report_status`, `rpc_submit_bug_report`, `vivah_bug_report_json`
+- **Policies:** 1 · **Indexes:** 2
+
+## 0020_social_live.sql
+
+Source: [supabase/migrations/0020_social_live.sql](../../supabase/migrations/0020_social_live.sql)
+
+```text
+Social hub, part 3: what the live networks need beyond 0018.
+
+  assignee_name     who on the team handles a conversation (team members
+                    are names in the business app, not always profiles)
+  WhatsApp consent  a customer who writes START / SUBSCRIBE (or सुरु) joins
+                    the broadcast list, STOP / UNSUBSCRIBE (or बन्द) leaves
+                    it; members can also record consent given another way
+                    (rpc_social_optin). The WhatsApp account's audience is
+                    the number of customers who agreed. Same words as
+                    optInKeyword() in src/services/social.ts.
+  insights          social-publish reads reach, likes, comments, shares and
+                    saves back from the networks every six hours for posts
+                    published in the last 30 days (job_social_metrics).
+NOT DEPLOYED. Never apply without the owner's say-so (AGENTS.md §1).
+```
+
+- **Functions (10):** `job_social_metrics`, `rpc_social_inbox`, `rpc_social_optin`, `rpc_social_triage`, `social_optin_keyword`, `social_set_consent`, `vivah_social_consent_keywords`, `vivah_social_count_audience`, `vivah_social_metric_targets`, `vivah_social_record_metrics`
+- **Triggers (2):** `social_contacts_audience`, `social_messages_consent`
+- **Scheduled jobs (1):** `vivah-social-metrics`
+- **Tables altered (1):** `social_threads`

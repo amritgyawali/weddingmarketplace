@@ -58,7 +58,7 @@ function Invitations({ project, readOnly }: { project: Project; readOnly: boolea
   return (
     <ScrollView contentContainerStyle={{ padding: 16, gap: 14, paddingBottom: 60 }} keyboardShouldPersistTaps="handled">
       <View style={[styles.card, { backgroundColor: design.colors[0] }]}>
-        <View pointerEvents="none" style={[styles.frame, { borderColor: design.accent }]} />
+        <View style={[styles.frame, { borderColor: design.accent, pointerEvents: 'none' }]} />
         <Text size={13} color={design.accent}>
           ॐ श्री गणेशाय नमः
         </Text>
