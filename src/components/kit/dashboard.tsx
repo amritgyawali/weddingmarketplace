@@ -148,7 +148,8 @@ export function FocusBand({
 export function StatTile({ label, value, sub, alert, style }: { label: string; value: string; sub?: string; alert?: boolean; style?: StyleProp<ViewStyle> }) {
   const t = useRoleTheme();
   return (
-    <Card style={[styles.tile, style]} accessibilityLabel={`${label}: ${value}${sub ? `, ${sub}` : ''}`}>
+    // A plain surface, not Card: on the web Card's `padding` shorthand would override the tighter padding a four-across row needs.
+    <View style={[styles.tile, { backgroundColor: t.c.surface, borderColor: t.c.border, borderRadius: t.cardRadius }, style]} accessible accessibilityLabel={`${label}: ${value}${sub ? `, ${sub}` : ''}`}>
       <Text size={12} weight="medium" color={t.c.muted} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.8} maxFontSizeMultiplier={1.3}>
         {label}
       </Text>
@@ -156,11 +157,11 @@ export function StatTile({ label, value, sub, alert, style }: { label: string; v
         {value}
       </Text>
       {sub && (
-        <Text size={11} color={t.c.muted} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.85} maxFontSizeMultiplier={1.3}>
+        <Text size={11} color={t.c.muted} lineHeight={14} numberOfLines={2} maxFontSizeMultiplier={1.3}>
           {sub}
         </Text>
       )}
-    </Card>
+    </View>
   );
 }
 
@@ -324,12 +325,12 @@ export function QuickAction({ icon, label, onPress }: { icon: IconName; label: s
 }
 
 const styles = StyleSheet.create({
-  kpi: { flex: 1, minWidth: '46%', gap: 0, paddingVertical: 12, paddingHorizontal: 14 },
+  kpi: { flex: 1, minWidth: '46%', gap: 0, paddingTop: 12, paddingBottom: 12, paddingLeft: 14, paddingRight: 14 },
   kpiValueRow: { flexDirection: 'row', alignItems: 'baseline', gap: 8 },
-  tile: { flex: 1, minWidth: 0, gap: 0, paddingVertical: 10, paddingHorizontal: 8 },
+  tile: { flex: 1, minWidth: 0, gap: 0, borderWidth: 1, paddingVertical: 10, paddingHorizontal: 8 },
   focus: { backgroundColor: colors.wine, borderRadius: 12, borderWidth: 1, borderColor: colors.goldLine, padding: 16, gap: 14 },
   focusTop: { flexDirection: 'row', alignItems: 'flex-end', gap: 12 },
-  focusActions: { flexDirection: 'row', gap: 10 },
+  focusActions: { flexDirection: 'row', gap: 10, width: '100%', maxWidth: 440 },
   focusBtn: { flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6, height: 42, borderRadius: 8, paddingHorizontal: 12 },
   focusBtnGhost: { borderWidth: 1, borderColor: colors.goldLine },
   bars: { flexDirection: 'row', alignItems: 'flex-end' },

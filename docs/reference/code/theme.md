@@ -80,6 +80,9 @@ _No JSDoc yet._
 | `surface` | `string` |  |
 | `surfaceAlt` | `string` |  |
 | `border` | `string` |  |
+| `borderStrong` | `string` | Control boundaries (inputs, toggles, outline buttons): 3 : 1 on the background. |
+| `accent` | `string` | Champagne: thin rules, the active tab mark, ratings. Never text on light surfaces. |
+| `accentText` | `string` | Champagne deep enough for text on light surfaces. |
 | `text` | `string` |  |
 | `textStrong` | `string` |  |
 | `muted` | `string` |  |
@@ -93,7 +96,7 @@ _No JSDoc yet._
 
 ### `RoleTheme`
 
-*interface* · [src/theme/roles.ts:25](../../../src/theme/roles.ts#L25)
+*interface* · [src/theme/roles.ts:31](../../../src/theme/roles.ts#L31)
 
 _No JSDoc yet._
 
@@ -110,7 +113,7 @@ _No JSDoc yet._
 
 ### `ROLE_THEMES`
 
-*const* · [src/theme/roles.ts:60](../../../src/theme/roles.ts#L60)
+*const* · [src/theme/roles.ts:69](../../../src/theme/roles.ts#L69)
 
 ```ts
 ROLE_THEMES: Record<UserRole, RoleTheme>
@@ -124,7 +127,7 @@ deeper wine so a coordinator can tell at a glance which app they are in.
 
 ### `ROLE_MARK`
 
-*const* · [src/theme/roles.ts:133](../../../src/theme/roles.ts#L133)
+*const* · [src/theme/roles.ts:142](../../../src/theme/roles.ts#L142)
 
 ```ts
 ROLE_MARK: Record<UserRole, string>
@@ -135,7 +138,7 @@ bubbles, member chips). Accents stay burgundy; these are only for labels.
 
 ### `statusTone`
 
-*function* · [src/theme/roles.ts:164](../../../src/theme/roles.ts#L164)
+*function* · [src/theme/roles.ts:173](../../../src/theme/roles.ts#L173)
 
 ```ts
 statusTone(status: string, t: RoleTheme): { fg: string; bg: string }
@@ -145,7 +148,7 @@ Colour for any workflow status string, shared by every role's status pills.
 
 ### `statusLabel`
 
-*function* · [src/theme/roles.ts:172](../../../src/theme/roles.ts#L172)
+*function* · [src/theme/roles.ts:181](../../../src/theme/roles.ts#L181)
 
 ```ts
 statusLabel(s: string)

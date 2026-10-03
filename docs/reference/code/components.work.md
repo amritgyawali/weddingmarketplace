@@ -348,7 +348,7 @@ Source: [src/components/work/Payments.tsx](../../../src/components/work/Payments
 
 ### `PAYMENT_METHODS`
 
-*const* · [src/components/work/Payments.tsx:23](../../../src/components/work/Payments.tsx#L23)
+*const* · [src/components/work/Payments.tsx:24](../../../src/components/work/Payments.tsx#L24)
 
 ```ts
 PAYMENT_METHODS: { id: PaymentMethod; label: string; sub: string; color: string; icon: string; staffOnly?: boolean }[]
@@ -358,7 +358,7 @@ _No JSDoc yet._
 
 ### `PaymentSheet`
 
-*component* · [src/components/work/Payments.tsx:40](../../../src/components/work/Payments.tsx#L40)
+*component* · [src/components/work/Payments.tsx:41](../../../src/components/work/Payments.tsx#L41)
 
 ```ts
 PaymentSheet({ visible, title, amount, allowPartial, staff, online, onClose, onPay, }: { visible: boolean; title: string; amount: number; allowPartial?: boolean; staff?: boolean; /** Real Khalti and eSewa payments for this milestone…)
@@ -371,7 +371,7 @@ payment-verify has confirmed it with the gateway (master plan §7.5).
 
 ### `PaymentsPanel`
 
-*component* · [src/components/work/Payments.tsx:304](../../../src/components/work/Payments.tsx#L304)
+*component* · [src/components/work/Payments.tsx:305](../../../src/components/work/Payments.tsx#L305)
 
 ```ts
 PaymentsPanel({ project, mode, openMilestoneId }: { project: Project; mode: 'customer' | 'platform' | 'vendor'; openMilestoneId?: string })
@@ -439,7 +439,7 @@ Source: [src/components/work/PortfolioManager.tsx](../../../src/components/work/
 
 ### `PortfolioManager`
 
-*component* · [src/components/work/PortfolioManager.tsx:25](../../../src/components/work/PortfolioManager.tsx#L25)
+*component* · [src/components/work/PortfolioManager.tsx:26](../../../src/components/work/PortfolioManager.tsx#L26)
 
 ```ts
 PortfolioManager()
@@ -584,7 +584,7 @@ Source: [src/components/work/SignaturePad.tsx](../../../src/components/work/Sign
 
 ### `SignaturePad`
 
-*component* · [src/components/work/SignaturePad.tsx:10](../../../src/components/work/SignaturePad.tsx#L10)
+*component* · [src/components/work/SignaturePad.tsx:11](../../../src/components/work/SignaturePad.tsx#L11)
 
 ```ts
 SignaturePad({ onDone, height = 180 }: { onDone: (path: string) => void; height?: number })
@@ -594,7 +594,7 @@ Finger/mouse signature capture; returns an SVG path string.
 
 ### `SignatureImage`
 
-*component* · [src/components/work/SignaturePad.tsx:60](../../../src/components/work/SignaturePad.tsx#L60)
+*component* · [src/components/work/SignaturePad.tsx:61](../../../src/components/work/SignaturePad.tsx#L61)
 
 ```ts
 SignatureImage({ path, height = 60 }: { path: string; height?: number })

@@ -8,6 +8,7 @@ Every exported symbol in `src/components/navigation/`, file by file. The guide t
 
 - [`RoleTabBar.tsx`](#roletabbartsx) (3 exports)
 - [`TabBar.tsx`](#tabbartsx) (1 exports)
+- [`TabMark.tsx`](#tabmarktsx) (1 exports)
 
 ## RoleTabBar.tsx
 
@@ -15,7 +16,7 @@ Source: [src/components/navigation/RoleTabBar.tsx](../../../src/components/navig
 
 ### `RoleTab`
 
-*interface* · [src/components/navigation/RoleTabBar.tsx:19](../../../src/components/navigation/RoleTabBar.tsx#L19)
+*interface* · [src/components/navigation/RoleTabBar.tsx:22](../../../src/components/navigation/RoleTabBar.tsx#L22)
 
 _No JSDoc yet._
 
@@ -29,7 +30,7 @@ _No JSDoc yet._
 
 ### `SidebarLink`
 
-*interface* · [src/components/navigation/RoleTabBar.tsx:27](../../../src/components/navigation/RoleTabBar.tsx#L27)
+*interface* · [src/components/navigation/RoleTabBar.tsx:30](../../../src/components/navigation/RoleTabBar.tsx#L30)
 
 _No JSDoc yet._
 
@@ -43,7 +44,7 @@ _No JSDoc yet._
 
 ### `RoleTabBar`
 
-*component* · [src/components/navigation/RoleTabBar.tsx:41](../../../src/components/navigation/RoleTabBar.tsx#L41)
+*component* · [src/components/navigation/RoleTabBar.tsx:44](../../../src/components/navigation/RoleTabBar.tsx#L44)
 
 ```ts
 RoleTabBar({ state, navigation, tabs, links: allLinks = [] }: BottomTabBarProps & { tabs: RoleTab[]; links?: SidebarLink[] })
@@ -59,14 +60,31 @@ Source: [src/components/navigation/TabBar.tsx](../../../src/components/navigatio
 
 ### `TabBar`
 
-*component* · [src/components/navigation/TabBar.tsx:35](../../../src/components/navigation/TabBar.tsx#L35)
+*component* · [src/components/navigation/TabBar.tsx:38](../../../src/components/navigation/TabBar.tsx#L38)
 
 ```ts
 TabBar({ state, navigation }: BottomTabBarProps)
 ```
 
-Couple-app bottom bar: outline icons, filled + crimson when active, short
+Couple-app bottom bar: a champagne hairline on top, outline icons, filled
+burgundy with a champagne mark over the active tab, short
 sentence-case labels. Browse (venues, vendors, ideas) on the left, the
 couple's own plan on the right. Follows the celebration (a pasni has no
 wedding ideas and says "My plan") and the super admin's feature switches.
 Routes without an entry in `TABS` (planner packages) stay reachable by link.
+
+## TabMark.tsx
+
+Source: [src/components/navigation/TabMark.tsx](../../../src/components/navigation/TabMark.tsx)
+
+### `TabMark`
+
+*component* · [src/components/navigation/TabMark.tsx:12](../../../src/components/navigation/TabMark.tsx#L12)
+
+```ts
+TabMark({ active, vertical }: { active: boolean; vertical?: boolean })
+```
+
+The champagne mark over the active tab: grows in from the centre when a
+tab is chosen. Shape and position carry the state, not colour alone.
+`vertical` draws it down the left edge of a sidebar item instead.

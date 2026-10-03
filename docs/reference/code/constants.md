@@ -9,7 +9,7 @@ Every exported symbol in `src/constants/`, file by file. The guide that explains
 - [`brand.ts`](#brandts) (1 exports)
 - [`env.ts`](#envts) (2 exports) · Public configuration from `EXPO_PUBLIC_*` variables (`.env.local`, EAS and Vercel environment variables; see `.env.example`). Expo inlines …
 - [`images.ts`](#imagests) (3 exports)
-- [`theme.ts`](#themets) (14 exports)
+- [`theme.ts`](#themets) (17 exports)
 
 ## brand.ts
 
@@ -116,7 +116,7 @@ large areas, and is never used for body text (use `goldDeep` for gold text).
 
 ### `socialColors`
 
-*const* · [src/constants/theme.ts:77](../../../src/constants/theme.ts#L77)
+*const* · [src/constants/theme.ts:105](../../../src/constants/theme.ts#L105)
 
 ```ts
 socialColors= { facebook: '#1877F2', instagram: '#C13584', whatsapp: '#128C7E', tiktok: '#161823', } as…
@@ -126,7 +126,7 @@ Network marks in the social hub. Small icons and hairlines only, never fills.
 
 ### `gradients`
 
-*const* · [src/constants/theme.ts:89](../../../src/constants/theme.ts#L89)
+*const* · [src/constants/theme.ts:117](../../../src/constants/theme.ts#L117)
 
 ```ts
 gradients= { … }
@@ -138,7 +138,7 @@ near-flat fills.
 
 ### `fonts`
 
-*const* · [src/constants/theme.ts:109](../../../src/constants/theme.ts#L109)
+*const* · [src/constants/theme.ts:139](../../../src/constants/theme.ts#L139)
 
 ```ts
 fonts= { regular: 'Mukta_400Regular', medium: 'Mukta_500Medium', semibold: 'Mukta_600SemiBold', …
@@ -152,7 +152,7 @@ titles on the couple app).
 
 ### `serif`
 
-*const* · [src/constants/theme.ts:117](../../../src/constants/theme.ts#L117)
+*const* · [src/constants/theme.ts:147](../../../src/constants/theme.ts#L147)
 
 ```ts
 serif= { regular: 'Martel_400Regular', medium: 'Martel_600SemiBold', semibold: 'Martel_600SemiBo…
@@ -162,7 +162,7 @@ _No JSDoc yet._
 
 ### `FontWeight`
 
-*type* · [src/constants/theme.ts:125](../../../src/constants/theme.ts#L125)
+*type* · [src/constants/theme.ts:155](../../../src/constants/theme.ts#L155)
 
 ```ts
 type FontWeight = keyof typeof fonts
@@ -172,7 +172,7 @@ _No JSDoc yet._
 
 ### `spacing`
 
-*const* · [src/constants/theme.ts:127](../../../src/constants/theme.ts#L127)
+*const* · [src/constants/theme.ts:157](../../../src/constants/theme.ts#L157)
 
 ```ts
 spacing= { xxs: 2, xs: 4, sm: 8, md: 12, lg: 16, xl: 20, xxl: 24, xxxl: 32, } as const
@@ -182,7 +182,7 @@ _No JSDoc yet._
 
 ### `radius`
 
-*const* · [src/constants/theme.ts:138](../../../src/constants/theme.ts#L138)
+*const* · [src/constants/theme.ts:168](../../../src/constants/theme.ts#L168)
 
 ```ts
 radius= { xs: 3, sm: 6, md: 8, lg: 10, xl: 12, pill: 999, } as const
@@ -192,7 +192,7 @@ _No JSDoc yet._
 
 ### `GUTTER`
 
-*const* · [src/constants/theme.ts:148](../../../src/constants/theme.ts#L148)
+*const* · [src/constants/theme.ts:178](../../../src/constants/theme.ts#L178)
 
 ```ts
 GUTTER= 16
@@ -202,7 +202,7 @@ Page gutter.
 
 ### `shadow`
 
-*function* · [src/constants/theme.ts:156](../../../src/constants/theme.ts#L156)
+*function* · [src/constants/theme.ts:186](../../../src/constants/theme.ts#L186)
 
 ```ts
 shadow(elevation: number, opacity: number, radiusPx: number, offsetY: number, color = '#251B18'): ViewStyle
@@ -212,7 +212,7 @@ Drop shadow for something that floats: elevation on Android, `boxShadow` on the 
 
 ### `shadows`
 
-*const* · [src/constants/theme.ts:175](../../../src/constants/theme.ts#L175)
+*const* · [src/constants/theme.ts:205](../../../src/constants/theme.ts#L205)
 
 ```ts
 shadows= { … }
@@ -222,7 +222,7 @@ Shadows are reserved for things that genuinely float (sheets, toasts).
 
 ### `type`
 
-*const* · [src/constants/theme.ts:185](../../../src/constants/theme.ts#L185)
+*const* · [src/constants/theme.ts:215](../../../src/constants/theme.ts#L215)
 
 ```ts
 type= { display: { fontFamily: serif.bold, fontSize: 30, lineHeight: 40 }, title: { fontFamily:…
@@ -230,9 +230,41 @@ type= { display: { fontFamily: serif.bold, fontSize: 30, lineHeight: 40 }, title
 
 _No JSDoc yet._
 
+### `tabular`
+
+*const* · [src/constants/theme.ts:227](../../../src/constants/theme.ts#L227)
+
+```ts
+tabular: TextStyle
+```
+
+Figures that line up in columns (money, counts, countdowns).
+
+### `iconSize`
+
+*const* · [src/constants/theme.ts:230](../../../src/constants/theme.ts#L230)
+
+```ts
+iconSize= { xs: 14, sm: 16, md: 20, lg: 24, xl: 28 } as const
+```
+
+Icon sizes: snap every Ionicon to one of these.
+
+### `motion`
+
+*const* · [src/constants/theme.ts:237](../../../src/constants/theme.ts#L237)
+
+```ts
+motion= { fast: 150, base: 240, slow: 360, stagger: 45 } as const
+```
+
+Motion timing (ms). One or two things move per screen, always with the
+ease-out curve in `hooks/useMotion`, and nothing moves when the device asks
+for reduced motion.
+
 ### `hitSlop`
 
-*const* · [src/constants/theme.ts:196](../../../src/constants/theme.ts#L196)
+*const* · [src/constants/theme.ts:239](../../../src/constants/theme.ts#L239)
 
 ```ts
 hitSlop= { top: 10, bottom: 10, left: 10, right: 10 }
@@ -242,7 +274,7 @@ _No JSDoc yet._
 
 ### `inputReset`
 
-*const* · [src/constants/theme.ts:199](../../../src/constants/theme.ts#L199)
+*const* · [src/constants/theme.ts:242](../../../src/constants/theme.ts#L242)
 
 ```ts
 inputReset: TextStyle

@@ -98,7 +98,7 @@ export default function ShortlistScreen() {
               </View>
             ) : null
           }
-          ListEmptyComponent={<EmptyState icon="bookmark-outline" title="No vendors saved yet" message="Tap the bookmark icon on any venue or vendor to save it here and track your conversations." actionLabel="Browse vendors" onAction={() => router.navigate('/vendors')} />}
+          ListEmptyComponent={<EmptyState icon="bookmark-outline" art="garland" title="No vendors saved yet" message="Tap the bookmark icon on any venue or vendor to save it here and track your conversations." actionLabel="Browse vendors" onAction={() => router.navigate('/vendors')} />}
           renderItem={({ item: { e, p } }) => {
             const ticked = compare.includes(p.id);
             return (

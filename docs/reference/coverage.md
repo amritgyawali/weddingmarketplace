@@ -4,7 +4,7 @@
 
 Exported symbols that have no JSDoc yet. The weekly documentation pass (see [the maintenance guide](../handbook/17-documentation-maintenance.md)) works through this list; whoever touches a file should document its exports too.
 
-**704 of 1377 exports documented (51%).** Files without a header comment: 316 of 410.
+**721 of 1392 exports documented (52%).** Files without a header comment: 321 of 415.
 
 | File | Undocumented exports |
 |---|---|
@@ -26,8 +26,8 @@ Exported symbols that have no JSDoc yet. The weekly documentation pass (see [the
 | [src/data/seed.ts](../../src/data/seed.ts) | `day`, `at`, `DEMO_VENUE`, `DEMO_STUDIO`, `DEMO_DECOR`, `DEMO_ACCOUNTS`, `buildSeedData`, `contractSections`, `DEMO_IMAGES` |
 | [src/store/db/helpers.ts](../../src/store/db/helpers.ts) | `SetDb`, `GetDb`, `now`, `today`, `SYSTEM`, `accountById`, `currentActor`, `firstDate`, `lastDate` |
 | [src/utils/bs.ts](../../src/utils/bs.ts) | `BS_FIRST_YEAR`, `BS_LAST_YEAR`, `BS_MONTHS_EN`, `BS_MONTHS_NE`, `WEEKDAYS_NE`, `WEEKDAYS_NE_SHORT`, `BsDate`, `bsMonthName`, `MonthCell` |
-| [src/components/kit/primitives.tsx](../../src/components/kit/primitives.tsx) | `IconName`, `KButton`, `StatusPill`, `Avatar`, `ProgressBar`, `SectionTitle`, `EmptyBlock`, `Divider` |
 | [src/services/pricing.ts](../../src/services/pricing.ts) | `PRICING_MODELS`, `pricingModel`, `Split`, `splitBooking`, `SCHEDULE_TEMPLATES`, `DEFAULT_SCHEDULE`, `dueDateFor`, `paymentSummary` |
+| [src/components/kit/primitives.tsx](../../src/components/kit/primitives.tsx) | `IconName`, `KButton`, `StatusPill`, `Avatar`, `ProgressBar`, `SectionTitle`, `Divider` |
 | [src/data/events.ts](../../src/data/events.ts) | `EventTypeDef`, `EVENT_TYPES`, `EVENT_TYPE_BY_ID`, `eventLabel`, `GUEST_BANDS`, `GuestBand`, `bandFor` |
 | [src/data/features.ts](../../src/data/features.ts) | `FeatureDef`, `FEATURES`, `FEATURE_BY_ID`, `toolFeature`, `serviceFeature`, `tabFeature`, `TopFeature` |
 | [src/data/occasions.ts](../../src/data/occasions.ts) | `BuiltInOccasionId`, `HonoureeKind`, `VocabKey`, `OccasionDef`, `BUILT_IN_OCCASIONS`, `DEFAULT_OCCASION_ID`, `builtInOccasions` |
@@ -89,7 +89,6 @@ Exported symbols that have no JSDoc yet. The weekly documentation pass (see [the
 | [src/components/navigation/RoleTabBar.tsx](../../src/components/navigation/RoleTabBar.tsx) | `RoleTab`, `SidebarLink` |
 | [src/components/ui/Button.tsx](../../src/components/ui/Button.tsx) | `ButtonProps`, `Button` |
 | [src/components/ui/Chip.tsx](../../src/components/ui/Chip.tsx) | `ChipProps`, `Chip` |
-| [src/components/ui/EmptyState.tsx](../../src/components/ui/EmptyState.tsx) | `EmptyState`, `ErrorState` |
 | [src/components/ui/PressableScale.tsx](../../src/components/ui/PressableScale.tsx) | `PressableScaleProps`, `triggerHaptic` |
 | [src/components/ui/SectionHeader.tsx](../../src/components/ui/SectionHeader.tsx) | `SectionHeader`, `NewBadge` |
 | [src/components/ui/Skeleton.tsx](../../src/components/ui/Skeleton.tsx) | `Skeleton`, `ListRowSkeleton` |
@@ -149,6 +148,7 @@ Exported symbols that have no JSDoc yet. The weekly documentation pass (see [the
 | [src/components/toolkit/freelancer/shared.ts](../../src/components/toolkit/freelancer/shared.ts) | `JobRef` |
 | [src/components/toolkit/hub.tsx](../../src/components/toolkit/hub.tsx) | `ToolDef` |
 | [src/components/ui/Calendar.tsx](../../src/components/ui/Calendar.tsx) | `weekdayLetters` |
+| [src/components/ui/EmptyState.tsx](../../src/components/ui/EmptyState.tsx) | `ErrorState` |
 | [src/components/ui/Field.tsx](../../src/components/ui/Field.tsx) | `FieldProps` |
 | [src/components/ui/IconButton.tsx](../../src/components/ui/IconButton.tsx) | `IconButtonProps` |
 | [src/components/ui/Rating.tsx](../../src/components/ui/Rating.tsx) | `Rating` |

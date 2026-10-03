@@ -75,7 +75,7 @@ function Registry({ project, readOnly }: { project: Project; readOnly: boolean }
         </Card>
 
         {items.length === 0 ? (
-          <EmptyBlock icon="gift-outline" title="Create your registry" message="Add a honeymoon fund, home essentials, a charity you love or a link to your Daraz wishlist." />
+          <EmptyBlock icon="gift-outline" art="kalash" title="Create your registry" message="Add a honeymoon fund, home essentials, a charity you love or a link to your Daraz wishlist." />
         ) : (
           items.map((item) => <RegistryCard key={item.id} item={item} onPress={() => setViewing(item.id)} />)
         )}

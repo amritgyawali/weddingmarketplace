@@ -129,7 +129,7 @@ Source: [src/components/home/WeddingStrip.tsx](../../../src/components/home/Wedd
 
 ### `WeddingStrip`
 
-*component* · [src/components/home/WeddingStrip.tsx:18](../../../src/components/home/WeddingStrip.tsx#L18)
+*component* · [src/components/home/WeddingStrip.tsx:19](../../../src/components/home/WeddingStrip.tsx#L19)
 
 ```ts
 WeddingStrip()

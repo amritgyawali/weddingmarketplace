@@ -129,6 +129,7 @@ export default function BookingsScreen() {
         ListEmptyComponent={
           <EmptyState
             icon="calendar-outline"
+            art="rings"
             title="No bookings yet"
             message="Check availability with venues or send enquiries to vendors — they'll all be tracked here."
             actionLabel="Explore venues"

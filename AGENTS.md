@@ -90,7 +90,7 @@ src/
   app/                 Expo Router screens only (every file is a route; _layout.tsx = navigators)
   components/
     kit/               role-themed primitives (Card, KButton, KField, Segmented, KPI, charts…) — use these in role apps
-    ui/                couple-app primitives (Text, PressableScale, Toast, Sheet, EmptyState…)
+    ui/                couple-app primitives (Text, PressableScale, Toast, Sheet, EmptyState, Photo, Ornament, Illustration…)
     work/              shared workflow UI used by several roles: MatchPanel, QuoteEditor, QuoteDocument,
                        Bookings, Payments, TaskBoard, Timeline, ThreadView, AvailabilityCalendar, RunSheet,
                        ContractView, SignaturePad, GigForm, ApplicantsList, VerificationScreen…
@@ -376,19 +376,21 @@ One design system for all four apps, in the "Royal Nepali Luxury" palette (`src/
 | --- | --- | --- | --- |
 | Primary | `primary` | #681C2A deep burgundy | Primary buttons, selected tabs and chips, links, headings that need weight |
 | Primary dark | `wine` / `primaryDark` | #3D1018 wine | Luxury sections: the home wedding band, the planner promo, featured badges, the floating filter bar, staff accent |
-| Accent | `gold` | #C8A46B champagne | Countdown, ratings, short gilt rules, hairlines on wine (`goldLine`). Never body text on ivory: use `goldDeep` #8C6A33 |
+| Accent | `gold` | #C8A46B champagne | Countdown, ratings, short gilt rules, hairlines on wine (`goldLine`). Never body text on ivory: use `goldDeep` #7F5F2C |
 | Background | `bg` | #FFF9F2 warm ivory | Screen background |
 | Surface | `bgSoft` | #F5ECE2 pearl cream | Sections, filters, pressed states, role-app `surfaceAlt` |
 | Romantic accent | `rose` | #C98991 dusty rose | Wedding-category accents, sparingly |
 | Ink | `heading` | #251B18 espresso | Headings and body text |
-| Muted | `textMuted` | #796B64 warm taupe | Secondary information |
+| Muted | `textMuted` | #6F625B warm taupe | Secondary text (5.6 : 1). `textSubtle` #8F7F74 is for icons, disabled states and large numbers only, never small text |
 | White | `white` | #FFFCF8 soft white | Cards and text on dark backgrounds |
 
-- **Colour.** Roughly 65% ivory/cream, 20% burgundy/wine, 10% espresso text, 5% champagne and dusty rose. Gold is a thin metallic accent, never a fill for large areas. Status colours come from `statusTone()`. No gradients except dark scrims over photos (tint them wine or espresso, not grey); no glows, no coloured shadows. Never hard-code a hex in a screen: add a token.
+- **Colour.** Roughly 65% ivory/cream, 20% burgundy/wine, 10% espresso text, 5% champagne and dusty rose. Gold is a thin metallic accent, never a fill for large areas. Status colours come from `statusTone()`. No gradients except dark scrims over photos (tint them wine or espresso, not grey; `gradients.photoCaption`); no glows, no coloured shadows. Never hard-code a hex in a screen: add a token (ESLint fails on hex literals in `src/app` and `src/components`, except the couple-chosen website/invitation themes and payment brands). Inputs, toggles and outline buttons use `borderStrong` (3 : 1); cards keep the soft `border`.
 - **Type.** Mukta for all UI text. Martel (`<Text serif>`) for display lines: screen and section titles, couple names, listing names, headline numbers (countdown, stat figures). Both are Ek Type faces with Devanagari, so Nepali text sets in the same voice. Don't add other font families.
 - **Shape.** Cards 10 px radius with a 1 px border and no shadow; buttons 8 px; chips and pills 4–6 px. Shadows only on things that float (sheets, toasts, the floating filter bar).
 - **Copy.** Sentence case everywhere, including labels, tabs and buttons. No all-caps eyebrows, no letter-spaced labels, no emoji in UI chrome or notifications, no "AI"/"magic"/sparkle language: the assistant is a rule-based help bot and is called "Quick help".
-- **Stats.** Label above, number below (Martel), in ink. Colour a number only when it flags a problem (overdue, risk).
+- **Stats.** Label above, number below (Martel, `<Text numeric>`), in ink. Colour a number only when it flags a problem (overdue, risk). `KpiCard`, or `StatTile` for rows of three or four.
+- **Shared pieces.** Photos through `ui/Photo` (pearl placeholder, fade-in), never `expo-image` directly. Filter and sort chips through kit `FilterChip`. Empty states through `EmptyState`/`EmptyBlock` (pearl medallion; `art` for a line drawing from `ui/Illustration`). At most one `FocusBand` (wine "needs you now" band) per dashboard, at the top. The gilt `Ornament` only on the wedding band, the welcome headline, the Vendors feature and `FocusBand`.
+- **Motion and access.** Respect Reduce Motion (`hooks/useMotion`; `motion` timing tokens, one ease-out curve); one or two moving things per screen; animate a container once, not every list item. Text scales with the system up to 1.6×. Active tabs carry a champagne `TabMark`, so state never rests on colour alone. Long form: `docs/handbook/04-ui-ux.md`.
 - Open UI/UX improvements (accessibility fixes, motion, dark mode, imagery) are prioritised in `docs/UI_UX_REPORT.md`; check it before starting visual work.
 - Keep `README.md` (the product overview) and this file current when behaviour changes.
 

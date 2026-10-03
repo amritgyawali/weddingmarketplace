@@ -467,6 +467,7 @@ function GuestList({ project, readOnly }: { project: Project; readOnly: boolean 
         ListEmptyComponent={
           <EmptyBlock
             icon="people-outline"
+            art={guests.length ? undefined : 'kalash'}
             title={guests.length ? 'No guests match' : 'Start your guest list'}
             message={guests.length ? 'Try another filter.' : 'Add guests one by one, import your phone contacts or upload a CSV from Excel/Google Sheets.'}
           />

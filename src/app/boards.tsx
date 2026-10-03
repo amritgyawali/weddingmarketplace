@@ -168,7 +168,7 @@ function Boards({ project, readOnly }: { project: Project; readOnly: boolean }) 
         </Card>
       )}
       {boards.length === 0 ? (
-        <EmptyBlock icon="images-outline" title="Collect your inspiration" message="Group photos by theme and share them with the people creating your look and décor." />
+        <EmptyBlock icon="images-outline" art="mandap" title="Collect your inspiration" message="Group photos by theme and share them with the people creating your look and décor." />
       ) : (
         <View style={styles.grid}>
           {boards.map((b) => {

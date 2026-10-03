@@ -1021,7 +1021,7 @@
    "kind": "screen",
    "file": "src/app/(tabs)/vendors.tsx",
    "component": "VendorsTab",
-   "doc": ""
+   "doc": "Vendors tab: an editorial index of every service. The first category is a full-width feature, the rest a grid of tall photo cards with serif captions; a card opens a sheet with its services and a \"See all\" link. Only the services the active celebration uses are shown; search finds the rest."
   },
   {
    "path": "/vendors/[category]",
@@ -1175,9 +1175,9 @@
     {
      "name": "VendorsTab",
      "kind": "component",
-     "line": 87,
+     "line": 86,
      "signature": "()",
-     "doc": ""
+     "doc": "Vendors tab: an editorial index of every service. The first category is\na full-width feature, the rest a grid of tall photo cards with serif\ncaptions; a card opens a sheet with its services and a \"See all\" link.\nOnly the services the active celebration uses are shown; search finds\nthe rest."
     }
    ]
   },
@@ -1260,7 +1260,7 @@
     {
      "name": "BoardsScreen",
      "kind": "component",
-     "line": 204,
+     "line": 205,
      "signature": "()",
      "doc": "Mood boards: collect ideas by theme and share them with vendors."
     }
@@ -1884,7 +1884,7 @@
     {
      "name": "DiscoverGigs",
      "kind": "component",
-     "line": 20,
+     "line": 19,
      "signature": "()",
      "doc": "Gig marketplace for crew: invitations, emergencies and gigs for the freelancer's own skills only."
     }
@@ -1910,7 +1910,7 @@
     {
      "name": "FreelancerProfile",
      "kind": "component",
-     "line": 56,
+     "line": 57,
      "signature": "()",
      "doc": "Crew profile: skills, kit, rates, travel, languages, reliability, reviews and portfolio."
     }
@@ -2092,7 +2092,7 @@
     {
      "name": "GuestsScreen",
      "kind": "component",
-     "line": 540,
+     "line": 531,
      "signature": "()",
      "doc": "Guest list & RSVP manager: sides, groups, per-function invites, dietary needs, imports and exports."
     }
@@ -2755,7 +2755,7 @@
     {
      "name": "PlatformProject",
      "kind": "component",
-     "line": 663,
+     "line": 664,
      "signature": "()",
      "doc": "Coordinator console for one wedding project."
     }
@@ -2911,7 +2911,7 @@
     {
      "name": "RegistryScreen",
      "kind": "component",
-     "line": 183,
+     "line": 176,
      "signature": "()",
      "doc": "Gift registry: cash, honeymoon and charity funds, gifts and store wishlists, with thank-you tracking."
     }
@@ -2963,7 +2963,7 @@
     {
      "name": "SeatingScreen",
      "kind": "component",
-     "line": 350,
+     "line": 344,
      "signature": "()",
      "doc": "Drag-and-drop seating planner per function with auto-seating, capacity warnings and printable charts."
     }
@@ -3119,7 +3119,7 @@
     {
      "name": "WelcomeLayout",
      "kind": "component",
-     "line": 7,
+     "line": 8,
      "signature": "()",
      "doc": ""
     }
@@ -3132,7 +3132,7 @@
     {
      "name": "WelcomeCarousel",
      "kind": "component",
-     "line": 56,
+     "line": 60,
      "signature": "()",
      "doc": ""
     }
@@ -4849,7 +4849,7 @@
     {
      "name": "WeddingStrip",
      "kind": "component",
-     "line": 18,
+     "line": 19,
      "signature": "()",
      "doc": "Top of the couple's home: a wine \"luxury section\" with their names, the\ndate in both calendars and the countdown in champagne, then the one thing\nto do next. Without a plan it invites them to start one."
     }
@@ -4889,21 +4889,28 @@
     {
      "name": "ChoiceChips",
      "kind": "component",
-     "line": 126,
+     "line": 128,
      "signature": "({ options, selected, onToggle, }: { options: string[]; selected: string[]; onToggle: (value: string) => void; })",
      "doc": "Selectable chips (multi or single choice)."
     },
     {
+     "name": "FilterChip",
+     "kind": "component",
+     "line": 168,
+     "signature": "({ label, selected, onPress, icon }: { label: string; selected?: boolean; onPress: () => void; icon?: IconName })",
+     "doc": "One filter or sort chip, the same in every role app: pearl at rest,\nburgundy with a check when selected (so the state never rests on colour\nalone). Use for ad-hoc chip rows instead of styling a Pressable by hand."
+    },
+    {
      "name": "ListRow",
      "kind": "component",
-     "line": 162,
+     "line": 195,
      "signature": "({ title, subtitle, leading, trailing, onPress, icon, meta, }: { title: string; subtitle?: string; leading?: ReactNode; trailing?: ReactNode; onPress?: () => void; icon?: IconName; meta?: ReactNode; })",
      "doc": "Tappable list row with leading visual and trailing slot."
     },
     {
      "name": "Fab",
      "kind": "component",
-     "line": 209,
+     "line": 242,
      "signature": "({ icon = 'add', label, onPress, bottom = 20 }: { icon?: IconName; label?: string; onPress: () => void; bottom?: number })",
      "doc": "Floating action button in the role's primary colour."
     }
@@ -4916,35 +4923,49 @@
     {
      "name": "KpiCard",
      "kind": "component",
-     "line": 17,
+     "line": 19,
      "signature": "({ label, value, icon: _icon, delta, tone, style, onPress, }: { label: string; value: string; /** Kept for call-site compatibility; stat tiles no longer draw icons. */ icon: IconName; delta?: string; tone?: string; style…)",
      "doc": "Text-only stat tile: label on top, figure below. `tone` only matters when it flags a problem."
     },
     {
+     "name": "FocusBand",
+     "kind": "component",
+     "line": 64,
+     "signature": "({ eyebrow, title, body, figure, figureLabel, primary, secondary, onPress, }: { eyebrow: string; title: string; body?: string; /** A headline number on the right (an amount, a count). */ figure?: string; figureLabel?: st…)",
+     "doc": "The one thing that needs the user now, at the top of a dashboard: a wine\nband with the gilt ornament, a serif title and at most two actions (the\nfirst in champagne). Everything else on the screen sits below it, quieter."
+    },
+    {
+     "name": "StatTile",
+     "kind": "component",
+     "line": 148,
+     "signature": "({ label, value, sub, alert, style }: { label: string; value: string; sub?: string; alert?: boolean; style?: StyleProp<ViewStyle> })",
+     "doc": "Compact stat for rows of three or four (guests, seating, registry):\nlabel above on one line, the Martel figure below, an optional note.\n`alert` colours the figure only when it flags a problem."
+    },
+    {
      "name": "BarChart",
      "kind": "component",
-     "line": 58,
+     "line": 169,
      "signature": "({ data, height = 120, format }: { data: { label: string; value: number }[]; height?: number; format?: (v: number) => string })",
      "doc": "Minimal column chart (no chart lib needed). The latest bar is inked, the rest stay grey."
     },
     {
      "name": "RoleHeader",
      "kind": "component",
-     "line": 127,
+     "line": 239,
      "signature": "({ eyebrow, title, subtitle, right, children, }: { eyebrow?: string; title: string; subtitle?: string; right?: ReactNode; children?: ReactNode; })",
      "doc": "Tab-root header: plain bar, title on the left, bell on the right. Same shape in every role app."
     },
     {
      "name": "StackHeader",
      "kind": "component",
-     "line": 171,
+     "line": 283,
      "signature": "({ title, subtitle, right, back = true }: { title: string; subtitle?: string; right?: ReactNode; back?: boolean })",
      "doc": "Stack header for detail screens."
     },
     {
      "name": "QuickAction",
      "kind": "component",
-     "line": 201,
+     "line": 313,
      "signature": "({ icon, label, onPress }: { icon: IconName; label: string; onPress: () => void })",
      "doc": "Shortcut (icon over label) used in dashboard shortcut rows."
     }
@@ -4984,70 +5005,70 @@
     {
      "name": "IconName",
      "kind": "type",
-     "line": 11,
+     "line": 13,
      "signature": "= ComponentProps<typeof Ionicons>['name']",
      "doc": ""
     },
     {
      "name": "Card",
      "kind": "component",
-     "line": 14,
+     "line": 16,
      "signature": "({ children, style, onPress, padded = true, accessibilityLabel, }: { children: ReactNode; style?: StyleProp<ViewStyle>; onPress?: () => void; padded?: boolean; accessibilityLabel?: string; })",
      "doc": "Themed surface. `pressable` turns it into a card button."
     },
     {
      "name": "KButton",
      "kind": "component",
-     "line": 48,
+     "line": 50,
      "signature": "({ label, onPress, variant = 'primary', icon, loading, disabled, size = 'md', style, }: { label: string; onPress?: () => void; variant?: ButtonVariant; icon?: IconName; loading?: boolean; disabled?: boolean; size?: 'sm' …)",
      "doc": ""
     },
     {
      "name": "StatusPill",
      "kind": "component",
-     "line": 102,
+     "line": 104,
      "signature": "({ status, label }: { status: string; label?: string })",
      "doc": ""
     },
     {
      "name": "Avatar",
      "kind": "component",
-     "line": 117,
+     "line": 123,
      "signature": "({ name, size = 40 }: { name: string; size?: number })",
      "doc": ""
     },
     {
      "name": "ProgressBar",
      "kind": "component",
-     "line": 134,
+     "line": 140,
      "signature": "({ value, color, height = 4 }: { value: number; color?: string; height?: number })",
      "doc": ""
     },
     {
      "name": "SectionTitle",
      "kind": "component",
-     "line": 143,
+     "line": 149,
      "signature": "({ title, action, onAction }: { title: string; action?: string; onAction?: () => void })",
      "doc": ""
     },
     {
      "name": "EmptyBlock",
      "kind": "component",
-     "line": 161,
-     "signature": "({ icon = 'file-tray-outline', title, message, action, onAction }: { icon?: IconName; title: string; message?: string; action?: string; onAction?: () => void })",
-     "doc": ""
+     "line": 168,
+     "signature": "({ icon = 'file-tray-outline', art, title, message, action, onAction }: { icon?: IconName; art?: ArtName; title: string; message?: string; action?: string; onAction?: () => void })",
+     "doc": "Empty list or section in the role apps: pearl medallion, serif title, one line, one action. `art` swaps the icon for a line drawing."
     },
     {
      "name": "Divider",
      "kind": "component",
-     "line": 179,
+     "line": 188,
      "signature": "({ style }: { style?: StyleProp<ViewStyle> })",
      "doc": ""
     },
     {
      "name": "KeyValue",
      "kind": "component",
-     "line": 185,
+     "line": 194,
      "signature": "({ label, value, strong }: { label: string; value: string; strong?: boolean })",
      "doc": "Label/value line used in summaries."
     }
@@ -5185,7 +5206,7 @@
     {
      "name": "RoleTab",
      "kind": "interface",
-     "line": 19,
+     "line": 22,
      "signature": "",
      "doc": "",
      "members": [
@@ -5224,7 +5245,7 @@
     {
      "name": "SidebarLink",
      "kind": "interface",
-     "line": 27,
+     "line": 30,
      "signature": "",
      "doc": "",
      "members": [
@@ -5263,7 +5284,7 @@
     {
      "name": "RoleTabBar",
      "kind": "component",
-     "line": 41,
+     "line": 44,
      "signature": "({ state, navigation, tabs, links: allLinks = [] }: BottomTabBarProps & { tabs: RoleTab[]; links?: SidebarLink[] })",
      "doc": "Shared tab bar for the vendor, freelancer and staff apps. On phones it is a\nplain bottom bar; at desktop widths it becomes a sidebar that also lists\nthe deep links. The same component in every role, only the accent differs."
     }
@@ -5276,9 +5297,22 @@
     {
      "name": "TabBar",
      "kind": "component",
-     "line": 35,
+     "line": 38,
      "signature": "({ state, navigation }: BottomTabBarProps)",
-     "doc": "Couple-app bottom bar: outline icons, filled + crimson when active, short\nsentence-case labels. Browse (venues, vendors, ideas) on the left, the\ncouple's own plan on the right. Follows the celebration (a pasni has no\nwedding ideas and says \"My plan\") and the super admin's feature switches.\nRoutes without an entry in `TABS` (planner packages) stay reachable by link."
+     "doc": "Couple-app bottom bar: a champagne hairline on top, outline icons, filled\nburgundy with a champagne mark over the active tab, short\nsentence-case labels. Browse (venues, vendors, ideas) on the left, the\ncouple's own plan on the right. Follows the celebration (a pasni has no\nwedding ideas and says \"My plan\") and the super admin's feature switches.\nRoutes without an entry in `TABS` (planner packages) stay reachable by link."
+    }
+   ]
+  },
+  {
+   "file": "src/components/navigation/TabMark.tsx",
+   "doc": "",
+   "exports": [
+    {
+     "name": "TabMark",
+     "kind": "component",
+     "line": 12,
+     "signature": "({ active, vertical }: { active: boolean; vertical?: boolean })",
+     "doc": "The champagne mark over the active tab: grows in from the centre when a\ntab is chosen. Shape and position carry the state, not colour alone.\n`vertical` draws it down the left edge of a sidebar item instead."
     }
    ]
   },
@@ -7508,14 +7542,14 @@
     {
      "name": "EmptyState",
      "kind": "component",
-     "line": 10,
-     "signature": "({ icon = 'albums-outline', title, message, actionLabel, onAction, }: { icon?: ComponentProps<typeof Ionicons>['name']; title: string; message?: string; actionLabel?: string; onAction?: () => void; })",
-     "doc": ""
+     "line": 16,
+     "signature": "({ icon = 'albums-outline', art, title, message, actionLabel, onAction, }: { icon?: ComponentProps<typeof Ionicons>['name']; /** A line drawing (mandap, garland, kalash, diya, rings) instead of the icon. */ art?: ArtName…)",
+     "doc": "Empty, not-found and nothing-yet screens: a pearl medallion with an icon\n(or one of the line drawings via `art`), a serif title, one short line and\nat most one action."
     },
     {
      "name": "ErrorState",
      "kind": "component",
-     "line": 41,
+     "line": 52,
      "signature": "({ onRetry, message }: { onRetry?: () => void; message?: string })",
      "doc": ""
     }
@@ -7690,6 +7724,33 @@
    ]
   },
   {
+   "file": "src/components/ui/Illustration.tsx",
+   "doc": "",
+   "exports": [
+    {
+     "name": "ArtName",
+     "kind": "type",
+     "line": 9,
+     "signature": "= 'mandap' | 'garland' | 'kalash' | 'diya' | 'rings'",
+     "doc": "The line drawings an empty state can show instead of an icon."
+    },
+    {
+     "name": "Illustration",
+     "kind": "component",
+     "line": 16,
+     "signature": "({ name, size = 72 }: { name: ArtName; size?: number })",
+     "doc": "Small line drawings for empty states: a mandap, a marigold toran, a\nkalash, a diya and a pair of rings. Burgundy lines with champagne\ndetails, drawn on a 96-unit grid so they stay crisp at any size."
+    },
+    {
+     "name": "Medallion",
+     "kind": "component",
+     "line": 82,
+     "signature": "({ size = 88, children }: { size?: number; children: ReactNode })",
+     "doc": "Round pearl medallion with a champagne hairline: frames an empty state's icon or drawing."
+    }
+   ]
+  },
+  {
    "file": "src/components/ui/Keyboard.tsx",
    "doc": "Keeps the field being typed in above the on-screen keyboard. Expo SDK 57 draws edge to edge on Android, so the window no longer resizes when the keyboard opens and it covers the bottom of the screen. Every screen is wrapped in `KeyboardLift` (through each navigator's `screenLayout`), which pads the screen by exactly the part the keyboard hides, animated with the keyboard. `KeyboardAwareScrollView` then scrolls the focused input into the space that is left.",
    "exports": [
@@ -7753,6 +7814,32 @@
      "line": 32,
      "signature": "({ message = 'Loading…', style }: { message?: string; style?: StyleProp<ViewStyle> })",
      "doc": "A centred loader with an optional line of text, for whole screens and panels."
+    }
+   ]
+  },
+  {
+   "file": "src/components/ui/Ornament.tsx",
+   "doc": "",
+   "exports": [
+    {
+     "name": "Ornament",
+     "kind": "component",
+     "line": 11,
+     "signature": "({ width = 120, color = colors.gold, style }: { width?: number; color?: string; style?: StyleProp<ViewStyle> })",
+     "doc": "A gilt divider drawn from the Dhaka weave: two fine rules meeting at a\nchain of diamonds. Vivah's one ornament, kept to a few places (the\nwedding band, the plan hero, the wedding website), never as wallpaper."
+    }
+   ]
+  },
+  {
+   "file": "src/components/ui/Photo.tsx",
+   "doc": "",
+   "exports": [
+    {
+     "name": "Photo",
+     "kind": "component",
+     "line": 12,
+     "signature": "({ style, transition, contentFit = 'cover', ...rest }: ImageProps)",
+     "doc": "Every photo in the app. Sits on a pearl fill while it loads and\ncross-dissolves in instead of popping, so lists and galleries feel calm;\nwith Reduce Motion on it simply appears. Takes every `expo-image` prop,\nand a caller's own `transition` or background wins."
     }
    ]
   },
@@ -7929,14 +8016,14 @@
     {
      "name": "VenueCardSkeleton",
      "kind": "component",
-     "line": 28,
+     "line": 30,
      "signature": "()",
      "doc": "Placeholder matching the large venue card layout."
     },
     {
      "name": "ListRowSkeleton",
      "kind": "component",
-     "line": 46,
+     "line": 48,
      "signature": "()",
      "doc": ""
     }
@@ -8006,14 +8093,27 @@
        "optional": true,
        "type": "boolean",
        "doc": "Render the children exactly as given (names, codes, user-written text)."
+      },
+      {
+       "name": "numeric",
+       "optional": true,
+       "type": "boolean",
+       "doc": "Tabular figures, so money and counts line up in columns and don't jiggle as they change."
       }
      ]
     },
     {
+     "name": "MAX_FONT_SCALE",
+     "kind": "const",
+     "line": 29,
+     "signature": "= 1.6",
+     "doc": "Largest system text size the app follows. High enough for readers who\nset large text (parents and grandparents planning a wedding); dense\nchrome (tab labels, badges, pills) passes a lower cap of its own."
+    },
+    {
      "name": "Text",
      "kind": "component",
-     "line": 41,
-     "signature": "({ weight = 'regular', size = 15, color, align, lineHeight, uppercase, tracking, serif, raw, style, children, ...rest }: TextProps)",
+     "line": 50,
+     "signature": "({ weight = 'regular', size = 15, color, align, lineHeight, uppercase, tracking, serif, raw, numeric, style, children, ...rest }: TextProps)",
      "doc": "App-wide text primitive. Every role sets UI text in Mukta; `serif` switches\nto Martel for display lines. Custom fonts on Android ignore `fontWeight`, so\nweight is expressed through the family name. Text is shown in the user's\nlanguage (English or Nepali) through the translation runtime."
     }
    ]
@@ -8060,7 +8160,7 @@
     {
      "name": "ToastHost",
      "kind": "component",
-     "line": 77,
+     "line": 78,
      "signature": "()",
      "doc": ""
     }
@@ -8436,21 +8536,21 @@
     {
      "name": "PAYMENT_METHODS",
      "kind": "const",
-     "line": 23,
+     "line": 24,
      "signature": ": { id: PaymentMethod; label: string; sub: string; color: string; icon: string; staffOnly?: boolean }[]",
      "doc": ""
     },
     {
      "name": "PaymentSheet",
      "kind": "component",
-     "line": 40,
+     "line": 41,
      "signature": "({ visible, title, amount, allowPartial, staff, online, onClose, onPay, }: { visible: boolean; title: string; amount: number; allowPartial?: boolean; staff?: boolean; /** Real Khalti and eSewa payments for this milestone…)",
      "doc": "Paying a milestone. The demo simulates the Nepali gateways (eSewa, Khalti,\nFonepay QR, ConnectIPS…). With `online` (Supabase builds, couples) Khalti and\neSewa are real: the gateway opens, and the payment counts only once\npayment-verify has confirmed it with the gateway (master plan §7.5)."
     },
     {
      "name": "PaymentsPanel",
      "kind": "component",
-     "line": 304,
+     "line": 305,
      "signature": "({ project, mode, openMilestoneId }: { project: Project; mode: 'customer' | 'platform' | 'vendor'; openMilestoneId?: string })",
      "doc": "`openMilestoneId` opens that milestone's payment sheet straight away (from \"Next up\" on My Wedding)."
     }
@@ -8504,7 +8604,7 @@
     {
      "name": "PortfolioManager",
      "kind": "component",
-     "line": 25,
+     "line": 26,
      "signature": "()",
      "doc": "Portfolio manager for providers and crew: upload, caption, tag, feature and reorder. Media goes to Cloudinary in production."
     }
@@ -8623,14 +8723,14 @@
     {
      "name": "SignaturePad",
      "kind": "component",
-     "line": 10,
+     "line": 11,
      "signature": "({ onDone, height = 180 }: { onDone: (path: string) => void; height?: number })",
      "doc": "Finger/mouse signature capture; returns an SVG path string."
     },
     {
      "name": "SignatureImage",
      "kind": "component",
-     "line": 60,
+     "line": 61,
      "signature": "({ path, height = 60 }: { path: string; height?: number })",
      "doc": "Render a stored signature path."
     }
@@ -8775,91 +8875,112 @@
     {
      "name": "socialColors",
      "kind": "const",
-     "line": 77,
+     "line": 105,
      "signature": "= { facebook: '#1877F2', instagram: '#C13584', whatsapp: '#128C7E', tiktok: '#161823', } as…",
      "doc": "Network marks in the social hub. Small icons and hairlines only, never fills."
     },
     {
      "name": "gradients",
      "kind": "const",
-     "line": 89,
+     "line": 117,
      "signature": "= { … }",
      "doc": "Only photo scrims remain; flat colour everywhere else. The remaining keys\nare kept so older call sites still type-check, and all resolve to flat or\nnear-flat fills."
     },
     {
      "name": "fonts",
      "kind": "const",
-     "line": 109,
+     "line": 139,
      "signature": "= { regular: 'Mukta_400Regular', medium: 'Mukta_500Medium', semibold: 'Mukta_600SemiBold', …",
      "doc": "Mukta (Ek Type) for everything you read and tap: it was drawn for\nDevanagari and Latin together, so Nepali names and \"शुभ विवाह\" set in the\nsame voice as the English UI. Martel, its serif sibling from the same\nfoundry, is kept for a handful of display lines (couple names, screen\ntitles on the couple app)."
     },
     {
      "name": "serif",
      "kind": "const",
-     "line": 117,
+     "line": 147,
      "signature": "= { regular: 'Martel_400Regular', medium: 'Martel_600SemiBold', semibold: 'Martel_600SemiBo…",
      "doc": ""
     },
     {
      "name": "FontWeight",
      "kind": "type",
-     "line": 125,
+     "line": 155,
      "signature": "= keyof typeof fonts",
      "doc": ""
     },
     {
      "name": "spacing",
      "kind": "const",
-     "line": 127,
+     "line": 157,
      "signature": "= { xxs: 2, xs: 4, sm: 8, md: 12, lg: 16, xl: 20, xxl: 24, xxxl: 32, } as const",
      "doc": ""
     },
     {
      "name": "radius",
      "kind": "const",
-     "line": 138,
+     "line": 168,
      "signature": "= { xs: 3, sm: 6, md: 8, lg: 10, xl: 12, pill: 999, } as const",
      "doc": ""
     },
     {
      "name": "GUTTER",
      "kind": "const",
-     "line": 148,
+     "line": 178,
      "signature": "= 16",
      "doc": "Page gutter."
     },
     {
      "name": "shadow",
      "kind": "function",
-     "line": 156,
+     "line": 186,
      "signature": "(elevation: number, opacity: number, radiusPx: number, offsetY: number, color = '#251B18'): ViewStyle",
      "doc": "Drop shadow for something that floats: elevation on Android, `boxShadow` on the web (shadow* props are deprecated there), shadow* on iOS."
     },
     {
      "name": "shadows",
      "kind": "const",
-     "line": 175,
+     "line": 205,
      "signature": "= { … }",
      "doc": "Shadows are reserved for things that genuinely float (sheets, toasts)."
     },
     {
      "name": "type",
      "kind": "const",
-     "line": 185,
+     "line": 215,
      "signature": "= { display: { fontFamily: serif.bold, fontSize: 30, lineHeight: 40 }, title: { fontFamily:…",
      "doc": ""
     },
     {
+     "name": "tabular",
+     "kind": "const",
+     "line": 227,
+     "signature": ": TextStyle",
+     "doc": "Figures that line up in columns (money, counts, countdowns)."
+    },
+    {
+     "name": "iconSize",
+     "kind": "const",
+     "line": 230,
+     "signature": "= { xs: 14, sm: 16, md: 20, lg: 24, xl: 28 } as const",
+     "doc": "Icon sizes: snap every Ionicon to one of these."
+    },
+    {
+     "name": "motion",
+     "kind": "const",
+     "line": 237,
+     "signature": "= { fast: 150, base: 240, slow: 360, stagger: 45 } as const",
+     "doc": "Motion timing (ms). One or two things move per screen, always with the\nease-out curve in `hooks/useMotion`, and nothing moves when the device asks\nfor reduced motion."
+    },
+    {
      "name": "hitSlop",
      "kind": "const",
-     "line": 196,
+     "line": 239,
      "signature": "= { top: 10, bottom: 10, left: 10, right: 10 }",
      "doc": ""
     },
     {
      "name": "inputReset",
      "kind": "const",
-     "line": 199,
+     "line": 242,
      "signature": ": TextStyle",
      "doc": "Removes the browser focus ring from text inputs on web (native is unaffected)."
     }
@@ -11362,6 +11483,26 @@
      "line": 7,
      "signature": "()",
      "doc": "Breakpoints for the web-ready consoles. Phones get one column; tablets and\ndesktop browsers (expo start --web) get side navigation and grids."
+    }
+   ]
+  },
+  {
+   "file": "src/hooks/useMotion.ts",
+   "doc": "",
+   "exports": [
+    {
+     "name": "easeOut",
+     "kind": "const",
+     "line": 6,
+     "signature": "= Easing.bezier(0.2, 0, 0, 1)",
+     "doc": "The one ease-out curve every animation uses (quick start, soft landing)."
+    },
+    {
+     "name": "useMotion",
+     "kind": "hook",
+     "line": 14,
+     "signature": "()",
+     "doc": "Motion that respects the device's Reduce Motion setting. `enter(i)` is a\nfade-and-rise for the i-th section of a screen (staggered, capped so long\nlists don't wait), `fade` a plain fade; both are `undefined` when the user\nasked for less motion, so the content simply appears."
     }
    ]
   },
@@ -16586,6 +16727,24 @@
        "doc": ""
       },
       {
+       "name": "borderStrong",
+       "optional": false,
+       "type": "string",
+       "doc": "Control boundaries (inputs, toggles, outline buttons): 3 : 1 on the background."
+      },
+      {
+       "name": "accent",
+       "optional": false,
+       "type": "string",
+       "doc": "Champagne: thin rules, the active tab mark, ratings. Never text on light surfaces."
+      },
+      {
+       "name": "accentText",
+       "optional": false,
+       "type": "string",
+       "doc": "Champagne deep enough for text on light surfaces."
+      },
+      {
        "name": "text",
        "optional": false,
        "type": "string",
@@ -16650,7 +16809,7 @@
     {
      "name": "RoleTheme",
      "kind": "interface",
-     "line": 25,
+     "line": 31,
      "signature": "",
      "doc": "",
      "members": [
@@ -16707,28 +16866,28 @@
     {
      "name": "ROLE_THEMES",
      "kind": "const",
-     "line": 60,
+     "line": 69,
      "signature": ": Record<UserRole, RoleTheme>",
      "doc": "One design system, four apps. Every role shares the \"Royal Nepali Luxury\"\npalette (ivory and pearl neutrals, espresso ink, champagne accents), the\ntype, the spacing and the component shapes. Couple, business and\nfreelancer apps share the burgundy accent; the staff console uses the\ndeeper wine so a coordinator can tell at a glance which app they are in."
     },
     {
      "name": "ROLE_MARK",
      "kind": "const",
-     "line": 133,
+     "line": 142,
      "signature": ": Record<UserRole, string>",
      "doc": "Small marks that tell roles apart where several meet on one screen (chat\nbubbles, member chips). Accents stay burgundy; these are only for labels."
     },
     {
      "name": "statusTone",
      "kind": "function",
-     "line": 164,
+     "line": 173,
      "signature": "(status: string, t: RoleTheme): { fg: string; bg: string }",
      "doc": "Colour for any workflow status string, shared by every role's status pills."
     },
     {
      "name": "statusLabel",
      "kind": "function",
-     "line": 172,
+     "line": 181,
      "signature": "(s: string)",
      "doc": "\"QUOTE_SENT\" / \"in_progress\" → \"Quote sent\" / \"In progress\"."
     }

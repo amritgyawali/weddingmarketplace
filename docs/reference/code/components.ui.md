@@ -18,9 +18,12 @@ Every exported symbol in `src/components/ui/`, file by file. The guide that expl
 - [`Field.tsx`](#fieldtsx) (2 exports)
 - [`GenieFab.tsx`](#geniefabtsx) (2 exports)
 - [`IconButton.tsx`](#iconbuttontsx) (3 exports)
+- [`Illustration.tsx`](#illustrationtsx) (3 exports)
 - [`Keyboard.tsx`](#keyboardtsx) (4 exports) · Keeps the field being typed in above the on-screen keyboard.
 - [`LanguageSwitch.tsx`](#languageswitchtsx) (1 exports)
 - [`Loader.tsx`](#loadertsx) (2 exports)
+- [`Ornament.tsx`](#ornamenttsx) (1 exports)
+- [`Photo.tsx`](#phototsx) (1 exports)
 - [`PressableScale.tsx`](#pressablescaletsx) (3 exports)
 - [`Rating.tsx`](#ratingtsx) (2 exports)
 - [`ScreenHeader.tsx`](#screenheadertsx) (1 exports)
@@ -28,7 +31,7 @@ Every exported symbol in `src/components/ui/`, file by file. The guide that expl
 - [`SectionHeader.tsx`](#sectionheadertsx) (2 exports)
 - [`Sheet.tsx`](#sheettsx) (1 exports)
 - [`Skeleton.tsx`](#skeletontsx) (3 exports)
-- [`Text.tsx`](#texttsx) (2 exports)
+- [`Text.tsx`](#texttsx) (3 exports)
 - [`Toast.tsx`](#toasttsx) (6 exports)
 - [`Toggle.tsx`](#toggletsx) (1 exports)
 
@@ -342,17 +345,19 @@ Source: [src/components/ui/EmptyState.tsx](../../../src/components/ui/EmptyState
 
 ### `EmptyState`
 
-*component* · [src/components/ui/EmptyState.tsx:10](../../../src/components/ui/EmptyState.tsx#L10)
+*component* · [src/components/ui/EmptyState.tsx:16](../../../src/components/ui/EmptyState.tsx#L16)
 
 ```ts
-EmptyState({ icon = 'albums-outline', title, message, actionLabel, onAction, }: { icon?: ComponentProps<typeof Ionicons>['name']; title: string; message?: string; actionLabel?: string; onAction?: () => void; })
+EmptyState({ icon = 'albums-outline', art, title, message, actionLabel, onAction, }: { icon?: ComponentProps<typeof Ionicons>['name']; /** A line drawing (mandap, garland, kalash, diya, rings) instead of the icon. */ art?: ArtName…)
 ```
 
-_No JSDoc yet._
+Empty, not-found and nothing-yet screens: a pearl medallion with an icon
+(or one of the line drawings via `art`), a serif title, one short line and
+at most one action.
 
 ### `ErrorState`
 
-*component* · [src/components/ui/EmptyState.tsx:41](../../../src/components/ui/EmptyState.tsx#L41)
+*component* · [src/components/ui/EmptyState.tsx:52](../../../src/components/ui/EmptyState.tsx#L52)
 
 ```ts
 ErrorState({ onRetry, message }: { onRetry?: () => void; message?: string })
@@ -472,6 +477,42 @@ BackButton({ onPress, style }: { onPress?: () => void; style?: StyleProp<ViewSty
 
 Back chevron. Falls back to home when there is no history (deep links).
 
+## Illustration.tsx
+
+Source: [src/components/ui/Illustration.tsx](../../../src/components/ui/Illustration.tsx)
+
+### `ArtName`
+
+*type* · [src/components/ui/Illustration.tsx:9](../../../src/components/ui/Illustration.tsx#L9)
+
+```ts
+type ArtName = 'mandap' | 'garland' | 'kalash' | 'diya' | 'rings'
+```
+
+The line drawings an empty state can show instead of an icon.
+
+### `Illustration`
+
+*component* · [src/components/ui/Illustration.tsx:16](../../../src/components/ui/Illustration.tsx#L16)
+
+```ts
+Illustration({ name, size = 72 }: { name: ArtName; size?: number })
+```
+
+Small line drawings for empty states: a mandap, a marigold toran, a
+kalash, a diya and a pair of rings. Burgundy lines with champagne
+details, drawn on a 96-unit grid so they stay crisp at any size.
+
+### `Medallion`
+
+*component* · [src/components/ui/Illustration.tsx:82](../../../src/components/ui/Illustration.tsx#L82)
+
+```ts
+Medallion({ size = 88, children }: { size?: number; children: ReactNode })
+```
+
+Round pearl medallion with a champagne hairline: frames an empty state's icon or drawing.
+
 ## Keyboard.tsx
 
 Source: [src/components/ui/Keyboard.tsx](../../../src/components/ui/Keyboard.tsx)
@@ -567,6 +608,39 @@ LoadingState({ message = 'Loading…', style }: { message?: string; style?: Styl
 ```
 
 A centred loader with an optional line of text, for whole screens and panels.
+
+## Ornament.tsx
+
+Source: [src/components/ui/Ornament.tsx](../../../src/components/ui/Ornament.tsx)
+
+### `Ornament`
+
+*component* · [src/components/ui/Ornament.tsx:11](../../../src/components/ui/Ornament.tsx#L11)
+
+```ts
+Ornament({ width = 120, color = colors.gold, style }: { width?: number; color?: string; style?: StyleProp<ViewStyle> })
+```
+
+A gilt divider drawn from the Dhaka weave: two fine rules meeting at a
+chain of diamonds. Vivah's one ornament, kept to a few places (the
+wedding band, the plan hero, the wedding website), never as wallpaper.
+
+## Photo.tsx
+
+Source: [src/components/ui/Photo.tsx](../../../src/components/ui/Photo.tsx)
+
+### `Photo`
+
+*component* · [src/components/ui/Photo.tsx:12](../../../src/components/ui/Photo.tsx#L12)
+
+```ts
+Photo({ style, transition, contentFit = 'cover', ...rest }: ImageProps)
+```
+
+Every photo in the app. Sits on a pearl fill while it loads and
+cross-dissolves in instead of popping, so lists and galleries feel calm;
+with Reduce Motion on it simply appears. Takes every `expo-image` prop,
+and a caller's own `transition` or background wins.
 
 ## PressableScale.tsx
 
@@ -732,7 +806,7 @@ _No JSDoc yet._
 
 ### `VenueCardSkeleton`
 
-*component* · [src/components/ui/Skeleton.tsx:28](../../../src/components/ui/Skeleton.tsx#L28)
+*component* · [src/components/ui/Skeleton.tsx:30](../../../src/components/ui/Skeleton.tsx#L30)
 
 ```ts
 VenueCardSkeleton()
@@ -742,7 +816,7 @@ Placeholder matching the large venue card layout.
 
 ### `ListRowSkeleton`
 
-*component* · [src/components/ui/Skeleton.tsx:46](../../../src/components/ui/Skeleton.tsx#L46)
+*component* · [src/components/ui/Skeleton.tsx:48](../../../src/components/ui/Skeleton.tsx#L48)
 
 ```ts
 ListRowSkeleton()
@@ -773,13 +847,26 @@ _No JSDoc yet._
 | `tracking?` | `number` |  |
 | `serif?` | `boolean` | Set in Martel, the display serif. Use for a few headline lines only. |
 | `raw?` | `boolean` | Render the children exactly as given (names, codes, user-written text). |
+| `numeric?` | `boolean` | Tabular figures, so money and counts line up in columns and don't jiggle as they change. |
+
+### `MAX_FONT_SCALE`
+
+*const* · [src/components/ui/Text.tsx:29](../../../src/components/ui/Text.tsx#L29)
+
+```ts
+MAX_FONT_SCALE= 1.6
+```
+
+Largest system text size the app follows. High enough for readers who
+set large text (parents and grandparents planning a wedding); dense
+chrome (tab labels, badges, pills) passes a lower cap of its own.
 
 ### `Text`
 
-*component* · [src/components/ui/Text.tsx:41](../../../src/components/ui/Text.tsx#L41)
+*component* · [src/components/ui/Text.tsx:50](../../../src/components/ui/Text.tsx#L50)
 
 ```ts
-Text({ weight = 'regular', size = 15, color, align, lineHeight, uppercase, tracking, serif, raw, style, children, ...rest }: TextProps)
+Text({ weight = 'regular', size = 15, color, align, lineHeight, uppercase, tracking, serif, raw, numeric, style, children, ...rest }: TextProps)
 ```
 
 App-wide text primitive. Every role sets UI text in Mukta; `serif` switches
@@ -843,7 +930,7 @@ When the last toast was shown, so automatic confirmations don't cover a screen's
 
 ### `ToastHost`
 
-*component* · [src/components/ui/Toast.tsx:77](../../../src/components/ui/Toast.tsx#L77)
+*component* · [src/components/ui/Toast.tsx:78](../../../src/components/ui/Toast.tsx#L78)
 
 ```ts
 ToastHost()

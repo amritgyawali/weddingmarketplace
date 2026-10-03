@@ -28,7 +28,7 @@ function Contracts({ project }: { project: Project }) {
         </Card>
       )}
       {contracts.length === 0 ? (
-        <EmptyBlock icon="document-lock-outline" title="No contracts yet" message="Every confirmed booking gets a three-party agreement between you, the provider and Vivah." />
+        <EmptyBlock icon="document-lock-outline" art="rings" title="No contracts yet" message="Every confirmed booking gets a three-party agreement between you, the provider and Vivah." />
       ) : (
         contracts.map((c) => (
           <Card key={c.id} onPress={() => router.push({ pathname: '/contract/[id]', params: { id: c.id } })} style={{ gap: 6 }}>

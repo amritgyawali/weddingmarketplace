@@ -34,7 +34,7 @@ function NotificationList() {
         keyExtractor={(n) => n.id}
         style={{ backgroundColor: t.c.surface }}
         contentContainerStyle={{ paddingBottom: 40 }}
-        ListEmptyComponent={<EmptyBlock icon="notifications-off-outline" title="You're all caught up" />}
+        ListEmptyComponent={<EmptyBlock icon="notifications-off-outline" art="diya" title="You're all caught up" />}
         renderItem={({ item }) => {
           const openable = !!item.href && canOpen(item.href, account.role);
           return (

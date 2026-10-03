@@ -5,6 +5,7 @@ import Svg, { Circle, Path } from 'react-native-svg';
 import { colors } from '@/constants/theme';
 import { useRoleTheme } from '@/theme/RoleTheme';
 
+/** The line drawings an empty state can show instead of an icon. */
 export type ArtName = 'mandap' | 'garland' | 'kalash' | 'diya' | 'rings';
 
 /**

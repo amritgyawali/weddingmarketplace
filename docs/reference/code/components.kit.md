@@ -6,8 +6,8 @@ Every exported symbol in `src/components/kit/`, file by file. The guide that exp
 
 ## Files
 
-- [`controls.tsx`](#controlstsx) (5 exports)
-- [`dashboard.tsx`](#dashboardtsx) (5 exports)
+- [`controls.tsx`](#controlstsx) (6 exports)
+- [`dashboard.tsx`](#dashboardtsx) (7 exports)
 - [`index.ts`](#indexts) (3 exports)
 - [`primitives.tsx`](#primitivestsx) (10 exports)
 
@@ -39,7 +39,7 @@ Underlined tab strip; scrolls horizontally when it overflows.
 
 ### `ChoiceChips`
 
-*component* · [src/components/kit/controls.tsx:126](../../../src/components/kit/controls.tsx#L126)
+*component* · [src/components/kit/controls.tsx:128](../../../src/components/kit/controls.tsx#L128)
 
 ```ts
 ChoiceChips({ options, selected, onToggle, }: { options: string[]; selected: string[]; onToggle: (value: string) => void; })
@@ -47,9 +47,21 @@ ChoiceChips({ options, selected, onToggle, }: { options: string[]; selected: str
 
 Selectable chips (multi or single choice).
 
+### `FilterChip`
+
+*component* · [src/components/kit/controls.tsx:168](../../../src/components/kit/controls.tsx#L168)
+
+```ts
+FilterChip({ label, selected, onPress, icon }: { label: string; selected?: boolean; onPress: () => void; icon?: IconName })
+```
+
+One filter or sort chip, the same in every role app: pearl at rest,
+burgundy with a check when selected (so the state never rests on colour
+alone). Use for ad-hoc chip rows instead of styling a Pressable by hand.
+
 ### `ListRow`
 
-*component* · [src/components/kit/controls.tsx:162](../../../src/components/kit/controls.tsx#L162)
+*component* · [src/components/kit/controls.tsx:195](../../../src/components/kit/controls.tsx#L195)
 
 ```ts
 ListRow({ title, subtitle, leading, trailing, onPress, icon, meta, }: { title: string; subtitle?: string; leading?: ReactNode; trailing?: ReactNode; onPress?: () => void; icon?: IconName; meta?: ReactNode; })
@@ -59,7 +71,7 @@ Tappable list row with leading visual and trailing slot.
 
 ### `Fab`
 
-*component* · [src/components/kit/controls.tsx:209](../../../src/components/kit/controls.tsx#L209)
+*component* · [src/components/kit/controls.tsx:242](../../../src/components/kit/controls.tsx#L242)
 
 ```ts
 Fab({ icon = 'add', label, onPress, bottom = 20 }: { icon?: IconName; label?: string; onPress: () => void; bottom?: number })
@@ -73,7 +85,7 @@ Source: [src/components/kit/dashboard.tsx](../../../src/components/kit/dashboard
 
 ### `KpiCard`
 
-*component* · [src/components/kit/dashboard.tsx:17](../../../src/components/kit/dashboard.tsx#L17)
+*component* · [src/components/kit/dashboard.tsx:19](../../../src/components/kit/dashboard.tsx#L19)
 
 ```ts
 KpiCard({ label, value, icon: _icon, delta, tone, style, onPress, }: { label: string; value: string; /** Kept for call-site compatibility; stat tiles no longer draw icons. */ icon: IconName; delta?: string; tone?: string; style…)
@@ -81,9 +93,33 @@ KpiCard({ label, value, icon: _icon, delta, tone, style, onPress, }: { label: st
 
 Text-only stat tile: label on top, figure below. `tone` only matters when it flags a problem.
 
+### `FocusBand`
+
+*component* · [src/components/kit/dashboard.tsx:64](../../../src/components/kit/dashboard.tsx#L64)
+
+```ts
+FocusBand({ eyebrow, title, body, figure, figureLabel, primary, secondary, onPress, }: { eyebrow: string; title: string; body?: string; /** A headline number on the right (an amount, a count). */ figure?: string; figureLabel?: st…)
+```
+
+The one thing that needs the user now, at the top of a dashboard: a wine
+band with the gilt ornament, a serif title and at most two actions (the
+first in champagne). Everything else on the screen sits below it, quieter.
+
+### `StatTile`
+
+*component* · [src/components/kit/dashboard.tsx:148](../../../src/components/kit/dashboard.tsx#L148)
+
+```ts
+StatTile({ label, value, sub, alert, style }: { label: string; value: string; sub?: string; alert?: boolean; style?: StyleProp<ViewStyle> })
+```
+
+Compact stat for rows of three or four (guests, seating, registry):
+label above on one line, the Martel figure below, an optional note.
+`alert` colours the figure only when it flags a problem.
+
 ### `BarChart`
 
-*component* · [src/components/kit/dashboard.tsx:58](../../../src/components/kit/dashboard.tsx#L58)
+*component* · [src/components/kit/dashboard.tsx:169](../../../src/components/kit/dashboard.tsx#L169)
 
 ```ts
 BarChart({ data, height = 120, format }: { data: { label: string; value: number }[]; height?: number; format?: (v: number) => string })
@@ -93,7 +129,7 @@ Minimal column chart (no chart lib needed). The latest bar is inked, the rest st
 
 ### `RoleHeader`
 
-*component* · [src/components/kit/dashboard.tsx:127](../../../src/components/kit/dashboard.tsx#L127)
+*component* · [src/components/kit/dashboard.tsx:239](../../../src/components/kit/dashboard.tsx#L239)
 
 ```ts
 RoleHeader({ eyebrow, title, subtitle, right, children, }: { eyebrow?: string; title: string; subtitle?: string; right?: ReactNode; children?: ReactNode; })
@@ -103,7 +139,7 @@ Tab-root header: plain bar, title on the left, bell on the right. Same shape in 
 
 ### `StackHeader`
 
-*component* · [src/components/kit/dashboard.tsx:171](../../../src/components/kit/dashboard.tsx#L171)
+*component* · [src/components/kit/dashboard.tsx:283](../../../src/components/kit/dashboard.tsx#L283)
 
 ```ts
 StackHeader({ title, subtitle, right, back = true }: { title: string; subtitle?: string; right?: ReactNode; back?: boolean })
@@ -113,7 +149,7 @@ Stack header for detail screens.
 
 ### `QuickAction`
 
-*component* · [src/components/kit/dashboard.tsx:201](../../../src/components/kit/dashboard.tsx#L201)
+*component* · [src/components/kit/dashboard.tsx:313](../../../src/components/kit/dashboard.tsx#L313)
 
 ```ts
 QuickAction({ icon, label, onPress }: { icon: IconName; label: string; onPress: () => void })
@@ -161,7 +197,7 @@ Source: [src/components/kit/primitives.tsx](../../../src/components/kit/primitiv
 
 ### `IconName`
 
-*type* · [src/components/kit/primitives.tsx:11](../../../src/components/kit/primitives.tsx#L11)
+*type* · [src/components/kit/primitives.tsx:13](../../../src/components/kit/primitives.tsx#L13)
 
 ```ts
 type IconName = ComponentProps<typeof Ionicons>['name']
@@ -171,7 +207,7 @@ _No JSDoc yet._
 
 ### `Card`
 
-*component* · [src/components/kit/primitives.tsx:14](../../../src/components/kit/primitives.tsx#L14)
+*component* · [src/components/kit/primitives.tsx:16](../../../src/components/kit/primitives.tsx#L16)
 
 ```ts
 Card({ children, style, onPress, padded = true, accessibilityLabel, }: { children: ReactNode; style?: StyleProp<ViewStyle>; onPress?: () => void; padded?: boolean; accessibilityLabel?: string; })
@@ -181,7 +217,7 @@ Themed surface. `pressable` turns it into a card button.
 
 ### `KButton`
 
-*component* · [src/components/kit/primitives.tsx:48](../../../src/components/kit/primitives.tsx#L48)
+*component* · [src/components/kit/primitives.tsx:50](../../../src/components/kit/primitives.tsx#L50)
 
 ```ts
 KButton({ label, onPress, variant = 'primary', icon, loading, disabled, size = 'md', style, }: { label: string; onPress?: () => void; variant?: ButtonVariant; icon?: IconName; loading?: boolean; disabled?: boolean; size?: 'sm' …)
@@ -191,7 +227,7 @@ _No JSDoc yet._
 
 ### `StatusPill`
 
-*component* · [src/components/kit/primitives.tsx:102](../../../src/components/kit/primitives.tsx#L102)
+*component* · [src/components/kit/primitives.tsx:104](../../../src/components/kit/primitives.tsx#L104)
 
 ```ts
 StatusPill({ status, label }: { status: string; label?: string })
@@ -201,7 +237,7 @@ _No JSDoc yet._
 
 ### `Avatar`
 
-*component* · [src/components/kit/primitives.tsx:117](../../../src/components/kit/primitives.tsx#L117)
+*component* · [src/components/kit/primitives.tsx:123](../../../src/components/kit/primitives.tsx#L123)
 
 ```ts
 Avatar({ name, size = 40 }: { name: string; size?: number })
@@ -211,7 +247,7 @@ _No JSDoc yet._
 
 ### `ProgressBar`
 
-*component* · [src/components/kit/primitives.tsx:134](../../../src/components/kit/primitives.tsx#L134)
+*component* · [src/components/kit/primitives.tsx:140](../../../src/components/kit/primitives.tsx#L140)
 
 ```ts
 ProgressBar({ value, color, height = 4 }: { value: number; color?: string; height?: number })
@@ -221,7 +257,7 @@ _No JSDoc yet._
 
 ### `SectionTitle`
 
-*component* · [src/components/kit/primitives.tsx:143](../../../src/components/kit/primitives.tsx#L143)
+*component* · [src/components/kit/primitives.tsx:149](../../../src/components/kit/primitives.tsx#L149)
 
 ```ts
 SectionTitle({ title, action, onAction }: { title: string; action?: string; onAction?: () => void })
@@ -231,17 +267,17 @@ _No JSDoc yet._
 
 ### `EmptyBlock`
 
-*component* · [src/components/kit/primitives.tsx:161](../../../src/components/kit/primitives.tsx#L161)
+*component* · [src/components/kit/primitives.tsx:168](../../../src/components/kit/primitives.tsx#L168)
 
 ```ts
-EmptyBlock({ icon = 'file-tray-outline', title, message, action, onAction }: { icon?: IconName; title: string; message?: string; action?: string; onAction?: () => void })
+EmptyBlock({ icon = 'file-tray-outline', art, title, message, action, onAction }: { icon?: IconName; art?: ArtName; title: string; message?: string; action?: string; onAction?: () => void })
 ```
 
-_No JSDoc yet._
+Empty list or section in the role apps: pearl medallion, serif title, one line, one action. `art` swaps the icon for a line drawing.
 
 ### `Divider`
 
-*component* · [src/components/kit/primitives.tsx:179](../../../src/components/kit/primitives.tsx#L179)
+*component* · [src/components/kit/primitives.tsx:188](../../../src/components/kit/primitives.tsx#L188)
 
 ```ts
 Divider({ style }: { style?: StyleProp<ViewStyle> })
@@ -251,7 +287,7 @@ _No JSDoc yet._
 
 ### `KeyValue`
 
-*component* · [src/components/kit/primitives.tsx:185](../../../src/components/kit/primitives.tsx#L185)
+*component* · [src/components/kit/primitives.tsx:194](../../../src/components/kit/primitives.tsx#L194)
 
 ```ts
 KeyValue({ label, value, strong }: { label: string; value: string; strong?: boolean })
