@@ -3,7 +3,7 @@ import { Image } from 'expo-image';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
-import Animated, { FadeIn, FadeOut, LinearTransition, useAnimatedStyle, withTiming } from 'react-native-reanimated';
+import Animated, { FadeIn, useAnimatedStyle, withTiming } from 'react-native-reanimated';
 
 import { CityHeader } from '@/components/home/CityHeader';
 import { IconButton } from '@/components/ui/IconButton';
@@ -36,7 +36,9 @@ function CategoryRow({ category, expanded, onToggle }: { category: VendorCategor
   }));
 
   return (
-    <Animated.View layout={LinearTransition.duration(220)} style={styles.block}>
+    // Plain View on purpose: a Reanimated `layout` transition here left the rows
+    // below at their old positions on iOS, so the opened list drew over them.
+    <View style={styles.block}>
       <Pressable
         onPress={() => {
           triggerHaptic('selection');
@@ -61,7 +63,7 @@ function CategoryRow({ category, expanded, onToggle }: { category: VendorCategor
       </Pressable>
 
       {expanded && (
-        <Animated.View entering={FadeIn.duration(200)} exiting={FadeOut.duration(120)} style={styles.subList}>
+        <Animated.View entering={FadeIn.duration(200)} style={styles.subList}>
           {category.subcategories.map((s, i) => (
             <Pressable
               key={s.id}
@@ -80,7 +82,7 @@ function CategoryRow({ category, expanded, onToggle }: { category: VendorCategor
           ))}
         </Animated.View>
       )}
-    </Animated.View>
+    </View>
   );
 }
 
