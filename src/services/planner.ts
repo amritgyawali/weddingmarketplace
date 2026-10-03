@@ -5,6 +5,7 @@
  * call behind your own server later without touching screens.
  */
 import type { PhotoKey } from '@/constants/images';
+import { CHECKLIST, CHECKLIST_PHASES, currentPhase, PHASE_DUE } from '@/data/checklist';
 import { EVENT_TYPE_BY_ID, bandFor, isPeakSeason } from '@/data/events';
 import type { OccasionId } from '@/data/occasions';
 import { SERVICE_BY_ID, defaultDetails, findService, serviceName } from '@/data/services';
@@ -306,6 +307,34 @@ export function generateTasks(mainDate: string, services: string[], customerName
 export function suggestedTasks(project: Project): ProjectTask[] {
   const services = project.requirements.filter((r) => r.status !== 'CANCELLED').map((r) => r.serviceId);
   return generateTasks(project.weddingDate, services, project.customerName, project.coordinatorName, project.occasion ?? 'wedding').filter((t) => !project.tasks.some((x) => x.title === t.title));
+}
+
+/**
+ * Items of the month-by-month guide for the phase the couple is in and the
+ * ones after it, not on the wedding's task list yet, as tasks for the couple
+ * due by the end of their phase. Weddings and engagements only.
+ */
+export function guideSuggestions(project: Project): ProjectTask[] {
+  if (!WEDDING_LIKE.has(project.occasion ?? 'wedding')) return [];
+  const from = CHECKLIST_PHASES.indexOf(currentPhase(daysUntil(project.weddingDate)));
+  const have = new Set([...project.tasks, ...suggestedTasks(project)].map((t) => t.title.toLowerCase()));
+  const now = today();
+  return CHECKLIST.filter((t) => CHECKLIST_PHASES.indexOf(t.phase) >= from && !have.has(t.title.toLowerCase())).map((t) => {
+    const due = shift(project.weddingDate, -PHASE_DUE[t.phase]);
+    return {
+      id: uid('tk'),
+      title: t.title,
+      assigneeKind: 'customer',
+      assigneeName: project.customerName,
+      assigneeId: project.customerId,
+      due: due < now ? shift(now, 3) : due,
+      status: 'TODO',
+      priority: 'medium',
+      category: t.category,
+      visibility: 'shared',
+      createdAt: new Date().toISOString(),
+    };
+  });
 }
 
 /**

@@ -8,7 +8,7 @@ import { findOccasion, occasionForEventType } from '@/data/occasions';
 import { findProvider } from '@/data/providers';
 import { crewPlanFor, findService, serviceName } from '@/data/services';
 import { rankFreelancers, rankProviders, type RankedProvider, toCandidate } from '@/services/matching';
-import { buildEvents, buildRequirements, generateTasks, type PlanInput, runSheetFor, suggestedTasks } from '@/services/planner';
+import { buildEvents, buildRequirements, generateTasks, guideSuggestions, type PlanInput, runSheetFor, suggestedTasks } from '@/services/planner';
 import { freelancerNet, payablesForBooking, splitBooking } from '@/services/pricing';
 import { useSession } from '@/store/useSession';
 import type {
@@ -91,7 +91,7 @@ export interface ProjectActions {
   updateTask: (projectId: string, taskId: string, patch: Partial<ProjectTask>) => void;
   setTaskStatus: (projectId: string, taskId: string, status: TaskStatus) => void;
   removeTask: (projectId: string, taskId: string) => void;
-  /** Adds the suggested tasks not yet on the list (only those titled in `titles` when given); returns how many were added. */
+  /** Adds the suggested tasks not yet on the list; with `titles`, only those (and guide items may be among them). Returns how many were added. */
   regenerateChecklist: (projectId: string, titles?: string[]) => number;
 
   addTimelineEntry: (projectId: string, entry: Omit<TimelineEntry, 'id' | 'done'> & { done?: boolean }) => void;
@@ -812,7 +812,7 @@ export const projectActions = (set: SetDb, get: GetDb): ProjectActions => ({
   regenerateChecklist: (projectId, titles) => {
     const project = get().projects.find((p) => p.id === projectId);
     if (!project) return 0;
-    const fresh = suggestedTasks(project).filter((t) => !titles || titles.includes(t.title));
+    const fresh = titles ? [...suggestedTasks(project), ...guideSuggestions(project)].filter((t) => titles.includes(t.title)) : suggestedTasks(project);
     if (fresh.length) set((s) => ({ projects: mapProject(s.projects, projectId, (p) => ({ ...p, tasks: [...p.tasks, ...fresh] })) }));
     return fresh.length;
   },

@@ -205,7 +205,7 @@ Source: [src/store/db/projects.ts:42](../../src/store/db/projects.ts#L42) · Wed
 | `updateTask` | `(projectId: string, taskId: string, patch: Partial<ProjectTask>) => void` | _No JSDoc yet._ |
 | `setTaskStatus` | `(projectId: string, taskId: string, status: TaskStatus) => void` | _No JSDoc yet._ |
 | `removeTask` | `(projectId: string, taskId: string) => void` | _No JSDoc yet._ |
-| `regenerateChecklist` | `(projectId: string, titles?: string[]) => number` | Adds the suggested tasks not yet on the list (only those titled in `titles` when given); returns how many were added. |
+| `regenerateChecklist` | `(projectId: string, titles?: string[]) => number` | Adds the suggested tasks not yet on the list; with `titles`, only those (and guide items may be among them). Returns how many were added. |
 | `addTimelineEntry` | `(projectId: string, entry: Omit<TimelineEntry, 'id' \| 'done'> & { done?: boolean }) => void` | _No JSDoc yet._ |
 | `toggleTimelineEntry` | `(projectId: string, id: string) => void` | _No JSDoc yet._ |
 | `inviteCollaborator` | `(projectId: string, c: Pick<Collaborator, 'name' \| 'relation' \| 'permission'> & { phone?: string }) => Collaborator` | _No JSDoc yet._ |

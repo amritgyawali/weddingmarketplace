@@ -42,11 +42,11 @@ Generated from the source. For the *why*, read [the handbook](../handbook/README
 | `src/components/wedding/` | 3 | 12 | [components.wedding.md](code/components.wedding.md) |
 | `src/components/work/` | 26 | 52 | [components.work.md](code/components.work.md) |
 | `src/constants/` | 4 | 20 | [constants.md](code/constants.md) |
-| `src/data/` | 25 | 186 | [data.md](code/data.md) |
+| `src/data/` | 25 | 187 | [data.md](code/data.md) |
 | `src/hooks/` | 12 | 40 | [hooks.md](code/hooks.md) |
 | `src/i18n/` | 2 | 14 | [i18n.md](code/i18n.md) |
 | `src/i18n/ne/` | 2 | 2 | [i18n.ne.md](code/i18n.ne.md) |
-| `src/services/` | 14 | 189 | [services.md](code/services.md) |
+| `src/services/` | 14 | 190 | [services.md](code/services.md) |
 | `src/store/` | 7 | 19 | [store.md](code/store.md) |
 | `src/store/db/` | 16 | 69 | [store.db.md](code/store.db.md) |
 | `src/theme/` | 3 | 10 | [theme.md](code/theme.md) |

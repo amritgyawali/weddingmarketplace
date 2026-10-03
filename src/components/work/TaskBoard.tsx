@@ -8,7 +8,7 @@ import { triggerHaptic } from '@/components/ui/PressableScale';
 import { Sheet } from '@/components/ui/Sheet';
 import { Text } from '@/components/ui/Text';
 import { toast } from '@/components/ui/Toast';
-import { suggestedTasks } from '@/services/planner';
+import { guideSuggestions, suggestedTasks } from '@/services/planner';
 import { useDb } from '@/store/useDb';
 import { useAccount } from '@/store/useSession';
 import { useRoleTheme } from '@/theme/RoleTheme';
@@ -150,20 +150,47 @@ function TaskSheet({ project, mode, task, onClose }: { project: Project; mode: M
 }
 
 /**
- * "Suggest tasks": the checklist tasks we recommend for the wedding date and
- * the services asked for that aren't on the list yet. The couple ticks the
- * ones they want and adds them in one go.
+ * "Suggest tasks": tasks not on the list yet, in two groups: the ones we
+ * recommend for the date and the services asked for (ticked), and the
+ * month-by-month guide's items from now on (unticked). The couple ticks what
+ * they want and adds it in one go.
  */
 function SuggestSheet({ project, visible, onClose }: { project: Project; visible: boolean; onClose: () => void }) {
   const t = useRoleTheme();
   const regenerate = useDb((s) => s.regenerateChecklist);
-  const suggestions = visible ? suggestedTasks(project) : [];
-  const [skipped, setSkipped] = useState<string[]>([]);
-  const picked = suggestions.filter((x) => !skipped.includes(x.title));
+  const forServices = visible ? suggestedTasks(project) : [];
+  const fromGuide = visible ? guideSuggestions(project) : [];
+  const suggestions = [...forServices, ...fromGuide];
+  // Titles whose tick differs from the default (services ticked, guide unticked).
+  const [flipped, setFlipped] = useState<string[]>([]);
+  const isOn = (task: ProjectTask) => forServices.includes(task) !== flipped.includes(task.title);
+  const picked = suggestions.filter(isOn);
 
   const close = () => {
-    setSkipped([]);
+    setFlipped([]);
     onClose();
+  };
+
+  const row = (task: ProjectTask) => {
+    const on = isOn(task);
+    return (
+      <Pressable
+        key={task.title}
+        onPress={() => setFlipped((s) => (s.includes(task.title) ? s.filter((x) => x !== task.title) : [...s, task.title]))}
+        accessibilityRole="checkbox"
+        accessibilityState={{ checked: on }}
+        style={({ pressed }) => [styles.suggestRow, { borderBottomColor: t.c.border }, pressed && { opacity: 0.6 }]}>
+        <Ionicons name={on ? 'checkbox' : 'square-outline'} size={22} color={on ? t.c.primary : t.c.muted} />
+        <View style={{ flex: 1 }}>
+          <Text size={15} color={t.c.textStrong}>
+            {task.title}
+          </Text>
+          <Text size={12} color={t.c.muted}>
+            {task.assigneeName} · due {formatShortDate(task.due)}
+          </Text>
+        </View>
+      </Pressable>
+    );
   };
 
   return (
@@ -171,30 +198,21 @@ function SuggestSheet({ project, visible, onClose }: { project: Project; visible
       <ScrollView contentContainerStyle={{ paddingHorizontal: 20, gap: 10, paddingBottom: 12 }}>
         <Text size={14} color={t.c.text}>
           {suggestions.length
-            ? 'Tasks we recommend for your date and the services you asked for. Untick any you don’t need, then add the rest to your list.'
+            ? 'Tick the tasks you want on your list, then add them. Each one gets a due date before your wedding.'
             : 'Your list already has every task we suggest for your date and services. Add a service and its tasks will show up here.'}
         </Text>
-        {suggestions.map((task) => {
-          const on = !skipped.includes(task.title);
-          return (
-            <Pressable
-              key={task.title}
-              onPress={() => setSkipped((s) => (on ? [...s, task.title] : s.filter((x) => x !== task.title)))}
-              accessibilityRole="checkbox"
-              accessibilityState={{ checked: on }}
-              style={({ pressed }) => [styles.suggestRow, { borderBottomColor: t.c.border }, pressed && { opacity: 0.6 }]}>
-              <Ionicons name={on ? 'checkbox' : 'square-outline'} size={22} color={on ? t.c.primary : t.c.muted} />
-              <View style={{ flex: 1 }}>
-                <Text size={15} color={t.c.textStrong}>
-                  {task.title}
-                </Text>
-                <Text size={12} color={t.c.muted}>
-                  {task.assigneeName} · due {formatShortDate(task.due)}
-                </Text>
-              </View>
-            </Pressable>
-          );
-        })}
+        {forServices.length > 0 && (
+          <Text size={13} weight="semibold" color={t.c.muted} style={{ marginTop: 6 }}>
+            For your date and services
+          </Text>
+        )}
+        {forServices.map(row)}
+        {fromGuide.length > 0 && (
+          <Text size={13} weight="semibold" color={t.c.muted} style={{ marginTop: 6 }}>
+            From the month-by-month guide
+          </Text>
+        )}
+        {fromGuide.map(row)}
         {suggestions.length > 0 ? (
           <KButton
             label={picked.length ? `Add ${picked.length} ${picked.length === 1 ? 'task' : 'tasks'}` : 'Tick a task to add it'}

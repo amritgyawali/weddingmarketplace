@@ -110,7 +110,7 @@ function PlanningGuide({ hasProject }: { hasProject: boolean }) {
                     </View>
                   )}
                 </View>
-                <Text size={12} color={section.behind ? colors.danger : colors.textMuted}>
+                <Text size={12} color={colors.textMuted}>
                   {section.doneCount} of {section.total} done{section.behind ? ' · catch up' : ''}
                 </Text>
               </View>

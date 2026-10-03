@@ -112,6 +112,18 @@ const PHASE_FROM: Record<ChecklistPhase, number> = {
   'Wedding Day': -Infinity,
 };
 
+/** Days before the wedding by which each phase's items should be done (due dates for guide items added as tasks). */
+export const PHASE_DUE: Record<ChecklistPhase, number> = {
+  '12+ Months': 365,
+  '9-12 Months': 270,
+  '6-9 Months': 180,
+  '3-6 Months': 90,
+  '1-3 Months': 30,
+  '2-4 Weeks': 14,
+  '1 Week': 2,
+  'Wedding Day': 0,
+};
+
 /** The phase a couple is in today; the first one when the date isn't set yet. */
 export function currentPhase(daysToWedding: number | null): ChecklistPhase {
   if (daysToWedding === null) return CHECKLIST_PHASES[0];
