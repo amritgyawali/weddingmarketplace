@@ -243,6 +243,7 @@ Source: [src/store/db/social.ts:41](../../src/store/db/social.ts#L41) · Social 
 | `toggleSocialThreadStar` | `(threadId: string) => void` | _No JSDoc yet._ |
 | `setSocialThreadLabels` | `(threadId: string, labels: string[]) => void` | _No JSDoc yet._ |
 | `assignSocialThread` | `(threadId: string, assignee?: string) => void` | _No JSDoc yet._ |
+| `setSocialOptIn` | `(threadId: string, optedIn: boolean) => string \| null` | WhatsApp: records that the customer agreed (or no longer agrees) to broadcasts. The opted-in count is the WhatsApp audience. |
 | `createLeadFromSocialThread` | `(threadId: string, input: SocialLeadInput) => { leadId?: string; error?: string }` | Turns a conversation into a CRM lead (source `social`) and links the two. Returns the lead id, or error text. |
 | `saveSocialPost` | `(input: Partial<SocialPost> & Pick<SocialPost, 'caption' \| 'networks' \| 'media'>) => { id?: string; error?: string }` | Creates or updates a draft. Returns the post id. |
 | `scheduleSocialPost` | `(postId: string, at: string) => string \| null` | _No JSDoc yet._ |

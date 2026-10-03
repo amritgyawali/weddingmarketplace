@@ -10,11 +10,13 @@ import { Text } from '@/components/ui/Text';
 import { colors, GUTTER } from '@/constants/theme';
 import { useExperience } from '@/hooks/useExperience';
 import { useFeatures } from '@/hooks/useFeatures';
+import { goToCoupleTab, useOpenMyWedding } from '@/hooks/useOpenMyWedding';
 import { useCustomerWorkspace } from '@/hooks/useWorkspace';
 import { logout } from '@/services/auth';
 import { selectUnreadCount, useAppStore } from '@/store/useAppStore';
 import { useInbox } from '@/store/useDb';
 import { useAccount } from '@/store/useSession';
+import { useTour } from '@/store/useTour';
 import { confirm } from '@/utils/confirm';
 import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
 
@@ -25,7 +27,8 @@ type IconName = ComponentProps<typeof Ionicons>['name'];
 interface MenuItem {
   label: string;
   icon: ReactNode;
-  href: Href;
+  href?: Href;
+  onPress?: () => void;
   badge?: number;
 }
 
@@ -42,28 +45,32 @@ export default function ProfileMenuScreen() {
   const awaitingQuotes = quotes.filter((q) => q.status === 'sent' || q.status === 'viewed').length;
   const unreadNotifications = useInbox(account).filter((n) => !n.read).length;
   const on = useFeatures();
+  const openMyWedding = useOpenMyWedding();
+  const replayTour = useTour((s) => s.replay);
+  /** Back to home, where the tour starts again. */
+  const showTour = () => {
+    replayTour('couple');
+    goToCoupleTab('/');
+  };
 
   const icon = (name: IconName) => <Ionicons name={name} size={21} color={ICON} />;
   const sections: { title: string; items: MenuItem[] }[] = [
     {
       title: wedding ? 'Your wedding' : `Your ${exp.vocab.noun}`,
       items: [
-        { label: wedding ? 'My Wedding' : exp.vocab.planTitle, icon: icon('heart-outline'), href: '/my-wedding', badge: awaitingQuotes },
-        ...(on('couple.tools') ? [{ label: 'Planning tools', icon: icon('construct-outline'), href: '/tools' as Href }] : []),
+        { label: wedding ? 'My Wedding' : exp.vocab.planTitle, icon: icon('heart-outline'), onPress: openMyWedding, badge: awaitingQuotes },
         ...(has('guests') ? [{ label: 'Guests & RSVP', icon: icon('people-outline'), href: '/guests' as Href }] : []),
         { label: 'Budget', icon: icon('wallet-outline'), href: '/budget' },
         { label: 'Checklist', icon: icon('checkbox-outline'), href: '/checklist' },
-        ...(has('invitations') ? [{ label: 'Invitations', icon: icon('mail-outline'), href: '/invitations' as Href }] : []),
-        ...(has('website') ? [{ label: wedding ? 'Wedding website' : 'Event page', icon: icon('globe-outline'), href: '/website' as Href }] : []),
-        { label: 'Contracts', icon: icon('document-lock-outline'), href: '/contracts' },
+        ...(on('couple.tools') ? [{ label: 'All planning tools', icon: icon('construct-outline'), href: '/tools' as Href }] : []),
         ...(on('couple.celebrate') ? [{ label: 'Plan another celebration', icon: icon('add-circle-outline'), href: '/celebrate' as Href }] : []),
       ],
     },
     {
       title: 'Bookings and messages',
       items: [
+        { label: 'Messages', icon: icon('chatbubble-outline'), href: '/inbox', badge: unread },
         { label: 'Notifications', icon: icon('notifications-outline'), href: '/notifications', badge: unreadNotifications },
-        { label: 'Inbox', icon: icon('chatbubble-outline'), href: '/inbox', badge: unread },
         { label: 'Enquiries & bookings', icon: icon('receipt-outline'), href: '/bookings', badge: bookings },
         { label: 'Shortlist', icon: icon('bookmark-outline'), href: '/shortlist' },
         { label: 'Deals & offers', icon: icon('pricetags-outline'), href: '/deals' },
@@ -73,6 +80,7 @@ export default function ProfileMenuScreen() {
       title: 'Help',
       items: [
         ...(wedding && on('tab.customer.genie') ? [{ label: 'Planner packages', icon: icon('clipboard-outline'), href: '/genie' as Href }] : []),
+        ...(on('couple.tour') ? [{ label: 'How Vivah works (tour)', icon: icon('compass-outline'), onPress: showTour }] : []),
         ...(on('couple.help') ? [{ label: 'Quick help', icon: icon('chatbubble-ellipses-outline'), href: '/assistant' as Href }] : []),
         { label: 'Contact support', icon: icon('call-outline'), href: { pathname: '/info/[slug]', params: { slug: 'support' } } },
       ],
@@ -82,8 +90,6 @@ export default function ProfileMenuScreen() {
       items: [
         { label: 'Join a wedding', icon: icon('enter-outline'), href: '/join-wedding' },
         { label: 'Write a review', icon: icon('create-outline'), href: '/write-review' },
-        { label: 'Shop', icon: icon('bag-handle-outline'), href: { pathname: '/info/[slug]', params: { slug: 'shop' } } },
-        { label: 'Promotions', icon: icon('megaphone-outline'), href: { pathname: '/info/[slug]', params: { slug: 'promotions' } } },
         { label: 'Settings', icon: icon('settings-outline'), href: '/settings' },
         { label: 'About Vivah', icon: icon('information-circle-outline'), href: { pathname: '/info/[slug]', params: { slug: 'information' } } },
       ],
@@ -133,7 +139,7 @@ export default function ProfileMenuScreen() {
             {section.items.map((item, i) => (
               <Pressable
                 key={item.label}
-                onPress={() => router.push(item.href)}
+                onPress={item.onPress ?? (() => item.href && router.push(item.href))}
                 accessibilityRole="button"
                 style={({ pressed }) => [styles.row, pressed && { backgroundColor: colors.bgSoft }]}>
                 <View style={styles.icon}>{item.icon}</View>

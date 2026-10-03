@@ -11,6 +11,7 @@ Every exported symbol in `src/components/home/`, file by file. The guide that ex
 - [`CityHeader.tsx`](#cityheadertsx) (1 exports)
 - [`GenieBanner.tsx`](#geniebannertsx) (1 exports)
 - [`PlanningTools.tsx`](#planningtoolstsx) (1 exports)
+- [`SearchPrompt.tsx`](#searchprompttsx) (1 exports)
 - [`VenueCollections.tsx`](#venuecollectionstsx) (1 exports)
 - [`WeddingStrip.tsx`](#weddingstriptsx) (1 exports)
 
@@ -86,13 +87,27 @@ Source: [src/components/home/PlanningTools.tsx](../../../src/components/home/Pla
 
 ### `PlanningTools`
 
-*component* · [src/components/home/PlanningTools.tsx:34](../../../src/components/home/PlanningTools.tsx#L34)
+*component* · [src/components/home/PlanningTools.tsx:35](../../../src/components/home/PlanningTools.tsx#L35)
 
 ```ts
 PlanningTools()
 ```
 
 Two-column grid of the couple's planning tools, each with a live count.
+
+## SearchPrompt.tsx
+
+Source: [src/components/home/SearchPrompt.tsx](../../../src/components/home/SearchPrompt.tsx)
+
+### `SearchPrompt`
+
+*component* · [src/components/home/SearchPrompt.tsx:10](../../../src/components/home/SearchPrompt.tsx#L10)
+
+```ts
+SearchPrompt()
+```
+
+A search field at the top of home that opens the search screen: easier to find than an icon.
 
 ## VenueCollections.tsx
 
@@ -114,7 +129,7 @@ Source: [src/components/home/WeddingStrip.tsx](../../../src/components/home/Wedd
 
 ### `WeddingStrip`
 
-*component* · [src/components/home/WeddingStrip.tsx:17](../../../src/components/home/WeddingStrip.tsx#L17)
+*component* · [src/components/home/WeddingStrip.tsx:18](../../../src/components/home/WeddingStrip.tsx#L18)
 
 ```ts
 WeddingStrip()

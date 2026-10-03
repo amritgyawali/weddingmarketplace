@@ -6,6 +6,8 @@
  *   POST { "due": true } (x-webhook-secret: NOTIFY_WEBHOOK_SECRET)   the scheduled run
  *        (job_social_due in 0018, every five minutes through pg_cron and pg_net)
  *        → claims the due posts (vivah_social_claim_due) and publishes each
+ *   POST { "metrics": true } (x-webhook-secret)   job_social_metrics in 0020, every six hours
+ *        → reads reach, likes, comments, shares and saves back for recent posts
  *
  * Each network follows its own steps (publishTo in _shared/social.ts) and
  * its outcome is recorded with vivah_social_target_result, which also sets
@@ -17,7 +19,7 @@
 import { deno, env, redis, socialConfig } from '../_shared/env.ts';
 import { fail, json, preflight, safeEqual } from '../_shared/http.ts';
 import { LIMITS, rateLimit } from '../_shared/ratelimit.ts';
-import { mediaUrls, type Network, publishTo, TIKTOK_API } from '../_shared/social.ts';
+import { fetchMetrics, mediaUrls, type Network, publishTo, TIKTOK_API } from '../_shared/social.ts';
 import { callerId, serviceRpc } from '../_shared/supabase.ts';
 
 interface Target {
@@ -90,21 +92,49 @@ async function publish(postId: string, userId: string | null): Promise<{ status:
   return { status, results };
 }
 
+interface MetricRow {
+  postId: string;
+  network: Network;
+  externalId: string;
+  token: string;
+  refreshToken: string | null;
+  accountId: string;
+  meta: Record<string, string> | null;
+}
+
+/** Reads reach and engagement back from the networks for recent posts (job_social_metrics, every six hours). */
+async function refreshMetrics(): Promise<number> {
+  const cfg = socialConfig();
+  const rows = (await serviceRpc<MetricRow[]>('vivah_social_metric_targets', { p_limit: 50 })) ?? [];
+  let updated = 0;
+  for (const r of rows) {
+    const token = r.network === 'tiktok'
+      ? ((await tiktokToken({ network: r.network, accountId: r.accountId, accountStatus: 'connected', accountExternalId: null, handle: null, token: r.token, refreshToken: r.refreshToken, meta: r.meta, targetStatus: 'published' })) ?? r.token)
+      : r.token;
+    const m = await fetchMetrics({ network: r.network, externalId: r.externalId, token }, fetch, cfg.graphVersion);
+    if (!m) continue;
+    await serviceRpc('vivah_social_record_metrics', { p_post: r.postId, p_network: r.network, p_reach: m.reach ?? null, p_likes: m.likes ?? null, p_comments: m.comments ?? null, p_shares: m.shares ?? null, p_saves: m.saves ?? null });
+    updated++;
+  }
+  return updated;
+}
+
 deno().serve(async (req) => {
   const early = preflight(req);
   if (early) return early;
   if (req.method !== 'POST') return fail('Use POST', 405);
-  let body: { postId?: unknown; due?: unknown };
+  let body: { postId?: unknown; due?: unknown; metrics?: unknown };
   try {
     body = await req.json();
   } catch {
     return fail('Send JSON with a postId');
   }
 
-  // The scheduled run, called by the database with the shared secret.
-  if (body.due === true) {
+  // The scheduled runs, called by the database with the shared secret.
+  if (body.due === true || body.metrics === true) {
     const secret = env('NOTIFY_WEBHOOK_SECRET');
     if (!secret || !safeEqual(req.headers.get('x-webhook-secret') ?? '', secret)) return fail('Forbidden', 403);
+    if (body.metrics === true) return json({ updated: await refreshMetrics() });
     const ids = await serviceRpc<string[]>('vivah_social_claim_due', { p_limit: 20 });
     const done: Record<string, unknown> = {};
     for (const id of ids ?? []) done[id] = await publish(id, null);

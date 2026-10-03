@@ -5,6 +5,7 @@ import { Pressable, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { triggerHaptic } from '@/components/ui/PressableScale';
+import { TourTarget } from '@/components/tour/AppTour';
 import { Text } from '@/components/ui/Text';
 import { colors } from '@/constants/theme';
 import { serviceFeature, tabFeature } from '@/data/features';
@@ -18,16 +19,18 @@ const TABS: Record<string, { label: string; icon: IconName; active: IconName }> 
   venues: { label: 'Venues', icon: 'business-outline', active: 'business' },
   vendors: { label: 'Vendors', icon: 'people-outline', active: 'people' },
   ideas: { label: 'Ideas', icon: 'images-outline', active: 'images' },
-  genie: { label: 'Planner', icon: 'clipboard-outline', active: 'clipboard' },
+  wedding: { label: 'My Wedding', icon: 'heart-outline', active: 'heart' },
 };
 
-/** Tabs that only make sense while planning a wedding (wedding photos, wedding planner packages). */
-const WEDDING_TABS = new Set(['ideas', 'genie']);
+/** Tabs that only make sense while planning a wedding (wedding photos). */
+const WEDDING_TABS = new Set(['ideas']);
 
 /**
  * Couple-app bottom bar: outline icons, filled + crimson when active, short
- * sentence-case labels. Follows the celebration (a pasni has no wedding ideas
- * or planner packages) and the super admin's feature switches.
+ * sentence-case labels. Browse (venues, vendors, ideas) on the left, the
+ * couple's own plan on the right. Follows the celebration (a pasni has no
+ * wedding ideas and says "My plan") and the super admin's feature switches.
+ * Routes without an entry in `TABS` (planner packages) stay reachable by link.
  */
 export function TabBar({ state, navigation }: BottomTabBarProps) {
   const insets = useSafeAreaInsets();
@@ -47,29 +50,31 @@ export function TabBar({ state, navigation }: BottomTabBarProps) {
   return (
     <View style={[styles.bar, { paddingBottom: Math.max(insets.bottom, 8) }]}>
       {state.routes.map((route, i) => {
-        const meta = TABS[route.name];
-        if (!meta || !shown(route.name)) return null;
+        const base = TABS[route.name];
+        if (!base || !shown(route.name)) return null;
+        const meta = route.name === 'wedding' && !weddingLike ? { ...base, label: 'My plan' } : base;
         const active = state.index === i;
         const tint = active ? colors.primary : colors.textMuted;
         return (
-          <Pressable
-            key={route.key}
-            accessibilityRole="tab"
-            accessibilityState={{ selected: active }}
-            accessibilityLabel={meta.label}
-            style={({ pressed }) => [styles.item, pressed && { opacity: 0.6 }]}
-            onPress={() => {
-              const event = navigation.emit({ type: 'tabPress', target: route.key, canPreventDefault: true });
-              if (!active && !event.defaultPrevented) {
-                triggerHaptic('selection');
-                navigation.navigate(route.name, route.params);
-              }
-            }}>
-            <Ionicons name={active ? meta.active : meta.icon} size={23} color={tint} />
-            <Text size={11} weight={active ? 'semibold' : 'regular'} color={tint} lineHeight={15} numberOfLines={1}>
-              {meta.label}
-            </Text>
-          </Pressable>
+          <TourTarget key={route.key} id={`tab.${route.name}`} style={styles.slot}>
+            <Pressable
+              accessibilityRole="tab"
+              accessibilityState={{ selected: active }}
+              accessibilityLabel={meta.label}
+              style={({ pressed }) => [styles.item, pressed && { opacity: 0.6 }]}
+              onPress={() => {
+                const event = navigation.emit({ type: 'tabPress', target: route.key, canPreventDefault: true });
+                if (!active && !event.defaultPrevented) {
+                  triggerHaptic('selection');
+                  navigation.navigate(route.name, route.params);
+                }
+              }}>
+              <Ionicons name={active ? meta.active : meta.icon} size={23} color={tint} />
+              <Text size={11} weight={active ? 'semibold' : 'regular'} color={tint} lineHeight={15} numberOfLines={1}>
+                {meta.label}
+              </Text>
+            </Pressable>
+          </TourTarget>
         );
       })}
     </View>
@@ -84,5 +89,6 @@ const styles = StyleSheet.create({
     borderTopColor: colors.border,
     paddingTop: 7,
   },
+  slot: { flex: 1 },
   item: { flex: 1, alignItems: 'center', gap: 2, minHeight: 44, justifyContent: 'center' },
 });

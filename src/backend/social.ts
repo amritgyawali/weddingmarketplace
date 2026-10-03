@@ -92,7 +92,7 @@ export async function sendSocialPostLive(post: SocialPost, when: { at?: string }
 }
 
 /** Inbox triage on the server: status (and snooze), star, labels, read. */
-export const triageSocialLive = (threadId: string, patch: { status?: string; snoozedUntil?: string | null; starred?: boolean; labels?: string[]; read?: boolean }) =>
+export const triageSocialLive = (threadId: string, patch: { status?: string; snoozedUntil?: string | null; starred?: boolean; labels?: string[]; read?: boolean; assignee?: string | null }) =>
   UUID.test(threadId) ? rpc<void>('rpc_social_triage', { p_thread: threadId, p_patch: patch }) : Promise.resolve(okResult(undefined));
 
 /** An internal note on the server. */
@@ -101,6 +101,9 @@ export const noteSocialLive = (threadId: string, text: string) => rpc<string>('r
 /** Turns a server thread into a CRM lead (rpc_social_lead). */
 export const leadSocialLive = (threadId: string, input: { eventDate: string; guests?: number; functions: string[]; budget?: number; phone?: string }) =>
   rpc<string>('rpc_social_lead', { p_thread: threadId, p_event_date: input.eventDate, p_guests: input.guests ?? null, p_functions: input.functions, p_budget: input.budget ?? null, p_phone: input.phone ?? null });
+
+/** Records (or withdraws) a WhatsApp customer's consent to broadcasts. */
+export const optInSocialLive = (threadId: string, on: boolean) => rpc<void>('rpc_social_optin', { p_thread: threadId, p_on: on });
 
 /** Disconnects a network on the server; its token is deleted. */
 export const disconnectSocialLive = (accountId: string) => rpc<void>('rpc_social_disconnect', { p_account: accountId });
@@ -145,6 +148,8 @@ export function mapSocialInbox(ownerId: string, d: { accounts?: Row[]; threads?:
     starred: !!t.starred,
     labels: (t.labels as string[]) ?? [],
     leadId: str(t.lead_id),
+    assignee: str(t.assignee_name),
+    optedIn: t.opted_in === true ? true : undefined,
     unread: Number(t.unread) || 0,
     lastAt: String(t.last_at),
     lastInboundAt: str(t.last_inbound_at),

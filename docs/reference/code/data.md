@@ -27,6 +27,7 @@ Every exported symbol in `src/data/`, file by file. The guide that explains how 
 - [`social.ts`](#socialts) (9 exports) · The four networks of the social hub and what each one allows, as the networks' own APIs define it (Meta Graph API for Facebook, Instagram a…
 - [`socialSeed.ts`](#socialseedts) (1 exports) · Demo records for the social hub: Everest Grand Party Palace has Facebook, Instagram and WhatsApp connected (TikTok left to connect in the d…
 - [`toolkitSeed.ts`](#toolkitseedts) (1 exports) · Demo records for the role toolkits, so the main tools open with a believable story.
+- [`tour.ts`](#tourts) (2 exports)
 - [`trades.ts`](#tradests) (12 exports) · Provider trades. The 43 services in `services.ts` stay the source of truth; trades group them for onboarding tiles, navigation headings and…
 - [`vendors.ts`](#vendorsts) (2 exports)
 - [`venues.ts`](#venuests) (4 exports)
@@ -737,7 +738,7 @@ _No JSDoc yet._
 
 ### `FEATURE_BY_ID`
 
-*const* · [src/data/features.ts:66](../../../src/data/features.ts#L66)
+*const* · [src/data/features.ts:68](../../../src/data/features.ts#L68)
 
 ```ts
 FEATURE_BY_ID: Record<string, FeatureDef>
@@ -747,7 +748,7 @@ _No JSDoc yet._
 
 ### `toolFeature`
 
-*function* · [src/data/features.ts:68](../../../src/data/features.ts#L68)
+*function* · [src/data/features.ts:70](../../../src/data/features.ts#L70)
 
 ```ts
 toolFeature(toolId: string)
@@ -757,7 +758,7 @@ _No JSDoc yet._
 
 ### `serviceFeature`
 
-*function* · [src/data/features.ts:69](../../../src/data/features.ts#L69)
+*function* · [src/data/features.ts:71](../../../src/data/features.ts#L71)
 
 ```ts
 serviceFeature(serviceId: string)
@@ -767,7 +768,7 @@ _No JSDoc yet._
 
 ### `tabFeature`
 
-*function* · [src/data/features.ts:70](../../../src/data/features.ts#L70)
+*function* · [src/data/features.ts:72](../../../src/data/features.ts#L72)
 
 ```ts
 tabFeature(role: UserRole, tab: string)
@@ -777,7 +778,7 @@ _No JSDoc yet._
 
 ### `featureOn`
 
-*function* · [src/data/features.ts:73](../../../src/data/features.ts#L73)
+*function* · [src/data/features.ts:75](../../../src/data/features.ts#L75)
 
 ```ts
 featureOn(flags: Record<string, boolean> | undefined, id: string)
@@ -1802,6 +1803,36 @@ Demo records for the role toolkits, so the main tools open with a believable sto
 
 ```ts
 buildToolkitSeed(): { toolEntries: ToolEntry[]; toolState: Record<string, ToolState>; broadcasts: Broadcast[] }
+```
+
+_No JSDoc yet._
+
+## tour.ts
+
+Source: [src/data/tour.ts](../../../src/data/tour.ts)
+
+### `TourStep`
+
+*interface* · [src/data/tour.ts:6](../../../src/data/tour.ts#L6)
+
+The steps of the couple's first-run tour. A step with a `target` points at
+the element wrapped in `<TourTarget id=…>`; when that element isn't on
+screen (a tab switched off, no Ideas for a pasni) the step is skipped.
+
+| Member | Type | Notes |
+|---|---|---|
+| `id` | `string` |  |
+| `target?` | `string` |  |
+| `title` | `string` |  |
+| `body` | `string` |  |
+| `bodyWithPlan?` | `string` | Shown instead of `body` when the couple already has a plan. |
+
+### `COUPLE_TOUR`
+
+*const* · [src/data/tour.ts:15](../../../src/data/tour.ts#L15)
+
+```ts
+COUPLE_TOUR: TourStep[]
 ```
 
 _No JSDoc yet._

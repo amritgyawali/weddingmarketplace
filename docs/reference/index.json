@@ -552,7 +552,7 @@
    "kind": "screen",
    "file": "src/app/my-wedding.tsx",
    "component": "MyWedding",
-   "doc": "The couple's single workspace for the whole wedding project."
+   "doc": "`/my-wedding`: the stack version of the \"My wedding\" tab, opened by deep links and notifications."
   },
   {
    "path": "/notifications",
@@ -1052,6 +1052,13 @@
    "doc": "Wedding website builder: templates, story, schedule, travel, FAQ, registry, RSVP questions, privacy and publishing."
   },
   {
+   "path": "/wedding",
+   "kind": "screen",
+   "file": "src/app/(tabs)/wedding.tsx",
+   "component": "WeddingTab",
+   "doc": "\"My wedding\" tab: the couple's plan, quotes, payments and team, one tap from anywhere."
+  },
+  {
    "path": "/welcome",
    "kind": "layout",
    "file": "src/app/welcome/_layout.tsx",
@@ -1109,7 +1116,7 @@
     {
      "name": "TabsLayout",
      "kind": "component",
-     "line": 7,
+     "line": 9,
      "signature": "()",
      "doc": ""
     }
@@ -1148,7 +1155,7 @@
     {
      "name": "ForYouScreen",
      "kind": "component",
-     "line": 82,
+     "line": 84,
      "signature": "()",
      "doc": "The couple's home. It follows the active celebration: a pasni or a\nbirthday shows its own services and checklist, and the wedding-only\nsections (collections, bridal makeup, real weddings, planner packages)\nstay with weddings. A super admin can switch any section off."
     }
@@ -1177,6 +1184,19 @@
      "line": 7,
      "signature": "()",
      "doc": ""
+    }
+   ]
+  },
+  {
+   "file": "src/app/(tabs)/wedding.tsx",
+   "doc": "",
+   "exports": [
+    {
+     "name": "WeddingTab",
+     "kind": "component",
+     "line": 4,
+     "signature": "()",
+     "doc": "\"My wedding\" tab: the couple's plan, quotes, payments and team, one tap from anywhere."
     }
    ]
   },
@@ -2169,9 +2189,9 @@
     {
      "name": "MyWedding",
      "kind": "component",
-     "line": 479,
+     "line": 4,
      "signature": "()",
-     "doc": "The couple's single workspace for the whole wedding project."
+     "doc": "`/my-wedding`: the stack version of the \"My wedding\" tab, opened by deep links and notifications."
     }
    ]
   },
@@ -2845,7 +2865,7 @@
     {
      "name": "ProfileMenuScreen",
      "kind": "component",
-     "line": 32,
+     "line": 35,
      "signature": "()",
      "doc": ""
     }
@@ -3942,7 +3962,7 @@
      "name": "triageSocialLive",
      "kind": "function",
      "line": 95,
-     "signature": "(threadId: string, patch: { status?: string; snoozedUntil?: string | null; starred?: boolean; labels?: string[]; read?: boolean })",
+     "signature": "(threadId: string, patch: { status?: string; snoozedUntil?: string | null; starred?: boolean; labels?: string[]; read?: boolean; assignee?: string | null })",
      "doc": "Inbox triage on the server: status (and snooze), star, labels, read."
     },
     {
@@ -3960,30 +3980,37 @@
      "doc": "Turns a server thread into a CRM lead (rpc_social_lead)."
     },
     {
-     "name": "disconnectSocialLive",
+     "name": "optInSocialLive",
      "kind": "function",
      "line": 106,
+     "signature": "(threadId: string, on: boolean)",
+     "doc": "Records (or withdraws) a WhatsApp customer's consent to broadcasts."
+    },
+    {
+     "name": "disconnectSocialLive",
+     "kind": "function",
+     "line": 109,
      "signature": "(accountId: string)",
      "doc": "Disconnects a network on the server; its token is deleted."
     },
     {
      "name": "saveSocialSettingsLive",
      "kind": "function",
-     "line": 109,
+     "line": 112,
      "signature": "(settings: SocialSettings)",
      "doc": "Saves the automation (owners and managers)."
     },
     {
      "name": "mapSocialInbox",
      "kind": "function",
-     "line": 118,
+     "line": 121,
      "signature": "(ownerId: string, d: { accounts?: Row[]; threads?: Row[]; messages?: Row[]; posts?: Row[]; settings?: Row | null })",
      "doc": "The server's hub (rpc_social_inbox) in the app's shapes, owned by this device's business account."
     },
     {
      "name": "syncSocialFromServer",
      "kind": "function",
-     "line": 196,
+     "line": 201,
      "signature": "(ownerId: string): Promise<Result<void>>",
      "doc": "Reads the hub from the server into the device's mirror (on opening the hub, on refresh and after each change)."
     }
@@ -4702,9 +4729,22 @@
     {
      "name": "PlanningTools",
      "kind": "component",
-     "line": 34,
+     "line": 35,
      "signature": "()",
      "doc": "Two-column grid of the couple's planning tools, each with a live count."
+    }
+   ]
+  },
+  {
+   "file": "src/components/home/SearchPrompt.tsx",
+   "doc": "",
+   "exports": [
+    {
+     "name": "SearchPrompt",
+     "kind": "component",
+     "line": 10,
+     "signature": "()",
+     "doc": "A search field at the top of home that opens the search screen: easier to find than an icon."
     }
    ]
   },
@@ -4728,7 +4768,7 @@
     {
      "name": "WeddingStrip",
      "kind": "component",
-     "line": 17,
+     "line": 18,
      "signature": "()",
      "doc": "Top of the couple's home: a wine \"luxury section\" with their names, the\ndate in both calendars and the countdown in champagne, then the one thing\nto do next. Without a plan it invites them to start one."
     }
@@ -5155,9 +5195,9 @@
     {
      "name": "TabBar",
      "kind": "component",
-     "line": 32,
+     "line": 35,
      "signature": "({ state, navigation }: BottomTabBarProps)",
-     "doc": "Couple-app bottom bar: outline icons, filled + crimson when active, short\nsentence-case labels. Follows the celebration (a pasni has no wedding ideas\nor planner packages) and the super admin's feature switches."
+     "doc": "Couple-app bottom bar: outline icons, filled + crimson when active, short\nsentence-case labels. Browse (venues, vendors, ideas) on the left, the\ncouple's own plan on the right. Follows the celebration (a pasni has no\nwedding ideas and says \"My plan\") and the super admin's feature switches.\nRoutes without an entry in `TABS` (planner packages) stay reachable by link."
     }
    ]
   },
@@ -5510,7 +5550,7 @@
     {
      "name": "SocialComposer",
      "kind": "component",
-     "line": 50,
+     "line": 51,
      "signature": "({ postId, at }: { postId?: string; at?: string })",
      "doc": "Write once, publish everywhere: caption with per-network versions, photos\nfrom the portfolio or the phone, hashtag and best-time suggestions, a check\nagainst every network's rules, a live preview, then publish now, schedule\nor keep as a draft."
     }
@@ -5549,28 +5589,28 @@
     {
      "name": "useReplyContext",
      "kind": "hook",
-     "line": 37,
+     "line": 38,
      "signature": "(account: Account, contact: string): ReplyContext",
      "doc": "Reply context for this business: name, city and its highest active package price."
     },
     {
      "name": "SocialInbox",
      "kind": "component",
-     "line": 44,
+     "line": 45,
      "signature": "({ onOpen, selectedId }: { onOpen: (id: string) => void; selectedId?: string })",
      "doc": "Every message and comment from the connected networks, with filters, search and a check for new messages."
     },
     {
      "name": "SocialConversation",
      "kind": "component",
-     "line": 178,
+     "line": 180,
      "signature": "({ threadId }: { threadId: string })",
      "doc": "One conversation: messages, reply window, suggested and saved replies, notes, labels, assignment, snooze and \"create lead\"."
     },
     {
      "name": "openThreadRoute",
      "kind": "function",
-     "line": 604,
+     "line": 614,
      "signature": "(id: string)",
      "doc": "Opens a thread: in the side pane on wide screens, as its own screen on phones."
     }
@@ -7039,6 +7079,33 @@
    ]
   },
   {
+   "file": "src/components/tour/AppTour.tsx",
+   "doc": "",
+   "exports": [
+    {
+     "name": "TourTarget",
+     "kind": "component",
+     "line": 35,
+     "signature": "({ id, style, children }: { id: string; style?: StyleProp<ViewStyle>; children: ReactNode })",
+     "doc": "Marks an element the tour can point at. Renders a plain wrapper view."
+    },
+    {
+     "name": "useCoupleTourOnFirstVisit",
+     "kind": "hook",
+     "line": 51,
+     "signature": "()",
+     "doc": "Starts the couple's tour the first time the screen that calls this is shown."
+    },
+    {
+     "name": "CoupleTour",
+     "kind": "component",
+     "line": 79,
+     "signature": "()",
+     "doc": "The couple's first-run tour: a dimmed screen with a window around one\nfeature and a small card that says what it does. Next, back and skip;\nthe last card offers to start a plan. Mounted once over the couple tabs."
+    }
+   ]
+  },
+  {
    "file": "src/components/ui/AppBanners.tsx",
    "doc": "",
    "exports": [
@@ -7877,6 +7944,19 @@
    ]
   },
   {
+   "file": "src/components/wedding/MyWeddingScreen.tsx",
+   "doc": "",
+   "exports": [
+    {
+     "name": "MyWeddingScreen",
+     "kind": "component",
+     "line": 484,
+     "signature": "({ inTab }: { inTab?: boolean })",
+     "doc": "The couple's single workspace for the whole wedding project. It is both the\n\"My wedding\" tab (`inTab`: no back button, the tab bar sits below) and the\n`/my-wedding` stack screen that deep links and notifications open."
+    }
+   ]
+  },
+  {
    "file": "src/components/wedding/WeddingParts.tsx",
    "doc": "",
    "exports": [
@@ -7898,55 +7978,55 @@
      "name": "WeddingHero",
      "kind": "component",
      "line": 35,
-     "signature": "({ project, shared, onBack, actions, }: { project: Project; shared?: boolean; onBack: () => void; actions?: { icon: 'calendar-outline' | 'globe-outline' | 'share-outline'; label: string; onPress: () => void }[]; })",
+     "signature": "({ project, shared, onBack, actions, }: { project: Project; shared?: boolean; /** Omit when the screen is a tab: there is nowhere to go back to. */ onBack?: () => void; actions?: { icon: 'calendar-outline' | 'globe-outli…)",
      "doc": "Full-bleed photo header with the couple's names set over a dark scrim."
     },
     {
      "name": "ProgressRing",
      "kind": "component",
-     "line": 83,
+     "line": 84,
      "signature": "({ value, size = 68, stroke = 6, children }: { value: number; size?: number; stroke?: number; children?: ReactNode })",
      "doc": "Circular progress; animates to its value on mount and on change."
     },
     {
      "name": "CountdownCard",
      "kind": "component",
-     "line": 126,
+     "line": 127,
      "signature": "({ project, onSetDate }: { project: Project; onSetDate: () => void })",
      "doc": "Countdown, overall progress and the four numbers couples check most."
     },
     {
      "name": "Section",
      "kind": "component",
-     "line": 190,
+     "line": 191,
      "signature": "({ title, action, onAction, children }: { title: string; action?: string; onAction?: () => void; children: ReactNode })",
      "doc": "Section heading with an optional text action on the right."
     },
     {
      "name": "FunctionsStrip",
      "kind": "component",
-     "line": 211,
+     "line": 212,
      "signature": "({ project, onOpen }: { project: Project; onOpen: () => void })",
      "doc": "Horizontal run of the wedding functions, next one highlighted."
     },
     {
      "name": "ServicesSummary",
      "kind": "component",
-     "line": 271,
+     "line": 272,
      "signature": "({ project, onOpen, limit = 5 }: { project: Project; onOpen: () => void; limit?: number })",
      "doc": "Booked / in progress / searching, as one bar plus the first few services."
     },
     {
      "name": "MoneyCard",
      "kind": "component",
-     "line": 345,
+     "line": 346,
      "signature": "({ project, onOpen }: { project: Project; onOpen: () => void })",
      "doc": "Paid vs. total and the next instalment; the budget before a quotation exists."
     },
     {
      "name": "PeopleRow",
      "kind": "component",
-     "line": 404,
+     "line": 405,
      "signature": "({ project, onOpen }: { project: Project; onOpen: () => void })",
      "doc": "The couple, family collaborators and an invite affordance."
     }
@@ -9306,35 +9386,35 @@
     {
      "name": "FEATURE_BY_ID",
      "kind": "const",
-     "line": 66,
+     "line": 68,
      "signature": ": Record<string, FeatureDef>",
      "doc": ""
     },
     {
      "name": "toolFeature",
      "kind": "function",
-     "line": 68,
+     "line": 70,
      "signature": "(toolId: string)",
      "doc": ""
     },
     {
      "name": "serviceFeature",
      "kind": "function",
-     "line": 69,
+     "line": 71,
      "signature": "(serviceId: string)",
      "doc": ""
     },
     {
      "name": "tabFeature",
      "kind": "function",
-     "line": 70,
+     "line": 72,
      "signature": "(role: UserRole, tab: string)",
      "doc": ""
     },
     {
      "name": "featureOn",
      "kind": "function",
-     "line": 73,
+     "line": 75,
      "signature": "(flags: Record<string, boolean> | undefined, id: string)",
      "doc": "Is the feature on? Missing ids are on."
     }
@@ -10510,6 +10590,58 @@
    ]
   },
   {
+   "file": "src/data/tour.ts",
+   "doc": "",
+   "exports": [
+    {
+     "name": "TourStep",
+     "kind": "interface",
+     "line": 6,
+     "signature": "",
+     "doc": "The steps of the couple's first-run tour. A step with a `target` points at\nthe element wrapped in `<TourTarget id=…>`; when that element isn't on\nscreen (a tab switched off, no Ideas for a pasni) the step is skipped.",
+     "members": [
+      {
+       "name": "id",
+       "optional": false,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "target",
+       "optional": true,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "title",
+       "optional": false,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "body",
+       "optional": false,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "bodyWithPlan",
+       "optional": true,
+       "type": "string",
+       "doc": "Shown instead of `body` when the couple already has a plan."
+      }
+     ]
+    },
+    {
+     "name": "COUPLE_TOUR",
+     "kind": "const",
+     "line": 15,
+     "signature": ": TourStep[]",
+     "doc": ""
+    }
+   ]
+  },
+  {
    "file": "src/data/trades.ts",
    "doc": "Provider trades. The 43 services in `services.ts` stay the source of truth; trades group them for onboarding tiles, navigation headings and copy, and each service declares the capabilities it grants. Vendors and freelancers share this taxonomy (a freelancer's trade is derived from their crew roles). Mirrored by `service_capabilities` in supabase/migrations/0005_personas.sql.",
    "exports": [
@@ -10948,6 +11080,26 @@
      "line": 7,
      "signature": "()",
      "doc": "Breakpoints for the web-ready consoles. Phones get one column; tablets and\ndesktop browsers (expo start --web) get side navigation and grids."
+    }
+   ]
+  },
+  {
+   "file": "src/hooks/useOpenMyWedding.ts",
+   "doc": "",
+   "exports": [
+    {
+     "name": "goToCoupleTab",
+     "kind": "function",
+     "line": 7,
+     "signature": "(tab: '/' | '/wedding')",
+     "doc": "Closes any screens stacked over the couple tabs, then switches to `tab`, instead of pushing a second set of tabs."
+    },
+    {
+     "name": "useOpenMyWedding",
+     "kind": "hook",
+     "line": 13,
+     "signature": "(): () => void",
+     "doc": "Opens the couple's plan: the \"My wedding\" tab, or the stack screen when a super admin has switched the tab off."
     }
    ]
   },
@@ -13120,6 +13272,13 @@
      "line": 451,
      "signature": "(posts: SocialPost[]): PostStats",
      "doc": "Totals across published posts, per network, and the best post by engagement."
+    },
+    {
+     "name": "optInKeyword",
+     "kind": "function",
+     "line": 483,
+     "signature": "(text: string): 'in' | 'out' | null",
+     "doc": "WhatsApp broadcast consent by keyword: \"START\"/\"SUBSCRIBE\" opts in, \"STOP\"/\"UNSUBSCRIBE\" opts out (also in Nepali). Same words as the SQL trigger in 0020."
     }
    ]
   },
@@ -13550,14 +13709,14 @@
     {
      "name": "messageFor",
      "kind": "function",
-     "line": 203,
+     "line": 204,
      "signature": "(action: string): string | null",
      "doc": "\"addBudgetLine\" → \"Budget line added\"."
     },
     {
      "name": "installActionToasts",
      "kind": "function",
-     "line": 264,
+     "line": 265,
      "signature": "()",
      "doc": "Wraps the store actions once (root layout). Timers that call actions use `quietly()`."
     }
@@ -15218,6 +15377,12 @@
        "doc": ""
       },
       {
+       "name": "setSocialOptIn",
+       "optional": false,
+       "type": "(threadId: string, optedIn: boolean) => string | null",
+       "doc": "WhatsApp: records that the customer agreed (or no longer agrees) to broadcasts. The opted-in count is the WhatsApp audience."
+      },
+      {
        "name": "createLeadFromSocialThread",
        "optional": false,
        "type": "(threadId: string, input: SocialLeadInput) => { leadId?: string; error?: string }",
@@ -15282,21 +15447,21 @@
     {
      "name": "clearSocialTimers",
      "kind": "function",
-     "line": 80,
+     "line": 82,
      "signature": "()",
      "doc": "Stops the simulated networks (on resetDemo)."
     },
     {
      "name": "socialSettingsFor",
      "kind": "function",
-     "line": 106,
+     "line": 108,
      "signature": "(all: Record<string, SocialSettings>, ownerId: string)",
      "doc": "Settings for a business, with the starter set until it saves its own."
     },
     {
      "name": "socialActions",
      "kind": "function",
-     "line": 111,
+     "line": 113,
      "signature": "(set: SetDb, get: GetDb): SocialActions",
      "doc": "The social hub actions for the shared store."
     }
@@ -15990,6 +16155,26 @@
      "line": 130,
      "signature": "(): Account",
      "doc": "Non-null account for screens that only render inside a role app. During\nlogout a screen may render once more before its protected route unmounts,\nso this falls back to the last signed-in account instead of throwing."
+    }
+   ]
+  },
+  {
+   "file": "src/store/useTour.ts",
+   "doc": "",
+   "exports": [
+    {
+     "name": "TourId",
+     "kind": "type",
+     "line": 6,
+     "signature": "= 'couple'",
+     "doc": "Guided tours; one per app that has one."
+    },
+    {
+     "name": "useTour",
+     "kind": "const",
+     "line": 22,
+     "signature": "= create<TourState>()( persist( (set, get) => ({ seen: [], running: null, start: (id) => { …",
+     "doc": "First-run guided tours, persisted per device apart from the couple's data."
     }
    ]
   },
@@ -23311,6 +23496,12 @@
        "doc": ""
       },
       {
+       "name": "publicId",
+       "optional": true,
+       "type": "string",
+       "doc": "Cloudinary public id (Supabase builds): the networks fetch the file from its public URL."
+      },
+      {
        "name": "alt",
        "optional": true,
        "type": "string",
@@ -23321,7 +23512,7 @@
     {
      "name": "SocialThread",
      "kind": "interface",
-     "line": 54,
+     "line": 56,
      "signature": "",
      "doc": "One conversation in the unified inbox.",
      "members": [
@@ -23372,6 +23563,12 @@
        "optional": true,
        "type": "string",
        "doc": "WhatsApp number, or one the customer typed into a message."
+      },
+      {
+       "name": "optedIn",
+       "optional": true,
+       "type": "boolean",
+       "doc": "WhatsApp: the customer agreed to receive broadcasts (said START, or the team recorded their consent)."
       },
       {
        "name": "postId",
@@ -23450,14 +23647,14 @@
     {
      "name": "SocialMessageStatus",
      "kind": "type",
-     "line": 85,
+     "line": 89,
      "signature": "= 'sending' | 'sent' | 'delivered' | 'read' | 'failed'",
      "doc": "Delivery state of a reply, as the network reports it."
     },
     {
      "name": "SocialMessage",
      "kind": "interface",
-     "line": 88,
+     "line": 92,
      "signature": "",
      "doc": "A message, a comment, or an internal note in a thread.",
      "members": [
@@ -23532,14 +23729,14 @@
     {
      "name": "SocialPostStatus",
      "kind": "type",
-     "line": 107,
+     "line": 111,
      "signature": "= 'draft' | 'scheduled' | 'publishing' | 'published' | 'partial' | 'failed'",
      "doc": "Where a post is: draft, scheduled, publishing, published, partly published or failed."
     },
     {
      "name": "SocialPostResult",
      "kind": "interface",
-     "line": 110,
+     "line": 114,
      "signature": "",
      "doc": "How one network took a post, and how it did there.",
      "members": [
@@ -23602,7 +23799,7 @@
     {
      "name": "SocialPost",
      "kind": "interface",
-     "line": 123,
+     "line": 127,
      "signature": "",
      "doc": "One post sent to several networks at once (now or at a set time).",
      "members": [
@@ -23701,7 +23898,7 @@
     {
      "name": "SocialAutoRule",
      "kind": "interface",
-     "line": 145,
+     "line": 149,
      "signature": "",
      "doc": "Keyword auto-reply: when an incoming message contains a keyword, reply at once.",
      "members": [
@@ -23746,7 +23943,7 @@
     {
      "name": "SocialSettings",
      "kind": "interface",
-     "line": 156,
+     "line": 160,
      "signature": "",
      "doc": "Saved replies, auto-replies and the away message of one business.",
      "members": [
@@ -25943,6 +26140,79 @@
      "line": 542,
      "signature": "(media: { kind?: string; publicId?: string; uri?: string }[], cloudName?: string): PublishMedia[]",
      "doc": "A post's media as public URLs: uploaded files are Cloudinary public ids, others already URLs."
+    },
+    {
+     "name": "MetricTarget",
+     "kind": "interface",
+     "line": 555,
+     "signature": "",
+     "doc": "A published post on one network whose numbers are read back.",
+     "members": [
+      {
+       "name": "network",
+       "optional": false,
+       "type": "Network",
+       "doc": ""
+      },
+      {
+       "name": "externalId",
+       "optional": false,
+       "type": "string",
+       "doc": "Facebook post id, Instagram media id, or TikTok publish id."
+      },
+      {
+       "name": "token",
+       "optional": false,
+       "type": "string",
+       "doc": ""
+      }
+     ]
+    },
+    {
+     "name": "Metrics",
+     "kind": "interface",
+     "line": 563,
+     "signature": "",
+     "doc": "Numbers a network reports for a post; missing ones are left as they were.",
+     "members": [
+      {
+       "name": "reach",
+       "optional": true,
+       "type": "number",
+       "doc": ""
+      },
+      {
+       "name": "likes",
+       "optional": true,
+       "type": "number",
+       "doc": ""
+      },
+      {
+       "name": "comments",
+       "optional": true,
+       "type": "number",
+       "doc": ""
+      },
+      {
+       "name": "shares",
+       "optional": true,
+       "type": "number",
+       "doc": ""
+      },
+      {
+       "name": "saves",
+       "optional": true,
+       "type": "number",
+       "doc": ""
+      }
+     ]
+    },
+    {
+     "name": "fetchMetrics",
+     "kind": "function",
+     "line": 588,
+     "signature": "(t: MetricTarget, http: Http, graphVersion = 'v21.0'): Promise<Metrics | null>",
+     "doc": "Reads a post's numbers back from its network: Facebook post fields and\ninsights, Instagram media insights, TikTok's video query (after finding the\npublic post id from the publish id). Never throws; null when unavailable."
     }
    ]
   },
@@ -26036,7 +26306,7 @@
   },
   {
    "file": "supabase/functions/social-publish/index.ts",
-   "doc": "social-publish: sends one post to every network it was written for. POST { \"postId\": uuid } (Authorization: Bearer <user JWT>) publish now → { status, results: { facebook: { status, url?, error? }, … } } POST { \"due\": true } (x-webhook-secret: NOTIFY_WEBHOOK_SECRET) the scheduled run (job_social_due in 0018, every five minutes through pg_cron and pg_net) → claims the due posts (vivah_social_claim_due) and publishes each Each network follows its own steps (publishTo in _shared/social.ts) and its outcome is recorded with vivah_social_target_result, which also sets the post's status: published, …",
+   "doc": "social-publish: sends one post to every network it was written for. POST { \"postId\": uuid } (Authorization: Bearer <user JWT>) publish now → { status, results: { facebook: { status, url?, error? }, … } } POST { \"due\": true } (x-webhook-secret: NOTIFY_WEBHOOK_SECRET) the scheduled run (job_social_due in 0018, every five minutes through pg_cron and pg_net) → claims the due posts (vivah_social_claim_due) and publishes each POST { \"metrics\": true } (x-webhook-secret) job_social_metrics in 0020, every six hours → reads reach, likes, comments, shares and saves back for recent posts Each network fol…",
    "exports": []
   },
   {

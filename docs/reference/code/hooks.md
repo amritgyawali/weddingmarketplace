@@ -14,6 +14,7 @@ Every exported symbol in `src/hooks/`, file by file. The guide that explains how
 - [`useFeatures.ts`](#usefeaturests) (1 exports)
 - [`useHydrated.ts`](#usehydratedts) (1 exports)
 - [`useLayout.ts`](#uselayoutts) (1 exports)
+- [`useOpenMyWedding.ts`](#useopenmyweddingts) (2 exports)
 - [`useShake.ts`](#useshakets) (1 exports)
 - [`useTelemetry.ts`](#usetelemetryts) (1 exports)
 - [`useWorkspace.ts`](#useworkspacets) (9 exports)
@@ -314,6 +315,30 @@ useLayout()
 
 Breakpoints for the web-ready consoles. Phones get one column; tablets and
 desktop browsers (expo start --web) get side navigation and grids.
+
+## useOpenMyWedding.ts
+
+Source: [src/hooks/useOpenMyWedding.ts](../../../src/hooks/useOpenMyWedding.ts)
+
+### `goToCoupleTab`
+
+*function* · [src/hooks/useOpenMyWedding.ts:7](../../../src/hooks/useOpenMyWedding.ts#L7)
+
+```ts
+goToCoupleTab(tab: '/' | '/wedding')
+```
+
+Closes any screens stacked over the couple tabs, then switches to `tab`, instead of pushing a second set of tabs.
+
+### `useOpenMyWedding`
+
+*hook* · [src/hooks/useOpenMyWedding.ts:13](../../../src/hooks/useOpenMyWedding.ts#L13)
+
+```ts
+useOpenMyWedding(): () => void
+```
+
+Opens the couple's plan: the "My wedding" tab, or the stack screen when a super admin has switched the tab off.
 
 ## useShake.ts
 

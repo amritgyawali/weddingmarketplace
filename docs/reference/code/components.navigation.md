@@ -59,12 +59,14 @@ Source: [src/components/navigation/TabBar.tsx](../../../src/components/navigatio
 
 ### `TabBar`
 
-*component* · [src/components/navigation/TabBar.tsx:32](../../../src/components/navigation/TabBar.tsx#L32)
+*component* · [src/components/navigation/TabBar.tsx:35](../../../src/components/navigation/TabBar.tsx#L35)
 
 ```ts
 TabBar({ state, navigation }: BottomTabBarProps)
 ```
 
 Couple-app bottom bar: outline icons, filled + crimson when active, short
-sentence-case labels. Follows the celebration (a pasni has no wedding ideas
-or planner packages) and the super admin's feature switches.
+sentence-case labels. Browse (venues, vendors, ideas) on the left, the
+couple's own plan on the right. Follows the celebration (a pasni has no
+wedding ideas and says "My plan") and the super admin's feature switches.
+Routes without an entry in `TABS` (planner packages) stay reachable by link.

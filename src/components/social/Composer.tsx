@@ -11,6 +11,7 @@ import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard'
 import { Sheet } from '@/components/ui/Sheet';
 import { Text } from '@/components/ui/Text';
 import { toast, toastError } from '@/components/ui/Toast';
+import { cloudMediaReady, uploadMedia } from '@/backend/media';
 import { saveSocialPostLive, sendSocialPostLive, socialLive, syncSocialFromServer } from '@/backend/social';
 import { photos } from '@/constants/images';
 import { NETWORK_BY_ID, NETWORKS } from '@/data/social';
@@ -78,11 +79,12 @@ export function SocialComposer({ postId, at }: { postId?: string; at?: string })
   const [library, setLibrary] = useState(false);
   const [connecting, setConnecting] = useState<SocialNetwork | null>(null);
   const [busy, setBusy] = useState(false);
+  const [uploading, setUploading] = useState(0);
 
   const scheduledAt = when === 'later' ? toIso(date, time) : null;
   const draft = { caption, overrides, media, networks, link, scheduledAt: scheduledAt ?? undefined };
   const checks = checkPost(draft, accounts, new Date().toISOString());
-  const ready = postReady(checks) && (when === 'now' || !!scheduledAt);
+  const ready = postReady(checks) && (when === 'now' || !!scheduledAt) && uploading === 0;
   const text = editing === 'main' ? caption : (overrides[editing] ?? '');
   const setText = (v: string) => (editing === 'main' ? setCaption(v) : setOverrides({ ...overrides, [editing]: v }));
   const limitNets = (editing === 'main' ? networks.filter((n) => !overrides[n]?.trim()) : [editing]).map((n) => NETWORK_BY_ID[n]);
@@ -104,7 +106,20 @@ export function SocialComposer({ postId, at }: { postId?: string; at?: string })
   const pickFromPhone = async () => {
     const res = await ImagePicker.launchImageLibraryAsync({ mediaTypes: ['images', 'videos'], quality: 0.8, allowsMultipleSelection: true, selectionLimit: 10 });
     if (res.canceled) return;
-    setMedia([...media, ...res.assets.map((a) => ({ id: uid('md'), kind: a.type === 'video' ? ('video' as const) : ('image' as const), uri: a.uri }))]);
+    if (!cloudMediaReady()) {
+      setMedia([...media, ...res.assets.map((a) => ({ id: uid('md'), kind: a.type === 'video' ? ('video' as const) : ('image' as const), uri: a.uri }))]);
+      return;
+    }
+    // Live: the networks fetch files from a public URL, so each file goes to Cloudinary first (and into the portfolio).
+    setUploading(res.assets.length);
+    const added: SocialMedia[] = [];
+    for (const a of res.assets) {
+      const up = await uploadMedia({ uri: a.uri, mimeType: a.mimeType, fileName: a.fileName, fileSize: a.fileSize }, 'portfolio');
+      if (up.ok) added.push({ id: uid('md'), kind: up.value.kind, uri: up.value.url, publicId: up.value.publicId });
+      else toastError(up.error);
+      setUploading((n) => Math.max(0, n - 1));
+    }
+    setMedia((cur) => [...cur, ...added]);
   };
 
   const persist = () => {
@@ -114,6 +129,11 @@ export function SocialComposer({ postId, at }: { postId?: string; at?: string })
 
   /** Supabase builds: the server saves, publishes or schedules, then the hub is read again. */
   const sendLive = async (go: boolean) => {
+    // The networks can only fetch files that have a public URL (uploaded to Cloudinary).
+    if (go && media.some((m) => !m.publicId && !(m.uri ?? '').startsWith('https://'))) {
+      toastError('Some photos are only on this device. Remove them and add them again from this device or your portfolio.');
+      return;
+    }
     const post = { id: existing?.id ?? '', caption, overrides, media, networks, link, firstComment, campaign };
     setBusy(true);
     const r = go ? await sendSocialPostLive({ ...post, status: 'draft', results: {}, ownerId: account.id, createdAt: '', updatedAt: '' }, { at: when === 'later' ? (scheduledAt ?? undefined) : undefined }) : await saveSocialPostLive(post);
@@ -222,8 +242,13 @@ export function SocialComposer({ postId, at }: { postId?: string; at?: string })
         )}
         <View style={[styles.row, { flexWrap: 'wrap' }]}>
           <KButton label="From your portfolio" size="sm" variant="secondary" icon="images-outline" onPress={() => setLibrary(true)} />
-          <KButton label="From this device" size="sm" variant="secondary" icon="cloud-upload-outline" onPress={pickFromPhone} />
+          <KButton label="From this device" size="sm" variant="secondary" icon="cloud-upload-outline" onPress={pickFromPhone} loading={uploading > 0} />
         </View>
+        {cloudMediaReady() && (
+          <Text size={12} color={t.c.muted}>
+            {uploading > 0 ? `Uploading ${uploading} file${uploading === 1 ? '' : 's'}…` : 'Files from this device are uploaded once and also added to your portfolio.'}
+          </Text>
+        )}
       </Card>
 
       <Card style={{ gap: 10 }}>
@@ -384,7 +409,7 @@ export function SocialComposer({ postId, at }: { postId?: string; at?: string })
             return (
               <Pressable
                 key={p.id}
-                onPress={() => (picked ? setMedia(media.filter((m) => !(p.uri ? m.uri === p.uri : m.image === p.image))) : setMedia([...media, { id: uid('md'), kind: p.kind, image: p.image, uri: p.uri, alt: p.caption }]))}
+                onPress={() => (picked ? setMedia(media.filter((m) => !(p.uri ? m.uri === p.uri : m.image === p.image))) : setMedia([...media, { id: uid('md'), kind: p.kind, image: p.image, uri: p.uri, publicId: p.publicId, alt: p.caption }]))}
                 accessibilityRole="checkbox"
                 accessibilityState={{ checked: picked }}
                 accessibilityLabel={p.caption}

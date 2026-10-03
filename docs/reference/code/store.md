@@ -12,6 +12,7 @@ Every exported symbol in `src/store/`, file by file. The guide that explains how
 - [`useAppStore.ts`](#useappstorets) (6 exports)
 - [`useDb.ts`](#usedbts) (1 exports)
 - [`useSession.ts`](#usesessionts) (4 exports)
+- [`useTour.ts`](#usetourts) (2 exports)
 
 ## actionToasts.ts
 
@@ -29,7 +30,7 @@ off with the `app.notifications` feature.
 
 ### `messageFor`
 
-*function* · [src/store/actionToasts.ts:203](../../../src/store/actionToasts.ts#L203)
+*function* · [src/store/actionToasts.ts:204](../../../src/store/actionToasts.ts#L204)
 
 ```ts
 messageFor(action: string): string | null
@@ -39,7 +40,7 @@ messageFor(action: string): string | null
 
 ### `installActionToasts`
 
-*function* · [src/store/actionToasts.ts:264](../../../src/store/actionToasts.ts#L264)
+*function* · [src/store/actionToasts.ts:265](../../../src/store/actionToasts.ts#L265)
 
 ```ts
 installActionToasts()
@@ -232,3 +233,27 @@ useAccount(): Account
 Non-null account for screens that only render inside a role app. During
 logout a screen may render once more before its protected route unmounts,
 so this falls back to the last signed-in account instead of throwing.
+
+## useTour.ts
+
+Source: [src/store/useTour.ts](../../../src/store/useTour.ts)
+
+### `TourId`
+
+*type* · [src/store/useTour.ts:6](../../../src/store/useTour.ts#L6)
+
+```ts
+type TourId = 'couple'
+```
+
+Guided tours; one per app that has one.
+
+### `useTour`
+
+*const* · [src/store/useTour.ts:22](../../../src/store/useTour.ts#L22)
+
+```ts
+useTour= create<TourState>()( persist( (set, get) => ({ seen: [], running: null, start: (id) => { …
+```
+
+First-run guided tours, persisted per device apart from the couple's data.
