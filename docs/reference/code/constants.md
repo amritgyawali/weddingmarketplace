@@ -9,7 +9,7 @@ Every exported symbol in `src/constants/`, file by file. The guide that explains
 - [`brand.ts`](#brandts) (1 exports)
 - [`env.ts`](#envts) (2 exports) · Public configuration from `EXPO_PUBLIC_*` variables (`.env.local`, EAS and Vercel environment variables; see `.env.example`). Expo inlines …
 - [`images.ts`](#imagests) (3 exports)
-- [`theme.ts`](#themets) (13 exports)
+- [`theme.ts`](#themets) (14 exports)
 
 ## brand.ts
 
@@ -47,7 +47,7 @@ _No JSDoc yet._
 
 ### `usesSupabase`
 
-*function* · [src/constants/env.ts:26](../../../src/constants/env.ts#L26)
+*function* · [src/constants/env.ts:30](../../../src/constants/env.ts#L30)
 
 ```ts
 usesSupabase()
@@ -200,9 +200,19 @@ GUTTER= 16
 
 Page gutter.
 
+### `shadow`
+
+*function* · [src/constants/theme.ts:156](../../../src/constants/theme.ts#L156)
+
+```ts
+shadow(elevation: number, opacity: number, radiusPx: number, offsetY: number, color = '#251B18'): ViewStyle
+```
+
+Drop shadow for something that floats: elevation on Android, `boxShadow` on the web (shadow* props are deprecated there), shadow* on iOS.
+
 ### `shadows`
 
-*const* · [src/constants/theme.ts:168](../../../src/constants/theme.ts#L168)
+*const* · [src/constants/theme.ts:175](../../../src/constants/theme.ts#L175)
 
 ```ts
 shadows= { … }
@@ -212,7 +222,7 @@ Shadows are reserved for things that genuinely float (sheets, toasts).
 
 ### `type`
 
-*const* · [src/constants/theme.ts:178](../../../src/constants/theme.ts#L178)
+*const* · [src/constants/theme.ts:185](../../../src/constants/theme.ts#L185)
 
 ```ts
 type= { display: { fontFamily: serif.bold, fontSize: 30, lineHeight: 40 }, title: { fontFamily:…
@@ -222,7 +232,7 @@ _No JSDoc yet._
 
 ### `hitSlop`
 
-*const* · [src/constants/theme.ts:189](../../../src/constants/theme.ts#L189)
+*const* · [src/constants/theme.ts:196](../../../src/constants/theme.ts#L196)
 
 ```ts
 hitSlop= { top: 10, bottom: 10, left: 10, right: 10 }
@@ -232,7 +242,7 @@ _No JSDoc yet._
 
 ### `inputReset`
 
-*const* · [src/constants/theme.ts:192](../../../src/constants/theme.ts#L192)
+*const* · [src/constants/theme.ts:199](../../../src/constants/theme.ts#L199)
 
 ```ts
 inputReset: TextStyle

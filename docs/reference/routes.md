@@ -95,6 +95,8 @@ Every file in `src/app/` is a route (Expo Router). Layouts (`_layout.tsx`) defin
 | `/platform` (tabs) | screen | `PlatformToday` | [platform/(tabs)/index.tsx](../../src/app/platform/%28tabs%29/index.tsx) |  |
 | `/platform/admin` | screen | `` | [platform/admin/index.tsx](../../src/app/platform/admin/index.tsx) |  |
 | `/platform/admin/announcements` | screen | `` | [platform/admin/announcements.tsx](../../src/app/platform/admin/announcements.tsx) |  |
+| `/platform/admin/bug/[id]` | screen | `` | [platform/admin/bug/[id].tsx](../../src/app/platform/admin/bug/%5Bid%5D.tsx) |  |
+| `/platform/admin/bugs` | screen | `` | [platform/admin/bugs.tsx](../../src/app/platform/admin/bugs.tsx) |  |
 | `/platform/admin/collection/[name]` | screen | `` | [platform/admin/collection/[name].tsx](../../src/app/platform/admin/collection/%5Bname%5D.tsx) |  |
 | `/platform/admin/data` | screen | `` | [platform/admin/data.tsx](../../src/app/platform/admin/data.tsx) |  |
 | `/platform/admin/features` | screen | `` | [platform/admin/features.tsx](../../src/app/platform/admin/features.tsx) |  |

@@ -89,6 +89,20 @@ export default function PlatformToday() {
       <RoleHeader eyebrow={`${formatLongDate(now)} · ${formatDateAlt(now)}`} title={`Namaste, ${account.name.split(' ')[0]}`} subtitle={`${account.team ?? 'Operations'} · ${active.length} active projects`} />
       <ScrollView contentContainerStyle={{ padding: 14, gap: 16, paddingBottom: 40 }}>
         <TodayFocus />
+        {can(exp, 'admin.full') && (
+          <Card onPress={() => router.push('/platform/admin')} style={[styles.row, { borderLeftColor: t.c.primary, borderLeftWidth: 3 }]}>
+            <Ionicons name="shield-checkmark-outline" size={22} color={t.c.primary} />
+            <View style={{ flex: 1 }}>
+              <Text size={14} weight="bold" color={t.c.textStrong}>
+                Super admin console
+              </Text>
+              <Text size={12} color={t.c.muted} numberOfLines={2}>
+                Edit or delete anything, switch features on and off, rewrite any text
+              </Text>
+            </View>
+            <Ionicons name="chevron-forward" size={18} color={t.c.muted} />
+          </Card>
+        )}
         <View>
           <SectionTitle title="Today" />
           <View style={styles.kpis}>

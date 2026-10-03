@@ -57,11 +57,14 @@ const SILENT = new Set([
   'runDueSocialPosts',
   'syncSocialInbox',
   'mirrorSocialData',
+  'submitBugReport',
 ]);
 
 /** Exact messages for the most common actions. */
 const MESSAGES: Record<string, string> = {
   addGuest: 'Guest added',
+  setBugReportStatus: 'Bug report updated',
+  removeBugReports: 'Bug report deleted',
   removeGuest: 'Guest removed',
   updateGuest: 'Guest updated',
   importGuests: 'Guests imported',

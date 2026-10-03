@@ -5,7 +5,7 @@ import Animated, { FadeIn } from 'react-native-reanimated';
 
 import { Button } from '@/components/ui/Button';
 import { Text } from '@/components/ui/Text';
-import { colors } from '@/constants/theme';
+import { colors, shadow } from '@/constants/theme';
 import { COUPLE_TOUR, type TourStep } from '@/data/tour';
 import { useFeatures } from '@/hooks/useFeatures';
 import { useHydrated } from '@/hooks/useHydrated';
@@ -183,7 +183,7 @@ function Scrim({ rect, box }: { rect: Rect | null; box: { width: number; height:
       <View style={[styles.panel, { top: bottom, left: 0, right: 0, bottom: 0 }]} />
       <View style={[styles.panel, { top, left: 0, width: left, height: bottom - top }]} />
       <View style={[styles.panel, { top, left: right, right: 0, height: bottom - top }]} />
-      <View pointerEvents="none" style={[styles.ring, { top, left, width: right - left, height: bottom - top }]} />
+      <View style={[styles.ring, { top, left, width: right - left, height: bottom - top, pointerEvents: 'none' }]} />
     </>
   );
 }
@@ -223,11 +223,7 @@ const styles = StyleSheet.create({
     padding: 16,
     borderRadius: 10,
     backgroundColor: colors.white,
-    shadowColor: '#000',
-    shadowOpacity: 0.18,
-    shadowRadius: 16,
-    shadowOffset: { width: 0, height: 6 },
-    elevation: 8,
+    ...shadow(8, 0.18, 16, 6, '#000000'),
   },
   arrow: { position: 'absolute', width: 14, height: 14, backgroundColor: colors.white, transform: [{ rotate: '45deg' }] },
   footer: { flexDirection: 'row', alignItems: 'center', gap: 8, marginTop: 8 },

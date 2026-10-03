@@ -52,7 +52,7 @@ export function WeddingHero({
   return (
     <View style={[styles.hero, { height: HERO_HEIGHT + insets.top }]}>
       <Image source={photos[cover]} style={StyleSheet.absoluteFill} contentFit="cover" contentPosition={{ left: '50%', top: '38%' }} transition={250} />
-      <LinearGradient colors={SCRIM} locations={[0, 0.3, 0.5, 1]} style={StyleSheet.absoluteFill} pointerEvents="none" />
+      <LinearGradient colors={SCRIM} locations={[0, 0.3, 0.5, 1]} style={[StyleSheet.absoluteFill, { pointerEvents: 'none' }]} />
       <View style={[styles.heroTop, { paddingTop: insets.top + 6 }]}>
         {onBack ? <IconButton icon="chevron-back" iconSize={22} color={colors.white} background={OVERLAY_BUTTON} accessibilityLabel="Go back" onPress={onBack} /> : <View />}
         <View style={{ flexDirection: 'row', gap: 8 }}>

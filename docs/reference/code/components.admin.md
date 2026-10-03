@@ -6,7 +6,32 @@ Every exported symbol in `src/components/admin/`, file by file. The guide that e
 
 ## Files
 
+- [`bugs.ts`](#bugsts) (2 exports)
 - [`shared.tsx`](#sharedtsx) (8 exports) · Building blocks of the super admin console: role names, collection metadata and a generic record editor.
+
+## bugs.ts
+
+Source: [src/components/admin/bugs.ts](../../../src/components/admin/bugs.ts)
+
+### `BUG_PILL`
+
+*const* · [src/components/admin/bugs.ts:5](../../../src/components/admin/bugs.ts#L5)
+
+```ts
+BUG_PILL: Record<BugReportStatus, { status: string; label: string }>
+```
+
+The status pill for a bug report (StatusPill colours by its own status names).
+
+### `reporterLine`
+
+*function* · [src/components/admin/bugs.ts:12](../../../src/components/admin/bugs.ts#L12)
+
+```ts
+reporterLine(r: BugReportRecord)
+```
+
+"Aakriti Shrestha · Couple", or "Signed out".
 
 ## shared.tsx
 
@@ -36,7 +61,7 @@ How each collection is described in the console, grouped like the app.
 
 ### `COLLECTION_BY_KEY`
 
-*const* · [src/components/admin/shared.tsx:59](../../../src/components/admin/shared.tsx#L59)
+*const* · [src/components/admin/shared.tsx:60](../../../src/components/admin/shared.tsx#L60)
 
 ```ts
 COLLECTION_BY_KEY= Object.fromEntries(COLLECTIONS.map((c) => [c.key, c])) as Record<keyof DbData, (typeof CO…
@@ -46,7 +71,7 @@ _No JSDoc yet._
 
 ### `recordsOf`
 
-*function* · [src/components/admin/shared.tsx:62](../../../src/components/admin/shared.tsx#L62)
+*function* · [src/components/admin/shared.tsx:63](../../../src/components/admin/shared.tsx#L63)
 
 ```ts
 recordsOf(value: unknown): [string, unknown][]
@@ -56,7 +81,7 @@ Records of a collection as [id, value] pairs, whatever its shape.
 
 ### `recordTitle`
 
-*function* · [src/components/admin/shared.tsx:69](../../../src/components/admin/shared.tsx#L69)
+*function* · [src/components/admin/shared.tsx:70](../../../src/components/admin/shared.tsx#L70)
 
 ```ts
 recordTitle(id: string, value: unknown): string
@@ -66,7 +91,7 @@ A one-line, human label for any record: its name, title, label… or its id.
 
 ### `recordSubtitle`
 
-*function* · [src/components/admin/shared.tsx:79](../../../src/components/admin/shared.tsx#L79)
+*function* · [src/components/admin/shared.tsx:80](../../../src/components/admin/shared.tsx#L80)
 
 ```ts
 recordSubtitle(value: unknown): string
@@ -76,7 +101,7 @@ Second line under a record: a few short fields that help tell records apart.
 
 ### `FieldEditor`
 
-*component* · [src/components/admin/shared.tsx:96](../../../src/components/admin/shared.tsx#L96)
+*component* · [src/components/admin/shared.tsx:97](../../../src/components/admin/shared.tsx#L97)
 
 ```ts
 FieldEditor({ name, value, onChange, locked }: { name: string; value: Value; onChange: (v: Value) => void; locked?: boolean })
@@ -88,7 +113,7 @@ reports the JSON error under the field.
 
 ### `RecordFields`
 
-*component* · [src/components/admin/shared.tsx:150](../../../src/components/admin/shared.tsx#L150)
+*component* · [src/components/admin/shared.tsx:151](../../../src/components/admin/shared.tsx#L151)
 
 ```ts
 RecordFields({ record, onChange, lockedKeys = [] }: { record: Record<string, Value>; onChange: (next: Record<string, Value>) => void; lockedKeys?: string[] })

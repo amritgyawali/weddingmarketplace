@@ -18,6 +18,7 @@ Every exported symbol in `src/store/db/`, file by file. The guide that explains 
 - [`projects.ts`](#projectsts) (4 exports) · Wedding-project workflow: requirement intake, matching, provider bookings, crew assignments, emergency replacement, deliverables, tasks and…
 - [`quotes.ts`](#quotests) (4 exports) · Versioned quotations. A sent version is frozen into `versions`; any later change creates the next version, so the customer can always compa…
 - [`social.ts`](#socialts) (6 exports) · Social hub: a business connects Facebook, Instagram, WhatsApp and TikTok, answers every message and comment from one inbox, and publishes o…
+- [`support.ts`](#supportts) (4 exports) · Bug reports from shake to report. Anyone can send one, signed in or not, in every build; super admins read them in the console (Super admin…
 - [`toolkit.ts`](#toolkitts) (3 exports) · Role toolkits: generic tool records, per-owner tool settings and ops broadcasts.
 - [`trust.ts`](#trustts) (2 exports) · Reviews (category ratings, replies, moderation) and provider/freelancer verification.
 - [`types.ts`](#typests) (1 exports)
@@ -420,7 +421,7 @@ production each action becomes an API call against supabase/migrations.
 
 ### `DbData`
 
-*re-export* · [src/store/db/index.ts:31](../../../src/store/db/index.ts#L31)
+*re-export* · [src/store/db/index.ts:32](../../../src/store/db/index.ts#L32)
 
 ```ts
 DbDatafrom './types'
@@ -430,17 +431,17 @@ _No JSDoc yet._
 
 ### `Db`
 
-*type* · [src/store/db/index.ts:32](../../../src/store/db/index.ts#L32)
+*type* · [src/store/db/index.ts:33](../../../src/store/db/index.ts#L33)
 
 ```ts
-type Db = DbData & CoreActions & QuoteActions & ProjectActions & FinanceActions & GigActions & ChatActions & TrustActions & PlannerActions & ToolkitActions & PersonaActions & AdminActions & SocialActions
+type Db = DbData & CoreActions & QuoteActions & ProjectActions & FinanceActions & GigActions & ChatActions & TrustActions & PlannerActions & ToolkitActions & PersonaActions & AdminActions & SocialActions & SupportActions
 ```
 
 _No JSDoc yet._
 
 ### `useDb`
 
-*const* · [src/store/db/index.ts:95](../../../src/store/db/index.ts#L95)
+*const* · [src/store/db/index.ts:96](../../../src/store/db/index.ts#L96)
 
 ```ts
 useDb= create<Db>()( persist( (set, get) => ({ ...buildSeedData(), ...coreActions(set, get), ...…
@@ -450,7 +451,7 @@ _No JSDoc yet._
 
 ### `useInbox`
 
-*hook* · [src/store/db/index.ts:146](../../../src/store/db/index.ts#L146)
+*hook* · [src/store/db/index.ts:149](../../../src/store/db/index.ts#L149)
 
 ```ts
 useInbox(account: Account)
@@ -462,7 +463,7 @@ from a zustand selector would re-render forever.
 
 ### `useThreads`
 
-*hook* · [src/store/db/index.ts:152](../../../src/store/db/index.ts#L152)
+*hook* · [src/store/db/index.ts:155](../../../src/store/db/index.ts#L155)
 
 ```ts
 useThreads(account: Account)
@@ -472,7 +473,7 @@ Threads this account is a member of (platform staff see every thread).
 
 ### `useUnreadMessageCount`
 
-*hook* · [src/store/db/index.ts:164](../../../src/store/db/index.ts#L164)
+*hook* · [src/store/db/index.ts:167](../../../src/store/db/index.ts#L167)
 
 ```ts
 useUnreadMessageCount(account: Account)
@@ -888,6 +889,58 @@ socialActions(set: SetDb, get: GetDb): SocialActions
 
 The social hub actions for the shared store.
 
+## support.ts
+
+Source: [src/store/db/support.ts](../../../src/store/db/support.ts)
+
+Bug reports from shake to report. Anyone can send one, signed in or not, in
+every build; super admins read them in the console (Super admin → Bug
+reports), mark them fixed or dismissed and delete them. On Supabase builds
+the same use cases are rpc_submit_bug_report and friends
+(supabase/migrations/0019_bug_reports.sql).
+
+### `MAX_BUG_REPORTS`
+
+*const* · [src/store/db/support.ts:16](../../../src/store/db/support.ts#L16)
+
+```ts
+MAX_BUG_REPORTS= 200
+```
+
+Reports kept on the device; the oldest go first.
+
+### `MAX_BUG_SCREENSHOTS`
+
+*const* · [src/store/db/support.ts:18](../../../src/store/db/support.ts#L18)
+
+```ts
+MAX_BUG_SCREENSHOTS= 20
+```
+
+Only the newest reports keep their screenshot, so the saved data stays small.
+
+### `SupportActions`
+
+*interface* · [src/store/db/support.ts:21](../../../src/store/db/support.ts#L21)
+
+_No JSDoc yet._
+
+| Member | Type | Notes |
+|---|---|---|
+| `submitBugReport` | `(report: BugReport) => { id?: string; error?: string }` | Saves a report from the report sheet and tells the super admins. Returns its id, or an error. |
+| `setBugReportStatus` | `(id: string, status: BugReportStatus, note?: string) => string \| null` | Marks a report new, fixed or dismissed (super admins). Returns an error to show, or null. |
+| `removeBugReports` | `(ids: string[]) => string \| null` | Deletes reports (super admins). |
+
+### `supportActions`
+
+*function* · [src/store/db/support.ts:30](../../../src/store/db/support.ts#L30)
+
+```ts
+supportActions(set: SetDb, get: GetDb): SupportActions
+```
+
+_No JSDoc yet._
+
 ## toolkit.ts
 
 Source: [src/store/db/toolkit.ts](../../../src/store/db/toolkit.ts)
@@ -971,7 +1024,7 @@ Source: [src/store/db/types.ts](../../../src/store/db/types.ts)
 
 ### `DbData`
 
-*interface* · [src/store/db/types.ts:49](../../../src/store/db/types.ts#L49)
+*interface* · [src/store/db/types.ts:50](../../../src/store/db/types.ts#L50)
 
 Everything the shared on-device "backend" persists. Mirrors the SQL schema.
 
@@ -1022,3 +1075,4 @@ Everything the shared on-device "backend" persists. Mirrors the SQL schema.
 | `socialMessages` | `SocialMessage[]` |  |
 | `socialPosts` | `SocialPost[]` | Posts sent (or scheduled) to several networks at once. |
 | `socialSettings` | `Record<string, SocialSettings>` | Saved replies, auto-replies and away message, keyed by the business account id. |
+| `bugReports` | `BugReportRecord[]` | Bug reports sent with shake to report, newest first (super admin console → Bug reports). |
