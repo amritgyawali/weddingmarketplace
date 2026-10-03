@@ -16,7 +16,7 @@ import { formatShortDate } from '@/utils/format';
 export function HeroControls({ kind, id, shareText }: { kind: 'venues' | 'vendors'; id: string; shareText: string }) {
   const insets = useSafeAreaInsets();
   return (
-    <View style={[styles.controls, { top: insets.top + 8 }]} pointerEvents="box-none">
+    <View style={[styles.controls, { top: insets.top + 8, pointerEvents: 'box-none' }]}>
       <IconButton
         icon="chevron-back"
         size={38}

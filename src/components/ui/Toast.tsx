@@ -82,7 +82,7 @@ export function ToastHost() {
   const palette = TONES[tone];
 
   return (
-    <View pointerEvents="box-none" style={[StyleSheet.absoluteFill, styles.host, { paddingBottom: insets.bottom + 90 }]}>
+    <View style={[StyleSheet.absoluteFill, styles.host, { paddingBottom: insets.bottom + 90, pointerEvents: 'box-none' }]}>
       <Animated.View key={key} entering={FadeInDown.duration(220)} exiting={FadeOutDown.duration(180)}>
         <Pressable
           onPress={hide}

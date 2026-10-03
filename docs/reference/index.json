@@ -7864,7 +7864,7 @@
     {
      "name": "Toggle",
      "kind": "component",
-     "line": 14,
+     "line": 15,
      "signature": "({ value, onValueChange, accessibilityLabel, }: { value: boolean; onValueChange: (v: boolean) => void; accessibilityLabel: string; })",
      "doc": "On/off switch."
     }
@@ -8607,30 +8607,37 @@
      "doc": "Page gutter."
     },
     {
+     "name": "shadow",
+     "kind": "function",
+     "line": 156,
+     "signature": "(elevation: number, opacity: number, radiusPx: number, offsetY: number, color = '#251B18'): ViewStyle",
+     "doc": "Drop shadow for something that floats: elevation on Android, `boxShadow` on the web (shadow* props are deprecated there), shadow* on iOS."
+    },
+    {
      "name": "shadows",
      "kind": "const",
-     "line": 168,
+     "line": 175,
      "signature": "= { … }",
      "doc": "Shadows are reserved for things that genuinely float (sheets, toasts)."
     },
     {
      "name": "type",
      "kind": "const",
-     "line": 178,
+     "line": 185,
      "signature": "= { display: { fontFamily: serif.bold, fontSize: 30, lineHeight: 40 }, title: { fontFamily:…",
      "doc": ""
     },
     {
      "name": "hitSlop",
      "kind": "const",
-     "line": 189,
+     "line": 196,
      "signature": "= { top: 10, bottom: 10, left: 10, right: 10 }",
      "doc": ""
     },
     {
      "name": "inputReset",
      "kind": "const",
-     "line": 192,
+     "line": 199,
      "signature": ": TextStyle",
      "doc": "Removes the browser focus ring from text inputs on web (native is unaffected)."
     }

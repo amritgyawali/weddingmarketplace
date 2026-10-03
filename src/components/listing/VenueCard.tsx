@@ -53,7 +53,7 @@ export const VenueCard = memo(function VenueCard({
       <View>
         <ImageCarousel images={venue.images} width={cardWidth} height={cardWidth * 0.62} radius={radius.lg} onPressImage={open} />
         {venue.featured && (
-          <View style={styles.featured} pointerEvents="none">
+          <View style={[styles.featured, { pointerEvents: 'none' }]}>
             <Text size={12} weight="semibold" color={colors.gold} lineHeight={16}>
               Featured
             </Text>

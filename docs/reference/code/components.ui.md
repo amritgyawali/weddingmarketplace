@@ -748,7 +748,7 @@ Source: [src/components/ui/Toggle.tsx](../../../src/components/ui/Toggle.tsx)
 
 ### `Toggle`
 
-*component* · [src/components/ui/Toggle.tsx:14](../../../src/components/ui/Toggle.tsx#L14)
+*component* · [src/components/ui/Toggle.tsx:15](../../../src/components/ui/Toggle.tsx#L15)
 
 ```ts
 Toggle({ value, onValueChange, accessibilityLabel, }: { value: boolean; onValueChange: (v: boolean) => void; accessibilityLabel: string; })
