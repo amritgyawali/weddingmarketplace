@@ -115,7 +115,7 @@ Built-in occasions (`BUILT_IN_OCCASIONS`): `wedding`, `engagement`, `anniversary
 
 - fixed surfaces in `EXTRA_FEATURES` (seating, registry, mood boards, compare, deals, calendar, plan another celebration, shop and promotions pages, three home carousels; business social media, team, customers, analytics, promotions);
 - every tool that isn't a top feature, except the one main tool of each trade (`TRADE_TOOLS`) and craft (`CRAFT_TOOLS`), which only that trade or craft sees anyway;
-- account basics (home, notifications, settings, profile, language, support, log out), services, sign-up paths and content switches are never extras.
+- account basics (home, notifications, settings, profile, language, support, log out, and the couple's first-run tour in `BASIC_FEATURES`), services, sign-up paths and content switches are never extras.
 
 A tool someone already has records in stays visible to them unless a super admin switched it off explicitly. Screens belong to features through `FEATURE_ROUTES`: menus and sidebars drop links with `useLinkOn()`, and `FeatureRouteGuard` (root layout) covers a switched-off screen opened from an old link or notification. The Features screen has "Recommended" (back to the defaults: clears `featureFlags`) and "Switch every feature on". `npm run test:features` checks the 20s, the defaults and that every feature route has a screen. When you add a screen or tool, decide whether it is a top feature or an extra; if it joins the top 20, something else leaves.
 

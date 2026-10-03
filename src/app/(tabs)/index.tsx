@@ -9,6 +9,8 @@ import { ChecklistCard } from '@/components/home/ChecklistCard';
 import { CityHeader } from '@/components/home/CityHeader';
 import { GenieBanner } from '@/components/home/GenieBanner';
 import { PlanningTools } from '@/components/home/PlanningTools';
+import { SearchPrompt } from '@/components/home/SearchPrompt';
+import { TourTarget, useCoupleTourOnFirstVisit } from '@/components/tour/AppTour';
 import { VenueCollections } from '@/components/home/VenueCollections';
 import { WeddingStrip } from '@/components/home/WeddingStrip';
 import { VendorMiniCard, VenueMiniCard } from '@/components/listing/MiniCards';
@@ -86,6 +88,7 @@ export default function ForYouScreen() {
   const [refreshing, setRefreshing] = useState(false);
   const exp = useExperience();
   const on = useFeatures();
+  useCoupleTourOnFirstVisit();
 
   const occasionId = exp.occasion?.id ?? 'wedding';
   const weddingLike = occasionId === 'wedding' || occasionId === 'engagement';
@@ -113,9 +116,14 @@ export default function ForYouScreen() {
       <CityHeader
         right={
           <>
-            {on('couple.search') && <IconButton icon="search-outline" accessibilityLabel="Search" onPress={() => router.push('/search')} />}
-            {on('couple.messages') && <IconButton icon="chatbubble-outline" badge={unread} accessibilityLabel="Messages" onPress={() => router.push('/inbox')} />}
-            <IconButton icon="person-circle-outline" iconSize={25} accessibilityLabel="Profile & menu" onPress={() => router.push('/profile')} />
+            {on('couple.messages') && (
+              <TourTarget id="messages">
+                <IconButton icon="chatbubble-outline" badge={unread} accessibilityLabel="Messages" onPress={() => router.push('/inbox')} />
+              </TourTarget>
+            )}
+            <TourTarget id="menu">
+              <IconButton icon="person-circle-outline" iconSize={25} accessibilityLabel="Profile & menu" onPress={() => router.push('/profile')} />
+            </TourTarget>
           </>
         }
       />
@@ -124,6 +132,7 @@ export default function ForYouScreen() {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: 40 }}
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={colors.primary} colors={[colors.primary]} />}>
+        {on('couple.search') && <SearchPrompt />}
         <AnnouncementBanner style={{ marginHorizontal: GUTTER, marginTop: 14 }} />
         <WeddingStrip />
         {on('home.categories') && <CategoryCircles />}

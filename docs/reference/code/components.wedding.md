@@ -7,6 +7,7 @@ Every exported symbol in `src/components/wedding/`, file by file. The guide that
 ## Files
 
 - [`CelebrationSwitcher.tsx`](#celebrationswitchertsx) (1 exports)
+- [`MyWeddingScreen.tsx`](#myweddingscreentsx) (1 exports)
 - [`WeddingParts.tsx`](#weddingpartstsx) (10 exports)
 
 ## CelebrationSwitcher.tsx
@@ -24,6 +25,22 @@ CelebrationSwitcher()
 The couple's celebrations side by side (a wedding now, a pasni later). The
 planner works on the one picked here; "Plan another" runs the onboarding
 questions again and adds a project.
+
+## MyWeddingScreen.tsx
+
+Source: [src/components/wedding/MyWeddingScreen.tsx](../../../src/components/wedding/MyWeddingScreen.tsx)
+
+### `MyWeddingScreen`
+
+*component* · [src/components/wedding/MyWeddingScreen.tsx:486](../../../src/components/wedding/MyWeddingScreen.tsx#L486)
+
+```ts
+MyWeddingScreen({ inTab }: { inTab?: boolean })
+```
+
+The couple's single workspace for the whole wedding project. It is both the
+"My wedding" tab (`inTab`: no back button, the tab bar sits below) and the
+`/my-wedding` stack screen that deep links and notifications open.
 
 ## WeddingParts.tsx
 
@@ -54,14 +71,14 @@ _No JSDoc yet._
 *component* · [src/components/wedding/WeddingParts.tsx:35](../../../src/components/wedding/WeddingParts.tsx#L35)
 
 ```ts
-WeddingHero({ project, shared, onBack, actions, }: { project: Project; shared?: boolean; onBack: () => void; actions?: { icon: 'calendar-outline' | 'globe-outline' | 'share-outline'; label: string; onPress: () => void }[]; })
+WeddingHero({ project, shared, onBack, actions, }: { project: Project; shared?: boolean; /** Omit when the screen is a tab: there is nowhere to go back to. */ onBack?: () => void; actions?: { icon: 'calendar-outline' | 'globe-outli…)
 ```
 
 Full-bleed photo header with the couple's names set over a dark scrim.
 
 ### `ProgressRing`
 
-*component* · [src/components/wedding/WeddingParts.tsx:83](../../../src/components/wedding/WeddingParts.tsx#L83)
+*component* · [src/components/wedding/WeddingParts.tsx:84](../../../src/components/wedding/WeddingParts.tsx#L84)
 
 ```ts
 ProgressRing({ value, size = 68, stroke = 6, children }: { value: number; size?: number; stroke?: number; children?: ReactNode })
@@ -71,7 +88,7 @@ Circular progress; animates to its value on mount and on change.
 
 ### `CountdownCard`
 
-*component* · [src/components/wedding/WeddingParts.tsx:126](../../../src/components/wedding/WeddingParts.tsx#L126)
+*component* · [src/components/wedding/WeddingParts.tsx:127](../../../src/components/wedding/WeddingParts.tsx#L127)
 
 ```ts
 CountdownCard({ project, onSetDate }: { project: Project; onSetDate: () => void })
@@ -81,7 +98,7 @@ Countdown, overall progress and the four numbers couples check most.
 
 ### `Section`
 
-*component* · [src/components/wedding/WeddingParts.tsx:190](../../../src/components/wedding/WeddingParts.tsx#L190)
+*component* · [src/components/wedding/WeddingParts.tsx:191](../../../src/components/wedding/WeddingParts.tsx#L191)
 
 ```ts
 Section({ title, action, onAction, children }: { title: string; action?: string; onAction?: () => void; children: ReactNode })
@@ -91,7 +108,7 @@ Section heading with an optional text action on the right.
 
 ### `FunctionsStrip`
 
-*component* · [src/components/wedding/WeddingParts.tsx:211](../../../src/components/wedding/WeddingParts.tsx#L211)
+*component* · [src/components/wedding/WeddingParts.tsx:212](../../../src/components/wedding/WeddingParts.tsx#L212)
 
 ```ts
 FunctionsStrip({ project, onOpen }: { project: Project; onOpen: () => void })
@@ -101,7 +118,7 @@ Horizontal run of the wedding functions, next one highlighted.
 
 ### `ServicesSummary`
 
-*component* · [src/components/wedding/WeddingParts.tsx:271](../../../src/components/wedding/WeddingParts.tsx#L271)
+*component* · [src/components/wedding/WeddingParts.tsx:272](../../../src/components/wedding/WeddingParts.tsx#L272)
 
 ```ts
 ServicesSummary({ project, onOpen, limit = 5 }: { project: Project; onOpen: () => void; limit?: number })
@@ -111,7 +128,7 @@ Booked / in progress / searching, as one bar plus the first few services.
 
 ### `MoneyCard`
 
-*component* · [src/components/wedding/WeddingParts.tsx:345](../../../src/components/wedding/WeddingParts.tsx#L345)
+*component* · [src/components/wedding/WeddingParts.tsx:346](../../../src/components/wedding/WeddingParts.tsx#L346)
 
 ```ts
 MoneyCard({ project, onOpen }: { project: Project; onOpen: () => void })
@@ -121,7 +138,7 @@ Paid vs. total and the next instalment; the budget before a quotation exists.
 
 ### `PeopleRow`
 
-*component* · [src/components/wedding/WeddingParts.tsx:404](../../../src/components/wedding/WeddingParts.tsx#L404)
+*component* · [src/components/wedding/WeddingParts.tsx:405](../../../src/components/wedding/WeddingParts.tsx#L405)
 
 ```ts
 PeopleRow({ project, onOpen }: { project: Project; onOpen: () => void })

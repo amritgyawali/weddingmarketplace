@@ -38,8 +38,8 @@ for (const [role, top] of Object.entries(f.TOP_FEATURES)) {
   ok(`${role}: top ids exist in this app`, unknown.length === 0, unknown.join(', '));
   const offTop = ids.filter((id) => !id.startsWith('core.') && !f.featureOn({}, id));
   ok(`${role}: top features start on`, offTop.length === 0, offTop.join(', '));
-  // Nothing outside the top 20 is on by default (home sections are layout, not features).
-  const loose = f.FEATURES.filter((x) => x.role === role && x.group !== 'Home' && !ids.includes(x.id) && f.featureOn({}, x.id)).map((x) => x.id);
+  // Nothing outside the top 20 is on by default (home sections are layout, not features; basics aren't counted).
+  const loose = f.FEATURES.filter((x) => x.role === role && x.group !== 'Home' && !f.BASIC_FEATURES.has(x.id) && !ids.includes(x.id) && f.featureOn({}, x.id)).map((x) => x.id);
   ok(`${role}: every other switch is an extra`, loose.length === 0, loose.join(', '));
   const bundled = new Set([...f.TRADE_TOOLS, ...f.CRAFT_TOOLS]);
   const onTools = TOOLS[role].filter((t) => f.featureOn({}, f.toolFeature(t)) && !ids.includes(f.toolFeature(t)) && !bundled.has(t));

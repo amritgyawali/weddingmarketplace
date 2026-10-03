@@ -28,7 +28,8 @@ export const FEATURES: FeatureDef[] = [
   { id: 'tab.customer.venues', label: 'Venues tab', role: 'customer', group: 'Tabs' },
   { id: 'tab.customer.vendors', label: 'Vendors tab', role: 'customer', group: 'Tabs' },
   { id: 'tab.customer.ideas', label: 'Ideas tab', role: 'customer', group: 'Tabs' },
-  { id: 'tab.customer.genie', label: 'Planner tab', role: 'customer', group: 'Tabs', hint: 'Paid planner packages' },
+  { id: 'tab.customer.wedding', label: 'My wedding tab', role: 'customer', group: 'Tabs', hint: "The couple's plan, quotes and payments" },
+  { id: 'tab.customer.genie', label: 'Planner packages', role: 'customer', group: 'Tabs', hint: 'Paid planner packages: the home banner and the menu entry' },
   { id: 'home.categories', label: 'Category shortcuts', role: 'customer', group: 'Home' },
   { id: 'home.planning', label: 'Your planning grid', role: 'customer', group: 'Home' },
   { id: 'home.venues', label: 'Venues carousel', role: 'customer', group: 'Home' },
@@ -43,6 +44,7 @@ export const FEATURES: FeatureDef[] = [
   { id: 'couple.messages', label: 'Messages', role: 'customer', group: 'Features' },
   { id: 'couple.tools', label: 'Planning tools hub', role: 'customer', group: 'Features' },
   { id: 'couple.celebrate', label: 'Plan another celebration', role: 'customer', group: 'Features' },
+  { id: 'couple.tour', label: 'First-run app tour', role: 'customer', group: 'Features', hint: 'Small cards that explain search, the tabs, messages and the menu on first open' },
   { id: 'couple.bookings', label: 'Enquiries and bookings', role: 'customer', group: 'Screens' },
   { id: 'couple.shortlist', label: 'Shortlist', role: 'customer', group: 'Screens' },
   { id: 'couple.budget', label: 'Budget', role: 'customer', group: 'Screens' },
@@ -125,7 +127,7 @@ export const TOP_FEATURES: Record<UserRole, TopFeature[]> = {
     { id: 'tab.customer.ideas', label: 'Ideas' },
     { id: 'couple.search', label: 'Search' },
     { id: 'couple.messages', label: 'Messages' },
-    { id: 'core.customer.wedding', label: 'My Wedding: plan, quotes and payments' },
+    { id: 'tab.customer.wedding', label: 'My Wedding: plan, quotes and payments' },
     { id: 'couple.bookings', label: 'Enquiries and bookings' },
     { id: 'couple.shortlist', label: 'Shortlist' },
     { id: 'couple.budget', label: 'Budget' },
@@ -213,6 +215,12 @@ export const TOP_FEATURES: Record<UserRole, TopFeature[]> = {
 export const TRADE_TOOLS = ['vendor.menu', 'vendor.themes', 'vendor.gallery', 'vendor.trials', 'vendor.requests', 'vendor.power', 'vendor.fleet', 'vendor.fittings', 'vendor.muhurta'];
 /** The kit tool each craft gets by default ("core.freelancer.craftkit"); crew see only their craft's. */
 export const CRAFT_TOOLS = ['freelancer.backup', 'freelancer.kit', 'freelancer.setlist', 'freelancer.vehicle'];
+
+/**
+ * Switches that come with the app like the account basics: on by default and
+ * not counted in the top 20. The first-run tour only explains the app.
+ */
+export const BASIC_FEATURES = new Set(['couple.tour']);
 
 /** Fixed surfaces that start hidden: extras a super admin can switch on. */
 export const EXTRA_FEATURES = new Set([
