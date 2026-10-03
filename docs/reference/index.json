@@ -660,6 +660,20 @@
    "doc": ""
   },
   {
+   "path": "/platform/admin/bug/[id]",
+   "kind": "screen",
+   "file": "src/app/platform/admin/bug/[id].tsx",
+   "component": "",
+   "doc": ""
+  },
+  {
+   "path": "/platform/admin/bugs",
+   "kind": "screen",
+   "file": "src/app/platform/admin/bugs.tsx",
+   "component": "",
+   "doc": ""
+  },
+  {
    "path": "/platform/admin/collection/[name]",
    "kind": "screen",
    "file": "src/app/platform/admin/collection/[name].tsx",
@@ -2396,6 +2410,32 @@
    ]
   },
   {
+   "file": "src/app/platform/admin/bug/[id].tsx",
+   "doc": "",
+   "exports": [
+    {
+     "name": "default",
+     "kind": "default",
+     "line": 166,
+     "signature": "staffScreen('/platform/admin/bug', BugReportDetail)",
+     "doc": ""
+    }
+   ]
+  },
+  {
+   "file": "src/app/platform/admin/bugs.tsx",
+   "doc": "",
+   "exports": [
+    {
+     "name": "default",
+     "kind": "default",
+     "line": 86,
+     "signature": "staffScreen('/platform/admin/bugs', BugReports)",
+     "doc": ""
+    }
+   ]
+  },
+  {
    "file": "src/app/platform/admin/collection/[name].tsx",
    "doc": "",
    "exports": [
@@ -2441,7 +2481,7 @@
     {
      "name": "default",
      "kind": "default",
-     "line": 101,
+     "line": 104,
      "signature": "staffScreen('/platform/admin', AdminHome)",
      "doc": ""
     }
@@ -3374,173 +3414,119 @@
   },
   {
    "file": "src/backend/bugReport.ts",
-   "doc": "Bug reports: the payload the shake-to-report sheet sends, where it goes, and the little history kept for it (recent screens, console errors). Reports go to the bug inbox (`scripts/bug-inbox.cjs`), which writes them into the project's `bug-reports/` folder. In development the inbox runs inside `npx expo start`, so the app finds it at the dev server's address; an installed test build (EXPO_PUBLIC_BUG_REPORTS=on) sends to `npm run bugs:inbox` at EXPO_PUBLIC_BUG_INBOX_URL, or at the address typed in Settings → Help on the phone. Store builds have none of these, and the feature stays hidden.",
+   "doc": "Bug reports: the payload the shake-to-report sheet sends, where it goes, and the little history kept for it (recent screens, console errors). Every build, for everyone (signed in or not), saves the report in the app's backend, where super admins read it (Super admin → Bug reports): - mock (the demo, Expo Go): the store's `bugReports`, with the screenshot as a file in the app's documents folder (`submitBugReport`); - supabase: `rpc_submit_bug_report` (supabase/migrations/0019_bug_reports.sql). Development and test builds also send it to the bug inbox on the developer's computer (`scripts/bug-i…",
    "exports": [
+    {
+     "name": "BugLogLine, BugReport",
+     "kind": "re-export",
+     "line": 34,
+     "signature": "from '@/types/platform'",
+     "doc": ""
+    },
     {
      "name": "BUG_INBOX_PATH",
      "kind": "const",
-     "line": 22,
+     "line": 37,
      "signature": "= '/__vivah/bug-report'",
      "doc": "Same path as `BUG_INBOX_PATH` in scripts/bug-inbox.cjs."
     },
     {
-     "name": "BugLogLine",
-     "kind": "interface",
-     "line": 24,
-     "signature": "",
-     "doc": "",
-     "members": [
-      {
-       "name": "at",
-       "optional": false,
-       "type": "string",
-       "doc": ""
-      },
-      {
-       "name": "level",
-       "optional": false,
-       "type": "'error' | 'warn'",
-       "doc": ""
-      },
-      {
-       "name": "message",
-       "optional": false,
-       "type": "string",
-       "doc": ""
-      }
-     ]
-    },
-    {
-     "name": "BugReport",
-     "kind": "interface",
-     "line": 30,
-     "signature": "",
-     "doc": "",
-     "members": [
-      {
-       "name": "description",
-       "optional": false,
-       "type": "string",
-       "doc": ""
-      },
-      {
-       "name": "screenshot",
-       "optional": true,
-       "type": "string",
-       "doc": "PNG or JPEG as a data URI."
-      },
-      {
-       "name": "route",
-       "optional": false,
-       "type": "string",
-       "doc": ""
-      },
-      {
-       "name": "params",
-       "optional": false,
-       "type": "Record<string, string>",
-       "doc": ""
-      },
-      {
-       "name": "capturedAt",
-       "optional": false,
-       "type": "string",
-       "doc": ""
-      },
-      {
-       "name": "account",
-       "optional": true,
-       "type": "{ id: string; name: string; role: string; staffRole?: string }",
-       "doc": ""
-      },
-      {
-       "name": "device",
-       "optional": false,
-       "type": "{ os: string; osVersion: string; width: number; height: number; scale: number; runtime: string; userAgent?: string }",
-       "doc": ""
-      },
-      {
-       "name": "app",
-       "optional": false,
-       "type": "{ name: string; version: string; backend: string; language: string; calendar: string }",
-       "doc": ""
-      },
-      {
-       "name": "recentRoutes",
-       "optional": false,
-       "type": "{ at: string; path: string }[]",
-       "doc": ""
-      },
-      {
-       "name": "logs",
-       "optional": false,
-       "type": "BugLogLine[]",
-       "doc": ""
-      }
-     ]
-    },
-    {
      "name": "setDeviceBugInbox",
      "kind": "function",
-     "line": 48,
+     "line": 46,
      "signature": "(address: string | undefined)",
      "doc": "The inbox address typed in Settings → Help on this device; it wins over the build's own."
     },
     {
      "name": "defaultBugInbox",
      "kind": "function",
-     "line": 68,
+     "line": 66,
      "signature": "()",
      "doc": "The address used when the device has none of its own: the dev server, else the build's EXPO_PUBLIC_BUG_INBOX_URL."
     },
     {
      "name": "bugInboxUrl",
      "kind": "function",
-     "line": 71,
+     "line": 69,
      "signature": "(): string | undefined",
      "doc": "Where reports go, or undefined when there is nowhere to send them yet."
     },
     {
      "name": "bugReportsAvailable",
      "kind": "function",
-     "line": 74,
+     "line": 72,
      "signature": "()",
-     "doc": "Does this build offer bug reports? Development builds, and test builds with EXPO_PUBLIC_BUG_REPORTS=on or an inbox URL."
+     "doc": "Every build offers bug reports, to everyone: they are saved in the app's backend. A super admin can switch them off (`app.bug_report`)."
+    },
+    {
+     "name": "devInboxOffered",
+     "kind": "function",
+     "line": 75,
+     "signature": "()",
+     "doc": "Do reports also go to a developer's computer? Development builds, and test builds with EXPO_PUBLIC_BUG_REPORTS=on or an inbox URL. Settings → Help shows the inbox address only then."
     },
     {
      "name": "pingBugInbox",
      "kind": "function",
-     "line": 77,
+     "line": 78,
      "signature": "(): Promise<Result<string>>",
      "doc": "Checks that the inbox answers, for Settings → Help. Resolves to the address it reached."
     },
     {
      "name": "recordRoute",
      "kind": "function",
-     "line": 100,
+     "line": 101,
      "signature": "(path: string)",
      "doc": "Remembers a visited screen for the next report."
     },
     {
      "name": "captureConsole",
      "kind": "function",
-     "line": 118,
+     "line": 119,
      "signature": "()",
      "doc": "Keeps the last console errors and warnings so a report shows what went wrong under the hood. Idempotent."
     },
     {
      "name": "reportContext",
      "kind": "function",
-     "line": 138,
+     "line": 139,
      "signature": "(): Pick<BugReport, 'device' | 'recentRoutes' | 'logs'> & { appVersion: string }",
      "doc": "Device, app and history details that go with every report."
     },
     {
      "name": "sendBugReport",
      "kind": "function",
-     "line": 157,
+     "line": 243,
      "signature": "(report: BugReport): Promise<Result<string>>",
-     "doc": "Posts a report to the inbox. Resolves to the folder it was saved in."
+     "doc": "Sends a report: saved in the app's backend (super admin console) and, in\ndevelopment and test builds, also posted to the developer's bug inbox.\nResolves once at least one of them has it."
+    },
+    {
+     "name": "fetchBugReports",
+     "kind": "function",
+     "line": 261,
+     "signature": "(limit = 200): Promise<Result<BugReportRecord[]>>",
+     "doc": "The newest reports without their screenshots (super admins)."
+    },
+    {
+     "name": "fetchBugReport",
+     "kind": "function",
+     "line": 267,
+     "signature": "(id: string): Promise<Result<BugReportRecord | null>>",
+     "doc": "One report with its screenshot (super admins)."
+    },
+    {
+     "name": "saveBugReportStatus",
+     "kind": "function",
+     "line": 273,
+     "signature": "(id: string, status: BugReportStatus, note?: string): Promise<Result<void>>",
+     "doc": "Marks a report new, fixed or dismissed on the server (super admins)."
+    },
+    {
+     "name": "deleteBugReports",
+     "kind": "function",
+     "line": 279,
+     "signature": "(ids: string[]): Promise<Result<void>>",
+     "doc": "Deletes reports on the server (super admins)."
     }
    ]
   },
@@ -4480,6 +4466,26 @@
    ]
   },
   {
+   "file": "src/components/admin/bugs.ts",
+   "doc": "",
+   "exports": [
+    {
+     "name": "BUG_PILL",
+     "kind": "const",
+     "line": 5,
+     "signature": ": Record<BugReportStatus, { status: string; label: string }>",
+     "doc": "The status pill for a bug report (StatusPill colours by its own status names)."
+    },
+    {
+     "name": "reporterLine",
+     "kind": "function",
+     "line": 12,
+     "signature": "(r: BugReportRecord)",
+     "doc": "\"Aakriti Shrestha · Couple\", or \"Signed out\"."
+    }
+   ]
+  },
+  {
    "file": "src/components/admin/shared.tsx",
    "doc": "Building blocks of the super admin console: role names, collection metadata and a generic record editor.",
    "exports": [
@@ -4500,42 +4506,42 @@
     {
      "name": "COLLECTION_BY_KEY",
      "kind": "const",
-     "line": 59,
+     "line": 60,
      "signature": "= Object.fromEntries(COLLECTIONS.map((c) => [c.key, c])) as Record<keyof DbData, (typeof CO…",
      "doc": ""
     },
     {
      "name": "recordsOf",
      "kind": "function",
-     "line": 62,
+     "line": 63,
      "signature": "(value: unknown): [string, unknown][]",
      "doc": "Records of a collection as [id, value] pairs, whatever its shape."
     },
     {
      "name": "recordTitle",
      "kind": "function",
-     "line": 69,
+     "line": 70,
      "signature": "(id: string, value: unknown): string",
      "doc": "A one-line, human label for any record: its name, title, label… or its id."
     },
     {
      "name": "recordSubtitle",
      "kind": "function",
-     "line": 79,
+     "line": 80,
      "signature": "(value: unknown): string",
      "doc": "Second line under a record: a few short fields that help tell records apart."
     },
     {
      "name": "FieldEditor",
      "kind": "component",
-     "line": 96,
+     "line": 97,
      "signature": "({ name, value, onChange, locked }: { name: string; value: Value; onChange: (v: Value) => void; locked?: boolean })",
      "doc": "Edits one field of a record by its type: text, number, on/off, or JSON for\nlists and nested objects. Calls `onChange` with the parsed value, or\nreports the JSON error under the field."
     },
     {
      "name": "RecordFields",
      "kind": "component",
-     "line": 150,
+     "line": 151,
      "signature": "({ record, onChange, lockedKeys = [] }: { record: Record<string, Value>; onChange: (next: Record<string, Value>) => void; lockedKeys?: string[] })",
      "doc": "Groups a record's fields: simple ones first, then lists and nested objects."
     }
@@ -7054,33 +7060,33 @@
   },
   {
    "file": "src/components/ui/BugReporter.tsx",
-   "doc": "Shake to report a bug. Shaking the phone (or Alt+Shift+B on the web, or Settings → Report a problem) takes a screenshot of the screen exactly as it is, then opens a sheet to describe the problem. The report goes to the bug inbox on the developer's computer and lands in `bug-reports/` (see `backend/bugReport.ts` and `scripts/bug-inbox.cjs`). Only builds that have an inbox show it: development builds, and test builds with EXPO_PUBLIC_BUG_INBOX_URL. A super admin can switch it off (`app.bug_report`) and each device can turn shaking off in Settings.",
+   "doc": "Shake to report a bug. Shaking the phone (or Alt+Shift+B on the web, or Settings → Report a problem) takes a screenshot of the screen exactly as it is, then opens a sheet to describe the problem. It works on every screen of every role app, signed in or not, in every build. The report is saved in the app's backend for the super admins (Super admin → Bug reports) and, in development and test builds, also lands in the developer's `bug-reports/` folder (see `backend/bugReport.ts` and `scripts/bug-inbox.cjs`). A super admin can switch it off (`app.bug_report`) and each device can turn shaking off …",
    "exports": [
     {
      "name": "useBugReporter",
      "kind": "const",
-     "line": 61,
+     "line": 62,
      "signature": "= create<BugReporterState>()( persist( (set) => ({ shake: true, inbox: '', draft: null, set…",
      "doc": "The reporter's state: the open draft, and the device's shake setting and inbox address (persisted)."
     },
     {
      "name": "installBugReporter",
      "kind": "function",
-     "line": 83,
+     "line": 84,
      "signature": "()",
-     "doc": "Starts keeping console errors for reports, in builds that can send them. Root layout calls it once."
+     "doc": "Starts keeping console errors for reports. Root layout calls it once."
     },
     {
      "name": "reportBug",
      "kind": "function",
-     "line": 88,
+     "line": 89,
      "signature": "({ screenshot = true }: { screenshot?: boolean } = {})",
      "doc": "Screenshots the screen as it is now and opens the report sheet. `screenshot: false` opens it without one."
     },
     {
      "name": "BugReporterHost",
      "kind": "component",
-     "line": 115,
+     "line": 117,
      "signature": "()",
      "doc": "Follows the current screen, listens for shakes and shows the report sheet. Root layout only."
     }
@@ -8672,21 +8678,21 @@
     {
      "name": "ROUTE_AUDIENCE",
      "kind": "const",
-     "line": 177,
+     "line": 179,
      "signature": ": Record<string, string>",
      "doc": "Who a staff screen is for, in words (\"finance and admins\"), for the no-access message."
     },
     {
      "name": "TODAY_FOCUS",
      "kind": "const",
-     "line": 204,
+     "line": 206,
      "signature": ": { id: 'admin' | 'finance' | 'vendor_success' | 'support' | 'coordinator'; when: When }[]",
      "doc": "The staff member's focus on the Today screen, first match wins."
     },
     {
      "name": "SetupStepDef",
      "kind": "interface",
-     "line": 213,
+     "line": 215,
      "signature": "",
      "doc": "A step on the vendor home's setup checklist, shown until it is done.",
      "members": [
@@ -8737,14 +8743,14 @@
     {
      "name": "VENDOR_SETUP_STEPS",
      "kind": "const",
-     "line": 225,
+     "line": 227,
      "signature": ": SetupStepDef[]",
      "doc": ""
     },
     {
      "name": "UNIVERSAL_TOOLS",
      "kind": "function",
-     "line": 241,
+     "line": 243,
      "signature": "(Object.keys(TOOL_RULES) as ToolId[]).filter((id))",
      "doc": "Tool ids that are universal for their role on purpose (the registry check lists them)."
     }
@@ -9293,35 +9299,35 @@
     {
      "name": "FEATURE_BY_ID",
      "kind": "const",
-     "line": 65,
+     "line": 66,
      "signature": ": Record<string, FeatureDef>",
      "doc": ""
     },
     {
      "name": "toolFeature",
      "kind": "function",
-     "line": 67,
+     "line": 68,
      "signature": "(toolId: string)",
      "doc": ""
     },
     {
      "name": "serviceFeature",
      "kind": "function",
-     "line": 68,
+     "line": 69,
      "signature": "(serviceId: string)",
      "doc": ""
     },
     {
      "name": "tabFeature",
      "kind": "function",
-     "line": 69,
+     "line": 70,
      "signature": "(role: UserRole, tab: string)",
      "doc": ""
     },
     {
      "name": "featureOn",
      "kind": "function",
-     "line": 72,
+     "line": 73,
      "signature": "(flags: Record<string, boolean> | undefined, id: string)",
      "doc": "Is the feature on? Missing ids are on."
     }
@@ -9437,7 +9443,7 @@
      "name": "LEGAL_VERSION",
      "kind": "const",
      "line": 14,
-     "signature": "= '2026-10-01'",
+     "signature": "= '2026-10-03'",
      "doc": "The date of the current Terms and Privacy policy; stored with each acceptance."
     },
     {
@@ -9510,14 +9516,14 @@
     {
      "name": "LEGAL_DOCS",
      "kind": "const",
-     "line": 319,
+     "line": 320,
      "signature": ": Record<LegalDocId, LegalDoc>",
      "doc": ""
     },
     {
      "name": "isLegalDoc",
      "kind": "function",
-     "line": 321,
+     "line": 322,
      "signature": "(x: unknown): x is LegalDocId",
      "doc": ""
     }
@@ -10052,14 +10058,14 @@
     {
      "name": "contractSections",
      "kind": "function",
-     "line": 1840,
+     "line": 1841,
      "signature": "(provider: string, scope: string, amount: number): { heading: string; body: string }[]",
      "doc": ""
     },
     {
      "name": "DEMO_IMAGES",
      "kind": "const",
-     "line": 1853,
+     "line": 1854,
      "signature": ": PhotoKey[]",
      "doc": ""
     }
@@ -10830,6 +10836,33 @@
      "line": 86,
      "signature": "(ids: string[])",
      "doc": ""
+    }
+   ]
+  },
+  {
+   "file": "src/hooks/useBugReports.ts",
+   "doc": "",
+   "exports": [
+    {
+     "name": "useBugReports",
+     "kind": "hook",
+     "line": 18,
+     "signature": "(): { reports: BugReportRecord[]; loading: boolean; error?: string; refresh: () => void }",
+     "doc": "Bug reports for the super admin console: the server's on Supabase builds, the store's in the demo."
+    },
+    {
+     "name": "useBugReport",
+     "kind": "hook",
+     "line": 27,
+     "signature": "(id: string | undefined): { report?: BugReportRecord; loading: boolean; error?: string }",
+     "doc": "One report, with its screenshot."
+    },
+    {
+     "name": "useBugReportActions",
+     "kind": "hook",
+     "line": 36,
+     "signature": "()",
+     "doc": "Mark fixed / dismissed / new and delete; each resolves to an error to show, or null."
     }
    ]
   },
@@ -13510,14 +13543,14 @@
     {
      "name": "messageFor",
      "kind": "function",
-     "line": 200,
+     "line": 203,
      "signature": "(action: string): string | null",
      "doc": "\"addBudgetLine\" → \"Budget line added\"."
     },
     {
      "name": "installActionToasts",
      "kind": "function",
-     "line": 261,
+     "line": 264,
      "signature": "()",
      "doc": "Wraps the store actions once (root layout). Timers that call actions use `quietly()`."
     }
@@ -14165,42 +14198,42 @@
     {
      "name": "DbData",
      "kind": "re-export",
-     "line": 31,
+     "line": 32,
      "signature": "from './types'",
      "doc": ""
     },
     {
      "name": "Db",
      "kind": "type",
-     "line": 32,
-     "signature": "= DbData & CoreActions & QuoteActions & ProjectActions & FinanceActions & GigActions & ChatActions & TrustActions & PlannerActions & ToolkitActions & PersonaActions & AdminActions & SocialActions",
+     "line": 33,
+     "signature": "= DbData & CoreActions & QuoteActions & ProjectActions & FinanceActions & GigActions & ChatActions & TrustActions & PlannerActions & ToolkitActions & PersonaActions & AdminActions & SocialActions & SupportActions",
      "doc": ""
     },
     {
      "name": "useDb",
      "kind": "const",
-     "line": 95,
+     "line": 96,
      "signature": "= create<Db>()( persist( (set, get) => ({ ...buildSeedData(), ...coreActions(set, get), ...…",
      "doc": ""
     },
     {
      "name": "useInbox",
      "kind": "hook",
-     "line": 146,
+     "line": 149,
      "signature": "(account: Account)",
      "doc": "Notifications addressed to the account directly or to its whole role.\nSelects the stable array and filters in render — returning a fresh array\nfrom a zustand selector would re-render forever."
     },
     {
      "name": "useThreads",
      "kind": "hook",
-     "line": 152,
+     "line": 155,
      "signature": "(account: Account)",
      "doc": "Threads this account is a member of (platform staff see every thread)."
     },
     {
      "name": "useUnreadMessageCount",
      "kind": "hook",
-     "line": 164,
+     "line": 167,
      "signature": "(account: Account)",
      "doc": ""
     }
@@ -15263,6 +15296,60 @@
    ]
   },
   {
+   "file": "src/store/db/support.ts",
+   "doc": "Bug reports from shake to report. Anyone can send one, signed in or not, in every build; super admins read them in the console (Super admin → Bug reports), mark them fixed or dismissed and delete them. On Supabase builds the same use cases are rpc_submit_bug_report and friends (supabase/migrations/0019_bug_reports.sql).",
+   "exports": [
+    {
+     "name": "MAX_BUG_REPORTS",
+     "kind": "const",
+     "line": 16,
+     "signature": "= 200",
+     "doc": "Reports kept on the device; the oldest go first."
+    },
+    {
+     "name": "MAX_BUG_SCREENSHOTS",
+     "kind": "const",
+     "line": 18,
+     "signature": "= 20",
+     "doc": "Only the newest reports keep their screenshot, so the saved data stays small."
+    },
+    {
+     "name": "SupportActions",
+     "kind": "interface",
+     "line": 21,
+     "signature": "",
+     "doc": "",
+     "members": [
+      {
+       "name": "submitBugReport",
+       "optional": false,
+       "type": "(report: BugReport) => { id?: string; error?: string }",
+       "doc": "Saves a report from the report sheet and tells the super admins. Returns its id, or an error."
+      },
+      {
+       "name": "setBugReportStatus",
+       "optional": false,
+       "type": "(id: string, status: BugReportStatus, note?: string) => string | null",
+       "doc": "Marks a report new, fixed or dismissed (super admins). Returns an error to show, or null."
+      },
+      {
+       "name": "removeBugReports",
+       "optional": false,
+       "type": "(ids: string[]) => string | null",
+       "doc": "Deletes reports (super admins)."
+      }
+     ]
+    },
+    {
+     "name": "supportActions",
+     "kind": "function",
+     "line": 30,
+     "signature": "(set: SetDb, get: GetDb): SupportActions",
+     "doc": ""
+    }
+   ]
+  },
+  {
    "file": "src/store/db/toolkit.ts",
    "doc": "Role toolkits: generic tool records, per-owner tool settings and ops broadcasts.",
    "exports": [
@@ -15422,7 +15509,7 @@
     {
      "name": "DbData",
      "kind": "interface",
-     "line": 49,
+     "line": 50,
      "signature": "",
      "doc": "Everything the shared on-device \"backend\" persists. Mirrors the SQL schema.",
      "members": [
@@ -15695,6 +15782,12 @@
        "optional": false,
        "type": "Record<string, SocialSettings>",
        "doc": "Saved replies, auto-replies and away message, keyed by the business account id."
+      },
+      {
+       "name": "bugReports",
+       "optional": false,
+       "type": "BugReportRecord[]",
+       "doc": "Bug reports sent with shake to report, newest first (super admin console → Bug reports)."
       }
      ]
     }
@@ -22902,23 +22995,171 @@
      ]
     },
     {
+     "name": "BugLogLine",
+     "kind": "interface",
+     "line": 1138,
+     "signature": "",
+     "doc": "",
+     "members": [
+      {
+       "name": "at",
+       "optional": false,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "level",
+       "optional": false,
+       "type": "'error' | 'warn'",
+       "doc": ""
+      },
+      {
+       "name": "message",
+       "optional": false,
+       "type": "string",
+       "doc": ""
+      }
+     ]
+    },
+    {
+     "name": "BugReport",
+     "kind": "interface",
+     "line": 1145,
+     "signature": "",
+     "doc": "What the report sheet sends: the description, the screenshot and where it happened.",
+     "members": [
+      {
+       "name": "description",
+       "optional": false,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "screenshot",
+       "optional": true,
+       "type": "string",
+       "doc": "JPEG or PNG as a data URI (on this device's own copy it can be a file:// address instead)."
+      },
+      {
+       "name": "route",
+       "optional": false,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "params",
+       "optional": false,
+       "type": "Record<string, string>",
+       "doc": ""
+      },
+      {
+       "name": "capturedAt",
+       "optional": false,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "account",
+       "optional": true,
+       "type": "{ id: string; name: string; role: string; staffRole?: string }",
+       "doc": "Missing when the report was sent signed out."
+      },
+      {
+       "name": "device",
+       "optional": false,
+       "type": "{ os: string; osVersion: string; width: number; height: number; scale: number; runtime: string; userAgent?: string }",
+       "doc": ""
+      },
+      {
+       "name": "app",
+       "optional": false,
+       "type": "{ name: string; version: string; backend: string; language: string; calendar: string }",
+       "doc": ""
+      },
+      {
+       "name": "recentRoutes",
+       "optional": false,
+       "type": "{ at: string; path: string }[]",
+       "doc": ""
+      },
+      {
+       "name": "logs",
+       "optional": false,
+       "type": "BugLogLine[]",
+       "doc": ""
+      }
+     ]
+    },
+    {
+     "name": "BugReportStatus",
+     "kind": "type",
+     "line": 1160,
+     "signature": "= 'new' | 'fixed' | 'dismissed'",
+     "doc": ""
+    },
+    {
+     "name": "BugReportRecord",
+     "kind": "interface",
+     "line": 1163,
+     "signature": "extends BugReport",
+     "doc": "A bug report as the super admin console keeps it.",
+     "members": [
+      {
+       "name": "id",
+       "optional": false,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "receivedAt",
+       "optional": false,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "status",
+       "optional": false,
+       "type": "BugReportStatus",
+       "doc": ""
+      },
+      {
+       "name": "resolvedBy",
+       "optional": true,
+       "type": "string",
+       "doc": "Who marked it fixed or dismissed, and when."
+      },
+      {
+       "name": "resolvedAt",
+       "optional": true,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "note",
+       "optional": true,
+       "type": "string",
+       "doc": ""
+      }
+     ]
+    },
+    {
      "name": "*",
      "kind": "re-export",
-     "line": 1138,
+     "line": 1174,
      "signature": "from './toolkit'",
      "doc": ""
     },
     {
      "name": "*",
      "kind": "re-export",
-     "line": 1140,
+     "line": 1176,
      "signature": "from './social'",
      "doc": ""
     },
     {
      "name": "*",
      "kind": "re-export",
-     "line": 1142,
+     "line": 1178,
      "signature": "from './persona'",
      "doc": ""
     }

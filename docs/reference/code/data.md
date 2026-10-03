@@ -105,7 +105,7 @@ staff member can't use shows who it is for instead of opening.
 
 ### `ROUTE_AUDIENCE`
 
-*const* · [src/data/access.ts:177](../../../src/data/access.ts#L177)
+*const* · [src/data/access.ts:179](../../../src/data/access.ts#L179)
 
 ```ts
 ROUTE_AUDIENCE: Record<string, string>
@@ -115,7 +115,7 @@ Who a staff screen is for, in words ("finance and admins"), for the no-access me
 
 ### `TODAY_FOCUS`
 
-*const* · [src/data/access.ts:204](../../../src/data/access.ts#L204)
+*const* · [src/data/access.ts:206](../../../src/data/access.ts#L206)
 
 ```ts
 TODAY_FOCUS: { id: 'admin' | 'finance' | 'vendor_success' | 'support' | 'coordinator'; when: When }[]
@@ -125,7 +125,7 @@ The staff member's focus on the Today screen, first match wins.
 
 ### `SetupStepDef`
 
-*interface* · [src/data/access.ts:213](../../../src/data/access.ts#L213)
+*interface* · [src/data/access.ts:215](../../../src/data/access.ts#L215)
 
 A step on the vendor home's setup checklist, shown until it is done.
 
@@ -141,7 +141,7 @@ A step on the vendor home's setup checklist, shown until it is done.
 
 ### `VENDOR_SETUP_STEPS`
 
-*const* · [src/data/access.ts:225](../../../src/data/access.ts#L225)
+*const* · [src/data/access.ts:227](../../../src/data/access.ts#L227)
 
 ```ts
 VENDOR_SETUP_STEPS: SetupStepDef[]
@@ -151,7 +151,7 @@ _No JSDoc yet._
 
 ### `UNIVERSAL_TOOLS`
 
-*function* · [src/data/access.ts:241](../../../src/data/access.ts#L241)
+*function* · [src/data/access.ts:243](../../../src/data/access.ts#L243)
 
 ```ts
 UNIVERSAL_TOOLS(Object.keys(TOOL_RULES) as ToolId[]).filter((id))
@@ -737,7 +737,7 @@ _No JSDoc yet._
 
 ### `FEATURE_BY_ID`
 
-*const* · [src/data/features.ts:65](../../../src/data/features.ts#L65)
+*const* · [src/data/features.ts:66](../../../src/data/features.ts#L66)
 
 ```ts
 FEATURE_BY_ID: Record<string, FeatureDef>
@@ -747,7 +747,7 @@ _No JSDoc yet._
 
 ### `toolFeature`
 
-*function* · [src/data/features.ts:67](../../../src/data/features.ts#L67)
+*function* · [src/data/features.ts:68](../../../src/data/features.ts#L68)
 
 ```ts
 toolFeature(toolId: string)
@@ -757,7 +757,7 @@ _No JSDoc yet._
 
 ### `serviceFeature`
 
-*function* · [src/data/features.ts:68](../../../src/data/features.ts#L68)
+*function* · [src/data/features.ts:69](../../../src/data/features.ts#L69)
 
 ```ts
 serviceFeature(serviceId: string)
@@ -767,7 +767,7 @@ _No JSDoc yet._
 
 ### `tabFeature`
 
-*function* · [src/data/features.ts:69](../../../src/data/features.ts#L69)
+*function* · [src/data/features.ts:70](../../../src/data/features.ts#L70)
 
 ```ts
 tabFeature(role: UserRole, tab: string)
@@ -777,7 +777,7 @@ _No JSDoc yet._
 
 ### `featureOn`
 
-*function* · [src/data/features.ts:72](../../../src/data/features.ts#L72)
+*function* · [src/data/features.ts:73](../../../src/data/features.ts#L73)
 
 ```ts
 featureOn(flags: Record<string, boolean> | undefined, id: string)
@@ -935,7 +935,7 @@ sign-in (rpc_accept_legal).
 *const* · [src/data/legal.ts:14](../../../src/data/legal.ts#L14)
 
 ```ts
-LEGAL_VERSION= '2026-10-01'
+LEGAL_VERSION= '2026-10-03'
 ```
 
 The date of the current Terms and Privacy policy; stored with each acceptance.
@@ -977,7 +977,7 @@ _No JSDoc yet._
 
 ### `LEGAL_DOCS`
 
-*const* · [src/data/legal.ts:319](../../../src/data/legal.ts#L319)
+*const* · [src/data/legal.ts:320](../../../src/data/legal.ts#L320)
 
 ```ts
 LEGAL_DOCS: Record<LegalDocId, LegalDoc>
@@ -987,7 +987,7 @@ _No JSDoc yet._
 
 ### `isLegalDoc`
 
-*function* · [src/data/legal.ts:321](../../../src/data/legal.ts#L321)
+*function* · [src/data/legal.ts:322](../../../src/data/legal.ts#L322)
 
 ```ts
 isLegalDoc(x: unknown): x is LegalDocId
@@ -1433,7 +1433,7 @@ _No JSDoc yet._
 
 ### `contractSections`
 
-*function* · [src/data/seed.ts:1840](../../../src/data/seed.ts#L1840)
+*function* · [src/data/seed.ts:1841](../../../src/data/seed.ts#L1841)
 
 ```ts
 contractSections(provider: string, scope: string, amount: number): { heading: string; body: string }[]
@@ -1443,7 +1443,7 @@ _No JSDoc yet._
 
 ### `DEMO_IMAGES`
 
-*const* · [src/data/seed.ts:1853](../../../src/data/seed.ts#L1853)
+*const* · [src/data/seed.ts:1854](../../../src/data/seed.ts#L1854)
 
 ```ts
 DEMO_IMAGES: PhotoKey[]

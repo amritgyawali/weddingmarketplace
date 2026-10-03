@@ -8,7 +8,7 @@ Every exported symbol in `src/backend/`, file by file. The guide that explains h
 
 - [`account.ts`](#accountts) (8 exports) · The signed-in user's own records on Supabase: who they are (rpc_me), the first-time sign-up (rpc_complete_signup), and mirroring them into …
 - [`auth.ts`](#authts) (8 exports) · Sign-in for the Supabase backend (master plan §7.3). Owner decision: email OTP only for the first year, so every role signs in with a 6-dig…
-- [`bugReport.ts`](#bugreportts) (12 exports) · Bug reports: the payload the shake-to-report sheet sends, where it goes, and the little history kept for it (recent screens, console errors…
+- [`bugReport.ts`](#bugreportts) (16 exports) · Bug reports: the payload the shake-to-report sheet sends, where it goes, and the little history kept for it (recent screens, console errors…
 - [`files.ts`](#filests) (3 exports) · Private documents in Supabase Storage (master plan §7.4): KYC papers, contracts and invoices never sit on a public CDN. Each user writes un…
 - [`index.ts`](#indexts) (3 exports) · Picks the backend from EXPO_PUBLIC_BACKEND: `mock` (the default: the demo and Expo Go) or `supabase` (staging and production, once configur…
 - [`media.ts`](#mediats) (7 exports) · Images and short video on Cloudinary (master plan §7.4). Uploads are signed by the media-sign Edge Function, go straight from the phone to …
@@ -230,17 +230,34 @@ Source: [src/backend/bugReport.ts](../../../src/backend/bugReport.ts)
 Bug reports: the payload the shake-to-report sheet sends, where it goes,
 and the little history kept for it (recent screens, console errors).
 
-Reports go to the bug inbox (`scripts/bug-inbox.cjs`), which writes them
-into the project's `bug-reports/` folder. In development the inbox runs
-inside `npx expo start`, so the app finds it at the dev server's address;
-an installed test build (EXPO_PUBLIC_BUG_REPORTS=on) sends to
+Every build, for everyone (signed in or not), saves the report in the app's
+backend, where super admins read it (Super admin → Bug reports):
+
+  - mock (the demo, Expo Go): the store's `bugReports`, with the screenshot
+    as a file in the app's documents folder (`submitBugReport`);
+  - supabase: `rpc_submit_bug_report` (supabase/migrations/0019_bug_reports.sql).
+
+Development and test builds also send it to the bug inbox on the
+developer's computer (`scripts/bug-inbox.cjs`), which writes it into the
+project's `bug-reports/` folder. In development the inbox runs inside
+`npx expo start`, so the app finds it at the dev server's address; an
+installed test build (EXPO_PUBLIC_BUG_REPORTS=on) sends to
 `npm run bugs:inbox` at EXPO_PUBLIC_BUG_INBOX_URL, or at the address typed in
-Settings → Help on the phone. Store builds have none of these, and the
-feature stays hidden.
+Settings → Help on the phone.
+
+### `BugLogLine, BugReport`
+
+*re-export* · [src/backend/bugReport.ts:34](../../../src/backend/bugReport.ts#L34)
+
+```ts
+BugLogLine, BugReportfrom '@/types/platform'
+```
+
+_No JSDoc yet._
 
 ### `BUG_INBOX_PATH`
 
-*const* · [src/backend/bugReport.ts:22](../../../src/backend/bugReport.ts#L22)
+*const* · [src/backend/bugReport.ts:37](../../../src/backend/bugReport.ts#L37)
 
 ```ts
 BUG_INBOX_PATH= '/__vivah/bug-report'
@@ -248,40 +265,9 @@ BUG_INBOX_PATH= '/__vivah/bug-report'
 
 Same path as `BUG_INBOX_PATH` in scripts/bug-inbox.cjs.
 
-### `BugLogLine`
-
-*interface* · [src/backend/bugReport.ts:24](../../../src/backend/bugReport.ts#L24)
-
-_No JSDoc yet._
-
-| Member | Type | Notes |
-|---|---|---|
-| `at` | `string` |  |
-| `level` | `'error' \| 'warn'` |  |
-| `message` | `string` |  |
-
-### `BugReport`
-
-*interface* · [src/backend/bugReport.ts:30](../../../src/backend/bugReport.ts#L30)
-
-_No JSDoc yet._
-
-| Member | Type | Notes |
-|---|---|---|
-| `description` | `string` |  |
-| `screenshot?` | `string` | PNG or JPEG as a data URI. |
-| `route` | `string` |  |
-| `params` | `Record<string, string>` |  |
-| `capturedAt` | `string` |  |
-| `account?` | `{ id: string; name: string; role: string; staffRole?: string }` |  |
-| `device` | `{ os: string; osVersion: string; width: number; height: number; scale: number; runtime: string; userAgent?: string }` |  |
-| `app` | `{ name: string; version: string; backend: string; language: string; calendar: string }` |  |
-| `recentRoutes` | `{ at: string; path: string }[]` |  |
-| `logs` | `BugLogLine[]` |  |
-
 ### `setDeviceBugInbox`
 
-*function* · [src/backend/bugReport.ts:48](../../../src/backend/bugReport.ts#L48)
+*function* · [src/backend/bugReport.ts:46](../../../src/backend/bugReport.ts#L46)
 
 ```ts
 setDeviceBugInbox(address: string | undefined)
@@ -291,7 +277,7 @@ The inbox address typed in Settings → Help on this device; it wins over the bu
 
 ### `defaultBugInbox`
 
-*function* · [src/backend/bugReport.ts:68](../../../src/backend/bugReport.ts#L68)
+*function* · [src/backend/bugReport.ts:66](../../../src/backend/bugReport.ts#L66)
 
 ```ts
 defaultBugInbox()
@@ -301,7 +287,7 @@ The address used when the device has none of its own: the dev server, else the b
 
 ### `bugInboxUrl`
 
-*function* · [src/backend/bugReport.ts:71](../../../src/backend/bugReport.ts#L71)
+*function* · [src/backend/bugReport.ts:69](../../../src/backend/bugReport.ts#L69)
 
 ```ts
 bugInboxUrl(): string | undefined
@@ -311,17 +297,27 @@ Where reports go, or undefined when there is nowhere to send them yet.
 
 ### `bugReportsAvailable`
 
-*function* · [src/backend/bugReport.ts:74](../../../src/backend/bugReport.ts#L74)
+*function* · [src/backend/bugReport.ts:72](../../../src/backend/bugReport.ts#L72)
 
 ```ts
 bugReportsAvailable()
 ```
 
-Does this build offer bug reports? Development builds, and test builds with EXPO_PUBLIC_BUG_REPORTS=on or an inbox URL.
+Every build offers bug reports, to everyone: they are saved in the app's backend. A super admin can switch them off (`app.bug_report`).
+
+### `devInboxOffered`
+
+*function* · [src/backend/bugReport.ts:75](../../../src/backend/bugReport.ts#L75)
+
+```ts
+devInboxOffered()
+```
+
+Do reports also go to a developer's computer? Development builds, and test builds with EXPO_PUBLIC_BUG_REPORTS=on or an inbox URL. Settings → Help shows the inbox address only then.
 
 ### `pingBugInbox`
 
-*function* · [src/backend/bugReport.ts:77](../../../src/backend/bugReport.ts#L77)
+*function* · [src/backend/bugReport.ts:78](../../../src/backend/bugReport.ts#L78)
 
 ```ts
 pingBugInbox(): Promise<Result<string>>
@@ -331,7 +327,7 @@ Checks that the inbox answers, for Settings → Help. Resolves to the address it
 
 ### `recordRoute`
 
-*function* · [src/backend/bugReport.ts:100](../../../src/backend/bugReport.ts#L100)
+*function* · [src/backend/bugReport.ts:101](../../../src/backend/bugReport.ts#L101)
 
 ```ts
 recordRoute(path: string)
@@ -341,7 +337,7 @@ Remembers a visited screen for the next report.
 
 ### `captureConsole`
 
-*function* · [src/backend/bugReport.ts:118](../../../src/backend/bugReport.ts#L118)
+*function* · [src/backend/bugReport.ts:119](../../../src/backend/bugReport.ts#L119)
 
 ```ts
 captureConsole()
@@ -351,7 +347,7 @@ Keeps the last console errors and warnings so a report shows what went wrong und
 
 ### `reportContext`
 
-*function* · [src/backend/bugReport.ts:138](../../../src/backend/bugReport.ts#L138)
+*function* · [src/backend/bugReport.ts:139](../../../src/backend/bugReport.ts#L139)
 
 ```ts
 reportContext(): Pick<BugReport, 'device' | 'recentRoutes' | 'logs'> & { appVersion: string }
@@ -361,13 +357,55 @@ Device, app and history details that go with every report.
 
 ### `sendBugReport`
 
-*function* · [src/backend/bugReport.ts:157](../../../src/backend/bugReport.ts#L157)
+*function* · [src/backend/bugReport.ts:243](../../../src/backend/bugReport.ts#L243)
 
 ```ts
 sendBugReport(report: BugReport): Promise<Result<string>>
 ```
 
-Posts a report to the inbox. Resolves to the folder it was saved in.
+Sends a report: saved in the app's backend (super admin console) and, in
+development and test builds, also posted to the developer's bug inbox.
+Resolves once at least one of them has it.
+
+### `fetchBugReports`
+
+*function* · [src/backend/bugReport.ts:261](../../../src/backend/bugReport.ts#L261)
+
+```ts
+fetchBugReports(limit = 200): Promise<Result<BugReportRecord[]>>
+```
+
+The newest reports without their screenshots (super admins).
+
+### `fetchBugReport`
+
+*function* · [src/backend/bugReport.ts:267](../../../src/backend/bugReport.ts#L267)
+
+```ts
+fetchBugReport(id: string): Promise<Result<BugReportRecord | null>>
+```
+
+One report with its screenshot (super admins).
+
+### `saveBugReportStatus`
+
+*function* · [src/backend/bugReport.ts:273](../../../src/backend/bugReport.ts#L273)
+
+```ts
+saveBugReportStatus(id: string, status: BugReportStatus, note?: string): Promise<Result<void>>
+```
+
+Marks a report new, fixed or dismissed on the server (super admins).
+
+### `deleteBugReports`
+
+*function* · [src/backend/bugReport.ts:279](../../../src/backend/bugReport.ts#L279)
+
+```ts
+deleteBugReports(ids: string[]): Promise<Result<void>>
+```
+
+Deletes reports on the server (super admins).
 
 ## files.ts
 

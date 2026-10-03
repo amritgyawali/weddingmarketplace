@@ -1,13 +1,14 @@
 /**
  * Shake to report a bug. Shaking the phone (or Alt+Shift+B on the web, or
  * Settings → Report a problem) takes a screenshot of the screen exactly as it
- * is, then opens a sheet to describe the problem. The report goes to the bug
- * inbox on the developer's computer and lands in `bug-reports/` (see
- * `backend/bugReport.ts` and `scripts/bug-inbox.cjs`).
+ * is, then opens a sheet to describe the problem. It works on every screen of
+ * every role app, signed in or not, in every build. The report is saved in the
+ * app's backend for the super admins (Super admin → Bug reports) and, in
+ * development and test builds, also lands in the developer's `bug-reports/`
+ * folder (see `backend/bugReport.ts` and `scripts/bug-inbox.cjs`).
  *
- * Only builds that have an inbox show it: development builds, and test builds
- * with EXPO_PUBLIC_BUG_INBOX_URL. A super admin can switch it off
- * (`app.bug_report`) and each device can turn shaking off in Settings.
+ * A super admin can switch it off (`app.bug_report`) and each device can turn
+ * shaking off in Settings.
  */
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -79,7 +80,7 @@ useBugReporter.subscribe((s) => setDeviceBugInbox(s.inbox));
 let current: { path: string; params: Record<string, string> } = { path: '/', params: {} };
 let capturing = false;
 
-/** Starts keeping console errors for reports, in builds that can send them. Root layout calls it once. */
+/** Starts keeping console errors for reports. Root layout calls it once. */
 export function installBugReporter() {
   if (bugReportsAvailable()) captureConsole();
 }
@@ -93,8 +94,9 @@ export async function reportBug({ screenshot = true }: { screenshot?: boolean } 
     let shot: string | undefined;
     if (screenshot) {
       try {
-        const base64 = await captureScreen({ format: 'png', result: 'base64' });
-        shot = `data:image/png;base64,${base64}`;
+        // JPEG keeps the report small enough to send over a phone connection.
+        const base64 = await captureScreen({ format: 'jpg', quality: 0.7, result: 'base64' });
+        shot = `data:image/jpeg;base64,${base64}`;
       } catch {
         // The sheet still opens; a picture can be attached by hand.
       }
@@ -233,7 +235,7 @@ function ReportSheet({ draft }: { draft: Draft }) {
           error={error}
         />
         <Text size={12} color={colors.textMuted}>
-          The screenshot, this screen’s address, your account and device details go to the developer’s computer.
+          The screenshot, this screen’s address, your account and device details go to the Vivah team so they can fix it.
         </Text>
       </ScrollView>
     </Sheet>

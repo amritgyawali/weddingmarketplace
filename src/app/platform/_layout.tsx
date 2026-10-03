@@ -50,6 +50,8 @@ export default function PlatformLayout() {
         <Stack.Screen name="admin/features" />
         <Stack.Screen name="admin/texts" />
         <Stack.Screen name="admin/announcements" />
+        <Stack.Screen name="admin/bugs" />
+        <Stack.Screen name="admin/bug/[id]" />
       </Stack>
     </RoleThemeProvider>
   );

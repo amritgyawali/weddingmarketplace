@@ -6,6 +6,7 @@ import { staffScreen } from '@/components/persona/StaffGate';
 import { Hint, StatRow, ToolPage } from '@/components/toolkit/core';
 import { Text } from '@/components/ui/Text';
 import { toast } from '@/components/ui/Toast';
+import { usesSupabase } from '@/constants/env';
 import { FEATURES } from '@/data/features';
 import { useDb } from '@/store/useDb';
 import { useSession } from '@/store/useSession';
@@ -24,6 +25,7 @@ function AdminHome() {
   const overrides = useDb((s) => s.textOverrides);
   const announcements = useDb((s) => s.announcements);
   const projects = useDb((s) => s.projects);
+  const bugReports = useDb((s) => s.bugReports);
   const resetDemo = useDb((s) => s.resetDemo);
   const off = Object.values(flags).filter((v) => v === false).length;
   const count = (role: string) => accounts.filter((a) => a.role === role).length;
@@ -51,6 +53,7 @@ function AdminHome() {
       rows: [
         { icon: 'server-outline', title: 'All data', subtitle: `Every collection: ${projects.length} projects, quotes, payments, gigs, reviews… view, edit, add or delete any record`, href: '/platform/admin/data' },
         { icon: 'list-outline', title: 'Audit log', subtitle: 'Every change, who made it and when', href: '/platform/audit' },
+        { icon: 'bug-outline', title: 'Bug reports', subtitle: usesSupabase() ? 'Screenshots and descriptions people sent by shaking their phone' : `${bugReports.filter((r) => r.status === 'new').length} new · screenshots and descriptions people sent by shaking their phone`, href: '/platform/admin/bugs' },
       ],
     },
   ];
@@ -81,7 +84,7 @@ function AdminHome() {
           <ListRow
             icon="refresh-outline"
             title="Reset all demo data"
-            subtitle="Projects, quotes, payments, gigs and settings return to the seed. Accounts stay."
+            subtitle="Projects, quotes, payments, gigs and settings return to the seed. Accounts and bug reports stay."
             onPress={() =>
               confirm('Reset all demo data?', 'Everything except accounts returns to the seeded state, including feature switches and text changes.', 'Reset', () => {
                 const err = resetDemo();

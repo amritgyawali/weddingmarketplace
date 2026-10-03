@@ -4,7 +4,7 @@ import { StyleSheet, View } from 'react-native';
 
 import { deleteMyAccount, exportMyData } from '@/backend/account';
 import { usesEmailSignIn } from '@/backend/auth';
-import { bugReportsAvailable, defaultBugInbox, pingBugInbox } from '@/backend/bugReport';
+import { bugReportsAvailable, defaultBugInbox, devInboxOffered, pingBugInbox } from '@/backend/bugReport';
 import { Card, ChoiceChips, KButton, KField, ListRow, SectionTitle, StackHeader } from '@/components/kit';
 import { reportBug, useBugReporter } from '@/components/ui/BugReporter';
 import { Text } from '@/components/ui/Text';
@@ -206,20 +206,22 @@ export function SettingsScreen() {
             <Card padded={false} style={{ overflow: 'hidden' }}>
               <ListRow icon="bug-outline" title="Report a problem" subtitle="Or shake your phone on the screen that went wrong" onPress={() => void reportBug({ screenshot: false })} />
               {row('Shake to report a bug', shake, setShake, 'Takes a screenshot of the screen you are on')}
-              <View style={[styles.inbox, { borderTopColor: t.c.border }]}>
-                <KField
-                  label="Bug inbox address"
-                  value={inboxDraft}
-                  onChangeText={setInboxDraft}
-                  onEndEditing={() => setInbox(inboxDraft)}
-                  placeholder={defaultBugInbox() ?? '192.168.1.10:8790'}
-                  autoCapitalize="none"
-                  autoCorrect={false}
-                  keyboardType="url"
-                  hint="The computer running npx expo start or npm run bugs:inbox, on the same Wi-Fi. Leave empty to use the one shown."
-                />
-                <KButton label="Check connection" icon="wifi-outline" variant="secondary" size="sm" loading={checkingInbox} onPress={checkInbox} />
-              </View>
+              {devInboxOffered() && (
+                <View style={[styles.inbox, { borderTopColor: t.c.border }]}>
+                  <KField
+                    label="Bug inbox address"
+                    value={inboxDraft}
+                    onChangeText={setInboxDraft}
+                    onEndEditing={() => setInbox(inboxDraft)}
+                    placeholder={defaultBugInbox() ?? '192.168.1.10:8790'}
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                    keyboardType="url"
+                    hint="Test builds also send each report to this computer (npx expo start or npm run bugs:inbox, on the same Wi-Fi). Leave empty to use the one shown."
+                  />
+                  <KButton label="Check connection" icon="wifi-outline" variant="secondary" size="sm" loading={checkingInbox} onPress={checkInbox} />
+                </View>
+              )}
             </Card>
           </>
         )}

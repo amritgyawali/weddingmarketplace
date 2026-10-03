@@ -60,17 +60,18 @@ Source: [src/components/ui/BugReporter.tsx](../../../src/components/ui/BugReport
 
 Shake to report a bug. Shaking the phone (or Alt+Shift+B on the web, or
 Settings → Report a problem) takes a screenshot of the screen exactly as it
-is, then opens a sheet to describe the problem. The report goes to the bug
-inbox on the developer's computer and lands in `bug-reports/` (see
-`backend/bugReport.ts` and `scripts/bug-inbox.cjs`).
+is, then opens a sheet to describe the problem. It works on every screen of
+every role app, signed in or not, in every build. The report is saved in the
+app's backend for the super admins (Super admin → Bug reports) and, in
+development and test builds, also lands in the developer's `bug-reports/`
+folder (see `backend/bugReport.ts` and `scripts/bug-inbox.cjs`).
 
-Only builds that have an inbox show it: development builds, and test builds
-with EXPO_PUBLIC_BUG_INBOX_URL. A super admin can switch it off
-(`app.bug_report`) and each device can turn shaking off in Settings.
+A super admin can switch it off (`app.bug_report`) and each device can turn
+shaking off in Settings.
 
 ### `useBugReporter`
 
-*const* · [src/components/ui/BugReporter.tsx:61](../../../src/components/ui/BugReporter.tsx#L61)
+*const* · [src/components/ui/BugReporter.tsx:62](../../../src/components/ui/BugReporter.tsx#L62)
 
 ```ts
 useBugReporter= create<BugReporterState>()( persist( (set) => ({ shake: true, inbox: '', draft: null, set…
@@ -80,17 +81,17 @@ The reporter's state: the open draft, and the device's shake setting and inbox a
 
 ### `installBugReporter`
 
-*function* · [src/components/ui/BugReporter.tsx:83](../../../src/components/ui/BugReporter.tsx#L83)
+*function* · [src/components/ui/BugReporter.tsx:84](../../../src/components/ui/BugReporter.tsx#L84)
 
 ```ts
 installBugReporter()
 ```
 
-Starts keeping console errors for reports, in builds that can send them. Root layout calls it once.
+Starts keeping console errors for reports. Root layout calls it once.
 
 ### `reportBug`
 
-*function* · [src/components/ui/BugReporter.tsx:88](../../../src/components/ui/BugReporter.tsx#L88)
+*function* · [src/components/ui/BugReporter.tsx:89](../../../src/components/ui/BugReporter.tsx#L89)
 
 ```ts
 reportBug({ screenshot = true }: { screenshot?: boolean } = {})
@@ -100,7 +101,7 @@ Screenshots the screen as it is now and opens the report sheet. `screenshot: fal
 
 ### `BugReporterHost`
 
-*component* · [src/components/ui/BugReporter.tsx:115](../../../src/components/ui/BugReporter.tsx#L115)
+*component* · [src/components/ui/BugReporter.tsx:117](../../../src/components/ui/BugReporter.tsx#L117)
 
 ```ts
 BugReporterHost()

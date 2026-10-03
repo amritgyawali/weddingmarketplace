@@ -5,7 +5,7 @@
  *
  *   README.md       what happened, the screen, the account, the device, recent
  *                   screens and console errors, with the screenshot embedded
- *   screenshot.png  the screen exactly as it was when the phone was shaken
+ *   screenshot.jpg  the screen exactly as it was when the phone was shaken (.png for older builds)
  *   report.json     the raw report, for scripts
  *
  * and adds an unticked line to `bug-reports/INDEX.md`.

@@ -2,46 +2,44 @@
  * Bug reports: the payload the shake-to-report sheet sends, where it goes,
  * and the little history kept for it (recent screens, console errors).
  *
- * Reports go to the bug inbox (`scripts/bug-inbox.cjs`), which writes them
- * into the project's `bug-reports/` folder. In development the inbox runs
- * inside `npx expo start`, so the app finds it at the dev server's address;
- * an installed test build (EXPO_PUBLIC_BUG_REPORTS=on) sends to
+ * Every build, for everyone (signed in or not), saves the report in the app's
+ * backend, where super admins read it (Super admin → Bug reports):
+ *
+ *   - mock (the demo, Expo Go): the store's `bugReports`, with the screenshot
+ *     as a file in the app's documents folder (`submitBugReport`);
+ *   - supabase: `rpc_submit_bug_report` (supabase/migrations/0019_bug_reports.sql).
+ *
+ * Development and test builds also send it to the bug inbox on the
+ * developer's computer (`scripts/bug-inbox.cjs`), which writes it into the
+ * project's `bug-reports/` folder. In development the inbox runs inside
+ * `npx expo start`, so the app finds it at the dev server's address; an
+ * installed test build (EXPO_PUBLIC_BUG_REPORTS=on) sends to
  * `npm run bugs:inbox` at EXPO_PUBLIC_BUG_INBOX_URL, or at the address typed in
- * Settings → Help on the phone. Store builds have none of these, and the
- * feature stays hidden.
+ * Settings → Help on the phone.
  */
 import Constants, { ExecutionEnvironment } from 'expo-constants';
+import { Directory, File, Paths } from 'expo-file-system';
 import { Dimensions, PixelRatio, Platform } from 'react-native';
 
-import { ENV } from '@/constants/env';
 import { BRAND } from '@/constants/brand';
+import { ENV, usesSupabase } from '@/constants/env';
+import { useDb } from '@/store/useDb';
+import type { BugLogLine, BugReport, BugReportRecord, BugReportStatus } from '@/types/platform';
+import { uid } from '@/utils/format';
 
+import { getAccessToken } from './auth';
+import { rpc } from './supabase';
 import { failResult, okResult, type Result } from './types';
+
+export type { BugLogLine, BugReport } from '@/types/platform';
 
 /** Same path as `BUG_INBOX_PATH` in scripts/bug-inbox.cjs. */
 export const BUG_INBOX_PATH = '/__vivah/bug-report';
 
-export interface BugLogLine {
-  at: string;
-  level: 'error' | 'warn';
-  message: string;
-}
-
-export interface BugReport {
-  description: string;
-  /** PNG or JPEG as a data URI. */
-  screenshot?: string;
-  route: string;
-  params: Record<string, string>;
-  capturedAt: string;
-  account?: { id: string; name: string; role: string; staffRole?: string };
-  device: { os: string; osVersion: string; width: number; height: number; scale: number; runtime: string; userAgent?: string };
-  app: { name: string; version: string; backend: string; language: string; calendar: string };
-  recentRoutes: { at: string; path: string }[];
-  logs: BugLogLine[];
-}
-
 const UNREACHABLE = 'Couldn’t reach the developer’s computer. Is the dev server running on the same Wi-Fi?';
+const OFFLINE = 'No connection. Check your internet and try again.';
+/** Same limit as the screenshot check in 0019_bug_reports.sql. */
+const MAX_SCREENSHOT_CHARS = 3_000_000;
 
 let deviceInbox: string | undefined;
 /** The inbox address typed in Settings → Help on this device; it wins over the build's own. */
@@ -70,8 +68,11 @@ export const defaultBugInbox = () => devServerInbox() ?? (ENV.bugInboxUrl ? inbo
 /** Where reports go, or undefined when there is nowhere to send them yet. */
 export const bugInboxUrl = (): string | undefined => (deviceInbox ? inboxAt(deviceInbox) : defaultBugInbox());
 
-/** Does this build offer bug reports? Development builds, and test builds with EXPO_PUBLIC_BUG_REPORTS=on or an inbox URL. */
-export const bugReportsAvailable = () => __DEV__ || ENV.bugReports || !!ENV.bugInboxUrl;
+/** Every build offers bug reports, to everyone: they are saved in the app's backend. A super admin can switch them off (`app.bug_report`). */
+export const bugReportsAvailable = () => true;
+
+/** Do reports also go to a developer's computer? Development builds, and test builds with EXPO_PUBLIC_BUG_REPORTS=on or an inbox URL. Settings → Help shows the inbox address only then. */
+export const devInboxOffered = () => __DEV__ || ENV.bugReports || !!ENV.bugInboxUrl;
 
 /** Checks that the inbox answers, for Settings → Help. Resolves to the address it reached. */
 export async function pingBugInbox(): Promise<Result<string>> {
@@ -153,19 +154,16 @@ export function reportContext(): Pick<BugReport, 'device' | 'recentRoutes' | 'lo
   };
 }
 
-/** Posts a report to the inbox. Resolves to the folder it was saved in. */
-export async function sendBugReport(report: BugReport): Promise<Result<string>> {
-  const url = bugInboxUrl();
-  if (!url) return failResult('Add the bug inbox address in Settings → Help first');
+// Where reports are saved -------------------------------------------------------
+
+const withName = (report: BugReport): BugReport => ({ ...report, app: { ...report.app, name: report.app.name || BRAND.name } });
+
+/** Posts a report to the developer's bug inbox. Resolves to the folder it was saved in. */
+async function postToInbox(url: string, report: BugReport): Promise<Result<string>> {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), 30_000);
   try {
-    const res = await fetch(url, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ ...report, app: { ...report.app, name: report.app.name || BRAND.name } }),
-      signal: controller.signal,
-    });
+    const res = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(report), signal: controller.signal });
     const body = (await res.json().catch(() => null)) as { ok?: boolean; folder?: string; error?: string } | null;
     if (!res.ok || !body?.ok) return failResult(body?.error ?? `The bug inbox answered ${res.status}`);
     return okResult(body.folder ?? '');
@@ -174,4 +172,111 @@ export async function sendBugReport(report: BugReport): Promise<Result<string>> 
   } finally {
     clearTimeout(timer);
   }
+}
+
+const SHOTS_DIR = 'bug-reports';
+
+/** Keeps the screenshot as a file in the app's documents folder; the store holds only its address. The web demo keeps none (its storage is too small). */
+function keepScreenshotFile(dataUri: string | undefined): string | undefined {
+  if (!dataUri || Platform.OS === 'web') return undefined;
+  if (!dataUri.startsWith('data:')) return dataUri;
+  try {
+    const ext = dataUri.startsWith('data:image/png') ? 'png' : 'jpg';
+    const file = new File(Paths.document, SHOTS_DIR, `${uid('shot')}.${ext}`);
+    file.create({ intermediates: true, overwrite: true });
+    file.write(dataUri.slice(dataUri.indexOf(',') + 1), { encoding: 'base64' });
+    return file.uri;
+  } catch {
+    return undefined;
+  }
+}
+
+/** Deletes screenshot files no saved report points at any more (older reports drop theirs). */
+function pruneScreenshotFiles() {
+  if (Platform.OS === 'web') return;
+  try {
+    const dir = new Directory(Paths.document, SHOTS_DIR);
+    if (!dir.exists) return;
+    const kept = new Set(useDb.getState().bugReports.map((r) => r.screenshot).filter(Boolean));
+    for (const item of dir.list()) if (item instanceof File && !kept.has(item.uri)) item.delete();
+  } catch {
+    // Housekeeping only.
+  }
+}
+
+/** The demo backend: the store, on this device. */
+function saveOnDevice(report: BugReport): Result<string> {
+  const saved = useDb.getState().submitBugReport({ ...report, screenshot: keepScreenshotFile(report.screenshot) });
+  if (!saved.id) return failResult(saved.error ?? 'The report could not be saved');
+  pruneScreenshotFiles();
+  return okResult(saved.id);
+}
+
+/** Supabase: rpc_submit_bug_report, as the signed-in user or signed out (the publishable key). */
+async function saveOnServer(report: BugReport): Promise<Result<string>> {
+  const key = ENV.supabasePublishableKey ?? '';
+  const token = (await getAccessToken().catch(() => null)) ?? key;
+  const payload = report.screenshot && report.screenshot.length > MAX_SCREENSHOT_CHARS ? { ...report, screenshot: undefined } : report;
+  try {
+    const res = await fetch(`${ENV.supabaseUrl}/rest/v1/rpc/rpc_submit_bug_report`, {
+      method: 'POST',
+      headers: { apikey: key, Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ p_report: payload }),
+    });
+    const text = await res.text();
+    const body: unknown = text ? JSON.parse(text) : null;
+    if (!res.ok) {
+      const message = body && typeof body === 'object' && 'message' in body ? String((body as { message: unknown }).message) : '';
+      return failResult(message || `Request failed (${res.status})`);
+    }
+    return okResult(String(body));
+  } catch {
+    return failResult(OFFLINE);
+  }
+}
+
+/**
+ * Sends a report: saved in the app's backend (super admin console) and, in
+ * development and test builds, also posted to the developer's bug inbox.
+ * Resolves once at least one of them has it.
+ */
+export async function sendBugReport(report: BugReport): Promise<Result<string>> {
+  const full = withName(report);
+  const inbox = devInboxOffered() ? bugInboxUrl() : undefined;
+  const [saved, posted] = await Promise.all([usesSupabase() ? saveOnServer(full) : Promise.resolve(saveOnDevice(full)), inbox ? postToInbox(inbox, full) : Promise.resolve(null)]);
+  if (saved.ok) return saved;
+  if (posted?.ok) return posted;
+  return failResult(saved.error);
+}
+
+// Reading them (Supabase builds; the demo reads the store) -----------------------
+
+interface ServerBugReport extends Omit<BugReportRecord, 'resolvedBy'> {
+  resolvedBy?: string | null;
+}
+
+const fromServer = (r: ServerBugReport): BugReportRecord => ({ ...r, resolvedBy: r.resolvedBy ?? undefined, params: r.params ?? {}, recentRoutes: r.recentRoutes ?? [], logs: r.logs ?? [] });
+
+/** The newest reports without their screenshots (super admins). */
+export async function fetchBugReports(limit = 200): Promise<Result<BugReportRecord[]>> {
+  const r = await rpc<ServerBugReport[] | null>('rpc_list_bug_reports', { p_limit: limit });
+  return r.ok ? okResult((r.value ?? []).map(fromServer)) : r;
+}
+
+/** One report with its screenshot (super admins). */
+export async function fetchBugReport(id: string): Promise<Result<BugReportRecord | null>> {
+  const r = await rpc<ServerBugReport | null>('rpc_get_bug_report', { p_id: id });
+  return r.ok ? okResult(r.value ? fromServer(r.value) : null) : r;
+}
+
+/** Marks a report new, fixed or dismissed on the server (super admins). */
+export async function saveBugReportStatus(id: string, status: BugReportStatus, note?: string): Promise<Result<void>> {
+  const r = await rpc('rpc_set_bug_report_status', { p_id: id, p_status: status, p_note: note?.trim() || null });
+  return r.ok ? okResult(undefined) : r;
+}
+
+/** Deletes reports on the server (super admins). */
+export async function deleteBugReports(ids: string[]): Promise<Result<void>> {
+  const r = await rpc('rpc_delete_bug_reports', { p_ids: ids });
+  return r.ok ? okResult(undefined) : r;
 }

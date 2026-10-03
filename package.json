@@ -61,7 +61,7 @@
     "check:personas": "node scripts/check-personas.mjs",
     "env:vercel": "node scripts/env-vercel.mjs",
     "db:check": "node scripts/db/db-check.mjs",
-    "db:test": "node scripts/db/core-loop.mjs && node scripts/db/accounts.mjs && node scripts/db/payments.mjs && node scripts/db/launch.mjs && node scripts/db/social.mjs",
+    "db:test": "node scripts/db/core-loop.mjs && node scripts/db/accounts.mjs && node scripts/db/payments.mjs && node scripts/db/launch.mjs && node scripts/db/social.mjs && node scripts/db/bugs.mjs",
     "test:parity": "node scripts/db/parity.mjs",
     "test:functions": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/test-functions.mjs",
     "env:functions": "node scripts/env-functions.mjs",

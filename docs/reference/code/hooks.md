@@ -7,6 +7,7 @@ Every exported symbol in `src/hooks/`, file by file. The guide that explains how
 ## Files
 
 - [`queries.ts`](#queriests) (17 exports)
+- [`useBugReports.ts`](#usebugreportsts) (3 exports)
 - [`useChat.ts`](#usechatts) (1 exports)
 - [`useDebounce.ts`](#usedebouncets) (1 exports)
 - [`useExperience.ts`](#useexperiencets) (1 exports)
@@ -190,6 +191,40 @@ useShortlistedVendors(ids: string[])
 ```
 
 _No JSDoc yet._
+
+## useBugReports.ts
+
+Source: [src/hooks/useBugReports.ts](../../../src/hooks/useBugReports.ts)
+
+### `useBugReports`
+
+*hook* · [src/hooks/useBugReports.ts:18](../../../src/hooks/useBugReports.ts#L18)
+
+```ts
+useBugReports(): { reports: BugReportRecord[]; loading: boolean; error?: string; refresh: () => void }
+```
+
+Bug reports for the super admin console: the server's on Supabase builds, the store's in the demo.
+
+### `useBugReport`
+
+*hook* · [src/hooks/useBugReports.ts:27](../../../src/hooks/useBugReports.ts#L27)
+
+```ts
+useBugReport(id: string | undefined): { report?: BugReportRecord; loading: boolean; error?: string }
+```
+
+One report, with its screenshot.
+
+### `useBugReportActions`
+
+*hook* · [src/hooks/useBugReports.ts:36](../../../src/hooks/useBugReports.ts#L36)
+
+```ts
+useBugReportActions()
+```
+
+Mark fixed / dismissed / new and delete; each resolves to an error to show, or null.
 
 ## useChat.ts
 
