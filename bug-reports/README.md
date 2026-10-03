@@ -4,8 +4,13 @@ Anyone using the app can report a bug from inside it: every role, signed in or n
 
 ## How a report is made
 
-1. On the screen that went wrong, **shake the phone**. On a computer, press **Alt+Shift+B**. You can also go to **Settings → Help → Report a problem**.
-2. The app takes a screenshot of the screen exactly as it was, then opens a sheet.
+1. On the screen that went wrong, do any of these:
+   - **take a screenshot** the normal way (iPhone: side button + volume up; Android: power + volume down);
+   - **hold three fingers** on the screen for half a second;
+   - tap the round **bug button** on the right edge (shown in development and test builds; drag it out of the way, or switch it in Settings → Help);
+   - **shake the phone** (installed builds only: in Expo Go shaking opens the Expo menu);
+   - on a computer, press **Alt+Shift+B**; or go to **Settings → Help → Report a problem**.
+2. The app takes a screenshot of the screen exactly as it was, then opens the report screen.
 3. The tester writes what they tapped, what they expected and what happened instead, then taps **Send report**.
 
 ## Where reports go
@@ -17,7 +22,7 @@ Anyone using the app can report a bug from inside it: every role, signed in or n
   - **Installed test builds (the `preview` APK):** run `npm run bugs:inbox` on the computer (port 8790). The APK sends to `EXPO_PUBLIC_BUG_INBOX_URL` from `eas.json`. If the computer's Wi-Fi address changes, type the new one in **Settings → Help → Bug inbox address** on the phone (for example `192.168.1.72:8790`) and tap **Check connection**.
   - **Store builds:** no inbox; reports are saved in the app only.
 
-A super admin can switch it off for everyone (Super admin → Features → "Shake to report a bug"). Each device can turn shaking off in Settings.
+A super admin can switch it off for everyone (Super admin → Features → "Shake to report a bug"). Each device picks its triggers in Settings → Help.
 
 ## What is in a report
 

@@ -9,7 +9,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import { getAccessToken, usesEmailSignIn } from '@/backend/auth';
 import { ImpersonationBar } from '@/components/ui/AppBanners';
-import { BugReporterHost, installBugReporter } from '@/components/ui/BugReporter';
+import { bugTouchHandlers, BugReporterHost, installBugReporter } from '@/components/ui/BugReporter';
 import { DialogHost } from '@/components/ui/Dialog';
 import { ToastHost } from '@/components/ui/Toast';
 import { colors } from '@/constants/theme';
@@ -79,7 +79,8 @@ export default function RootLayout() {
   const isCustomer = role === 'customer';
 
   return (
-    <GestureHandlerRootView style={{ flex: 1, backgroundColor: colors.white }}>
+    // Holding three fingers on any screen reports a bug (the handlers only watch touches).
+    <GestureHandlerRootView style={{ flex: 1, backgroundColor: colors.white }} {...bugTouchHandlers}>
       <I18nProvider>
       <QueryClientProvider client={queryClient}>
         <StatusBar style="dark" />
@@ -166,6 +167,8 @@ export default function RootLayout() {
           <Stack.Screen name="rsvp/[code]" options={{ animation: 'fade' }} />
           {/* Terms, privacy, refunds and account deletion: store listings and gateways link here. */}
           <Stack.Screen name="legal/[doc]" />
+          {/* Report a bug, for every role and signed-out visitors (components/ui/BugReporter.tsx). */}
+          <Stack.Screen name="report-bug" options={{ presentation: 'modal', animation: 'slide_from_bottom' }} />
           {/* Khalti and eSewa return here (through payment-verify); eSewa's form is posted from pay/esewa. */}
           <Stack.Screen name="pay/result" options={{ animation: 'fade', gestureEnabled: false }} />
           <Stack.Screen name="pay/esewa" options={{ animation: 'none' }} />

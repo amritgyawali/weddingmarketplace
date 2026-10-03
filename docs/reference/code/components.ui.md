@@ -7,7 +7,7 @@ Every exported symbol in `src/components/ui/`, file by file. The guide that expl
 ## Files
 
 - [`AppBanners.tsx`](#appbannerstsx) (2 exports)
-- [`BugReporter.tsx`](#bugreportertsx) (4 exports) · Shake to report a bug. Shaking the phone (or Alt+Shift+B on the web, or Settings → Report a problem) takes a screenshot of the screen exact…
+- [`BugReporter.tsx`](#bugreportertsx) (10 exports) · Report a bug from any screen. Any of these takes a screenshot of the screen exactly as it is and opens the report screen (`/report-bug`) to…
 - [`Button.tsx`](#buttontsx) (2 exports)
 - [`Calendar.tsx`](#calendartsx) (4 exports)
 - [`Chip.tsx`](#chiptsx) (2 exports)
@@ -58,30 +58,83 @@ Announcements a super admin pinned for this role (or everyone). Dismissed ones s
 
 Source: [src/components/ui/BugReporter.tsx](../../../src/components/ui/BugReporter.tsx)
 
-Shake to report a bug. Shaking the phone (or Alt+Shift+B on the web, or
-Settings → Report a problem) takes a screenshot of the screen exactly as it
-is, then opens a sheet to describe the problem. It works on every screen of
-every role app, signed in or not, in every build. The report is saved in the
-app's backend for the super admins (Super admin → Bug reports) and, in
-development and test builds, also lands in the developer's `bug-reports/`
-folder (see `backend/bugReport.ts` and `scripts/bug-inbox.cjs`).
+Report a bug from any screen. Any of these takes a screenshot of the screen
+exactly as it is and opens the report screen (`/report-bug`) to describe
+the problem:
 
-A super admin can switch it off (`app.bug_report`) and each device can turn
-shaking off in Settings.
+  - taking a phone screenshot (side + volume up on iPhone, power + volume
+    down on Android; `expo-screen-capture`);
+  - holding three fingers on the screen for half a second;
+  - the floating bug button (on by default in development and test builds);
+  - shaking the phone, in installed builds (in Expo Go and development
+    builds shaking opens the developer menu instead, so it is off there);
+  - Alt+Shift+B on a computer, or Settings → Help → Report a problem.
+
+It works on every screen of every role app, signed in or not, in every
+build. The report is saved in the app's backend for the super admins (Super
+admin → Bug reports) and, in development and test builds, also lands in the
+developer's `bug-reports/` folder (see `backend/bugReport.ts` and
+`scripts/bug-inbox.cjs`).
+
+The report is a screen of its own, not a Modal: a screen opens on top of
+modal screens and sheets, where a second Modal can't be shown on iOS.
+
+A super admin can switch it off (`app.bug_report`); each device picks its
+triggers in Settings → Help.
+
+### `REPORT_ROUTE`
+
+*const* · [src/components/ui/BugReporter.tsx:57](../../../src/components/ui/BugReporter.tsx#L57)
+
+```ts
+REPORT_ROUTE= '/report-bug'
+```
+
+The report screen's route; never recorded as "the screen that went wrong".
 
 ### `useBugReporter`
 
-*const* · [src/components/ui/BugReporter.tsx:62](../../../src/components/ui/BugReporter.tsx#L62)
+*const* · [src/components/ui/BugReporter.tsx:95](../../../src/components/ui/BugReporter.tsx#L95)
 
 ```ts
-useBugReporter= create<BugReporterState>()( persist( (set) => ({ shake: true, inbox: '', draft: null, set…
+useBugReporter= create<BugReporterState>()( persist( (set) => ({ shake: true, screenshots: true, threeFin…
 ```
 
-The reporter's state: the open draft, and the device's shake setting and inbox address (persisted).
+The reporter's state: the open draft, and the device's triggers and inbox address (persisted).
+
+### `shakeToReportWorks`
+
+*function* · [src/components/ui/BugReporter.tsx:125](../../../src/components/ui/BugReporter.tsx#L125)
+
+```ts
+shakeToReportWorks()
+```
+
+Shaking is the developer menu's gesture in Expo Go and development builds, so the reporter only listens to it in installed builds.
+
+### `screenshotToReportWorks`
+
+*function* · [src/components/ui/BugReporter.tsx:127](../../../src/components/ui/BugReporter.tsx#L127)
+
+```ts
+screenshotToReportWorks()
+```
+
+Phone screenshots can be noticed on iOS and Android, not in a browser.
+
+### `bugButtonOn`
+
+*function* · [src/components/ui/BugReporter.tsx:129](../../../src/components/ui/BugReporter.tsx#L129)
+
+```ts
+bugButtonOn(button: boolean | undefined)
+```
+
+Is the floating bug button showing on this device?
 
 ### `installBugReporter`
 
-*function* · [src/components/ui/BugReporter.tsx:84](../../../src/components/ui/BugReporter.tsx#L84)
+*function* · [src/components/ui/BugReporter.tsx:139](../../../src/components/ui/BugReporter.tsx#L139)
 
 ```ts
 installBugReporter()
@@ -91,23 +144,45 @@ Starts keeping console errors for reports. Root layout calls it once.
 
 ### `reportBug`
 
-*function* · [src/components/ui/BugReporter.tsx:89](../../../src/components/ui/BugReporter.tsx#L89)
+*function* · [src/components/ui/BugReporter.tsx:144](../../../src/components/ui/BugReporter.tsx#L144)
 
 ```ts
 reportBug({ screenshot = true }: { screenshot?: boolean } = {})
 ```
 
-Screenshots the screen as it is now and opens the report sheet. `screenshot: false` opens it without one.
+Screenshots the screen as it is now and opens the report screen. `screenshot: false` opens it without one.
+
+### `bugTouchHandlers`
+
+*const* · [src/components/ui/BugReporter.tsx:196](../../../src/components/ui/BugReporter.tsx#L196)
+
+```ts
+bugTouchHandlers= { … }
+```
+
+Touch handlers for the app's root view: holding three fingers on any screen
+reports a bug. They only watch touches (they never take them), so taps,
+scrolling and gestures underneath work as usual.
 
 ### `BugReporterHost`
 
-*component* · [src/components/ui/BugReporter.tsx:117](../../../src/components/ui/BugReporter.tsx#L117)
+*component* · [src/components/ui/BugReporter.tsx:220](../../../src/components/ui/BugReporter.tsx#L220)
 
 ```ts
 BugReporterHost()
 ```
 
-Follows the current screen, listens for shakes and shows the report sheet. Root layout only.
+Follows the current screen, listens for the triggers and shows the floating button. Root layout only.
+
+### `BugReportScreen`
+
+*component* · [src/components/ui/BugReporter.tsx:327](../../../src/components/ui/BugReporter.tsx#L327)
+
+```ts
+BugReportScreen()
+```
+
+The report screen's content: the screenshot, the screen it came from and what went wrong.
 
 ## Button.tsx
 

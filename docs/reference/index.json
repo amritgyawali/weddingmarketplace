@@ -940,6 +940,13 @@
    "doc": "Gift registry: cash, honeymoon and charity funds, gifts and store wishlists, with thank-you tracking."
   },
   {
+   "path": "/report-bug",
+   "kind": "screen",
+   "file": "src/app/report-bug.tsx",
+   "component": "ReportBug",
+   "doc": "Report a bug: opened by a phone screenshot, three fingers held on the screen, the bug button, a shake or Settings. Public, every role."
+  },
+  {
    "path": "/rsvp/[code]",
    "kind": "screen",
    "file": "src/app/rsvp/[code].tsx",
@@ -2907,6 +2914,19 @@
      "line": 183,
      "signature": "()",
      "doc": "Gift registry: cash, honeymoon and charity funds, gifts and store wishlists, with thank-you tracking."
+    }
+   ]
+  },
+  {
+   "file": "src/app/report-bug.tsx",
+   "doc": "",
+   "exports": [
+    {
+     "name": "ReportBug",
+     "kind": "component",
+     "line": 4,
+     "signature": "()",
+     "doc": "Report a bug: opened by a phone screenshot, three fingers held on the screen, the bug button, a shake or Settings. Public, every role."
     }
    ]
   },
@@ -7127,35 +7147,77 @@
   },
   {
    "file": "src/components/ui/BugReporter.tsx",
-   "doc": "Shake to report a bug. Shaking the phone (or Alt+Shift+B on the web, or Settings → Report a problem) takes a screenshot of the screen exactly as it is, then opens a sheet to describe the problem. It works on every screen of every role app, signed in or not, in every build. The report is saved in the app's backend for the super admins (Super admin → Bug reports) and, in development and test builds, also lands in the developer's `bug-reports/` folder (see `backend/bugReport.ts` and `scripts/bug-inbox.cjs`). A super admin can switch it off (`app.bug_report`) and each device can turn shaking off …",
+   "doc": "Report a bug from any screen. Any of these takes a screenshot of the screen exactly as it is and opens the report screen (`/report-bug`) to describe the problem: - taking a phone screenshot (side + volume up on iPhone, power + volume down on Android; `expo-screen-capture`); - holding three fingers on the screen for half a second; - the floating bug button (on by default in development and test builds); - shaking the phone, in installed builds (in Expo Go and development builds shaking opens the developer menu instead, so it is off there); - Alt+Shift+B on a computer, or Settings → Help → Repo…",
    "exports": [
+    {
+     "name": "REPORT_ROUTE",
+     "kind": "const",
+     "line": 57,
+     "signature": "= '/report-bug'",
+     "doc": "The report screen's route; never recorded as \"the screen that went wrong\"."
+    },
     {
      "name": "useBugReporter",
      "kind": "const",
-     "line": 62,
-     "signature": "= create<BugReporterState>()( persist( (set) => ({ shake: true, inbox: '', draft: null, set…",
-     "doc": "The reporter's state: the open draft, and the device's shake setting and inbox address (persisted)."
+     "line": 95,
+     "signature": "= create<BugReporterState>()( persist( (set) => ({ shake: true, screenshots: true, threeFin…",
+     "doc": "The reporter's state: the open draft, and the device's triggers and inbox address (persisted)."
+    },
+    {
+     "name": "shakeToReportWorks",
+     "kind": "function",
+     "line": 125,
+     "signature": "()",
+     "doc": "Shaking is the developer menu's gesture in Expo Go and development builds, so the reporter only listens to it in installed builds."
+    },
+    {
+     "name": "screenshotToReportWorks",
+     "kind": "function",
+     "line": 127,
+     "signature": "()",
+     "doc": "Phone screenshots can be noticed on iOS and Android, not in a browser."
+    },
+    {
+     "name": "bugButtonOn",
+     "kind": "function",
+     "line": 129,
+     "signature": "(button: boolean | undefined)",
+     "doc": "Is the floating bug button showing on this device?"
     },
     {
      "name": "installBugReporter",
      "kind": "function",
-     "line": 84,
+     "line": 139,
      "signature": "()",
      "doc": "Starts keeping console errors for reports. Root layout calls it once."
     },
     {
      "name": "reportBug",
      "kind": "function",
-     "line": 89,
+     "line": 144,
      "signature": "({ screenshot = true }: { screenshot?: boolean } = {})",
-     "doc": "Screenshots the screen as it is now and opens the report sheet. `screenshot: false` opens it without one."
+     "doc": "Screenshots the screen as it is now and opens the report screen. `screenshot: false` opens it without one."
+    },
+    {
+     "name": "bugTouchHandlers",
+     "kind": "const",
+     "line": 196,
+     "signature": "= { … }",
+     "doc": "Touch handlers for the app's root view: holding three fingers on any screen\nreports a bug. They only watch touches (they never take them), so taps,\nscrolling and gestures underneath work as usual."
     },
     {
      "name": "BugReporterHost",
      "kind": "component",
-     "line": 117,
+     "line": 220,
      "signature": "()",
-     "doc": "Follows the current screen, listens for shakes and shows the report sheet. Root layout only."
+     "doc": "Follows the current screen, listens for the triggers and shows the floating button. Root layout only."
+    },
+    {
+     "name": "BugReportScreen",
+     "kind": "component",
+     "line": 327,
+     "signature": "()",
+     "doc": "The report screen's content: the screenshot, the screen it came from and what went wrong."
     }
    ]
   },
