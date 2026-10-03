@@ -72,6 +72,29 @@ export default function RolePicker() {
               </Pressable>
             );
           })}
+          {/* Vivah staff with full control: login only (super admins are created from the console, never self sign-up). */}
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel="Continue as Super admin"
+            onPress={() => {
+              triggerHaptic('light');
+              selectRole('platform');
+              router.push({ pathname: '/welcome/login', params: { as: 'super_admin' } });
+            }}
+            style={({ pressed }) => [styles.row, styles.rowBorder, pressed && { backgroundColor: colors.bgSoft }]}>
+            <View style={styles.icon}>
+              <Ionicons name="shield-checkmark-outline" size={22} color={ROLE_THEMES.platform.c.primary} />
+            </View>
+            <View style={{ flex: 1 }}>
+              <Text size={17} weight="semibold" color={colors.heading}>
+                Super admin
+              </Text>
+              <Text size={14} color={colors.textMuted}>
+                Full control: edit any account, record, feature or text
+              </Text>
+            </View>
+            <Ionicons name="chevron-forward" size={18} color={colors.textSubtle} />
+          </Pressable>
         </View>
       </ScrollView>
     </View>

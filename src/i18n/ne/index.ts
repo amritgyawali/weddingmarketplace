@@ -5011,4 +5011,7 @@ export const NE: Record<string, string> = {
   "{0} · {1}": "{0} · {1}",
   "{0} · {1} · {2}": "{0} · {1} · {2}",
   "Quote sent": "कोटेसन पठाइयो",
+  "Full control: edit any account, record, feature or text": "पूरा नियन्त्रण: जुनसुकै खाता, रेकर्ड, सुविधा वा पाठ सम्पादन गर्नुहोस्",
+  "Continue as Super admin": "सुपर एडमिनको रूपमा जारी राख्नुहोस्",
+  "This isn’t a super admin account. Log in as Vivah staff, or ask a super admin to give you access.": "यो सुपर एडमिन खाता होइन। Vivah कर्मचारीको रूपमा लग इन गर्नुहोस्, वा सुपर एडमिनलाई पहुँच दिन भन्नुहोस्।",
 };
