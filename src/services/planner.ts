@@ -5,6 +5,7 @@
  * call behind your own server later without touching screens.
  */
 import type { PhotoKey } from '@/constants/images';
+import { CHECKLIST, CHECKLIST_PHASES, currentPhase, PHASE_DUE } from '@/data/checklist';
 import { EVENT_TYPE_BY_ID, bandFor, isPeakSeason } from '@/data/events';
 import type { OccasionId } from '@/data/occasions';
 import { SERVICE_BY_ID, defaultDetails, findService, serviceName } from '@/data/services';
@@ -302,6 +303,41 @@ export function generateTasks(mainDate: string, services: string[], customerName
   });
 }
 
+/** Checklist tasks for the project's date and requested services that aren't on its list yet (the "Suggest tasks" sheet). */
+export function suggestedTasks(project: Project): ProjectTask[] {
+  const services = project.requirements.filter((r) => r.status !== 'CANCELLED').map((r) => r.serviceId);
+  return generateTasks(project.weddingDate, services, project.customerName, project.coordinatorName, project.occasion ?? 'wedding').filter((t) => !project.tasks.some((x) => x.title === t.title));
+}
+
+/**
+ * Items of the month-by-month guide for the phase the couple is in and the
+ * ones after it, not on the wedding's task list yet, as tasks for the couple
+ * due by the end of their phase. Items already ticked in the guide (`ticked`,
+ * checklist ids) are left out. Weddings and engagements only.
+ */
+export function guideSuggestions(project: Project, ticked: string[] = []): ProjectTask[] {
+  if (!WEDDING_LIKE.has(project.occasion ?? 'wedding')) return [];
+  const from = CHECKLIST_PHASES.indexOf(currentPhase(daysUntil(project.weddingDate)));
+  const have = new Set([...project.tasks, ...suggestedTasks(project)].map((t) => t.title.toLowerCase()));
+  const now = today();
+  return CHECKLIST.filter((t) => CHECKLIST_PHASES.indexOf(t.phase) >= from && !ticked.includes(t.id) && !have.has(t.title.toLowerCase())).map((t) => {
+    const due = shift(project.weddingDate, -PHASE_DUE[t.phase]);
+    return {
+      id: uid('tk'),
+      title: t.title,
+      assigneeKind: 'customer',
+      assigneeName: project.customerName,
+      assigneeId: project.customerId,
+      due: due < now ? shift(now, 3) : due,
+      status: 'TODO',
+      priority: 'medium',
+      category: t.category,
+      visibility: 'shared',
+      createdAt: new Date().toISOString(),
+    };
+  });
+}
+
 /**
  * Customer-facing timeline built from live project data plus any manual
  * entries (meetings, milestones) stored on the project.
@@ -334,19 +370,23 @@ export interface NextAction {
   body: string;
   href: string;
   icon: string;
+  /** My Wedding tab the action lives on; that screen switches tab in place instead of opening `href`. */
+  tab?: 'payments' | 'services' | 'tasks';
+  /** The milestone or task to open on that tab. */
+  focus?: string;
 }
 
 export function nextBestAction(project: Project, quotes: Quotation[]): NextAction {
   const pendingQuote = quotes.find((q) => q.projectId === project.id && (q.status === 'sent' || q.status === 'viewed'));
   if (pendingQuote) return { title: 'Review your quotation', body: `${pendingQuote.number} from ${pendingQuote.fromName} is waiting for you.`, href: `/quote/${pendingQuote.id}`, icon: 'document-text' };
   const { next } = paymentSummary(project);
-  if (next && milestoneStatus(next) !== 'UPCOMING') return { title: `Pay ${formatMoney(next.amount)}`, body: `${next.label} is due ${formatShortDate(next.due)}.`, href: '/my-wedding?tab=payments', icon: 'card' };
+  if (next && milestoneStatus(next) !== 'UPCOMING') return { title: `Pay ${formatMoney(next.amount - next.paidAmount)}`, body: `${next.label} is due ${formatShortDate(next.due)}.`, href: `/my-wedding?tab=payments&focus=${next.id}`, icon: 'card', tab: 'payments', focus: next.id };
   const review = project.bookings.flatMap((b) => b.deliverables.map((d) => ({ b, d }))).find(({ d }) => d.status === 'READY_FOR_REVIEW');
-  if (review) return { title: `Review ${review.d.title}`, body: `${review.b.providerName} marked it ready.`, href: '/my-wedding?tab=services', icon: 'eye' };
+  if (review) return { title: `Review ${review.d.title}`, body: `${review.b.providerName} marked it ready.`, href: '/my-wedding?tab=services', icon: 'eye', tab: 'services' };
   const task = project.tasks
     .filter((t) => t.visibility === 'shared' && (t.assigneeKind === 'customer' || t.assigneeKind === 'partner') && t.status !== 'COMPLETED' && t.status !== 'CANCELLED')
     .sort((a, b) => a.due.localeCompare(b.due))[0];
-  if (task) return { title: task.title, body: `Due ${formatShortDate(task.due)}`, href: '/my-wedding?tab=tasks', icon: 'checkbox' };
+  if (task) return { title: task.title, body: `Due ${formatShortDate(task.due)}`, href: `/my-wedding?tab=tasks&focus=${task.id}`, icon: 'checkbox', tab: 'tasks', focus: task.id };
   return { title: 'Invite your guests', body: 'Build your guest list and send e-invites.', href: '/guests', icon: 'people' };
 }
 

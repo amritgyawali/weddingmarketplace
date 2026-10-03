@@ -9,7 +9,7 @@ Every exported symbol in `src/data/`, file by file. The guide that explains how 
 - [`access.ts`](#accessts) (11 exports) · Who sees what: the visibility rule of every tool and persona-aware surface. Rules are data so the registry check (`npm run check:personas`)…
 - [`capabilities.ts`](#capabilitiests) (10 exports)
 - [`categories.ts`](#categoriests) (9 exports)
-- [`checklist.ts`](#checklistts) (3 exports)
+- [`checklist.ts`](#checklistts) (7 exports)
 - [`cities.ts`](#citiests) (8 exports)
 - [`crafts.ts`](#craftsts) (7 exports) · Freelancer crafts. The crew roles in `services.ts` stay the source of truth (a freelancer's skills are crew roles, and their trade and capa…
 - [`events.ts`](#eventsts) (11 exports)
@@ -401,6 +401,47 @@ CHECKLIST_TOTAL= CHECKLIST.length
 ```
 
 _No JSDoc yet._
+
+### `PHASE_LABEL`
+
+*const* · [src/data/checklist.ts:92](../../../src/data/checklist.ts#L92)
+
+```ts
+PHASE_LABEL: Record<ChecklistPhase, string>
+```
+
+Plain-words name of each phase, as couples say it ("1–3 months before").
+
+### `PHASE_DUE`
+
+*const* · [src/data/checklist.ts:116](../../../src/data/checklist.ts#L116)
+
+```ts
+PHASE_DUE: Record<ChecklistPhase, number>
+```
+
+Days before the wedding by which each phase's items should be done (due dates for guide items added as tasks).
+
+### `currentPhase`
+
+*function* · [src/data/checklist.ts:128](../../../src/data/checklist.ts#L128)
+
+```ts
+currentPhase(daysToWedding: number | null): ChecklistPhase
+```
+
+The phase a couple is in today; the first one when the date isn't set yet.
+
+### `nextChecklistItems`
+
+*function* · [src/data/checklist.ts:137](../../../src/data/checklist.ts#L137)
+
+```ts
+nextChecklistItems(completed: string[], daysToWedding: number | null, count: number): ChecklistTask[]
+```
+
+Open guide items in the order to do them: this phase first, then earlier
+ones still open (catch-up), then what comes later.
 
 ## cities.ts
 

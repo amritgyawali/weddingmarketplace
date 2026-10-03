@@ -87,3 +87,62 @@ export const CHECKLIST: ChecklistTask[] = CHECKLIST_PHASES.flatMap((phase, p) =>
 );
 
 export const CHECKLIST_TOTAL = CHECKLIST.length;
+
+/** Plain-words name of each phase, as couples say it ("1–3 months before"). */
+export const PHASE_LABEL: Record<ChecklistPhase, string> = {
+  '12+ Months': 'A year or more before',
+  '9-12 Months': '9–12 months before',
+  '6-9 Months': '6–9 months before',
+  '3-6 Months': '3–6 months before',
+  '1-3 Months': '1–3 months before',
+  '2-4 Weeks': '2–4 weeks before',
+  '1 Week': 'The last week',
+  'Wedding Day': 'On the wedding day',
+};
+
+/** Fewest days before the wedding at which each phase starts. */
+const PHASE_FROM: Record<ChecklistPhase, number> = {
+  '12+ Months': 365,
+  '9-12 Months': 270,
+  '6-9 Months': 180,
+  '3-6 Months': 90,
+  '1-3 Months': 30,
+  '2-4 Weeks': 14,
+  '1 Week': 1,
+  'Wedding Day': -Infinity,
+};
+
+/** Days before the wedding by which each phase's items should be done (due dates for guide items added as tasks). */
+export const PHASE_DUE: Record<ChecklistPhase, number> = {
+  '12+ Months': 365,
+  '9-12 Months': 270,
+  '6-9 Months': 180,
+  '3-6 Months': 90,
+  '1-3 Months': 30,
+  '2-4 Weeks': 14,
+  '1 Week': 2,
+  'Wedding Day': 0,
+};
+
+/** The phase a couple is in today; the first one when the date isn't set yet. */
+export function currentPhase(daysToWedding: number | null): ChecklistPhase {
+  if (daysToWedding === null) return CHECKLIST_PHASES[0];
+  return CHECKLIST_PHASES.find((p) => daysToWedding >= PHASE_FROM[p]) ?? 'Wedding Day';
+}
+
+/**
+ * Open guide items in the order to do them: this phase first, then earlier
+ * ones still open (catch-up), then what comes later.
+ */
+export function nextChecklistItems(completed: string[], daysToWedding: number | null, count: number): ChecklistTask[] {
+  const now = CHECKLIST_PHASES.indexOf(currentPhase(daysToWedding));
+  const rank = (t: ChecklistTask) => {
+    const i = CHECKLIST_PHASES.indexOf(t.phase);
+    return i === now ? 0 : i < now ? 1 : 2;
+  };
+  return CHECKLIST.filter((t) => !completed.includes(t.id))
+    .map((t, order) => ({ t, order }))
+    .sort((a, b) => rank(a.t) - rank(b.t) || a.order - b.order)
+    .slice(0, count)
+    .map((x) => x.t);
+}

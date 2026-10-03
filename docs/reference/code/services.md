@@ -13,7 +13,7 @@ Every exported symbol in `src/services/`, file by file. The guide that explains 
 - [`experience.ts`](#experiencets) (16 exports) · The persona resolver: identify the user, derive what they can do, and show only that. Pure and deterministic (no React, no store), like the…
 - [`exporters.ts`](#exportersts) (11 exports) · Files the app hands to other apps: calendar (.ics), spreadsheets (.csv) and PDFs (via expo-print). Works on iOS/Android (share sheet) and w…
 - [`matching.ts`](#matchingts) (16 exports) · Matching engine. Scores providers for a requirement and freelancers for a crew slot / gig. Weights mirror supabase/migrations/0003 so on-de…
-- [`planner.ts`](#plannerts) (23 exports) · Rule-based wedding planner ("AI" without paid AI): turns the requirement wizard into a project, allocates budgets, generates checklists and…
+- [`planner.ts`](#plannerts) (25 exports) · Rule-based wedding planner ("AI" without paid AI): turns the requirement wizard into a project, allocates budgets, generates checklists and…
 - [`pricing.ts`](#pricingts) (16 exports) · Marketplace economics: the four business models, payment schedules, milestone status and payables. Customer payments and provider/freelance…
 - [`quotes.ts`](#quotests) (10 exports)
 - [`risk.ts`](#riskts) (5 exports) · Risk detection for coordinators — the same rules as the `project_risks` view in supabase/migrations/0003, evaluated on-device.
@@ -779,7 +779,7 @@ call behind your own server later without touching screens.
 
 ### `PlanInput`
 
-*interface* · [src/services/planner.ts:25](../../../src/services/planner.ts#L25)
+*interface* · [src/services/planner.ts:26](../../../src/services/planner.ts#L26)
 
 _No JSDoc yet._
 
@@ -805,7 +805,7 @@ _No JSDoc yet._
 
 ### `estimateRange`
 
-*function* · [src/services/planner.ts:58](../../../src/services/planner.ts#L58)
+*function* · [src/services/planner.ts:59](../../../src/services/planner.ts#L59)
 
 ```ts
 estimateRange(serviceId: string, guests: number, events = 1): [number, number]
@@ -815,7 +815,7 @@ Typical total cost range for a service in NPR.
 
 ### `estimateTotal`
 
-*function* · [src/services/planner.ts:80](../../../src/services/planner.ts#L80)
+*function* · [src/services/planner.ts:81](../../../src/services/planner.ts#L81)
 
 ```ts
 estimateTotal(serviceIds: string[], guests: number, events = 1): [number, number]
@@ -825,7 +825,7 @@ _No JSDoc yet._
 
 ### `allocateBudget`
 
-*function* · [src/services/planner.ts:94](../../../src/services/planner.ts#L94)
+*function* · [src/services/planner.ts:95](../../../src/services/planner.ts#L95)
 
 ```ts
 allocateBudget(total: number, serviceIds: string[], guests: number, events = 1): Record<string, number>
@@ -836,7 +836,7 @@ per-guest services (catering) never fall below their minimum feasible cost.
 
 ### `perUnitBudget`
 
-*function* · [src/services/planner.ts:111](../../../src/services/planner.ts#L111)
+*function* · [src/services/planner.ts:112](../../../src/services/planner.ts#L112)
 
 ```ts
 perUnitBudget(serviceId: string, total: number, guests: number, events = 1): [number, number]
@@ -846,7 +846,7 @@ Convert a total allocation into the service's own unit (per plate etc.).
 
 ### `runSheetFor`
 
-*function* · [src/services/planner.ts:121](../../../src/services/planner.ts#L121)
+*function* · [src/services/planner.ts:122](../../../src/services/planner.ts#L122)
 
 ```ts
 runSheetFor(type: EventType): RunItem[]
@@ -856,7 +856,7 @@ _No JSDoc yet._
 
 ### `buildEvents`
 
-*function* · [src/services/planner.ts:125](../../../src/services/planner.ts#L125)
+*function* · [src/services/planner.ts:126](../../../src/services/planner.ts#L126)
 
 ```ts
 buildEvents(input: PlanInput): ProjectEvent[]
@@ -866,7 +866,7 @@ _No JSDoc yet._
 
 ### `buildRequirements`
 
-*function* · [src/services/planner.ts:150](../../../src/services/planner.ts#L150)
+*function* · [src/services/planner.ts:151](../../../src/services/planner.ts#L151)
 
 ```ts
 buildRequirements(input: PlanInput, events: ProjectEvent[]): Requirement[]
@@ -876,7 +876,7 @@ _No JSDoc yet._
 
 ### `WEDDING_ONLY_TASKS`
 
-*const* · [src/services/planner.ts:275](../../../src/services/planner.ts#L275)
+*const* · [src/services/planner.ts:276](../../../src/services/planner.ts#L276)
 
 ```ts
 WEDDING_ONLY_TASKS= new Set(TASK_TEMPLATES.map((t) => t.title).filter((title) => !CELEBRATION_TEMPLATES.some(…
@@ -886,7 +886,7 @@ Titles that only make sense for a wedding; older non-wedding plans drop them (st
 
 ### `generateTasks`
 
-*function* · [src/services/planner.ts:278](../../../src/services/planner.ts#L278)
+*function* · [src/services/planner.ts:279](../../../src/services/planner.ts#L279)
 
 ```ts
 generateTasks(mainDate: string, services: string[], customerName: string, coordinatorName = 'Your coordinator', occasion = 'wedding'): ProjectTask[]
@@ -894,9 +894,32 @@ generateTasks(mainDate: string, services: string[], customerName: string, coordi
 
 Personalised checklist for the occasion; overdue templates are compressed into the remaining time.
 
+### `suggestedTasks`
+
+*function* · [src/services/planner.ts:307](../../../src/services/planner.ts#L307)
+
+```ts
+suggestedTasks(project: Project): ProjectTask[]
+```
+
+Checklist tasks for the project's date and requested services that aren't on its list yet (the "Suggest tasks" sheet).
+
+### `guideSuggestions`
+
+*function* · [src/services/planner.ts:318](../../../src/services/planner.ts#L318)
+
+```ts
+guideSuggestions(project: Project, ticked: string[] = []): ProjectTask[]
+```
+
+Items of the month-by-month guide for the phase the couple is in and the
+ones after it, not on the wedding's task list yet, as tasks for the couple
+due by the end of their phase. Items already ticked in the guide (`ticked`,
+checklist ids) are left out. Weddings and engagements only.
+
 ### `buildTimeline`
 
-*function* · [src/services/planner.ts:309](../../../src/services/planner.ts#L309)
+*function* · [src/services/planner.ts:345](../../../src/services/planner.ts#L345)
 
 ```ts
 buildTimeline(project: Project, opts: { internal?: boolean } = {}): TimelineEntry[]
@@ -907,7 +930,7 @@ entries (meetings, milestones) stored on the project.
 
 ### `NextAction`
 
-*interface* · [src/services/planner.ts:332](../../../src/services/planner.ts#L332)
+*interface* · [src/services/planner.ts:368](../../../src/services/planner.ts#L368)
 
 _No JSDoc yet._
 
@@ -917,10 +940,12 @@ _No JSDoc yet._
 | `body` | `string` |  |
 | `href` | `string` |  |
 | `icon` | `string` |  |
+| `tab?` | `'payments' \| 'services' \| 'tasks'` | My Wedding tab the action lives on; that screen switches tab in place instead of opening `href`. |
+| `focus?` | `string` | The milestone or task to open on that tab. |
 
 ### `nextBestAction`
 
-*function* · [src/services/planner.ts:339](../../../src/services/planner.ts#L339)
+*function* · [src/services/planner.ts:379](../../../src/services/planner.ts#L379)
 
 ```ts
 nextBestAction(project: Project, quotes: Quotation[]): NextAction
@@ -930,7 +955,7 @@ _No JSDoc yet._
 
 ### `missingServices`
 
-*function* · [src/services/planner.ts:354](../../../src/services/planner.ts#L354)
+*function* · [src/services/planner.ts:394](../../../src/services/planner.ts#L394)
 
 ```ts
 missingServices(project: Project): string[]
@@ -940,7 +965,7 @@ Services couples usually need for their functions but haven't requested.
 
 ### `planningProgress`
 
-*function* · [src/services/planner.ts:360](../../../src/services/planner.ts#L360)
+*function* · [src/services/planner.ts:400](../../../src/services/planner.ts#L400)
 
 ```ts
 planningProgress(project: Project)
@@ -950,7 +975,7 @@ _No JSDoc yet._
 
 ### `savingTips`
 
-*function* · [src/services/planner.ts:372](../../../src/services/planner.ts#L372)
+*function* · [src/services/planner.ts:412](../../../src/services/planner.ts#L412)
 
 ```ts
 savingTips(project: Project): string[]
@@ -960,7 +985,7 @@ _No JSDoc yet._
 
 ### `invitationText`
 
-*function* · [src/services/planner.ts:384](../../../src/services/planner.ts#L384)
+*function* · [src/services/planner.ts:424](../../../src/services/planner.ts#L424)
 
 ```ts
 invitationText(project: Project, tone: 'traditional' | 'modern' | 'nepali' = 'traditional'): string
@@ -970,7 +995,7 @@ _No JSDoc yet._
 
 ### `enquiryText`
 
-*function* · [src/services/planner.ts:395](../../../src/services/planner.ts#L395)
+*function* · [src/services/planner.ts:435](../../../src/services/planner.ts#L435)
 
 ```ts
 enquiryText(project: Project, serviceId: string): string
@@ -980,7 +1005,7 @@ _No JSDoc yet._
 
 ### `QUESTIONS_TO_ASK`
 
-*const* · [src/services/planner.ts:402](../../../src/services/planner.ts#L402)
+*const* · [src/services/planner.ts:442](../../../src/services/planner.ts#L442)
 
 ```ts
 QUESTIONS_TO_ASK: Record<string, string[]>
@@ -990,7 +1015,7 @@ _No JSDoc yet._
 
 ### `questionsToAsk`
 
-*function* · [src/services/planner.ts:411](../../../src/services/planner.ts#L411)
+*function* · [src/services/planner.ts:451](../../../src/services/planner.ts#L451)
 
 ```ts
 questionsToAsk(serviceId: string)
@@ -1000,7 +1025,7 @@ _No JSDoc yet._
 
 ### `negotiationPoints`
 
-*function* · [src/services/planner.ts:414](../../../src/services/planner.ts#L414)
+*function* · [src/services/planner.ts:454](../../../src/services/planner.ts#L454)
 
 ```ts
 negotiationPoints(quote: Quotation, marketMedian?: number): string[]
@@ -1010,7 +1035,7 @@ _No JSDoc yet._
 
 ### `summarizeReviews`
 
-*function* · [src/services/planner.ts:425](../../../src/services/planner.ts#L425)
+*function* · [src/services/planner.ts:465](../../../src/services/planner.ts#L465)
 
 ```ts
 summarizeReviews(reviews: { rating: number; text: string }[]): { average: number; highlights: string[]; concerns: string[] }
@@ -1020,7 +1045,7 @@ _No JSDoc yet._
 
 ### `guestBandLabel`
 
-*function* · [src/services/planner.ts:442](../../../src/services/planner.ts#L442)
+*function* · [src/services/planner.ts:482](../../../src/services/planner.ts#L482)
 
 ```ts
 guestBandLabel(guests: number)

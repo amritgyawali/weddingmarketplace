@@ -371,13 +371,13 @@ payment-verify has confirmed it with the gateway (master plan §7.5).
 
 ### `PaymentsPanel`
 
-*component* · [src/components/work/Payments.tsx:303](../../../src/components/work/Payments.tsx#L303)
+*component* · [src/components/work/Payments.tsx:304](../../../src/components/work/Payments.tsx#L304)
 
 ```ts
-PaymentsPanel({ project, mode }: { project: Project; mode: 'customer' | 'platform' | 'vendor' })
+PaymentsPanel({ project, mode, openMilestoneId }: { project: Project; mode: 'customer' | 'platform' | 'vendor'; openMilestoneId?: string })
 ```
 
-Customer payment milestones, receipts and refunds for a project.
+`openMilestoneId` opens that milestone's payment sheet straight away (from "Next up" on My Wedding).
 
 ## Pipeline.tsx
 
@@ -608,13 +608,13 @@ Source: [src/components/work/TaskBoard.tsx](../../../src/components/work/TaskBoa
 
 ### `TaskBoard`
 
-*component* · [src/components/work/TaskBoard.tsx:134](../../../src/components/work/TaskBoard.tsx#L134)
+*component* · [src/components/work/TaskBoard.tsx:238](../../../src/components/work/TaskBoard.tsx#L238)
 
 ```ts
-TaskBoard({ project, mode }: { project: Project; mode: Mode })
+TaskBoard({ project, mode, openTaskId }: { project: Project; mode: Mode; openTaskId?: string })
 ```
 
-Project task board shared by couple, coordinator and providers.
+Project task board shared by couple, coordinator and providers. `openTaskId` opens that task's sheet straight away.
 
 ## ThreadView.tsx
 
