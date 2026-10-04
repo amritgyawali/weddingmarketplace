@@ -8,7 +8,6 @@ import { Text } from '@/components/ui/Text';
 import { colors, GUTTER } from '@/constants/theme';
 import { CHECKLIST_TOTAL } from '@/data/checklist';
 import { useExperience } from '@/hooks/useExperience';
-import { useOpenMyWedding } from '@/hooks/useOpenMyWedding';
 import { useCustomerWorkspace } from '@/hooks/useWorkspace';
 import { selectShortlistCount, useAppStore } from '@/store/useAppStore';
 import { useAccount } from '@/store/useSession';
@@ -43,7 +42,6 @@ export function PlanningTools() {
   const wedding = !exp.occasion || exp.occasion.id === 'wedding' || exp.occasion.id === 'engagement';
   const tasks = project?.tasks.filter((t) => t.visibility !== 'internal') ?? [];
   const tasksDone = tasks.filter((t) => t.status === 'COMPLETED').length;
-  const openMyWedding = useOpenMyWedding();
 
   return (
     <View style={styles.section}>
@@ -54,7 +52,7 @@ export function PlanningTools() {
           label={wedding ? 'Wedding plan' : exp.vocab.planTitle}
           meta={awaitingQuotes ? `${awaitingQuotes} quote${awaitingQuotes > 1 ? 's' : ''} to review` : 'Quotes, payments, run sheet'}
           alert={!!awaitingQuotes}
-          onPress={openMyWedding}
+          href="/my-wedding?tab=services&section=plan"
         />
         <Tool icon="bookmark-outline" label="Shortlist" meta={shortlistCount ? `${shortlistCount} saved` : 'Nothing saved yet'} href="/shortlist" />
         {wedding || !project ? (

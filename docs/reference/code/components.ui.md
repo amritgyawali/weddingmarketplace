@@ -228,7 +228,7 @@ Source: [src/components/ui/Calendar.tsx](../../../src/components/ui/Calendar.tsx
 
 ### `useMonthTitle`
 
-*hook* · [src/components/ui/Calendar.tsx:20](../../../src/components/ui/Calendar.tsx#L20)
+*hook* · [src/components/ui/Calendar.tsx:21](../../../src/components/ui/Calendar.tsx#L21)
 
 ```ts
 useMonthTitle(mode: 'bs' | 'ad', cursor: { year: number; month: number }, cells: (MonthCell | null)[])
@@ -238,7 +238,7 @@ Title and subtitle of a month cursor: "Mangsir 2083" over "Nov – Dec 2026", or
 
 ### `weekdayLetters`
 
-*function* · [src/components/ui/Calendar.tsx:40](../../../src/components/ui/Calendar.tsx#L40)
+*function* · [src/components/ui/Calendar.tsx:41](../../../src/components/ui/Calendar.tsx#L41)
 
 ```ts
 weekdayLetters(lang: 'en' | 'ne')
@@ -248,7 +248,7 @@ _No JSDoc yet._
 
 ### `shiftCursor`
 
-*function* · [src/components/ui/Calendar.tsx:43](../../../src/components/ui/Calendar.tsx#L43)
+*function* · [src/components/ui/Calendar.tsx:44](../../../src/components/ui/Calendar.tsx#L44)
 
 ```ts
 shiftCursor(mode: 'bs' | 'ad', c: { year: number; month: number }, delta: number)
@@ -258,10 +258,10 @@ Moves a month cursor in either calendar.
 
 ### `Calendar`
 
-*component* · [src/components/ui/Calendar.tsx:54](../../../src/components/ui/Calendar.tsx#L54)
+*component* · [src/components/ui/Calendar.tsx:55](../../../src/components/ui/Calendar.tsx#L55)
 
 ```ts
-Calendar({ value, onChange, minDate = new Date(), }: { value: string | null; onChange: (iso: string) => void; minDate?: Date; })
+Calendar({ value, onChange, minDate = new Date(), dateStatus, }: { value: string | null; onChange: (iso: string) => void; minDate?: Date; dateStatus?: (date: string) => AvailabilityStatus; })
 ```
 
 Pure-JS month calendar so the date step looks the same on iOS, Android and

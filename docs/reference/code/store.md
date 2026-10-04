@@ -133,7 +133,7 @@ _No JSDoc yet._
 
 ### `AppStore`
 
-*type* · [src/store/useAppStore.ts:76](../../../src/store/useAppStore.ts#L76)
+*type* · [src/store/useAppStore.ts:77](../../../src/store/useAppStore.ts#L77)
 
 ```ts
 type AppStore = AppState & AppActions
@@ -143,7 +143,7 @@ _No JSDoc yet._
 
 ### `useAppStore`
 
-*const* · [src/store/useAppStore.ts:112](../../../src/store/useAppStore.ts#L112)
+*const* · [src/store/useAppStore.ts:113](../../../src/store/useAppStore.ts#L113)
 
 ```ts
 useAppStore= create<AppStore>()( persist( (set, get) => ({ ...initialState, bindOwner: (account, prese…
@@ -153,7 +153,7 @@ _No JSDoc yet._
 
 ### `selectUnreadCount`
 
-*function* · [src/store/useAppStore.ts:239](../../../src/store/useAppStore.ts#L239)
+*function* · [src/store/useAppStore.ts:242](../../../src/store/useAppStore.ts#L242)
 
 ```ts
 selectUnreadCount(s: AppStore)
@@ -163,7 +163,7 @@ Derived selectors kept outside components so they stay referentially stable.
 
 ### `selectShortlistCount`
 
-*function* · [src/store/useAppStore.ts:240](../../../src/store/useAppStore.ts#L240)
+*function* · [src/store/useAppStore.ts:243](../../../src/store/useAppStore.ts#L243)
 
 ```ts
 selectShortlistCount(s: AppStore)
@@ -250,10 +250,10 @@ Guided tours; one per app that has one.
 
 ### `useTour`
 
-*const* · [src/store/useTour.ts:22](../../../src/store/useTour.ts#L22)
+*const* · [src/store/useTour.ts:25](../../../src/store/useTour.ts#L25)
 
 ```ts
-useTour= create<TourState>()( persist( (set, get) => ({ seen: [], running: null, start: (id) => { …
+useTour= create<TourState>()( persist( (set, get) => ({ seen: [], seenAccounts: [], activeAccountI…
 ```
 
 First-run guided tours, persisted per device apart from the couple's data.

@@ -8,7 +8,8 @@ import { triggerHaptic } from '@/components/ui/PressableScale';
 import { SectionHeader } from '@/components/ui/SectionHeader';
 import { Text } from '@/components/ui/Text';
 import { colors, GUTTER } from '@/constants/theme';
-import { CHECKLIST_TOTAL, nextChecklistItems, PHASE_LABEL } from '@/data/checklist';
+import { CHECKLIST, CHECKLIST_TOTAL } from '@/data/checklist';
+import { guideSections } from '@/services/customerPlanning';
 import { useExperience } from '@/hooks/useExperience';
 import { useCustomerWorkspace } from '@/hooks/useWorkspace';
 import { useAppStore } from '@/store/useAppStore';
@@ -129,9 +130,13 @@ function WeddingChecklist() {
   const completed = useAppStore((s) => s.completedTasks);
   const toggleTask = useAppStore((s) => s.toggleTask);
   const weddingDate = useAppStore((s) => s.weddingDate);
-  const done = completed.length;
+  const account = useAccount();
+  const { project } = useCustomerWorkspace(account.id);
+  const date = project?.events.find((e) => e.type === project.eventType)?.date ?? weddingDate;
+  const guide = guideSections(CHECKLIST, date ? daysUntil(date) : null);
+  const done = completed.filter((id) => CHECKLIST.some((t) => t.id === id)).length;
   const share = done / CHECKLIST_TOTAL;
-  const upcoming = nextChecklistItems(completed, weddingDate ? daysUntil(weddingDate) : null, SHOWN);
+  const upcoming = guide.flatMap((group) => group.tasks.filter((t) => !completed.includes(t.id)).map((task) => ({ ...task, timing: group.label }))).slice(0, SHOWN);
 
   return (
     <View style={styles.section}>
@@ -175,7 +180,7 @@ function WeddingChecklist() {
                     {task.title}
                   </Text>
                   <Text size={12} color={colors.textMuted}>
-                    {PHASE_LABEL[task.phase]}
+                    {task.timing}
                   </Text>
                 </View>
               </Pressable>

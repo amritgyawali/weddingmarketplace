@@ -150,7 +150,7 @@ _No JSDoc yet._
 | `log` | `(actor: Actor, action: string, entity: string, entityId: string, detail?: string) => void` |  |
 | `updateSettings` | `(patch: Partial<PlatformSettings>) => string \| null` | Staff need `settings.edit`; vendors buying a promotion pass. Returns an error to show, or null. |
 | `resetDemo` | `() => string \| null` | Admins only (`demo.reset`). Returns an error to show, or null. |
-| `createLead` | `(input: Omit<Lead, 'id' \| 'createdAt' \| 'status'>) => Lead` |  |
+| `createLead` | `(input: Omit<Lead, 'id' \| 'createdAt' \| 'status'>, deduplicate?: boolean) => Lead` | Optionally reuses an identical open enquiry after revisiting an automatic CTA. |
 | `setLeadStatus` | `(id: string, status: LeadStatus) => void` |  |
 | `updateLead` | `(id: string, patch: Partial<Lead>) => void` |  |
 | `addLeadNote` | `(id: string, text: string, by: string) => void` |  |
@@ -158,7 +158,7 @@ _No JSDoc yet._
 
 ### `coreActions`
 
-*function* · [src/store/db/core.ts:65](../../../src/store/db/core.ts#L65)
+*function* · [src/store/db/core.ts:66](../../../src/store/db/core.ts#L66)
 
 ```ts
 coreActions(set: SetDb, get: GetDb): CoreActions

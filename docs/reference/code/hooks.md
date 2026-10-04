@@ -14,6 +14,7 @@ Every exported symbol in `src/hooks/`, file by file. The guide that explains how
 - [`useFeatures.ts`](#usefeaturests) (2 exports)
 - [`useHydrated.ts`](#usehydratedts) (1 exports)
 - [`useLayout.ts`](#uselayoutts) (1 exports)
+- [`useListingAvailability.ts`](#uselistingavailabilityts) (1 exports)
 - [`useMotion.ts`](#usemotionts) (2 exports)
 - [`useOpenMyWedding.ts`](#useopenmyweddingts) (2 exports)
 - [`useShake.ts`](#useshakets) (1 exports)
@@ -326,6 +327,20 @@ useLayout()
 
 Breakpoints for the web-ready consoles. Phones get one column; tablets and
 desktop browsers (expo start --web) get side navigation and grids.
+
+## useListingAvailability.ts
+
+Source: [src/hooks/useListingAvailability.ts](../../../src/hooks/useListingAvailability.ts)
+
+### `useListingAvailability`
+
+*hook* · [src/hooks/useListingAvailability.ts:6](../../../src/hooks/useListingAvailability.ts#L6)
+
+```ts
+useListingAvailability(listingId: string)
+```
+
+Shares the vendor's published calendar with customers viewing the same listing.
 
 ## useMotion.ts
 

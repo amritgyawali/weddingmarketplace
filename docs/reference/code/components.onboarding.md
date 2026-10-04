@@ -22,9 +22,9 @@ CelebrationOnboarding({ another = false }: { another?: boolean })
 ```
 
 The couple's first run, and "Plan another celebration": what are we
-celebrating, then five short questions shaped by the occasion, one per
-screen, then a review card. A wedding asks exactly the questions it always
-did. "Build our plan" turns the answers into a coordinated project.
+celebrating, then seven short questions shaped by the occasion, one per
+screen, then a review card. Services and related functions have dedicated
+steps. "Build our plan" turns the answers into a coordinated project.
 
 ## OnboardingStep.tsx
 

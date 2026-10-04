@@ -3,6 +3,7 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { Linking, StyleSheet, useWindowDimensions, View } from 'react-native';
 
 import { ExpandableText, HeroControls, InfoTile, ReviewList, Section, StickyCta } from '@/components/detail/DetailParts';
+import { ListingAvailability } from '@/components/detail/ListingAvailability';
 import { ImageCarousel } from '@/components/listing/ImageCarousel';
 import { VenueMiniCard } from '@/components/listing/MiniCards';
 import { useStartConversation } from '@/components/listing/VenueCard';
@@ -52,7 +53,7 @@ export default function VenueDetailScreen() {
     );
   }
 
-  const enquire = () => router.push({ pathname: '/enquiry', params: { kind: 'venue', id: venue.id } });
+  const enquire = () => router.push({ pathname: '/enquiry', params: { kind: 'venue', id: venue.id, auto: '1' } });
 
   return (
     <View style={styles.root}>
@@ -120,6 +121,10 @@ export default function VenueDetailScreen() {
             <InfoTile icon="key-outline" label="Rental cost / function" value={formatMoney(venue.rentalCost)} />
             <InfoTile icon="airplane-outline" label="Destination (2 days)" value={formatMoney(venue.destinationPackage)} />
           </View>
+        </Section>
+
+        <Section title="Availability">
+          <ListingAvailability listingId={venue.id} />
         </Section>
 
         <Section title="About">

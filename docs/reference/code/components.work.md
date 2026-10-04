@@ -63,7 +63,7 @@ Source: [src/components/work/AvailabilityCalendar.tsx](../../../src/components/w
 
 ### `statusColor`
 
-*function* · [src/components/work/AvailabilityCalendar.tsx:20](../../../src/components/work/AvailabilityCalendar.tsx#L20)
+*function* · [src/components/work/AvailabilityCalendar.tsx:22](../../../src/components/work/AvailabilityCalendar.tsx#L22)
 
 ```ts
 statusColor(s: AvailabilityStatus, t: ReturnType<typeof useRoleTheme>)
@@ -73,7 +73,7 @@ _No JSDoc yet._
 
 ### `AvailabilityCalendar`
 
-*component* · [src/components/work/AvailabilityCalendar.tsx:28](../../../src/components/work/AvailabilityCalendar.tsx#L28)
+*component* · [src/components/work/AvailabilityCalendar.tsx:30](../../../src/components/work/AvailabilityCalendar.tsx#L30)
 
 ```ts
 AvailabilityCalendar({ ownerKind, ownerId, onSelectDay }: { ownerKind: AvailabilityEntry['ownerKind']; ownerId: string; onSelectDay?: (date: string) => void })
@@ -374,7 +374,7 @@ payment-verify has confirmed it with the gateway (master plan §7.5).
 *component* · [src/components/work/Payments.tsx:305](../../../src/components/work/Payments.tsx#L305)
 
 ```ts
-PaymentsPanel({ project, mode, openMilestoneId }: { project: Project; mode: 'customer' | 'platform' | 'vendor'; openMilestoneId?: string })
+PaymentsPanel({ project, mode, openMilestoneId, focusMilestoneId, onFocusTarget }: { project: Project; mode: 'customer' | 'platform' | 'vendor'; openMilestoneId?: string; focusMilestoneId?: string; onFocusTarget?: (node: View) => voi…)
 ```
 
 `openMilestoneId` opens that milestone's payment sheet straight away (from "Next up" on My Wedding).
@@ -611,10 +611,10 @@ Source: [src/components/work/TaskBoard.tsx](../../../src/components/work/TaskBoa
 *component* · [src/components/work/TaskBoard.tsx:238](../../../src/components/work/TaskBoard.tsx#L238)
 
 ```ts
-TaskBoard({ project, mode, openTaskId }: { project: Project; mode: Mode; openTaskId?: string })
+TaskBoard({ project, mode, openTaskId, onFocusTarget }: { project: Project; mode: Mode; openTaskId?: string; onFocusTarget?: (node: View) => void })
 ```
 
-Project task board shared by couple, coordinator and providers. `openTaskId` opens that task's sheet straight away.
+Project task board shared by couple, coordinator and providers. `openTaskId` highlights and scrolls to the task without editing it.
 
 ## ThreadView.tsx
 

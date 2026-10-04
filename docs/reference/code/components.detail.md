@@ -7,6 +7,7 @@ Every exported symbol in `src/components/detail/`, file by file. The guide that 
 ## Files
 
 - [`DetailParts.tsx`](#detailpartstsx) (6 exports)
+- [`ListingAvailability.tsx`](#listingavailabilitytsx) (1 exports)
 
 ## DetailParts.tsx
 
@@ -71,3 +72,17 @@ InfoTile({ icon, label, value }: { icon: React.ComponentProps<typeof Ionicons>['
 ```
 
 _No JSDoc yet._
+
+## ListingAvailability.tsx
+
+Source: [src/components/detail/ListingAvailability.tsx](../../../src/components/detail/ListingAvailability.tsx)
+
+### `ListingAvailability`
+
+*component* · [src/components/detail/ListingAvailability.tsx:12](../../../src/components/detail/ListingAvailability.tsx#L12)
+
+```ts
+ListingAvailability({ listingId }: { listingId: string })
+```
+
+A read-only public calendar using the same reservations and capacity as the business calendar.

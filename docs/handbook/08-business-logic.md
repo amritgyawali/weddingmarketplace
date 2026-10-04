@@ -169,3 +169,11 @@ Known defect (Oct 2026): accommodation and security estimates use the guest coun
 3. Add or update parity fixtures (`scripts/parity-fixtures.json`) and run `npm run test:parity`.
 4. Update `AGENTS.md` §5, this page and any seed data that must stay consistent.
 5. Run the money reconciliation smoke test ([12-testing-and-qa.md](12-testing-and-qa.md)): quote total = Σ milestones; booking price = payable + fee; payables sum to the provider payable.
+
+## Customer planning estimates and availability (4 October 2026)
+
+`services/customerPlanning.ts` keeps guide task ids unchanged and groups them by the days left until their recommended due date. Earlier work moves into Do now; upcoming groups never extend beyond the event date. The home guide uses the same grouping and shows five open items.
+
+`personalizedPackagePrice` calculates a listing estimate using the active, requirement-linked functions, per-function headcounts or explicit quantities, and priced extras in `Requirement.details.addOnTotal`. These totals are estimates; unspecified extras require a vendor quotation. No accepted quote, VAT rule, milestone or payout changes.
+
+Vendor Calendar publishes `tradeProfile.eventsPerDay` through `setProviderPersona`, which validates whole numbers from 1 to 100. The public and business calendars share `listingAvailability`: distinct booking/hold reference ids consume slots; closures and weekly rules override remaining slots. Unpublished calendars are labelled as requiring enquiry confirmation, without synthetic availability. The matching engine retains its existing conservative booking exclusions.

@@ -302,7 +302,7 @@ function MilestoneRow({ m, mode, onPay }: { m: PaymentMilestone; mode: 'customer
 
 /** Customer payment milestones, receipts and refunds for a project. */
 /** `openMilestoneId` opens that milestone's payment sheet straight away (from "Next up" on My Wedding). */
-export function PaymentsPanel({ project, mode, openMilestoneId }: { project: Project; mode: 'customer' | 'platform' | 'vendor'; openMilestoneId?: string }) {
+export function PaymentsPanel({ project, mode, openMilestoneId, focusMilestoneId, onFocusTarget }: { project: Project; mode: 'customer' | 'platform' | 'vendor'; openMilestoneId?: string; focusMilestoneId?: string; onFocusTarget?: (node: View) => void }) {
   const t = useRoleTheme();
   const account = useAccount();
   const payMilestone = useDb((s) => s.payMilestone);
@@ -361,7 +361,9 @@ export function PaymentsPanel({ project, mode, openMilestoneId }: { project: Pro
       </Card>
 
       {project.milestones.map((m) => (
-        <MilestoneRow key={m.id} m={m} mode={mode} onPay={() => setPaying(m)} />
+        <View key={m.id} ref={(node) => { if (node && m.id === focusMilestoneId) requestAnimationFrame(() => onFocusTarget?.(node)); }} collapsable={false} style={m.id === focusMilestoneId ? { borderWidth: 2, borderColor: t.c.primary, borderRadius: 10 } : undefined}>
+          <MilestoneRow m={m} mode={mode} onPay={() => setPaying(m)} />
+        </View>
       ))}
 
       {payments.length > 0 && (

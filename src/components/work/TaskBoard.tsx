@@ -153,7 +153,7 @@ function TaskSheet({ project, mode, task, onClose }: { project: Project; mode: M
 /**
  * "Suggest tasks": tasks not on the list yet, in two groups: the ones we
  * recommend for the date and the services asked for (ticked), and the
- * month-by-month guide's items from now on (unticked). The couple ticks what
+ * remaining-days guide's open items (unticked). The couple ticks what
  * they want and adds it in one go.
  */
 function SuggestSheet({ project, visible, onClose }: { project: Project; visible: boolean; onClose: () => void }) {
@@ -211,7 +211,7 @@ function SuggestSheet({ project, visible, onClose }: { project: Project; visible
         {forServices.map(row)}
         {fromGuide.length > 0 && (
           <Text size={13} weight="semibold" color={t.c.muted} style={{ marginTop: 6 }}>
-            From the month-by-month guide
+            From the remaining days guide
           </Text>
         )}
         {fromGuide.map(row)}
@@ -234,13 +234,13 @@ function SuggestSheet({ project, visible, onClose }: { project: Project; visible
   );
 }
 
-/** Project task board shared by couple, coordinator and providers. `openTaskId` opens that task's sheet straight away. */
-export function TaskBoard({ project, mode, openTaskId }: { project: Project; mode: Mode; openTaskId?: string }) {
+/** Project task board shared by couple, coordinator and providers. `openTaskId` highlights and scrolls to the task without editing it. */
+export function TaskBoard({ project, mode, openTaskId, onFocusTarget }: { project: Project; mode: Mode; openTaskId?: string; onFocusTarget?: (node: View) => void }) {
   const t = useRoleTheme();
   const account = useAccount();
   const setTaskStatus = useDb((s) => s.setTaskStatus);
   const [filter, setFilter] = useState<'mine' | 'all' | 'overdue'>('all');
-  const [editing, setEditing] = useState<ProjectTask | 'new' | null>(() => project.tasks.find((x) => x.id === openTaskId) ?? null);
+  const [editing, setEditing] = useState<ProjectTask | 'new' | null>(null);
   const [suggesting, setSuggesting] = useState(false);
 
   const visible = project.tasks.filter((x) => mode === 'platform' || x.visibility === 'shared');
@@ -289,7 +289,8 @@ export function TaskBoard({ project, mode, openTaskId }: { project: Project; mod
             {tasks.map((task) => {
               const late = overdue(task);
               return (
-                <Card key={task.id} style={styles.task}>
+                <View key={task.id} ref={(node) => { if (node && task.id === openTaskId) requestAnimationFrame(() => onFocusTarget?.(node)); }} collapsable={false}>
+                <Card style={[styles.task, task.id === openTaskId && { borderWidth: 2, borderColor: t.c.primary }]}>
                   <Pressable
                     onPress={() => {
                       triggerHaptic(task.status === 'IN_PROGRESS' ? 'success' : 'selection');
@@ -318,6 +319,7 @@ export function TaskBoard({ project, mode, openTaskId }: { project: Project; mod
                   {(task.priority === 'high' || task.priority === 'urgent') && task.status !== 'COMPLETED' && <StatusPill status={task.priority} />}
                   </Pressable>
                 </Card>
+                </View>
               );
             })}
           </View>

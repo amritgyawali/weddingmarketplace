@@ -117,41 +117,40 @@ export const KeyboardAwareScrollView = forwardRef<RNScrollView, ScrollViewProps>
 ) {
   const inner = useRef<RNScrollView>(null);
   const offset = useRef(0);
-  const height = useRef(0);
+  const visible = useKeyboardStore((s) => s.visible);
   useImperativeHandle(ref, () => inner.current as RNScrollView);
 
   useEffect(() => {
-    if (Platform.OS === 'web' || rest.horizontal) return;
+    if (Platform.OS === 'web' || rest.horizontal || !visible) return;
     listen();
     let timer: ReturnType<typeof setTimeout> | undefined;
     const reveal = () => {
       const input = TextInput.State.currentlyFocusedInput?.();
       const scroll = inner.current;
       if (!input || !scroll) return;
-      const host = (scroll as unknown as { getInnerViewRef?: () => unknown }).getInnerViewRef?.() ?? scroll.getInnerViewNode();
-      if (!host) return;
-      // measureLayout fails (and we do nothing) when the input is not inside this scroll view.
-      input.measureLayout(
-        host as never,
-        (_x: number, y: number, _w: number, h: number) => {
-          const visibleTop = offset.current;
-          const visibleBottom = offset.current + height.current - GAP;
-          if (y + h > visibleBottom) scroll.scrollTo({ y: Math.max(0, y + h - height.current + GAP), animated: true });
-          else if (y < visibleTop) scroll.scrollTo({ y: Math.max(0, y - GAP), animated: true });
-        },
-        () => {},
-      );
+      // Window coordinates work through animated wrappers and nested native views.
+      input.measureLayout(scroll.getInnerViewNode() as never, () => scroll.getNativeScrollRef()?.measureInWindow((_sx: number, sy: number, _sw: number, sh: number) => {
+        input.measureInWindow((_ix: number, iy: number, _iw: number, ih: number) => {
+          const keyboard = useKeyboardStore.getState();
+          const bottom = Math.min(sy + sh, keyboard.visible ? keyboard.top : sy + sh) - GAP;
+          if (iy + ih > bottom) scroll.scrollTo({ y: Math.max(0, offset.current + iy + ih - bottom), animated: true });
+          else if (iy < sy) scroll.scrollTo({ y: Math.max(0, offset.current + iy - sy - GAP), animated: true });
+        });
+      }), () => {});
     };
     // Wait for the screen padding to settle before measuring.
-    const sub = Keyboard.addListener(SHOW, () => {
-      clearTimeout(timer);
-      timer = setTimeout(reveal, Platform.OS === 'ios' ? 320 : 260);
-    });
+    timer = setTimeout(reveal, Platform.OS === 'ios' ? 320 : 260);
+    // Also reveal when focus changes while the keyboard is already open.
+    let focused: unknown = null;
+    const interval = setInterval(() => {
+      const input = TextInput.State.currentlyFocusedInput?.();
+      if (input !== focused && useKeyboardStore.getState().visible) { focused = input; clearTimeout(timer); timer = setTimeout(reveal, 80); }
+    }, 160);
     return () => {
-      sub.remove();
+      clearInterval(interval);
       clearTimeout(timer);
     };
-  }, [rest.horizontal]);
+  }, [rest.horizontal, visible]);
 
   return (
     <RNScrollView
@@ -164,7 +163,6 @@ export const KeyboardAwareScrollView = forwardRef<RNScrollView, ScrollViewProps>
         onScroll?.(e);
       }}
       onLayout={(e) => {
-        height.current = e.nativeEvent.layout.height;
         onLayout?.(e);
       }}
       {...rest}

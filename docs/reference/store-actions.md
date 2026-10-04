@@ -55,7 +55,7 @@ Source: [src/store/db/core.ts:12](../../src/store/db/core.ts#L12)
 | `log` | `(actor: Actor, action: string, entity: string, entityId: string, detail?: string) => void` | _No JSDoc yet._ |
 | `updateSettings` | `(patch: Partial<PlatformSettings>) => string \| null` | Staff need `settings.edit`; vendors buying a promotion pass. Returns an error to show, or null. |
 | `resetDemo` | `() => string \| null` | Admins only (`demo.reset`). Returns an error to show, or null. |
-| `createLead` | `(input: Omit<Lead, 'id' \| 'createdAt' \| 'status'>) => Lead` | _No JSDoc yet._ |
+| `createLead` | `(input: Omit<Lead, 'id' \| 'createdAt' \| 'status'>, deduplicate?: boolean) => Lead` | Optionally reuses an identical open enquiry after revisiting an automatic CTA. |
 | `setLeadStatus` | `(id: string, status: LeadStatus) => void` | _No JSDoc yet._ |
 | `updateLead` | `(id: string, patch: Partial<Lead>) => void` | _No JSDoc yet._ |
 | `addLeadNote` | `(id: string, text: string, by: string) => void` | _No JSDoc yet._ |

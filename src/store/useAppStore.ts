@@ -61,7 +61,8 @@ interface AppActions {
   toggleShortlist: (kind: 'venues' | 'vendors', id: string) => boolean;
   toggleLike: (photoId: string) => boolean;
   toggleTask: (taskId: string) => void;
-  addBooking: (booking: Omit<Booking, 'id' | 'createdAt' | 'status'>) => Booking;
+  /** Optionally reuses a matching pending enquiry on an automatic listing CTA. */
+  addBooking: (booking: Omit<Booking, 'id' | 'createdAt' | 'status'>, deduplicate?: boolean) => Booking;
   setBookingStatus: (id: string, status: BookingStatus) => void;
   openConversation: (c: Pick<Conversation, 'kind' | 'refId' | 'title' | 'image'>) => string;
   sendMessage: (conversationId: string, text: string) => void;
@@ -150,7 +151,9 @@ export const useAppStore = create<AppStore>()(
 
       toggleTask: (taskId) => set((s) => ({ completedTasks: toggle(s.completedTasks, taskId) })),
 
-      addBooking: (input) => {
+      addBooking: (input, deduplicate = false) => {
+        const existing = deduplicate ? get().bookings.find((b) => b.status === 'pending' && b.kind === input.kind && b.refId === input.refId && b.eventDate === input.eventDate && b.guests === input.guests && b.subtitle === input.subtitle) : undefined;
+        if (existing) return existing;
         const booking: Booking = { ...input, id: uid('bk'), status: 'pending', createdAt: now() };
         set((s) => ({ bookings: [booking, ...s.bookings] }));
         return booking;
