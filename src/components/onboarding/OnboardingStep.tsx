@@ -82,7 +82,7 @@ export function OnboardingFrame({
       </View>
 
       <View style={{ flex: 1 }}>
-        <ScrollView contentContainerStyle={[styles.scroll, { paddingBottom: 140 + insets.bottom }]} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
+        <ScrollView contentContainerStyle={[styles.scroll, { paddingBottom: 24 + insets.bottom }]} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
           <View style={styles.inner}>
             {crumbs.length > 0 && (
               <View style={styles.crumbs}>
@@ -190,10 +190,6 @@ const styles = StyleSheet.create({
   crumbText: { textDecorationLine: 'underline', textDecorationColor: colors.border },
   content: { marginTop: 24, gap: 10 },
   footer: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    bottom: 0,
     paddingHorizontal: GUTTER,
     paddingTop: 12,
     backgroundColor: colors.white,

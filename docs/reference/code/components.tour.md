@@ -34,7 +34,7 @@ Starts the couple's tour the first time the screen that calls this is shown.
 
 ### `CoupleTour`
 
-*component* · [src/components/tour/AppTour.tsx:79](../../../src/components/tour/AppTour.tsx#L79)
+*component* · [src/components/tour/AppTour.tsx:80](../../../src/components/tour/AppTour.tsx#L80)
 
 ```ts
 CoupleTour()

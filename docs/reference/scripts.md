@@ -23,6 +23,7 @@ npm scripts and the Node scripts behind them. All run locally with no network un
 | `npm run env:functions` | `node scripts/env-functions.mjs` |
 | `npm run test:telemetry` | `node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/test-telemetry.mjs` |
 | `npm run test:social` | `node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/test-social.mjs` |
+| `npm run test:customer-planning` | `node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/test-customer-planning.mjs` |
 | `npm run test:features` | `node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/test-features.mjs` |
 | `npm run docs:generate` | `node scripts/docs/generate-reference.mjs` |
 | `npm run docs:check` | `node scripts/docs/generate-reference.mjs --check` |
@@ -295,6 +296,12 @@ and no Docker:
                                                after signing up as staff: approve yourself as super admin
 
 Secrets are read from .env.local and never printed.
+
+### scripts/test-customer-planning.mjs
+
+Source: [scripts/test-customer-planning.mjs](../../scripts/test-customer-planning.mjs)
+
+_No header comment yet._
 
 ### scripts/test-features.mjs
 

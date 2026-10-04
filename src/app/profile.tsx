@@ -50,7 +50,7 @@ export default function ProfileMenuScreen() {
   const replayTour = useTour((s) => s.replay);
   /** Back to home, where the tour starts again. */
   const showTour = () => {
-    replayTour('couple');
+    replayTour('couple', account.id);
     goToCoupleTab('/');
   };
 

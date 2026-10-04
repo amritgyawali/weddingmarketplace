@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Linking, Pressable, StyleSheet, useWindowDimensions, View } from 'react-native';
 
 import { ExpandableText, HeroControls, InfoTile, ReviewList, Section, StickyCta } from '@/components/detail/DetailParts';
+import { ListingAvailability } from '@/components/detail/ListingAvailability';
 import { ImageCarousel } from '@/components/listing/ImageCarousel';
 import { VendorMiniCard } from '@/components/listing/MiniCards';
 import { useStartConversation } from '@/components/listing/VenueCard';
@@ -16,6 +17,9 @@ import { Text } from '@/components/ui/Text';
 import { colors, GUTTER, radius } from '@/constants/theme';
 import { findCategory, findSubcategory } from '@/data/categories';
 import { useFeaturedVendors, useVendor } from '@/hooks/queries';
+import { personalizedPackagePrice } from '@/services/customerPlanning';
+import { useCustomerWorkspace } from '@/hooks/useWorkspace';
+import { useAccount } from '@/store/useSession';
 import { NotFoundError } from '@/services/api';
 import { formatMoney } from '@/utils/format';
 import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
@@ -26,6 +30,8 @@ export default function VendorDetailScreen() {
   const { data: vendor, isLoading, error, refetch } = useVendor(id);
   const similar = useFeaturedVendors(vendor?.city ?? '', vendor?.categoryId ?? '');
   const startConversation = useStartConversation();
+  const account = useAccount();
+  const { project } = useCustomerWorkspace(account.id);
   const [selectedPkg, setSelectedPkg] = useState(1);
 
   if (isLoading) {
@@ -56,7 +62,8 @@ export default function VendorDetailScreen() {
 
   const category = findCategory(vendor.categoryId);
   const sub = findSubcategory(vendor.categoryId, vendor.subcategoryId);
-  const pkg = vendor.packages[selectedPkg];
+  const pkg = vendor.packages[selectedPkg] ?? vendor.packages[0];
+  const estimate = pkg ? personalizedPackagePrice(pkg, vendor.subcategoryId, project) : null;
 
   return (
     <View style={styles.root}>
@@ -97,9 +104,11 @@ export default function VendorDetailScreen() {
         </View>
 
         <Section title="Packages">
+          <Text style={{ marginBottom: 12 }}>{project ? 'Estimate for your selected functions and requirements. Extras without a published price are confirmed in your quotation.' : 'Add your event details to see a personalised estimate.'}</Text>
           <View style={{ gap: 12 }}>
             {vendor.packages.map((p, i) => {
               const active = i === selectedPkg;
+              const packageEstimate = personalizedPackagePrice(p, vendor.subcategoryId, project);
               return (
                 <Pressable
                   key={p.name}
@@ -115,9 +124,9 @@ export default function VendorDetailScreen() {
                       </Text>
                     </View>
                     <Text size={16} weight="bold" color={colors.textStrong}>
-                      {formatMoney(p.price)}{' '}
+                      {packageEstimate === null ? 'Request a quote' : formatMoney(packageEstimate)}{' '}
                       <Text size={12} color={colors.textMuted}>
-                        {p.unit}
+                        {packageEstimate === null ? '' : 'estimated total'}
                       </Text>
                     </Text>
                   </View>
@@ -132,6 +141,10 @@ export default function VendorDetailScreen() {
               );
             })}
           </View>
+        </Section>
+
+        <Section title="Availability">
+          <ListingAvailability listingId={vendor.id} />
         </Section>
 
         <Section title="About">
@@ -175,13 +188,13 @@ export default function VendorDetailScreen() {
         )}
       </ScrollView>
 
-      <StickyCta
-        priceLabel={`${pkg.name} package`}
-        price={formatMoney(pkg.price)}
-        unit={pkg.unit}
+      {pkg && <StickyCta
+        priceLabel={project ? 'Your estimated total' : 'Personalised pricing'}
+        price={estimate === null ? 'Request a quote' : formatMoney(estimate)}
+        unit={estimate === null ? '' : 'Final price in your quotation'}
         cta="Send Enquiry"
-        onPress={() => router.push({ pathname: '/enquiry', params: { kind: 'vendor', id: vendor.id, pkg: pkg.name } })}
-      />
+        onPress={() => router.push({ pathname: '/enquiry', params: { kind: 'vendor', id: vendor.id, pkg: pkg.name, auto: '1' } })}
+      />}
     </View>
   );
 }

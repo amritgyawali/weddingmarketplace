@@ -573,7 +573,7 @@
    "kind": "screen",
    "file": "src/app/onboarding/index.tsx",
    "component": "CoupleOnboarding",
-   "doc": "First run for couples: what are we celebrating, five short questions shaped by the occasion, then a review card. \"Build our plan\" turns the answers into a coordinated project."
+   "doc": "First run for couples: what are we celebrating, seven short questions shaped by the occasion, then a review card. \"Build our plan\" turns the answers into a coordinated project."
   },
   {
    "path": "/onboarding/city",
@@ -1338,7 +1338,7 @@
     {
      "name": "VendorCalendar",
      "kind": "component",
-     "line": 19,
+     "line": 23,
      "signature": "()",
      "doc": "Availability calendar that feeds the matching engine, plus bookings by day."
     }
@@ -1741,7 +1741,7 @@
     {
      "name": "ChecklistScreen",
      "kind": "component",
-     "line": 150,
+     "line": 145,
      "signature": "()",
      "doc": "Our wedding's shared task list (from the project) plus the general planning guide."
     }
@@ -1832,7 +1832,7 @@
     {
      "name": "EnquiryScreen",
      "kind": "component",
-     "line": 28,
+     "line": 32,
      "signature": "()",
      "doc": ""
     }
@@ -2263,7 +2263,7 @@
      "kind": "component",
      "line": 8,
      "signature": "()",
-     "doc": "First run for couples: what are we celebrating, five short questions shaped\nby the occasion, then a review card. \"Build our plan\" turns the answers into\na coordinated project."
+     "doc": "First run for couples: what are we celebrating, seven short questions shaped\nby the occasion, then a review card. \"Build our plan\" turns the answers into\na coordinated project."
     }
    ]
   },
@@ -3054,7 +3054,7 @@
     {
      "name": "VendorDetailScreen",
      "kind": "component",
-     "line": 23,
+     "line": 27,
      "signature": "()",
      "doc": ""
     }
@@ -3080,7 +3080,7 @@
     {
      "name": "VenueDetailScreen",
      "kind": "component",
-     "line": 21,
+     "line": 22,
      "signature": "()",
      "doc": ""
     }
@@ -4704,6 +4704,19 @@
    ]
   },
   {
+   "file": "src/components/detail/ListingAvailability.tsx",
+   "doc": "",
+   "exports": [
+    {
+     "name": "ListingAvailability",
+     "kind": "component",
+     "line": 12,
+     "signature": "({ listingId }: { listingId: string })",
+     "doc": "A read-only public calendar using the same reservations and capacity as the business calendar."
+    }
+   ]
+  },
+  {
    "file": "src/components/genie/GenieSections.tsx",
    "doc": "",
    "exports": [
@@ -4764,14 +4777,14 @@
     {
      "name": "ProgressRing",
      "kind": "component",
-     "line": 23,
+     "line": 24,
      "signature": "({ percent, size = 58, stroke = 3, light }: { percent: number; size?: number; stroke?: number; light?: boolean })",
      "doc": "Thin progress ring. Defaults to crimson on a light track; pass `light` over dark photos."
     },
     {
      "name": "ChecklistCard",
      "kind": "component",
-     "line": 121,
+     "line": 122,
      "signature": "()",
      "doc": "Checklist progress plus the next tasks, tickable in place. Weddings use the wedding checklist; other celebrations their own."
     }
@@ -4810,7 +4823,7 @@
     {
      "name": "PlanningTools",
      "kind": "component",
-     "line": 35,
+     "line": 34,
      "signature": "()",
      "doc": "Two-column grid of the couple's planning tools, each with a live count."
     }
@@ -5325,7 +5338,7 @@
      "kind": "component",
      "line": 106,
      "signature": "({ another = false }: { another?: boolean })",
-     "doc": "The couple's first run, and \"Plan another celebration\": what are we\ncelebrating, then five short questions shaped by the occasion, one per\nscreen, then a review card. A wedding asks exactly the questions it always\ndid. \"Build our plan\" turns the answers into a coordinated project."
+     "doc": "The couple's first run, and \"Plan another celebration\": what are we\ncelebrating, then seven short questions shaped by the occasion, one per\nscreen, then a review card. Services and related functions have dedicated\nsteps. \"Build our plan\" turns the answers into a coordinated project."
     }
    ]
   },
@@ -7214,7 +7227,7 @@
     {
      "name": "CoupleTour",
      "kind": "component",
-     "line": 79,
+     "line": 80,
      "signature": "()",
      "doc": "The couple's first-run tour: a dimmed screen with a window around one\nfeature and a small card that says what it does. Next, back and skip;\nthe last card offers to start a plan. Mounted once over the couple tabs."
     }
@@ -7405,29 +7418,29 @@
     {
      "name": "useMonthTitle",
      "kind": "hook",
-     "line": 20,
+     "line": 21,
      "signature": "(mode: 'bs' | 'ad', cursor: { year: number; month: number }, cells: (MonthCell | null)[])",
      "doc": "Title and subtitle of a month cursor: \"Mangsir 2083\" over \"Nov – Dec 2026\", or the reverse in AD mode."
     },
     {
      "name": "weekdayLetters",
      "kind": "function",
-     "line": 40,
+     "line": 41,
      "signature": "(lang: 'en' | 'ne')",
      "doc": ""
     },
     {
      "name": "shiftCursor",
      "kind": "function",
-     "line": 43,
+     "line": 44,
      "signature": "(mode: 'bs' | 'ad', c: { year: number; month: number }, delta: number)",
      "doc": "Moves a month cursor in either calendar."
     },
     {
      "name": "Calendar",
      "kind": "component",
-     "line": 54,
-     "signature": "({ value, onChange, minDate = new Date(), }: { value: string | null; onChange: (iso: string) => void; minDate?: Date; })",
+     "line": 55,
+     "signature": "({ value, onChange, minDate = new Date(), dateStatus, }: { value: string | null; onChange: (iso: string) => void; minDate?: Date; dateStatus?: (date: string) => AvailabilityStatus; })",
      "doc": "Pure-JS month calendar so the date step looks the same on iOS, Android and\nweb. Shows the Nepali (BS) month by default with the AD day in small type;\nthe value is always an AD `yyyy-mm-dd`."
     }
    ]
@@ -8308,14 +8321,14 @@
     {
      "name": "statusColor",
      "kind": "function",
-     "line": 20,
+     "line": 22,
      "signature": "(s: AvailabilityStatus, t: ReturnType<typeof useRoleTheme>)",
      "doc": ""
     },
     {
      "name": "AvailabilityCalendar",
      "kind": "component",
-     "line": 28,
+     "line": 30,
      "signature": "({ ownerKind, ownerId, onSelectDay }: { ownerKind: AvailabilityEntry['ownerKind']; ownerId: string; onSelectDay?: (date: string) => void })",
      "doc": "Month calendar of AVAILABLE / TENTATIVE / HELD / BOOKED / UNAVAILABLE days.\nBooking-driven entries are read-only; owners edit manual days and weekly rules."
     }
@@ -8551,7 +8564,7 @@
      "name": "PaymentsPanel",
      "kind": "component",
      "line": 305,
-     "signature": "({ project, mode, openMilestoneId }: { project: Project; mode: 'customer' | 'platform' | 'vendor'; openMilestoneId?: string })",
+     "signature": "({ project, mode, openMilestoneId, focusMilestoneId, onFocusTarget }: { project: Project; mode: 'customer' | 'platform' | 'vendor'; openMilestoneId?: string; focusMilestoneId?: string; onFocusTarget?: (node: View) => voi…)",
      "doc": "`openMilestoneId` opens that milestone's payment sheet straight away (from \"Next up\" on My Wedding)."
     }
    ]
@@ -8744,8 +8757,8 @@
      "name": "TaskBoard",
      "kind": "component",
      "line": 238,
-     "signature": "({ project, mode, openTaskId }: { project: Project; mode: Mode; openTaskId?: string })",
-     "doc": "Project task board shared by couple, coordinator and providers. `openTaskId` opens that task's sheet straight away."
+     "signature": "({ project, mode, openTaskId, onFocusTarget }: { project: Project; mode: Mode; openTaskId?: string; onFocusTarget?: (node: View) => void })",
+     "doc": "Project task board shared by couple, coordinator and providers. `openTaskId` highlights and scrolls to the task without editing it."
     }
    ]
   },
@@ -11487,6 +11500,19 @@
    ]
   },
   {
+   "file": "src/hooks/useListingAvailability.ts",
+   "doc": "",
+   "exports": [
+    {
+     "name": "useListingAvailability",
+     "kind": "hook",
+     "line": 6,
+     "signature": "(listingId: string)",
+     "doc": "Shares the vendor's published calendar with customers viewing the same listing."
+    }
+   ]
+  },
+  {
    "file": "src/hooks/useMotion.ts",
    "doc": "",
    "exports": [
@@ -11692,13 +11718,26 @@
    ]
   },
   {
+   "file": "src/i18n/ne/customerPlanning.ts",
+   "doc": "",
+   "exports": [
+    {
+     "name": "CUSTOMER_PLANNING_NE",
+     "kind": "const",
+     "line": 2,
+     "signature": ": Record<string, string>",
+     "doc": "Nepali copy for customer planning, enquiry and availability screens."
+    }
+   ]
+  },
+  {
    "file": "src/i18n/ne/index.ts",
    "doc": "English → Nepali for everything the app shows. Keys are the English text exactly as written in the code; keys with {0}, {1}… are templates whose placeholders match any text (translated in turn). Generated from the app's strings and reviewed by hand; add new lines in the same form.",
    "exports": [
     {
      "name": "NE",
      "kind": "const",
-     "line": 9,
+     "line": 10,
      "signature": ": Record<string, string>",
      "doc": ""
     }
@@ -11983,6 +12022,47 @@
      "line": 56,
      "signature": "()",
      "doc": ""
+    }
+   ]
+  },
+  {
+   "file": "src/services/customerPlanning.ts",
+   "doc": "",
+   "exports": [
+    {
+     "name": "guideSections",
+     "kind": "function",
+     "line": 9,
+     "signature": "(tasks: ChecklistTask[], days: number | null)",
+     "doc": "Keeps existing guide ids while compressing overdue preparation into today's work."
+    },
+    {
+     "name": "relatedEvents",
+     "kind": "function",
+     "line": 25,
+     "signature": "(occasion: OccasionDef)",
+     "doc": "Only functions in the selected occasion are offered, including admin-created occasions."
+    },
+    {
+     "name": "personalizedPackagePrice",
+     "kind": "function",
+     "line": 31,
+     "signature": "(pkg: VendorPackage, serviceId: string, project: Project | null): number | null",
+     "doc": "A listing estimate uses the functions assigned to its service and explicit quantities. It is not a quotation."
+    },
+    {
+     "name": "dailyCapacity",
+     "kind": "function",
+     "line": 54,
+     "signature": "(account?: Account): number",
+     "doc": "Capacity defaults conservatively to one until the business publishes its daily limit."
+    },
+    {
+     "name": "listingAvailability",
+     "kind": "function",
+     "line": 60,
+     "signature": "(ownerIds: string[], date: string, entries: AvailabilityEntry[], rules: AvailabilityRule[], capacity: number): { status: AvailabilityStatus; remaining: number }",
+     "doc": "Public calendar status from real entries and weekly rules, with distinct booking reservations counted once."
     }
    ]
   },
@@ -12624,6 +12704,18 @@
        "doc": "Per-function date; null = not confirmed yet."
       },
       {
+       "name": "eventCities",
+       "optional": true,
+       "type": "Partial<Record<EventType, string>>",
+       "doc": "Optional city override for each additional function."
+      },
+      {
+       "name": "eventNames",
+       "optional": true,
+       "type": "Partial<Record<EventType, string>>",
+       "doc": "Optional display name for a related party or family gathering."
+      },
+      {
        "name": "guests",
        "optional": false,
        "type": "number",
@@ -12700,91 +12792,91 @@
     {
      "name": "estimateRange",
      "kind": "function",
-     "line": 59,
+     "line": 63,
      "signature": "(serviceId: string, guests: number, events = 1): [number, number]",
      "doc": "Typical total cost range for a service in NPR."
     },
     {
      "name": "estimateTotal",
      "kind": "function",
-     "line": 81,
+     "line": 85,
      "signature": "(serviceIds: string[], guests: number, events = 1): [number, number]",
      "doc": ""
     },
     {
      "name": "allocateBudget",
      "kind": "function",
-     "line": 95,
+     "line": 99,
      "signature": "(total: number, serviceIds: string[], guests: number, events = 1): Record<string, number>",
      "doc": "Split an overall budget across services by typical share, making sure\nper-guest services (catering) never fall below their minimum feasible cost."
     },
     {
      "name": "perUnitBudget",
      "kind": "function",
-     "line": 112,
+     "line": 116,
      "signature": "(serviceId: string, total: number, guests: number, events = 1): [number, number]",
      "doc": "Convert a total allocation into the service's own unit (per plate etc.)."
     },
     {
      "name": "runSheetFor",
      "kind": "function",
-     "line": 122,
+     "line": 126,
      "signature": "(type: EventType): RunItem[]",
      "doc": ""
     },
     {
      "name": "buildEvents",
      "kind": "function",
-     "line": 126,
+     "line": 130,
      "signature": "(input: PlanInput): ProjectEvent[]",
      "doc": ""
     },
     {
      "name": "buildRequirements",
      "kind": "function",
-     "line": 151,
+     "line": 155,
      "signature": "(input: PlanInput, events: ProjectEvent[]): Requirement[]",
      "doc": ""
     },
     {
      "name": "WEDDING_ONLY_TASKS",
      "kind": "const",
-     "line": 276,
+     "line": 280,
      "signature": "= new Set(TASK_TEMPLATES.map((t) => t.title).filter((title) => !CELEBRATION_TEMPLATES.some(…",
      "doc": "Titles that only make sense for a wedding; older non-wedding plans drop them (store migrate v5)."
     },
     {
      "name": "generateTasks",
      "kind": "function",
-     "line": 279,
+     "line": 283,
      "signature": "(mainDate: string, services: string[], customerName: string, coordinatorName = 'Your coordinator', occasion = 'wedding'): ProjectTask[]",
      "doc": "Personalised checklist for the occasion; overdue templates are compressed into the remaining time."
     },
     {
      "name": "suggestedTasks",
      "kind": "function",
-     "line": 307,
+     "line": 311,
      "signature": "(project: Project): ProjectTask[]",
      "doc": "Checklist tasks for the project's date and requested services that aren't on its list yet (the \"Suggest tasks\" sheet)."
     },
     {
      "name": "guideSuggestions",
      "kind": "function",
-     "line": 318,
+     "line": 321,
      "signature": "(project: Project, ticked: string[] = []): ProjectTask[]",
-     "doc": "Items of the month-by-month guide for the phase the couple is in and the\nones after it, not on the wedding's task list yet, as tasks for the couple\ndue by the end of their phase. Items already ticked in the guide (`ticked`,\nchecklist ids) are left out. Weddings and engagements only."
+     "doc": "Open remaining-days guide items, including earlier preparation, not on the\nwedding's task list yet. Earlier due dates become today. Items already ticked in the guide (`ticked`,\nchecklist ids) are left out. Weddings and engagements only."
     },
     {
      "name": "buildTimeline",
      "kind": "function",
-     "line": 345,
+     "line": 347,
      "signature": "(project: Project, opts: { internal?: boolean } = {}): TimelineEntry[]",
      "doc": "Customer-facing timeline built from live project data plus any manual\nentries (meetings, milestones) stored on the project."
     },
     {
      "name": "NextAction",
      "kind": "interface",
-     "line": 368,
+     "line": 370,
      "signature": "",
      "doc": "",
      "members": [
@@ -12829,77 +12921,77 @@
     {
      "name": "nextBestAction",
      "kind": "function",
-     "line": 379,
+     "line": 381,
      "signature": "(project: Project, quotes: Quotation[]): NextAction",
      "doc": ""
     },
     {
      "name": "missingServices",
      "kind": "function",
-     "line": 394,
+     "line": 396,
      "signature": "(project: Project): string[]",
      "doc": "Services couples usually need for their functions but haven't requested."
     },
     {
      "name": "planningProgress",
      "kind": "function",
-     "line": 400,
+     "line": 402,
      "signature": "(project: Project)",
      "doc": ""
     },
     {
      "name": "savingTips",
      "kind": "function",
-     "line": 412,
+     "line": 414,
      "signature": "(project: Project): string[]",
      "doc": ""
     },
     {
      "name": "invitationText",
      "kind": "function",
-     "line": 424,
+     "line": 426,
      "signature": "(project: Project, tone: 'traditional' | 'modern' | 'nepali' = 'traditional'): string",
      "doc": ""
     },
     {
      "name": "enquiryText",
      "kind": "function",
-     "line": 435,
+     "line": 437,
      "signature": "(project: Project, serviceId: string): string",
      "doc": ""
     },
     {
      "name": "QUESTIONS_TO_ASK",
      "kind": "const",
-     "line": 442,
+     "line": 444,
      "signature": ": Record<string, string[]>",
      "doc": ""
     },
     {
      "name": "questionsToAsk",
      "kind": "function",
-     "line": 451,
+     "line": 453,
      "signature": "(serviceId: string)",
      "doc": ""
     },
     {
      "name": "negotiationPoints",
      "kind": "function",
-     "line": 454,
+     "line": 456,
      "signature": "(quote: Quotation, marketMedian?: number): string[]",
      "doc": ""
     },
     {
      "name": "summarizeReviews",
      "kind": "function",
-     "line": 465,
+     "line": 467,
      "signature": "(reviews: { rating: number; text: string }[]): { average: number; highlights: string[]; concerns: string[] }",
      "doc": ""
     },
     {
      "name": "guestBandLabel",
      "kind": "function",
-     "line": 482,
+     "line": 484,
      "signature": "(guests: number)",
      "doc": ""
     }
@@ -14436,8 +14528,8 @@
       {
        "name": "createLead",
        "optional": false,
-       "type": "(input: Omit<Lead, 'id' | 'createdAt' | 'status'>) => Lead",
-       "doc": ""
+       "type": "(input: Omit<Lead, 'id' | 'createdAt' | 'status'>, deduplicate?: boolean) => Lead",
+       "doc": "Optionally reuses an identical open enquiry after revisiting an automatic CTA."
       },
       {
        "name": "setLeadStatus",
@@ -14468,7 +14560,7 @@
     {
      "name": "coreActions",
      "kind": "function",
-     "line": 65,
+     "line": 66,
      "signature": "(set: SetDb, get: GetDb): CoreActions",
      "doc": ""
     }
@@ -16533,28 +16625,28 @@
     {
      "name": "AppStore",
      "kind": "type",
-     "line": 76,
+     "line": 77,
      "signature": "= AppState & AppActions",
      "doc": ""
     },
     {
      "name": "useAppStore",
      "kind": "const",
-     "line": 112,
+     "line": 113,
      "signature": "= create<AppStore>()( persist( (set, get) => ({ ...initialState, bindOwner: (account, prese…",
      "doc": ""
     },
     {
      "name": "selectUnreadCount",
      "kind": "function",
-     "line": 239,
+     "line": 242,
      "signature": "(s: AppStore)",
      "doc": "Derived selectors kept outside components so they stay referentially stable."
     },
     {
      "name": "selectShortlistCount",
      "kind": "function",
-     "line": 240,
+     "line": 243,
      "signature": "(s: AppStore)",
      "doc": ""
     }
@@ -16621,8 +16713,8 @@
     {
      "name": "useTour",
      "kind": "const",
-     "line": 22,
-     "signature": "= create<TourState>()( persist( (set, get) => ({ seen: [], running: null, start: (id) => { …",
+     "line": 25,
+     "signature": "= create<TourState>()( persist( (set, get) => ({ seen: [], seenAccounts: [], activeAccountI…",
      "doc": "First-run guided tours, persisted per device apart from the couple's data."
     }
    ]

@@ -130,6 +130,8 @@ export const personaActions = (set: SetDb, get: GetDb): PersonaActions => ({
     if (!services.length) return 'Pick at least one service';
     if (!services.includes(input.primaryService)) return 'Your main service must be one of the services you offer';
     if (!BUSINESS_FORMS.some((f) => f.id === input.businessForm)) return 'Pick how your business is set up';
+    const eventsPerDay = input.tradeProfile?.eventsPerDay;
+    if (eventsPerDay !== undefined && (!Number.isInteger(Number(eventsPerDay)) || Number(eventsPerDay) < 1 || Number(eventsPerDay) > 100)) return 'Daily capacity must be a whole number from 1 to 100';
     const teamSize = input.teamSize === undefined ? undefined : Math.max(0, Math.round(input.teamSize));
     if (teamSize !== undefined && !Number.isFinite(teamSize)) return 'Team size must be a number';
     session.updateAccount(accountId, {

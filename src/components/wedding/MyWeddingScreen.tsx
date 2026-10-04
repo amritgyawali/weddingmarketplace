@@ -488,7 +488,7 @@ export function MyWeddingScreen({ inTab }: { inTab?: boolean }) {
   const account = useAccount();
   const insets = useSafeAreaInsets();
   const { wide, contentWidth } = useLayout();
-  const params = useLocalSearchParams<{ tab?: Tab; focus?: string }>();
+  const params = useLocalSearchParams<{ tab?: Tab; focus?: string; section?: string }>();
   const { project, projects, isCollaborator } = useCustomerWorkspace(account.id);
   const exp = useExperience();
   const on = useFeatures();
@@ -498,8 +498,18 @@ export function MyWeddingScreen({ inTab }: { inTab?: boolean }) {
   const [tabsY, setTabsY] = useState(0);
   const [collapsed, setCollapsed] = useState(false);
   const scrollRef = useRef<RNScrollView>(null);
+  const bodyRef = useRef<View>(null);
+  const bodyY = useRef(0);
   // A tab stays mounted in the background; only the visible screen may set the status bar.
   const focused = useIsFocused();
+
+  const request = `${params.tab ?? ''}|${params.focus ?? ''}|${params.section ?? ''}`;
+  const [lastRequest, setLastRequest] = useState(request);
+  if (lastRequest !== request) {
+    setLastRequest(request);
+    if (params.tab && TABS.some((t) => t.id === params.tab)) setTab(params.tab);
+    setFocus(params.focus);
+  }
 
   if (!project) return <EmptyWedding inTab={inTab} />;
 
@@ -522,6 +532,11 @@ export function MyWeddingScreen({ inTab }: { inTab?: boolean }) {
     else if (collapsed) requestAnimationFrame(() => scrollRef.current?.scrollTo({ y: threshold, animated: false }));
   };
 
+  const revealTarget = (node: View) => {
+    const host = bodyRef.current;
+    if (host) node.measureLayout(host, (_x, y) => scrollRef.current?.scrollTo({ y: Math.max(0, bodyY.current + y - insets.top - BAR_HEIGHT - 80), animated: true }), () => {});
+  };
+
   return (
     <View style={styles.root}>
       {focused && <StatusBar style={collapsed ? 'dark' : 'light'} />}
@@ -539,18 +554,18 @@ export function MyWeddingScreen({ inTab }: { inTab?: boolean }) {
           <CountdownCard project={project} onSetDate={() => changeTab('functions')} />
           {!isCollaborator && (projects.length > 1 || exp.occasion?.id !== 'wedding') && <CelebrationSwitcher />}
         </View>
-        <View style={styles.tabs} onLayout={(e) => setTabsY(e.nativeEvent.layout.y)}>
+        <View style={styles.tabs} onLayout={(e) => { const y = e.nativeEvent.layout.y; setTabsY(y); if (params.tab || params.section) requestAnimationFrame(() => scrollRef.current?.scrollTo({ y: Math.max(0, y - insets.top - BAR_HEIGHT), animated: false })); }}>
           <View style={page}>
             <Segmented options={TABS} value={tab} onChange={changeTab} counts={counts} />
           </View>
         </View>
-        <View style={[styles.pad, page, { paddingTop: 18 }]}>
+        <View ref={bodyRef} collapsable={false} onLayout={(e) => { bodyY.current = e.nativeEvent.layout.y; }} style={[styles.pad, page, { paddingTop: 18 }]}>
           {tab === 'overview' && <Overview project={project} setTab={changeTab} wide={wide} />}
           {tab === 'services' && <Services project={project} />}
           {tab === 'timeline' && <TimelineView project={project} mode="customer" />}
           {tab === 'functions' && <EventsPanel project={project} mode="customer" />}
-          {tab === 'tasks' && <TaskBoard project={project} mode="customer" openTaskId={focus} />}
-          {tab === 'payments' && <PaymentsPanel project={project} mode="customer" openMilestoneId={focus} />}
+          {tab === 'tasks' && <TaskBoard project={project} mode="customer" openTaskId={focus} onFocusTarget={revealTarget} />}
+          {tab === 'payments' && <PaymentsPanel project={project} mode="customer" focusMilestoneId={focus} onFocusTarget={revealTarget} />}
           {tab === 'files' && <FilesPanel project={project} mode="customer" />}
           {tab === 'team' && <Team project={project} />}
         </View>

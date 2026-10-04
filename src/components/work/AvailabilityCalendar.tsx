@@ -8,6 +8,8 @@ import { Sheet } from '@/components/ui/Sheet';
 import { Text } from '@/components/ui/Text';
 import { toast } from '@/components/ui/Toast';
 import { useI18n } from '@/i18n';
+import { dailyCapacity, listingAvailability } from '@/services/customerPlanning';
+import { useSession } from '@/store/useSession';
 import { useDb } from '@/store/useDb';
 import { useRoleTheme } from '@/theme/RoleTheme';
 import type { AvailabilityEntry, AvailabilityStatus, DayPart } from '@/types/platform';
@@ -27,6 +29,8 @@ export function statusColor(s: AvailabilityStatus, t: ReturnType<typeof useRoleT
  */
 export function AvailabilityCalendar({ ownerKind, ownerId, onSelectDay }: { ownerKind: AvailabilityEntry['ownerKind']; ownerId: string; onSelectDay?: (date: string) => void }) {
   const t = useRoleTheme();
+  const accounts = useSession((s) => s.accounts);
+  const owner = accounts.find((a) => a.id === ownerId || a.listingId === ownerId);
   const entries = useDb((s) => s.availability);
   const rules = useDb((s) => s.availabilityRules);
   const setAvailability = useDb((s) => s.setAvailability);
@@ -53,7 +57,7 @@ export function AvailabilityCalendar({ ownerKind, ownerId, onSelectDay }: { owne
     const list = mine.filter((e) => e.date === iso);
     const weekday = new Date(`${iso}T00:00:00`).getDay();
     const rule = myRules.find((r) => r.weekday === weekday);
-    const worst = list.reduce<AvailabilityStatus>((w, e) => (RANK[e.status] > RANK[w] ? e.status : w), rule ? rule.status : 'AVAILABLE');
+    const worst = ownerKind === 'provider' ? listingAvailability([ownerId, ...(owner ? [owner.id] : [])], iso, entries, rules, dailyCapacity(owner)).status : list.reduce<AvailabilityStatus>((w, e) => (RANK[e.status] > RANK[w] ? e.status : w), rule ? rule.status : 'AVAILABLE');
     return { status: worst, entries: list, rule: !!rule && !list.length };
   };
 
@@ -109,6 +113,7 @@ export function AvailabilityCalendar({ ownerKind, ownerId, onSelectDay }: { owne
                 setSelected((cur) => (cur.includes(date) ? cur.filter((x) => x !== date) : [...cur, date]));
               }}
               style={styles.cell}
+              accessibilityRole="button"
               accessibilityLabel={`${date} ${s.status}`}>
               <View style={[styles.day, { backgroundColor: s.status === 'AVAILABLE' ? 'transparent' : `${color}26`, borderColor: on ? t.c.primary : isToday ? t.c.textStrong : 'transparent' }]}>
                 <Text size={14} lineHeight={17} weight={on || isToday ? 'bold' : 'medium'} color={s.status === 'AVAILABLE' ? t.c.textStrong : color} raw>

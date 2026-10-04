@@ -146,7 +146,7 @@ Every file in `src/app/` is a route (Expo Router). Layouts (`_layout.tsx`) defin
 | URL | Kind | Screen | File | Notes |
 |---|---|---|---|---|
 | `/onboarding` | layout | `OnboardingLayout` | [onboarding/_layout.tsx](../../src/app/onboarding/_layout.tsx) |  |
-| `/onboarding` | screen | `CoupleOnboarding` | [onboarding/index.tsx](../../src/app/onboarding/index.tsx) | First run for couples: what are we celebrating, five short questions shaped by the occasion, then a review card. "Build our plan" turns the answers into a coordinated project. |
+| `/onboarding` | screen | `CoupleOnboarding` | [onboarding/index.tsx](../../src/app/onboarding/index.tsx) | First run for couples: what are we celebrating, seven short questions shaped by the occasion, then a review card. "Build our plan" turns the answers into a coordinated project. |
 | `/onboarding/city` | screen | `CityRedirect` | [onboarding/city.tsx](../../src/app/onboarding/city.tsx) | Old city question; the questions now live on one screen. |
 | `/onboarding/date` | screen | `DateRedirect` | [onboarding/date.tsx](../../src/app/onboarding/date.tsx) | Old date question; the questions now live on one screen. |
 | `/onboarding/role` | screen | `RoleRedirect` | [onboarding/role.tsx](../../src/app/onboarding/role.tsx) | Old first question; the questions now live on one screen. |

@@ -19,7 +19,8 @@ export interface CoreActions {
   /** Admins only (`demo.reset`). Returns an error to show, or null. */
   resetDemo: () => string | null;
 
-  createLead: (input: Omit<Lead, 'id' | 'createdAt' | 'status'>) => Lead;
+  /** Optionally reuses an identical open enquiry after revisiting an automatic CTA. */
+  createLead: (input: Omit<Lead, 'id' | 'createdAt' | 'status'>, deduplicate?: boolean) => Lead;
   setLeadStatus: (id: string, status: LeadStatus) => void;
   updateLead: (id: string, patch: Partial<Lead>) => void;
   addLeadNote: (id: string, text: string, by: string) => void;
@@ -91,7 +92,11 @@ export const coreActions = (set: SetDb, get: GetDb): CoreActions => ({
   },
 
   // Provider CRM leads
-  createLead: (input) => {
+  createLead: (input, deduplicate = false) => {
+    if (deduplicate) {
+      const existing = get().leads.find((l) => l.customerId === input.customerId && l.listingId === input.listingId && l.listingKind === input.listingKind && l.eventDate === input.eventDate && l.guests === input.guests && l.message === input.message && l.functions.slice().sort().join('|') === input.functions.slice().sort().join('|') && !['lost', 'archived'].includes(l.status));
+      if (existing) return existing;
+    }
     const lead: Lead = { ...input, id: uid('ld'), status: 'new', priority: input.priority ?? 'medium', history: [{ status: 'new', at: now() }], createdAt: now() };
     set((s) => ({ leads: [lead, ...s.leads] }));
     const owners = ownersOf(lead.listingId);

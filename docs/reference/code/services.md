@@ -9,6 +9,7 @@ Every exported symbol in `src/services/`, file by file. The guide that explains 
 - [`api.ts`](#apits) (6 exports) · Data-access layer. Every screen reads through these async functions (via React Query), so replacing the mock data with a real backend only …
 - [`assistant.ts`](#assistantts) (4 exports) · Wedika — on-device wedding assistant. It resolves intent + city from the user's message and answers with real listings from the catalogue. …
 - [`auth.ts`](#authts) (5 exports)
+- [`customerPlanning.ts`](#customerplanningts) (5 exports)
 - [`documents.ts`](#documentsts) (7 exports) · Printable HTML documents (quotation, receipt, contract, guest list, seating, run sheet).
 - [`experience.ts`](#experiencets) (16 exports) · The persona resolver: identify the user, derive what they can do, and show only that. Pure and deterministic (no React, no store), like the…
 - [`exporters.ts`](#exportersts) (11 exports) · Files the app hands to other apps: calendar (.ics), spreadsheets (.csv) and PDFs (via expo-print). Works on iOS/Android (share sheet) and w…
@@ -199,6 +200,60 @@ logout()
 ```
 
 _No JSDoc yet._
+
+## customerPlanning.ts
+
+Source: [src/services/customerPlanning.ts](../../../src/services/customerPlanning.ts)
+
+### `guideSections`
+
+*function* · [src/services/customerPlanning.ts:9](../../../src/services/customerPlanning.ts#L9)
+
+```ts
+guideSections(tasks: ChecklistTask[], days: number | null)
+```
+
+Keeps existing guide ids while compressing overdue preparation into today's work.
+
+### `relatedEvents`
+
+*function* · [src/services/customerPlanning.ts:25](../../../src/services/customerPlanning.ts#L25)
+
+```ts
+relatedEvents(occasion: OccasionDef)
+```
+
+Only functions in the selected occasion are offered, including admin-created occasions.
+
+### `personalizedPackagePrice`
+
+*function* · [src/services/customerPlanning.ts:31](../../../src/services/customerPlanning.ts#L31)
+
+```ts
+personalizedPackagePrice(pkg: VendorPackage, serviceId: string, project: Project | null): number | null
+```
+
+A listing estimate uses the functions assigned to its service and explicit quantities. It is not a quotation.
+
+### `dailyCapacity`
+
+*function* · [src/services/customerPlanning.ts:54](../../../src/services/customerPlanning.ts#L54)
+
+```ts
+dailyCapacity(account?: Account): number
+```
+
+Capacity defaults conservatively to one until the business publishes its daily limit.
+
+### `listingAvailability`
+
+*function* · [src/services/customerPlanning.ts:60](../../../src/services/customerPlanning.ts#L60)
+
+```ts
+listingAvailability(ownerIds: string[], date: string, entries: AvailabilityEntry[], rules: AvailabilityRule[], capacity: number): { status: AvailabilityStatus; remaining: number }
+```
+
+Public calendar status from real entries and weekly rules, with distinct booking reservations counted once.
 
 ## documents.ts
 
@@ -790,6 +845,8 @@ _No JSDoc yet._
 | `area?` | `string` |  |
 | `venueSelected?` | `string` |  |
 | `dates` | `Partial<Record<EventType, string \| null>>` | Per-function date; null = not confirmed yet. |
+| `eventCities?` | `Partial<Record<EventType, string>>` | Optional city override for each additional function. |
+| `eventNames?` | `Partial<Record<EventType, string>>` | Optional display name for a related party or family gathering. |
 | `guests` | `number` |  |
 | `services` | `string[]` |  |
 | `budgetMode` | `'overall' \| 'per_service' \| 'undecided'` |  |
@@ -805,7 +862,7 @@ _No JSDoc yet._
 
 ### `estimateRange`
 
-*function* · [src/services/planner.ts:59](../../../src/services/planner.ts#L59)
+*function* · [src/services/planner.ts:63](../../../src/services/planner.ts#L63)
 
 ```ts
 estimateRange(serviceId: string, guests: number, events = 1): [number, number]
@@ -815,7 +872,7 @@ Typical total cost range for a service in NPR.
 
 ### `estimateTotal`
 
-*function* · [src/services/planner.ts:81](../../../src/services/planner.ts#L81)
+*function* · [src/services/planner.ts:85](../../../src/services/planner.ts#L85)
 
 ```ts
 estimateTotal(serviceIds: string[], guests: number, events = 1): [number, number]
@@ -825,7 +882,7 @@ _No JSDoc yet._
 
 ### `allocateBudget`
 
-*function* · [src/services/planner.ts:95](../../../src/services/planner.ts#L95)
+*function* · [src/services/planner.ts:99](../../../src/services/planner.ts#L99)
 
 ```ts
 allocateBudget(total: number, serviceIds: string[], guests: number, events = 1): Record<string, number>
@@ -836,7 +893,7 @@ per-guest services (catering) never fall below their minimum feasible cost.
 
 ### `perUnitBudget`
 
-*function* · [src/services/planner.ts:112](../../../src/services/planner.ts#L112)
+*function* · [src/services/planner.ts:116](../../../src/services/planner.ts#L116)
 
 ```ts
 perUnitBudget(serviceId: string, total: number, guests: number, events = 1): [number, number]
@@ -846,7 +903,7 @@ Convert a total allocation into the service's own unit (per plate etc.).
 
 ### `runSheetFor`
 
-*function* · [src/services/planner.ts:122](../../../src/services/planner.ts#L122)
+*function* · [src/services/planner.ts:126](../../../src/services/planner.ts#L126)
 
 ```ts
 runSheetFor(type: EventType): RunItem[]
@@ -856,7 +913,7 @@ _No JSDoc yet._
 
 ### `buildEvents`
 
-*function* · [src/services/planner.ts:126](../../../src/services/planner.ts#L126)
+*function* · [src/services/planner.ts:130](../../../src/services/planner.ts#L130)
 
 ```ts
 buildEvents(input: PlanInput): ProjectEvent[]
@@ -866,7 +923,7 @@ _No JSDoc yet._
 
 ### `buildRequirements`
 
-*function* · [src/services/planner.ts:151](../../../src/services/planner.ts#L151)
+*function* · [src/services/planner.ts:155](../../../src/services/planner.ts#L155)
 
 ```ts
 buildRequirements(input: PlanInput, events: ProjectEvent[]): Requirement[]
@@ -876,7 +933,7 @@ _No JSDoc yet._
 
 ### `WEDDING_ONLY_TASKS`
 
-*const* · [src/services/planner.ts:276](../../../src/services/planner.ts#L276)
+*const* · [src/services/planner.ts:280](../../../src/services/planner.ts#L280)
 
 ```ts
 WEDDING_ONLY_TASKS= new Set(TASK_TEMPLATES.map((t) => t.title).filter((title) => !CELEBRATION_TEMPLATES.some(…
@@ -886,7 +943,7 @@ Titles that only make sense for a wedding; older non-wedding plans drop them (st
 
 ### `generateTasks`
 
-*function* · [src/services/planner.ts:279](../../../src/services/planner.ts#L279)
+*function* · [src/services/planner.ts:283](../../../src/services/planner.ts#L283)
 
 ```ts
 generateTasks(mainDate: string, services: string[], customerName: string, coordinatorName = 'Your coordinator', occasion = 'wedding'): ProjectTask[]
@@ -896,7 +953,7 @@ Personalised checklist for the occasion; overdue templates are compressed into t
 
 ### `suggestedTasks`
 
-*function* · [src/services/planner.ts:307](../../../src/services/planner.ts#L307)
+*function* · [src/services/planner.ts:311](../../../src/services/planner.ts#L311)
 
 ```ts
 suggestedTasks(project: Project): ProjectTask[]
@@ -906,20 +963,19 @@ Checklist tasks for the project's date and requested services that aren't on its
 
 ### `guideSuggestions`
 
-*function* · [src/services/planner.ts:318](../../../src/services/planner.ts#L318)
+*function* · [src/services/planner.ts:321](../../../src/services/planner.ts#L321)
 
 ```ts
 guideSuggestions(project: Project, ticked: string[] = []): ProjectTask[]
 ```
 
-Items of the month-by-month guide for the phase the couple is in and the
-ones after it, not on the wedding's task list yet, as tasks for the couple
-due by the end of their phase. Items already ticked in the guide (`ticked`,
+Open remaining-days guide items, including earlier preparation, not on the
+wedding's task list yet. Earlier due dates become today. Items already ticked in the guide (`ticked`,
 checklist ids) are left out. Weddings and engagements only.
 
 ### `buildTimeline`
 
-*function* · [src/services/planner.ts:345](../../../src/services/planner.ts#L345)
+*function* · [src/services/planner.ts:347](../../../src/services/planner.ts#L347)
 
 ```ts
 buildTimeline(project: Project, opts: { internal?: boolean } = {}): TimelineEntry[]
@@ -930,7 +986,7 @@ entries (meetings, milestones) stored on the project.
 
 ### `NextAction`
 
-*interface* · [src/services/planner.ts:368](../../../src/services/planner.ts#L368)
+*interface* · [src/services/planner.ts:370](../../../src/services/planner.ts#L370)
 
 _No JSDoc yet._
 
@@ -945,7 +1001,7 @@ _No JSDoc yet._
 
 ### `nextBestAction`
 
-*function* · [src/services/planner.ts:379](../../../src/services/planner.ts#L379)
+*function* · [src/services/planner.ts:381](../../../src/services/planner.ts#L381)
 
 ```ts
 nextBestAction(project: Project, quotes: Quotation[]): NextAction
@@ -955,7 +1011,7 @@ _No JSDoc yet._
 
 ### `missingServices`
 
-*function* · [src/services/planner.ts:394](../../../src/services/planner.ts#L394)
+*function* · [src/services/planner.ts:396](../../../src/services/planner.ts#L396)
 
 ```ts
 missingServices(project: Project): string[]
@@ -965,7 +1021,7 @@ Services couples usually need for their functions but haven't requested.
 
 ### `planningProgress`
 
-*function* · [src/services/planner.ts:400](../../../src/services/planner.ts#L400)
+*function* · [src/services/planner.ts:402](../../../src/services/planner.ts#L402)
 
 ```ts
 planningProgress(project: Project)
@@ -975,7 +1031,7 @@ _No JSDoc yet._
 
 ### `savingTips`
 
-*function* · [src/services/planner.ts:412](../../../src/services/planner.ts#L412)
+*function* · [src/services/planner.ts:414](../../../src/services/planner.ts#L414)
 
 ```ts
 savingTips(project: Project): string[]
@@ -985,7 +1041,7 @@ _No JSDoc yet._
 
 ### `invitationText`
 
-*function* · [src/services/planner.ts:424](../../../src/services/planner.ts#L424)
+*function* · [src/services/planner.ts:426](../../../src/services/planner.ts#L426)
 
 ```ts
 invitationText(project: Project, tone: 'traditional' | 'modern' | 'nepali' = 'traditional'): string
@@ -995,7 +1051,7 @@ _No JSDoc yet._
 
 ### `enquiryText`
 
-*function* · [src/services/planner.ts:435](../../../src/services/planner.ts#L435)
+*function* · [src/services/planner.ts:437](../../../src/services/planner.ts#L437)
 
 ```ts
 enquiryText(project: Project, serviceId: string): string
@@ -1005,7 +1061,7 @@ _No JSDoc yet._
 
 ### `QUESTIONS_TO_ASK`
 
-*const* · [src/services/planner.ts:442](../../../src/services/planner.ts#L442)
+*const* · [src/services/planner.ts:444](../../../src/services/planner.ts#L444)
 
 ```ts
 QUESTIONS_TO_ASK: Record<string, string[]>
@@ -1015,7 +1071,7 @@ _No JSDoc yet._
 
 ### `questionsToAsk`
 
-*function* · [src/services/planner.ts:451](../../../src/services/planner.ts#L451)
+*function* · [src/services/planner.ts:453](../../../src/services/planner.ts#L453)
 
 ```ts
 questionsToAsk(serviceId: string)
@@ -1025,7 +1081,7 @@ _No JSDoc yet._
 
 ### `negotiationPoints`
 
-*function* · [src/services/planner.ts:454](../../../src/services/planner.ts#L454)
+*function* · [src/services/planner.ts:456](../../../src/services/planner.ts#L456)
 
 ```ts
 negotiationPoints(quote: Quotation, marketMedian?: number): string[]
@@ -1035,7 +1091,7 @@ _No JSDoc yet._
 
 ### `summarizeReviews`
 
-*function* · [src/services/planner.ts:465](../../../src/services/planner.ts#L465)
+*function* · [src/services/planner.ts:467](../../../src/services/planner.ts#L467)
 
 ```ts
 summarizeReviews(reviews: { rating: number; text: string }[]): { average: number; highlights: string[]; concerns: string[] }
@@ -1045,7 +1101,7 @@ _No JSDoc yet._
 
 ### `guestBandLabel`
 
-*function* · [src/services/planner.ts:482](../../../src/services/planner.ts#L482)
+*function* · [src/services/planner.ts:484](../../../src/services/planner.ts#L484)
 
 ```ts
 guestBandLabel(guests: number)

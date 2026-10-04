@@ -1,7 +1,7 @@
 import { Photo } from '@/components/ui/Photo';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import Animated, { FadeIn, FadeInDown } from 'react-native-reanimated';
 
@@ -15,6 +15,7 @@ import { colors } from '@/constants/theme';
 import { CITIES, ONBOARDING_CITIES } from '@/data/cities';
 import { EVENT_TYPE_BY_ID, GUEST_BANDS, bandFor, isPeakSeason, type GuestBand } from '@/data/events';
 import { BUILT_IN_OCCASIONS, type OccasionDef } from '@/data/occasions';
+import { relatedEvents } from '@/services/customerPlanning';
 import { findService } from '@/data/services';
 import { logout } from '@/services/auth';
 import { estimateTotal } from '@/services/planner';
@@ -25,8 +26,8 @@ import type { Role } from '@/types';
 import type { EventType, Project } from '@/types/platform';
 import { addDays, daysUntil, formatDateAlt, formatLakhRange, formatLongDate, formatShortDate } from '@/utils/format';
 
-type StepId = 'occasion' | 'you' | 'date' | 'city' | 'guests' | 'budget' | 'review';
-const QUESTION_STEPS: StepId[] = ['you', 'date', 'city', 'guests', 'budget', 'review'];
+type StepId = 'occasion' | 'you' | 'date' | 'city' | 'guests' | 'budget' | 'services' | 'events' | 'review';
+const QUESTION_STEPS: StepId[] = ['you', 'date', 'city', 'guests', 'budget', 'services', 'events', 'review'];
 const QUESTIONS = QUESTION_STEPS.length - 1;
 
 const ROLES: { id: Role; title: string; short: string; caption: string }[] = [
@@ -91,7 +92,6 @@ const CEREMONIES: { id: 'NWARAN' | 'PASNI' | 'both'; label: string }[] = [
 
 /** What most couples book; the review step lets them change it. */
 const DEFAULT_SERVICES = ['venue', 'catering', 'photography', 'videography', 'decoration', 'makeup'];
-const WEDDING_SERVICES = EVENT_TYPE_BY_ID.WEDDING.suggestedServices;
 const MORE_CITIES = CITIES.filter((c) => (c.group === 'popular' || c.group === 'international') && !(ONBOARDING_CITIES as readonly string[]).includes(c.name)).map((c) => c.name);
 
 const first = (s: string) => s.trim().split(/\s+/)[0] ?? '';
@@ -99,9 +99,9 @@ const possessive = (name: string) => (name ? `${name}’s` : 'Our');
 
 /**
  * The couple's first run, and "Plan another celebration": what are we
- * celebrating, then five short questions shaped by the occasion, one per
- * screen, then a review card. A wedding asks exactly the questions it always
- * did. "Build our plan" turns the answers into a coordinated project.
+ * celebrating, then seven short questions shaped by the occasion, one per
+ * screen, then a review card. Services and related functions have dedicated
+ * steps. "Build our plan" turns the answers into a coordinated project.
  */
 export function CelebrationOnboarding({ another = false }: { another?: boolean }) {
   const account = useAccount();
@@ -133,6 +133,12 @@ export function CelebrationOnboarding({ another = false }: { another?: boolean }
   const initialBudget = another ? null : (WEDDING_BUDGETS.find((b) => b.value !== null && b.value === stored.budget)?.id ?? null);
   const [budget, setBudget] = useState<string | null>(initialBudget);
   const [services, setServices] = useState<string[]>(DEFAULT_SERVICES);
+  const [extraEvents, setExtraEvents] = useState<EventType[]>(['RECEPTION']);
+  const [eventDates, setEventDates] = useState<Partial<Record<EventType, string | null>>>({});
+  const [eventNames, setEventNames] = useState<Partial<Record<EventType, string>>>({});
+  const [eventCities, setEventCities] = useState<Partial<Record<EventType, string>>>({});
+  const [editingReview, setEditingReview] = useState(false);
+  const [showEvents, setShowEvents] = useState(false);
   const [busy, setBusy] = useState(false);
   const advancing = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -141,7 +147,7 @@ export function CelebrationOnboarding({ another = false }: { another?: boolean }
   const couple = wedding || occasion.id === 'engagement';
   const noun = occasion.vocab.noun;
   const budgets = wedding ? WEDDING_BUDGETS : CELEBRATION_BUDGETS;
-  const serviceOptions = wedding ? WEDDING_SERVICES : occasion.services;
+  const serviceOptions = occasion.services;
 
   const id = steps[step];
   const qIndex = Math.max(0, QUESTION_STEPS.indexOf(id));
@@ -150,8 +156,8 @@ export function CelebrationOnboarding({ another = false }: { another?: boolean }
   const partnerFirst = couple && role !== 'other' ? first(partner) : '';
   const honoureeName = honouree.trim();
 
-  const eventTypes: EventType[] =
-    occasion.id === 'newborn' ? (ceremony === 'both' ? ['NWARAN', 'PASNI'] : [ceremony]) : wedding ? ['WEDDING', 'RECEPTION'] : [occasion.eventTypes[0] ?? 'OTHER'];
+  const mainTypes: EventType[] = occasion.id === 'newborn' ? (ceremony === 'both' ? ['NWARAN', 'PASNI'] : [ceremony]) : [occasion.eventTypes[0] ?? 'OTHER'];
+  const eventTypes: EventType[] = [...mainTypes, ...extraEvents.filter((t) => !mainTypes.includes(t) && relatedEvents(occasion).includes(t))];
   const title = (() => {
     if (couple) return partnerFirst ? `${me} & ${partnerFirst}` : role === 'other' ? `Our family ${noun}` : `${me}’s ${noun}`;
     const who = first(honoureeName);
@@ -175,7 +181,7 @@ export function CelebrationOnboarding({ another = false }: { another?: boolean }
     : honoureeName
       ? { kind: occasion.honourees, names: occasion.honourees === 'couple' ? honoureeName.split(/\s+(?:and|&)\s+/i) : [honoureeName], years: years ? Number(years.replace(/\D/g, '')) || undefined : undefined }
       : undefined;
-  const [estLo, estHi] = estimateTotal(wedding ? DEFAULT_SERVICES : occasion.defaultServices, guestCount, eventTypes.length);
+  const [estLo, estHi] = estimateTotal(services, guestCount, eventTypes.length);
 
   const goTo = (next: number) => {
     if (advancing.current) clearTimeout(advancing.current);
@@ -183,18 +189,27 @@ export function CelebrationOnboarding({ another = false }: { another?: boolean }
     setDirection(next >= step ? 1 : -1);
     setStep(Math.max(0, Math.min(steps.length - 1, next)));
   };
+  useEffect(() => () => { if (advancing.current) clearTimeout(advancing.current); }, []);
+  const continueStep = () => {
+    if (editingReview) { setEditingReview(false); goTo(steps.indexOf('review')); }
+    else goTo(step + 1);
+  };
   /** Single-choice answers move on by themselves after the selection registers. */
   const answerAndAdvance = (apply: () => void) => {
     apply();
     if (advancing.current) clearTimeout(advancing.current);
-    advancing.current = setTimeout(() => goTo(step + 1), 260);
+    if (!editingReview) advancing.current = setTimeout(() => goTo(step + 1), 260);
   };
-  const jump = (target: StepId) => goTo(steps.indexOf(target));
+  const jump = (target: StepId) => { setEditingReview(true); goTo(steps.indexOf(target)); };
 
   const pickOccasion = (o: OccasionDef) =>
     answerAndAdvance(() => {
       if (o.id !== occasionId) {
         setOccasionId(o.id);
+        setExtraEvents(o.id === 'wedding' ? ['RECEPTION'] : []);
+        setEventDates({});
+        setEventCities({});
+        setEventNames({});
         setServices(o.id === 'wedding' ? DEFAULT_SERVICES : [...o.defaultServices]);
         setBudget(o.id === 'wedding' ? initialBudget : null);
         setHonouree('');
@@ -209,6 +224,8 @@ export function CelebrationOnboarding({ another = false }: { another?: boolean }
     city: !!city,
     guests: !!guests,
     budget: !!budget,
+    services: services.length > 0,
+    events: true,
     review: true,
   };
 
@@ -225,6 +242,7 @@ export function CelebrationOnboarding({ another = false }: { another?: boolean }
   if (step > at('guests') && guests) crumbs.push({ label: `${GUEST_BANDS.find((b) => b.id === guests)!.label} guests`, step: at('guests') });
 
   const finish = async (withPlan: boolean) => {
+    if (busy) return;
     if (!another) {
       saveWeddingBasics({
         role: couple ? role : null,
@@ -238,14 +256,13 @@ export function CelebrationOnboarding({ another = false }: { another?: boolean }
     if (withPlan && city) {
       setBusy(true);
       await new Promise((r) => setTimeout(r, 600));
-      const dates: Partial<Record<EventType, string | null>> = wedding
-        ? { WEDDING: date, RECEPTION: date ? addDays(date, 1) : null }
-        : // The first function gets the date; a pasni after a nwaran is fixed later.
-          Object.fromEntries(eventTypes.map((t, i) => [t, i === 0 ? date : null]));
+      const dates = Object.fromEntries(eventTypes.map((t, i) => [t, i === 0 ? date : eventDates[t] !== undefined ? eventDates[t] : t === 'RECEPTION' && date ? addDays(date, 1) : null]));
       const project = submitPlan(account, {
         eventTypes,
         city,
         dates,
+        eventCities,
+        eventNames,
         guests: guestCount,
         services,
         budgetMode: budgetValue ? 'overall' : 'undecided',
@@ -271,9 +288,9 @@ export function CelebrationOnboarding({ another = false }: { another?: boolean }
     if (withPlan) setTimeout(() => router.push('/my-wedding'), 80);
   };
 
-  const onBack = () => (step === 0 ? (another ? (router.canGoBack() ? router.back() : router.replace('/profile')) : logout()) : goTo(step - 1));
+  const onBack = () => editingReview ? (setEditingReview(false), goTo(steps.indexOf('review'))) : (step === 0 ? (another ? (router.canGoBack() ? router.back() : router.replace('/profile')) : logout()) : goTo(step - 1));
 
-  const next = <KButton label="Continue" size="lg" disabled={!answered[id]} onPress={() => goTo(step + 1)} />;
+  const next = <KButton label={editingReview ? "Save changes" : "Continue"} size="lg" disabled={!answered[id]} onPress={continueStep} />;
   const frame = { stepKey: `${id}-${occasion.id}`, direction, current: id === 'review' ? QUESTIONS : qIndex, total: QUESTIONS, onBack, onCrumb: goTo };
 
   switch (id) {
@@ -284,7 +301,7 @@ export function CelebrationOnboarding({ another = false }: { another?: boolean }
           current={0}
           crumbs={[]}
           title={another ? 'What are we celebrating next?' : `Namaste, ${me}. What are we celebrating?`}
-          subtitle={another ? 'Your other plans stay as they are. Switch between them from your plan.' : 'Pick one and answer five quick questions. Nothing is final; change anything later.'}
+          subtitle={another ? 'Your other plans stay as they are. Switch between them from your plan.' : 'Pick one and answer seven quick questions. Nothing is final; change anything later.'}
           footer={next}>
           {occasions.map((o, i) => (
             <ChoiceRow key={o.id} index={i} title={o.label} caption={o.blurb} selected={occasionId === o.id} onPress={() => pickOccasion(o)} />
@@ -299,14 +316,14 @@ export function CelebrationOnboarding({ another = false }: { another?: boolean }
             {...frame}
             crumbs={crumbs}
             title={wedding ? (askOccasion ? 'Who’s getting married?' : `Namaste, ${me}. Who’s getting married?`) : 'Who’s getting engaged?'}
-            subtitle={askOccasion ? 'Five quick questions and we’ll set it up.' : 'Five quick questions and we’ll set up your wedding. Nothing is final; change anything later.'}
+            subtitle={askOccasion ? 'Seven quick questions and we’ll set it up.' : 'Seven quick questions and we’ll set up your wedding. Nothing is final; change anything later.'}
             footer={next}>
             {ROLES.map((r, i) => (
               <ChoiceRow key={r.id} index={i} title={r.title.replace('bride', wedding ? 'bride' : 'bride-to-be').replace('groom', wedding ? 'groom' : 'groom-to-be')} caption={wedding ? r.caption : r.caption.replace('wedding', 'engagement')} selected={role === r.id} onPress={() => setRole(r.id)} />
             ))}
             {(role === 'bride' || role === 'groom') && (
               <Animated.View entering={FadeInDown.duration(260)} style={{ marginTop: 10 }}>
-                <KField label="Your partner’s name (optional)" value={partner} onChangeText={setPartner} placeholder={role === 'bride' ? 'e.g. Sujan' : 'e.g. Aakriti'} autoCapitalize="words" returnKeyType="next" onSubmitEditing={() => goTo(step + 1)} />
+                <KField label="Your partner’s name (optional)" value={partner} onChangeText={setPartner} placeholder={role === 'bride' ? 'e.g. Sujan' : 'e.g. Aakriti'} autoCapitalize="words" returnKeyType="next" onSubmitEditing={continueStep} />
               </Animated.View>
             )}
           </OnboardingFrame>
@@ -481,6 +498,49 @@ export function CelebrationOnboarding({ another = false }: { another?: boolean }
         </OnboardingFrame>
       );
 
+    case 'services':
+      return (
+        <OnboardingFrame {...frame} crumbs={crumbs} title="What should we arrange?" subtitle="Choose the services you need. You can change them later." footer={next}>
+          <View style={{ gap: 8, marginTop: 14 }}>
+            <Text size={13} color={colors.textMuted}>
+              {wedding ? 'We’ve picked what most couples book. Tap to add or remove.' : `We’ve picked what most families book for a ${occasion.label.toLowerCase()}. Tap to add or remove.`}
+            </Text>
+            <ChoiceChips
+              options={serviceOptions.map((s) => findService(s)?.name ?? s)}
+              selected={services.map((s) => findService(s)?.name ?? s)}
+              onToggle={(name) => {
+                const sid = serviceOptions.find((s) => (findService(s)?.name ?? s) === name)!;
+                setServices((cur) => (cur.includes(sid) ? cur.filter((x) => x !== sid) : [...cur, sid]));
+              }}
+            />
+          </View>
+
+        </OnboardingFrame>
+      );
+
+    case 'events':
+      return (
+        <OnboardingFrame {...frame} crumbs={crumbs} title="Your events" subtitle="Check your main event and add related functions." footer={next}>
+          <View style={styles.card}>
+            <Text size={18} weight="bold">{EVENT_TYPE_BY_ID[eventTypes[0]].label}</Text>
+            <Text>{date ? formatLongDate(date) : 'Date to be fixed'} · {city}</Text>
+          </View>
+          <KButton label="Add more events" variant="secondary" onPress={() => setShowEvents(!showEvents)} />
+          {showEvents && relatedEvents(occasion).filter((t) => t !== eventTypes[0]).map((type) => (
+            <ChoiceRow key={type} title={type === 'OTHER' ? 'Party or family gathering' : EVENT_TYPE_BY_ID[type].label} selected={extraEvents.includes(type)} onPress={() => setExtraEvents((cur) => cur.includes(type) ? cur.filter((t) => t !== type) : [...cur, type])} />
+          ))}
+          {eventTypes.slice(1).map((type) => (
+            <View key={type} style={[styles.card, { gap: 10 }]}>
+              <Text size={16} weight="bold">{EVENT_TYPE_BY_ID[type].label}</Text>
+              {type === 'OTHER' && <KField label="Event name" value={eventNames[type] ?? ''} placeholder="e.g. Bachelor party" onChangeText={(name) => setEventNames((cur) => ({ ...cur, [type]: name }))} />}
+              <Calendar value={eventDates[type] !== undefined ? eventDates[type]! : type === 'RECEPTION' && date ? addDays(date, 1) : null} onChange={(d) => setEventDates((cur) => ({ ...cur, [type]: d }))} />
+              <KButton label="Set date later" variant="ghost" size="sm" onPress={() => setEventDates((cur) => ({ ...cur, [type]: null }))} />
+              <KField label="City" value={eventCities[type] ?? city ?? ''} onChangeText={(c) => setEventCities((cur) => ({ ...cur, [type]: c }))} />
+            </View>
+          ))}
+        </OnboardingFrame>
+      );
+
     case 'review':
       return (
         <OnboardingFrame
@@ -490,7 +550,7 @@ export function CelebrationOnboarding({ another = false }: { another?: boolean }
           subtitle="Check the details. Tap any line to change it."
           footer={
             <>
-              <KButton label="Build our plan" size="lg" loading={busy} disabled={!city || !services.length} onPress={() => finish(true)} />
+              <KButton label="Build our plan" size="lg" loading={busy} disabled={!steps.every((s) => answered[s])} onPress={() => finish(true)} />
               <KButton label={another ? 'Not now' : 'Just browse for now'} variant="ghost" size="sm" disabled={busy} onPress={() => finish(false)} />
             </>
           }>
@@ -515,23 +575,8 @@ export function CelebrationOnboarding({ another = false }: { another?: boolean }
             <SummaryRow label="Budget" value={budgets.find((b) => b.id === budget)?.title ?? '—'} onPress={() => jump('budget')} last />
           </Animated.View>
 
-          <View style={{ gap: 8, marginTop: 14 }}>
-            <Text size={16} weight="bold" color={colors.heading}>
-              What should we arrange?
-            </Text>
-            <Text size={13} color={colors.textMuted}>
-              {wedding ? 'We’ve picked what most couples book. Tap to add or remove.' : `We’ve picked what most families book for a ${occasion.label.toLowerCase()}. Tap to add or remove.`}
-            </Text>
-            <ChoiceChips
-              options={serviceOptions.map((s) => findService(s)?.name ?? s)}
-              selected={services.map((s) => findService(s)?.name ?? s)}
-              onToggle={(name) => {
-                const sid = serviceOptions.find((s) => (findService(s)?.name ?? s) === name)!;
-                setServices((cur) => (cur.includes(sid) ? cur.filter((x) => x !== sid) : [...cur, sid]));
-              }}
-            />
-          </View>
-
+          <SummaryRow label="Services" value={services.map((s) => findService(s)?.name ?? s).join(', ')} onPress={() => jump('services')} />
+          <SummaryRow label="Functions" value={eventTypes.map((t) => (eventNames[t]?.trim() || EVENT_TYPE_BY_ID[t].label)).join(', ')} onPress={() => jump('events')} />
           <View style={styles.next}>
             <Text size={14} weight="semibold" color={colors.heading}>
               What happens next

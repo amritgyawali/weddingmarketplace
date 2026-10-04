@@ -35,7 +35,7 @@ Source: [src/components/home/ChecklistCard.tsx](../../../src/components/home/Che
 
 ### `ProgressRing`
 
-*component* · [src/components/home/ChecklistCard.tsx:23](../../../src/components/home/ChecklistCard.tsx#L23)
+*component* · [src/components/home/ChecklistCard.tsx:24](../../../src/components/home/ChecklistCard.tsx#L24)
 
 ```ts
 ProgressRing({ percent, size = 58, stroke = 3, light }: { percent: number; size?: number; stroke?: number; light?: boolean })
@@ -45,7 +45,7 @@ Thin progress ring. Defaults to crimson on a light track; pass `light` over dark
 
 ### `ChecklistCard`
 
-*component* · [src/components/home/ChecklistCard.tsx:121](../../../src/components/home/ChecklistCard.tsx#L121)
+*component* · [src/components/home/ChecklistCard.tsx:122](../../../src/components/home/ChecklistCard.tsx#L122)
 
 ```ts
 ChecklistCard()
@@ -87,7 +87,7 @@ Source: [src/components/home/PlanningTools.tsx](../../../src/components/home/Pla
 
 ### `PlanningTools`
 
-*component* · [src/components/home/PlanningTools.tsx:35](../../../src/components/home/PlanningTools.tsx#L35)
+*component* · [src/components/home/PlanningTools.tsx:34](../../../src/components/home/PlanningTools.tsx#L34)
 
 ```ts
 PlanningTools()

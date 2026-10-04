@@ -2,7 +2,7 @@ import { router } from 'expo-router';
 import { useState } from 'react';
 import { View } from 'react-native';
 
-import { Card, EmptyBlock, KButton, ListRow, RoleHeader, SectionTitle, StatusPill } from '@/components/kit';
+import { Card, EmptyBlock, KButton, KField, ListRow, RoleHeader, SectionTitle, StatusPill } from '@/components/kit';
 import { Text } from '@/components/ui/Text';
 import { AvailabilityCalendar } from '@/components/work/AvailabilityCalendar';
 import { serviceName } from '@/data/services';
@@ -10,6 +10,10 @@ import { useLinkOn } from '@/hooks/useFeatures';
 import { useLayout } from '@/hooks/useLayout';
 import { useVendorWorkspace } from '@/hooks/useWorkspace';
 import { exportCalendar } from '@/services/exporters';
+import { dailyCapacity } from '@/services/customerPlanning';
+import { useExperience } from '@/hooks/useExperience';
+import { useDb } from '@/store/useDb';
+import { toast } from '@/components/ui/Toast';
 import { useAccount } from '@/store/useSession';
 import { useRoleTheme } from '@/theme/RoleTheme';
 import { daysUntil, formatLongDate } from '@/utils/format';
@@ -23,6 +27,9 @@ export default function VendorCalendar() {
   const account = useAccount();
   const { bookings, staff } = useVendorWorkspace(account);
   const [day, setDay] = useState<string | null>(null);
+  const exp = useExperience();
+  const savePersona = useDb((s) => s.setProviderPersona);
+  const [capacity, setCapacity] = useState(String(dailyCapacity(account)));
   const ownerId = account.listingId ?? account.id;
   const onDay = day ? bookings.filter(({ project, booking }) => booking.status !== 'CANCELLED' && project.events.some((e) => booking.eventIds.includes(e.id) && e.date === day)) : [];
   const upcoming = bookings
@@ -34,6 +41,12 @@ export default function VendorCalendar() {
       <RoleHeader title="Calendar" subtitle="Booked, held and blocked days feed Vivah matching" />
       <ScrollView contentContainerStyle={[{ padding: 16, gap: 16, paddingBottom: 40 }, wide && { flexDirection: 'row', alignItems: 'flex-start' }]}>
         <Card style={{ flex: wide ? 1.2 : undefined }}>
+          <KField label="Events per day" value={capacity} onChangeText={setCapacity} keyboardType="number-pad" />
+          <Text size={13} color={t.c.muted}>Publish how many functions your team can handle each day. Customers see the remaining slots.</Text>
+          <KButton label="Save daily capacity" size="sm" onPress={() => {
+            const error = savePersona(account.id, { services: exp.services, primaryService: exp.primaryService!, businessForm: exp.form!, teamSize: account.teamSize, tradeProfile: { ...account.tradeProfile, eventsPerDay: Number(capacity) } });
+            toast(error ?? 'Daily capacity saved', error ? 'alert-circle' : 'checkmark-circle');
+          }} />
           <AvailabilityCalendar ownerKind="provider" ownerId={ownerId} onSelectDay={setDay} />
         </Card>
         <View style={{ flex: 1, gap: 14 }}>

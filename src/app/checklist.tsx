@@ -11,48 +11,43 @@ import { ScreenHeader } from '@/components/ui/ScreenHeader';
 import { Text } from '@/components/ui/Text';
 import { TaskBoard } from '@/components/work/TaskBoard';
 import { colors, GUTTER, radius } from '@/constants/theme';
-import { CHECKLIST, CHECKLIST_PHASES, CHECKLIST_TOTAL, currentPhase, PHASE_LABEL } from '@/data/checklist';
+import { CHECKLIST, CHECKLIST_TOTAL } from '@/data/checklist';
 import { useCustomerWorkspace } from '@/hooks/useWorkspace';
 import { useAppStore } from '@/store/useAppStore';
 import { useAccount } from '@/store/useSession';
+import { guideSections } from '@/services/customerPlanning';
 import { daysUntil } from '@/utils/format';
 import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
 
 type Filter = 'all' | 'pending' | 'done';
 
 /**
- * Month-by-month planning guide: what most couples do before a wedding, as a
- * personal tick list (works before a project exists). Only the phase the
- * couple is in now starts open, so the screen reads as "what to do now".
+ * Remaining-days guide, compressing earlier preparation into Do now while preserving personal ticks.
  */
-function PlanningGuide({ hasProject }: { hasProject: boolean }) {
+function PlanningGuide({ hasProject, eventDate }: { hasProject: boolean; eventDate?: string | null }) {
   const completed = useAppStore((s) => s.completedTasks);
   const toggleTask = useAppStore((s) => s.toggleTask);
   const weddingDate = useAppStore((s) => s.weddingDate);
   const [filter, setFilter] = useState<Filter>('all');
-  const days = weddingDate ? daysUntil(weddingDate) : null;
-  const now = currentPhase(days);
-  const nowIndex = CHECKLIST_PHASES.indexOf(now);
-  const [open, setOpen] = useState<string[]>([now]);
+  const date = eventDate ?? weddingDate;
+  const days = date ? daysUntil(date) : null;
+  const [open, setOpen] = useState<string[]>(['0']);
 
-  const done = completed.length;
+  const done = completed.filter((id) => CHECKLIST.some((t) => t.id === id)).length;
   const percent = Math.round((done / CHECKLIST_TOTAL) * 100);
 
-  const sections = CHECKLIST_PHASES.map((phase, index) => {
-    const all = CHECKLIST.filter((t) => t.phase === phase);
-    const tasks = all.filter((t) => (filter === 'all' ? true : filter === 'done' ? completed.includes(t.id) : !completed.includes(t.id)));
-    const doneCount = all.filter((t) => completed.includes(t.id)).length;
+  const sections = guideSections(CHECKLIST, days).map((group) => {
+    const tasks = group.tasks.filter((t) => filter === 'all' || (filter === 'done' ? completed.includes(t.id) : !completed.includes(t.id)));
     return {
-      title: phase,
-      total: all.length,
-      doneCount,
-      isNow: phase === now,
-      // An earlier phase with open items: things to catch up on.
-      behind: index < nowIndex && doneCount < all.length,
-      data: open.includes(phase) ? tasks : [],
+      title: group.id,
+      label: group.label,
+      total: group.tasks.length,
+      doneCount: group.tasks.filter((t) => completed.includes(t.id)).length,
+      isNow: group.id === '0',
+      data: open.includes(group.id) ? tasks : [],
       hidden: tasks.length,
     };
-  }).filter((s) => s.hidden > 0);
+  }).filter((section) => section.hidden > 0);
 
   return (
     <View style={styles.root}>
@@ -67,8 +62,8 @@ function PlanningGuide({ hasProject }: { hasProject: boolean }) {
               <Ionicons name="information-circle-outline" size={20} color={colors.primary} />
               <Text size={14} color={colors.textBody} style={{ flex: 1 }}>
                 {hasProject
-                  ? 'A simple list of what most couples do before the wedding, month by month. Tick things off as you finish them. It is only for you; tasks shared with your coordinator are in Our tasks.'
-                  : 'A simple list of what most couples do before the wedding, month by month. Tick things off as you finish them.'}
+                  ? 'Your guide follows the days remaining. Start with Do now, then work through the upcoming days. Earlier preparation is included in Do now. It is only for you; tasks shared with your coordinator are in Our tasks.'
+                  : 'Your guide follows the days remaining. Start with Do now, then work through the upcoming days. Earlier preparation is included in Do now.'}
               </Text>
             </View>
             <View style={styles.hero}>
@@ -77,7 +72,7 @@ function PlanningGuide({ hasProject }: { hasProject: boolean }) {
                   {done} of {CHECKLIST_TOTAL} done
                 </Text>
                 <Text size={13} color={colors.textMuted}>
-                  {days === null ? 'Set your wedding date to see what to do now' : days >= 0 ? `${days} days to go · now: ${PHASE_LABEL[now].toLowerCase()}` : 'Married. Congratulations!'}
+                  {days === null ? 'Set your wedding date to see what to do now' : days >= 0 ? `${days} days to go` : 'Married. Congratulations!'}
                 </Text>
               </View>
               <ProgressRing percent={percent} size={56} stroke={3} />
@@ -100,7 +95,7 @@ function PlanningGuide({ hasProject }: { hasProject: boolean }) {
               <View style={{ flex: 1 }}>
                 <View style={styles.inline}>
                   <Text size={16} weight="bold" color={colors.heading}>
-                    {PHASE_LABEL[section.title]}
+                    {section.label}
                   </Text>
                   {section.isNow && (
                     <View style={styles.nowTag}>
@@ -111,7 +106,7 @@ function PlanningGuide({ hasProject }: { hasProject: boolean }) {
                   )}
                 </View>
                 <Text size={12} color={colors.textMuted}>
-                  {section.doneCount} of {section.total} done{section.behind ? ' · catch up' : ''}
+                  {section.doneCount} of {section.total} done
                 </Text>
               </View>
               <Ionicons name={isOpen ? 'chevron-up' : 'chevron-down'} size={18} color={colors.textMuted} />
@@ -162,7 +157,7 @@ export default function ChecklistScreen() {
           <Segmented
             options={[
               { id: 'tasks', label: 'Our tasks' },
-              { id: 'guide', label: 'Month-by-month guide' },
+              { id: 'guide', label: 'Remaining days guide' },
             ]}
             value={tab}
             onChange={setTab}
@@ -175,7 +170,7 @@ export default function ChecklistScreen() {
           <TaskBoard project={project} mode="customer" />
         </ScrollView>
       ) : (
-        <PlanningGuide hasProject={!!project} />
+        <PlanningGuide hasProject={!!project} eventDate={project?.events.find((e) => e.type === project.eventType)?.date} />
       )}
     </View>
   );

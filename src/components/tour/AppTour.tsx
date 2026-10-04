@@ -50,16 +50,17 @@ export function TourTarget({ id, style, children }: { id: string; style?: StyleP
 /** Starts the couple's tour the first time the screen that calls this is shown. */
 export function useCoupleTourOnFirstVisit() {
   const hydrated = useHydrated(useTour);
-  const seen = useTour((s) => s.seen.includes('couple'));
+  const account = useAccount();
+  const seen = useTour((s) => s.seenAccounts.includes(account.id));
   const on = useFeatures();
   const enabled = hydrated && !seen && on('couple.tour');
   useFocusEffect(
     useCallback(() => {
       if (!enabled) return;
       // Let the screen lay out first so every target can be measured.
-      const timer = setTimeout(() => useTour.getState().start('couple'), 700);
+      const timer = setTimeout(() => useTour.getState().start('couple', account.id), 700);
       return () => clearTimeout(timer);
-    }, [enabled]),
+    }, [enabled, account.id]),
   );
 }
 

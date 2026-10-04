@@ -143,3 +143,5 @@ The migrations have **not** been applied to any Supabase project. They are check
 - replies from unclaimed listings.
 
 Contacts import and GPS check-in use Expo modules; they fall back gracefully where a module is unavailable.
+
+Customer planning: onboarding includes service selection and related functions with dates and cities, review changes return directly to the summary, the checklist follows days remaining, enquiries reuse saved details, and vendor calendars publish daily capacity. Package totals are personalised estimates; vendors confirm the final quotation. Run `npm run test:customer-planning` for these regression checks.

@@ -5,7 +5,7 @@
  * call behind your own server later without touching screens.
  */
 import type { PhotoKey } from '@/constants/images';
-import { CHECKLIST, CHECKLIST_PHASES, currentPhase, PHASE_DUE } from '@/data/checklist';
+import { CHECKLIST, PHASE_DUE } from '@/data/checklist';
 import { EVENT_TYPE_BY_ID, bandFor, isPeakSeason } from '@/data/events';
 import type { OccasionId } from '@/data/occasions';
 import { SERVICE_BY_ID, defaultDetails, findService, serviceName } from '@/data/services';
@@ -30,6 +30,10 @@ export interface PlanInput {
   venueSelected?: string;
   /** Per-function date; null = not confirmed yet. */
   dates: Partial<Record<EventType, string | null>>;
+  /** Optional city override for each additional function. */
+  eventCities?: Partial<Record<EventType, string>>;
+  /** Optional display name for a related party or family gathering. */
+  eventNames?: Partial<Record<EventType, string>>;
   guests: number;
   services: string[];
   budgetMode: 'overall' | 'per_service' | 'undecided';
@@ -134,12 +138,12 @@ export function buildEvents(input: PlanInput): ProjectEvent[] {
     return {
       id: uid('ev'),
       type,
-      name: def?.label.replace(/ \(.*\)$/, '') ?? type,
+      name: input.eventNames?.[type]?.trim() || def?.label.replace(/ \(.*\)$/, '') || type,
       date,
       dateConfirmed: !!input.dates[type],
       startTime: def?.start ?? '11:00',
       venue: type === main && input.venueSelected ? input.venueSelected : 'To be decided',
-      city: input.city,
+      city: input.eventCities?.[type]?.trim() || input.city,
       guests: Math.max(0, Math.round(input.guests * (def?.guestShare ?? 1))),
       status: 'planned',
       private: false,
@@ -310,17 +314,15 @@ export function suggestedTasks(project: Project): ProjectTask[] {
 }
 
 /**
- * Items of the month-by-month guide for the phase the couple is in and the
- * ones after it, not on the wedding's task list yet, as tasks for the couple
- * due by the end of their phase. Items already ticked in the guide (`ticked`,
+ * Open remaining-days guide items, including earlier preparation, not on the
+ * wedding's task list yet. Earlier due dates become today. Items already ticked in the guide (`ticked`,
  * checklist ids) are left out. Weddings and engagements only.
  */
 export function guideSuggestions(project: Project, ticked: string[] = []): ProjectTask[] {
   if (!WEDDING_LIKE.has(project.occasion ?? 'wedding')) return [];
-  const from = CHECKLIST_PHASES.indexOf(currentPhase(daysUntil(project.weddingDate)));
   const have = new Set([...project.tasks, ...suggestedTasks(project)].map((t) => t.title.toLowerCase()));
   const now = today();
-  return CHECKLIST.filter((t) => CHECKLIST_PHASES.indexOf(t.phase) >= from && !ticked.includes(t.id) && !have.has(t.title.toLowerCase())).map((t) => {
+  return CHECKLIST.filter((t) => !ticked.includes(t.id) && !have.has(t.title.toLowerCase())).map((t) => {
     const due = shift(project.weddingDate, -PHASE_DUE[t.phase]);
     return {
       id: uid('tk'),
@@ -328,7 +330,7 @@ export function guideSuggestions(project: Project, ticked: string[] = []): Proje
       assigneeKind: 'customer',
       assigneeName: project.customerName,
       assigneeId: project.customerId,
-      due: due < now ? shift(now, 3) : due,
+      due: due < now ? now : due,
       status: 'TODO',
       priority: 'medium',
       category: t.category,

@@ -5,6 +5,7 @@ import { Pressable, StyleSheet, View } from 'react-native';
 import { useI18n } from '@/i18n';
 import { useRoleTheme } from '@/theme/RoleTheme';
 import { bsMonthName, cursorFor, monthCells, shiftBsMonth, toNepaliDigits, WEEKDAYS_NE_SHORT, type MonthCell } from '@/utils/bs';
+import type { AvailabilityStatus } from '@/types/platform';
 import { fromISODate, toISODate } from '@/utils/format';
 
 import { Text } from './Text';
@@ -55,10 +56,12 @@ export function Calendar({
   value,
   onChange,
   minDate = new Date(),
+  dateStatus,
 }: {
   value: string | null;
   onChange: (iso: string) => void;
   minDate?: Date;
+  dateStatus?: (date: string) => AvailabilityStatus;
 }) {
   const t = useRoleTheme();
   const { calendar: mode, lang } = useI18n();
@@ -117,7 +120,9 @@ export function Calendar({
         {cells.map((cell, i) => {
           if (!cell) return <View key={`e${i}`} style={styles.cell} />;
           const date = fromISODate(cell.iso);
-          const disabled = cell.iso < minIso;
+          const status = dateStatus?.(cell.iso);
+          const blocked = status === 'BOOKED' || status === 'UNAVAILABLE';
+          const disabled = cell.iso < minIso || blocked;
           const selected = cell.iso === value;
           const peak = !disabled && isPeakDay(date);
           const saturday = date.getDay() === 6;
@@ -128,7 +133,7 @@ export function Calendar({
               onPress={() => onChange(cell.iso)}
               accessibilityRole="button"
               accessibilityState={{ selected, disabled }}
-              accessibilityLabel={cell.iso}
+              accessibilityLabel={`${cell.iso}${status ? ` ${status}` : ''}`}
               style={styles.cell}>
               {({ pressed }) => (
                 <View style={[styles.day, selected && { backgroundColor: t.c.primary }, pressed && !selected && { backgroundColor: t.c.surfaceAlt }]}>
@@ -136,14 +141,15 @@ export function Calendar({
                     size={15}
                     lineHeight={19}
                     weight={selected ? 'bold' : 'medium'}
-                    color={selected ? t.c.onPrimary : disabled ? t.c.border : saturday ? t.c.danger : t.c.text}
+                    color={selected ? t.c.onPrimary : blocked ? t.c.danger : disabled ? t.c.border : saturday ? t.c.danger : t.c.text}
                     raw>
                     {n(cell.day)}
                   </Text>
                   <Text size={9} lineHeight={11} color={selected ? t.c.onPrimary : t.c.muted} raw>
                     {cell.alt}
                   </Text>
-                  {peak && !selected && <View style={[styles.dot, styles.peakDot, { backgroundColor: t.c.primary }]} />}
+                  {status && !selected && <View style={[styles.dot, styles.peakDot, { backgroundColor: blocked ? t.c.danger : status === 'TENTATIVE' || status === 'HELD' ? t.c.warning : t.c.success }]} />}
+                  {!status && peak && !selected && <View style={[styles.dot, styles.peakDot, { backgroundColor: t.c.primary }]} />}
                 </View>
               )}
             </Pressable>
@@ -153,7 +159,7 @@ export function Calendar({
       <View style={styles.legend}>
         <View style={[styles.dot, { backgroundColor: t.c.primary }]} />
         <Text size={12} color={t.c.muted}>
-          Popular wedding dates
+          {dateStatus ? 'Green: available · Red: unavailable' : 'Popular wedding dates'}
         </Text>
       </View>
     </View>
