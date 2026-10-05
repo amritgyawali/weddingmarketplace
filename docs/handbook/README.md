@@ -2,7 +2,7 @@
 
 This handbook explains how Vivah works, why it is built the way it is, and the rules every change must follow. It is written so that someone who has never seen the project (a developer joining in five years, or an AI coding agent starting a fresh session) can read it and work safely.
 
-> **Last full review:** 2 October 2026 (`main` at PR #20). The weekly documentation pass updates this line. See [17-documentation-maintenance.md](17-documentation-maintenance.md).
+> **Last full review:** 5 October 2026 (`main` at PR #36). The weekly documentation pass updates this line. See [17-documentation-maintenance.md](17-documentation-maintenance.md).
 
 ## How the documentation is organised
 

@@ -76,7 +76,7 @@ JavaScript-only changes can later ship through EAS Update; native changes need a
 
 - Migrations go to staging when a pull request merges, and to production on a release after a backup ([`docs/LAUNCH.md`](../LAUNCH.md)).
 - Only with the owner's go-ahead (R-PROD-10).
-- `npm run setup:supabase` (branch `feature/live-backend-config` as of 2 Oct 2026) automates project setup through the Management API; the owner runs it.
+- `npm run setup:supabase` (`scripts/supabase-setup.mjs`, on `main` since PR #34, 3 Oct 2026) automates project setup through the Management API; the owner runs it. Metro's transform cache lives in `.expo/metro-cache` inside each checkout (`metro.config.js`, PR #29), so git worktrees sharing `node_modules` don't read each other's cached routes ("Unable to resolve @/..."). CI also runs `npm run test:social`.
 
 ## 7. Dependencies
 

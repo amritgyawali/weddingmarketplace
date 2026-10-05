@@ -17,6 +17,7 @@ import { daysUntil, fromISODate, toISODate, uid } from '@/utils/format';
 /** Nepal VAT. */
 export const VAT_RATE = 0.13;
 
+/** The four ways the platform earns on a booking, with default rates and labels for the settings UI. */
 export const PRICING_MODELS: { id: PricingModel; label: string; blurb: string; defaultRate: number; rateLabel: string }[] = [
   { id: 'COMMISSION', label: 'Commission', blurb: 'Customer pays the listed price; platform keeps a %', defaultRate: 0.1, rateLabel: 'Commission %' },
   { id: 'MARKUP', label: 'Markup', blurb: 'Provider quotes the platform; platform resells higher', defaultRate: 0.15, rateLabel: 'Markup %' },
@@ -24,8 +25,10 @@ export const PRICING_MODELS: { id: PricingModel; label: string; blurb: string; d
   { id: 'FREELANCER_MARGIN', label: 'Freelancer margin', blurb: 'Crew pay minus platform margin', defaultRate: 0.2, rateLabel: 'Margin %' },
 ];
 
+/** Looks up a pricing model definition by id. */
 export const pricingModel = (id: PricingModel) => PRICING_MODELS.find((m) => m.id === id)!;
 
+/** Result of splitting a booking: the agreed price, provider cost, platform fee and what the provider is paid. */
 export interface Split {
   agreedPrice: number;
   providerCost: number;
@@ -34,19 +37,19 @@ export interface Split {
 }
 
 /**
- * Split one booking.
- *  A  COMMISSION        customer 100,000 → provider 90,000, platform 10,000
- *  B  MARKUP            provider 70,000 → customer 80,500 (15%), platform 10,500
- *  C  LEAD_FEE          customer pays provider price; platform nets a flat fee
- *  D  FREELANCER_MARGIN client 10,000 → freelancer 8,000, platform 2,000
- */
-/**
  * Whole rupees, half up, without binary floating-point drift: 1,780,150 × 1.15
  * is 2,047,172.5 and rounds to 2,047,173, where plain Math.round sees
  * 2,047,172.4999… Mirrors vivah_rupees() in supabase/migrations/0011.
  */
 export const roundMoney = (x: number) => Math.round(Number(x.toPrecision(12)));
 
+/**
+ * Split one booking.
+ *  A  COMMISSION        customer 100,000 → provider 90,000, platform 10,000
+ *  B  MARKUP            provider 70,000 → customer 80,500 (15%), platform 10,500
+ *  C  LEAD_FEE          customer pays provider price; platform nets a flat fee
+ *  D  FREELANCER_MARGIN client 10,000 → freelancer 8,000, platform 2,000
+ */
 export function splitBooking(model: PricingModel, rate: number, amounts: { customerPrice?: number; providerCost?: number }): Split {
   switch (model) {
     case 'MARKUP': {
@@ -73,6 +76,7 @@ export function splitBooking(model: PricingModel, rate: number, amounts: { custo
 export const freelancerNet = (clientPay: number, margin = 0.2) => ({ pay: roundMoney(clientPay * (1 - margin)), margin: roundMoney(clientPay * margin) });
 
 // Payment schedules
+/** Customer payment schedule templates; the first is the default 30/50/20 split. */
 export const SCHEDULE_TEMPLATES: { id: string; label: string; steps: ScheduleStep[] }[] = [
   {
     id: '30-50-20',
@@ -104,6 +108,7 @@ export const SCHEDULE_TEMPLATES: { id: string; label: string; steps: ScheduleSte
   { id: 'full', label: 'Full payment', steps: [{ label: 'Full payment on confirmation', percent: 100, rule: 'on_confirmation' }] },
 ];
 
+/** The default customer payment schedule (30% on confirmation, 50% fifteen days before the event, 20% after completion). */
 export const DEFAULT_SCHEDULE = SCHEDULE_TEMPLATES[0].steps;
 
 const shift = (iso: string, days: number) => {
@@ -160,6 +165,7 @@ export function milestoneStatus(m: Pick<PaymentMilestone, 'due' | 'amount' | 'pa
   return days <= 7 ? 'DUE' : 'UPCOMING';
 }
 
+/** Totals for a project's milestones: total (waived excluded), paid, outstanding, the next unpaid milestone and the overdue ones. */
 export function paymentSummary(project: Pick<Project, 'milestones'>) {
   const total = project.milestones.reduce((s, m) => s + (m.status === 'WAIVED' ? 0 : m.amount), 0);
   const paid = project.milestones.reduce((s, m) => s + m.paidAmount, 0);
