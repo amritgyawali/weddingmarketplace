@@ -7,7 +7,7 @@ import { Pressable, StyleSheet, View } from 'react-native';
 import { Card, EmptyBlock, KButton } from '@/components/kit';
 import { Text } from '@/components/ui/Text';
 import { ScreenHeader } from '@/components/ui/ScreenHeader';
-import { photos } from '@/constants/images';
+import { photo } from '@/constants/images';
 import { colors } from '@/constants/theme';
 import { findProvider, type Provider } from '@/data/providers';
 import { serviceName } from '@/data/services';
@@ -104,7 +104,7 @@ export default function CompareScreen() {
                 <View style={styles.labelCol} />
                 {chosen.map((p) => (
                   <View key={p.id} style={[styles.col, { gap: 6 }]}>
-                    <Photo source={photos[p.image]} style={styles.image} contentFit="cover" />
+                    <Photo source={photo(p.image)} style={styles.image} contentFit="cover" />
                     <Text size={14} weight="bold" color={colors.textStrong} numberOfLines={2}>
                       {p.name}
                     </Text>

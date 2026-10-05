@@ -9,9 +9,10 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { triggerHaptic } from '@/components/ui/PressableScale';
 import { Text } from '@/components/ui/Text';
-import { photos } from '@/constants/images';
+import { photo as photoSource } from '@/constants/images';
 import { colors } from '@/constants/theme';
 import { IDEA_PHOTOS } from '@/data/ideas';
+import { useLiveList } from '@/hooks/useContent';
 import { useAppStore } from '@/store/useAppStore';
 
 /** Full-screen swipeable photo viewer for the Ideas feed. */
@@ -19,9 +20,10 @@ export default function IdeaViewer() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { width, height } = useWindowDimensions();
   const insets = useSafeAreaInsets();
-  const startIndex = Math.max(0, IDEA_PHOTOS.findIndex((p) => p.id === id));
+  const ideas = useLiveList('idea', IDEA_PHOTOS);
+  const startIndex = Math.max(0, ideas.findIndex((p) => p.id === id));
   const [index, setIndex] = useState(startIndex);
-  const photo = IDEA_PHOTOS[index];
+  const photo = ideas[index] ?? ideas[0];
   const liked = useAppStore((s) => s.likedPhotos.includes(photo.id));
   const toggleLike = useAppStore((s) => s.toggleLike);
 
@@ -29,7 +31,7 @@ export default function IdeaViewer() {
     <View style={styles.root}>
       <StatusBar style="light" />
       <FlatList
-        data={IDEA_PHOTOS}
+        data={ideas}
         horizontal
         pagingEnabled
         initialScrollIndex={startIndex}
@@ -38,7 +40,7 @@ export default function IdeaViewer() {
         keyExtractor={(p) => p.id}
         onMomentumScrollEnd={(e) => setIndex(Math.round(e.nativeEvent.contentOffset.x / width))}
         renderItem={({ item }) => (
-          <Photo source={photos[item.image]} style={{ width, height }} contentFit="contain" transition={150} />
+          <Photo source={photoSource(item.image)} style={{ width, height }} contentFit="contain" transition={150} />
         )}
       />
 
@@ -47,7 +49,7 @@ export default function IdeaViewer() {
           <Ionicons name="close" size={24} color={colors.white} />
         </Pressable>
         <Text size={14} color={colors.white}>
-          {index + 1} / {IDEA_PHOTOS.length}
+          {index + 1} / {ideas.length}
         </Text>
         <Pressable
           onPress={() => Share.share({ message: `${photo.title} — wedding inspiration` }).catch(() => {})}

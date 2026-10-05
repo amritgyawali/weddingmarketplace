@@ -7,7 +7,7 @@ import Animated, { useAnimatedStyle, useSharedValue, withSequence, withSpring } 
 
 import { triggerHaptic } from '@/components/ui/PressableScale';
 import { Text } from '@/components/ui/Text';
-import { photos } from '@/constants/images';
+import { photo as photoSource } from '@/constants/images';
 import { colors } from '@/constants/theme';
 import { useAppStore } from '@/store/useAppStore';
 import type { IdeaPhoto } from '@/types';
@@ -32,7 +32,7 @@ export const PhotoTile = memo(function PhotoTile({ photo, width }: { photo: Idea
         onPress={() => router.push({ pathname: '/idea/[id]', params: { id: photo.id } })}
         accessibilityLabel={photo.title}
         style={StyleSheet.absoluteFill}>
-        <Photo source={photos[photo.image]} style={StyleSheet.absoluteFill} contentFit="cover" transition={200} recyclingKey={photo.id} />
+        <Photo source={photoSource(photo.image)} style={StyleSheet.absoluteFill} contentFit="cover" transition={200} recyclingKey={photo.id} />
       </Pressable>
       <Pressable onPress={like} hitSlop={8} accessibilityLabel={liked ? 'Unlike photo' : 'Like photo'} style={styles.likes}>
         <Animated.View style={heartStyle}>

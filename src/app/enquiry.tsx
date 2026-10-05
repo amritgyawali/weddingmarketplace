@@ -14,7 +14,7 @@ import { triggerHaptic } from '@/components/ui/PressableScale';
 import { ScreenHeader } from '@/components/ui/ScreenHeader';
 import { Sheet } from '@/components/ui/Sheet';
 import { Text } from '@/components/ui/Text';
-import { photos } from '@/constants/images';
+import { photo } from '@/constants/images';
 import { colors, GUTTER, radius } from '@/constants/theme';
 import { EVENT_TYPE_BY_ID } from '@/data/events';
 import { useCustomerWorkspace } from '@/hooks/useWorkspace';
@@ -144,7 +144,7 @@ export default function EnquiryScreen() {
         <ScrollView contentContainerStyle={styles.body} keyboardShouldPersistTaps="handled">
           {item && (
             <View style={styles.itemCard}>
-              <Photo source={photos[item.images[0]]} style={styles.itemImage} contentFit="cover" />
+              <Photo source={photo(item.images[0])} style={styles.itemImage} contentFit="cover" />
               <View style={{ flex: 1 }}>
                 <Text size={16} weight="semibold" color={colors.heading} numberOfLines={1}>
                   {item.name}

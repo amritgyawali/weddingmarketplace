@@ -34,4 +34,20 @@ export const photos = {
 
 export type PhotoKey = keyof typeof photos;
 
-export const photo = (key: PhotoKey) => photos[key];
+/** A bundled photo's key, or the address of a photo a super admin supplied (Content studio). */
+export type PhotoRef = PhotoKey | (string & {});
+
+export const PHOTO_KEYS = Object.keys(photos) as PhotoKey[];
+
+const KEY_BY_SOURCE = new Map<unknown, PhotoKey>(PHOTO_KEYS.map((key) => [photos[key], key]));
+
+export const isPhotoKey = (ref: string): ref is PhotoKey => Object.hasOwn(photos, ref);
+
+/** The bundled photo a source came from, so `Photo` can show its replacement. */
+export const photoKeyOf = (source: unknown) => KEY_BY_SOURCE.get(source);
+
+/** An image source for a bundled key or an address. Always go through this: catalogue records may carry either. */
+export function photo(ref: PhotoRef | null | undefined): ImageSourcePropType | undefined {
+  if (!ref) return undefined;
+  return isPhotoKey(ref) ? photos[ref] : { uri: ref };
+}

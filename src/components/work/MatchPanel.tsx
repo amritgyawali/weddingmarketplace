@@ -7,7 +7,7 @@ import { Card, ChoiceChips, KButton, KField, ProgressBar, StatusPill } from '@/c
 import { Sheet } from '@/components/ui/Sheet';
 import { Text } from '@/components/ui/Text';
 import { toast } from '@/components/ui/Toast';
-import { photos } from '@/constants/images';
+import { photo } from '@/constants/images';
 import { findProvider } from '@/data/providers';
 import { findService } from '@/data/services';
 import { MATCH_FACTORS, MATCH_WEIGHTS, rankProviders, type RankedProvider } from '@/services/matching';
@@ -65,7 +65,7 @@ function CandidateRow({
   return (
     <View style={[styles.candidate, { borderColor: t.c.border }]}>
       <Pressable onPress={onOpen} style={styles.candidateTop} accessibilityRole="button" accessibilityLabel={`${candidate.providerName}, ${candidate.score}% fit`}>
-        {provider && <Photo source={photos[provider.image]} style={styles.thumb} contentFit="cover" />}
+        {provider && <Photo source={photo(provider.image)} style={styles.thumb} contentFit="cover" />}
         <View style={{ flex: 1, gap: 2 }}>
           <Text size={14} weight="bold" color={t.c.textStrong} numberOfLines={1}>
             {candidate.providerName}

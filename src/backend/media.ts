@@ -67,8 +67,8 @@ async function signFor(purpose: MediaPurpose): Promise<Result<Signature>> {
   }
 }
 
-/** Uploads one picked file and records it (portfolio items land in the owner's portfolio). */
-export async function uploadMedia(file: UploadInput, purpose: MediaPurpose, caption?: string): Promise<Result<Uploaded>> {
+/** Sends one picked file to Cloudinary through a signed upload, without recording it anywhere. */
+export async function uploadToCloud(file: UploadInput, purpose: MediaPurpose): Promise<Result<Omit<Uploaded, 'url'>>> {
   const sig = await signFor(purpose);
   if (!sig.ok) return sig;
   const s = sig.value;
@@ -87,11 +87,18 @@ export async function uploadMedia(file: UploadInput, purpose: MediaPurpose, capt
     const res = await fetch(`https://api.cloudinary.com/v1_1/${s.cloudName}/${s.resource}/upload`, { method: 'POST', body: form });
     const body = (await res.json()) as { public_id?: string; resource_type?: string; width?: number; height?: number; error?: { message: string } };
     if (!res.ok || !body.public_id) return failResult(body.error?.message ?? 'The upload didn’t finish');
-    const kind = body.resource_type === 'video' ? 'video' : 'image';
-    const saved = await rpc<string>('rpc_register_media', { p_purpose: purpose, p_public_id: body.public_id, p_kind: kind.toUpperCase(), p_caption: caption ?? null });
-    if (!saved.ok) return saved;
-    return okResult({ publicId: body.public_id, kind, width: body.width, height: body.height, url: cloudinaryUrl(body.public_id, 't_card', kind) });
+    return okResult({ publicId: body.public_id, kind: body.resource_type === 'video' ? 'video' : 'image', width: body.width, height: body.height });
   } catch {
     return failResult('The upload was interrupted. Try again on a steadier connection.');
   }
+}
+
+/** Uploads one picked file and records it (portfolio items land in the owner's portfolio). */
+export async function uploadMedia(file: UploadInput, purpose: MediaPurpose, caption?: string): Promise<Result<Uploaded>> {
+  const up = await uploadToCloud(file, purpose);
+  if (!up.ok) return up;
+  const { publicId, kind } = up.value;
+  const saved = await rpc<string>('rpc_register_media', { p_purpose: purpose, p_public_id: publicId, p_kind: kind.toUpperCase(), p_caption: caption ?? null });
+  if (!saved.ok) return saved;
+  return okResult({ ...up.value, url: cloudinaryUrl(publicId, 't_card', kind) });
 }

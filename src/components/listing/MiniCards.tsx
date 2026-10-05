@@ -6,7 +6,7 @@ import { StyleSheet, View } from 'react-native';
 
 import { PressableScale } from '@/components/ui/PressableScale';
 import { Text } from '@/components/ui/Text';
-import { photos, type PhotoKey } from '@/constants/images';
+import { photo, type PhotoRef } from '@/constants/images';
 import { colors, radius } from '@/constants/theme';
 import type { Vendor, Venue } from '@/types';
 import { formatMoney } from '@/utils/format';
@@ -28,7 +28,7 @@ function MiniCard({
 }: {
   width: number;
   imageHeight: number;
-  image: PhotoKey;
+  image: PhotoRef;
   label: string;
   onPress: () => void;
   save: ReactNode;
@@ -38,7 +38,7 @@ function MiniCard({
     <View style={{ width }}>
       <PressableScale accessibilityLabel={label} onPress={onPress}>
         <View style={[styles.imageWrap, { height: imageHeight }]}>
-          <Photo source={photos[image]} style={StyleSheet.absoluteFill} contentFit="cover" transition={200} />
+          <Photo source={photo(image)} style={StyleSheet.absoluteFill} contentFit="cover" transition={200} />
         </View>
         <View style={styles.meta}>{children}</View>
       </PressableScale>

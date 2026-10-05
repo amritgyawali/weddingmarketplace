@@ -6,7 +6,7 @@ import { Card, EmptyBlock, KButton, KeyValue, ProgressBar, SectionTitle, StackHe
 import { Text } from '@/components/ui/Text';
 import { toast } from '@/components/ui/Toast';
 import { AvailabilityCalendar } from '@/components/work/AvailabilityCalendar';
-import { photos } from '@/constants/images';
+import { photo } from '@/constants/images';
 import { findProvider } from '@/data/providers';
 import { serviceName } from '@/data/services';
 import { useDb } from '@/store/useDb';
@@ -45,7 +45,7 @@ export default function PlatformProvider() {
       <StackHeader title={provider.name} subtitle={`${serviceName(provider.serviceId)} · ${provider.city}`} right={<StatusPill status={provider.verification} />} />
       <ScrollView contentContainerStyle={{ padding: 14, gap: 14, paddingBottom: 40 }}>
         <Card padded={false} style={{ overflow: 'hidden' }}>
-          <Photo source={photos[provider.image]} style={{ width: '100%', height: 150 }} contentFit="cover" />
+          <Photo source={photo(provider.image)} style={{ width: '100%', height: 150 }} contentFit="cover" />
           <View style={{ padding: 14, gap: 4 }}>
             <KeyValue label="Rating" value={`${provider.rating}★ (${provider.reviewCount})`} />
             <KeyValue label="Starting price" value={`${formatMoney(provider.startingPrice)} ${provider.priceUnit}`} />

@@ -9,8 +9,7 @@ import { BRAND } from '@/constants/brand';
 import { ALL_CITIES, CITIES } from '@/data/cities';
 import { CHECKLIST, CHECKLIST_TOTAL } from '@/data/checklist';
 import { GENIE_PACKAGES } from '@/data/genie';
-import { VENDORS } from '@/data/vendors';
-import { VENUES } from '@/data/venues';
+import { catalogue } from '@/data/live';
 import type { Vendor, Venue } from '@/types';
 import { formatMoney, formatMoneyCompact } from '@/utils/format';
 
@@ -134,7 +133,7 @@ function reply(message: string, ctx: AssistantContext): AssistantReply {
       };
 
     case 'destination': {
-      const venues = VENUES.filter((v) => v.collections.includes('destination'))
+      const venues = catalogue.venues().filter((v) => v.collections.includes('destination'))
         .sort((a, b) => b.rating - a.rating)
         .slice(0, 6);
       return {
@@ -152,7 +151,7 @@ function reply(message: string, ctx: AssistantContext): AssistantReply {
 
     case 'venues': {
       const lower = message.toLowerCase();
-      let venues = VENUES.filter((v) => inCity(city, v.city));
+      let venues = catalogue.venues().filter((v) => inCity(city, v.city));
       if (/luxury|premium|5 star|grand/.test(lower)) venues = venues.filter((v) => v.collections.includes('luxury'));
       else if (/budget|cheap|affordable/.test(lower)) venues = venues.filter((v) => v.collections.includes('budget'));
       if (budget) venues = venues.filter((v) => v.rentalCost <= budget);
@@ -178,7 +177,7 @@ function reply(message: string, ctx: AssistantContext): AssistantReply {
     case 'mehndi':
     case 'music': {
       const meta = SUBCATEGORY_BY_INTENT[intent]!;
-      let vendors = VENDORS.filter(
+      let vendors = catalogue.vendors().filter(
         (v) =>
           v.categoryId === meta.categoryId &&
           (!meta.subcategoryId || v.subcategoryId === meta.subcategoryId) &&

@@ -15,6 +15,7 @@ import { buildSocialSeed } from '@/data/socialSeed';
 import { buildToolkitSeed } from '@/data/toolkitSeed';
 import { VENDORS } from '@/data/vendors';
 import { VENUES } from '@/data/venues';
+import { emptyContent } from '@/services/content';
 import { generateTasks } from '@/services/planner';
 import { buildMilestones, DEFAULT_SCHEDULE, payablesForBooking, splitBooking } from '@/services/pricing';
 import { DEFAULT_TERMS, quoteTotals, TAX_RATE } from '@/services/quotes';
@@ -1833,6 +1834,7 @@ export function buildSeedData(): DbData {
     occasions: builtInOccasions(),
     featureFlags: {},
     textOverrides: {},
+    content: emptyContent(),
     announcements: [],
     bugReports: [],
   };

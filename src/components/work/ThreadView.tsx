@@ -14,7 +14,7 @@ import { Sheet } from '@/components/ui/Sheet';
 import { Text } from '@/components/ui/Text';
 import { toast } from '@/components/ui/Toast';
 import { inputReset } from '@/constants/theme';
-import { photos } from '@/constants/images';
+import { photo } from '@/constants/images';
 import { addToGoogleCalendar } from '@/services/exporters';
 import { quoteTotals } from '@/services/quotes';
 import { useDb } from '@/store/useDb';
@@ -106,7 +106,7 @@ function Bubble({ m, mine, showName, seen }: { m: Message; mine: boolean; showNa
       );
     }
     if (m.kind === 'image' && (m.meta?.uri || m.meta?.image)) {
-      return <Photo source={m.meta.uri ? { uri: m.meta.uri } : photos[m.meta.image!]} style={styles.image} contentFit="cover" />;
+      return <Photo source={m.meta.uri ? { uri: m.meta.uri } : photo(m.meta.image)} style={styles.image} contentFit="cover" />;
     }
     return (
       <Text size={15} color={fg} lineHeight={21}>

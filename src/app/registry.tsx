@@ -10,7 +10,7 @@ import { ToolScreen, toolStyles } from '@/components/planner/ToolScreen';
 import { Sheet } from '@/components/ui/Sheet';
 import { Text } from '@/components/ui/Text';
 import { toast } from '@/components/ui/Toast';
-import { photos, type PhotoKey } from '@/constants/images';
+import { photo, type PhotoKey } from '@/constants/images';
 import { useDb } from '@/store/useDb';
 import { useRoleTheme } from '@/theme/RoleTheme';
 import type { Project, RegistryItem } from '@/types/platform';
@@ -161,7 +161,7 @@ function Registry({ project, readOnly }: { project: Project; readOnly: boolean }
             <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 8 }}>
               {IMAGES.map((img) => (
                 <Pressable key={img} onPress={() => setDraft({ ...draft, image: img })}>
-                  <Photo source={photos[img]} style={[styles.thumb, { borderColor: draft.image === img ? t.c.primary : 'transparent' }]} contentFit="cover" />
+                  <Photo source={photo(img)} style={[styles.thumb, { borderColor: draft.image === img ? t.c.primary : 'transparent' }]} contentFit="cover" />
                 </Pressable>
               ))}
             </ScrollView>

@@ -8,7 +8,7 @@ import { Card, KButton, ListRow, RoleHeader, SectionTitle, StatusPill, type Icon
 import { Text } from '@/components/ui/Text';
 import { Toggle } from '@/components/ui/Toggle';
 import { toast } from '@/components/ui/Toast';
-import { photos } from '@/constants/images';
+import { photo } from '@/constants/images';
 import { useSocialSummary } from '@/components/social/parts';
 import { useFeatures, useLinkOn } from '@/hooks/useFeatures';
 import { useVisibleTools } from '@/components/toolkit/hub';
@@ -71,7 +71,7 @@ export default function BusinessAccount() {
       <ScrollView contentContainerStyle={{ padding: 16, gap: 16, paddingBottom: 40 }}>
         <Card padded={false} style={{ overflow: 'hidden' }}>
           {cover?.image || listing ? (
-            <Photo source={cover?.uri ? { uri: cover.uri } : photos[cover?.image ?? listing!.image]} style={styles.cover} contentFit="cover" />
+            <Photo source={cover?.uri ? { uri: cover.uri } : photo(cover?.image ?? listing!.image)} style={styles.cover} contentFit="cover" />
           ) : (
             <View style={[styles.cover, { backgroundColor: t.c.soft, alignItems: 'center', justifyContent: 'center' }]}>
               <Ionicons name="images-outline" size={36} color={t.c.primary} />

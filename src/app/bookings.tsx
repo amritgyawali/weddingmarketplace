@@ -9,7 +9,7 @@ import { Chip } from '@/components/ui/Chip';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { ScreenHeader } from '@/components/ui/ScreenHeader';
 import { Text } from '@/components/ui/Text';
-import { photos } from '@/constants/images';
+import { photo } from '@/constants/images';
 import { colors, GUTTER, radius, shadows } from '@/constants/theme';
 import { useAppStore } from '@/store/useAppStore';
 import type { Booking, BookingStatus } from '@/types';
@@ -38,7 +38,7 @@ function BookingCard({ booking }: { booking: Booking }) {
     <View style={[styles.card, shadows.card]}>
       <View style={styles.cardTop}>
         {booking.image ? (
-          <Photo source={photos[booking.image]} style={styles.image} contentFit="cover" />
+          <Photo source={photo(booking.image)} style={styles.image} contentFit="cover" />
         ) : (
           <View style={[styles.image, styles.genieIcon]}>
             <Ionicons name="clipboard-outline" size={26} color={colors.textMuted} />

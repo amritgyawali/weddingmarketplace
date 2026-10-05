@@ -10,7 +10,7 @@ import { Pressable, StyleSheet, View } from 'react-native';
 
 import { ChoiceChips } from '@/components/kit';
 import { Text } from '@/components/ui/Text';
-import { photos } from '@/constants/images';
+import { photo } from '@/constants/images';
 import { CRAFT_BY_ID, CRAFTS, craftOf, type CraftId } from '@/data/crafts';
 import { useLayout } from '@/hooks/useLayout';
 import { useRoleTheme } from '@/theme/RoleTheme';
@@ -55,7 +55,7 @@ export function CraftTiles({ value, onChange }: { value?: CraftId; onChange: (c:
             accessibilityState={{ selected: on }}
             accessibilityLabel={craft.label}
             style={[styles.tile, { width: medium ? '31.5%' : '48%', borderColor: on ? t.c.primary : t.c.border, backgroundColor: t.c.surface }]}>
-            <Photo source={photos[craft.image]} style={styles.tileImage} contentFit="cover" />
+            <Photo source={photo(craft.image)} style={styles.tileImage} contentFit="cover" />
             <View style={styles.tileText}>
               <View style={styles.row}>
                 <Text size={14} weight="semibold" color={t.c.textStrong} style={{ flex: 1 }} numberOfLines={1}>

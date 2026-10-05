@@ -9,7 +9,7 @@ import { ChoiceChips, EmptyBlock, KButton, KField, StackHeader } from '@/compone
 import { Sheet } from '@/components/ui/Sheet';
 import { Text } from '@/components/ui/Text';
 import { toast } from '@/components/ui/Toast';
-import { photos } from '@/constants/images';
+import { photo } from '@/constants/images';
 import { colors } from '@/constants/theme';
 import { EVENT_TYPES } from '@/data/events';
 import { useLayout } from '@/hooks/useLayout';
@@ -73,7 +73,7 @@ export function PortfolioManager() {
         <View style={styles.grid}>
           {items.map((p, i) => (
             <Pressable key={p.id} onPress={() => setEditing(p)} style={{ width: size }}>
-              <Photo source={p.uri ? { uri: p.uri } : photos[p.image!]} style={styles.image} contentFit="cover" />
+              <Photo source={p.uri ? { uri: p.uri } : photo(p.image)} style={styles.image} contentFit="cover" />
               {p.featured && (
                 <View style={[styles.badge, { backgroundColor: t.c.primary }]}>
                   <Ionicons name="star" size={11} color={colors.white} />

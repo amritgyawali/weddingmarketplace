@@ -8,9 +8,11 @@ import { ToolScreen, toolStyles } from '@/components/planner/ToolScreen';
 import { Sheet } from '@/components/ui/Sheet';
 import { Text } from '@/components/ui/Text';
 import { toast } from '@/components/ui/Toast';
-import { photos } from '@/constants/images';
+import { photo } from '@/constants/images';
 import { colors } from '@/constants/theme';
 import { IDEA_PHOTOS } from '@/data/ideas';
+import { catalogueAll } from '@/data/live';
+import { useLiveList } from '@/hooks/useContent';
 import { useLayout } from '@/hooks/useLayout';
 import { useAppStore } from '@/store/useAppStore';
 import { useDb } from '@/store/useDb';
@@ -20,7 +22,7 @@ import { confirm } from '@/utils/confirm';
 import { shareMessage } from '@/utils/links';
 import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
 
-const photoById = (id: string) => IDEA_PHOTOS.find((p) => p.id === id);
+const photoById = (id: string) => catalogueAll.ideas().find((p) => p.id === id);
 const STARTERS = ['Decor & mandap', 'Bridal look', 'Groom look', 'Mehendi', 'Reception', 'Cake & desserts'];
 
 function BoardView({ board, readOnly, onBack }: { board: InspirationBoard; readOnly: boolean; onBack: () => void }) {
@@ -35,8 +37,9 @@ function BoardView({ board, readOnly, onBack }: { board: InspirationBoard; readO
   const [name, setName] = useState(board.name);
   const cols = Math.max(2, columns + 1);
   const size = (Math.min(width, 1100) - 32 - (cols - 1) * 8) / cols;
-  const categories = [...new Set(IDEA_PHOTOS.map((p) => p.category))];
-  const pool = IDEA_PHOTOS.filter((p) => !filter || (filter === 'Liked' ? liked.includes(p.id) : p.category === filter));
+  const ideas = useLiveList('idea', IDEA_PHOTOS);
+  const categories = [...new Set(ideas.map((p) => p.category))];
+  const pool = ideas.filter((p) => !filter || (filter === 'Liked' ? liked.includes(p.id) : p.category === filter));
 
   return (
     <>
@@ -74,7 +77,7 @@ function BoardView({ board, readOnly, onBack }: { board: InspirationBoard; readO
               if (!p) return null;
               return (
                 <View key={id} style={{ width: size }}>
-                  <Photo source={photos[p.image]} style={{ width: size, height: size * 1.25, borderRadius: 8 }} contentFit="cover" />
+                  <Photo source={photo(p.image)} style={{ width: size, height: size * 1.25, borderRadius: 8 }} contentFit="cover" />
                   <Text size={12} color={t.c.text} numberOfLines={2} style={{ marginTop: 4 }}>
                     {p.title}
                   </Text>
@@ -118,7 +121,7 @@ function BoardView({ board, readOnly, onBack }: { board: InspirationBoard; readO
               const on = board.items.includes(item.id);
               return (
                 <Pressable onPress={() => toggle(board.id, item.id)} style={{ flex: 1 / 3 }}>
-                  <Photo source={photos[item.image]} style={{ width: '100%', aspectRatio: 0.8, borderRadius: 10, opacity: on ? 0.6 : 1 }} contentFit="cover" />
+                  <Photo source={photo(item.image)} style={{ width: '100%', aspectRatio: 0.8, borderRadius: 10, opacity: on ? 0.6 : 1 }} contentFit="cover" />
                   {on && <Ionicons name="checkmark-circle" size={24} color={t.c.primary} style={styles.tick} />}
                 </Pressable>
               );
@@ -177,7 +180,7 @@ function Boards({ project, readOnly }: { project: Project; readOnly: boolean }) 
               <Card key={b.id} onPress={() => setOpenId(b.id)} padded={false} style={{ width: columns > 1 ? '31.5%' : '48%', overflow: 'hidden' }}>
                 <View style={styles.cover}>
                   {covers.length ? (
-                    covers.map((p) => <Photo key={p!.id} source={photos[p!.image]} style={{ flex: 1, height: '100%' }} contentFit="cover" />)
+                    covers.map((p) => <Photo key={p!.id} source={photo(p!.image)} style={{ flex: 1, height: '100%' }} contentFit="cover" />)
                   ) : (
                     <View style={[styles.placeholder, { backgroundColor: t.c.soft }]}>
                       <Ionicons name="images-outline" size={28} color={t.c.primary} />

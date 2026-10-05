@@ -1,4 +1,5 @@
 import type { PhotoKey } from '@/constants/images';
+import { patchList } from '@/services/content';
 import type { Review, Vendor, VendorPackage } from '@/types';
 import { seeded } from '@/utils/random';
 
@@ -203,4 +204,5 @@ Object.assign(decor, {
     'Phoolbari Decor is a Lalitpur flower and decor studio run by Sunita Maharjan. Marigold and rose mandaps, Newari courtyard setups, stage lighting and fresh flowers from our own Kalimati stall.',
 });
 
-export const findVendor = (id: string) => VENDORS.find((v) => v.id === id);
+/** A vendor by id, with a super admin's edits (Content studio) applied. */
+export const findVendor = (id: string) => patchList('vendor', VENDORS).find((v) => v.id === id);

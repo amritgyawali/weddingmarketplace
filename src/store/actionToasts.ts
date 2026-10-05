@@ -58,6 +58,7 @@ const SILENT = new Set([
   'syncSocialInbox',
   'mirrorSocialData',
   'submitBugReport',
+  'setHomeOrder',
 ]);
 
 /** Exact messages for the most common actions. */
@@ -152,6 +153,15 @@ const MESSAGES: Record<string, string> = {
   setFeatures: 'Features updated',
   resetFeatures: 'Every feature is on again',
   setTextOverride: 'Text updated',
+  setContentImage: 'Photo updated',
+  saveContentEntry: 'Saved. It shows in the app now.',
+  setContentHidden: 'Updated',
+  restoreContentEntry: 'Original restored',
+  setHomeTitle: 'Heading saved',
+  saveBanner: 'Banner saved',
+  removeBanner: 'Banner deleted',
+  setBrandField: 'Saved',
+  resetContent: 'Original content restored',
   resetTextOverrides: 'Original text restored',
   addAnnouncement: 'Announcement published',
   updateAnnouncement: 'Announcement updated',

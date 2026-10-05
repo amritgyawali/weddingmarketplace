@@ -8,6 +8,7 @@ import { AppState, Platform } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import { getAccessToken, usesEmailSignIn } from '@/backend/auth';
+import { ContentSync } from '@/components/ContentSync';
 import { ImpersonationBar } from '@/components/ui/AppBanners';
 import { bugTouchHandlers, BugReporterHost, installBugReporter } from '@/components/ui/BugReporter';
 import { DialogHost } from '@/components/ui/Dialog';
@@ -85,6 +86,7 @@ export default function RootLayout() {
       <I18nProvider>
       <QueryClientProvider client={queryClient}>
         <StatusBar style="dark" />
+        <ContentSync />
         <Stack screenLayout={keyboardScreenLayout}
           screenOptions={{
             headerShown: false,

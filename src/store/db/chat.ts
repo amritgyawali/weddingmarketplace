@@ -2,14 +2,14 @@
  * Project threads, service threads and direct enquiries shared by every role.
  * Customer-visible conversation is kept apart from staff-only internal notes.
  */
-import type { PhotoKey } from '@/constants/images';
+import type { PhotoRef } from '@/constants/images';
 import type { FileRef, InternalNote, Message, MessageKind, Thread, ThreadMember } from '@/types/platform';
 import { uid } from '@/utils/format';
 
 import { accountById, type GetDb, now, type SetDb } from './helpers';
 
 export interface ChatActions {
-  openThread: (input: { kind: Thread['kind']; title: string; members: ThreadMember[]; projectId?: string; bookingId?: string; gigId?: string; listingId?: string; image?: PhotoKey }) => string;
+  openThread: (input: { kind: Thread['kind']; title: string; members: ThreadMember[]; projectId?: string; bookingId?: string; gigId?: string; listingId?: string; image?: PhotoRef }) => string;
   sendMessage: (threadId: string, sender: ThreadMember, text: string, kind?: MessageKind, meta?: Message['meta'], opts?: { silent?: boolean }) => void;
   markThreadRead: (threadId: string, accountId: string) => void;
   toggleThreadFlag: (threadId: string, accountId: string, flag: 'archivedBy' | 'mutedBy' | 'blockedBy') => void;

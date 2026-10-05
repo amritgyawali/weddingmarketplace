@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 
-import type { PhotoKey } from '@/constants/images';
+import type { PhotoRef } from '@/constants/images';
 import { useDb } from '@/store/useDb';
 import { useAccount, useSession } from '@/store/useSession';
 
@@ -12,7 +12,7 @@ import { useAccount, useSession } from '@/store/useSession';
 export function useStartChat() {
   const account = useAccount();
   const openThread = useDb((s) => s.openThread);
-  return (listing: { id: string; name: string; image?: PhotoKey }, navigate = true) => {
+  return (listing: { id: string; name: string; image?: PhotoRef }, navigate = true) => {
     const owner = useSession.getState().accounts.find((a) => a.role === 'vendor' && a.listingId === listing.id);
     const id = openThread({
       kind: 'direct',
