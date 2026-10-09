@@ -167,7 +167,7 @@ function reply(message: string, ctx: AssistantContext): AssistantReply {
         text: `Here are the highest-rated venues ${cityLabel(city)}${budget ? ` within ${formatMoneyCompact(budget)}` : ''}. Tap any card to see photos, pricing & availability.`,
         venues,
         suggestions: ['Show luxury venues', 'Venues under 5 lakh', 'Plan my dream destination wedding'],
-        action: { label: 'See all venues', href: '/venues' },
+        action: { label: 'View all venues', href: '/venues' },
       };
     }
 
@@ -197,7 +197,7 @@ function reply(message: string, ctx: AssistantContext): AssistantReply {
         vendors,
         suggestions: ['Compare their prices', 'What should I book first?', 'Talk to an expert'],
         action: {
-          label: `See all ${meta.label}`,
+          label: `View all ${meta.label}`,
           href: `/vendors/${meta.categoryId}${meta.subcategoryId ? `?sub=${meta.subcategoryId}` : ''}`,
         },
       };

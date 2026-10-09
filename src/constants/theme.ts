@@ -238,5 +238,18 @@ export const motion = { fast: 150, base: 240, slow: 360, stagger: 45 } as const;
 
 export const hitSlop = { top: 10, bottom: 10, left: 10, right: 10 };
 
-/** Removes the browser focus ring from text inputs on web (native is unaffected). */
-export const inputReset: TextStyle = Platform.OS === 'web' ? { outlineStyle: 'none' as never } : {};
+/**
+ * The font typed text uses inside inputs on phones: the system font at the
+ * given weight. Mukta's line box is 1.66 em tall (room for Devanagari marks),
+ * and iOS and Android size the text caret from it, so the cursor looked half
+ * again taller than the text. Web keeps Mukta; the browser caret follows the
+ * text. Put it after any `fontFamily` in an input's style array.
+ */
+export const inputFont = (weight: '400' | '500' | '600' | '700' = '400'): TextStyle =>
+  Platform.OS === 'web' ? {} : { fontFamily: Platform.OS === 'ios' ? 'System' : 'sans-serif', fontWeight: weight };
+
+/**
+ * Base style for every text input: removes the browser focus ring on web and
+ * sets the normal-height caret font on phones (see `inputFont`).
+ */
+export const inputReset: TextStyle = Platform.OS === 'web' ? { outlineStyle: 'none' as never } : inputFont();

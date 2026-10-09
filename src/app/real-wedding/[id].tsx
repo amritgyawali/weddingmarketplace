@@ -1,9 +1,11 @@
 import { Ionicons } from '@expo/vector-icons';
 import { Photo } from '@/components/ui/Photo';
 import { router, useLocalSearchParams } from 'expo-router';
-import { StyleSheet, useWindowDimensions, View } from 'react-native';
+import { useState } from 'react';
+import { Pressable, StyleSheet, useWindowDimensions, View } from 'react-native';
 
 import { EmptyState } from '@/components/ui/EmptyState';
+import { PhotoViewer } from '@/components/ui/PhotoViewer';
 import { ScreenHeader } from '@/components/ui/ScreenHeader';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { Text } from '@/components/ui/Text';
@@ -17,6 +19,7 @@ export default function RealWeddingScreen() {
   const { width } = useWindowDimensions();
   const { data: wedding, isLoading, error } = useRealWedding(id);
   const tile = (width - GUTTER * 2 - 8) / 2;
+  const [viewing, setViewing] = useState<number | null>(null);
 
   return (
     <View style={styles.root}>
@@ -55,9 +58,12 @@ export default function RealWeddingScreen() {
             </Text>
             <View style={styles.gallery}>
               {wedding.gallery.map((g, i) => (
-                <Photo key={`${g}${i}`} source={photos[g]} style={{ width: tile, height: tile * 1.25, borderRadius: radius.md }} contentFit="cover" />
+                <Pressable key={`${g}${i}`} onPress={() => setViewing(i)} accessibilityRole="button" accessibilityLabel={`Open photo ${i + 1} of ${wedding.gallery.length}`}>
+                  <Photo source={photos[g]} style={{ width: tile, height: tile * 1.25, borderRadius: radius.md }} contentFit="cover" />
+                </Pressable>
               ))}
             </View>
+            <PhotoViewer sources={wedding.gallery.map((g) => photos[g])} index={viewing} onClose={() => setViewing(null)} />
 
             <Text size={19} weight="bold" color={colors.heading} style={{ marginTop: 16 }}>
               Vendors they loved

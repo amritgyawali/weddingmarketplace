@@ -89,7 +89,7 @@ function CaseCard({ vc }: { vc: VerificationCase }) {
           <KField placeholder="Note to the applicant (optional)" value={note} onChangeText={setNote} />
           <View style={styles.row}>
             <KButton label="Reject" variant="danger" size="sm" style={{ flex: 1 }} onPress={() => decideAs('REJECTED')} />
-            <KButton label="Verify" variant="success" size="sm" style={{ flex: 1 }} disabled={!allPassed} onPress={() => decideAs('VERIFIED')} />
+            <KButton label="Verify" variant="success" size="sm" style={{ flex: 1 }} missing={!allPassed && 'Mark every check as passed before verifying'} onPress={() => decideAs('VERIFIED')} />
           </View>
           {!allPassed && (
             <Text size={11} color={t.c.muted}>

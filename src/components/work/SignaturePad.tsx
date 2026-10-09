@@ -51,7 +51,7 @@ export function SignaturePad({ onDone, height = 180 }: { onDone: (path: string) 
       </View>
       <View style={styles.row}>
         <KButton label="Clear" variant="ghost" size="sm" onPress={() => setInk({ paths: [], current: '' })} style={{ flex: 1 }} />
-        <KButton label="Sign" icon="create" size="sm" disabled={!paths.length} onPress={() => onDone(paths.join(' '))} style={{ flex: 2 }} />
+        <KButton label="Sign" icon="create" size="sm" missing={!paths.length && 'Draw your signature in the box first'} onPress={() => onDone(paths.join(' '))} style={{ flex: 2 }} />
       </View>
     </View>
   );

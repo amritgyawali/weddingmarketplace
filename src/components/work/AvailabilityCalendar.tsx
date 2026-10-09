@@ -148,7 +148,7 @@ export function AvailabilityCalendar({ ownerKind, ownerId, onSelectDay }: { owne
         </View>
       )}
       <View style={styles.actions}>
-        <KButton label={selected.length ? `Set ${selected.length} day${selected.length > 1 ? 's' : ''}` : 'Select days to edit'} size="sm" disabled={!selected.length} onPress={() => setEditing(true)} style={{ flex: 1 }} />
+        <KButton label={selected.length ? `Set ${selected.length} day${selected.length > 1 ? 's' : ''}` : 'Select days to edit'} size="sm" missing={!selected.length && 'Tap days on the calendar to select them first'} onPress={() => setEditing(true)} style={{ flex: 1 }} />
         <KButton label="Weekly rules" size="sm" variant="secondary" icon="repeat" onPress={() => setRulesOpen(true)} style={{ flex: 1 }} />
       </View>
 

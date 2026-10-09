@@ -9,7 +9,7 @@ Every exported symbol in `src/constants/`, file by file. The guide that explains
 - [`brand.ts`](#brandts) (1 exports)
 - [`env.ts`](#envts) (2 exports) · Public configuration from `EXPO_PUBLIC_*` variables (`.env.local`, EAS and Vercel environment variables; see `.env.example`). Expo inlines …
 - [`images.ts`](#imagests) (3 exports)
-- [`theme.ts`](#themets) (17 exports)
+- [`theme.ts`](#themets) (18 exports)
 
 ## brand.ts
 
@@ -272,12 +272,27 @@ hitSlop= { top: 10, bottom: 10, left: 10, right: 10 }
 
 _No JSDoc yet._
 
+### `inputFont`
+
+*function* · [src/constants/theme.ts:248](../../../src/constants/theme.ts#L248)
+
+```ts
+inputFont(weight: '400' | '500' | '600' | '700' = '400'): TextStyle
+```
+
+The font typed text uses inside inputs on phones: the system font at the
+given weight. Mukta's line box is 1.66 em tall (room for Devanagari marks),
+and iOS and Android size the text caret from it, so the cursor looked half
+again taller than the text. Web keeps Mukta; the browser caret follows the
+text. Put it after any `fontFamily` in an input's style array.
+
 ### `inputReset`
 
-*const* · [src/constants/theme.ts:242](../../../src/constants/theme.ts#L242)
+*const* · [src/constants/theme.ts:255](../../../src/constants/theme.ts#L255)
 
 ```ts
 inputReset: TextStyle
 ```
 
-Removes the browser focus ring from text inputs on web (native is unaffected).
+Base style for every text input: removes the browser focus ring on web and
+sets the normal-height caret font on phones (see `inputFont`).

@@ -11,6 +11,7 @@ import { toast } from '@/components/ui/Toast';
 import { photos } from '@/constants/images';
 import { colors } from '@/constants/theme';
 import { IDEA_PHOTOS } from '@/data/ideas';
+import { useFormCheck } from '@/hooks/useFormCheck';
 import { useLayout } from '@/hooks/useLayout';
 import { useAppStore } from '@/store/useAppStore';
 import { useDb } from '@/store/useDb';
@@ -139,6 +140,7 @@ function Boards({ project, readOnly }: { project: Project; readOnly: boolean }) 
   const boards = all.filter((b) => b.projectId === project.id);
   const [openId, setOpenId] = useState<string | null>(null);
   const [name, setName] = useState('');
+  const check = useFormCheck({ name: !name.trim() && 'Enter a name for the board' });
   const open = boards.find((b) => b.id === openId);
 
   if (open) return <BoardView key={open.id} board={open} readOnly={readOnly} onBack={() => setOpenId(null)} />;
@@ -152,15 +154,17 @@ function Boards({ project, readOnly }: { project: Project; readOnly: boolean }) 
           </Text>
           <View style={toolStyles.row}>
             <View style={{ flex: 1 }}>
-              <KField placeholder="e.g. Reception decor" value={name} onChangeText={setName} />
+              <KField placeholder="e.g. Reception decor" value={name} onChangeText={setName} error={check.error('name')} maxLength={60} />
             </View>
             <KButton
               label="Create"
               size="sm"
-              disabled={!name.trim()}
+              missing={check.missing}
+              onMissing={check.reveal}
               onPress={() => {
                 setOpenId(addBoard(project.id, name));
                 setName('');
+                check.reset();
               }}
             />
           </View>

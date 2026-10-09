@@ -118,7 +118,7 @@ export function buildSocialSeed(): { socialAccounts: SocialAccount[]; socialThre
       { id: 'st_pratik', ownerId: VENUE, accountId: 'sa_venue_ig', network: 'instagram', kind: 'comment', contactName: 'pratik.weds.puja', contactHandle: '@pratik.weds.puja', postId: 'sp_venue_bhoj', postCaption: 'The Newari bhoj corner is back for Mangsir', status: 'done', labels: ['Booked'], firstResponseMins: 35 },
       [
         { direction: 'in', author: 'pratik.weds.puja', text: 'We had our reception here, the food was amazing! 🙏', at: at(-3, 20, 10) },
-        { direction: 'out', author: 'Rajesh Pradhan', text: 'Dhanyabad Pratik! Wishing you both a lifetime of happiness.', at: at(-3, 20, 45), status: 'sent' },
+        { direction: 'out', author: 'Rajesh Pradhan', text: 'Thank you, Pratik! Wishing you both a lifetime of happiness.', at: at(-3, 20, 45), status: 'sent' },
       ],
     ),
     thread(

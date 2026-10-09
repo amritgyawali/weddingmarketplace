@@ -416,10 +416,10 @@ export function PaymentsPanel({ project, mode, openMilestoneId, focusMilestoneId
           <Text size={13} color={t.c.muted}>
             Refunds follow your contract’s cancellation policy. Your coordinator will review the request within 2 working days.
           </Text>
-          <KField placeholder="Reason for the refund" value={reason} onChangeText={setReason} multiline />
+          <KField placeholder="Reason for the refund" value={reason} onChangeText={setReason} multiline minLength={5} maxLength={500} />
           <KButton
             label="Submit request"
-            disabled={reason.trim().length < 5}
+            missing={reason.trim().length < 5 && (reason.trim() ? 'Give a little more detail (at least 5 characters)' : 'Enter the reason for the refund')}
             onPress={() => {
               const p = payments.find((x) => x.id === refundFor);
               const err = p ? requestRefund(p.id, p.amount - p.refunded, reason.trim()) : 'This payment no longer exists';

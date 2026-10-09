@@ -407,7 +407,7 @@ export function OpenDates() {
           ))}
         </Card>
       )}
-      <KButton label="Share open dates" icon="share-outline" disabled={!free.length} onPress={() => shareMessage(message)} />
+      <KButton label="Share open dates" icon="share-outline" missing={!free.length && 'No open dates in this period to share'} onPress={() => shareMessage(message)} />
       <Hint>Uses your Vivah calendar: booked jobs, days you marked unavailable and your weekly rules.</Hint>
     </ToolPage>
   );

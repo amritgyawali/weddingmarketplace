@@ -79,7 +79,7 @@ function CategoryCard({ category, width, height, featured, onPress }: { category
 /**
  * Vendors tab: an editorial index of every service. The first category is
  * a full-width feature, the rest a grid of tall photo cards with serif
- * captions; a card opens a sheet with its services and a "See all" link.
+ * captions; a card opens a sheet with its services and a "View all" link.
  * Only the services the active celebration uses are shown; search finds
  * the rest.
  */
@@ -145,7 +145,7 @@ export default function VendorsTab() {
           open ? (
             <View style={styles.sheetFooter}>
               <Button
-                label={open.id === 'venues' ? 'See all venues' : `See all ${open.title.toLowerCase()}`}
+                label={open.id === 'venues' ? 'View all venues' : `View all ${open.title.toLowerCase()}`}
                 onPress={() => leaveSheet(() => openAll(open))}
               />
             </View>

@@ -2,7 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 
-import { Card, ChoiceChips, KButton, KField, StatusPill } from '@/components/kit';
+import { Card, ChoiceChips, KButton, KField, showMissing, StatusPill } from '@/components/kit';
 import { triggerHaptic } from '@/components/ui/PressableScale';
 import { Sheet } from '@/components/ui/Sheet';
 import { Text } from '@/components/ui/Text';
@@ -114,7 +114,8 @@ export function EventCard({ project, event, canControl, canEditRun }: { project:
   const [draft, setDraft] = useState({ time: '', title: '', owner: '' });
 
   const addItem = () => {
-    if (!draft.title.trim() || !/^\d{1,2}:\d{2}$/.test(draft.time)) return;
+    if (!/^\d{1,2}:\d{2}$/.test(draft.time)) return showMissing(draft.time ? 'Use 24-hour time like 18:30' : 'Enter the time of the cue, e.g. 18:30');
+    if (!draft.title.trim()) return showMissing('Enter what happens at this cue');
     addRunItem(project.id, event.id, { time: draft.time.padStart(5, '0'), title: draft.title.trim(), owner: draft.owner.trim() || 'Coordinator' });
     setDraft({ time: '', title: '', owner: '' });
     setAdding(false);

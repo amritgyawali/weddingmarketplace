@@ -140,7 +140,7 @@ export function ExpensesMileage() {
 export function PrivateInvoices() {
   const { account } = useJobs();
   const invoiceText = (e: { title: string; amount?: number; date?: string; note?: string; fields?: Record<string, unknown> }) =>
-    `Invoice ${e.fields?.number ?? ''}\nFrom: ${account.name} (${account.phone})\nTo: ${e.title}\nFor: ${e.note ?? 'Wedding services'}\nAmount: ${formatMoney(e.amount ?? 0)}\nDue: ${e.date ? formatShortDate(e.date) : 'on receipt'}\nPay by: ${account.payoutMethod ? `${account.payoutMethod.kind} ${account.payoutMethod.detail}` : 'eSewa / Khalti / bank transfer'}\n\nDhanyabad!`;
+    `Invoice ${e.fields?.number ?? ''}\nFrom: ${account.name} (${account.phone})\nTo: ${e.title}\nFor: ${e.note ?? 'Wedding services'}\nAmount: ${formatMoney(e.amount ?? 0)}\nDue: ${e.date ? formatShortDate(e.date) : 'on receipt'}\nPay by: ${account.payoutMethod ? `${account.payoutMethod.kind} ${account.payoutMethod.detail}` : 'eSewa / Khalti / bank transfer'}\n\nThank you!`;
   return (
     <ToolPage title="Private invoices" subtitle="Bill clients you found outside Vivah">
       <EntryList

@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/Button';
 import { triggerHaptic } from '@/components/ui/PressableScale';
 import { ScreenHeader } from '@/components/ui/ScreenHeader';
 import { Text } from '@/components/ui/Text';
-import { colors, fonts, GUTTER, inputReset, radius } from '@/constants/theme';
+import { colors, fonts, GUTTER, inputFont, inputReset, radius } from '@/constants/theme';
 import { useAppStore } from '@/store/useAppStore';
 import { useDb } from '@/store/useDb';
 import { useAccount, useSession } from '@/store/useSession';
@@ -32,6 +32,11 @@ export default function JoinWeddingScreen() {
 
   const submit = () => {
     const normalized = code.trim().toUpperCase();
+    if (!normalized) {
+      setError('Enter the invite code the couple shared with you');
+      triggerHaptic('medium');
+      return;
+    }
     if (!CODE_PATTERN.test(normalized)) {
       setError('Invite codes are 6 letters or numbers, e.g. RIYA24');
       triggerHaptic('medium');
@@ -104,7 +109,7 @@ export default function JoinWeddingScreen() {
             autoCorrect={false}
             maxLength={6}
             autoFocus
-            style={[styles.code, inputReset, !!error && { borderColor: colors.danger }]}
+            style={[styles.code, inputReset, inputFont('700'), !!error && { borderColor: colors.danger }]}
             onSubmitEditing={submit}
           />
           {!!error && (
@@ -119,7 +124,7 @@ export default function JoinWeddingScreen() {
           )}
         </View>
         <View style={[styles.footer, { paddingBottom: Math.max(insets.bottom, 14) }]}>
-          <Button label="Join Wedding" size="lg" onPress={submit} disabled={code.trim().length < 6} />
+          <Button label="Join Wedding" size="lg" onPress={submit} />
         </View>
       </View>
     </View>

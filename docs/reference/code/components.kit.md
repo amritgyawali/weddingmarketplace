@@ -9,7 +9,7 @@ Every exported symbol in `src/components/kit/`, file by file. The guide that exp
 - [`controls.tsx`](#controlstsx) (6 exports)
 - [`dashboard.tsx`](#dashboardtsx) (7 exports)
 - [`index.ts`](#indexts) (3 exports)
-- [`primitives.tsx`](#primitivestsx) (10 exports)
+- [`primitives.tsx`](#primitivestsx) (11 exports)
 
 ## controls.tsx
 
@@ -17,19 +17,21 @@ Source: [src/components/kit/controls.tsx](../../../src/components/kit/controls.t
 
 ### `KField`
 
-*component* · [src/components/kit/controls.tsx:19](../../../src/components/kit/controls.tsx#L19)
+*component* · [src/components/kit/controls.tsx:22](../../../src/components/kit/controls.tsx#L22)
 
 ```ts
-KFieldforwardRef(({ label, error, prefix, hint, required, style, multiline, placeholder, onFocus, onBlur, ...rest }, ref))
+KFieldforwardRef(({ label, error, prefix, hint, required, style, multiline, placeholder, onFocus, onBlur, minLength, ...rest }, ref))
 ```
 
 Labelled input for the role apps. The border darkens while typing, turns
 red with an error, and the error (or a hint) shows under the field.
-Placeholders are translated with the rest of the app.
+Placeholders are translated with the rest of the app. With `maxLength`
+(and optionally `minLength`) a multi-line field shows the allowed length
+and a live character count under it.
 
 ### `Segmented`
 
-*component* · [src/components/kit/controls.tsx:83](../../../src/components/kit/controls.tsx#L83)
+*component* · [src/components/kit/controls.tsx:88](../../../src/components/kit/controls.tsx#L88)
 
 ```ts
 Segmented<T extends string>({ options, value, onChange, counts, }: { options: { id: T; label: string }[]; value: T; onChange: (v: T) => void; counts?: Partial<Record<T, number>>; })
@@ -39,7 +41,7 @@ Underlined tab strip; scrolls horizontally when it overflows.
 
 ### `ChoiceChips`
 
-*component* · [src/components/kit/controls.tsx:128](../../../src/components/kit/controls.tsx#L128)
+*component* · [src/components/kit/controls.tsx:133](../../../src/components/kit/controls.tsx#L133)
 
 ```ts
 ChoiceChips({ options, selected, onToggle, }: { options: string[]; selected: string[]; onToggle: (value: string) => void; })
@@ -49,7 +51,7 @@ Selectable chips (multi or single choice).
 
 ### `FilterChip`
 
-*component* · [src/components/kit/controls.tsx:168](../../../src/components/kit/controls.tsx#L168)
+*component* · [src/components/kit/controls.tsx:173](../../../src/components/kit/controls.tsx#L173)
 
 ```ts
 FilterChip({ label, selected, onPress, icon }: { label: string; selected?: boolean; onPress: () => void; icon?: IconName })
@@ -61,7 +63,7 @@ alone). Use for ad-hoc chip rows instead of styling a Pressable by hand.
 
 ### `ListRow`
 
-*component* · [src/components/kit/controls.tsx:195](../../../src/components/kit/controls.tsx#L195)
+*component* · [src/components/kit/controls.tsx:200](../../../src/components/kit/controls.tsx#L200)
 
 ```ts
 ListRow({ title, subtitle, leading, trailing, onPress, icon, meta, }: { title: string; subtitle?: string; leading?: ReactNode; trailing?: ReactNode; onPress?: () => void; icon?: IconName; meta?: ReactNode; })
@@ -71,7 +73,7 @@ Tappable list row with leading visual and trailing slot.
 
 ### `Fab`
 
-*component* · [src/components/kit/controls.tsx:242](../../../src/components/kit/controls.tsx#L242)
+*component* · [src/components/kit/controls.tsx:247](../../../src/components/kit/controls.tsx#L247)
 
 ```ts
 Fab({ icon = 'add', label, onPress, bottom = 20 }: { icon?: IconName; label?: string; onPress: () => void; bottom?: number })
@@ -197,7 +199,7 @@ Source: [src/components/kit/primitives.tsx](../../../src/components/kit/primitiv
 
 ### `IconName`
 
-*type* · [src/components/kit/primitives.tsx:13](../../../src/components/kit/primitives.tsx#L13)
+*type* · [src/components/kit/primitives.tsx:14](../../../src/components/kit/primitives.tsx#L14)
 
 ```ts
 type IconName = ComponentProps<typeof Ionicons>['name']
@@ -207,7 +209,7 @@ _No JSDoc yet._
 
 ### `Card`
 
-*component* · [src/components/kit/primitives.tsx:16](../../../src/components/kit/primitives.tsx#L16)
+*component* · [src/components/kit/primitives.tsx:17](../../../src/components/kit/primitives.tsx#L17)
 
 ```ts
 Card({ children, style, onPress, padded = true, accessibilityLabel, }: { children: ReactNode; style?: StyleProp<ViewStyle>; onPress?: () => void; padded?: boolean; accessibilityLabel?: string; })
@@ -217,17 +219,27 @@ Themed surface. `pressable` turns it into a card button.
 
 ### `KButton`
 
-*component* · [src/components/kit/primitives.tsx:50](../../../src/components/kit/primitives.tsx#L50)
+*component* · [src/components/kit/primitives.tsx:51](../../../src/components/kit/primitives.tsx#L51)
 
 ```ts
-KButton({ label, onPress, variant = 'primary', icon, loading, disabled, size = 'md', style, }: { label: string; onPress?: () => void; variant?: ButtonVariant; icon?: IconName; loading?: boolean; disabled?: boolean; size?: 'sm' …)
+KButton({ label, onPress, variant = 'primary', icon, loading, disabled, missing, onMissing, size = 'md', style, }: { label: string; onPress?: () => void; variant?: ButtonVariant; icon?: IconName; loading?: boolean; disabled?: b…)
 ```
 
 _No JSDoc yet._
 
+### `showMissing`
+
+*function* · [src/components/kit/primitives.tsx:125](../../../src/components/kit/primitives.tsx#L125)
+
+```ts
+showMissing(message: string)
+```
+
+Tells the person what is still missing when they tap an incomplete form's button.
+
 ### `StatusPill`
 
-*component* · [src/components/kit/primitives.tsx:104](../../../src/components/kit/primitives.tsx#L104)
+*component* · [src/components/kit/primitives.tsx:130](../../../src/components/kit/primitives.tsx#L130)
 
 ```ts
 StatusPill({ status, label }: { status: string; label?: string })
@@ -237,7 +249,7 @@ _No JSDoc yet._
 
 ### `Avatar`
 
-*component* · [src/components/kit/primitives.tsx:123](../../../src/components/kit/primitives.tsx#L123)
+*component* · [src/components/kit/primitives.tsx:149](../../../src/components/kit/primitives.tsx#L149)
 
 ```ts
 Avatar({ name, size = 40 }: { name: string; size?: number })
@@ -247,7 +259,7 @@ _No JSDoc yet._
 
 ### `ProgressBar`
 
-*component* · [src/components/kit/primitives.tsx:140](../../../src/components/kit/primitives.tsx#L140)
+*component* · [src/components/kit/primitives.tsx:166](../../../src/components/kit/primitives.tsx#L166)
 
 ```ts
 ProgressBar({ value, color, height = 4 }: { value: number; color?: string; height?: number })
@@ -257,7 +269,7 @@ _No JSDoc yet._
 
 ### `SectionTitle`
 
-*component* · [src/components/kit/primitives.tsx:149](../../../src/components/kit/primitives.tsx#L149)
+*component* · [src/components/kit/primitives.tsx:175](../../../src/components/kit/primitives.tsx#L175)
 
 ```ts
 SectionTitle({ title, action, onAction }: { title: string; action?: string; onAction?: () => void })
@@ -267,7 +279,7 @@ _No JSDoc yet._
 
 ### `EmptyBlock`
 
-*component* · [src/components/kit/primitives.tsx:168](../../../src/components/kit/primitives.tsx#L168)
+*component* · [src/components/kit/primitives.tsx:194](../../../src/components/kit/primitives.tsx#L194)
 
 ```ts
 EmptyBlock({ icon = 'file-tray-outline', art, title, message, action, onAction }: { icon?: IconName; art?: ArtName; title: string; message?: string; action?: string; onAction?: () => void })
@@ -277,7 +289,7 @@ Empty list or section in the role apps: pearl medallion, serif title, one line, 
 
 ### `Divider`
 
-*component* · [src/components/kit/primitives.tsx:188](../../../src/components/kit/primitives.tsx#L188)
+*component* · [src/components/kit/primitives.tsx:214](../../../src/components/kit/primitives.tsx#L214)
 
 ```ts
 Divider({ style }: { style?: StyleProp<ViewStyle> })
@@ -287,7 +299,7 @@ _No JSDoc yet._
 
 ### `KeyValue`
 
-*component* · [src/components/kit/primitives.tsx:194](../../../src/components/kit/primitives.tsx#L194)
+*component* · [src/components/kit/primitives.tsx:220](../../../src/components/kit/primitives.tsx#L220)
 
 ```ts
 KeyValue({ label, value, strong }: { label: string; value: string; strong?: boolean })

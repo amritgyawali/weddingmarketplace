@@ -19,7 +19,7 @@ data is a list of records (gifts, expenses, tickets…).
 
 ### `useToolOwner`
 
-*hook* · [src/components/toolkit/core.tsx:32](../../../src/components/toolkit/core.tsx#L32)
+*hook* · [src/components/toolkit/core.tsx:33](../../../src/components/toolkit/core.tsx#L33)
 
 ```ts
 useToolOwner()
@@ -30,7 +30,7 @@ collaborators), the vendor or freelancer account, or the whole ops team.
 
 ### `useToolEntries`
 
-*hook* · [src/components/toolkit/core.tsx:41](../../../src/components/toolkit/core.tsx#L41)
+*hook* · [src/components/toolkit/core.tsx:42](../../../src/components/toolkit/core.tsx#L42)
 
 ```ts
 useToolEntries(ownerId: string, tool: string)
@@ -40,7 +40,7 @@ Entries of one tool for one owner. Selects the stable array and filters in rende
 
 ### `useToolState`
 
-*hook* · [src/components/toolkit/core.tsx:47](../../../src/components/toolkit/core.tsx#L47)
+*hook* · [src/components/toolkit/core.tsx:48](../../../src/components/toolkit/core.tsx#L48)
 
 ```ts
 useToolState<T extends ToolState>(ownerId: string, tool: string, defaults: T): [T, (patch: Partial<T>) => void]
@@ -50,7 +50,7 @@ A tool's saved settings, with defaults for missing keys.
 
 ### `usePreset`
 
-*hook* · [src/components/toolkit/core.tsx:55](../../../src/components/toolkit/core.tsx#L55)
+*hook* · [src/components/toolkit/core.tsx:56](../../../src/components/toolkit/core.tsx#L56)
 
 ```ts
 usePreset(ownerId: string, tool: string, items: Omit<ToolEntryInput, 'ownerId' | 'tool'>[] | undefined)
@@ -60,7 +60,7 @@ Adds a tool's starter items the first time its owner opens it.
 
 ### `ToolPage`
 
-*component* · [src/components/toolkit/core.tsx:66](../../../src/components/toolkit/core.tsx#L66)
+*component* · [src/components/toolkit/core.tsx:67](../../../src/components/toolkit/core.tsx#L67)
 
 ```ts
 ToolPage({ title, subtitle, right, children }: { title: string; subtitle?: string; right?: ReactNode; children: ReactNode })
@@ -70,7 +70,7 @@ Stack header + scrolling column, centred at desktop width.
 
 ### `StatRow`
 
-*component* · [src/components/toolkit/core.tsx:80](../../../src/components/toolkit/core.tsx#L80)
+*component* · [src/components/toolkit/core.tsx:81](../../../src/components/toolkit/core.tsx#L81)
 
 ```ts
 StatRow({ items }: { items: { label: string; value: string; alert?: boolean }[] })
@@ -80,7 +80,7 @@ A row of text-only stats (label above, figure below).
 
 ### `Line`
 
-*component* · [src/components/toolkit/core.tsx:99](../../../src/components/toolkit/core.tsx#L99)
+*component* · [src/components/toolkit/core.tsx:100](../../../src/components/toolkit/core.tsx#L100)
 
 ```ts
 Line({ label, value, note, strong, tone }: { label: string; value: string; note?: string; strong?: boolean; tone?: 'danger' | 'success' })
@@ -90,7 +90,7 @@ Label/value line with an optional muted note underneath.
 
 ### `Hint`
 
-*component* · [src/components/toolkit/core.tsx:121](../../../src/components/toolkit/core.tsx#L121)
+*component* · [src/components/toolkit/core.tsx:122](../../../src/components/toolkit/core.tsx#L122)
 
 ```ts
 Hint({ children }: { children: ReactNode })
@@ -100,7 +100,7 @@ Muted explanatory paragraph.
 
 ### `NumberField`
 
-*component* · [src/components/toolkit/core.tsx:131](../../../src/components/toolkit/core.tsx#L131)
+*component* · [src/components/toolkit/core.tsx:132](../../../src/components/toolkit/core.tsx#L132)
 
 ```ts
 NumberField({ label, value, onChange, money, placeholder }: { label: string; value: number; onChange: (n: number) => void; money?: boolean; placeholder?: string })
@@ -110,7 +110,7 @@ Numeric input that keeps digits only and reports a number.
 
 ### `Cols`
 
-*component* · [src/components/toolkit/core.tsx:146](../../../src/components/toolkit/core.tsx#L146)
+*component* · [src/components/toolkit/core.tsx:147](../../../src/components/toolkit/core.tsx#L147)
 
 ```ts
 Cols({ children, style }: { children: ReactNode; style?: StyleProp<ViewStyle> })
@@ -120,7 +120,7 @@ Two or three controls side by side on wide screens, stacked on phones.
 
 ### `Col`
 
-*component* · [src/components/toolkit/core.tsx:151](../../../src/components/toolkit/core.tsx#L151)
+*component* · [src/components/toolkit/core.tsx:152](../../../src/components/toolkit/core.tsx#L152)
 
 ```ts
 Col({ children }: { children: ReactNode })
@@ -130,7 +130,7 @@ _No JSDoc yet._
 
 ### `FieldKey`
 
-*type* · [src/components/toolkit/core.tsx:158](../../../src/components/toolkit/core.tsx#L158)
+*type* · [src/components/toolkit/core.tsx:159](../../../src/components/toolkit/core.tsx#L159)
 
 ```ts
 type FieldKey = BaseKey | `f.${string}`
@@ -140,7 +140,7 @@ _No JSDoc yet._
 
 ### `FieldKind`
 
-*type* · [src/components/toolkit/core.tsx:159](../../../src/components/toolkit/core.tsx#L159)
+*type* · [src/components/toolkit/core.tsx:160](../../../src/components/toolkit/core.tsx#L160)
 
 ```ts
 type FieldKind = 'text' | 'multiline' | 'money' | 'number' | 'date' | 'time' | 'select' | 'toggle'
@@ -150,7 +150,7 @@ _No JSDoc yet._
 
 ### `FieldDef`
 
-*interface* · [src/components/toolkit/core.tsx:161](../../../src/components/toolkit/core.tsx#L161)
+*interface* · [src/components/toolkit/core.tsx:162](../../../src/components/toolkit/core.tsx#L162)
 
 _No JSDoc yet._
 
@@ -165,7 +165,7 @@ _No JSDoc yet._
 
 ### `EntryListProps`
 
-*interface* · [src/components/toolkit/core.tsx:298](../../../src/components/toolkit/core.tsx#L298)
+*interface* · [src/components/toolkit/core.tsx:319](../../../src/components/toolkit/core.tsx#L319)
 
 _No JSDoc yet._
 
@@ -193,7 +193,7 @@ _No JSDoc yet._
 
 ### `EntryList`
 
-*component* · [src/components/toolkit/core.tsx:332](../../../src/components/toolkit/core.tsx#L332)
+*component* · [src/components/toolkit/core.tsx:353](../../../src/components/toolkit/core.tsx#L353)
 
 ```ts
 EntryList(props: EntryListProps)
@@ -203,7 +203,7 @@ List + add/edit sheet for any record-shaped tool.
 
 ### `sumAmount`
 
-*function* · [src/components/toolkit/core.tsx:487](../../../src/components/toolkit/core.tsx#L487)
+*function* · [src/components/toolkit/core.tsx:522](../../../src/components/toolkit/core.tsx#L522)
 
 ```ts
 sumAmount(entries: ToolEntry[], pick: (e: ToolEntry) => boolean = () => true)
@@ -213,7 +213,7 @@ Sum of entry amounts.
 
 ### `today`
 
-*re-export* · [src/components/toolkit/core.tsx:489](../../../src/components/toolkit/core.tsx#L489)
+*re-export* · [src/components/toolkit/core.tsx:524](../../../src/components/toolkit/core.tsx#L524)
 
 _No JSDoc yet._
 

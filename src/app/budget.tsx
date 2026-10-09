@@ -2,7 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
-import { Card, ChoiceChips, EmptyBlock, KButton, KField, ProgressBar, SectionTitle } from '@/components/kit';
+import { Card, ChoiceChips, EmptyBlock, KButton, KField, ProgressBar, SectionTitle, showMissing } from '@/components/kit';
 import { ToolScreen, toolStyles } from '@/components/planner/ToolScreen';
 import { Sheet } from '@/components/ui/Sheet';
 import { Text } from '@/components/ui/Text';
@@ -82,7 +82,7 @@ function Budget({ project, readOnly }: { project: Project; readOnly: boolean }) 
   const tips = savingTips(project);
 
   const saveLine = () => {
-    if (!editing?.label?.trim()) return toast('Give this expense a name', 'alert-circle');
+    if (!editing?.label?.trim()) return showMissing('Enter what this expense is for');
     const data = { projectId: project.id, serviceId: editing.serviceId ?? '', label: editing.label.trim(), estimated: editing.estimated ?? 0, actual: editing.actual, paid: editing.paid ?? 0, due: editing.due, notes: editing.notes };
     if (editing.id) updateLine(editing.id, data);
     else addLine(data);
@@ -179,7 +179,7 @@ function Budget({ project, readOnly }: { project: Project; readOnly: boolean }) 
         {editing && (
           <View style={{ paddingHorizontal: 20, gap: 12 }}>
             <ChoiceChips options={OWN_CATEGORIES} selected={editing.serviceId ? [editing.serviceId] : []} onToggle={(v) => setEditing((e) => ({ ...e, serviceId: v, label: e?.label || v }))} />
-            <KField label="What" value={editing.label ?? ''} onChangeText={(v) => setEditing((e) => ({ ...e, label: v }))} placeholder="e.g. Bridal lehenga from New Road" />
+            <KField label="What" required value={editing.label ?? ''} onChangeText={(v) => setEditing((e) => ({ ...e, label: v }))} placeholder="e.g. Bridal lehenga from New Road" />
             <View style={toolStyles.row}>
               <View style={{ flex: 1 }}>
                 <KField label="Planned" value={editing.estimated ? String(editing.estimated) : ''} onChangeText={(v) => setEditing((e) => ({ ...e, estimated: money(v) }))} keyboardType="number-pad" prefix="NPR" />
@@ -216,7 +216,7 @@ function Budget({ project, readOnly }: { project: Project; readOnly: boolean }) 
             label="Save"
             onPress={() => {
               const v = parseMoney(totalText);
-              if (!v) return toast('Enter an amount like 25 lakh or 2500000', 'alert-circle');
+              if (!v) return showMissing(totalText.trim() ? 'Enter an amount like 25 lakh or 2500000' : 'Enter your overall budget');
               patchProject(project.id, { budget: v });
               setTotalOpen(false);
             }}

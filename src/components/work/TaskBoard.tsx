@@ -2,7 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 
-import { Card, ChoiceChips, KButton, KField, Segmented, StatusPill } from '@/components/kit';
+import { Card, ChoiceChips, KButton, KField, Segmented, showMissing, StatusPill } from '@/components/kit';
 import { DatePopup } from '@/components/ui/DatePopup';
 import { triggerHaptic } from '@/components/ui/PressableScale';
 import { Sheet } from '@/components/ui/Sheet';
@@ -10,6 +10,7 @@ import { Text } from '@/components/ui/Text';
 import { toast } from '@/components/ui/Toast';
 import { guideSuggestions, suggestedTasks } from '@/services/planner';
 import { useAppStore } from '@/store/useAppStore';
+import { useDraft } from '@/store/drafts';
 import { useDb } from '@/store/useDb';
 import { useAccount } from '@/store/useSession';
 import { useRoleTheme } from '@/theme/RoleTheme';
@@ -57,8 +58,11 @@ function TaskSheet({ project, mode, task, onClose }: { project: Project; mode: M
   const updateTask = useDb((s) => s.updateTask);
   const removeTask = useDb((s) => s.removeTask);
   const existing = task && task !== 'new' ? task : null;
-  const [title, setTitle] = useState(existing?.title ?? '');
-  const [notes, setNotes] = useState(existing?.notes ?? '');
+  // A new task being typed is kept as a draft until it is added.
+  const draftKey = task === 'new' ? `task:${account.id}:${project.id}` : null;
+  const [title, setTitle, clearTitle] = useDraft(draftKey && `${draftKey}:title`, existing?.title ?? '');
+  const [notes, setNotes, clearNotes] = useDraft(draftKey && `${draftKey}:notes`, existing?.notes ?? '');
+  const [titleTried, setTitleTried] = useState(false);
   const [assignee, setAssignee] = useState<TaskAssignee>(existing?.assigneeKind ?? (mode === 'platform' ? 'coordinator' : mode === 'vendor' ? 'provider' : 'customer'));
   const [priority, setPriority] = useState<ProjectTask['priority']>(existing?.priority ?? 'medium');
   const [due, setDue] = useState(existing?.due ?? addDays(today(), 7));
@@ -71,7 +75,10 @@ function TaskSheet({ project, mode, task, onClose }: { project: Project; mode: M
     kind === 'customer' ? project.customerName : kind === 'partner' ? (project.partnerName ?? 'Partner') : kind === 'coordinator' ? (project.coordinatorName ?? 'Coordinator') : kind === 'provider' ? (mode === 'vendor' ? (account.businessName ?? account.name) : 'Provider') : kind === 'family' ? 'Family' : 'Crew';
 
   const save = () => {
-    if (!title.trim()) return;
+    if (!title.trim()) {
+      setTitleTried(true);
+      return showMissing('Enter what the task is');
+    }
     const patch = {
       title: title.trim(),
       notes: notes.trim() || undefined,
@@ -90,6 +97,8 @@ function TaskSheet({ project, mode, task, onClose }: { project: Project; mode: M
     } else {
       addTask(project.id, { ...patch, status, category: 'Custom' });
       toast(`Task added to ${STATUS_LABEL[status]}`);
+      clearTitle();
+      clearNotes();
     }
     onClose();
   };
@@ -97,8 +106,8 @@ function TaskSheet({ project, mode, task, onClose }: { project: Project; mode: M
   return (
     <Sheet visible={!!task} onClose={onClose} title={existing ? 'Edit task' : 'New task'}>
       <ScrollView contentContainerStyle={{ paddingHorizontal: 20, gap: 12, paddingBottom: 12 }} keyboardShouldPersistTaps="handled">
-        <KField placeholder="e.g. Confirm jagge flowers" value={title} onChangeText={setTitle} autoFocus={!existing} />
-        <KField placeholder="Notes (optional)" value={notes} onChangeText={setNotes} multiline />
+        <KField label="Task" required placeholder="e.g. Confirm jagge flowers" value={title} onChangeText={setTitle} autoFocus={!existing} maxLength={120} error={titleTried && !title.trim() ? 'Enter what the task is' : null} />
+        <KField label="Notes (optional)" placeholder="Anything to remember" value={notes} onChangeText={setNotes} multiline maxLength={500} />
         <Pressable onPress={() => setPicking(true)} accessibilityRole="button" accessibilityLabel={`Due ${formatShortDate(due)}. Change date`} style={[styles.due, { borderColor: t.c.border }]}>
           <Ionicons name="calendar-outline" size={18} color={t.c.primary} />
           <Text size={15} color={t.c.textStrong} style={{ flex: 1 }}>
@@ -132,7 +141,7 @@ function TaskSheet({ project, mode, task, onClose }: { project: Project; mode: M
             </Text>
           </Pressable>
         )}
-        <KButton label={existing ? 'Save task' : 'Add task'} disabled={!title.trim()} onPress={save} />
+        <KButton label={existing ? 'Save task' : 'Add task'} missing={!title.trim() && 'Enter what the task is'} onMissing={() => setTitleTried(true)} onPress={save} />
         {existing && (
           <KButton
             label="Delete task"
@@ -218,7 +227,7 @@ function SuggestSheet({ project, visible, onClose }: { project: Project; visible
         {suggestions.length > 0 ? (
           <KButton
             label={picked.length ? `Add ${picked.length} ${picked.length === 1 ? 'task' : 'tasks'}` : 'Tick a task to add it'}
-            disabled={!picked.length}
+            missing={!picked.length && 'Tick at least one task to add'}
             onPress={() => {
               const added = regenerate(project.id, picked.map((x) => x.title));
               triggerHaptic('success');

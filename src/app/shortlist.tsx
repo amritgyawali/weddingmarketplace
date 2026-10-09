@@ -164,7 +164,7 @@ export default function ShortlistScreen() {
       )}
       {tab === 'vendors' && compare.length > 0 && (
         <View style={styles.footer}>
-          <KButton label={compare.length < 2 ? 'Pick one more to compare' : `Compare ${compare.length}`} icon="git-compare-outline" disabled={compare.length < 2} onPress={() => router.push({ pathname: '/compare', params: { ids: compare.join(',') } })} style={{ flex: 1 }} />
+          <KButton label={compare.length < 2 ? 'Pick one more to compare' : `Compare ${compare.length}`} icon="git-compare-outline" missing={compare.length < 2 && 'Pick at least two vendors to compare'} onPress={() => router.push({ pathname: '/compare', params: { ids: compare.join(',') } })} style={{ flex: 1 }} />
           <KButton label="Clear" variant="ghost" onPress={() => setCompare([])} />
         </View>
       )}

@@ -374,7 +374,7 @@ export function BugReportScreen() {
     });
     setBusy(false);
     if (!sent.ok) return setError(sent.error);
-    toast('Bug report sent. Dhanyabad!');
+    toast('Bug report sent. Thank you!');
     leave();
   };
 

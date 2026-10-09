@@ -5,8 +5,9 @@ import { StyleSheet, View, type StyleProp, type ViewStyle } from 'react-native';
 import { colors, radius } from '@/constants/theme';
 
 import { Loader } from './Loader';
-import { PressableScale } from './PressableScale';
+import { PressableScale, triggerHaptic } from './PressableScale';
 import { Text } from './Text';
+import { toast } from './Toast';
 
 type Variant = 'primary' | 'outline' | 'white' | 'ghost' | 'soft';
 
@@ -18,6 +19,13 @@ export interface ButtonProps {
   leading?: ReactNode;
   loading?: boolean;
   disabled?: boolean;
+  /**
+   * What the person still has to fill in. The button then looks dimmed but
+   * stays tappable, and a tap shows this message instead of doing nothing.
+   */
+  missing?: string | false | null;
+  /** Called on a tap while `missing` is set (e.g. `useFormCheck().reveal`). */
+  onMissing?: () => void;
   size?: 'md' | 'lg' | 'sm';
   style?: StyleProp<ViewStyle>;
   color?: string;
@@ -34,6 +42,8 @@ export function Button({
   leading,
   loading,
   disabled,
+  missing,
+  onMissing,
   size = 'md',
   style,
   color,
@@ -50,10 +60,19 @@ export function Button({
 
   return (
     <PressableScale
-      onPress={onPress}
+      onPress={
+        missing
+          ? () => {
+              triggerHaptic('medium');
+              toast(missing, 'warning-outline');
+              onMissing?.();
+            }
+          : onPress
+      }
       disabled={disabled || loading}
-      haptic
+      haptic={!missing}
       accessibilityLabel={label}
+      accessibilityHint={missing || undefined}
       style={[
         styles.base,
         {
@@ -63,6 +82,7 @@ export function Button({
           borderWidth: p.border ? 1 : 0,
         },
         style,
+        !!missing && !disabled && { opacity: 0.45 },
       ]}>
       {loading ? (
         <Loader size={7} color={p.fg} />

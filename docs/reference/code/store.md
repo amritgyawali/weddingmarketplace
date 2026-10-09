@@ -7,6 +7,7 @@ Every exported symbol in `src/store/`, file by file. The guide that explains how
 ## Files
 
 - [`actionToasts.ts`](#actiontoaststs) (2 exports) · A short confirmation after every change a user makes — "Guest added", "Task deleted", "Marked as done" — without touching each screen.
+- [`drafts.ts`](#draftsts) (5 exports)
 - [`lazyStorage.ts`](#lazystoragets) (2 exports)
 - [`quiet.ts`](#quietts) (2 exports)
 - [`useAppStore.ts`](#useappstorets) (6 exports)
@@ -47,6 +48,63 @@ installActionToasts()
 ```
 
 Wraps the store actions once (root layout). Timers that call actions use `quietly()`.
+
+## drafts.ts
+
+Source: [src/store/drafts.ts](../../../src/store/drafts.ts)
+
+### `loadDrafts`
+
+*function* · [src/store/drafts.ts:29](../../../src/store/drafts.ts#L29)
+
+```ts
+loadDrafts()
+```
+
+Reads every saved draft into memory. Called once at app start.
+
+### `readDraft`
+
+*function* · [src/store/drafts.ts:55](../../../src/store/drafts.ts#L55)
+
+```ts
+readDraft<T>(key: string): T | undefined
+```
+
+The saved draft for `key`, if there is a fresh one.
+
+### `saveDraft`
+
+*function* · [src/store/drafts.ts:61](../../../src/store/drafts.ts#L61)
+
+```ts
+saveDraft(key: string, value: unknown)
+```
+
+Saves a draft (written to the device a moment after the last change).
+
+### `clearDraft`
+
+*function* · [src/store/drafts.ts:75](../../../src/store/drafts.ts#L75)
+
+```ts
+clearDraft(key: string)
+```
+
+Forgets a draft, e.g. after the form was submitted.
+
+### `useDraft`
+
+*hook* · [src/store/drafts.ts:88](../../../src/store/drafts.ts#L88)
+
+```ts
+useDraft<T>(key: string | null, initial: T): [T, (next: T | ((prev: T) => T)) => void, () => void]
+```
+
+`useState` that is kept as a draft under `key` (no key: plain state).
+Returns the value, a setter, and `clear()` to call after a successful
+submit. A value equal to `initial` is not stored, so an untouched form
+leaves nothing behind.
 
 ## lazyStorage.ts
 

@@ -11,6 +11,7 @@ import { toast } from '@/components/ui/Toast';
 import { GigCard } from '@/components/work/GigCard';
 import { cityDistanceKm } from '@/data/cities';
 import { myApplication } from '@/hooks/useWorkspace';
+import { useDraft } from '@/store/drafts';
 import { freelancerNet } from '@/services/pricing';
 import { useDb } from '@/store/useDb';
 import { useAccount } from '@/store/useSession';
@@ -29,7 +30,7 @@ export default function FreelancerGigDetail() {
   const respondToInvite = useDb((s) => s.respondToInvite);
   const askQuestion = useDb((s) => s.askGigQuestion);
   const withdraw = useDb((s) => s.withdrawApplication);
-  const [message, setMessage] = useState('');
+  const [message, setMessage, clearMessage] = useDraft(`gig-apply:${account.id}:${id}`, '');
   const [pay, setPay] = useState('');
   const [question, setQuestion] = useState('');
 
@@ -56,6 +57,7 @@ export default function FreelancerGigDetail() {
     if (problem) return toast(problem);
     triggerHaptic('success');
     toast('Application sent', 'paper-plane');
+    clearMessage();
     router.back();
   };
 
@@ -126,7 +128,7 @@ export default function FreelancerGigDetail() {
               <KButton
                 label="Ask"
                 size="sm"
-                disabled={!question.trim()}
+                missing={!question.trim() && 'Type your question first'}
                 onPress={() => {
                   askQuestion(gig.id, { id: account.id, name: account.name }, question.trim());
                   setQuestion('');
@@ -159,7 +161,7 @@ export default function FreelancerGigDetail() {
                   This gig needs a {gig.skill}, which isn’t on your profile. Add the skill in Your craft to apply.
                 </Text>
               )}
-              <KField label="Message to the organiser" value={message} onChangeText={setMessage} multiline placeholder="Similar weddings you’ve done, your kit, availability…" />
+              <KField label="Message to the organiser" value={message} onChangeText={setMessage} multiline maxLength={600} placeholder="Similar weddings you’ve done, your kit, availability…" />
               <KField label="Your rate for this gig" value={pay} onChangeText={(v) => setPay(v.replace(/\D/g, ''))} keyboardType="number-pad" prefix="NPR" placeholder={String(gig.pay)} />
             </Card>
           ) : gig.status !== 'open' ? (

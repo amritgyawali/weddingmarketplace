@@ -128,7 +128,7 @@ Platform toolkit: broadcasts, promos, helpdesk, macros, recruitment, payout batc
 
 ### `Broadcasts`
 
-*component* · [src/components/toolkit/platform/ops.tsx:39](../../../src/components/toolkit/platform/ops.tsx#L39)
+*component* · [src/components/toolkit/platform/ops.tsx:40](../../../src/components/toolkit/platform/ops.tsx#L40)
 
 ```ts
 Broadcasts()
@@ -138,7 +138,7 @@ _No JSDoc yet._
 
 ### `PromoCampaigns`
 
-*component* · [src/components/toolkit/platform/ops.tsx:93](../../../src/components/toolkit/platform/ops.tsx#L93)
+*component* · [src/components/toolkit/platform/ops.tsx:97](../../../src/components/toolkit/platform/ops.tsx#L97)
 
 ```ts
 PromoCampaigns()
@@ -148,7 +148,7 @@ _No JSDoc yet._
 
 ### `Helpdesk`
 
-*component* · [src/components/toolkit/platform/ops.tsx:135](../../../src/components/toolkit/platform/ops.tsx#L135)
+*component* · [src/components/toolkit/platform/ops.tsx:139](../../../src/components/toolkit/platform/ops.tsx#L139)
 
 ```ts
 Helpdesk()
@@ -158,7 +158,7 @@ _No JSDoc yet._
 
 ### `Macros`
 
-*component* · [src/components/toolkit/platform/ops.tsx:185](../../../src/components/toolkit/platform/ops.tsx#L185)
+*component* · [src/components/toolkit/platform/ops.tsx:189](../../../src/components/toolkit/platform/ops.tsx#L189)
 
 ```ts
 Macros()
@@ -168,7 +168,7 @@ _No JSDoc yet._
 
 ### `Recruitment`
 
-*component* · [src/components/toolkit/platform/ops.tsx:217](../../../src/components/toolkit/platform/ops.tsx#L217)
+*component* · [src/components/toolkit/platform/ops.tsx:221](../../../src/components/toolkit/platform/ops.tsx#L221)
 
 ```ts
 Recruitment()
@@ -178,7 +178,7 @@ _No JSDoc yet._
 
 ### `PayoutBatches`
 
-*component* · [src/components/toolkit/platform/ops.tsx:248](../../../src/components/toolkit/platform/ops.tsx#L248)
+*component* · [src/components/toolkit/platform/ops.tsx:252](../../../src/components/toolkit/platform/ops.tsx#L252)
 
 ```ts
 PayoutBatches()
@@ -188,7 +188,7 @@ _No JSDoc yet._
 
 ### `Holidays`
 
-*component* · [src/components/toolkit/platform/ops.tsx:316](../../../src/components/toolkit/platform/ops.tsx#L316)
+*component* · [src/components/toolkit/platform/ops.tsx:320](../../../src/components/toolkit/platform/ops.tsx#L320)
 
 ```ts
 Holidays()
@@ -198,7 +198,7 @@ _No JSDoc yet._
 
 ### `OnCall`
 
-*component* · [src/components/toolkit/platform/ops.tsx:361](../../../src/components/toolkit/platform/ops.tsx#L361)
+*component* · [src/components/toolkit/platform/ops.tsx:365](../../../src/components/toolkit/platform/ops.tsx#L365)
 
 ```ts
 OnCall()
@@ -208,7 +208,7 @@ _No JSDoc yet._
 
 ### `QualityAudits`
 
-*component* · [src/components/toolkit/platform/ops.tsx:407](../../../src/components/toolkit/platform/ops.tsx#L407)
+*component* · [src/components/toolkit/platform/ops.tsx:411](../../../src/components/toolkit/platform/ops.tsx#L411)
 
 ```ts
 QualityAudits()
@@ -218,7 +218,7 @@ _No JSDoc yet._
 
 ### `WinBack`
 
-*component* · [src/components/toolkit/platform/ops.tsx:454](../../../src/components/toolkit/platform/ops.tsx#L454)
+*component* · [src/components/toolkit/platform/ops.tsx:458](../../../src/components/toolkit/platform/ops.tsx#L458)
 
 ```ts
 WinBack()
@@ -228,7 +228,7 @@ _No JSDoc yet._
 
 ### `ExportCentre`
 
-*component* · [src/components/toolkit/platform/ops.tsx:494](../../../src/components/toolkit/platform/ops.tsx#L494)
+*component* · [src/components/toolkit/platform/ops.tsx:498](../../../src/components/toolkit/platform/ops.tsx#L498)
 
 ```ts
 ExportCentre()

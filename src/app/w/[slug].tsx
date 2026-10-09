@@ -55,6 +55,7 @@ export default function WeddingSite() {
   const [gift, setGift] = useState<RegistryItem | null>(null);
   const [giver, setGiver] = useState('');
   const [note, setNote] = useState('');
+  const [giverTried, setGiverTried] = useState(false);
   const [payOpen, setPayOpen] = useState(false);
 
   useEffect(() => {
@@ -153,7 +154,7 @@ export default function WeddingSite() {
                 <View style={{ flex: 1 }}>
                   <KField value={code} onChangeText={(v) => setCode(v.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 6))} placeholder="Invitation code" autoCapitalize="characters" />
                 </View>
-                <KButton label="RSVP" disabled={code.length < 4} onPress={() => router.push({ pathname: '/rsvp/[code]', params: { code } })} style={{ backgroundColor: site.accent, borderColor: site.accent }} />
+                <KButton label="RSVP" missing={code.length < 4 && (code ? 'Invitation codes have at least 4 letters or numbers' : 'Enter the code from your invitation')} onPress={() => router.push({ pathname: '/rsvp/[code]', params: { code } })} style={{ backgroundColor: site.accent, borderColor: site.accent }} />
               </View>
             </Card>
           )}
@@ -261,9 +262,9 @@ export default function WeddingSite() {
             <Text size={18} weight="bold" color={colors.textStrong}>
               {gift.title}
             </Text>
-            <KField label="Your name" value={giver} onChangeText={setGiver} placeholder="From…" />
-            <KField label="Message (optional)" value={note} onChangeText={setNote} multiline placeholder="Blessings for the couple" />
-            <KButton label="Continue to payment" disabled={giver.trim().length < 2} onPress={() => setPayOpen(true)} style={{ backgroundColor: site.accent, borderColor: site.accent }} />
+            <KField label="Your name" required value={giver} onChangeText={setGiver} placeholder="From…" error={giverTried && giver.trim().length < 2 ? 'Enter your name so the couple knows who sent it' : null} />
+            <KField label="Message (optional)" value={note} onChangeText={setNote} multiline maxLength={300} placeholder="Blessings for the couple" />
+            <KButton label="Continue to payment" missing={giver.trim().length < 2 && 'Enter your name so the couple knows who sent it'} onMissing={() => setGiverTried(true)} onPress={() => setPayOpen(true)} style={{ backgroundColor: site.accent, borderColor: site.accent }} />
             <KButton label="Cancel" variant="ghost" onPress={() => setGift(null)} />
           </View>
         </View>
@@ -281,7 +282,7 @@ export default function WeddingSite() {
           setGift(null);
           setGiver('');
           setNote('');
-          toast('Dhanyabad for your blessing', 'heart');
+          toast('Thank you for your blessing', 'heart');
         }}
       />
     </View>

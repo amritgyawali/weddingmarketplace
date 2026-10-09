@@ -37,7 +37,7 @@ Product, Nepali and technical terms used in the code and the docs, in alphabetic
 | **Mehendi** | Henna ceremony; also a freelancer craft (makeup and mehendi). |
 | **Milestone** | One instalment the customer owes; status derived by `milestoneStatus()`. |
 | **Muhurta** | An auspicious time for a ritual; the vendor "muhurta and samagri" tool. |
-| **Namaste / Dhanyabad** | Hello / thank you; the app's tone. |
+| **Namaste / Dhanyabad** | Hello / thank you. The app says "Namaste", but writes "Thank you" in English (धन्यवाद in Nepali). |
 | **NPR** | Nepalese rupee. |
 | **Nwaran** | Newborn naming ceremony (event type `NWARAN`). |
 | **Occasion** | What a customer celebrates; decides functions, services, tools and vocabulary. |

@@ -89,7 +89,7 @@ export function Pickups() {
           { key: 'status', label: 'Status', kind: 'select', options: PICKUP_STATUS },
         ]}
         subtitle={(e) => [e.date ? formatShortDate(e.date) : undefined, e.time ? formatClock(e.time) : undefined, [e.fields?.from, e.fields?.to].filter(Boolean).join(' → '), e.fields?.driver].filter(Boolean).join(' · ')}
-        rowActions={(e) => (e.fields?.phone ? [{ label: 'WhatsApp driver', onPress: () => openWhatsApp(`Namaste! Pickup for ${e.title} on ${e.date ? formatShortDate(e.date) : ''} ${e.time ? `at ${formatClock(e.time)}` : ''} from ${e.fields?.from ?? ''}. Dhanyabad!`, String(e.fields?.phone)) }] : [])}
+        rowActions={(e) => (e.fields?.phone ? [{ label: 'WhatsApp driver', onPress: () => openWhatsApp(`Namaste! Pickup for ${e.title} on ${e.date ? formatShortDate(e.date) : ''} ${e.time ? `at ${formatClock(e.time)}` : ''} from ${e.fields?.from ?? ''}. Thank you!`, String(e.fields?.phone)) }] : [])}
         header={(entries) => (
           <StatRow
             items={[

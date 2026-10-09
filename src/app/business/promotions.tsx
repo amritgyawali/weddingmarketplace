@@ -6,6 +6,7 @@ import { Text } from '@/components/ui/Text';
 import { Toggle } from '@/components/ui/Toggle';
 import { toast } from '@/components/ui/Toast';
 import { PaymentSheet } from '@/components/work/Payments';
+import { useFormCheck } from '@/hooks/useFormCheck';
 import { useVendorWorkspace } from '@/hooks/useWorkspace';
 import { useDb } from '@/store/useDb';
 import { useAccount } from '@/store/useSession';
@@ -36,6 +37,10 @@ export default function Promotions() {
   const [kind, setKind] = useState<Deal['kind']>('seasonal');
   const [pct, setPct] = useState('10');
   const [code, setCode] = useState('');
+  const check = useFormCheck({
+    title: !title.trim() && 'Enter a title for the deal',
+    pct: (!Number(pct) || Number(pct) > 90) && 'Enter a discount between 1 and 90%',
+  });
   const [buying, setBuying] = useState<(typeof PLACEMENTS)[number] | null>(null);
   const featured = settings.featuredProviderIds.includes(account.listingId ?? '');
 
@@ -45,12 +50,12 @@ export default function Promotions() {
       <ScrollView contentContainerStyle={{ padding: 16, gap: 14, paddingBottom: 40 }}>
         <Card style={{ gap: 10 }}>
           <SectionTitle title="Create a deal" />
-          <KField label="Title" value={title} onChangeText={setTitle} placeholder="e.g. Mangsir early-booking 10% off" />
-          <KField label="Details" value={description} onChangeText={setDescription} multiline placeholder="Who it’s for and what’s included" />
+          <KField label="Title" required value={title} onChangeText={setTitle} placeholder="e.g. Mangsir early-booking 10% off" error={check.error('title')} maxLength={80} />
+          <KField label="Details" value={description} onChangeText={setDescription} multiline maxLength={300} placeholder="Who it’s for and what’s included" />
           <ChoiceChips options={KINDS.map((k) => k.replace('_', ' '))} selected={[kind.replace('_', ' ')]} onToggle={(v) => setKind(v.replace(' ', '_') as Deal['kind'])} />
           <View style={styles.row}>
             <View style={{ flex: 1 }}>
-              <KField label="Discount %" value={pct} onChangeText={(v) => setPct(v.replace(/\D/g, ''))} keyboardType="number-pad" />
+              <KField label="Discount %" required value={pct} onChangeText={(v) => setPct(v.replace(/\D/g, ''))} keyboardType="number-pad" error={check.error('pct')} />
             </View>
             <View style={{ flex: 1 }}>
               <KField label="Promo code (optional)" value={code} onChangeText={(v) => setCode(v.toUpperCase())} autoCapitalize="characters" />
@@ -58,7 +63,8 @@ export default function Promotions() {
           </View>
           <KButton
             label="Publish deal"
-            disabled={!title.trim() || !Number(pct)}
+            missing={check.missing}
+            onMissing={check.reveal}
             onPress={() => {
               saveDeal({ id: uid('deal'), providerId: account.listingId, providerName: account.businessName, serviceId: listing?.serviceId, title: title.trim(), description: description.trim(), kind, discountPct: Number(pct), code: code.trim() || undefined, endsAt: addDays(today(), 30), featured: false, active: true, redemptions: 0 });
               setTitle('');

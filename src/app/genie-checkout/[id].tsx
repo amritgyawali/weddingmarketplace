@@ -5,6 +5,7 @@ import { Pressable, StyleSheet, View } from 'react-native';
 import Animated, { ZoomIn } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { showMissing } from '@/components/kit';
 import { Button } from '@/components/ui/Button';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { Field } from '@/components/ui/Field';
@@ -93,7 +94,8 @@ export default function GenieCheckoutScreen() {
       email: email && !/^\S+@\S+\.\S+$/.test(email) ? 'Enter a valid email' : null,
     };
     setErrors(next);
-    if (Object.values(next).some(Boolean)) return;
+    const problem = Object.values(next).find(Boolean);
+    if (problem) return showMissing(problem);
 
     updateProfile({ name: name.trim(), phone: phone.trim(), email: email.trim() });
     setPaying(true);

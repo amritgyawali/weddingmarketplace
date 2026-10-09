@@ -6,6 +6,7 @@ import { Sheet } from '@/components/ui/Sheet';
 import { Text } from '@/components/ui/Text';
 import { Toggle } from '@/components/ui/Toggle';
 import { toast } from '@/components/ui/Toast';
+import { useFormCheck } from '@/hooks/useFormCheck';
 import { useVendorWorkspace } from '@/hooks/useWorkspace';
 import { useDb } from '@/store/useDb';
 import { useAccount } from '@/store/useSession';
@@ -24,6 +25,10 @@ export default function Team() {
   const save = useDb((s) => s.saveStaff);
   const remove = useDb((s) => s.removeStaff);
   const [editing, setEditing] = useState<StaffMember | null>(null);
+  const check = useFormCheck({
+    name: !editing?.name.trim() && 'Enter the team member’s name',
+    phone: !!editing?.phone && editing.phone.length !== 10 && 'Enter a 10-digit mobile number',
+  });
   const shifts = (id: string) => bookings.flatMap(({ project, booking }) => booking.assignments.filter((a) => a.workerId === id && a.status !== 'CANCELLED').map((a) => ({ project, a })));
 
   return (
@@ -69,8 +74,8 @@ export default function Team() {
       <Sheet visible={!!editing} onClose={() => setEditing(null)} title={editing?.name ? 'Edit member' : 'Add member'}>
         {editing && (
           <ScrollView contentContainerStyle={{ paddingHorizontal: 20, gap: 12, paddingBottom: 12 }} keyboardShouldPersistTaps="handled">
-            <KField label="Name" value={editing.name} onChangeText={(name) => setEditing({ ...editing, name })} />
-            <KField label="Mobile" value={editing.phone} onChangeText={(phone) => setEditing({ ...editing, phone: phone.replace(/\D/g, '').slice(0, 10) })} keyboardType="phone-pad" />
+            <KField label="Name" required value={editing.name} onChangeText={(name) => setEditing({ ...editing, name })} error={check.error('name')} />
+            <KField label="Mobile" value={editing.phone} onChangeText={(phone) => setEditing({ ...editing, phone: phone.replace(/\D/g, '').slice(0, 10) })} keyboardType="phone-pad" error={check.error('phone')} />
             <ChoiceChips options={['Manager', 'Coordinator', 'Photographer', 'Videographer', 'Editor', 'Decorator', 'Chef', 'Accounts', 'Staff']} selected={[editing.role]} onToggle={(role) => setEditing({ ...editing, role })} />
             <Text size={13} weight="semibold" color={t.c.muted}>
               Permissions
@@ -82,7 +87,7 @@ export default function Team() {
               </Text>
               <Toggle value={editing.active} onValueChange={(active) => setEditing({ ...editing, active })} accessibilityLabel="Active" />
             </View>
-            <KButton label="Save" disabled={!editing.name.trim()} onPress={() => { save({ ...editing, name: editing.name.trim() }); setEditing(null); toast('Team updated'); }} />
+            <KButton label="Save" missing={check.missing} onMissing={check.reveal} onPress={() => { save({ ...editing, name: editing.name.trim() }); setEditing(null); check.reset(); toast('Team updated'); }} />
             {staff.some((m) => m.id === editing.id) && <KButton label="Remove" variant="ghost" size="sm" onPress={() => { remove(editing.id); setEditing(null); }} />}
           </ScrollView>
         )}

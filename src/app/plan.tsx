@@ -1,12 +1,12 @@
 import { Ionicons } from '@expo/vector-icons';
 import { Photo } from '@/components/ui/Photo';
 import { router } from 'expo-router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import Animated, { FadeInRight } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { ChoiceChips, KButton, KField } from '@/components/kit';
+import { ChoiceChips, KButton, KField, showMissing } from '@/components/kit';
 import { Calendar } from '@/components/ui/Calendar';
 import { triggerHaptic } from '@/components/ui/PressableScale';
 import { ScreenHeader } from '@/components/ui/ScreenHeader';
@@ -19,6 +19,7 @@ import { IDEA_PHOTOS } from '@/data/ideas';
 import { SERVICE_GROUPS, SERVICES, findService } from '@/data/services';
 import { allocateBudget, estimateTotal, perUnitBudget, type PlanInput } from '@/services/planner';
 import { useAppStore } from '@/store/useAppStore';
+import { clearDraft, readDraft, saveDraft } from '@/store/drafts';
 import { useDb } from '@/store/useDb';
 import { useAccount } from '@/store/useSession';
 import type { EventType } from '@/types/platform';
@@ -53,6 +54,27 @@ function OptionCard({ label, icon, selected, onPress, sub }: { label: string; ic
   );
 }
 
+/** Everything the wizard asks, saved as a draft while it is filled in. */
+interface PlanDraft {
+  step: number;
+  eventTypes: EventType[];
+  city: string;
+  area: string;
+  hasVenue: boolean;
+  venue: string;
+  dates: Partial<Record<EventType, string | null>>;
+  band: (typeof GUEST_BANDS)[number]['id'];
+  exactGuests: string;
+  services: string[];
+  budgetMode: PlanInput['budgetMode'];
+  budget: string;
+  serviceBudgets: Record<string, [number, number]>;
+  styles: Record<string, string[]>;
+  notes: string;
+  partner: string;
+  inspiration: PhotoKey[];
+}
+
 /** "Plan My Wedding": one requirement → a managed wedding project. */
 export default function PlanWizard() {
   const insets = useSafeAreaInsets();
@@ -63,24 +85,36 @@ export default function PlanWizard() {
   const appGuests = useAppStore((s) => s.guests);
   const appBudget = useAppStore((s) => s.budget);
   const appPartner = useAppStore((s) => s.profile.partnerName);
-  const [step, setStep] = useState(0);
-  const [eventTypes, setEventTypes] = useState<EventType[]>(['WEDDING']);
-  const [city, setCity] = useState(CITIES.some((c) => c.name === appCity) && appCity !== 'All Nepal' ? appCity : account.city || 'Kathmandu');
-  const [area, setArea] = useState('');
-  const [hasVenue, setHasVenue] = useState(false);
-  const [venue, setVenue] = useState('');
-  const [dates, setDates] = useState<Partial<Record<EventType, string | null>>>({ WEDDING: appDate });
+  // A wizard left half-way is kept on the device and picks up where it stopped.
+  const draftKey = `plan:${account.id}`;
+  const [saved] = useState(() => readDraft<PlanDraft>(draftKey));
+  const [step, setStep] = useState(saved?.step ?? 0);
+  const [eventTypes, setEventTypes] = useState<EventType[]>(saved?.eventTypes ?? ['WEDDING']);
+  const [city, setCity] = useState(saved?.city ?? (CITIES.some((c) => c.name === appCity) && appCity !== 'All Nepal' ? appCity : account.city || 'Kathmandu'));
+  const [area, setArea] = useState(saved?.area ?? '');
+  const [hasVenue, setHasVenue] = useState(saved?.hasVenue ?? false);
+  const [venue, setVenue] = useState(saved?.venue ?? '');
+  const [dates, setDates] = useState<Partial<Record<EventType, string | null>>>(saved?.dates ?? { WEDDING: appDate });
   const [dateFor, setDateFor] = useState<EventType>('WEDDING');
-  const [band, setBand] = useState<(typeof GUEST_BANDS)[number]['id']>(appGuests ? bandFor(appGuests) : '300-500');
-  const [exactGuests, setExactGuests] = useState('');
-  const [services, setServices] = useState<string[]>(['venue', 'catering', 'photography', 'videography', 'decoration']);
-  const [budgetMode, setBudgetMode] = useState<PlanInput['budgetMode']>('overall');
-  const [budget, setBudget] = useState(appBudget ? String(appBudget) : '');
-  const [serviceBudgets, setServiceBudgets] = useState<Record<string, [number, number]>>({});
-  const [styles_, setStyles] = useState<Record<string, string[]>>({});
-  const [notes, setNotes] = useState('');
-  const [partner, setPartner] = useState(appPartner);
-  const [inspiration, setInspiration] = useState<PhotoKey[]>([]);
+  const [band, setBand] = useState<(typeof GUEST_BANDS)[number]['id']>(saved?.band ?? (appGuests ? bandFor(appGuests) : '300-500'));
+  const [exactGuests, setExactGuests] = useState(saved?.exactGuests ?? '');
+  const [services, setServices] = useState<string[]>(saved?.services ?? ['venue', 'catering', 'photography', 'videography', 'decoration']);
+  const [budgetMode, setBudgetMode] = useState<PlanInput['budgetMode']>(saved?.budgetMode ?? 'overall');
+  const [budget, setBudget] = useState(saved?.budget ?? (appBudget ? String(appBudget) : ''));
+  const [serviceBudgets, setServiceBudgets] = useState<Record<string, [number, number]>>(saved?.serviceBudgets ?? {});
+  const [styles_, setStyles] = useState<Record<string, string[]>>(saved?.styles ?? {});
+  const [notes, setNotes] = useState(saved?.notes ?? '');
+  const [partner, setPartner] = useState(saved?.partner ?? appPartner);
+  const [inspiration, setInspiration] = useState<PhotoKey[]>(saved?.inspiration ?? []);
+  const [touched, setTouched] = useState(!!saved);
+  const snapshot: PlanDraft = { step, eventTypes, city, area, hasVenue, venue, dates, band, exactGuests, services, budgetMode, budget, serviceBudgets, styles: styles_, notes, partner, inspiration };
+  const snapshotJson = JSON.stringify(snapshot);
+  useEffect(() => {
+    if (touched) saveDraft(draftKey, JSON.parse(snapshotJson));
+  }, [touched, draftKey, snapshotJson]);
+  // Saving starts with the first change, so just opening the wizard leaves nothing behind.
+  const [first] = useState(snapshotJson);
+  if (!touched && snapshotJson !== first) setTouched(true);
   const [submitting, setSubmitting] = useState(false);
 
   const guests = Number(exactGuests) || GUEST_BANDS.find((b) => b.id === band)!.value;
@@ -90,14 +124,23 @@ export default function PlanWizard() {
 
   const toggleEvent = (id: EventType) => {
     const next = eventTypes.includes(id) ? eventTypes.filter((x) => x !== id) : [...eventTypes, id];
-    if (!next.length) return;
+    if (!next.length) return showMissing('Keep at least one function selected');
     setEventTypes(next);
     // Pre-select the core services couples usually book for these functions.
     const suggested = next.flatMap((e) => EVENT_TYPE_BY_ID[e].suggestedServices.filter((s) => findService(s)?.core));
     setServices((cur) => [...new Set([...cur, ...suggested])]);
   };
 
-  const canNext = [eventTypes.length > 0, !!city, true, guests > 0, services.length > 0, budgetMode !== 'overall' || budgetNum > 0, true, true][step];
+  const stepMissing = [
+    !eventTypes.length && 'Pick at least one function',
+    !city && 'Pick your city',
+    null,
+    !(guests > 0) && 'Enter the number of guests',
+    !services.length && 'Pick at least one service you need',
+    budgetMode === 'overall' && !(budgetNum > 0) && 'Enter your overall budget, or choose to discuss it per service',
+    null,
+    null,
+  ][step];
 
   const submit = async () => {
     setSubmitting(true);
@@ -121,6 +164,7 @@ export default function PlanWizard() {
     useAppStore.getState().setCity(city);
     if (project.weddingDate) useAppStore.getState().setWeddingDate(project.weddingDate);
     triggerHaptic('success');
+    clearDraft(draftKey);
     setSubmitting(false);
     router.replace({ pathname: '/plan-submitted', params: { id: project.id } });
   };
@@ -330,6 +374,7 @@ export default function PlanWizard() {
               value={notes}
               onChangeText={setNotes}
               multiline
+              maxLength={1000}
               placeholder="e.g. Outdoor pre-wedding near Pokhara. Bride wants natural makeup. Drone is required. Same team for engagement and wedding."
             />
             <Text size={14} weight="semibold" color={colors.heading}>
@@ -377,7 +422,7 @@ export default function PlanWizard() {
         <View style={[styles.footer, { paddingBottom: Math.max(insets.bottom, 14) }]}>
           {step > 0 && <KButton label="Back" variant="secondary" onPress={() => setStep(step - 1)} style={{ flex: 1 }} />}
           {step < STEPS.length - 1 ? (
-            <KButton label="Continue" icon="arrow-forward" disabled={!canNext} onPress={() => setStep(step + 1)} style={{ flex: 2 }} />
+            <KButton label="Continue" icon="arrow-forward" missing={stepMissing} onPress={() => setStep(step + 1)} style={{ flex: 2 }} />
           ) : (
             <KButton label="Submit requirement" icon="paper-plane" loading={submitting} onPress={submit} style={{ flex: 2 }} />
           )}

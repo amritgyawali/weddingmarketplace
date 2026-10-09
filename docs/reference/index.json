@@ -1021,7 +1021,7 @@
    "kind": "screen",
    "file": "src/app/(tabs)/vendors.tsx",
    "component": "VendorsTab",
-   "doc": "Vendors tab: an editorial index of every service. The first category is a full-width feature, the rest a grid of tall photo cards with serif captions; a card opens a sheet with its services and a \"See all\" link. Only the services the active celebration uses are shown; search finds the rest."
+   "doc": "Vendors tab: an editorial index of every service. The first category is a full-width feature, the rest a grid of tall photo cards with serif captions; a card opens a sheet with its services and a \"View all\" link. Only the services the active celebration uses are shown; search finds the rest."
   },
   {
    "path": "/vendors/[category]",
@@ -1177,7 +1177,7 @@
      "kind": "component",
      "line": 86,
      "signature": "()",
-     "doc": "Vendors tab: an editorial index of every service. The first category is\na full-width feature, the rest a grid of tall photo cards with serif\ncaptions; a card opens a sheet with its services and a \"See all\" link.\nOnly the services the active celebration uses are shown; search finds\nthe rest."
+     "doc": "Vendors tab: an editorial index of every service. The first category is\na full-width feature, the rest a grid of tall photo cards with serif\ncaptions; a card opens a sheet with its services and a \"View all\" link.\nOnly the services the active celebration uses are shown; search finds\nthe rest."
     }
    ]
   },
@@ -1227,14 +1227,14 @@
     {
      "name": "ErrorBoundary",
      "kind": "re-export",
-     "line": 32,
+     "line": 33,
      "signature": "from '@/components/AppErrorBoundary'",
      "doc": ""
     },
     {
      "name": "RootLayout",
      "kind": "component",
-     "line": 45,
+     "line": 49,
      "signature": "()",
      "doc": ""
     }
@@ -1247,7 +1247,7 @@
     {
      "name": "AssistantScreen",
      "kind": "component",
-     "line": 114,
+     "line": 115,
      "signature": "()",
      "doc": ""
     }
@@ -1260,7 +1260,7 @@
     {
      "name": "BoardsScreen",
      "kind": "component",
-     "line": 205,
+     "line": 209,
      "signature": "()",
      "doc": "Mood boards: collect ideas by theme and share them with vendors."
     }
@@ -1429,7 +1429,7 @@
     {
      "name": "VendorFinance",
      "kind": "component",
-     "line": 19,
+     "line": 20,
      "signature": "()",
      "doc": "Provider finance: settlements from Vivah, invoices, commission and exports."
     }
@@ -1520,7 +1520,7 @@
     {
      "name": "Packages",
      "kind": "component",
-     "line": 95,
+     "line": 98,
      "signature": "()",
      "doc": "Package builder: price, inclusions, crew, deliverables, add-ons, discounts."
     }
@@ -1546,7 +1546,7 @@
     {
      "name": "Promotions",
      "kind": "component",
-     "line": 27,
+     "line": 28,
      "signature": "()",
      "doc": "Deals, discount campaigns and paid placements."
     }
@@ -1663,7 +1663,7 @@
     {
      "name": "Team",
      "kind": "component",
-     "line": 20,
+     "line": 21,
      "signature": "()",
      "doc": "Staff, roles, permissions and who is on which booking."
     }
@@ -1832,7 +1832,7 @@
     {
      "name": "EnquiryScreen",
      "kind": "component",
-     "line": 32,
+     "line": 34,
      "signature": "()",
      "doc": ""
     }
@@ -1962,7 +1962,7 @@
     {
      "name": "FreelancerGigDetail",
      "kind": "component",
-     "line": 22,
+     "line": 23,
      "signature": "()",
      "doc": "Gig detail for crew: accept an invite, apply, ask a question or decline."
     }
@@ -2079,7 +2079,7 @@
     {
      "name": "GenieCheckoutScreen",
      "kind": "component",
-     "line": 38,
+     "line": 39,
      "signature": "()",
      "doc": "Checkout for Genie packages. Payment is simulated — plug a gateway SDK\n(eSewa / Khalti / Fonepay) into `pay()` and confirm the order server-side."
     }
@@ -2092,7 +2092,7 @@
     {
      "name": "GuestsScreen",
      "kind": "component",
-     "line": 531,
+     "line": 532,
      "signature": "()",
      "doc": "Guest list & RSVP manager: sides, groups, per-function invites, dietary needs, imports and exports."
     }
@@ -2326,7 +2326,7 @@
     {
      "name": "PlanWizard",
      "kind": "component",
-     "line": 57,
+     "line": 79,
      "signature": "()",
      "doc": "\"Plan My Wedding\": one requirement → a managed wedding project."
     }
@@ -2716,7 +2716,7 @@
     {
      "name": "default",
      "kind": "default",
-     "line": 185,
+     "line": 193,
      "signature": "staffScreen('/platform/marketplace', MarketplaceSettings)",
      "doc": ""
     }
@@ -2898,7 +2898,7 @@
     {
      "name": "RealWeddingScreen",
      "kind": "component",
-     "line": 15,
+     "line": 17,
      "signature": "()",
      "doc": ""
     }
@@ -3145,7 +3145,7 @@
     {
      "name": "LoginScreen",
      "kind": "component",
-     "line": 286,
+     "line": 296,
      "signature": "()",
      "doc": ""
     }
@@ -3171,7 +3171,7 @@
     {
      "name": "SetupScreen",
      "kind": "component",
-     "line": 372,
+     "line": 373,
      "signature": "()",
      "doc": ""
     }
@@ -4704,6 +4704,19 @@
    ]
   },
   {
+   "file": "src/components/detail/HeroGallery.tsx",
+   "doc": "",
+   "exports": [
+    {
+     "name": "HeroGallery",
+     "kind": "component",
+     "line": 16,
+     "signature": "({ images, width, height }: { images: PhotoKey[]; width: number; height: number })",
+     "doc": "The photo strip at the top of a venue or vendor page, with a \"12 photos\"\nbadge. Tapping a photo or the badge opens every photo full screen, with a\nclose (X) button."
+    }
+   ]
+  },
+  {
    "file": "src/components/detail/ListingAvailability.tsx",
    "doc": "",
    "exports": [
@@ -4888,42 +4901,42 @@
     {
      "name": "KField",
      "kind": "component",
-     "line": 19,
-     "signature": "forwardRef(({ label, error, prefix, hint, required, style, multiline, placeholder, onFocus, onBlur, ...rest }, ref))",
-     "doc": "Labelled input for the role apps. The border darkens while typing, turns\nred with an error, and the error (or a hint) shows under the field.\nPlaceholders are translated with the rest of the app."
+     "line": 22,
+     "signature": "forwardRef(({ label, error, prefix, hint, required, style, multiline, placeholder, onFocus, onBlur, minLength, ...rest }, ref))",
+     "doc": "Labelled input for the role apps. The border darkens while typing, turns\nred with an error, and the error (or a hint) shows under the field.\nPlaceholders are translated with the rest of the app. With `maxLength`\n(and optionally `minLength`) a multi-line field shows the allowed length\nand a live character count under it."
     },
     {
      "name": "Segmented",
      "kind": "component",
-     "line": 83,
+     "line": 88,
      "signature": "<T extends string>({ options, value, onChange, counts, }: { options: { id: T; label: string }[]; value: T; onChange: (v: T) => void; counts?: Partial<Record<T, number>>; })",
      "doc": "Underlined tab strip; scrolls horizontally when it overflows."
     },
     {
      "name": "ChoiceChips",
      "kind": "component",
-     "line": 128,
+     "line": 133,
      "signature": "({ options, selected, onToggle, }: { options: string[]; selected: string[]; onToggle: (value: string) => void; })",
      "doc": "Selectable chips (multi or single choice)."
     },
     {
      "name": "FilterChip",
      "kind": "component",
-     "line": 168,
+     "line": 173,
      "signature": "({ label, selected, onPress, icon }: { label: string; selected?: boolean; onPress: () => void; icon?: IconName })",
      "doc": "One filter or sort chip, the same in every role app: pearl at rest,\nburgundy with a check when selected (so the state never rests on colour\nalone). Use for ad-hoc chip rows instead of styling a Pressable by hand."
     },
     {
      "name": "ListRow",
      "kind": "component",
-     "line": 195,
+     "line": 200,
      "signature": "({ title, subtitle, leading, trailing, onPress, icon, meta, }: { title: string; subtitle?: string; leading?: ReactNode; trailing?: ReactNode; onPress?: () => void; icon?: IconName; meta?: ReactNode; })",
      "doc": "Tappable list row with leading visual and trailing slot."
     },
     {
      "name": "Fab",
      "kind": "component",
-     "line": 242,
+     "line": 247,
      "signature": "({ icon = 'add', label, onPress, bottom = 20 }: { icon?: IconName; label?: string; onPress: () => void; bottom?: number })",
      "doc": "Floating action button in the role's primary colour."
     }
@@ -5018,70 +5031,77 @@
     {
      "name": "IconName",
      "kind": "type",
-     "line": 13,
+     "line": 14,
      "signature": "= ComponentProps<typeof Ionicons>['name']",
      "doc": ""
     },
     {
      "name": "Card",
      "kind": "component",
-     "line": 16,
+     "line": 17,
      "signature": "({ children, style, onPress, padded = true, accessibilityLabel, }: { children: ReactNode; style?: StyleProp<ViewStyle>; onPress?: () => void; padded?: boolean; accessibilityLabel?: string; })",
      "doc": "Themed surface. `pressable` turns it into a card button."
     },
     {
      "name": "KButton",
      "kind": "component",
-     "line": 50,
-     "signature": "({ label, onPress, variant = 'primary', icon, loading, disabled, size = 'md', style, }: { label: string; onPress?: () => void; variant?: ButtonVariant; icon?: IconName; loading?: boolean; disabled?: boolean; size?: 'sm' …)",
+     "line": 51,
+     "signature": "({ label, onPress, variant = 'primary', icon, loading, disabled, missing, onMissing, size = 'md', style, }: { label: string; onPress?: () => void; variant?: ButtonVariant; icon?: IconName; loading?: boolean; disabled?: b…)",
      "doc": ""
+    },
+    {
+     "name": "showMissing",
+     "kind": "function",
+     "line": 125,
+     "signature": "(message: string)",
+     "doc": "Tells the person what is still missing when they tap an incomplete form's button."
     },
     {
      "name": "StatusPill",
      "kind": "component",
-     "line": 104,
+     "line": 130,
      "signature": "({ status, label }: { status: string; label?: string })",
      "doc": ""
     },
     {
      "name": "Avatar",
      "kind": "component",
-     "line": 123,
+     "line": 149,
      "signature": "({ name, size = 40 }: { name: string; size?: number })",
      "doc": ""
     },
     {
      "name": "ProgressBar",
      "kind": "component",
-     "line": 140,
+     "line": 166,
      "signature": "({ value, color, height = 4 }: { value: number; color?: string; height?: number })",
      "doc": ""
     },
     {
      "name": "SectionTitle",
      "kind": "component",
-     "line": 149,
+     "line": 175,
      "signature": "({ title, action, onAction }: { title: string; action?: string; onAction?: () => void })",
      "doc": ""
     },
     {
      "name": "EmptyBlock",
      "kind": "component",
-     "line": 168,
+     "line": 194,
      "signature": "({ icon = 'file-tray-outline', art, title, message, action, onAction }: { icon?: IconName; art?: ArtName; title: string; message?: string; action?: string; onAction?: () => void })",
      "doc": "Empty list or section in the role apps: pearl medallion, serif title, one line, one action. `art` swaps the icon for a line drawing."
     },
     {
      "name": "Divider",
      "kind": "component",
-     "line": 188,
+     "line": 214,
      "signature": "({ style }: { style?: StyleProp<ViewStyle> })",
      "doc": ""
     },
     {
      "name": "KeyValue",
      "kind": "component",
-     "line": 194,
+     "line": 220,
      "signature": "({ label, value, strong }: { label: string; value: string; strong?: boolean })",
      "doc": "Label/value line used in summaries."
     }
@@ -5738,7 +5758,7 @@
     {
      "name": "openThreadRoute",
      "kind": "function",
-     "line": 614,
+     "line": 613,
      "signature": "(id: string)",
      "doc": "Opens a thread: in the side pane on wide screens, as its own screen on phones."
     }
@@ -5922,98 +5942,98 @@
     {
      "name": "useToolOwner",
      "kind": "hook",
-     "line": 32,
+     "line": 33,
      "signature": "()",
      "doc": "Whose records a tool reads and writes: the couple's project (shared with\ncollaborators), the vendor or freelancer account, or the whole ops team."
     },
     {
      "name": "useToolEntries",
      "kind": "hook",
-     "line": 41,
+     "line": 42,
      "signature": "(ownerId: string, tool: string)",
      "doc": "Entries of one tool for one owner. Selects the stable array and filters in render."
     },
     {
      "name": "useToolState",
      "kind": "hook",
-     "line": 47,
+     "line": 48,
      "signature": "<T extends ToolState>(ownerId: string, tool: string, defaults: T): [T, (patch: Partial<T>) => void]",
      "doc": "A tool's saved settings, with defaults for missing keys."
     },
     {
      "name": "usePreset",
      "kind": "hook",
-     "line": 55,
+     "line": 56,
      "signature": "(ownerId: string, tool: string, items: Omit<ToolEntryInput, 'ownerId' | 'tool'>[] | undefined)",
      "doc": "Adds a tool's starter items the first time its owner opens it."
     },
     {
      "name": "ToolPage",
      "kind": "component",
-     "line": 66,
+     "line": 67,
      "signature": "({ title, subtitle, right, children }: { title: string; subtitle?: string; right?: ReactNode; children: ReactNode })",
      "doc": "Stack header + scrolling column, centred at desktop width."
     },
     {
      "name": "StatRow",
      "kind": "component",
-     "line": 80,
+     "line": 81,
      "signature": "({ items }: { items: { label: string; value: string; alert?: boolean }[] })",
      "doc": "A row of text-only stats (label above, figure below)."
     },
     {
      "name": "Line",
      "kind": "component",
-     "line": 99,
+     "line": 100,
      "signature": "({ label, value, note, strong, tone }: { label: string; value: string; note?: string; strong?: boolean; tone?: 'danger' | 'success' })",
      "doc": "Label/value line with an optional muted note underneath."
     },
     {
      "name": "Hint",
      "kind": "component",
-     "line": 121,
+     "line": 122,
      "signature": "({ children }: { children: ReactNode })",
      "doc": "Muted explanatory paragraph."
     },
     {
      "name": "NumberField",
      "kind": "component",
-     "line": 131,
+     "line": 132,
      "signature": "({ label, value, onChange, money, placeholder }: { label: string; value: number; onChange: (n: number) => void; money?: boolean; placeholder?: string })",
      "doc": "Numeric input that keeps digits only and reports a number."
     },
     {
      "name": "Cols",
      "kind": "component",
-     "line": 146,
+     "line": 147,
      "signature": "({ children, style }: { children: ReactNode; style?: StyleProp<ViewStyle> })",
      "doc": "Two or three controls side by side on wide screens, stacked on phones."
     },
     {
      "name": "Col",
      "kind": "component",
-     "line": 151,
+     "line": 152,
      "signature": "({ children }: { children: ReactNode })",
      "doc": ""
     },
     {
      "name": "FieldKey",
      "kind": "type",
-     "line": 158,
+     "line": 159,
      "signature": "= BaseKey | `f.${string}`",
      "doc": ""
     },
     {
      "name": "FieldKind",
      "kind": "type",
-     "line": 159,
+     "line": 160,
      "signature": "= 'text' | 'multiline' | 'money' | 'number' | 'date' | 'time' | 'select' | 'toggle'",
      "doc": ""
     },
     {
      "name": "FieldDef",
      "kind": "interface",
-     "line": 161,
+     "line": 162,
      "signature": "",
      "doc": "",
      "members": [
@@ -6058,7 +6078,7 @@
     {
      "name": "EntryListProps",
      "kind": "interface",
-     "line": 298,
+     "line": 319,
      "signature": "",
      "doc": "",
      "members": [
@@ -6181,21 +6201,21 @@
     {
      "name": "EntryList",
      "kind": "component",
-     "line": 332,
+     "line": 353,
      "signature": "(props: EntryListProps)",
      "doc": "List + add/edit sheet for any record-shaped tool."
     },
     {
      "name": "sumAmount",
      "kind": "function",
-     "line": 487,
+     "line": 522,
      "signature": "(entries: ToolEntry[], pick: (e: ToolEntry) => boolean = () => true)",
      "doc": "Sum of entry amounts."
     },
     {
      "name": "today",
      "kind": "re-export",
-     "line": 489,
+     "line": 524,
      "signature": "",
      "doc": ""
     }
@@ -6848,77 +6868,77 @@
     {
      "name": "Broadcasts",
      "kind": "component",
-     "line": 39,
+     "line": 40,
      "signature": "()",
      "doc": ""
     },
     {
      "name": "PromoCampaigns",
      "kind": "component",
-     "line": 93,
+     "line": 97,
      "signature": "()",
      "doc": ""
     },
     {
      "name": "Helpdesk",
      "kind": "component",
-     "line": 135,
+     "line": 139,
      "signature": "()",
      "doc": ""
     },
     {
      "name": "Macros",
      "kind": "component",
-     "line": 185,
+     "line": 189,
      "signature": "()",
      "doc": ""
     },
     {
      "name": "Recruitment",
      "kind": "component",
-     "line": 217,
+     "line": 221,
      "signature": "()",
      "doc": ""
     },
     {
      "name": "PayoutBatches",
      "kind": "component",
-     "line": 248,
+     "line": 252,
      "signature": "()",
      "doc": ""
     },
     {
      "name": "Holidays",
      "kind": "component",
-     "line": 316,
+     "line": 320,
      "signature": "()",
      "doc": ""
     },
     {
      "name": "OnCall",
      "kind": "component",
-     "line": 361,
+     "line": 365,
      "signature": "()",
      "doc": ""
     },
     {
      "name": "QualityAudits",
      "kind": "component",
-     "line": 407,
+     "line": 411,
      "signature": "()",
      "doc": ""
     },
     {
      "name": "WinBack",
      "kind": "component",
-     "line": 454,
+     "line": 458,
      "signature": "()",
      "doc": ""
     },
     {
      "name": "ExportCentre",
      "kind": "component",
-     "line": 494,
+     "line": 498,
      "signature": "()",
      "doc": ""
     }
@@ -7336,7 +7356,7 @@
     {
      "name": "ButtonProps",
      "kind": "interface",
-     "line": 13,
+     "line": 14,
      "signature": "",
      "doc": "",
      "members": [
@@ -7383,6 +7403,18 @@
        "doc": ""
       },
       {
+       "name": "missing",
+       "optional": true,
+       "type": "string | false | null",
+       "doc": "What the person still has to fill in. The button then looks dimmed but stays tappable, and a tap shows this message instead of doing nothing."
+      },
+      {
+       "name": "onMissing",
+       "optional": true,
+       "type": "() => void",
+       "doc": "Called on a tap while `missing` is set (e.g. `useFormCheck().reveal`)."
+      },
+      {
        "name": "size",
        "optional": true,
        "type": "'md' | 'lg' | 'sm'",
@@ -7405,8 +7437,8 @@
     {
      "name": "Button",
      "kind": "component",
-     "line": 29,
-     "signature": "({ label, onPress, variant = 'primary', icon, leading, loading, disabled, size = 'md', style, color, }: ButtonProps)",
+     "line": 37,
+     "signature": "({ label, onPress, variant = 'primary', icon, leading, loading, disabled, missing, onMissing, size = 'md', style, color, }: ButtonProps)",
      "doc": ""
     }
    ]
@@ -7588,7 +7620,7 @@
     {
      "name": "FieldProps",
      "kind": "interface",
-     "line": 10,
+     "line": 11,
      "signature": "extends TextInputProps",
      "doc": "",
      "members": [
@@ -7615,15 +7647,41 @@
        "optional": true,
        "type": "boolean",
        "doc": ""
+      },
+      {
+       "name": "minLength",
+       "optional": true,
+       "type": "number",
+       "doc": "With `maxLength`, shows \"Minimum n, maximum m characters\" and a live count."
       }
      ]
     },
     {
      "name": "Field",
      "kind": "component",
-     "line": 18,
-     "signature": "forwardRef(({ label, error, hint, required, style, multiline, placeholder, onFocus, onBlur, ...rest }, ref))",
-     "doc": "Labelled text input with a focus border and an inline validation message."
+     "line": 21,
+     "signature": "forwardRef(({ label, error, hint, required, style, multiline, placeholder, onFocus, onBlur, minLength, ...rest }, ref))",
+     "doc": "Labelled text input with a focus border, an inline validation message and, for descriptions, the allowed length."
+    }
+   ]
+  },
+  {
+   "file": "src/components/ui/FieldNote.tsx",
+   "doc": "",
+   "exports": [
+    {
+     "name": "lengthRule",
+     "kind": "function",
+     "line": 7,
+     "signature": "(minLength?: number, maxLength?: number): string | null",
+     "doc": "\"Minimum 10, maximum 1000 characters\", or null when the field has no limits."
+    },
+    {
+     "name": "FieldNote",
+     "kind": "component",
+     "line": 19,
+     "signature": "({ error, hint, length, minLength, maxLength, tone, }: { error?: string | null; hint?: string; length: number; minLength?: number; maxLength?: number; tone: { danger: string; muted: string; warning: string }; })",
+     "doc": "The line under a text field: the error if there is one, else the hint,\nelse the allowed length; with a live \"12 / 1000\" count on the right when\nthe field has a maximum, so a description never gets cut off by surprise."
     }
    ]
   },
@@ -7853,6 +7911,19 @@
      "line": 12,
      "signature": "({ style, transition, contentFit = 'cover', ...rest }: ImageProps)",
      "doc": "Every photo in the app. Sits on a pearl fill while it loads and\ncross-dissolves in instead of popping, so lists and galleries feel calm;\nwith Reduce Motion on it simply appears. Takes every `expo-image` prop,\nand a caller's own `transition` or background wins."
+    }
+   ]
+  },
+  {
+   "file": "src/components/ui/PhotoViewer.tsx",
+   "doc": "",
+   "exports": [
+    {
+     "name": "PhotoViewer",
+     "kind": "component",
+     "line": 16,
+     "signature": "({ sources, index, onClose, }: { sources: ImageProps['source'][]; /** The photo to open at, or null when the viewer is closed. */ index: number | null; onClose: () => void; })",
+     "doc": "Full-screen photo viewer: swipe between photos on black, \"3 / 8\" at the\ntop and a close (X) button. Opens at `index`; Android back also closes it."
     }
    ]
   },
@@ -8212,7 +8283,7 @@
     {
      "name": "MyWeddingScreen",
      "kind": "component",
-     "line": 487,
+     "line": 489,
      "signature": "({ inTab }: { inTab?: boolean })",
      "doc": "The couple's single workspace for the whole wedding project. It is both the\n\"My wedding\" tab (`inTab`: no back button, the tab bar sits below) and the\n`/my-wedding` stack screen that deep links and notifications open."
     }
@@ -8656,16 +8727,30 @@
     {
      "name": "FREELANCER_CRITERIA",
      "kind": "const",
-     "line": 13,
+     "line": 20,
      "signature": "= ['Skill', 'Punctuality', 'Behaviour', 'Reliability']",
+     "doc": ""
+    },
+    {
+     "name": "REVIEW_MIN_CHARS",
+     "kind": "const",
+     "line": 23,
+     "signature": "= 10",
+     "doc": "Allowed length of a review's text."
+    },
+    {
+     "name": "REVIEW_MAX_CHARS",
+     "kind": "const",
+     "line": 24,
+     "signature": "= 1000",
      "doc": ""
     },
     {
      "name": "ReviewComposer",
      "kind": "component",
-     "line": 19,
-     "signature": "({ serviceId, freelancer, targetName, onSubmit, }: { serviceId?: string; freelancer?: boolean; targetName: string; onSubmit: (r: { overall: number; criteria: Record<string, number>; text: string; photoUris: string[] }) =…)",
-     "doc": "Category-specific review: overall stars plus the criteria that matter for\nthis service (photo quality, food, parking…). Criteria feed matching."
+     "line": 41,
+     "signature": "({ serviceId, freelancer, targetName, eventDates = [], draftKey, onSubmit, }: { serviceId?: string; freelancer?: boolean; targetName: string; /** The couple's events with a date, offered as quick choices (\"Wedding · 14 F…)",
+     "doc": "Category-specific review: overall stars plus the criteria that matter for\nthis service (photo quality, food, parking…). Criteria feed matching.\nOptional extras: up to six photos (each removable) and the date of the\nevent being reviewed, picked from the couple's own event dates. With a\n`draftKey` the half-written review is kept on the device until it is sent."
     }
    ]
   },
@@ -8690,7 +8775,7 @@
     {
      "name": "SeverityPicker",
      "kind": "component",
-     "line": 179,
+     "line": 180,
      "signature": "({ value, onChange }: { value: string; onChange: (v: 'low' | 'medium' | 'high') => void })",
      "doc": ""
     }
@@ -8756,7 +8841,7 @@
     {
      "name": "TaskBoard",
      "kind": "component",
-     "line": 238,
+     "line": 247,
      "signature": "({ project, mode, openTaskId, onFocusTarget }: { project: Project; mode: Mode; openTaskId?: string; onFocusTarget?: (node: View) => void })",
      "doc": "Project task board shared by couple, coordinator and providers. `openTaskId` highlights and scrolls to the task without editing it."
     }
@@ -8769,7 +8854,7 @@
     {
      "name": "ThreadView",
      "kind": "component",
-     "line": 137,
+     "line": 138,
      "signature": "({ thread }: { thread: Thread })",
      "doc": "Shared conversation view for every role: text, photos, quotes, locations and meetings."
     }
@@ -8991,11 +9076,18 @@
      "doc": ""
     },
     {
+     "name": "inputFont",
+     "kind": "function",
+     "line": 248,
+     "signature": "(weight: '400' | '500' | '600' | '700' = '400'): TextStyle",
+     "doc": "The font typed text uses inside inputs on phones: the system font at the\ngiven weight. Mukta's line box is 1.66 em tall (room for Devanagari marks),\nand iOS and Android size the text caret from it, so the cursor looked half\nagain taller than the text. Web keeps Mukta; the browser caret follows the\ntext. Put it after any `fontFamily` in an input's style array."
+    },
+    {
      "name": "inputReset",
      "kind": "const",
-     "line": 242,
+     "line": 255,
      "signature": ": TextStyle",
-     "doc": "Removes the browser focus ring from text inputs on web (native is unaffected)."
+     "doc": "Base style for every text input: removes the browser focus ring on web and\nsets the normal-height caret font on phones (see `inputFont`)."
     }
    ]
   },
@@ -11470,6 +11562,19 @@
      "line": 11,
      "signature": "()",
      "doc": "`linkOn('/seating')`: does this link lead to a screen that is switched on? Use it to drop menu rows and buttons."
+    }
+   ]
+  },
+  {
+   "file": "src/hooks/useFormCheck.ts",
+   "doc": "",
+   "exports": [
+    {
+     "name": "useFormCheck",
+     "kind": "hook",
+     "line": 15,
+     "signature": "<K extends string>(rules: Record<K, string | false | null | undefined | 0>)",
+     "doc": "Validation for a small form. Give each field the message to show while it\nis empty or wrong (or a falsy value when it is fine):\n\n  const check = useFormCheck({ title: !title.trim() && 'Enter a title' });\n  <KField error={check.error('title')} … />\n  <KButton missing={check.missing} onMissing={check.reveal} onPress={save} />\n\nThe submit button stays tappable: a tap on an incomplete form shows the\nfirst message as a toast and, from then on, each field's own message under\nit until it is filled in."
     }
    ]
   },
@@ -14919,28 +15024,28 @@
     {
      "name": "useDb",
      "kind": "const",
-     "line": 96,
+     "line": 113,
      "signature": "= create<Db>()( persist( (set, get) => ({ ...buildSeedData(), ...coreActions(set, get), ...…",
      "doc": ""
     },
     {
      "name": "useInbox",
      "kind": "hook",
-     "line": 149,
+     "line": 168,
      "signature": "(account: Account)",
      "doc": "Notifications addressed to the account directly or to its whole role.\nSelects the stable array and filters in render — returning a fresh array\nfrom a zustand selector would re-render forever."
     },
     {
      "name": "useThreads",
      "kind": "hook",
-     "line": 155,
+     "line": 174,
      "signature": "(account: Account)",
      "doc": "Threads this account is a member of (platform staff see every thread)."
     },
     {
      "name": "useUnreadMessageCount",
      "kind": "hook",
-     "line": 167,
+     "line": 186,
      "signature": "(account: Account)",
      "doc": ""
     }
@@ -16503,6 +16608,47 @@
        "doc": "Bug reports sent with shake to report, newest first (super admin console → Bug reports)."
       }
      ]
+    }
+   ]
+  },
+  {
+   "file": "src/store/drafts.ts",
+   "doc": "",
+   "exports": [
+    {
+     "name": "loadDrafts",
+     "kind": "function",
+     "line": 29,
+     "signature": "()",
+     "doc": "Reads every saved draft into memory. Called once at app start."
+    },
+    {
+     "name": "readDraft",
+     "kind": "function",
+     "line": 55,
+     "signature": "<T>(key: string): T | undefined",
+     "doc": "The saved draft for `key`, if there is a fresh one."
+    },
+    {
+     "name": "saveDraft",
+     "kind": "function",
+     "line": 61,
+     "signature": "(key: string, value: unknown)",
+     "doc": "Saves a draft (written to the device a moment after the last change)."
+    },
+    {
+     "name": "clearDraft",
+     "kind": "function",
+     "line": 75,
+     "signature": "(key: string)",
+     "doc": "Forgets a draft, e.g. after the form was submitted."
+    },
+    {
+     "name": "useDraft",
+     "kind": "hook",
+     "line": 88,
+     "signature": "<T>(key: string | null, initial: T): [T, (next: T | ((prev: T) => T)) => void, () => void]",
+     "doc": "`useState` that is kept as a draft under `key` (no key: plain state).\nReturns the value, a setter, and `clear()` to call after a successful\nsubmit. A value equal to `initial` is not stored, so an untouched form\nleaves nothing behind."
     }
    ]
   },
@@ -22350,6 +22496,12 @@
        "doc": "Photos the reviewer uploaded (Cloudinary URLs in production)."
       },
       {
+       "name": "eventDate",
+       "optional": true,
+       "type": "string",
+       "doc": "yyyy-mm-dd of the event being reviewed, when the reviewer gave it (optional)."
+      },
+      {
        "name": "verifiedBooking",
        "optional": false,
        "type": "boolean",
@@ -22390,14 +22542,14 @@
     {
      "name": "CheckState",
      "kind": "type",
-     "line": 878,
+     "line": 880,
      "signature": "= 'pending' | 'passed' | 'failed'",
      "doc": ""
     },
     {
      "name": "VerificationCase",
      "kind": "interface",
-     "line": 880,
+     "line": 882,
      "signature": "",
      "doc": "",
      "members": [
@@ -22478,14 +22630,14 @@
     {
      "name": "RsvpStatus",
      "kind": "type",
-     "line": 897,
+     "line": 899,
      "signature": "= 'pending' | 'yes' | 'no' | 'maybe'",
      "doc": ""
     },
     {
      "name": "GuestInvite",
      "kind": "interface",
-     "line": 899,
+     "line": 901,
      "signature": "",
      "doc": "",
      "members": [
@@ -22548,7 +22700,7 @@
     {
      "name": "Guest",
      "kind": "interface",
-     "line": 911,
+     "line": 913,
      "signature": "",
      "doc": "",
      "members": [
@@ -22683,7 +22835,7 @@
     {
      "name": "SeatingElement",
      "kind": "interface",
-     "line": 935,
+     "line": 937,
      "signature": "",
      "doc": "",
      "members": [
@@ -22734,7 +22886,7 @@
     {
      "name": "SeatingLayout",
      "kind": "interface",
-     "line": 945,
+     "line": 947,
      "signature": "",
      "doc": "",
      "members": [
@@ -22761,7 +22913,7 @@
     {
      "name": "BudgetLine",
      "kind": "interface",
-     "line": 951,
+     "line": 953,
      "signature": "",
      "doc": "",
      "members": [
@@ -22836,7 +22988,7 @@
     {
      "name": "WeddingWebsite",
      "kind": "interface",
-     "line": 965,
+     "line": 967,
      "signature": "",
      "doc": "",
      "members": [
@@ -22971,7 +23123,7 @@
     {
      "name": "RegistryItem",
      "kind": "interface",
-     "line": 989,
+     "line": 991,
      "signature": "",
      "doc": "",
      "members": [
@@ -23046,7 +23198,7 @@
     {
      "name": "InspirationBoard",
      "kind": "interface",
-     "line": 1003,
+     "line": 1005,
      "signature": "",
      "doc": "",
      "members": [
@@ -23085,7 +23237,7 @@
     {
      "name": "Contract",
      "kind": "interface",
-     "line": 1011,
+     "line": 1013,
      "signature": "",
      "doc": "",
      "members": [
@@ -23166,7 +23318,7 @@
     {
      "name": "ShortlistEntry",
      "kind": "interface",
-     "line": 1026,
+     "line": 1028,
      "signature": "",
      "doc": "",
      "members": [
@@ -23205,7 +23357,7 @@
     {
      "name": "Deal",
      "kind": "interface",
-     "line": 1034,
+     "line": 1036,
      "signature": "",
      "doc": "",
      "members": [
@@ -23298,7 +23450,7 @@
     {
      "name": "ProviderPackage",
      "kind": "interface",
-     "line": 1051,
+     "line": 1053,
      "signature": "",
      "doc": "",
      "members": [
@@ -23409,7 +23561,7 @@
     {
      "name": "PortfolioItem",
      "kind": "interface",
-     "line": 1071,
+     "line": 1073,
      "signature": "",
      "doc": "",
      "members": [
@@ -23490,7 +23642,7 @@
     {
      "name": "StaffMember",
      "kind": "interface",
-     "line": 1087,
+     "line": 1089,
      "signature": "",
      "doc": "",
      "members": [
@@ -23541,7 +23693,7 @@
     {
      "name": "Invoice",
      "kind": "interface",
-     "line": 1097,
+     "line": 1099,
      "signature": "",
      "doc": "",
      "members": [
@@ -23622,7 +23774,7 @@
     {
      "name": "PlatformSettings",
      "kind": "interface",
-     "line": 1112,
+     "line": 1114,
      "signature": "",
      "doc": "",
      "members": [
@@ -23691,7 +23843,7 @@
     {
      "name": "Announcement",
      "kind": "interface",
-     "line": 1126,
+     "line": 1128,
      "signature": "",
      "doc": "A notice a super admin pins to the top of one role's home, or every role's.",
      "members": [
@@ -23748,7 +23900,7 @@
     {
      "name": "BugLogLine",
      "kind": "interface",
-     "line": 1138,
+     "line": 1140,
      "signature": "",
      "doc": "",
      "members": [
@@ -23775,7 +23927,7 @@
     {
      "name": "BugReport",
      "kind": "interface",
-     "line": 1145,
+     "line": 1147,
      "signature": "",
      "doc": "What the report sheet sends: the description, the screenshot and where it happened.",
      "members": [
@@ -23844,14 +23996,14 @@
     {
      "name": "BugReportStatus",
      "kind": "type",
-     "line": 1160,
+     "line": 1162,
      "signature": "= 'new' | 'fixed' | 'dismissed'",
      "doc": ""
     },
     {
      "name": "BugReportRecord",
      "kind": "interface",
-     "line": 1163,
+     "line": 1165,
      "signature": "extends BugReport",
      "doc": "A bug report as the super admin console keeps it.",
      "members": [
@@ -23896,21 +24048,21 @@
     {
      "name": "*",
      "kind": "re-export",
-     "line": 1174,
+     "line": 1176,
      "signature": "from './toolkit'",
      "doc": ""
     },
     {
      "name": "*",
      "kind": "re-export",
-     "line": 1176,
+     "line": 1178,
      "signature": "from './social'",
      "doc": ""
     },
     {
      "name": "*",
      "kind": "re-export",
-     "line": 1178,
+     "line": 1180,
      "signature": "from './persona'",
      "doc": ""
     }

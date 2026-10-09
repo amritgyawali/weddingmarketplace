@@ -7,7 +7,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useEffect, useState, type ReactNode } from 'react';
 import { Pressable, StyleSheet, View, type StyleProp, type ViewStyle } from 'react-native';
 
-import { Card, ChoiceChips, EmptyBlock, KButton, KField, ProgressBar, SectionTitle, StackHeader, StatusPill } from '@/components/kit';
+import { Card, ChoiceChips, EmptyBlock, KButton, KField, ProgressBar, SectionTitle, showMissing, StackHeader, StatusPill } from '@/components/kit';
 import { Sheet } from '@/components/ui/Sheet';
 import { Text } from '@/components/ui/Text';
 import { Toggle } from '@/components/ui/Toggle';
@@ -15,6 +15,7 @@ import { toast } from '@/components/ui/Toast';
 import { useLayout } from '@/hooks/useLayout';
 import { useCustomerWorkspace } from '@/hooks/useWorkspace';
 import { toolStateKey } from '@/store/db/toolkit';
+import { clearDraft, readDraft, saveDraft } from '@/store/drafts';
 import { useDb } from '@/store/useDb';
 import { useAccount } from '@/store/useSession';
 import { useRoleTheme } from '@/theme/RoleTheme';
@@ -199,23 +200,32 @@ function toInput(draft: Draft, fields: FieldDef[]): Partial<ToolEntryInput> {
 const DATE = /^\d{4}-\d{2}-\d{2}$/;
 const TIME = /^\d{2}:\d{2}$/;
 
-function validate(draft: Draft, fields: FieldDef[]): string | null {
+/** Longest text a tool's multi-line field takes. */
+const NOTE_MAX = 500;
+
+/** Every field's problem, keyed by field (empty when the entry can be saved). The title is always required. */
+function validate(draft: Draft, fields: FieldDef[]): Partial<Record<FieldKey, string>> {
+  const out: Partial<Record<FieldKey, string>> = {};
   for (const f of fields) {
     const v = draft[f.key];
-    if (f.required && (v === undefined || v === '')) return `${f.label} is required`;
+    const empty = v === undefined || (typeof v === 'string' && !v.trim());
+    if ((f.required || f.key === 'title') && empty) {
+      out[f.key] = f.kind === 'select' || f.kind === 'date' ? `Pick ${f.label.toLowerCase()}` : `Enter ${f.label.toLowerCase()}`;
+      continue;
+    }
     if (f.kind === 'money' || f.kind === 'number') {
       const n = numeric(f, v);
-      if (n !== undefined && !(Number.isFinite(n) && n >= 0)) return f.kind === 'money' ? `${f.label}: enter an amount like 150000, 150k or 1.5 lakh` : `${f.label}: enter a whole number`;
-      if (f.required && f.kind === 'money' && !n) return `${f.label} is required`;
+      if (n !== undefined && !(Number.isFinite(n) && n >= 0)) out[f.key] = f.kind === 'money' ? `${f.label}: enter an amount like 150000, 150k or 1.5 lakh` : `${f.label}: enter a whole number`;
+      else if (f.required && f.kind === 'money' && !n) out[f.key] = `Enter ${f.label.toLowerCase()}`;
     }
-    if (f.kind === 'date' && v && !DATE.test(String(v))) return `${f.label}: use yyyy-mm-dd`;
-    if (f.kind === 'time' && v && !TIME.test(String(v))) return `${f.label}: use HH:mm, e.g. 16:30`;
+    if (f.kind === 'date' && v && !DATE.test(String(v))) out[f.key] = `${f.label}: use yyyy-mm-dd`;
+    if (f.kind === 'time' && v && !TIME.test(String(v))) out[f.key] = `${f.label}: use HH:mm, e.g. 16:30`;
   }
-  return null;
+  return out;
 }
 
-/** Form fields for an entry, shared by add and edit. */
-function EntryForm({ fields, draft, setDraft }: { fields: FieldDef[]; draft: Draft; setDraft: (d: Draft) => void }) {
+/** Form fields for an entry, shared by add and edit. `errors` shows each field's problem under it. */
+function EntryForm({ fields, draft, setDraft, errors = {} }: { fields: FieldDef[]; draft: Draft; setDraft: (d: Draft) => void; errors?: Partial<Record<FieldKey, string>> }) {
   const t = useRoleTheme();
   const put = (k: FieldKey, v: ToolValue | undefined) => setDraft({ ...draft, [k]: v });
   return (
@@ -229,6 +239,8 @@ function EntryForm({ fields, draft, setDraft }: { fields: FieldDef[]; draft: Dra
               <KField
                 key={f.key}
                 label={f.label}
+                required={f.required}
+                error={errors[f.key]}
                 prefix={f.kind === 'money' ? 'NPR' : undefined}
                 value={v === undefined || v === '' ? '' : String(v)}
                 placeholder={f.placeholder ?? '0'}
@@ -242,8 +254,14 @@ function EntryForm({ fields, draft, setDraft }: { fields: FieldDef[]; draft: Dra
               <View key={f.key} style={{ gap: 6 }}>
                 <Text size={13} weight="medium" color={t.c.text}>
                   {f.label}
+                  {f.required ? <Text size={13} color={t.c.danger}> *</Text> : null}
                 </Text>
                 <ChoiceChips options={opts.map((o) => o.label)} selected={opts.filter((o) => o.id === v).map((o) => o.label)} onToggle={(label) => put(f.key, opts.find((o) => o.label === label)?.id)} />
+                {errors[f.key] && (
+                  <Text size={12} color={t.c.danger}>
+                    {errors[f.key]}
+                  </Text>
+                )}
               </View>
             );
           }
@@ -259,7 +277,7 @@ function EntryForm({ fields, draft, setDraft }: { fields: FieldDef[]; draft: Dra
           case 'date':
             return (
               <View key={f.key} style={{ gap: 6 }}>
-                <KField label={f.label} value={v ? String(v) : ''} placeholder={f.placeholder ?? 'yyyy-mm-dd'} onChangeText={(x) => put(f.key, x.trim() || undefined)} autoCapitalize="none" />
+                <KField label={f.label} required={f.required} error={errors[f.key]} value={v ? String(v) : ''} placeholder={f.placeholder ?? 'yyyy-mm-dd'} onChangeText={(x) => put(f.key, x.trim() || undefined)} autoCapitalize="none" />
                 <View style={styles.quick}>
                   {[
                     ['Today', 0],
@@ -280,9 +298,12 @@ function EntryForm({ fields, draft, setDraft }: { fields: FieldDef[]; draft: Dra
               <KField
                 key={f.key}
                 label={f.label}
+                required={f.required || f.key === 'title'}
+                error={errors[f.key]}
                 value={v === undefined ? '' : String(v)}
                 placeholder={f.placeholder ?? (f.kind === 'time' ? 'HH:mm' : undefined)}
                 multiline={f.kind === 'multiline'}
+                maxLength={f.kind === 'multiline' ? NOTE_MAX : undefined}
                 onChangeText={(x) => put(f.key, x)}
                 autoCapitalize={f.kind === 'time' ? 'none' : 'sentences'}
               />
@@ -339,27 +360,41 @@ export function EntryList(props: EntryListProps) {
   const remove = useDb((s) => s.removeToolEntry);
   const toggle = useDb((s) => s.toggleToolEntry);
   const [editing, setEditing] = useState<ToolEntry | 'new' | null>(null);
-  const [draft, setDraft] = useState<Draft>({});
+  const [draft, setDraftState] = useState<Draft>({});
   const [error, setError] = useState<string | null>(null);
+  const [fieldErrors, setFieldErrors] = useState<Partial<Record<FieldKey, string>>>({});
+  // A new entry being typed is kept on the device until it is saved.
+  const draftKey = `tool:${ownerId}:${tool}:new`;
+  const setDraft = (d: Draft) => {
+    setDraftState(d);
+    if (editing === 'new') saveDraft(draftKey, d);
+    if (Object.keys(fieldErrors).length) setFieldErrors(validate(d, fields));
+  };
 
   const entries = all.filter((e) => !props.filter || props.filter(e)).sort(props.sort ?? ((a, b) => Number(a.fields?.order ?? 0) - Number(b.fields?.order ?? 0) || (a.date ?? '').localeCompare(b.date ?? '') || a.createdAt.localeCompare(b.createdAt)));
   const done = entries.filter((e) => e.done).length;
 
   const open = (e: ToolEntry | 'new') => {
     const src: Partial<ToolEntry> = e === 'new' ? { ...defaults } : e;
-    setDraft(Object.fromEntries(fields.map((f) => [f.key, readField(src, f.key)])));
+    setDraftState((e === 'new' && readDraft<Draft>(draftKey)) || Object.fromEntries(fields.map((f) => [f.key, readField(src, f.key)])));
     setError(null);
+    setFieldErrors({});
     setEditing(e);
   };
 
   const save = () => {
-    const problem = validate(draft, fields);
-    if (problem) return setError(problem);
+    const problems = validate(draft, fields);
+    const first = Object.values(problems)[0];
+    if (first) {
+      setFieldErrors(problems);
+      return showMissing(first);
+    }
     const input = toInput(draft, fields);
     if (editing === 'new') {
       const created = add({ ...defaults, ...input, fields: { ...defaults?.fields, ...input.fields }, ownerId, tool, title: String(input.title ?? '') } as ToolEntryInput);
       if (!created) return setError('Please add a title');
       toast(`${cap(noun)} added`);
+      clearDraft(draftKey);
       props.onAdded?.(created);
     } else if (editing) {
       update(editing.id, { ...input, fields: { ...editing.fields, ...input.fields } });
@@ -469,7 +504,7 @@ export function EntryList(props: EntryListProps) {
           </View>
         }>
         <ScrollView style={{ maxHeight: 460 }} contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 12, gap: 10 }} keyboardShouldPersistTaps="handled">
-          <EntryForm fields={fields} draft={draft} setDraft={setDraft} />
+          <EntryForm fields={fields} draft={draft} setDraft={setDraft} errors={fieldErrors} />
           {error && (
             <Text size={13} color={t.c.danger}>
               {error}

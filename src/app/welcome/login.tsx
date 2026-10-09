@@ -12,7 +12,7 @@ import { registerForPush } from '@/backend/push';
 import { KButton } from '@/components/kit';
 import { triggerHaptic } from '@/components/ui/PressableScale';
 import { Text } from '@/components/ui/Text';
-import { inputReset } from '@/constants/theme';
+import { inputFont, inputReset } from '@/constants/theme';
 import { LEGAL_VERSION } from '@/data/legal';
 import { DEMO_ACCOUNTS, DEMO_OTP } from '@/data/seed';
 import { completeLogin } from '@/services/auth';
@@ -53,6 +53,11 @@ function LoginForm() {
 
   const sendOtp = async () => {
     if (emailMode) {
+      if (!/^\S+@\S+\.\S+$/.test(email.trim())) {
+        setError(email.trim() ? 'Enter a valid email address, e.g. name@gmail.com' : 'Enter your email address');
+        triggerHaptic('medium');
+        return;
+      }
       setError(null);
       setBusy(true);
       const sent = await emailOtp.start(email);
@@ -67,7 +72,7 @@ function LoginForm() {
       return;
     }
     if (!isNepalMobile(phone)) {
-      setError('Enter a valid Nepali mobile number (98XXXXXXXX)');
+      setError(phone ? 'Enter a valid Nepali mobile number (98XXXXXXXX)' : 'Enter your mobile number');
       triggerHaptic('medium');
       return;
     }
@@ -113,6 +118,11 @@ function LoginForm() {
   };
 
   const verify = async (code = otp) => {
+    if (code.length < codeLength) {
+      setError(code ? `Enter all ${codeLength} digits of the code` : `Enter the ${codeLength}-digit code we sent you`);
+      triggerHaptic('medium');
+      return;
+    }
     if (emailMode) return verifyEmail(code);
     if (code !== DEMO_OTP) {
       setError('Incorrect OTP. Use 1234 in this demo.');
@@ -173,7 +183,7 @@ function LoginForm() {
                 autoCapitalize="none"
                 autoComplete="email"
                 autoFocus
-                style={[styles.email, inputReset, { color: t.c.textStrong, borderColor: error ? t.c.danger : t.c.border, backgroundColor: t.c.surface, fontFamily: t.fonts.medium }]}
+                style={[styles.email, inputReset, { color: t.c.textStrong, borderColor: error ? t.c.danger : t.c.border, backgroundColor: t.c.surface, fontFamily: t.fonts.medium }, inputFont('500')]}
                 onSubmitEditing={sendOtp}
               />
               {!!error && (
@@ -181,7 +191,7 @@ function LoginForm() {
                   {error}
                 </Text>
               )}
-              <KButton label="Email me a code" size="lg" onPress={sendOtp} loading={busy} disabled={!email.includes('@')} />
+              <KButton label="Email me a code" size="lg" onPress={sendOtp} loading={busy} />
             </Animated.View>
           ) : step === 'phone' ? (
             <Animated.View entering={FadeInDown.duration(300)} style={{ gap: 12 }}>
@@ -204,7 +214,7 @@ function LoginForm() {
                   keyboardType="phone-pad"
                   autoFocus
                   maxLength={10}
-                  style={[styles.phoneInput, inputReset, { color: t.c.textStrong, fontFamily: t.fonts.semibold }]}
+                  style={[styles.phoneInput, inputReset, { color: t.c.textStrong, fontFamily: t.fonts.semibold }, inputFont('600')]}
                   onSubmitEditing={sendOtp}
                 />
               </View>
@@ -213,7 +223,7 @@ function LoginForm() {
                   {error}
                 </Text>
               )}
-              <KButton label="Send OTP" size="lg" onPress={sendOtp} loading={busy} disabled={phone.length < 10} />
+              <KButton label="Send OTP" size="lg" onPress={sendOtp} loading={busy} />
             </Animated.View>
           ) : (
             <Animated.View entering={FadeInDown.duration(300)} style={{ gap: 12 }}>
@@ -230,7 +240,7 @@ function LoginForm() {
                 maxLength={codeLength}
                 placeholder={'0'.repeat(codeLength)}
                 placeholderTextColor={t.c.subtle}
-                style={[styles.otp, inputReset, { color: t.c.textStrong, borderColor: error ? t.c.danger : t.c.border, backgroundColor: t.c.surface, fontFamily: t.fonts.semibold }]}
+                style={[styles.otp, inputReset, { color: t.c.textStrong, borderColor: error ? t.c.danger : t.c.border, backgroundColor: t.c.surface, fontFamily: t.fonts.semibold }, inputFont('600')]}
               />
               {!!error && (
                 <Text size={13} color={t.c.danger}>
@@ -240,7 +250,7 @@ function LoginForm() {
               <Text size={12} color={t.c.muted}>
                 {emailMode ? 'The code works for 10 minutes. Check your spam folder if it hasn’t arrived.' : `Demo mode: the OTP is ${DEMO_OTP}.`}
               </Text>
-              <KButton label="Continue" size="lg" onPress={() => verify()} loading={busy} disabled={otp.length < codeLength} />
+              <KButton label="Continue" size="lg" onPress={() => verify()} loading={busy} />
               <KButton label={emailMode ? 'Change email' : 'Change number'} variant="ghost" size="sm" onPress={() => { setStep('phone'); setOtp(''); }} />
             </Animated.View>
           )}

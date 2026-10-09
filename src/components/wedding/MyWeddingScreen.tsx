@@ -357,6 +357,7 @@ function Team({ project }: { project: Project }) {
   const threads = useDb((s) => s.threads);
   const [open, setOpen] = useState(false);
   const [name, setName] = useState('');
+  const [inviteTried, setInviteTried] = useState(false);
   const [phone, setPhone] = useState('');
   const [relation, setRelation] = useState('Partner');
   const [permission, setPermission] = useState<'editor' | 'viewer'>('editor');
@@ -403,13 +404,14 @@ function Team({ project }: { project: Project }) {
       )}
       <Sheet visible={open} onClose={() => setOpen(false)} title="Invite to your wedding">
         <View style={{ paddingHorizontal: 20, gap: 12 }}>
-          <KField placeholder="Name" value={name} onChangeText={setName} />
+          <KField placeholder="Name" value={name} onChangeText={setName} error={inviteTried && !name.trim() ? 'Enter the name of the person you are inviting' : null} />
           <KField placeholder="Mobile (optional)" value={phone} onChangeText={setPhone} keyboardType="phone-pad" />
           <ChoiceChips options={['Partner', 'Mother', 'Father', 'Sibling', 'Friend', 'Relative']} selected={[relation]} onToggle={setRelation} />
           <ChoiceChips options={['Can edit', 'View only']} selected={[permission === 'editor' ? 'Can edit' : 'View only']} onToggle={(v) => setPermission(v === 'Can edit' ? 'editor' : 'viewer')} />
           <KButton
             label="Create invite"
-            disabled={!name.trim()}
+            missing={!name.trim() && 'Enter the name of the person you are inviting'}
+            onMissing={() => setInviteTried(true)}
             onPress={() => {
               const c = invite(project.id, { name: name.trim(), phone: phone.trim() || undefined, relation, permission });
               setOpen(false);

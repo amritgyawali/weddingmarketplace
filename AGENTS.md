@@ -366,7 +366,8 @@ Seed dates are **relative to today** (`day(n)`/`at(n)`); keep them relative.
 - TypeScript strict. No `any` in new code; use the domain types from `types/platform.ts`.
 - Match the surrounding style: small typed helpers, JSDoc one-liners on exported functions, and no comment noise.
 - Ids come from `uid(prefix)`; human codes from `shortCode()`, `nextQuoteNumber()` and `nextNumber()`.
-- Copy is Nepal-first and friendly ("Namaste", "Dhanyabad"). Use the existing tone.
+- Copy is Nepal-first and friendly ("Namaste"; English text says "Thank you", not "Dhanyabad"). Use the existing tone.
+- Forms: a submit button with missing input stays tappable and says what is missing (`missing` on `KButton`/`Button`, `useFormCheck` for per-field errors); `disabled` only while busy. Descriptions get `maxLength`/`minLength` (shown with a live count), longer forms keep a device draft (`useDraft`), and uploaded photos can always be removed.
 - On web, avoid nesting pressables (`Card onPress` containing buttons). It produces `<button>` inside `<button>`. Make the tappable area and the buttons siblings inside a plain `Card`.
 
 ### Visual design

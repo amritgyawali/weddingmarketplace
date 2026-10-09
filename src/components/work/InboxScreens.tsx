@@ -86,7 +86,7 @@ export function ThreadScreen({ customer }: { customer?: boolean }) {
             label="Report to Vivah"
             variant="ghost"
             icon="flag-outline"
-            disabled={!reason.trim()}
+            missing={!reason.trim() && 'Describe the problem first'}
             onPress={() => {
               report(thread.id, { id: account.id, name: account.name, role: account.role }, reason.trim());
               setReason('');

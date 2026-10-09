@@ -7,6 +7,7 @@ import { Text } from '@/components/ui/Text';
 import { Toggle } from '@/components/ui/Toggle';
 import { toast } from '@/components/ui/Toast';
 import { CITIES } from '@/data/cities';
+import { useFormCheck } from '@/hooks/useFormCheck';
 import { findProvider } from '@/data/providers';
 import { SERVICES } from '@/data/services';
 import { PRICING_MODELS } from '@/services/pricing';
@@ -34,6 +35,11 @@ function MarketplaceSettings() {
   const [code, setCode] = useState('');
   const [pct, setPct] = useState('');
   const [title, setTitle] = useState('');
+  const promoCheck = useFormCheck({
+    title: !title.trim() && 'Enter the campaign title',
+    code: !code.trim() && 'Enter the promo code',
+    pct: (!Number(pct) || Number(pct) > 90) && 'Enter a discount between 1 and 90%',
+  });
 
   return (
     <View style={{ flex: 1, backgroundColor: t.c.bg }}>
@@ -136,20 +142,22 @@ function MarketplaceSettings() {
             </View>
           ))}
           <View style={styles.grid}>
-            <KField label="Campaign title" value={title} onChangeText={setTitle} placeholder="Dashain special" />
-            <KField label="Promo code" value={code} onChangeText={(v) => setCode(v.toUpperCase())} placeholder="DASHAIN15" autoCapitalize="characters" />
-            <KField label="Discount %" value={pct} onChangeText={setPct} keyboardType="number-pad" />
+            <KField label="Campaign title" required value={title} onChangeText={setTitle} placeholder="Dashain special" error={promoCheck.error('title')} />
+            <KField label="Promo code" required value={code} onChangeText={(v) => setCode(v.toUpperCase())} placeholder="DASHAIN15" autoCapitalize="characters" error={promoCheck.error('code')} />
+            <KField label="Discount %" required value={pct} onChangeText={(v) => setPct(v.replace(/\D/g, ''))} keyboardType="number-pad" error={promoCheck.error('pct')} />
           </View>
           <KButton
             label="Create promo code"
             size="sm"
-            disabled={!code.trim() || !title.trim() || !Number(pct)}
+            missing={promoCheck.missing}
+            onMissing={promoCheck.reveal}
             onPress={() => {
               const deal: Deal = { id: uid('deal'), title: title.trim(), description: `${pct}% off the coordination fee with code ${code}`, kind: 'promo_code', code: code.trim(), discountPct: Number(pct), featured: true, active: true, redemptions: 0 };
               saveDeal(deal);
               setCode('');
               setPct('');
               setTitle('');
+              promoCheck.reset();
               toast('Promo code live');
             }}
           />

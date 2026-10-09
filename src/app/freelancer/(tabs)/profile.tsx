@@ -404,7 +404,7 @@ export default function FreelancerProfile() {
           <KField label="Model" value={kitName} onChangeText={setKitName} placeholder={craft?.kitHint ?? 'e.g. Sony A7 IV, 24-70mm f/2.8 GM'} />
           <KButton
             label="Add"
-            disabled={!kitName.trim()}
+            missing={!kitName.trim() && 'Enter the model of your equipment'}
             onPress={() => {
               updateAccount(account.id, { equipment: [...(account.equipment ?? []), { kind: kitKind, name: kitName.trim() }] });
               setKitName('');

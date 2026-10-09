@@ -3,7 +3,7 @@ import { router } from 'expo-router';
 import { useState } from 'react';
 import { Linking, Pressable, StyleSheet, View } from 'react-native';
 
-import { Avatar, Card, ChoiceChips, KButton, KField, ProgressBar, StatusPill } from '@/components/kit';
+import { Avatar, Card, ChoiceChips, KButton, KField, ProgressBar, showMissing, StatusPill } from '@/components/kit';
 import { triggerHaptic } from '@/components/ui/PressableScale';
 import { Sheet } from '@/components/ui/Sheet';
 import { Text } from '@/components/ui/Text';
@@ -193,7 +193,7 @@ function AssignmentRow({ project, booking, a, mode }: { project: Project; bookin
             label="Start emergency replacement"
             variant="danger"
             icon="medkit"
-            disabled={!reason.trim()}
+            missing={!reason.trim() && 'Pick a reason or describe what happened'}
             onPress={() => {
               const gig = startEmergency(project.id, booking.id, a.id, reason.trim());
               setEmergency(false);
@@ -237,8 +237,8 @@ export function WorkerPicker({ project, booking, crew, visible, onClose }: { pro
           ranked.map((r) => (
             <Pressable
               key={r.freelancer.id}
-              disabled={!!r.excluded}
               onPress={() => {
+                if (r.excluded) return showMissing(`${r.freelancer.name} can’t be assigned: ${r.excluded}`);
                 assignWorker(project.id, booking.id, crew.id, { id: r.freelancer.id, name: r.freelancer.name, kind: 'freelancer' }, { pay: crew.pay });
                 toast(`${r.freelancer.name} assigned`, 'person-add');
                 onClose();
@@ -405,13 +405,13 @@ function DeliverableRow({ project, booking, d, mode }: { project: Project; booki
       )}
       {mode === 'customer' && d.status === 'READY_FOR_REVIEW' && (
         <View style={{ gap: 8 }}>
-          <KField placeholder="Comments or changes (optional)" value={note} onChangeText={setNote} />
+          <KField placeholder="What should change? (needed to request changes)" value={note} onChangeText={setNote} multiline maxLength={500} />
           <View style={styles.actionsRow}>
             <KButton
               label="Request changes"
               size="sm"
               variant="secondary"
-              disabled={d.revisions >= d.revisionLimit || !note.trim()}
+              missing={d.revisions >= d.revisionLimit ? `All ${d.revisionLimit} revisions have been used` : !note.trim() && 'Write what should change first'}
               onPress={() => {
                 update(project.id, booking.id, d.id, { status: 'REVISION_REQUESTED' }, note.trim());
                 toast('Changes requested', 'create');
@@ -458,7 +458,7 @@ function DeliverableRow({ project, booking, d, mode }: { project: Project; booki
                   label="Ready for review"
                   size="sm"
                   icon="eye"
-                  disabled={!link.trim()}
+                  missing={!link.trim() && 'Add the link to the files first'}
                   onPress={() => {
                     update(project.id, booking.id, d.id, { status: 'READY_FOR_REVIEW', link: link.trim() });
                     setEditing(false);
@@ -503,7 +503,7 @@ export function DeliverablesPanel({ project, booking, mode }: { project: Project
           <KButton
             label="Add"
             size="sm"
-            disabled={!title.trim()}
+            missing={!title.trim() && 'Type the deliverable first'}
             onPress={() => {
               addDeliverable(project.id, booking.id, { title: title.trim(), kind: 'other', due: project.weddingDate });
               setTitle('');

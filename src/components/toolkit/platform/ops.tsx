@@ -8,6 +8,7 @@ import { Card, ChoiceChips, EmptyBlock, KButton, KField, ListRow, SectionTitle, 
 import { Text } from '@/components/ui/Text';
 import { toast } from '@/components/ui/Toast';
 import { SERVICES } from '@/data/services';
+import { useFormCheck } from '@/hooks/useFormCheck';
 import { exportCsv } from '@/services/exporters';
 import { NEPAL_HOLIDAYS } from '@/services/toolkit';
 import { currentActor } from '@/store/db/helpers';
@@ -43,17 +44,19 @@ export function Broadcasts() {
   const [audience, setAudience] = useState<Broadcast['audience']>('vendor');
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
+  const check = useFormCheck({ title: !title.trim() && 'Enter a title for the broadcast', body: !body.trim() && 'Write the message to send' });
   const label = (id: Broadcast['audience']) => AUDIENCES.find((a) => a.id === id)?.label ?? id;
   return (
     <ToolPage title="Broadcasts" subtitle="Announcements to a whole group">
       <Card style={{ gap: 10 }}>
         <ChoiceChips options={AUDIENCES.map((a) => a.label)} selected={[label(audience)]} onToggle={(l) => setAudience(AUDIENCES.find((a) => a.label === l)?.id ?? audience)} />
-        <KField label="Title" value={title} onChangeText={setTitle} placeholder="e.g. Office closed for Dashain, 11–21 October" />
-        <KField label="Message" value={body} onChangeText={setBody} multiline placeholder="Keep it short and say what people should do." />
+        <KField label="Title" required value={title} onChangeText={setTitle} placeholder="e.g. Office closed for Dashain, 11–21 October" error={check.error('title')} maxLength={100} />
+        <KField label="Message" required value={body} onChangeText={setBody} multiline maxLength={500} placeholder="Keep it short and say what people should do." error={check.error('body')} />
         <KButton
           label={`Send to ${label(audience).toLowerCase()}`}
           icon="megaphone-outline"
-          disabled={!title.trim() || !body.trim()}
+          missing={check.missing}
+          onMissing={check.reveal}
           onPress={() =>
             confirm('Send broadcast?', `“${title.trim()}” goes to every ${label(audience).toLowerCase()} account as a notification.`, 'Send', () => {
               const b = send(audience, title, body);
@@ -61,6 +64,7 @@ export function Broadcasts() {
                 toast(`Sent to ${b.recipients} accounts`, 'megaphone');
                 setTitle('');
                 setBody('');
+                check.reset();
               }
             })
           }
@@ -175,7 +179,7 @@ export function Helpdesk() {
 // ─── Macros ─────────────────────────────────────────────────────────────────
 
 const MACROS: [string, string, string][] = [
-  ['Payment received', 'Payments', 'Namaste! We have received your payment and the receipt is in the app under My Wedding → Payments. Dhanyabad!'],
+  ['Payment received', 'Payments', 'Namaste! We have received your payment and the receipt is in the app under My Wedding → Payments. Thank you!'],
   ['Refund timeline', 'Payments', 'Your refund has been approved. It reaches the original eSewa/Khalti/bank account within 7 working days.'],
   ['Vendor running late', 'Wedding day', 'Namaste! The team is on the way and your coordinator is tracking them live. We will update you in 15 minutes.'],
   ['Date change request', 'Bookings', 'We can move your booking if all providers are free on the new date. Please share two preferred dates and we will check today.'],

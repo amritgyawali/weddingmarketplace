@@ -16,7 +16,7 @@ export const VENDOR_CATEGORIES: VendorCategory[] = SERVICE_GROUPS.map((g) =>
         image: g.image,
         bg: g.bg,
         subcategories: [
-          { id: 'all-venues', title: 'View All Venues' },
+          { id: 'all-venues', title: 'View all venues' },
           { id: 'party-palaces', title: 'Party Palaces' },
           { id: 'banquet-halls', title: 'Banquet Halls' },
           { id: 'hotels', title: 'Hotels' },

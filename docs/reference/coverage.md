@@ -4,7 +4,7 @@
 
 Exported symbols that have no JSDoc yet. The weekly documentation pass (see [the maintenance guide](../handbook/17-documentation-maintenance.md)) works through this list; whoever touches a file should document its exports too.
 
-**729 of 1400 exports documented (52%).** Files without a header comment: 325 of 419.
+**742 of 1414 exports documented (52%).** Files without a header comment: 330 of 424.
 
 | File | Undocumented exports |
 |---|---|
@@ -93,6 +93,7 @@ Exported symbols that have no JSDoc yet. The weekly documentation pass (see [the
 | [src/components/ui/SectionHeader.tsx](../../src/components/ui/SectionHeader.tsx) | `SectionHeader`, `NewBadge` |
 | [src/components/ui/Skeleton.tsx](../../src/components/ui/Skeleton.tsx) | `Skeleton`, `ListRowSkeleton` |
 | [src/components/ui/Toast.tsx](../../src/components/ui/Toast.tsx) | `ToastTone`, `ToastHost` |
+| [src/components/work/ReviewComposer.tsx](../../src/components/work/ReviewComposer.tsx) | `FREELANCER_CRITERIA`, `REVIEW_MAX_CHARS` |
 | [src/constants/images.ts](../../src/constants/images.ts) | `PhotoKey`, `photo` |
 | [src/data/freelancers.ts](../../src/data/freelancers.ts) | `FREELANCER_DIRECTORY`, `findFreelancer` |
 | [src/data/vendors.ts](../../src/data/vendors.ts) | `VENDORS`, `findVendor` |
@@ -160,7 +161,6 @@ Exported symbols that have no JSDoc yet. The weekly documentation pass (see [the
 | [src/components/work/MatchPanel.tsx](../../src/components/work/MatchPanel.tsx) | `fitColor` |
 | [src/components/work/Payments.tsx](../../src/components/work/Payments.tsx) | `PAYMENT_METHODS` |
 | [src/components/work/Pipeline.tsx](../../src/components/work/Pipeline.tsx) | `STATUS_LABEL` |
-| [src/components/work/ReviewComposer.tsx](../../src/components/work/ReviewComposer.tsx) | `FREELANCER_CRITERIA` |
 | [src/components/work/RunSheet.tsx](../../src/components/work/RunSheet.tsx) | `SeverityPicker` |
 | [src/components/work/SettingsScreen.tsx](../../src/components/work/SettingsScreen.tsx) | `DEFAULT_PREFS` |
 | [src/components/work/TodayFocus.tsx](../../src/components/work/TodayFocus.tsx) | `TodayFocus` |

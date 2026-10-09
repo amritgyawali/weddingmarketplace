@@ -102,7 +102,7 @@ export default function CustomerQuote() {
             label={`Accept · ${formatMoney(total)}`}
             icon="checkmark-circle"
             size="lg"
-            disabled={expired}
+            missing={expired && 'This quote has expired. Ask for an updated version below.'}
             onPress={() => {
               respond(quote.id, 'accept');
               triggerHaptic('success');
@@ -138,10 +138,10 @@ export default function CustomerQuote() {
             Tell {quote.fromName} what to change — you’ll get a new version and can compare it with this one.
           </Text>
           <ChoiceChips options={CHANGE_PRESETS} selected={presets} onToggle={(v) => setPresets((p) => (p.includes(v) ? p.filter((x) => x !== v) : [...p, v]))} />
-          <KField value={note} onChangeText={setNote} multiline placeholder="e.g. Bring catering to NPR 1,150/plate and include the entrance gate" />
+          <KField value={note} onChangeText={setNote} multiline maxLength={500} minLength={presets.length ? undefined : 5} placeholder="e.g. Bring catering to NPR 1,150/plate and include the entrance gate" />
           <KButton
             label="Send request"
-            disabled={note.trim().length < 5 && !presets.length}
+            missing={note.trim().length < 5 && !presets.length && 'Pick what to change, or describe it in at least 5 characters'}
             onPress={() => {
               respond(quote.id, 'revision', [presets.join(', '), note.trim()].filter(Boolean).join(' — '));
               setRevisionOpen(false);

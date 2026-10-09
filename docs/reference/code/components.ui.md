@@ -16,6 +16,7 @@ Every exported symbol in `src/components/ui/`, file by file. The guide that expl
 - [`EmptyState.tsx`](#emptystatetsx) (2 exports)
 - [`FeatureRouteGuard.tsx`](#featurerouteguardtsx) (1 exports)
 - [`Field.tsx`](#fieldtsx) (2 exports)
+- [`FieldNote.tsx`](#fieldnotetsx) (2 exports)
 - [`GenieFab.tsx`](#geniefabtsx) (2 exports)
 - [`IconButton.tsx`](#iconbuttontsx) (3 exports)
 - [`Illustration.tsx`](#illustrationtsx) (3 exports)
@@ -24,6 +25,7 @@ Every exported symbol in `src/components/ui/`, file by file. The guide that expl
 - [`Loader.tsx`](#loadertsx) (2 exports)
 - [`Ornament.tsx`](#ornamenttsx) (1 exports)
 - [`Photo.tsx`](#phototsx) (1 exports)
+- [`PhotoViewer.tsx`](#photoviewertsx) (1 exports)
 - [`PressableScale.tsx`](#pressablescaletsx) (3 exports)
 - [`Rating.tsx`](#ratingtsx) (2 exports)
 - [`ScreenHeader.tsx`](#screenheadertsx) (1 exports)
@@ -195,7 +197,7 @@ Source: [src/components/ui/Button.tsx](../../../src/components/ui/Button.tsx)
 
 ### `ButtonProps`
 
-*interface* · [src/components/ui/Button.tsx:13](../../../src/components/ui/Button.tsx#L13)
+*interface* · [src/components/ui/Button.tsx:14](../../../src/components/ui/Button.tsx#L14)
 
 _No JSDoc yet._
 
@@ -208,16 +210,18 @@ _No JSDoc yet._
 | `leading?` | `ReactNode` |  |
 | `loading?` | `boolean` |  |
 | `disabled?` | `boolean` |  |
+| `missing?` | `string \| false \| null` | What the person still has to fill in. The button then looks dimmed but stays tappable, and a tap shows this message instead of doing nothing. |
+| `onMissing?` | `() => void` | Called on a tap while `missing` is set (e.g. `useFormCheck().reveal`). |
 | `size?` | `'md' \| 'lg' \| 'sm'` |  |
 | `style?` | `StyleProp<ViewStyle>` |  |
 | `color?` | `string` |  |
 
 ### `Button`
 
-*component* · [src/components/ui/Button.tsx:29](../../../src/components/ui/Button.tsx#L29)
+*component* · [src/components/ui/Button.tsx:37](../../../src/components/ui/Button.tsx#L37)
 
 ```ts
-Button({ label, onPress, variant = 'primary', icon, leading, loading, disabled, size = 'md', style, color, }: ButtonProps)
+Button({ label, onPress, variant = 'primary', icon, leading, loading, disabled, missing, onMissing, size = 'md', style, color, }: ButtonProps)
 ```
 
 _No JSDoc yet._
@@ -387,7 +391,7 @@ Source: [src/components/ui/Field.tsx](../../../src/components/ui/Field.tsx)
 
 ### `FieldProps`
 
-*interface* · [src/components/ui/Field.tsx:10](../../../src/components/ui/Field.tsx#L10)
+*interface* · [src/components/ui/Field.tsx:11](../../../src/components/ui/Field.tsx#L11)
 
 `extends TextInputProps`
 
@@ -399,16 +403,43 @@ _No JSDoc yet._
 | `error?` | `string \| null` |  |
 | `hint?` | `string` |  |
 | `required?` | `boolean` |  |
+| `minLength?` | `number` | With `maxLength`, shows "Minimum n, maximum m characters" and a live count. |
 
 ### `Field`
 
-*component* · [src/components/ui/Field.tsx:18](../../../src/components/ui/Field.tsx#L18)
+*component* · [src/components/ui/Field.tsx:21](../../../src/components/ui/Field.tsx#L21)
 
 ```ts
-FieldforwardRef(({ label, error, hint, required, style, multiline, placeholder, onFocus, onBlur, ...rest }, ref))
+FieldforwardRef(({ label, error, hint, required, style, multiline, placeholder, onFocus, onBlur, minLength, ...rest }, ref))
 ```
 
-Labelled text input with a focus border and an inline validation message.
+Labelled text input with a focus border, an inline validation message and, for descriptions, the allowed length.
+
+## FieldNote.tsx
+
+Source: [src/components/ui/FieldNote.tsx](../../../src/components/ui/FieldNote.tsx)
+
+### `lengthRule`
+
+*function* · [src/components/ui/FieldNote.tsx:7](../../../src/components/ui/FieldNote.tsx#L7)
+
+```ts
+lengthRule(minLength?: number, maxLength?: number): string | null
+```
+
+"Minimum 10, maximum 1000 characters", or null when the field has no limits.
+
+### `FieldNote`
+
+*component* · [src/components/ui/FieldNote.tsx:19](../../../src/components/ui/FieldNote.tsx#L19)
+
+```ts
+FieldNote({ error, hint, length, minLength, maxLength, tone, }: { error?: string | null; hint?: string; length: number; minLength?: number; maxLength?: number; tone: { danger: string; muted: string; warning: string }; })
+```
+
+The line under a text field: the error if there is one, else the hint,
+else the allowed length; with a live "12 / 1000" count on the right when
+the field has a maximum, so a description never gets cut off by surprise.
 
 ## GenieFab.tsx
 
@@ -641,6 +672,21 @@ Every photo in the app. Sits on a pearl fill while it loads and
 cross-dissolves in instead of popping, so lists and galleries feel calm;
 with Reduce Motion on it simply appears. Takes every `expo-image` prop,
 and a caller's own `transition` or background wins.
+
+## PhotoViewer.tsx
+
+Source: [src/components/ui/PhotoViewer.tsx](../../../src/components/ui/PhotoViewer.tsx)
+
+### `PhotoViewer`
+
+*component* · [src/components/ui/PhotoViewer.tsx:16](../../../src/components/ui/PhotoViewer.tsx#L16)
+
+```ts
+PhotoViewer({ sources, index, onClose, }: { sources: ImageProps['source'][]; /** The photo to open at, or null when the viewer is closed. */ index: number | null; onClose: () => void; })
+```
+
+Full-screen photo viewer: swipe between photos on black, "3 / 8" at the
+top and a close (X) button. Opens at `index`; Android back also closes it.
 
 ## PressableScale.tsx
 

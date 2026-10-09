@@ -124,8 +124,8 @@ export default function LeadDetail() {
 
         <Card style={{ gap: 10 }}>
           <SectionTitle title="Notes" />
-          <KField placeholder="Add a note (call outcome, preferences…)" value={note} onChangeText={setNote} multiline />
-          <KButton label="Save note" size="sm" disabled={!note.trim()} onPress={() => { addNote(lead.id, note.trim(), account.name); setNote(''); }} />
+          <KField placeholder="Add a note (call outcome, preferences…)" value={note} onChangeText={setNote} multiline maxLength={500} />
+          <KButton label="Save note" size="sm" missing={!note.trim() && 'Write the note first'} onPress={() => { addNote(lead.id, note.trim(), account.name); setNote(''); }} />
           {(lead.notes ?? []).map((n) => (
             <View key={n.id} style={{ gap: 2 }}>
               <Text size={13} color={t.c.text}>

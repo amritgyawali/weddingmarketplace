@@ -7,6 +7,7 @@ import { Text } from '@/components/ui/Text';
 import { Toggle } from '@/components/ui/Toggle';
 import { toast } from '@/components/ui/Toast';
 import { SERVICES, findService } from '@/data/services';
+import { useFormCheck } from '@/hooks/useFormCheck';
 import { useExperience } from '@/hooks/useExperience';
 import { has } from '@/services/experience';
 import { useDb } from '@/store/useDb';
@@ -26,6 +27,7 @@ function PackageEditor({ pkg, onClose }: { pkg: ProviderPackage | null; onClose:
   const [draft, setDraft] = useState<ProviderPackage | null>(pkg);
   const [crewText, setCrewText] = useState(pkg ? Object.entries(pkg.crew).map(([r, n]) => `${n} ${r}`).join('\n') : '');
   const [addOns, setAddOns] = useState(pkg ? pkg.addOns.map((a) => `${a.title} = ${a.price}`).join('\n') : '');
+  const check = useFormCheck({ title: !draft?.title.trim() && 'Enter a title for the package', price: !draft?.price && 'Enter the package price' });
   if (!draft) return null;
   const patch = (p: Partial<ProviderPackage>) => setDraft((d) => (d ? { ...d, ...p } : d));
   const def = findService(draft.serviceId);
@@ -38,17 +40,17 @@ function PackageEditor({ pkg, onClose }: { pkg: ProviderPackage | null; onClose:
   return (
     <Sheet visible onClose={onClose} title={pkg?.title ? 'Edit package' : 'New package'}>
       <ScrollView contentContainerStyle={{ paddingHorizontal: 20, gap: 12, paddingBottom: 12 }} keyboardShouldPersistTaps="handled">
-        <KField label="Title" value={draft.title} onChangeText={(title) => patch({ title })} placeholder="e.g. Wedding Photography Premium" />
+        <KField label="Title" required value={draft.title} onChangeText={(title) => patch({ title })} placeholder="e.g. Wedding Photography Premium" error={check.error('title')} maxLength={80} />
         {choices.length > 1 && <ChoiceChips options={choices.map((s) => s.name)} selected={[def?.name ?? '']} onToggle={(name) => patch({ serviceId: choices.find((s) => s.name === name)!.id, unit: choices.find((s) => s.name === name)!.unit })} />}
         <View style={styles.row}>
           <View style={{ flex: 1.3 }}>
-            <KField label="Price" value={String(draft.price || '')} onChangeText={(v) => patch({ price: Number(v.replace(/\D/g, '')) || 0 })} keyboardType="number-pad" prefix="NPR" />
+            <KField label="Price" required value={String(draft.price || '')} onChangeText={(v) => patch({ price: Number(v.replace(/\D/g, '')) || 0 })} keyboardType="number-pad" prefix="NPR" error={check.error('price')} />
           </View>
           <View style={{ flex: 1 }}>
             <KField label="Unit" value={draft.unit} onChangeText={(unit) => patch({ unit })} />
           </View>
         </View>
-        <KField label="Description" value={draft.description} onChangeText={(description) => patch({ description })} multiline />
+        <KField label="Description" value={draft.description} onChangeText={(description) => patch({ description })} multiline maxLength={600} />
         <KField label="Included (one per line)" value={draft.included.join('\n')} onChangeText={(v) => patch({ included: lines(v) })} multiline />
         <KField label="Not included (one per line)" value={draft.excluded.join('\n')} onChangeText={(v) => patch({ excluded: lines(v) })} multiline />
         {crewed && <KField label={`Crew (e.g. “2 ${def?.crew[0]?.role ?? 'Staff'}”, one per line)`} value={crewText} onChangeText={setCrewText} multiline />}
@@ -74,7 +76,8 @@ function PackageEditor({ pkg, onClose }: { pkg: ProviderPackage | null; onClose:
         </View>
         <KButton
           label="Save package"
-          disabled={!draft.title.trim() || !draft.price}
+          missing={check.missing}
+          onMissing={check.reveal}
           onPress={() => {
             const crew = Object.fromEntries(lines(crewText).map((l) => { const m = l.match(/^(\d+)\s+(.*)$/); return m ? [m[2], Number(m[1])] : [l, 1]; }));
             const extras = lines(addOns).map((l) => { const [title, price] = l.split('='); return { title: title.trim(), price: Number((price ?? '').replace(/\D/g, '')) || 0 }; });

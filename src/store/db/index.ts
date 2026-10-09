@@ -93,6 +93,23 @@ function addSocial(data: DbData): DbData {
   };
 }
 
+/** The demo texts that said "Dhanyabad" before v7, and what they say now. */
+const OLD_THANKS: Record<string, string> = {
+  'Dhanyabad! It was lovely to be part of your celebration. A review on Vivah would mean a lot to us.': 'Thank you! It was lovely to be part of your celebration. A review on Vivah would mean a lot to us.',
+  'Namaste! We are away for the night and will reply first thing in the morning. Dhanyabad for your patience.': 'Namaste! We are away for the night and will reply first thing in the morning. Thank you for your patience.',
+  'Dhanyabad Pratik! Wishing you both a lifetime of happiness.': 'Thank you, Pratik! Wishing you both a lifetime of happiness.',
+  'Namaste! We are away for a family festival and will reply by tomorrow evening. For urgent bookings call us directly. Dhanyabad!': 'Namaste! We are away for a family festival and will reply by tomorrow evening. For urgent bookings call us directly. Thank you!',
+  'Namaste! We have received your payment and the receipt is in the app under My Wedding → Payments. Dhanyabad!': 'Namaste! We have received your payment and the receipt is in the app under My Wedding → Payments. Thank you!',
+};
+
+/** Replaces the old seeded texts wherever they were saved; text people wrote themselves is left alone. */
+function sayThankYou<T>(value: T): T {
+  if (typeof value === 'string') return (OLD_THANKS[value] ?? value) as T;
+  if (Array.isArray(value)) return value.map(sayThankYou) as T;
+  if (value && typeof value === 'object') return Object.fromEntries(Object.entries(value).map(([k, v]) => [k, sayThankYou(v)])) as T;
+  return value;
+}
+
 export const useDb = create<Db>()(
   persist(
     (set, get) => ({
@@ -126,7 +143,8 @@ export const useDb = create<Db>()(
       // v4: adds the newborn demo project, the new demo tool records and the nwaran function (additive).
       // v5: vehicle services on the built-in occasions; feature flags, text overrides, announcements (additive).
       // v6: the social hub (connected networks, unified inbox, posts), seeded for the demo businesses (additive).
-      version: 6,
+      // v7: the seeded "Dhanyabad" texts now say "Thank you" (only exact seed texts change).
+      version: 7,
       storage: lazyStorage<DbData>(),
       partialize: (s) => Object.fromEntries(DATA_KEYS.map((k) => [k, s[k]])) as unknown as DbData,
       migrate: (persisted, version) => {
@@ -135,6 +153,7 @@ export const useDb = create<Db>()(
         if (version < 4) data = addSeedRecords(data);
         if (version < 5) data = addVehicles(data);
         if (version < 6) data = addSocial(data);
+        if (version < 7) data = sayThankYou(data);
         return data as Db;
       },
     },

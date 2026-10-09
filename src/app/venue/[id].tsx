@@ -4,7 +4,7 @@ import { Linking, StyleSheet, useWindowDimensions, View } from 'react-native';
 
 import { ExpandableText, HeroControls, InfoTile, ReviewList, Section, StickyCta } from '@/components/detail/DetailParts';
 import { ListingAvailability } from '@/components/detail/ListingAvailability';
-import { ImageCarousel } from '@/components/listing/ImageCarousel';
+import { HeroGallery } from '@/components/detail/HeroGallery';
 import { VenueMiniCard } from '@/components/listing/MiniCards';
 import { useStartConversation } from '@/components/listing/VenueCard';
 import { Button } from '@/components/ui/Button';
@@ -58,15 +58,7 @@ export default function VenueDetailScreen() {
   return (
     <View style={styles.root}>
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 30 }}>
-        <View>
-          <ImageCarousel images={venue.images} width={width} height={width * 0.8} dotsBottom={16} />
-          <View style={styles.photoCount}>
-            <Ionicons name="images-outline" size={14} color={colors.white} />
-            <Text size={12} weight="semibold" color={colors.white}>
-              {venue.images.length} photos
-            </Text>
-          </View>
-        </View>
+        <HeroGallery images={venue.images} width={width} height={width * 0.8} />
         <HeroControls kind="venues" id={venue.id} shareText={`${venue.name}, ${venue.locality}, ${venue.city} — found on the wedding app!`} />
 
         <View style={styles.head}>
@@ -202,18 +194,6 @@ export default function VenueDetailScreen() {
 
 const styles = StyleSheet.create({
   root: { flex: 1, backgroundColor: colors.white },
-  photoCount: {
-    position: 'absolute',
-    right: 14,
-    bottom: 14,
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 5,
-    backgroundColor: 'rgba(20,16,12,0.6)',
-    borderRadius: radius.xs,
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-  },
   head: { paddingHorizontal: GUTTER, paddingTop: 16, paddingBottom: 20, borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: colors.border },
   rowBetween: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
   tags: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginTop: 12 },

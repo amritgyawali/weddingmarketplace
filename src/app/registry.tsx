@@ -4,7 +4,7 @@ import { router } from 'expo-router';
 import { useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 
-import { Card, ChoiceChips, EmptyBlock, Fab, KButton, KField, StatTile } from '@/components/kit';
+import { Card, ChoiceChips, EmptyBlock, Fab, KButton, KField, showMissing, StatTile } from '@/components/kit';
 import { REGISTRY_KINDS, RegistryCard, registryRaised } from '@/components/planner/RegistryCard';
 import { ToolScreen, toolStyles } from '@/components/planner/ToolScreen';
 import { Sheet } from '@/components/ui/Sheet';
@@ -41,7 +41,7 @@ function Registry({ project, readOnly }: { project: Project; readOnly: boolean }
   const url = site?.published ? webUrl(sitePath(site.slug)) : null;
 
   const save = () => {
-    if (!draft || draft.title.trim().length < 2) return toast('Give it a name', 'alert-circle');
+    if (!draft || draft.title.trim().length < 2) return showMissing(draft?.title.trim() ? 'The title needs at least 2 characters' : 'Enter a title for this registry item');
     const { id, ...data } = draft;
     if (id) update(id, { ...data, title: data.title.trim() });
     else add({ ...data, title: data.title.trim() });
@@ -149,8 +149,8 @@ function Registry({ project, readOnly }: { project: Project; readOnly: boolean }
         {draft && (
           <ScrollView style={{ maxHeight: 520 }} contentContainerStyle={{ paddingHorizontal: 20, gap: 12, paddingBottom: 12 }} keyboardShouldPersistTaps="handled">
             <ChoiceChips options={REGISTRY_KINDS.map((k) => k.label)} selected={[REGISTRY_KINDS.find((k) => k.id === draft.kind)!.label]} onToggle={(l) => setDraft({ ...draft, kind: REGISTRY_KINDS.find((k) => k.label === l)!.id })} />
-            <KField label="Title" value={draft.title} onChangeText={(v) => setDraft({ ...draft, title: v })} placeholder={draft.kind === 'honeymoon' ? 'Honeymoon in Bali' : draft.kind === 'charity' ? 'Plant trees in Shivapuri' : 'New home fund'} />
-            <KField label="Note for guests" value={draft.note ?? ''} onChangeText={(v) => setDraft({ ...draft, note: v || undefined })} multiline />
+            <KField label="Title" required value={draft.title} onChangeText={(v) => setDraft({ ...draft, title: v })} placeholder={draft.kind === 'honeymoon' ? 'Honeymoon in Bali' : draft.kind === 'charity' ? 'Plant trees in Shivapuri' : 'New home fund'} />
+            <KField label="Note for guests" value={draft.note ?? ''} onChangeText={(v) => setDraft({ ...draft, note: v || undefined })} multiline maxLength={300} />
             {draft.kind === 'external' ? (
               <KField label="Wishlist link" value={draft.link ?? ''} onChangeText={(v) => setDraft({ ...draft, link: v || undefined })} autoCapitalize="none" placeholder="https://www.daraz.com.np/…" />
             ) : draft.kind === 'gift' ? (

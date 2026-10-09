@@ -3,7 +3,7 @@ import { router } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
 import { Pressable, ScrollView as RNScrollView, StyleSheet, TextInput, View } from 'react-native';
 
-import { ChoiceChips, EmptyBlock, KButton, KField, Segmented, type IconName } from '@/components/kit';
+import { ChoiceChips, EmptyBlock, KButton, KField, Segmented, showMissing, type IconName } from '@/components/kit';
 import { Calendar } from '@/components/ui/Calendar';
 import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
 import { SearchBar } from '@/components/ui/SearchBar';
@@ -368,8 +368,7 @@ export function SocialConversation({ threadId }: { threadId: string }) {
             style={[styles.input, { borderColor: mode === 'note' ? t.c.warning : t.c.border, color: t.c.textStrong, fontFamily: t.fonts.regular, backgroundColor: t.c.surface }, inputReset]}
           />
           <Pressable
-            onPress={() => send()}
-            disabled={!draft.trim() || window.state === 'closed'}
+            onPress={() => (window.state === 'closed' ? showMissing(window.message || 'This conversation can no longer be answered from here') : draft.trim() ? send() : showMissing(mode === 'note' ? 'Type your note first' : 'Type your reply first'))}
             accessibilityRole="button"
             accessibilityLabel={mode === 'note' ? 'Save note' : 'Send reply'}
             style={({ pressed }) => [styles.send, { backgroundColor: mode === 'note' ? t.c.warning : t.c.primary, opacity: !draft.trim() || window.state === 'closed' ? 0.4 : pressed ? 0.8 : 1 }]}>
@@ -437,7 +436,7 @@ function LabelsSheet({ visible, onClose, thread }: { visible: boolean; onClose: 
             label="Add"
             size="sm"
             variant="secondary"
-            disabled={!custom.trim()}
+            missing={!custom.trim() && 'Type the label name first'}
             onPress={() => {
               setLabels(thread.id, [...thread.labels, custom.trim()]);
               setCustom('');
@@ -605,7 +604,7 @@ function LeadForm({ onClose, thread, texts }: { onClose: () => void; thread: Soc
           </View>
         </View>
         <KField label="Phone" value={phone} onChangeText={setPhone} keyboardType="phone-pad" placeholder="98XXXXXXXX" />
-        <KButton label="Create lead" icon="flash-outline" disabled={!date || fns.length === 0} onPress={save} />
+        <KButton label="Create lead" icon="flash-outline" missing={!date ? 'Pick the event date' : fns.length === 0 && 'Pick at least one function'} onPress={save} />
     </ScrollView>
   );
 }

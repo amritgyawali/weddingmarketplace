@@ -25,6 +25,7 @@ export function ContractView({ contract, party, signerName }: { contract: Contra
   const t = useRoleTheme();
   const sign = useDb((s) => s.signContract);
   const [agreed, setAgreed] = useState(false);
+  const [signTried, setSignTried] = useState(false);
   const [name, setName] = useState(signerName);
   const [path, setPath] = useState<string | null>(null);
   const mine = party ? contract.signatures.find((s) => s.party === party) : undefined;
@@ -88,7 +89,7 @@ export function ContractView({ contract, party, signerName }: { contract: Contra
           <Text size={15} weight="bold" color={t.c.textStrong}>
             Sign as {PARTY_LABEL[party!].toLowerCase()}
           </Text>
-          <KField label="Full legal name" value={name} onChangeText={setName} />
+          <KField label="Full legal name" required value={name} onChangeText={setName} error={signTried && name.trim().length < 3 ? 'Enter your full legal name' : null} />
           <SignaturePad onDone={setPath} />
           {path && (
             <Text size={12} color={t.c.success}>
@@ -99,7 +100,8 @@ export function ContractView({ contract, party, signerName }: { contract: Contra
           <KButton
             label="Sign contract"
             icon="create-outline"
-            disabled={!agreed || !path || name.trim().length < 3}
+            missing={name.trim().length < 3 ? 'Enter your full legal name' : !path ? 'Draw your signature, then tap Sign' : !agreed && 'Tick “I have read and agree to every clause” first'}
+            onMissing={() => setSignTried(true)}
             onPress={() => {
               sign(contract.id, party!, name.trim(), path ?? undefined);
               triggerHaptic('success');
