@@ -6,8 +6,10 @@ import { adToBs, bsMonthName, toNepaliDigits, WEEKDAYS_NE } from './bs';
  * Money is NPR everywhere. Grouping is done by hand because Hermes' Intl
  * support varies across platforms.
  */
+/** Currency code shown in every money string. */
 export const CURRENCY = 'NPR';
 
+/** Groups digits in thousands (150,000), keeps up to two decimals and a leading minus. */
 export function formatNumber(value: number): string {
   const negative = value < 0;
   const [intPart, decimals] = Math.abs(Math.round(value * 100) / 100)
@@ -58,6 +60,7 @@ export function parseMoney(input: string): number {
   return Math.round(n * mult);
 }
 
+/** Turns a ratio into a percentage string: 0.13 gives "13%". */
 export const percent = (value: number, digits = 0) => `${(value * 100).toFixed(digits)}%`;
 
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -115,6 +118,7 @@ export function formatDateAlt(iso: string): string {
   return bs ? `${bsMonthName(bs.month, runtime.lang)} ${num(bs.year)}` : '';
 }
 
+/** Local clock time of an ISO timestamp in 12-hour form, e.g. "6:30 PM". */
 export function formatTime(iso: string): string {
   const d = new Date(iso);
   const h = d.getHours();
@@ -142,6 +146,7 @@ export function timeAgo(iso: string): string {
   return formatShortDate(iso);
 }
 
+/** Whole days from today (local midnight) to a date; negative when the date has passed. */
 export function daysUntil(iso: string): number {
   const target = parseDate(iso);
   const today = new Date();
@@ -167,19 +172,23 @@ export function toISODate(date: Date): string {
   return `${y}-${m}-${d}`;
 }
 
+/** Parses yyyy-mm-dd as a local-midnight Date, never shifted by the time zone. */
 export function fromISODate(iso: string): Date {
   const [y, m, d] = iso.split('-').map(Number);
   return new Date(y, m - 1, d);
 }
 
+/** Adds (or, when negative, subtracts) whole days to a yyyy-mm-dd date. */
 export const addDays = (iso: string, days: number) => {
   const d = fromISODate(iso);
   d.setDate(d.getDate() + days);
   return toISODate(d);
 };
 
+/** Count with its noun: pluralize(1, 'guest') is "1 guest", pluralize(3, 'guest') is "3 guests". */
 export const pluralize = (count: number, word: string, plural = `${word}s`) => `${count} ${count === 1 ? word : plural}`;
 
+/** Up to two capital letters from the first two words of a name. */
 export const initials = (name: string) =>
   name
     .split(/\s+/)
@@ -188,6 +197,7 @@ export const initials = (name: string) =>
     .map((p) => p[0]?.toUpperCase())
     .join('');
 
+/** Unique-enough local id with a prefix, such as "proj_lq3k9_x7a1bc". */
 export const uid = (prefix = 'id') => `${prefix}_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 8)}`;
 
 /** Short human code, e.g. for invites: "K7P2QX". */
@@ -196,6 +206,7 @@ export const shortCode = (length = 6) =>
 
 /** Nepal mobile numbers: 97/98 + 8 digits. */
 export const isNepalMobile = (phone: string) => /^9[678]\d{8}$/.test(phone.replace(/\D/g, '').slice(-10));
+/** Formats a Nepal mobile number as "+977 98x-xxx-xxxx"; returns the input unchanged if it has fewer than 10 digits. */
 export const formatPhone = (phone: string) => {
   const d = phone.replace(/\D/g, '').slice(-10);
   return d.length === 10 ? `+977 ${d.slice(0, 3)}-${d.slice(3, 6)}-${d.slice(6)}` : phone;

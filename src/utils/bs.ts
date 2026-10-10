@@ -20,16 +20,23 @@ const TABLE =
   '232321110011232321110102223222101011223222101011232321110012132321110102223222101011223222110111' +
   '123312110111132321110111132321110111';
 
+/** First Bikram Sambat year the month-length table covers. */
 export const BS_FIRST_YEAR = 2000;
+/** Last Bikram Sambat year the month-length table covers (extend the table before this). */
 export const BS_LAST_YEAR = BS_FIRST_YEAR + TABLE.length / 12 - 1;
 /** BS 2000 Baisakh 1 = AD 1943-04-14 (UTC day number). */
 const EPOCH = Date.UTC(1943, 3, 14) / 86_400_000;
 
+/** Bikram Sambat month names in English, Baisakh first. */
 export const BS_MONTHS_EN = ['Baisakh', 'Jestha', 'Asar', 'Shrawan', 'Bhadra', 'Asoj', 'Kartik', 'Mangsir', 'Poush', 'Magh', 'Falgun', 'Chaitra'];
+/** Bikram Sambat month names in Nepali, Baisakh first. */
 export const BS_MONTHS_NE = ['बैशाख', 'जेठ', 'असार', 'साउन', 'भदौ', 'असोज', 'कात्तिक', 'मंसिर', 'पुस', 'माघ', 'फागुन', 'चैत'];
+/** Weekday names in Nepali, Sunday first. */
 export const WEEKDAYS_NE = ['आइत', 'सोम', 'मंगल', 'बुध', 'बिही', 'शुक्र', 'शनि'];
+/** One-letter Nepali weekday labels for calendar headers, Sunday first. */
 export const WEEKDAYS_NE_SHORT = ['आ', 'सो', 'मं', 'बु', 'बि', 'शु', 'श'];
 
+/** A Bikram Sambat calendar date; `month` is zero-based. */
 export interface BsDate {
   year: number;
   /** 0 = Baisakh … 11 = Chaitra */
@@ -84,6 +91,7 @@ const DEVANAGARI = '०१२३४५६७८९';
 /** "2083" → "२०८३" */
 export const toNepaliDigits = (s: string | number) => String(s).replace(/[0-9]/g, (c) => DEVANAGARI[Number(c)]);
 
+/** Name of a BS month (0 = Baisakh) in English or Nepali; wraps around outside 0–11. */
 export const bsMonthName = (month: number, lang: 'en' | 'ne' = 'en') => (lang === 'ne' ? BS_MONTHS_NE : BS_MONTHS_EN)[((month % 12) + 12) % 12];
 
 /** Moves a BS month cursor by `delta` months. */
@@ -98,6 +106,7 @@ const weekdayOf = (iso: string) => {
   return new Date(y, m - 1, d).getDay();
 };
 
+/** One day cell of a month grid. */
 export interface MonthCell {
   /** AD date the cell stands for. */
   iso: string;

@@ -4,7 +4,7 @@
 
 Exported symbols that have no JSDoc yet. The weekly documentation pass (see [the maintenance guide](../handbook/17-documentation-maintenance.md)) works through this list; whoever touches a file should document its exports too.
 
-**729 of 1400 exports documented (52%).** Files without a header comment: 325 of 419.
+**764 of 1400 exports documented (55%).** Files without a header comment: 325 of 419.
 
 | File | Undocumented exports |
 |---|---|
@@ -19,14 +19,10 @@ Exported symbols that have no JSDoc yet. The weekly documentation pass (see [the
 | [src/services/matching.ts](../../src/services/matching.ts) | `MATCH_WEIGHTS`, `MATCH_FACTORS`, `isBlocking`, `RankedProvider`, `MatchContext`, `scoreProvider`, `rankProviders`, `toCandidate`, `RankedFreelancer`, `CrewSlot`, `rankFreelancers` |
 | [src/services/toolkit.ts](../../src/services/toolkit.ts) | `SaitDate`, `monthLabel`, `regionFor`, `ClimateNote`, `HONEYMOON_SPOTS`, `TIERS`, `Tier`, `tipFor`, `PriceInput`, `hallCapacity`, `RateInput` |
 | [src/components/toolkit/couple/ceremony.tsx](../../src/components/toolkit/couple/ceremony.tsx) | `SaitFinder`, `FamilyDuties`, `JantiPlanner`, `Samagri`, `EmergencyKit`, `Outfits`, `MusicPlan`, `ShotList`, `MyDay`, `WeatherGuide` |
-| [src/utils/format.ts](../../src/utils/format.ts) | `formatNumber`, `percent`, `formatTime`, `daysUntil`, `fromISODate`, `addDays`, `pluralize`, `initials`, `uid`, `formatPhone` |
 | [src/components/toolkit/freelancer/work.tsx](../../src/components/toolkit/freelancer/work.tsx) | `GearChecklist`, `GearCare`, `TravelPlanner`, `Deliveries`, `BackupLog`, `WorkDiary`, `SafetyChecklist`, `WeekPlanner`, `OpenDates` |
 | [src/components/toolkit/platform/insight.tsx](../../src/components/toolkit/platform/insight.tsx) | `SlaMonitor`, `Workload`, `SourceFunnel`, `CashFlow`, `Scorecards`, `DemandHeatmap`, `CitySupply`, `Targets`, `RiskWatch` |
 | [src/components/toolkit/vendor/money.tsx](../../src/components/toolkit/vendor/money.tsx) | `EXPENSE_CATEGORIES`, `Expenses`, `ProfitLoss`, `TaxSummary`, `PriceCalculator`, `Vouchers`, `Referrals`, `Goals`, `Benchmark` |
 | [src/data/seed.ts](../../src/data/seed.ts) | `day`, `at`, `DEMO_VENUE`, `DEMO_STUDIO`, `DEMO_DECOR`, `DEMO_ACCOUNTS`, `buildSeedData`, `contractSections`, `DEMO_IMAGES` |
-| [src/store/db/helpers.ts](../../src/store/db/helpers.ts) | `SetDb`, `GetDb`, `now`, `today`, `SYSTEM`, `accountById`, `currentActor`, `firstDate`, `lastDate` |
-| [src/utils/bs.ts](../../src/utils/bs.ts) | `BS_FIRST_YEAR`, `BS_LAST_YEAR`, `BS_MONTHS_EN`, `BS_MONTHS_NE`, `WEEKDAYS_NE`, `WEEKDAYS_NE_SHORT`, `BsDate`, `bsMonthName`, `MonthCell` |
-| [src/services/pricing.ts](../../src/services/pricing.ts) | `PRICING_MODELS`, `pricingModel`, `Split`, `splitBooking`, `SCHEDULE_TEMPLATES`, `DEFAULT_SCHEDULE`, `dueDateFor`, `paymentSummary` |
 | [src/components/kit/primitives.tsx](../../src/components/kit/primitives.tsx) | `IconName`, `KButton`, `StatusPill`, `Avatar`, `ProgressBar`, `SectionTitle`, `Divider` |
 | [src/data/events.ts](../../src/data/events.ts) | `EventTypeDef`, `EVENT_TYPES`, `EVENT_TYPE_BY_ID`, `eventLabel`, `GUEST_BANDS`, `GuestBand`, `bandFor` |
 | [src/data/features.ts](../../src/data/features.ts) | `FeatureDef`, `FEATURES`, `FEATURE_BY_ID`, `toolFeature`, `serviceFeature`, `tabFeature`, `TopFeature` |
@@ -171,6 +167,7 @@ Exported symbols that have no JSDoc yet. The weekly documentation pass (see [the
 | [src/hooks/useDebounce.ts](../../src/hooks/useDebounce.ts) | `useDebounce` |
 | [src/i18n/ne/index.ts](../../src/i18n/ne/index.ts) | `NE` |
 | [src/services/auth.ts](../../src/services/auth.ts) | `logout` |
+| [src/services/pricing.ts](../../src/services/pricing.ts) | `dueDateFor` |
 | [src/theme/RoleTheme.tsx](../../src/theme/RoleTheme.tsx) | `useRoleTheme` |
 | [src/types/persona.ts](../../src/types/persona.ts) | `RateModel` |
 | [src/utils/random.ts](../../src/utils/random.ts) | `seeded` |

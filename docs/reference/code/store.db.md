@@ -261,47 +261,47 @@ Source: [src/store/db/helpers.ts](../../../src/store/db/helpers.ts)
 
 ### `SetDb`
 
-*type* · [src/store/db/helpers.ts:7](../../../src/store/db/helpers.ts#L7)
+*type* · [src/store/db/helpers.ts:8](../../../src/store/db/helpers.ts#L8)
 
 ```ts
 type SetDb = (partial: Partial<Db> | ((s: Db) => Partial<Db>)) => void
 ```
 
-_No JSDoc yet._
+Signature of the zustand `set` function for the DB store.
 
 ### `GetDb`
 
-*type* · [src/store/db/helpers.ts:8](../../../src/store/db/helpers.ts#L8)
+*type* · [src/store/db/helpers.ts:10](../../../src/store/db/helpers.ts#L10)
 
 ```ts
 type GetDb = () => Db
 ```
 
-_No JSDoc yet._
+Signature of the zustand `get` function for the DB store.
 
 ### `now`
 
-*function* · [src/store/db/helpers.ts:10](../../../src/store/db/helpers.ts#L10)
+*function* · [src/store/db/helpers.ts:13](../../../src/store/db/helpers.ts#L13)
 
 ```ts
 now()
 ```
 
-_No JSDoc yet._
+Current time as an ISO timestamp, used for created/updated stamps.
 
 ### `today`
 
-*function* · [src/store/db/helpers.ts:11](../../../src/store/db/helpers.ts#L11)
+*function* · [src/store/db/helpers.ts:15](../../../src/store/db/helpers.ts#L15)
 
 ```ts
 today()
 ```
 
-_No JSDoc yet._
+Today's date as yyyy-mm-dd (local).
 
 ### `Actor`
 
-*interface* · [src/store/db/helpers.ts:14](../../../src/store/db/helpers.ts#L14)
+*interface* · [src/store/db/helpers.ts:18](../../../src/store/db/helpers.ts#L18)
 
 Actor recorded on audit entries and status history.
 
@@ -312,37 +312,37 @@ Actor recorded on audit entries and status history.
 
 ### `SYSTEM`
 
-*const* · [src/store/db/helpers.ts:19](../../../src/store/db/helpers.ts#L19)
+*const* · [src/store/db/helpers.ts:24](../../../src/store/db/helpers.ts#L24)
 
 ```ts
 SYSTEM: Actor
 ```
 
-_No JSDoc yet._
+Actor used for automated changes that no signed-in person made.
 
 ### `accountById`
 
-*function* · [src/store/db/helpers.ts:21](../../../src/store/db/helpers.ts#L21)
+*function* · [src/store/db/helpers.ts:27](../../../src/store/db/helpers.ts#L27)
 
 ```ts
 accountById(id?: string): Account | undefined
 ```
 
-_No JSDoc yet._
+Finds an account by id in the session store; undefined when the id is missing or unknown.
 
 ### `currentActor`
 
-*function* · [src/store/db/helpers.ts:22](../../../src/store/db/helpers.ts#L22)
+*function* · [src/store/db/helpers.ts:29](../../../src/store/db/helpers.ts#L29)
 
 ```ts
 currentActor(): Actor
 ```
 
-_No JSDoc yet._
+The signed-in account as an audit actor, or `SYSTEM` when nobody is signed in.
 
 ### `ownersOf`
 
-*function* · [src/store/db/helpers.ts:29](../../../src/store/db/helpers.ts#L29)
+*function* · [src/store/db/helpers.ts:36](../../../src/store/db/helpers.ts#L36)
 
 ```ts
 ownersOf(listingId: string)
@@ -352,7 +352,7 @@ Vendor accounts that manage a catalogue listing.
 
 ### `mapProject`
 
-*function* · [src/store/db/helpers.ts:32](../../../src/store/db/helpers.ts#L32)
+*function* · [src/store/db/helpers.ts:39](../../../src/store/db/helpers.ts#L39)
 
 ```ts
 mapProject(projects: Project[], id: string, fn: (p: Project) => Project)
@@ -362,7 +362,7 @@ Replace one project immutably.
 
 ### `mapBooking`
 
-*function* · [src/store/db/helpers.ts:36](../../../src/store/db/helpers.ts#L36)
+*function* · [src/store/db/helpers.ts:43](../../../src/store/db/helpers.ts#L43)
 
 ```ts
 mapBooking(p: Project, bookingId: string, fn: (b: ServiceBooking) => ServiceBooking): Project
@@ -372,7 +372,7 @@ Replace one booking inside a project immutably.
 
 ### `bookingDates`
 
-*function* · [src/store/db/helpers.ts:42](../../../src/store/db/helpers.ts#L42)
+*function* · [src/store/db/helpers.ts:49](../../../src/store/db/helpers.ts#L49)
 
 ```ts
 bookingDates(p: Project, b: Pick<ServiceBooking, 'eventIds'>)
@@ -382,27 +382,27 @@ Dated events a booking covers, earliest first.
 
 ### `firstDate`
 
-*function* · [src/store/db/helpers.ts:45](../../../src/store/db/helpers.ts#L45)
+*function* · [src/store/db/helpers.ts:53](../../../src/store/db/helpers.ts#L53)
 
 ```ts
 firstDate(p: Project)
 ```
 
-_No JSDoc yet._
+Earliest date of the project's live (not cancelled) events, falling back to the wedding date.
 
 ### `lastDate`
 
-*function* · [src/store/db/helpers.ts:51](../../../src/store/db/helpers.ts#L51)
+*function* · [src/store/db/helpers.ts:60](../../../src/store/db/helpers.ts#L60)
 
 ```ts
 lastDate(p: Project)
 ```
 
-_No JSDoc yet._
+Latest date of the project's live (not cancelled) events, falling back to the wedding date.
 
 ### `nextNumber`
 
-*function* · [src/store/db/helpers.ts:59](../../../src/store/db/helpers.ts#L59)
+*function* · [src/store/db/helpers.ts:68](../../../src/store/db/helpers.ts#L68)
 
 ```ts
 nextNumber(prefix: string, existing: string[])
