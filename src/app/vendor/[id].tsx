@@ -5,7 +5,7 @@ import { Linking, Pressable, StyleSheet, useWindowDimensions, View } from 'react
 
 import { ExpandableText, HeroControls, InfoTile, ReviewList, Section, StickyCta } from '@/components/detail/DetailParts';
 import { ListingAvailability } from '@/components/detail/ListingAvailability';
-import { ImageCarousel } from '@/components/listing/ImageCarousel';
+import { HeroGallery } from '@/components/detail/HeroGallery';
 import { VendorMiniCard } from '@/components/listing/MiniCards';
 import { useStartConversation } from '@/components/listing/VenueCard';
 import { Button } from '@/components/ui/Button';
@@ -68,7 +68,7 @@ export default function VendorDetailScreen() {
   return (
     <View style={styles.root}>
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 30 }}>
-        <ImageCarousel images={vendor.images} width={width} height={width * 0.8} dotsBottom={16} />
+        <HeroGallery images={vendor.images} width={width} height={width * 0.8} />
         <HeroControls kind="vendors" id={vendor.id} shareText={`${vendor.name} (${sub?.title ?? category?.title}) in ${vendor.city}`} />
 
         <View style={styles.head}>

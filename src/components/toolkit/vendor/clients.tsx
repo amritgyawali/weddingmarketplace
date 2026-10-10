@@ -37,7 +37,7 @@ const REPLIES: [string, string][] = [
   ['Site visit invite', 'Namaste {name}, you are welcome to visit us any day between 10 AM and 6 PM. Saturdays get busy, so please tell us a time and we will keep the hall ready for you.'],
   ['Quote follow-up', 'Namaste {name}, just checking whether you had a chance to look at our quotation for {date}. Happy to adjust the package if anything does not fit.'],
   ['Date is taken', 'Namaste {name}, we are sorry — {date} is already booked. We have availability two days before and after; would either work for your family?'],
-  ['Thank you after the event', 'Dhanyabad {name}! It was an honour to be part of your wedding. If you have a minute, a review on Vivah would help us a lot.'],
+  ['Thank you after the event', 'Thank you, {name}! It was an honour to be part of your wedding. If you have a minute, a review on Vivah would help us a lot.'],
 ];
 
 export function SavedReplies() {
@@ -323,7 +323,7 @@ export function BusinessHours() {
     close: '19:00',
     closedDays: ['Saturday'] as string[],
     away: false as boolean,
-    awayMessage: 'Namaste! We are away for a family festival and will reply by tomorrow evening. For urgent bookings call us directly. Dhanyabad!',
+    awayMessage: 'Namaste! We are away for a family festival and will reply by tomorrow evening. For urgent bookings call us directly. Thank you!',
   });
   const weekday = DAYS[new Date().getDay()];
   const openToday = !s.closedDays.includes(weekday);

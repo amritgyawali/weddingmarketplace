@@ -7,6 +7,7 @@ Every exported symbol in `src/components/detail/`, file by file. The guide that 
 ## Files
 
 - [`DetailParts.tsx`](#detailpartstsx) (6 exports)
+- [`HeroGallery.tsx`](#herogallerytsx) (1 exports)
 - [`ListingAvailability.tsx`](#listingavailabilitytsx) (1 exports)
 
 ## DetailParts.tsx
@@ -72,6 +73,22 @@ InfoTile({ icon, label, value }: { icon: React.ComponentProps<typeof Ionicons>['
 ```
 
 _No JSDoc yet._
+
+## HeroGallery.tsx
+
+Source: [src/components/detail/HeroGallery.tsx](../../../src/components/detail/HeroGallery.tsx)
+
+### `HeroGallery`
+
+*component* · [src/components/detail/HeroGallery.tsx:16](../../../src/components/detail/HeroGallery.tsx#L16)
+
+```ts
+HeroGallery({ images, width, height }: { images: PhotoKey[]; width: number; height: number })
+```
+
+The photo strip at the top of a venue or vendor page, with a "12 photos"
+badge. Tapping a photo or the badge opens every photo full screen, with a
+close (X) button.
 
 ## ListingAvailability.tsx
 

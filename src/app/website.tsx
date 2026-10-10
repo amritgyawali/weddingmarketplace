@@ -229,7 +229,7 @@ function Builder({ project, readOnly }: { project: Project; readOnly: boolean })
                 <KButton
                   label="Add"
                   size="sm"
-                  disabled={!question.trim()}
+                  missing={!question.trim() && 'Type the question for your guests first'}
                   onPress={() => {
                     set({ rsvpQuestions: [...site.rsvpQuestions, { id: uid('q'), q: question.trim(), kind: 'text' }] });
                     setQuestion('');

@@ -7,7 +7,7 @@ import { useEffect, useRef, useState } from 'react';
 import { FlatList, Linking, Pressable, StyleSheet, TextInput, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { Avatar, ChoiceChips, KButton, KField } from '@/components/kit';
+import { Avatar, ChoiceChips, KButton, KField, showMissing } from '@/components/kit';
 import { Calendar } from '@/components/ui/Calendar';
 import { triggerHaptic } from '@/components/ui/PressableScale';
 import { Sheet } from '@/components/ui/Sheet';
@@ -17,6 +17,7 @@ import { inputReset } from '@/constants/theme';
 import { photo } from '@/constants/images';
 import { addToGoogleCalendar } from '@/services/exporters';
 import { quoteTotals } from '@/services/quotes';
+import { useDraft } from '@/store/drafts';
 import { useDb } from '@/store/useDb';
 import { useAccount } from '@/store/useSession';
 import { ROLE_MARK, ROLE_THEMES } from '@/theme/roles';
@@ -27,7 +28,7 @@ import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard'
 import { tr } from '@/i18n';
 
 const QUICK_REPLIES: Record<string, string[]> = {
-  customer: ['Dhanyabad!', 'Can we schedule a call?', 'Please share the updated quote', 'Is this date available?'],
+  customer: ['Thank you!', 'Can we schedule a call?', 'Please share the updated quote', 'Is this date available?'],
   vendor: ['Thanks for reaching out! Sharing our packages now.', 'The date is available — shall I hold it?', 'Can we do a site visit this weekend?', 'Advance of 30% confirms the booking.'],
   platform: ['I’ve shared the updated quotation.', 'Your provider has confirmed.', 'Reminder: your next instalment is due soon.', 'I’ll call you in 10 minutes.'],
   freelancer: ['On my way.', 'Reached the venue.', 'Could you share the exact location?', 'Sharing raw files tonight.'],
@@ -142,7 +143,8 @@ export function ThreadView({ thread }: { thread: Thread }) {
   const quotes = useDb((s) => s.quotes);
   const sendMessage = useDb((s) => s.sendMessage);
   const markRead = useDb((s) => s.markThreadRead);
-  const [text, setText] = useState('');
+  // An unsent message stays in the box (and on the device) until it is sent.
+  const [text, setText] = useDraft(`chat:${account.id}:${thread.id}`, '');
   const [menu, setMenu] = useState(false);
   const [meeting, setMeeting] = useState(false);
   const [meetingTitle, setMeetingTitle] = useState('Call with your coordinator');
@@ -258,9 +260,9 @@ export function ThreadView({ thread }: { thread: Thread }) {
               placeholder={tr('Message')}
               placeholderTextColor={t.c.subtle}
               multiline
-              style={[styles.input, inputReset, { color: t.c.textStrong, fontFamily: t.fonts.regular, backgroundColor: t.c.surfaceAlt }]}
+              style={[styles.input, { color: t.c.textStrong, fontFamily: t.fonts.regular, backgroundColor: t.c.surfaceAlt }, inputReset]}
             />
-            <Pressable onPress={() => send()} disabled={!text.trim()} accessibilityLabel="Send" style={[styles.circle, { backgroundColor: text.trim() ? t.c.primary : t.c.surfaceAlt }]}>
+            <Pressable onPress={() => (text.trim() ? send() : showMissing('Type a message first'))} accessibilityLabel="Send" style={[styles.circle, { backgroundColor: text.trim() ? t.c.primary : t.c.surfaceAlt }]}>
               <Ionicons name="send" size={18} color={text.trim() ? t.c.onPrimary : t.c.subtle} />
             </Pressable>
           </View>

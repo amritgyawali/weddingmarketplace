@@ -70,7 +70,7 @@ function RecordScreen() {
       ) : (
         <FieldEditor name={id} value={draft} onChange={update} />
       )}
-      <KButton label={dirty ? 'Save changes' : 'Saved'} icon="checkmark" size="lg" disabled={!dirty} onPress={submit} />
+      <KButton label={dirty ? 'Save changes' : 'Saved'} icon="checkmark" size="lg" missing={!dirty && 'Nothing has changed yet. Edit a field, then save.'} onPress={submit} />
       {!isSettings && key !== 'audit' && (
         <>
           <KButton label="Duplicate" icon="copy-outline" variant="secondary" onPress={duplicate} />

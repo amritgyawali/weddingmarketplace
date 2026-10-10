@@ -258,7 +258,7 @@ const SUGGESTIONS: Record<SocialIntent, string> = {
   visit: 'You are most welcome to visit, {name}. Which day and time suit you? We are open 9 am to 7 pm.',
   booking: 'Wonderful! To hold your date we take a small advance. Shall we send the quotation and payment details?',
   complaint: 'We are sorry to hear this, {name}. Please share your number and the manager will call you today.',
-  thanks: 'Dhanyabad {name}! It means a lot to us.',
+  thanks: 'Thank you, {name}! It means a lot to us.',
 };
 
 /** Up to three ready replies for what the customer asked, filled in for this business. */

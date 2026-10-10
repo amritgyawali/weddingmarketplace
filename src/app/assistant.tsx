@@ -15,6 +15,7 @@ import Animated, {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { VendorMiniCard, VenueMiniCard } from '@/components/listing/MiniCards';
+import { showMissing } from '@/components/kit';
 import { PressableScale, triggerHaptic } from '@/components/ui/PressableScale';
 import { Text } from '@/components/ui/Text';
 import { BRAND } from '@/constants/brand';
@@ -246,8 +247,8 @@ export default function AssistantScreen() {
               returnKeyType="send"
             />
             <PressableScale
-              onPress={() => send(input)}
-              disabled={!canSend}
+              onPress={() => (input.trim() ? send(input) : showMissing('Type your question first'))}
+              disabled={thinking}
               accessibilityLabel="Send message"
               style={[styles.send, { backgroundColor: canSend ? colors.primary : colors.bgMuted }]}>
               <Ionicons name="arrow-up" size={20} color={canSend ? colors.white : colors.textSubtle} />

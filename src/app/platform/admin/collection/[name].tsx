@@ -106,7 +106,7 @@ function CollectionScreen() {
         {selecting ? (
           <>
             <KButton label="Cancel" size="sm" variant="ghost" onPress={() => { setSelecting(false); setSelected([]); }} />
-            <KButton label={`Delete ${selected.length}`} size="sm" variant="danger" icon="trash-outline" disabled={!selected.length} onPress={deleteSelected} />
+            <KButton label={`Delete ${selected.length}`} size="sm" variant="danger" icon="trash-outline" missing={!selected.length && 'Tick the records to delete first'} onPress={deleteSelected} />
           </>
         ) : (
           records.length > 0 && <KButton label="Select" size="sm" variant="secondary" icon="checkbox-outline" onPress={() => setSelecting(true)} />

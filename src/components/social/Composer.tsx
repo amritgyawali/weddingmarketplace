@@ -85,6 +85,16 @@ export function SocialComposer({ postId, at }: { postId?: string; at?: string })
   const draft = { caption, overrides, media, networks, link, scheduledAt: scheduledAt ?? undefined };
   const checks = checkPost(draft, accounts, new Date().toISOString());
   const ready = postReady(checks) && (when === 'now' || !!scheduledAt) && uploading === 0;
+  const blocked = checks.find((c) => c.errors.length);
+  const notReady = ready
+    ? null
+    : uploading > 0
+      ? 'Wait for the photos to finish uploading'
+      : !checks.length
+        ? 'Pick at least one network to post to'
+        : blocked
+          ? `${NETWORK_BY_ID[blocked.network].label}: ${blocked.errors[0]}`
+          : 'Pick the date and time to schedule the post';
   const text = editing === 'main' ? caption : (overrides[editing] ?? '');
   const setText = (v: string) => (editing === 'main' ? setCaption(v) : setOverrides({ ...overrides, [editing]: v }));
   const limitNets = (editing === 'main' ? networks.filter((n) => !overrides[n]?.trim()) : [editing]).map((n) => NETWORK_BY_ID[n]);
@@ -392,8 +402,8 @@ export function SocialComposer({ postId, at }: { postId?: string; at?: string })
         )}
       </ScrollView>
       <View style={[styles.footer, { borderTopColor: t.c.border, backgroundColor: t.c.surface }]}>
-        <KButton label="Save draft" variant="secondary" onPress={onDraft} disabled={!caption.trim() && media.length === 0} style={{ flex: 1 }} />
-        <KButton label={when === 'later' ? 'Schedule' : 'Publish now'} icon={when === 'later' ? 'calendar-outline' : 'paper-plane-outline'} onPress={onGo} disabled={!ready} loading={busy} style={{ flex: 1.4 }} />
+        <KButton label="Save draft" variant="secondary" onPress={onDraft} missing={!caption.trim() && media.length === 0 && 'Write a caption or add a photo first'} style={{ flex: 1 }} />
+        <KButton label={when === 'later' ? 'Schedule' : 'Publish now'} icon={when === 'later' ? 'calendar-outline' : 'paper-plane-outline'} onPress={onGo} missing={notReady} loading={busy} style={{ flex: 1.4 }} />
       </View>
 
       <Sheet visible={library} onClose={() => setLibrary(false)} title="Your portfolio">

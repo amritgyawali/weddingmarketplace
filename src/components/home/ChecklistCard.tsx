@@ -69,7 +69,7 @@ function CelebrationTasks() {
 
   return (
     <View style={styles.section}>
-      <SectionHeader title={`${exp.vocab.planTitle}: to do`} actionLabel="See all" onAction={() => router.push('/my-wedding?tab=tasks')} />
+      <SectionHeader title={`${exp.vocab.planTitle}: to do`} onAction={() => router.push('/my-wedding?tab=tasks')} />
       <View style={styles.card}>
         <View style={styles.summary}>
           <Text size={14} color={colors.textBody}>
@@ -140,7 +140,7 @@ function WeddingChecklist() {
 
   return (
     <View style={styles.section}>
-      <SectionHeader title="Checklist" actionLabel="See all" onAction={() => router.push('/checklist?tab=guide')} />
+      <SectionHeader title="Checklist" onAction={() => router.push('/checklist?tab=guide')} />
       <View style={styles.card}>
         <View style={styles.summary}>
           <Text size={14} color={colors.textBody}>

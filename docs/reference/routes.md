@@ -55,7 +55,7 @@ Every file in `src/app/` is a route (Expo Router). Layouts (`_layout.tsx`) defin
 | `/tool/[id]` | screen | `CoupleTool` | [tool/[id].tsx](../../src/app/tool/%5Bid%5D.tsx) | One couple planning tool (or why it isn't part of this celebration). |
 | `/tools` | screen | `CoupleTools` | [tools.tsx](../../src/app/tools.tsx) | Extra planning tools for the couple, picked for what they are celebrating. |
 | `/vendor/[id]` | screen | `VendorDetailScreen` | [vendor/[id].tsx](../../src/app/vendor/%5Bid%5D.tsx) |  |
-| `/vendors` (tabs) | screen | `VendorsTab` | [(tabs)/vendors.tsx](../../src/app/%28tabs%29/vendors.tsx) | Vendors tab: an editorial index of every service. The first category is a full-width feature, the rest a grid of tall photo cards with serif captions; a card opens a sheet with its services and a "Se… |
+| `/vendors` (tabs) | screen | `VendorsTab` | [(tabs)/vendors.tsx](../../src/app/%28tabs%29/vendors.tsx) | Vendors tab: an editorial index of every service. The first category is a full-width feature, the rest a grid of tall photo cards with serif captions; a card opens a sheet with its services and a "Vi… |
 | `/vendors/[category]` | screen | `VendorListingScreen` | [vendors/[category].tsx](../../src/app/vendors/%5Bcategory%5D.tsx) |  |
 | `/venue/[id]` | screen | `VenueDetailScreen` | [venue/[id].tsx](../../src/app/venue/%5Bid%5D.tsx) |  |
 | `/venues` (tabs) | screen | `VenuesTab` | [(tabs)/venues.tsx](../../src/app/%28tabs%29/venues.tsx) |  |

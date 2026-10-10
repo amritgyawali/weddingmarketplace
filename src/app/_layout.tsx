@@ -19,6 +19,7 @@ import { useHydrated } from '@/hooks/useHydrated';
 import { useTelemetry } from '@/hooks/useTelemetry';
 import { I18nProvider, usePrefs } from '@/i18n';
 import { installActionToasts } from '@/store/actionToasts';
+import { loadDrafts } from '@/store/drafts';
 import { useAppStore } from '@/store/useAppStore';
 import { useDb } from '@/store/useDb';
 import { logout } from '@/services/auth';
@@ -37,6 +38,9 @@ installActionToasts();
 
 // Shake to report a bug (development and test builds): keep recent console errors for the report.
 installBugReporter();
+
+// Half-filled forms saved on this device (reviews, enquiries, tasks…).
+loadDrafts();
 
 // Refetch stale queries when the app returns to the foreground.
 AppState.addEventListener('change', (status) => {

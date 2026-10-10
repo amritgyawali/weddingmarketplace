@@ -4,8 +4,9 @@ import { Pressable, StyleSheet, View, type StyleProp, type ViewStyle } from 'rea
 
 import { Illustration, Medallion, type ArtName } from '@/components/ui/Illustration';
 import { Loader } from '@/components/ui/Loader';
-import { PressableScale } from '@/components/ui/PressableScale';
+import { PressableScale, triggerHaptic } from '@/components/ui/PressableScale';
 import { Text } from '@/components/ui/Text';
+import { toast } from '@/components/ui/Toast';
 import { colors } from '@/constants/theme';
 import { statusLabel, statusTone } from '@/theme/roles';
 import { useRoleTheme } from '@/theme/RoleTheme';
@@ -54,6 +55,8 @@ export function KButton({
   icon,
   loading,
   disabled,
+  missing,
+  onMissing,
   size = 'md',
   style,
 }: {
@@ -63,6 +66,14 @@ export function KButton({
   icon?: IconName;
   loading?: boolean;
   disabled?: boolean;
+  /**
+   * What the person still has to fill in ("Enter a board name"). The button
+   * then looks dimmed but stays tappable, and a tap shows this message
+   * instead of doing nothing. Use `disabled` only when no input can help.
+   */
+  missing?: string | false | null;
+  /** Called on a tap while `missing` is set (e.g. `useFormCheck().reveal` to mark the empty fields). */
+  onMissing?: () => void;
   size?: 'sm' | 'md' | 'lg';
   style?: StyleProp<ViewStyle>;
 }) {
@@ -78,14 +89,23 @@ export function KButton({
   const height = size === 'sm' ? 34 : size === 'lg' ? 50 : 42;
   return (
     <PressableScale
-      haptic
-      onPress={onPress}
+      haptic={!missing}
+      onPress={
+        missing
+          ? () => {
+              showMissing(missing);
+              onMissing?.();
+            }
+          : onPress
+      }
       disabled={disabled || loading}
       accessibilityLabel={label}
+      accessibilityHint={missing || undefined}
       style={[
         styles.button,
         { height, backgroundColor: p.bg, borderColor: p.border, borderRadius: t.role === 'platform' ? 6 : 8 },
         style,
+        !!missing && !disabled && styles.missing,
       ]}>
       {loading ? (
         <Loader size={7} color={p.fg} />
@@ -99,6 +119,12 @@ export function KButton({
       )}
     </PressableScale>
   );
+}
+
+/** Tells the person what is still missing when they tap an incomplete form's button. */
+export function showMissing(message: string) {
+  triggerHaptic('medium');
+  toast(message, 'warning-outline');
 }
 
 export function StatusPill({ status, label }: { status: string; label?: string }) {
@@ -207,6 +233,8 @@ export function KeyValue({ label, value, strong }: { label: string; value: strin
 
 const styles = StyleSheet.create({
   button: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6, paddingHorizontal: 16, borderWidth: 1 },
+  /** Same dimming as a disabled button: the form isn't complete yet. */
+  missing: { opacity: 0.45 },
   pill: { flexDirection: 'row', alignItems: 'center', alignSelf: 'flex-start', gap: 5, borderRadius: 4, paddingHorizontal: 7, paddingVertical: 2 },
   pillDot: { width: 5, height: 5, borderRadius: 3 },
   sectionTitle: { flexDirection: 'row', alignItems: 'baseline', justifyContent: 'space-between', gap: 12, marginBottom: 10 },

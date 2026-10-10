@@ -72,7 +72,7 @@ export function ApplicantsList({ gig }: { gig: Gig }) {
                 <KButton
                   label="Hire"
                   size="sm"
-                  disabled={full}
+                  missing={full && 'Every place on this gig is filled. Add more people needed to hire again.'}
                   style={{ flex: 1 }}
                   onPress={() => {
                     setStatus(gig.id, a.id, 'hired');
@@ -151,7 +151,7 @@ export function GigManage({ gig }: { gig: Gig }) {
                     label={invited ? 'Invited' : 'Invite'}
                     size="sm"
                     variant={invited ? 'ghost' : 'secondary'}
-                    disabled={invited}
+                    missing={invited && `${r.freelancer.name} is already invited`}
                     onPress={() => {
                       invite(gig.id, r.freelancer.id);
                       toast(`Invited ${r.freelancer.name}`, 'paper-plane');
@@ -181,7 +181,7 @@ export function GigManage({ gig }: { gig: Gig }) {
                     <View style={{ flex: 1 }}>
                       <KField placeholder="Answer" value={answers[q.id] ?? ''} onChangeText={(v) => setAnswers((s) => ({ ...s, [q.id]: v }))} />
                     </View>
-                    <KButton label="Reply" size="sm" disabled={!answers[q.id]?.trim()} onPress={() => answer(gig.id, q.id, answers[q.id].trim())} />
+                    <KButton label="Reply" size="sm" missing={!answers[q.id]?.trim() && 'Type your answer first'} onPress={() => answer(gig.id, q.id, answers[q.id].trim())} />
                   </View>
                 )}
               </Card>

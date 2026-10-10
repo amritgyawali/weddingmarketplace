@@ -154,7 +154,7 @@ function ProposeSheet({ project, requirement, providerId, onClose }: { project: 
         <KButton
           label="Send booking request"
           icon="paper-plane"
-          disabled={!amount}
+          missing={!amount && 'Enter the price for this booking'}
           onPress={() => {
             proposeBooking(project.id, requirement.id, providerId!, { price: amount, model, rate, hold });
             toast(`Request sent to ${provider?.name}`, 'paper-plane');

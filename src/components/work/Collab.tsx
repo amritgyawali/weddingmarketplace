@@ -34,11 +34,11 @@ export function NotesPanel({ project }: { project: Project }) {
           Private internal notes — never shown to the customer or providers.
         </Text>
       </View>
-      <KField placeholder="e.g. Customer is price sensitive on catering" value={text} onChangeText={setText} multiline />
+      <KField placeholder="e.g. Customer is price sensitive on catering" value={text} onChangeText={setText} multiline maxLength={500} />
       <KButton
         label="Add note"
         size="sm"
-        disabled={!text.trim()}
+        missing={!text.trim() && 'Write the note first'}
         onPress={() => {
           addNote(project.id, { id: account.id, name: account.name }, text);
           setText('');
@@ -125,7 +125,7 @@ export function FilesPanel({ project, mode }: { project: Project; mode: 'custome
         <KButton
           label="Add"
           size="sm"
-          disabled={!/^https?:\/\//.test(link.trim())}
+          missing={!/^https?:\/\//.test(link.trim()) && (link.trim() ? 'Links start with https://' : 'Paste the link first')}
           onPress={() => {
             addFile({ projectId: project.id, folder: target, name: link.trim().replace(/^https?:\/\//, '').slice(0, 40), kind: 'link', uri: link.trim(), storage: 'link', visibility: 'customer', uploadedBy: account.name });
             setLink('');

@@ -430,7 +430,7 @@ function QuoteTab({ project }: { project: Project }) {
           <KButton
             label="Build quote from selected providers"
             icon="construct-outline"
-            disabled={!bookings.length}
+            missing={!bookings.length && 'Select providers in Matching first'}
             onPress={() => {
               const q = draft(project.id);
               if (q) router.push({ pathname: '/platform/quote/[id]', params: { id: q.id } });

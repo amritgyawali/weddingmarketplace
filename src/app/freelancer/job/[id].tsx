@@ -74,7 +74,7 @@ export default function FreelancerJob() {
                 label={canCheckIn ? 'Check in on site' : `Check-in opens on ${formatLongDate(gig.date)}`}
                 icon="location"
                 size="lg"
-                disabled={!canCheckIn}
+                missing={!canCheckIn && `Check-in opens on the day of the job, ${formatLongDate(gig.date)}`}
                 onPress={() => {
                   checkIn(gig.id, app.id);
                   triggerHaptic('success');
@@ -133,12 +133,12 @@ export default function FreelancerJob() {
 
       <Sheet visible={issueOpen} onClose={() => setIssueOpen(false)} title="Report an issue">
         <View style={{ paddingHorizontal: 20, gap: 14 }}>
-          <KField placeholder="What happened?" value={issue} onChangeText={setIssue} multiline />
+          <KField placeholder="What happened?" value={issue} onChangeText={setIssue} multiline maxLength={500} />
           <SeverityPicker value={severity} onChange={setSeverity} />
           <KButton
             label="Send to control room"
             variant="danger"
-            disabled={!issue.trim()}
+            missing={!issue.trim() && 'Describe what happened first'}
             onPress={() => {
               if (!project) return;
               reportIncident(project.id, { eventId: event?.id ?? project.events[0].id, title: issue.trim(), severity, reportedBy: `${account.name} (crew)` });

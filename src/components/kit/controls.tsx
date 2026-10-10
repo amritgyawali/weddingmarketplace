@@ -2,6 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { forwardRef, useState, type ReactNode } from 'react';
 import { Pressable, StyleSheet, TextInput, View, type TextInputProps } from 'react-native';
 
+import { FieldNote } from '@/components/ui/FieldNote';
 import { triggerHaptic } from '@/components/ui/PressableScale';
 import { Text } from '@/components/ui/Text';
 import { inputReset, shadow } from '@/constants/theme';
@@ -14,10 +15,12 @@ import type { IconName } from './primitives';
 /**
  * Labelled input for the role apps. The border darkens while typing, turns
  * red with an error, and the error (or a hint) shows under the field.
- * Placeholders are translated with the rest of the app.
+ * Placeholders are translated with the rest of the app. With `maxLength`
+ * (and optionally `minLength`) a multi-line field shows the allowed length
+ * and a live character count under it.
  */
-export const KField = forwardRef<TextInput, TextInputProps & { label?: string; error?: string | null; prefix?: string; hint?: string; required?: boolean }>(function KField(
-  { label, error, prefix, hint, required, style, multiline, placeholder, onFocus, onBlur, ...rest },
+export const KField = forwardRef<TextInput, TextInputProps & { label?: string; error?: string | null; prefix?: string; hint?: string; required?: boolean; minLength?: number }>(function KField(
+  { label, error, prefix, hint, required, style, multiline, placeholder, onFocus, onBlur, minLength, ...rest },
   ref,
 ) {
   const t = useRoleTheme();
@@ -66,7 +69,9 @@ export const KField = forwardRef<TextInput, TextInputProps & { label?: string; e
         />
         {!!error && <Ionicons name="alert-circle" size={18} color={t.c.danger} style={multiline ? { marginTop: 12 } : undefined} />}
       </View>
-      {error ? (
+      {multiline && (rest.maxLength || minLength) ? (
+        <FieldNote error={error} hint={hint} length={(rest.value ?? '').length} minLength={minLength} maxLength={rest.maxLength} tone={{ danger: t.c.danger, muted: t.c.muted, warning: t.c.warning }} />
+      ) : error ? (
         <Text size={12} color={t.c.danger} accessibilityLiveRegion="polite">
           {error}
         </Text>

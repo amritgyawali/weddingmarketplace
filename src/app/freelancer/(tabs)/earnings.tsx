@@ -43,6 +43,7 @@ export default function Earnings() {
   const [methodOpen, setMethodOpen] = useState(false);
   const [kind, setKind] = useState(account.payoutMethod?.kind ?? 'esewa');
   const [detail, setDetail] = useState(account.payoutMethod?.detail ?? account.phone);
+  const [detailTried, setDetailTried] = useState(false);
 
   const sum = (list: Payable[]) => list.reduce((s, p) => s + p.amount, 0);
   const paid = payables.filter((p) => p.status === 'PAID');
@@ -216,13 +217,14 @@ export default function Earnings() {
       <Sheet visible={methodOpen} onClose={() => setMethodOpen(false)} title="Payout method">
         <View style={{ paddingHorizontal: 20, gap: 14 }}>
           <ChoiceChips options={METHODS.map((m) => m.label)} selected={[METHODS.find((m) => m.id === kind)!.label]} onToggle={(label) => setKind(METHODS.find((m) => m.label === label)!.id)} />
-          <KField label={METHODS.find((m) => m.id === kind)!.hint} value={detail} onChangeText={setDetail} />
+          <KField label={METHODS.find((m) => m.id === kind)!.hint} required value={detail} onChangeText={setDetail} error={detailTried && detail.trim().length < 5 ? (detail.trim() ? 'Enter at least 5 characters' : 'Enter your account or wallet number') : null} />
           <Text size={12} color={t.c.muted}>
             The name on the account must match your verified citizenship. Vivah never asks for your PIN or password.
           </Text>
           <KButton
             label="Save payout method"
-            disabled={detail.trim().length < 5}
+            missing={detail.trim().length < 5 && (detail.trim() ? 'Your payout details need at least 5 characters' : 'Enter your account or wallet number')}
+            onMissing={() => setDetailTried(true)}
             onPress={() => {
               updateAccount(account.id, { payoutMethod: { kind, detail: detail.trim() } });
               setMethodOpen(false);

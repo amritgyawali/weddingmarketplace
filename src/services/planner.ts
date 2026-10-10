@@ -438,7 +438,7 @@ export function enquiryText(project: Project, serviceId: string): string {
   const req = project.requirements.find((r) => r.serviceId === serviceId);
   const dates = project.events.filter((e) => !req || req.eventIds.includes(e.id)).map((e) => `${e.name} ${e.date ? formatShortDate(e.date) : '(date TBC)'}`);
   const budget = req?.budgetMax ? ` Our budget is around ${formatMoney(req.budgetMax)}${findService(serviceId)?.unit === 'per plate' ? ' per plate' : ''}.` : '';
-  return `Namaste! We're planning our ${project.eventType === 'WEDDING' ? 'wedding' : 'event'} in ${project.city} for about ${project.guests} guests (${dates.join(', ')}). We're looking for ${serviceName(serviceId).toLowerCase()}${req?.styles.length ? ` in a ${req.styles.join('/').toLowerCase()} style` : ''}.${budget} Could you share availability, packages and what's included? Dhanyabad!`;
+  return `Namaste! We're planning our ${project.eventType === 'WEDDING' ? 'wedding' : 'event'} in ${project.city} for about ${project.guests} guests (${dates.join(', ')}). We're looking for ${serviceName(serviceId).toLowerCase()}${req?.styles.length ? ` in a ${req.styles.join('/').toLowerCase()} style` : ''}.${budget} Could you share availability, packages and what's included? Thank you!`;
 }
 
 export const QUESTIONS_TO_ASK: Record<string, string[]> = {

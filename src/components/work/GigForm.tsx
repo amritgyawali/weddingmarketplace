@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { ChoiceChips, KButton, KField } from '@/components/kit';
+import { ChoiceChips, KButton, KField, showMissing } from '@/components/kit';
 import { Calendar } from '@/components/ui/Calendar';
 import { Sheet } from '@/components/ui/Sheet';
 import { Text } from '@/components/ui/Text';
@@ -46,13 +46,14 @@ export function GigForm({ projects, defaultCity, initialProjectId, onSubmit }: {
 
   const submit = () => {
     const next = {
-      title: title.trim().length < 5 ? 'Give the gig a clear title' : null,
+      title: !title.trim() ? 'Enter a title for the gig' : title.trim().length < 5 ? 'Give the gig a clear title (at least 5 characters)' : null,
       date: !date ? 'Pick the gig date' : null,
       pay: !(Number(pay) > 0) ? 'Enter the pay per person' : null,
       time: !/^\d{1,2}:\d{2}$/.test(startTime) ? 'Use HH:MM' : null,
     };
     setErrors(next);
-    if (Object.values(next).some(Boolean)) return;
+    const problem = Object.values(next).find(Boolean);
+    if (problem) return showMissing(problem);
     const event = project?.events.find((e) => e.id === eventId);
     onSubmit({
       title: title.trim(),
@@ -77,7 +78,7 @@ export function GigForm({ projects, defaultCity, initialProjectId, onSubmit }: {
   return (
     <View style={{ flex: 1 }}>
       <ScrollView contentContainerStyle={{ padding: 16, gap: 16, paddingBottom: 120 }} keyboardShouldPersistTaps="handled">
-        <KField label="Gig title" placeholder="e.g. Second photographer for the reception" value={title} onChangeText={setTitle} error={errors.title} />
+        <KField label="Gig title" required placeholder="e.g. Second photographer for the reception" value={title} onChangeText={setTitle} error={errors.title} maxLength={80} />
         <View style={{ gap: 6 }}>
           <Text size={13} weight="semibold" color={t.c.muted}>
             Role needed
@@ -127,7 +128,7 @@ export function GigForm({ projects, defaultCity, initialProjectId, onSubmit }: {
         </View>
         <View style={{ gap: 6 }}>
           <Text size={13} weight="semibold" color={t.c.muted}>
-            Date
+            Date <Text size={13} color={t.c.danger}>*</Text>
           </Text>
           <Pressable onPress={() => setDateOpen(true)} style={[styles.date, { borderColor: errors.date ? t.c.danger : t.c.border, backgroundColor: t.dark ? t.c.surfaceAlt : t.c.surface }]}>
             <Ionicons name="calendar-outline" size={18} color={t.c.primary} />
@@ -143,7 +144,7 @@ export function GigForm({ projects, defaultCity, initialProjectId, onSubmit }: {
         </View>
         <View style={styles.row}>
           <View style={{ flex: 1 }}>
-            <KField label="Start time" value={startTime} onChangeText={setStartTime} placeholder="10:00" error={errors.time} />
+            <KField label="Start time" required value={startTime} onChangeText={setStartTime} placeholder="10:00" error={errors.time} />
           </View>
           <View style={{ flex: 1 }}>
             <KField label="Hours" value={hours} onChangeText={setHours} keyboardType="number-pad" />
@@ -151,7 +152,7 @@ export function GigForm({ projects, defaultCity, initialProjectId, onSubmit }: {
         </View>
         <View style={styles.row}>
           <View style={{ flex: 1.4 }}>
-            <KField label="Pay per person (freelancer receives)" value={pay} onChangeText={(v) => setPay(v.replace(/\D/g, ''))} keyboardType="number-pad" prefix="NPR" error={errors.pay} />
+            <KField label="Pay per person (freelancer receives)" required value={pay} onChangeText={(v) => setPay(v.replace(/\D/g, ''))} keyboardType="number-pad" prefix="NPR" error={errors.pay} />
           </View>
           <View style={{ flex: 1 }}>
             <KField label="People needed" value={slots} onChangeText={setSlots} keyboardType="number-pad" />
@@ -168,7 +169,7 @@ export function GigForm({ projects, defaultCity, initialProjectId, onSubmit }: {
           </Text>
           <ChoiceChips options={EQUIPMENT} selected={equipment} onToggle={(v) => setEquipment((cur) => (cur.includes(v) ? cur.filter((x) => x !== v) : [...cur, v]))} />
         </View>
-        <KField label="Description" value={description} onChangeText={setDescription} multiline placeholder="What will they do? Dress code, reporting point, deliverables…" />
+        <KField label="Description" value={description} onChangeText={setDescription} multiline maxLength={800} placeholder="What will they do? Dress code, reporting point, deliverables…" />
         <KField label="Other requirements (comma separated)" value={requirements} onChangeText={setRequirements} placeholder="2+ years experience, Nepali & English" />
         <Pressable onPress={() => setEmergency((v) => !v)} style={[styles.emergency, { borderColor: emergency ? t.c.danger : t.c.border }]} accessibilityRole="checkbox" accessibilityState={{ checked: emergency }}>
           <Ionicons name={emergency ? 'medkit' : 'medkit-outline'} size={20} color={emergency ? t.c.danger : t.c.muted} />
@@ -188,7 +189,7 @@ export function GigForm({ projects, defaultCity, initialProjectId, onSubmit }: {
       <Sheet visible={dateOpen} onClose={() => setDateOpen(false)} title="Gig date">
         <View style={{ paddingHorizontal: 20, gap: 14 }}>
           <Calendar value={date} onChange={setDate} />
-          <KButton label="Done" onPress={() => setDateOpen(false)} disabled={!date} />
+          <KButton label="Done" onPress={() => setDateOpen(false)} missing={!date && 'Pick the gig date'} />
         </View>
       </Sheet>
     </View>

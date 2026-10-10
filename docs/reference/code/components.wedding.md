@@ -32,7 +32,7 @@ Source: [src/components/wedding/MyWeddingScreen.tsx](../../../src/components/wed
 
 ### `MyWeddingScreen`
 
-*component* · [src/components/wedding/MyWeddingScreen.tsx:487](../../../src/components/wedding/MyWeddingScreen.tsx#L487)
+*component* · [src/components/wedding/MyWeddingScreen.tsx:489](../../../src/components/wedding/MyWeddingScreen.tsx#L489)
 
 ```ts
 MyWeddingScreen({ inTab }: { inTab?: boolean })

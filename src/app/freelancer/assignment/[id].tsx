@@ -112,7 +112,7 @@ export default function AssignmentScreen() {
         )}
         {a.status === 'CONFIRMED' && (
           <>
-            <KButton label={days <= 0 ? 'Check in on site' : `Check-in opens ${formatLongDate(a.date)}`} icon="location" size="lg" disabled={days > 0} loading={busy} onPress={doCheckIn} />
+            <KButton label={days <= 0 ? 'Check in on site' : `Check-in opens ${formatLongDate(a.date)}`} icon="location" size="lg" missing={days > 0 && `Check-in opens on the day of the job, ${formatLongDate(a.date)}`} loading={busy} onPress={doCheckIn} />
             {days > 0 && <KButton label="Can’t make it" variant="ghost" size="sm" onPress={() => setCantOpen(true)} />}
           </>
         )}
@@ -166,12 +166,12 @@ export default function AssignmentScreen() {
 
       <Sheet visible={issueOpen} onClose={() => setIssueOpen(false)} title="Report an issue">
         <View style={{ paddingHorizontal: 20, gap: 14 }}>
-          <KField placeholder="What happened?" value={issue} onChangeText={setIssue} multiline />
+          <KField placeholder="What happened?" value={issue} onChangeText={setIssue} multiline maxLength={500} />
           <SeverityPicker value={severity} onChange={setSeverity} />
           <KButton
             label="Send to control room"
             variant="danger"
-            disabled={!issue.trim()}
+            missing={!issue.trim() && 'Describe what happened first'}
             onPress={() => {
               reportIncident(project.id, { eventId: event?.id ?? project.events[0].id, title: issue.trim(), severity, reportedBy: `${account.name} (${a.role})` });
               setIssue('');
@@ -186,7 +186,7 @@ export default function AssignmentScreen() {
           <Text size={13} color={t.c.muted}>
             Add completion proof (files handed over, card numbers, notes). The organiser confirms and your payout is released.
           </Text>
-          <KField placeholder="e.g. 2 cards (1,240 RAW) handed to Prakash at 21:10" value={proof} onChangeText={setProof} multiline />
+          <KField placeholder="e.g. 2 cards (1,240 RAW) handed to Prakash at 21:10" value={proof} onChangeText={setProof} multiline maxLength={500} />
           <KButton label="Attach photo" icon="camera-outline" variant="ghost" size="sm" onPress={addProofPhoto} />
           <KButton
             label="Check out & request payout"
@@ -210,7 +210,7 @@ export default function AssignmentScreen() {
           <KButton
             label="Release this job"
             variant="danger"
-            disabled={!reason}
+            missing={!reason && 'Pick a reason first'}
             onPress={() =>
               confirm('Release this job?', 'An emergency gig will go out to other crew.', 'Release', () => {
                 startEmergency(project.id, booking.id, a.id, `${account.name}: ${reason}`);

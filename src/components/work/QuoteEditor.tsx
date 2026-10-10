@@ -5,7 +5,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Card, ChoiceChips, Divider, KButton, KeyValue, KField } from '@/components/kit';
 import { Text } from '@/components/ui/Text';
-import { inputReset } from '@/constants/theme';
+import { inputFont, inputReset } from '@/constants/theme';
 import { serviceName } from '@/data/services';
 import { quoteHtml } from '@/services/documents';
 import { sharePdf } from '@/services/exporters';
@@ -27,18 +27,18 @@ const num = (s: string) => {
 
 function ItemEditor({ item, internal, onChange, onRemove }: { item: QuoteItem; internal: boolean; onChange: (i: QuoteItem) => void; onRemove: () => void }) {
   const t = useRoleTheme();
-  const cell = [styles.cellInput, inputReset, { color: t.c.textStrong, fontFamily: t.fonts.semibold, borderColor: t.c.border, backgroundColor: t.dark ? t.c.surfaceAlt : t.c.bg }];
+  const cell = [styles.cellInput, inputReset, { color: t.c.textStrong, fontFamily: t.fonts.semibold, borderColor: t.c.border, backgroundColor: t.dark ? t.c.surfaceAlt : t.c.bg }, inputFont('600')];
   const model = item.pricingModel ?? 'COMMISSION';
   const revenue = internal ? (model === 'MARKUP' ? lineTotal(item) - (item.cost ?? item.rate) * item.qty : model === 'LEAD_FEE' ? (item.modelRate ?? 2000) : Math.round(lineTotal(item) * (item.modelRate ?? 0.1))) : 0;
   return (
     <View style={[styles.itemCard, { borderColor: t.c.border }]}>
       <View style={styles.itemTop}>
-        <TextInput value={item.title} onChangeText={(title) => onChange({ ...item, title })} placeholder={tr('Item / service')} placeholderTextColor={t.c.subtle} style={[styles.titleInput, inputReset, { color: t.c.textStrong, fontFamily: t.fonts.semibold }]} />
+        <TextInput value={item.title} onChangeText={(title) => onChange({ ...item, title })} placeholder={tr('Item / service')} placeholderTextColor={t.c.subtle} style={[styles.titleInput, inputReset, { color: t.c.textStrong, fontFamily: t.fonts.semibold }, inputFont('600')]} />
         <Pressable onPress={onRemove} hitSlop={10} accessibilityLabel="Remove item">
           <Ionicons name="trash-outline" size={18} color={t.c.danger} />
         </Pressable>
       </View>
-      <TextInput value={item.description ?? ''} onChangeText={(description) => onChange({ ...item, description })} placeholder={tr("What's included (optional)")} placeholderTextColor={t.c.subtle} style={[inputReset, { color: t.c.text, fontFamily: t.fonts.regular, fontSize: 13 }]} />
+      <TextInput value={item.description ?? ''} onChangeText={(description) => onChange({ ...item, description })} placeholder={tr("What's included (optional)")} placeholderTextColor={t.c.subtle} style={[{ color: t.c.text, fontFamily: t.fonts.regular, fontSize: 13 }, inputReset]} />
       {!!item.providerName && (
         <Text size={11} color={t.c.muted}>
           {serviceName(item.serviceId ?? '')} · {item.providerName}
@@ -298,7 +298,7 @@ export function QuoteEditor({
         )}
       </ScrollView>
       <View style={[styles.footer, { backgroundColor: t.c.surface, borderTopColor: t.c.border, paddingBottom: Math.max(insets.bottom, 12) }]}>
-        <KButton label="Save draft" variant="secondary" onPress={() => submit(false)} style={{ flex: 1 }} disabled={locked} />
+        <KButton label="Save draft" variant="secondary" onPress={() => submit(false)} style={{ flex: 1 }} missing={locked && `This quote was ${quote.status}, so it can no longer be edited`} />
         <KButton label="Preview & send" icon="eye-outline" onPress={() => setPreview(true)} style={{ flex: 1.4 }} />
       </View>
     </View>

@@ -97,7 +97,7 @@ One conversation: messages, reply window, suggested and saved replies, notes, la
 
 ### `openThreadRoute`
 
-*function* · [src/components/social/Inbox.tsx:614](../../../src/components/social/Inbox.tsx#L614)
+*function* · [src/components/social/Inbox.tsx:613](../../../src/components/social/Inbox.tsx#L613)
 
 ```ts
 openThreadRoute(id: string)

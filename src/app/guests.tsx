@@ -4,7 +4,7 @@ import { router } from 'expo-router';
 import { useState } from 'react';
 import { FlatList, Pressable, StyleSheet, View } from 'react-native';
 
-import { Avatar, Card, ChoiceChips, EmptyBlock, Fab, KButton, KField, Segmented, StatTile } from '@/components/kit';
+import { Avatar, Card, ChoiceChips, EmptyBlock, Fab, KButton, KField, Segmented, showMissing, StatTile } from '@/components/kit';
 import { ToolScreen, toolStyles } from '@/components/planner/ToolScreen';
 import { Sheet } from '@/components/ui/Sheet';
 import { Text } from '@/components/ui/Text';
@@ -65,15 +65,16 @@ function GuestSheet({ project, guest, onClose }: { project: Project; guest: Gues
   const checkIn = useDb((s) => s.checkInGuest);
   const live = useDb((s) => (guest?.id ? s.guests.find((g) => g.id === guest.id) : undefined));
   const [draft, setDraft] = useState<Guest | null>(guest);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<{ field: 'name' | 'phone'; message: string } | null>(null);
   if (!guest || !draft) return null;
   const isNew = !guest.id;
   const invites = live?.invites ?? draft.invites;
   const set = (patch: Partial<Guest>) => setDraft((d) => (d ? { ...d, ...patch } : d));
 
   const save = () => {
-    if (draft.name.trim().length < 2) return setError('Enter the guest’s name');
-    if (draft.phone && !isNepalMobile(draft.phone)) return setError('Enter a valid Nepali mobile number');
+    const problem = draft.name.trim().length < 2 ? { field: 'name' as const, message: draft.name.trim() ? 'Enter the guest’s full name' : 'Enter the guest’s name' } : draft.phone && !isNepalMobile(draft.phone) ? { field: 'phone' as const, message: 'Enter a valid Nepali mobile number (98XXXXXXXX)' } : null;
+    setError(problem);
+    if (problem) return showMissing(problem.message);
     const { invites: inv, ...rest } = draft;
     if (isNew) {
       const created = addGuest({ ...rest, name: draft.name.trim(), eventIds: inv.map((i) => i.eventId) });
@@ -88,10 +89,10 @@ function GuestSheet({ project, guest, onClose }: { project: Project; guest: Gues
   return (
     <Sheet visible onClose={onClose} title={isNew ? 'Add guest' : draft.name} footer={<KButton label={isNew ? 'Add guest' : 'Save changes'} onPress={save} />}>
       <ScrollView style={{ maxHeight: 560 }} contentContainerStyle={{ paddingHorizontal: 20, gap: 14, paddingBottom: 12 }} keyboardShouldPersistTaps="handled">
-        <KField label="Full name" value={draft.name} onChangeText={(v) => set({ name: v })} placeholder="e.g. Hari Bahadur Shrestha" error={error} />
+        <KField label="Full name" value={draft.name} onChangeText={(v) => set({ name: v })} placeholder="e.g. Hari Bahadur Shrestha" required error={error?.field === 'name' ? error.message : null} />
         <View style={toolStyles.row}>
           <View style={{ flex: 1 }}>
-            <KField label="Mobile" value={draft.phone ?? ''} onChangeText={(v) => set({ phone: v.replace(/\D/g, '').slice(0, 10) || undefined })} keyboardType="phone-pad" placeholder="98XXXXXXXX" />
+            <KField label="Mobile" value={draft.phone ?? ''} onChangeText={(v) => set({ phone: v.replace(/\D/g, '').slice(0, 10) || undefined })} keyboardType="phone-pad" placeholder="98XXXXXXXX" error={error?.field === 'phone' ? error.message : null} />
           </View>
           <View style={{ flex: 1 }}>
             <KField label="Household" value={draft.household ?? ''} onChangeText={(v) => set({ household: v || undefined })} placeholder="Shrestha family" />
@@ -272,7 +273,7 @@ function ContactsSheet({ visible, onClose, onImport }: { visible: boolean; onClo
         contacts ? (
           <KButton
             label={`Import ${picked.length} guest${picked.length === 1 ? '' : 's'}`}
-            disabled={!picked.length}
+            missing={!picked.length && 'Tick the contacts you want to add first'}
             onPress={() => {
               onImport((contacts ?? []).filter((c) => picked.includes(c.id)));
               setPicked([]);
@@ -459,7 +460,7 @@ function GuestList({ project, readOnly }: { project: Project; readOnly: boolean 
               ))}
             </View>
             <View style={toolStyles.row}>
-              <KButton label="Import / export" icon="swap-vertical" variant="secondary" size="sm" style={{ flex: 1 }} onPress={() => setMenuOpen(true)} disabled={readOnly} />
+              <KButton label="Import / export" icon="swap-vertical" variant="secondary" size="sm" style={{ flex: 1 }} onPress={() => setMenuOpen(true)} missing={readOnly && 'You have view-only access. Ask the couple to make you an editor.'} />
               <KButton label="Send invites" icon="paper-plane-outline" size="sm" style={{ flex: 1 }} onPress={() => router.push('/invitations')} />
             </View>
           </View>

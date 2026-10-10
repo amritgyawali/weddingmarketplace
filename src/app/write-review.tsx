@@ -46,6 +46,12 @@ export default function WriteReviewScreen() {
   const matches = q.trim().length >= 2 ? PROVIDERS.filter((p) => p.name.toLowerCase().includes(q.trim().toLowerCase())).slice(0, 8) : [];
 
   if (target) {
+    const booking = project?.bookings.find((b) => b.id === target.bookingId);
+    // The booked events first, then the rest of the couple's dated events.
+    const eventDates = (project?.events ?? [])
+      .filter((e) => e.date && e.status !== 'cancelled')
+      .sort((a, b) => Number(!booking?.eventIds.includes(a.id)) - Number(!booking?.eventIds.includes(b.id)) || a.date!.localeCompare(b.date!))
+      .map((e) => ({ label: e.name, date: e.date! }));
     return (
       <View style={styles.root}>
         <ScreenHeader title="Write a review" subtitle={`${target.name} · ${serviceName(target.serviceId)}`} />
@@ -53,6 +59,8 @@ export default function WriteReviewScreen() {
           <ReviewComposer
             serviceId={target.serviceId}
             targetName={target.name}
+            eventDates={eventDates}
+            draftKey={`review:${account.id}:${target.bookingId ?? target.providerId}`}
             onSubmit={(r) => {
               const saved = submitReview({
                 targetKind: 'provider',
@@ -68,8 +76,9 @@ export default function WriteReviewScreen() {
                 text: r.text,
                 photos: [],
                 photoUris: r.photoUris,
+                eventDate: r.eventDate,
               });
-              toast(saved.status === 'published' ? 'Your review is live. Dhanyabad!' : 'Thanks! Your review is with our team for a quick check', 'star');
+              toast(saved.status === 'published' ? 'Your review is live. Thank you!' : 'Thanks! Your review is with our team for a quick check', 'star');
               router.back();
             }}
           />
@@ -141,6 +150,7 @@ export default function WriteReviewScreen() {
                 </View>
                 <Text size={12} color={colors.textMuted}>
                   {'★'.repeat(Math.round(r.overall))} {r.overall.toFixed(1)} · {formatShortDate(r.at)}
+                  {r.eventDate ? ` · Event ${formatShortDate(r.eventDate)}` : ''}
                   {r.verifiedBooking ? ' · ✓ Verified' : ''}
                 </Text>
                 <Text size={13} color={colors.textBody}>

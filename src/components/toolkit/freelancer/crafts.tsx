@@ -186,7 +186,7 @@ export function Setlist() {
                 size="sm"
                 variant="secondary"
                 icon="share-outline"
-                disabled={!entries.length}
+                missing={!entries.length && 'Add songs to the setlist first'}
                 onPress={() =>
                   shareMessage(
                     `${account.name} setlist${job === 'all' ? '' : ` · ${jobs.find((j) => j.id === job)?.label ?? ''}`}\n\n${SET_SECTIONS.map((sec) => {

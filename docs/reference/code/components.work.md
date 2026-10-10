@@ -22,7 +22,7 @@ Every exported symbol in `src/components/work/`, file by file. The guide that ex
 - [`PortfolioManager.tsx`](#portfoliomanagertsx) (1 exports)
 - [`QuoteDocument.tsx`](#quotedocumenttsx) (1 exports)
 - [`QuoteEditor.tsx`](#quoteeditortsx) (1 exports)
-- [`ReviewComposer.tsx`](#reviewcomposertsx) (2 exports)
+- [`ReviewComposer.tsx`](#reviewcomposertsx) (4 exports)
 - [`RunSheet.tsx`](#runsheettsx) (3 exports)
 - [`SegmentFilter.tsx`](#segmentfiltertsx) (1 exports)
 - [`SettingsScreen.tsx`](#settingsscreentsx) (2 exports)
@@ -485,7 +485,7 @@ Source: [src/components/work/ReviewComposer.tsx](../../../src/components/work/Re
 
 ### `FREELANCER_CRITERIA`
 
-*const* · [src/components/work/ReviewComposer.tsx:13](../../../src/components/work/ReviewComposer.tsx#L13)
+*const* · [src/components/work/ReviewComposer.tsx:20](../../../src/components/work/ReviewComposer.tsx#L20)
 
 ```ts
 FREELANCER_CRITERIA= ['Skill', 'Punctuality', 'Behaviour', 'Reliability']
@@ -493,16 +493,39 @@ FREELANCER_CRITERIA= ['Skill', 'Punctuality', 'Behaviour', 'Reliability']
 
 _No JSDoc yet._
 
-### `ReviewComposer`
+### `REVIEW_MIN_CHARS`
 
-*component* · [src/components/work/ReviewComposer.tsx:19](../../../src/components/work/ReviewComposer.tsx#L19)
+*const* · [src/components/work/ReviewComposer.tsx:23](../../../src/components/work/ReviewComposer.tsx#L23)
 
 ```ts
-ReviewComposer({ serviceId, freelancer, targetName, onSubmit, }: { serviceId?: string; freelancer?: boolean; targetName: string; onSubmit: (r: { overall: number; criteria: Record<string, number>; text: string; photoUris: string[] }) =…)
+REVIEW_MIN_CHARS= 10
+```
+
+Allowed length of a review's text.
+
+### `REVIEW_MAX_CHARS`
+
+*const* · [src/components/work/ReviewComposer.tsx:24](../../../src/components/work/ReviewComposer.tsx#L24)
+
+```ts
+REVIEW_MAX_CHARS= 1000
+```
+
+_No JSDoc yet._
+
+### `ReviewComposer`
+
+*component* · [src/components/work/ReviewComposer.tsx:41](../../../src/components/work/ReviewComposer.tsx#L41)
+
+```ts
+ReviewComposer({ serviceId, freelancer, targetName, eventDates = [], draftKey, onSubmit, }: { serviceId?: string; freelancer?: boolean; targetName: string; /** The couple's events with a date, offered as quick choices ("Wedding · 14 F…)
 ```
 
 Category-specific review: overall stars plus the criteria that matter for
 this service (photo quality, food, parking…). Criteria feed matching.
+Optional extras: up to six photos (each removable) and the date of the
+event being reviewed, picked from the couple's own event dates. With a
+`draftKey` the half-written review is kept on the device until it is sent.
 
 ## RunSheet.tsx
 
@@ -531,7 +554,7 @@ Event card: header with status + controls, collapsible run sheet.
 
 ### `SeverityPicker`
 
-*component* · [src/components/work/RunSheet.tsx:179](../../../src/components/work/RunSheet.tsx#L179)
+*component* · [src/components/work/RunSheet.tsx:180](../../../src/components/work/RunSheet.tsx#L180)
 
 ```ts
 SeverityPicker({ value, onChange }: { value: string; onChange: (v: 'low' | 'medium' | 'high') => void })
@@ -608,7 +631,7 @@ Source: [src/components/work/TaskBoard.tsx](../../../src/components/work/TaskBoa
 
 ### `TaskBoard`
 
-*component* · [src/components/work/TaskBoard.tsx:238](../../../src/components/work/TaskBoard.tsx#L238)
+*component* · [src/components/work/TaskBoard.tsx:247](../../../src/components/work/TaskBoard.tsx#L247)
 
 ```ts
 TaskBoard({ project, mode, openTaskId, onFocusTarget }: { project: Project; mode: Mode; openTaskId?: string; onFocusTarget?: (node: View) => void })
@@ -622,7 +645,7 @@ Source: [src/components/work/ThreadView.tsx](../../../src/components/work/Thread
 
 ### `ThreadView`
 
-*component* · [src/components/work/ThreadView.tsx:137](../../../src/components/work/ThreadView.tsx#L137)
+*component* · [src/components/work/ThreadView.tsx:138](../../../src/components/work/ThreadView.tsx#L138)
 
 ```ts
 ThreadView({ thread }: { thread: Thread })

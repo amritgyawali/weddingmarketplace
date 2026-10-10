@@ -142,13 +142,13 @@ export const DEFAULT_SOCIAL_SETTINGS: SocialSettings = {
     { id: 'sr_price', title: 'Price list', text: 'Namaste! Our packages start at {price}. Share your date and guest count and we will send an exact quotation.' },
     { id: 'sr_date', title: 'Check the date', text: 'Thank you for asking! Which date (BS or AD) and how many guests? We will check the calendar right away.' },
     { id: 'sr_visit', title: 'Invite to visit', text: 'You are welcome to visit us in {city}. Which day suits you? We are open 9 am to 7 pm, Sunday to Friday.' },
-    { id: 'sr_thanks', title: 'Thank you', text: 'Dhanyabad! It was lovely to be part of your celebration. A review on Vivah would mean a lot to us.' },
+    { id: 'sr_thanks', title: 'Thank you', text: 'Thank you! It was lovely to be part of your celebration. A review on Vivah would mean a lot to us.' },
   ],
   rules: [
     { id: 'ar_price', keywords: ['price', 'rate', 'kati', 'कति', 'cost', 'package'], reply: 'Namaste! Packages at {business} start at {price}. Tell us your date and guest count for an exact quotation.', networks: [], active: true, hits: 0 },
     { id: 'ar_location', keywords: ['location', 'kaha', 'कहाँ', 'address', 'where'], reply: 'We are in {city}. Send us a message to get the map pin and visiting hours.', networks: [], active: false, hits: 0 },
   ],
-  away: { active: true, from: '21:00', to: '08:00', text: 'Namaste! We are away for the night and will reply first thing in the morning. Dhanyabad for your patience.' },
+  away: { active: true, from: '21:00', to: '08:00', text: 'Namaste! We are away for the night and will reply first thing in the morning. Thank you for your patience.' },
 };
 
 /** Messages the simulated networks deliver in the demo (`receiveSocialMessage` is what a real webhook calls). */

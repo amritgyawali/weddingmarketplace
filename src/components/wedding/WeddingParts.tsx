@@ -394,7 +394,7 @@ export function MoneyCard({ project, onOpen }: { project: Project; onOpen: () =>
         </View>
       ) : (
         <Text size={13} color={colors.success}>
-          All paid. Dhanyabad!
+          All paid. Thank you!
         </Text>
       )}
     </Pressable>

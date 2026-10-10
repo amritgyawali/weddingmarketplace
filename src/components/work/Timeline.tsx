@@ -107,7 +107,7 @@ export function TimelineView({ project, mode }: { project: Project; mode: 'custo
       <Sheet visible={open} onClose={() => setOpen(false)} title="Add to timeline">
         <ScrollView contentContainerStyle={{ paddingHorizontal: 20, gap: 12, paddingBottom: 12 }} keyboardShouldPersistTaps="handled">
           <ChoiceChips options={['meeting', 'milestone', 'delivery', 'task']} selected={[kind]} onToggle={(v) => setKind(v as TimelineEntry['kind'])} />
-          <KField placeholder="Title (e.g. Menu tasting)" value={title} onChangeText={setTitle} />
+          <KField placeholder="Title (e.g. Menu tasting)" value={title} onChangeText={setTitle} maxLength={100} />
           <Calendar value={date} onChange={setDate} />
           <View style={styles.actions}>
             <View style={{ flex: 1 }}>
@@ -120,7 +120,7 @@ export function TimelineView({ project, mode }: { project: Project; mode: 'custo
           {mode === 'platform' && <ChoiceChips options={['Visible to customer', 'Internal only']} selected={[internal ? 'Internal only' : 'Visible to customer']} onToggle={(v) => setInternal(v === 'Internal only')} />}
           <KButton
             label="Add"
-            disabled={!title.trim()}
+            missing={!title.trim() ? 'Enter a title for the timeline entry' : kind === 'meeting' && !/^\d{1,2}:\d{2}$/.test(time) && 'Enter the meeting time, e.g. 11:00'}
             onPress={() => {
               addEntry(project.id, { title: title.trim(), date, time: kind === 'meeting' ? time : undefined, location: location.trim() || undefined, kind, internal });
               setOpen(false);

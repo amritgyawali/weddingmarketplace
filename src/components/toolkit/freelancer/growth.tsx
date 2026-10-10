@@ -202,7 +202,7 @@ export function PitchBuilder() {
   const kit = (account.equipment ?? []).slice(0, 3).map((e) => e.name).join(', ');
   const years = account.experienceYears ?? 3;
   const opener = tone === 'Warm' ? 'Namaste!' : 'Hello,';
-  const pitch = `${opener} I'm ${account.name}, a ${(account.skills ?? ['wedding freelancer'])[0].toLowerCase()} based in ${account.city} with ${years} years of wedding work${account.rating ? ` and a ${account.rating.toFixed(1)}★ rating on Vivah` : ''}.${gig ? ` I'd love to cover "${gig.title}" on ${formatShortDate(gig.date)} in ${gig.city}.` : ''}${kit ? ` I bring my own kit (${kit}).` : ''} ${tone === 'Warm' ? 'I know the rituals well and stay calm when timings shift.' : 'I arrive early, follow the run sheet and deliver on time.'}${gig ? ` My rate for this job is ${formatMoney(gig.pay)} as posted.` : ''} ${tone === 'Warm' ? 'Dhanyabad!' : 'Thank you.'}`;
+  const pitch = `${opener} I'm ${account.name}, a ${(account.skills ?? ['wedding freelancer'])[0].toLowerCase()} based in ${account.city} with ${years} years of wedding work${account.rating ? ` and a ${account.rating.toFixed(1)}★ rating on Vivah` : ''}.${gig ? ` I'd love to cover "${gig.title}" on ${formatShortDate(gig.date)} in ${gig.city}.` : ''}${kit ? ` I bring my own kit (${kit}).` : ''} ${tone === 'Warm' ? 'I know the rituals well and stay calm when timings shift.' : 'I arrive early, follow the run sheet and deliver on time.'}${gig ? ` My rate for this job is ${formatMoney(gig.pay)} as posted.` : ''} ${tone === 'Warm' ? 'Thank you!' : 'Thank you.'}`;
   return (
     <ToolPage title="Pitch builder" subtitle="A strong application message in one tap">
       {targets.length > 0 ? (

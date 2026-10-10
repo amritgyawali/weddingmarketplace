@@ -7,7 +7,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { acceptLegal, accountFromMe, completeSignup, roleOf } from '@/backend/account';
 import { signOut } from '@/backend/auth';
 import { registerForPush } from '@/backend/push';
-import { Card, ChoiceChips, KButton, KField, StackHeader } from '@/components/kit';
+import { Card, ChoiceChips, KButton, KField, showMissing, StackHeader } from '@/components/kit';
 import { CraftProfileForm, CraftTiles, draftForCraft, SkillPicker, type FreelancerPersonaDraft } from '@/components/persona/FreelancerPersona';
 import { draftForTrade, EssentialsForm, FormPicker, ServicePicker, TradeTiles, type VendorPersonaDraft } from '@/components/persona/VendorPersona';
 import { Text } from '@/components/ui/Text';
@@ -93,7 +93,8 @@ function SetupForm({ phone, signInEmail }: { phone: string; signInEmail?: string
       form: null,
     };
     setErrors(next);
-    if (Object.values(next).some(Boolean)) return;
+    const problem = Object.values(next).find(Boolean);
+    if (problem) return showMissing(problem);
 
     const base: Omit<Account, 'id' | 'createdAt' | 'verified'> = {
       role: t.role,
@@ -299,7 +300,7 @@ function SetupForm({ phone, signInEmail }: { phone: string; signInEmail?: string
                 placeholder="8000"
                 error={errors.rate}
               />
-              <KField label="Short bio" value={bio} onChangeText={setBio} multiline placeholder={craft.equipment.length ? 'Experience, style, the kit you bring…' : 'Experience and the events you’ve worked…'} />
+              <KField label="Short bio" value={bio} onChangeText={setBio} multiline maxLength={500} placeholder={craft.equipment.length ? 'Experience, style, the kit you bring…' : 'Experience and the events you’ve worked…'} />
               <View style={{ gap: 6 }}>
                 <Text size={13} weight="semibold" color={t.c.muted}>
                   How far will you travel?

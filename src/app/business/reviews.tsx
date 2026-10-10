@@ -110,10 +110,10 @@ export default function VendorReviews() {
               </View>
             ) : (
               <View style={{ gap: 8 }}>
-                <KField placeholder="Reply publicly…" value={drafts[item.id] ?? ''} onChangeText={(v) => setDrafts((d) => ({ ...d, [item.id]: v }))} multiline />
+                <KField placeholder="Reply publicly…" value={drafts[item.id] ?? ''} onChangeText={(v) => setDrafts((d) => ({ ...d, [item.id]: v }))} multiline maxLength={500} />
                 <View style={styles.row}>
                   <KButton label="Report" size="sm" variant="ghost" onPress={() => { flag(item.id, `Reported by ${account.businessName}`); toast('Sent to moderation'); }} />
-                  <KButton label="Reply" size="sm" style={{ flex: 1 }} disabled={!drafts[item.id]?.trim()} onPress={() => { reply(item.id, drafts[item.id].trim()); toast('Reply posted'); }} />
+                  <KButton label="Reply" size="sm" style={{ flex: 1 }} missing={!drafts[item.id]?.trim() && 'Write your reply first'} onPress={() => { reply(item.id, drafts[item.id].trim()); toast('Reply posted'); }} />
                 </View>
               </View>
             )}

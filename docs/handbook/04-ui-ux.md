@@ -92,7 +92,8 @@ Always render text with `Text` from `components/ui/Text` (it translates, picks t
 
 - **Sentence case everywhere**: titles, tabs, buttons, labels ("Add guest", not "Add Guest") (R-UI-5).
 - No all-caps eyebrows, no letter-spaced labels, no emoji in UI chrome or notifications.
-- Friendly and Nepal-first: "Namaste", "Dhanyabad", BS months, NPR.
+- Friendly and Nepal-first: "Namaste", BS months, NPR. English text says "Thank you", never "Dhanyabad" (the Nepali translation says धन्यवाद).
+- A link to a full list is always labelled "View all" ("View all venues"), never "See all".
 - Say what happened, in the past tense, in toasts: "Quote sent", "Payment recorded".
 - Errors say what to do next: "This quotation no longer exists" is acceptable; "Error 500" is not.
 - The rule-based assistant is called **"Quick help"**; the concierge service is **"Vivah Planners"** (tab "Planner"). Never call anything "AI".
@@ -107,7 +108,8 @@ Always render text with `Text` from `components/ui/Text` (it translates, picks t
 | The one urgent thing | `FocusBand` (kit): a wine band with the gilt ornament, a serif title, an optional gold figure and at most two actions (the first in champagne). One per dashboard, at the top: the business home's first booking request (else new enquiries), staff Today's weddings live today. |
 | Status | `StatusPill` with `statusTone()`; never a raw colour per screen. |
 | Lists | `ListRow` (kit) or a `Card` per row; long lists use `FlatList`. |
-| Forms | `KField` (kit) or `Field` (ui) with a label above; `required` marks; error under the field; `KeyboardAwareScrollView`. |
+| Forms | `KField` (kit) or `Field` (ui) with a label above; `required` marks; error under the field; `KeyboardAwareScrollView`. Submit buttons are never silently disabled for missing input: pass `missing="Enter a title"` (and `useFormCheck` for per-field errors) so a tap says what is missing. `disabled` is only for "busy". Descriptions take `maxLength` (and `minLength`), which shows the allowed length and a live count. Longer forms keep a draft on the device with `useDraft` (`store/drafts`). |
+| Photos | A listing's photo badge and photos open `PhotoViewer` (full screen, X to close). Every photo a person uploads can be removed again. |
 | Choosing one of few | `Segmented` (counts show in a small pill); one of many: `ChoiceChips`; a filter or sort chip: `FilterChip` (burgundy with a check when selected; never style a `Pressable` as a chip by hand); on/off: `Toggle`. |
 | Destructive actions | Confirm through `utils/confirm`; say what will be lost. |
 | Empty | `EmptyState` / `EmptyBlock`: a pearl medallion with a champagne ring around an icon, a serif title, a sentence and, if possible, the next action. Pass `art` (`mandap`, `garland`, `kalash`, `diya`, `rings`) for a line drawing from `ui/Illustration` where a screen deserves warmth (first-run lists). |

@@ -1802,6 +1802,7 @@ _No JSDoc yet._
 | `text` | `string` |  |
 | `photos` | `PhotoKey[]` |  |
 | `photoUris?` | `string[]` | Photos the reviewer uploaded (Cloudinary URLs in production). |
+| `eventDate?` | `string` | yyyy-mm-dd of the event being reviewed, when the reviewer gave it (optional). |
 | `verifiedBooking` | `boolean` |  |
 | `status` | `'published' \| 'pending' \| 'flagged' \| 'removed'` |  |
 | `flagReason?` | `string` |  |
@@ -1811,7 +1812,7 @@ _No JSDoc yet._
 
 ### `CheckState`
 
-*type* · [src/types/platform.ts:878](../../../src/types/platform.ts#L878)
+*type* · [src/types/platform.ts:880](../../../src/types/platform.ts#L880)
 
 ```ts
 type CheckState = 'pending' | 'passed' | 'failed'
@@ -1821,7 +1822,7 @@ _No JSDoc yet._
 
 ### `VerificationCase`
 
-*interface* · [src/types/platform.ts:880](../../../src/types/platform.ts#L880)
+*interface* · [src/types/platform.ts:882](../../../src/types/platform.ts#L882)
 
 _No JSDoc yet._
 
@@ -1842,7 +1843,7 @@ _No JSDoc yet._
 
 ### `RsvpStatus`
 
-*type* · [src/types/platform.ts:897](../../../src/types/platform.ts#L897)
+*type* · [src/types/platform.ts:899](../../../src/types/platform.ts#L899)
 
 ```ts
 type RsvpStatus = 'pending' | 'yes' | 'no' | 'maybe'
@@ -1852,7 +1853,7 @@ _No JSDoc yet._
 
 ### `GuestInvite`
 
-*interface* · [src/types/platform.ts:899](../../../src/types/platform.ts#L899)
+*interface* · [src/types/platform.ts:901](../../../src/types/platform.ts#L901)
 
 _No JSDoc yet._
 
@@ -1870,7 +1871,7 @@ _No JSDoc yet._
 
 ### `Guest`
 
-*interface* · [src/types/platform.ts:911](../../../src/types/platform.ts#L911)
+*interface* · [src/types/platform.ts:913](../../../src/types/platform.ts#L913)
 
 _No JSDoc yet._
 
@@ -1900,7 +1901,7 @@ _No JSDoc yet._
 
 ### `SeatingElement`
 
-*interface* · [src/types/platform.ts:935](../../../src/types/platform.ts#L935)
+*interface* · [src/types/platform.ts:937](../../../src/types/platform.ts#L937)
 
 _No JSDoc yet._
 
@@ -1916,7 +1917,7 @@ _No JSDoc yet._
 
 ### `SeatingLayout`
 
-*interface* · [src/types/platform.ts:945](../../../src/types/platform.ts#L945)
+*interface* · [src/types/platform.ts:947](../../../src/types/platform.ts#L947)
 
 _No JSDoc yet._
 
@@ -1928,7 +1929,7 @@ _No JSDoc yet._
 
 ### `BudgetLine`
 
-*interface* · [src/types/platform.ts:951](../../../src/types/platform.ts#L951)
+*interface* · [src/types/platform.ts:953](../../../src/types/platform.ts#L953)
 
 _No JSDoc yet._
 
@@ -1948,7 +1949,7 @@ _No JSDoc yet._
 
 ### `WeddingWebsite`
 
-*interface* · [src/types/platform.ts:965](../../../src/types/platform.ts#L965)
+*interface* · [src/types/platform.ts:967](../../../src/types/platform.ts#L967)
 
 _No JSDoc yet._
 
@@ -1978,7 +1979,7 @@ _No JSDoc yet._
 
 ### `RegistryItem`
 
-*interface* · [src/types/platform.ts:989](../../../src/types/platform.ts#L989)
+*interface* · [src/types/platform.ts:991](../../../src/types/platform.ts#L991)
 
 _No JSDoc yet._
 
@@ -1998,7 +1999,7 @@ _No JSDoc yet._
 
 ### `InspirationBoard`
 
-*interface* · [src/types/platform.ts:1003](../../../src/types/platform.ts#L1003)
+*interface* · [src/types/platform.ts:1005](../../../src/types/platform.ts#L1005)
 
 _No JSDoc yet._
 
@@ -2012,7 +2013,7 @@ _No JSDoc yet._
 
 ### `Contract`
 
-*interface* · [src/types/platform.ts:1011](../../../src/types/platform.ts#L1011)
+*interface* · [src/types/platform.ts:1013](../../../src/types/platform.ts#L1013)
 
 _No JSDoc yet._
 
@@ -2033,7 +2034,7 @@ _No JSDoc yet._
 
 ### `ShortlistEntry`
 
-*interface* · [src/types/platform.ts:1026](../../../src/types/platform.ts#L1026)
+*interface* · [src/types/platform.ts:1028](../../../src/types/platform.ts#L1028)
 
 _No JSDoc yet._
 
@@ -2047,7 +2048,7 @@ _No JSDoc yet._
 
 ### `Deal`
 
-*interface* · [src/types/platform.ts:1034](../../../src/types/platform.ts#L1034)
+*interface* · [src/types/platform.ts:1036](../../../src/types/platform.ts#L1036)
 
 _No JSDoc yet._
 
@@ -2070,7 +2071,7 @@ _No JSDoc yet._
 
 ### `ProviderPackage`
 
-*interface* · [src/types/platform.ts:1051](../../../src/types/platform.ts#L1051)
+*interface* · [src/types/platform.ts:1053](../../../src/types/platform.ts#L1053)
 
 _No JSDoc yet._
 
@@ -2096,7 +2097,7 @@ _No JSDoc yet._
 
 ### `PortfolioItem`
 
-*interface* · [src/types/platform.ts:1071](../../../src/types/platform.ts#L1071)
+*interface* · [src/types/platform.ts:1073](../../../src/types/platform.ts#L1073)
 
 _No JSDoc yet._
 
@@ -2117,7 +2118,7 @@ _No JSDoc yet._
 
 ### `StaffMember`
 
-*interface* · [src/types/platform.ts:1087](../../../src/types/platform.ts#L1087)
+*interface* · [src/types/platform.ts:1089](../../../src/types/platform.ts#L1089)
 
 _No JSDoc yet._
 
@@ -2133,7 +2134,7 @@ _No JSDoc yet._
 
 ### `Invoice`
 
-*interface* · [src/types/platform.ts:1097](../../../src/types/platform.ts#L1097)
+*interface* · [src/types/platform.ts:1099](../../../src/types/platform.ts#L1099)
 
 _No JSDoc yet._
 
@@ -2154,7 +2155,7 @@ _No JSDoc yet._
 
 ### `PlatformSettings`
 
-*interface* · [src/types/platform.ts:1112](../../../src/types/platform.ts#L1112)
+*interface* · [src/types/platform.ts:1114](../../../src/types/platform.ts#L1114)
 
 _No JSDoc yet._
 
@@ -2173,7 +2174,7 @@ _No JSDoc yet._
 
 ### `Announcement`
 
-*interface* · [src/types/platform.ts:1126](../../../src/types/platform.ts#L1126)
+*interface* · [src/types/platform.ts:1128](../../../src/types/platform.ts#L1128)
 
 A notice a super admin pins to the top of one role's home, or every role's.
 
@@ -2190,7 +2191,7 @@ A notice a super admin pins to the top of one role's home, or every role's.
 
 ### `BugLogLine`
 
-*interface* · [src/types/platform.ts:1138](../../../src/types/platform.ts#L1138)
+*interface* · [src/types/platform.ts:1140](../../../src/types/platform.ts#L1140)
 
 _No JSDoc yet._
 
@@ -2202,7 +2203,7 @@ _No JSDoc yet._
 
 ### `BugReport`
 
-*interface* · [src/types/platform.ts:1145](../../../src/types/platform.ts#L1145)
+*interface* · [src/types/platform.ts:1147](../../../src/types/platform.ts#L1147)
 
 What the report sheet sends: the description, the screenshot and where it happened.
 
@@ -2221,7 +2222,7 @@ What the report sheet sends: the description, the screenshot and where it happen
 
 ### `BugReportStatus`
 
-*type* · [src/types/platform.ts:1160](../../../src/types/platform.ts#L1160)
+*type* · [src/types/platform.ts:1162](../../../src/types/platform.ts#L1162)
 
 ```ts
 type BugReportStatus = 'new' | 'fixed' | 'dismissed'
@@ -2231,7 +2232,7 @@ _No JSDoc yet._
 
 ### `BugReportRecord`
 
-*interface* · [src/types/platform.ts:1163](../../../src/types/platform.ts#L1163)
+*interface* · [src/types/platform.ts:1165](../../../src/types/platform.ts#L1165)
 
 `extends BugReport`
 
@@ -2248,7 +2249,7 @@ A bug report as the super admin console keeps it.
 
 ### `*`
 
-*re-export* · [src/types/platform.ts:1174](../../../src/types/platform.ts#L1174)
+*re-export* · [src/types/platform.ts:1176](../../../src/types/platform.ts#L1176)
 
 ```ts
 *from './toolkit'
@@ -2258,7 +2259,7 @@ _No JSDoc yet._
 
 ### `*`
 
-*re-export* · [src/types/platform.ts:1176](../../../src/types/platform.ts#L1176)
+*re-export* · [src/types/platform.ts:1178](../../../src/types/platform.ts#L1178)
 
 ```ts
 *from './social'
@@ -2268,7 +2269,7 @@ _No JSDoc yet._
 
 ### `*`
 
-*re-export* · [src/types/platform.ts:1178](../../../src/types/platform.ts#L1178)
+*re-export* · [src/types/platform.ts:1180](../../../src/types/platform.ts#L1180)
 
 ```ts
 *from './persona'

@@ -12,6 +12,7 @@ Every exported symbol in `src/hooks/`, file by file. The guide that explains how
 - [`useDebounce.ts`](#usedebouncets) (1 exports)
 - [`useExperience.ts`](#useexperiencets) (1 exports)
 - [`useFeatures.ts`](#usefeaturests) (2 exports)
+- [`useFormCheck.ts`](#useformcheckts) (1 exports)
 - [`useHydrated.ts`](#usehydratedts) (1 exports)
 - [`useLayout.ts`](#uselayoutts) (1 exports)
 - [`useListingAvailability.ts`](#uselistingavailabilityts) (1 exports)
@@ -298,6 +299,29 @@ useLinkOn()
 ```
 
 `linkOn('/seating')`: does this link lead to a screen that is switched on? Use it to drop menu rows and buttons.
+
+## useFormCheck.ts
+
+Source: [src/hooks/useFormCheck.ts](../../../src/hooks/useFormCheck.ts)
+
+### `useFormCheck`
+
+*hook* · [src/hooks/useFormCheck.ts:15](../../../src/hooks/useFormCheck.ts#L15)
+
+```ts
+useFormCheck<K extends string>(rules: Record<K, string | false | null | undefined | 0>)
+```
+
+Validation for a small form. Give each field the message to show while it
+is empty or wrong (or a falsy value when it is fine):
+
+  const check = useFormCheck({ title: !title.trim() && 'Enter a title' });
+  <KField error={check.error('title')} … />
+  <KButton missing={check.missing} onMissing={check.reveal} onPress={save} />
+
+The submit button stays tappable: a tap on an incomplete form shows the
+first message as a toast and, from then on, each field's own message under
+it until it is filled in.
 
 ## useHydrated.ts
 

@@ -71,7 +71,7 @@ These are the binding rules of the Vivah codebase. Each has an id, the rule, and
 | R-UI-5 | **Sentence case everywhere.** No all-caps eyebrows, no letter-spaced labels, no emoji in UI chrome or notifications, no "AI", "magic" or sparkle language. | Owner decision: the app must read as built by experienced human designers. |
 | R-UI-6 | Gold (`gold`) is a thin accent, never a large fill and never body text on ivory (use `goldDeep`). | Contrast and taste. |
 | R-UI-7 | Stats: label above, number below in Martel, in ink. Colour a number only when it flags a problem. | Colour must mean something. |
-| R-UI-8 | Copy is Nepal-first and friendly ("Namaste", "Dhanyabad"). New UI text MUST get its Nepali line in `src/i18n/ne/index.ts`. | The app ships in English and Nepali. |
+| R-UI-8 | Copy is Nepal-first and friendly ("Namaste"; English says "Thank you", not "Dhanyabad"). New UI text MUST get its Nepali line in `src/i18n/ne/index.ts`. | The app ships in English and Nepali. |
 
 ## R-STATE: state, persistence and the seed
 

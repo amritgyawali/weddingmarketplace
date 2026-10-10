@@ -6,6 +6,7 @@ import { Pressable, StyleSheet, View } from 'react-native';
 import Animated, { ZoomIn } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { showMissing } from '@/components/kit';
 import { Button } from '@/components/ui/Button';
 import { Calendar } from '@/components/ui/Calendar';
 import { Chip } from '@/components/ui/Chip';
@@ -22,6 +23,7 @@ import { useListingAvailability } from '@/hooks/useListingAvailability';
 import { enquiryText } from '@/services/planner';
 import { useVendor, useVenue } from '@/hooks/queries';
 import { useAppStore } from '@/store/useAppStore';
+import { useDraft } from '@/store/drafts';
 import { useDb } from '@/store/useDb';
 import { useAccount } from '@/store/useSession';
 import { formatLongDate } from '@/utils/format';
@@ -58,7 +60,7 @@ export default function EnquiryScreen() {
   const [date, setDate] = useState<string | null>(knownDate);
   const [guests, setGuests] = useState(knownGuests ? String(knownGuests) : '');
   const [fns, setFns] = useState<string[]>(knownFunctions.length ? knownFunctions : ['Wedding']);
-  const [note, setNote] = useState('');
+  const [note, setNote, clearNote] = useDraft(`enquiry:${account.id}:${id}`, '');
   const [dateOpen, setDateOpen] = useState(false);
   const [errors, setErrors] = useState<Record<string, string | null>>({});
   const [submitted, setSubmitted] = useState(false);
@@ -85,8 +87,17 @@ export default function EnquiryScreen() {
   }, [auto, item, knownDate, knownGuests, knownName, knownPhone, kind, vendor.data, account.id, project, pkg, createLead, addBooking]);
 
   const submit = () => {
-    if (!item || !validate()) {
-      triggerHaptic('medium');
+    if (!item) return;
+    if (!validate()) {
+      const first = [
+        name.trim().length < 2 && 'Please enter your name',
+        !/^\+?\d{10,13}$/.test(phone.replace(/[\s-]/g, '')) && 'Enter a valid 10-digit mobile number',
+        !date && 'Pick your event date',
+        guests && !/^\d+$/.test(guests) && 'Guests must be a number',
+      ].find(Boolean);
+      // The fields may be folded away under "Your details": open them so the message has a place.
+      setEditDetails(true);
+      showMissing(first || 'Check the highlighted fields');
       return;
     }
     updateProfile({ name: name.trim(), phone: phone.trim() });
@@ -114,6 +125,7 @@ export default function EnquiryScreen() {
       message: [note.trim(), pkg ? `Package: ${pkg}.` : '', project ? enquiryText(project, kind === 'venue' ? 'venue' : vendor.data?.subcategoryId ?? 'photography') : ''].filter(Boolean).join(' ') || undefined,
     });
     triggerHaptic('success');
+    clearNote();
     setSubmitted(true);
   };
 
@@ -206,7 +218,7 @@ export default function EnquiryScreen() {
             </View>
           </View>}
 
-          <Field label="Message (optional)" value={note} onChangeText={setNote} placeholder="Tell them about your requirements…" multiline />
+          <Field label="Message (optional)" value={note} onChangeText={setNote} placeholder="Tell them about your requirements…" multiline maxLength={500} />
         </ScrollView>
 
         <View style={[styles.footer, { paddingBottom: Math.max(insets.bottom, 14) }]}>
@@ -217,7 +229,7 @@ export default function EnquiryScreen() {
       <Sheet visible={dateOpen} onClose={() => setDateOpen(false)} title="Event date">
         <View style={{ paddingHorizontal: 20, gap: 16 }}>
           <Calendar value={date} onChange={setDate} dateStatus={availability.published ? (d) => availability.onDate(d).status : undefined} />
-          <Button label="Done" onPress={() => setDateOpen(false)} disabled={!date} />
+          <Button label="Done" onPress={() => setDateOpen(false)} missing={!date && 'Pick your event date'} />
         </View>
       </Sheet>
     </View>

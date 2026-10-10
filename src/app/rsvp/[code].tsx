@@ -50,7 +50,7 @@ export default function RsvpScreen() {
           {params.code ? 'We couldn’t find that invitation code. Check your invitation and try again.' : 'Enter the 6-character code printed on your invitation.'}
         </Text>
         <KField placeholder="e.g. K7Q2XA" value={entered} onChangeText={(v) => setEntered(v.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 6))} autoCapitalize="characters" />
-        <KButton label="Find my invitation" disabled={entered.length < 4} onPress={() => setCode(entered)} />
+        <KButton label="Find my invitation" missing={entered.length < 4 && (entered ? 'Invitation codes have at least 4 letters or numbers' : 'Enter the code from your invitation')} onPress={() => setCode(entered)} />
         <KButton label="Back" variant="ghost" onPress={() => (router.canGoBack() ? router.back() : router.replace('/'))} />
       </View>
     );
@@ -84,7 +84,7 @@ export default function RsvpScreen() {
       <View style={[styles.root, { paddingTop: insets.top + 40, paddingHorizontal: 24, gap: 14, alignItems: 'center' }]}>
         <Ionicons name="heart-circle" size={72} color={accent} />
         <Text size={26} weight="bold" color={colors.textStrong} align="center">
-          Dhanyabad, {guest.name.split(' ')[0]}!
+          Thank you, {guest.name.split(' ')[0]}!
         </Text>
         <Text size={15} color={colors.textMuted} align="center">
           {going.length ? `We can’t wait to celebrate with you at ${going.map((g) => g.event!.name).join(', ')}.` : 'Thank you for letting us know — you’ll be missed!'}
@@ -203,7 +203,13 @@ export default function RsvpScreen() {
             </Card>
           ))}
 
-          <KButton label="Send my RSVP" size="lg" disabled={!complete} onPress={submit} style={{ backgroundColor: accent, borderColor: accent }} />
+          <KButton
+            label="Send my RSVP"
+            size="lg"
+            missing={!complete && `Choose a reply for ${events.filter(({ event }) => answerFor(event!.id).rsvp === 'pending').map(({ event }) => event!.name).join(', ')}`}
+            onPress={submit}
+            style={{ backgroundColor: accent, borderColor: accent }}
+          />
           {!complete && (
             <Text size={12} color={colors.textMuted} align="center">
               Choose a reply for every celebration to continue.

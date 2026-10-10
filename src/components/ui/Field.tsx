@@ -5,6 +5,7 @@ import { StyleSheet, TextInput, View, type TextInputProps } from 'react-native';
 import { colors, fonts, inputReset, radius } from '@/constants/theme';
 import { useT } from '@/i18n';
 
+import { FieldNote } from './FieldNote';
 import { Text } from './Text';
 
 export interface FieldProps extends TextInputProps {
@@ -12,10 +13,12 @@ export interface FieldProps extends TextInputProps {
   error?: string | null;
   hint?: string;
   required?: boolean;
+  /** With `maxLength`, shows "Minimum n, maximum m characters" and a live count. */
+  minLength?: number;
 }
 
-/** Labelled text input with a focus border and an inline validation message. */
-export const Field = forwardRef<TextInput, FieldProps>(function Field({ label, error, hint, required, style, multiline, placeholder, onFocus, onBlur, ...rest }, ref) {
+/** Labelled text input with a focus border, an inline validation message and, for descriptions, the allowed length. */
+export const Field = forwardRef<TextInput, FieldProps>(function Field({ label, error, hint, required, style, multiline, placeholder, onFocus, onBlur, minLength, ...rest }, ref) {
   const tr = useT();
   const [focused, setFocused] = useState(false);
   return (
@@ -41,7 +44,9 @@ export const Field = forwardRef<TextInput, FieldProps>(function Field({ label, e
         style={[styles.input, inputReset, multiline && styles.multiline, focused && styles.inputFocused, !!error && styles.inputError, style]}
         {...rest}
       />
-      {error ? (
+      {multiline && (rest.maxLength || minLength) ? (
+        <FieldNote error={error} hint={hint} length={(rest.value ?? '').length} minLength={minLength} maxLength={rest.maxLength} tone={{ danger: colors.danger, muted: colors.textMuted, warning: colors.warning }} />
+      ) : error ? (
         <View style={styles.errorRow} accessibilityLiveRegion="polite">
           <Ionicons name="alert-circle" size={14} color={colors.danger} />
           <Text size={12} color={colors.danger} style={{ flexShrink: 1 }}>

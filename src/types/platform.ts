@@ -867,6 +867,8 @@ export interface ReviewRecord {
   photos: PhotoRef[];
   /** Photos the reviewer uploaded (Cloudinary URLs in production). */
   photoUris?: string[];
+  /** yyyy-mm-dd of the event being reviewed, when the reviewer gave it (optional). */
+  eventDate?: string;
   verifiedBooking: boolean;
   status: 'published' | 'pending' | 'flagged' | 'removed';
   flagReason?: string;

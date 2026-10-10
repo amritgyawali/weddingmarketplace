@@ -228,6 +228,18 @@ export function CelebrationOnboarding({ another = false }: { another?: boolean }
     events: true,
     review: true,
   };
+  // What a tap on Continue says while the step is unanswered.
+  const unanswered: Record<StepId, string> = {
+    occasion: 'Pick what you are celebrating',
+    you: couple ? 'Tell us who you are in the couple' : occasion.id === 'newborn' ? 'Pick the baby’s age' : occasion.id === 'other' ? 'Enter who the celebration is for' : 'Answer this question to continue',
+    date: 'Pick a date, or choose “We haven’t fixed it yet”',
+    city: 'Pick your city',
+    guests: 'Pick roughly how many guests',
+    budget: 'Pick a budget range',
+    services: 'Pick at least one thing you need',
+    events: '',
+    review: '',
+  };
 
   const roleLabel = ROLES.find((r) => r.id === role)?.short;
   const crumbs: Crumb[] = [];
@@ -290,7 +302,7 @@ export function CelebrationOnboarding({ another = false }: { another?: boolean }
 
   const onBack = () => editingReview ? (setEditingReview(false), goTo(steps.indexOf('review'))) : (step === 0 ? (another ? (router.canGoBack() ? router.back() : router.replace('/profile')) : logout()) : goTo(step - 1));
 
-  const next = <KButton label={editingReview ? "Save changes" : "Continue"} size="lg" disabled={!answered[id]} onPress={continueStep} />;
+  const next = <KButton label={editingReview ? "Save changes" : "Continue"} size="lg" missing={!answered[id] && unanswered[id]} onPress={continueStep} />;
   const frame = { stepKey: `${id}-${occasion.id}`, direction, current: id === 'review' ? QUESTIONS : qIndex, total: QUESTIONS, onBack, onCrumb: goTo };
 
   switch (id) {
@@ -550,7 +562,7 @@ export function CelebrationOnboarding({ another = false }: { another?: boolean }
           subtitle="Check the details. Tap any line to change it."
           footer={
             <>
-              <KButton label="Build our plan" size="lg" loading={busy} disabled={!steps.every((s) => answered[s])} onPress={() => finish(true)} />
+              <KButton label="Build our plan" size="lg" loading={busy} missing={steps.filter((s) => !answered[s]).map((s) => unanswered[s])[0]} onPress={() => finish(true)} />
               <KButton label={another ? 'Not now' : 'Just browse for now'} variant="ghost" size="sm" disabled={busy} onPress={() => finish(false)} />
             </>
           }>

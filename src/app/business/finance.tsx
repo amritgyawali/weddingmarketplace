@@ -4,6 +4,7 @@ import { StyleSheet, View } from 'react-native';
 import { Card, ChoiceChips, EmptyBlock, KButton, KField, KpiCard, Segmented, StackHeader, StatusPill } from '@/components/kit';
 import { Text } from '@/components/ui/Text';
 import { toast } from '@/components/ui/Toast';
+import { useFormCheck } from '@/hooks/useFormCheck';
 import { useVendorWorkspace } from '@/hooks/useWorkspace';
 import { exportCsv } from '@/services/exporters';
 import { useDb } from '@/store/useDb';
@@ -26,6 +27,7 @@ export default function VendorFinance() {
   const [customer, setCustomer] = useState(bookings[0]?.project.customerName ?? '');
   const [amount, setAmount] = useState('');
   const [kind, setKind] = useState<Invoice['kind']>('deposit');
+  const check = useFormCheck({ customer: !customer && 'Pick the customer to invoice', amount: !Number(amount) && 'Enter the invoice amount' });
   const invoices = invoicesAll.filter((i) => i.issuerId === account.id);
   const paid = payables.filter((p) => p.status === 'PAID').reduce((s, p) => s + p.amount, 0);
   const ready = payables.filter((p) => p.status === 'READY').reduce((s, p) => s + p.amount, 0);
@@ -87,11 +89,17 @@ export default function VendorFinance() {
               </Text>
               <ChoiceChips options={[...new Set(bookings.map((b) => b.project.customerName))]} selected={[customer]} onToggle={setCustomer} />
               <ChoiceChips options={['deposit', 'instalment', 'balance', 'tax']} selected={[kind]} onToggle={(v) => setKind(v as Invoice['kind'])} />
-              <KField label="Amount (incl. VAT)" value={amount} onChangeText={(v) => setAmount(v.replace(/\D/g, ''))} keyboardType="number-pad" prefix="NPR" />
+              {check.error('customer') && (
+                <Text size={12} color={t.c.danger}>
+                  {check.error('customer')}
+                </Text>
+              )}
+              <KField label="Amount (incl. VAT)" required value={amount} onChangeText={(v) => setAmount(v.replace(/\D/g, ''))} keyboardType="number-pad" prefix="NPR" error={check.error('amount')} />
               <KButton
                 label="Issue invoice"
                 size="sm"
-                disabled={!customer || !Number(amount)}
+                missing={check.missing}
+                onMissing={check.reveal}
                 onPress={() => {
                   const amt = Number(amount);
                   saveInvoice({
