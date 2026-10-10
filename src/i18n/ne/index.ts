@@ -4,10 +4,13 @@
  * placeholders match any text (translated in turn). Generated from the app's
  * strings and reviewed by hand; add new lines in the same form.
  */
+import { CONTENT_NE } from './content';
 import { CUSTOMER_PLANNING_NE } from './customerPlanning';
 import { SOCIAL_NE } from './social';
 
 export const NE: Record<string, string> = {
+  // The Content studio (Super admin); entries below win where both have one.
+  ...CONTENT_NE,
   // The social hub (Business → Social media); entries below win where both have one.
   ...SOCIAL_NE,
   ...CUSTOMER_PLANNING_NE,

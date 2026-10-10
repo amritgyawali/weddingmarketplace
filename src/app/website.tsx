@@ -13,7 +13,7 @@ import { Sheet } from '@/components/ui/Sheet';
 import { Text } from '@/components/ui/Text';
 import { Toggle } from '@/components/ui/Toggle';
 import { toast } from '@/components/ui/Toast';
-import { photos, type PhotoKey } from '@/constants/images';
+import { photo, type PhotoKey } from '@/constants/images';
 import { colors } from '@/constants/theme';
 import { useDb } from '@/store/useDb';
 import { useRoleTheme } from '@/theme/RoleTheme';
@@ -128,7 +128,7 @@ function Builder({ project, readOnly }: { project: Project; readOnly: boolean })
         <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 10 }}>
           {TEMPLATES.map((tp) => (
             <Pressable key={tp.id} disabled={readOnly} onPress={() => set({ template: tp.id, accent: tp.accent })} style={[styles.template, { borderColor: site.template === tp.id ? t.c.primary : t.c.border }]}>
-              <Photo source={photos[tp.cover]} style={styles.templateImg} contentFit="cover" />
+              <Photo source={photo(tp.cover)} style={styles.templateImg} contentFit="cover" />
               <Text size={13} weight="semibold" color={t.c.textStrong} style={{ padding: 8 }}>
                 {tp.label}
               </Text>
@@ -152,7 +152,7 @@ function Builder({ project, readOnly }: { project: Project; readOnly: boolean })
         <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 8 }}>
           {PHOTO_CHOICES.map((p) => (
             <Pressable key={p} disabled={readOnly} onPress={() => set({ cover: p })}>
-              <Photo source={photos[p]} style={[styles.thumb, { borderColor: site.cover === p ? t.c.primary : 'transparent' }]} contentFit="cover" />
+              <Photo source={photo(p)} style={[styles.thumb, { borderColor: site.cover === p ? t.c.primary : 'transparent' }]} contentFit="cover" />
             </Pressable>
           ))}
         </ScrollView>
@@ -164,7 +164,7 @@ function Builder({ project, readOnly }: { project: Project; readOnly: boolean })
             const on = site.gallery.includes(p);
             return (
               <Pressable key={p} disabled={readOnly} onPress={() => set({ gallery: on ? site.gallery.filter((x) => x !== p) : [...site.gallery, p] })}>
-                <Photo source={photos[p]} style={[styles.thumb, { borderColor: on ? t.c.primary : 'transparent', opacity: on ? 1 : 0.55 }]} contentFit="cover" />
+                <Photo source={photo(p)} style={[styles.thumb, { borderColor: on ? t.c.primary : 'transparent', opacity: on ? 1 : 0.55 }]} contentFit="cover" />
                 {on && <Ionicons name="checkmark-circle" size={20} color={t.c.primary} style={styles.check} />}
               </Pressable>
             );

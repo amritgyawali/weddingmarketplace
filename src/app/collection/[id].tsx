@@ -2,6 +2,7 @@ import { useLocalSearchParams } from 'expo-router';
 
 import { VenueListScreen } from '@/components/listing/VenueListScreen';
 import { findSubcategory, VENUE_COLLECTIONS } from '@/data/categories';
+import { useLiveList } from '@/hooks/useContent';
 import type { CollectionId, VenueType } from '@/types';
 
 /** Venue sub-categories from the Vendors tab map onto venue-type filters. */
@@ -17,7 +18,7 @@ const SUBCATEGORY_TYPES: Record<string, VenueType[]> = {
 
 export default function CollectionScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const collection = VENUE_COLLECTIONS.find((c) => c.id === id);
+  const collection = useLiveList('collection', VENUE_COLLECTIONS, true).find((c) => c.id === id);
 
   if (collection) {
     return <VenueListScreen key={id} title={collection.title} collection={collection.id as CollectionId} />;

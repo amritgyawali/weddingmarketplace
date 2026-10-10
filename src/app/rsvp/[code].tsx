@@ -8,7 +8,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Card, ChoiceChips, KButton, KField } from '@/components/kit';
 import { triggerHaptic } from '@/components/ui/PressableScale';
 import { Text } from '@/components/ui/Text';
-import { photos } from '@/constants/images';
+import { photo } from '@/constants/images';
 import { colors } from '@/constants/theme';
 import { exportCalendar } from '@/services/exporters';
 import { useDb } from '@/store/useDb';
@@ -112,7 +112,7 @@ export default function RsvpScreen() {
     <View style={styles.root}>
       <ScrollView contentContainerStyle={{ paddingBottom: insets.bottom + 40 }} keyboardShouldPersistTaps="handled">
         <View>
-          <Photo source={photos[site?.cover ?? 'ideaCoupleGardenWalk']} style={{ width: '100%', height: 220 }} contentFit="cover" />
+          <Photo source={photo(site?.cover ?? 'ideaCoupleGardenWalk')} style={{ width: '100%', height: 220 }} contentFit="cover" />
           <View style={[styles.veil, { paddingTop: insets.top + 12 }]}>
             <Text size={13} weight="bold" color={colors.white}>
               You’re invited

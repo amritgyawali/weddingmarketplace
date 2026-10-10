@@ -10,7 +10,7 @@ import Svg, { Circle } from 'react-native-svg';
 import { Avatar, StatusPill } from '@/components/kit';
 import { IconButton } from '@/components/ui/IconButton';
 import { Text } from '@/components/ui/Text';
-import { photos } from '@/constants/images';
+import { photo } from '@/constants/images';
 import { colors } from '@/constants/theme';
 import { findService, serviceName } from '@/data/services';
 import { occasionOf } from '@/services/experience';
@@ -51,7 +51,7 @@ export function WeddingHero({
   const cover = weddingLike ? (project.inspiration[0] ?? 'ideaCoupleGardenWalk') : 'decorMandapFloral';
   return (
     <View style={[styles.hero, { height: HERO_HEIGHT + insets.top }]}>
-      <Photo source={photos[cover]} style={StyleSheet.absoluteFill} contentFit="cover" contentPosition={{ left: '50%', top: '38%' }} transition={250} />
+      <Photo source={photo(cover)} style={StyleSheet.absoluteFill} contentFit="cover" contentPosition={{ left: '50%', top: '38%' }} transition={250} />
       <LinearGradient colors={SCRIM} locations={[0, 0.3, 0.5, 1]} style={[StyleSheet.absoluteFill, { pointerEvents: 'none' }]} />
       <View style={[styles.heroTop, { paddingTop: insets.top + 6 }]}>
         {onBack ? <IconButton icon="chevron-back" iconSize={22} color={colors.white} background={OVERLAY_BUTTON} accessibilityLabel="Go back" onPress={onBack} /> : <View />}

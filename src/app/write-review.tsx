@@ -9,7 +9,7 @@ import { ScreenHeader } from '@/components/ui/ScreenHeader';
 import { Text } from '@/components/ui/Text';
 import { toast } from '@/components/ui/Toast';
 import { ReviewComposer } from '@/components/work/ReviewComposer';
-import { photos } from '@/constants/images';
+import { photo } from '@/constants/images';
 import { colors } from '@/constants/theme';
 import { findProvider, PROVIDERS } from '@/data/providers';
 import { serviceName } from '@/data/services';
@@ -94,7 +94,7 @@ export default function WriteReviewScreen() {
               const p = findProvider(b.providerId);
               return (
                 <Card key={b.id} onPress={() => setTarget({ providerId: b.providerId, name: b.providerName, serviceId: b.serviceId, bookingId: b.id })} style={styles.row}>
-                  {p && <Photo source={photos[p.image]} style={styles.thumb} contentFit="cover" />}
+                  {p && <Photo source={photo(p.image)} style={styles.thumb} contentFit="cover" />}
                   <View style={{ flex: 1 }}>
                     <Text size={15} weight="bold" color={colors.textStrong}>
                       {b.providerName}
@@ -115,7 +115,7 @@ export default function WriteReviewScreen() {
         <KField placeholder="Search venue or vendor name" value={q} onChangeText={setQ} />
         {matches.map((p) => (
           <Card key={p.id} onPress={() => setTarget({ providerId: p.id, name: p.name, serviceId: p.serviceId })} style={styles.row}>
-            <Photo source={photos[p.image]} style={styles.thumb} contentFit="cover" />
+            <Photo source={photo(p.image)} style={styles.thumb} contentFit="cover" />
             <View style={{ flex: 1 }}>
               <Text size={14} weight="semibold" color={colors.textStrong}>
                 {p.name}

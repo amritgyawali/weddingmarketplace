@@ -10,7 +10,7 @@ import { RegistryCard } from '@/components/planner/RegistryCard';
 import { Text } from '@/components/ui/Text';
 import { toast } from '@/components/ui/Toast';
 import { PaymentSheet } from '@/components/work/Payments';
-import { photos } from '@/constants/images';
+import { photo } from '@/constants/images';
 import { colors } from '@/constants/theme';
 import { useLayout } from '@/hooks/useLayout';
 import { exportCalendar } from '@/services/exporters';
@@ -104,7 +104,7 @@ export default function WeddingSite() {
     <View style={{ flex: 1, backgroundColor: theme.bg }}>
       <ScrollView contentContainerStyle={{ paddingBottom: insets.bottom + 40 }}>
         <View>
-          <Photo source={photos[site.cover]} style={{ width: '100%', height: wide ? 460 : 380 }} contentFit="cover" />
+          <Photo source={photo(site.cover)} style={{ width: '100%', height: wide ? 460 : 380 }} contentFit="cover" />
           <View style={[styles.veil, { paddingTop: insets.top + 12 }]}>
             {preview ? (
               <Pressable onPress={() => router.back()} style={styles.previewBar}>
@@ -216,7 +216,7 @@ export default function WeddingSite() {
             <Section theme={theme} serif={serif} accent={site.accent} title="Gallery">
               <View style={styles.gallery}>
                 {site.gallery.map((g) => (
-                  <Photo key={g} source={photos[g]} style={[styles.photo, { width: wide ? '32%' : '48.5%' }]} contentFit="cover" />
+                  <Photo key={g} source={photo(g)} style={[styles.photo, { width: wide ? '32%' : '48.5%' }]} contentFit="cover" />
                 ))}
               </View>
             </Section>

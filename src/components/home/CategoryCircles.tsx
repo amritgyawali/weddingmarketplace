@@ -6,9 +6,10 @@ import { PressableScale } from '@/components/ui/PressableScale';
 import { Text } from '@/components/ui/Text';
 import { enabledServices, homeCategoriesFor } from '@/data/categories';
 import { SERVICES } from '@/data/services';
+import { useContent } from '@/hooks/useContent';
 import { useExperience } from '@/hooks/useExperience';
 import { useDb } from '@/store/useDb';
-import { photos } from '@/constants/images';
+import { photo } from '@/constants/images';
 import { colors, GUTTER } from '@/constants/theme';
 import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
 
@@ -17,7 +18,8 @@ export function CategoryCircles() {
   const exp = useExperience();
   const flags = useDb((s) => s.featureFlags);
   const services = exp.occasion?.services ?? SERVICES.map((s) => s.id);
-  const categories = homeCategoriesFor(enabledServices(services, flags));
+  const content = useContent();
+  const categories = homeCategoriesFor(enabledServices(services, flags), content);
   return (
     <ScrollView
       horizontal
@@ -37,7 +39,7 @@ export function CategoryCircles() {
                 })
           }
           style={styles.item}>
-          <Photo source={photos[c.image]} style={styles.circle} contentFit="cover" transition={200} />
+          <Photo source={photo(c.image)} style={styles.circle} contentFit="cover" transition={200} />
           <Text size={13} color={colors.text} align="center" numberOfLines={2} lineHeight={16}>
             {c.title}
           </Text>

@@ -49,6 +49,8 @@ export default function PlatformLayout() {
         <Stack.Screen name="admin/record/[name]/[id]" />
         <Stack.Screen name="admin/features" />
         <Stack.Screen name="admin/texts" />
+        <Stack.Screen name="admin/content/index" />
+        <Stack.Screen name="admin/content/[kind]/[id]" />
         <Stack.Screen name="admin/announcements" />
         <Stack.Screen name="admin/bugs" />
         <Stack.Screen name="admin/bug/[id]" />

@@ -10,7 +10,7 @@ import { Pressable, StyleSheet, View } from 'react-native';
 import { ChoiceChips, KField } from '@/components/kit';
 import { Text } from '@/components/ui/Text';
 import { Toggle } from '@/components/ui/Toggle';
-import { photos } from '@/constants/images';
+import { photo } from '@/constants/images';
 import { SERVICE_BY_ID } from '@/data/services';
 import { BUSINESS_FORMS, TRADE_BY_ID, TRADES, tradeOf, type BusinessForm, type EssentialField, type TradeId } from '@/data/trades';
 import { useLayout } from '@/hooks/useLayout';
@@ -58,7 +58,7 @@ export function TradeTiles({ value, onChange }: { value?: TradeId; onChange: (t:
             accessibilityState={{ selected: on }}
             accessibilityLabel={trade.label}
             style={[styles.tile, { width: medium ? '31.5%' : '48%', borderColor: on ? t.c.primary : t.c.border, backgroundColor: t.c.surface }]}>
-            <Photo source={photos[trade.image]} style={styles.tileImage} contentFit="cover" />
+            <Photo source={photo(trade.image)} style={styles.tileImage} contentFit="cover" />
             <View style={styles.tileText}>
               <View style={styles.row}>
                 <Text size={14} weight="semibold" color={t.c.textStrong} style={{ flex: 1 }} numberOfLines={1}>

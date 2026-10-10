@@ -9,7 +9,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Chip } from '@/components/ui/Chip';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { Text } from '@/components/ui/Text';
-import { photos } from '@/constants/images';
+import { photo } from '@/constants/images';
 import { colors, fonts, GUTTER, inputReset, radius } from '@/constants/theme';
 import { findCategory } from '@/data/categories';
 import { POPULAR_SEARCHES } from '@/data/ideas';
@@ -46,17 +46,17 @@ function ResultRow({ result }: { result: SearchResult }) {
   let image, title: string, subtitle: string;
   switch (result.kind) {
     case 'venue':
-      image = photos[result.item.images[0]];
+      image = photo(result.item.images[0]);
       title = result.item.name;
       subtitle = `${result.item.type} · ${result.item.city} · ${formatMoney(result.item.vegPerPlate)}/plate`;
       break;
     case 'vendor':
-      image = photos[result.item.images[0]];
+      image = photo(result.item.images[0]);
       title = result.item.name;
       subtitle = `${findCategory(result.item.categoryId)?.title} · ${result.item.city} · ★ ${result.item.rating}`;
       break;
     case 'idea':
-      image = photos[result.item.image];
+      image = photo(result.item.image);
       title = result.item.title;
       subtitle = result.item.category;
       break;

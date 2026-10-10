@@ -6,7 +6,7 @@ import { FlatList, StyleSheet, View } from 'react-native';
 import { staffScreen } from '@/components/persona/StaffGate';
 import { Card, ChoiceChips, KField, StackHeader, StatusPill } from '@/components/kit';
 import { Text } from '@/components/ui/Text';
-import { photos } from '@/constants/images';
+import { photo } from '@/constants/images';
 import { PROVIDERS } from '@/data/providers';
 import { SERVICES } from '@/data/services';
 import { SegmentFilter } from '@/components/work/SegmentFilter';
@@ -57,7 +57,7 @@ function ProvidersDirectory() {
         contentContainerStyle={{ paddingHorizontal: 14, gap: 10, paddingBottom: 30 }}
         renderItem={({ item }) => (
           <Card onPress={() => router.push({ pathname: '/platform/provider/[id]', params: { id: item.id } })} style={[styles.row, { flex: 1 }]}>
-            <Photo source={photos[item.image]} style={styles.thumb} contentFit="cover" />
+            <Photo source={photo(item.image)} style={styles.thumb} contentFit="cover" />
             <View style={{ flex: 1, gap: 2 }}>
               <Text size={14} weight="bold" color={t.c.textStrong} numberOfLines={1}>
                 {item.name}{featured.includes(item.id) ? ' · Featured' : ''}

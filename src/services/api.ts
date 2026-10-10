@@ -4,10 +4,8 @@
  * swapping the bodies below for `fetch` calls.
  */
 import { ALL_CITIES } from '@/data/cities';
-import { findCategory, VENDOR_CATEGORIES, VENUE_COLLECTIONS } from '@/data/categories';
-import { IDEA_PHOTOS, REAL_WEDDINGS, STORIES } from '@/data/ideas';
-import { VENDORS } from '@/data/vendors';
-import { VENUES } from '@/data/venues';
+import { findCategory } from '@/data/categories';
+import { catalogue, catalogueAll } from '@/data/live';
 import type {
   CollectionId,
   IdeaCategory,
@@ -85,7 +83,7 @@ export interface VenueQuery {
 
 export function filterVenues({ city, query = '', collection, filters = DEFAULT_VENUE_FILTERS, destinationPricing }: VenueQuery) {
   const priceOf = (v: Venue) => (destinationPricing ? v.destinationPackage : v.rentalCost);
-  const list = VENUES.filter(
+  const list = catalogue.venues().filter(
     (v) =>
       inCity(city, v.city) &&
       (!collection || v.collections.includes(collection)) &&
@@ -113,19 +111,19 @@ export const api = {
   getVenues: (q: VenueQuery) => delay(filterVenues(q)),
 
   getVenue: async (id: string) => {
-    const venue = VENUES.find((v) => v.id === id);
+    const venue = catalogueAll.venues().find((v) => v.id === id);
     if (!venue) throw new NotFoundError('Venue', id);
     return delay(venue);
   },
 
   getSimilarVenues: (venue: Venue) =>
-    delay(VENUES.filter((v) => v.id !== venue.id && (v.city === venue.city || v.type === venue.type)).slice(0, 6)),
+    delay(catalogue.venues().filter((v) => v.id !== venue.id && (v.city === venue.city || v.type === venue.type)).slice(0, 6)),
 
   getCollections: (city: string) =>
     delay(
-      VENUE_COLLECTIONS.map((c) => ({
+      catalogue.collections().map((c) => ({
         ...c,
-        count: VENUES.filter((v) => inCity(city, v.city) && v.collections.includes(c.id)).length,
+        count: catalogue.venues().filter((v) => inCity(city, v.city) && v.collections.includes(c.id)).length,
       })).filter((c) => c.count > 0),
     ),
 
@@ -142,7 +140,7 @@ export const api = {
     query?: string;
     sort?: 'popular' | 'rating' | 'priceLow' | 'priceHigh';
   }) => {
-    const list = VENDORS.filter(
+    const list = catalogue.vendors().filter(
       (v) =>
         v.categoryId === categoryId &&
         (!subcategoryId || v.subcategoryId === subcategoryId) &&
@@ -159,40 +157,40 @@ export const api = {
   },
 
   getVendor: async (id: string) => {
-    const vendor = VENDORS.find((v) => v.id === id);
+    const vendor = catalogueAll.vendors().find((v) => v.id === id);
     if (!vendor) throw new NotFoundError('Vendor', id);
     return delay(vendor);
   },
 
   getFeaturedVendors: (city: string, categoryId: string, limit = 8) =>
     delay(
-      VENDORS.filter((v) => v.categoryId === categoryId && inCity(city, v.city))
+      catalogue.vendors().filter((v) => v.categoryId === categoryId && inCity(city, v.city))
         .sort((a, b) => b.rating - a.rating)
         .slice(0, limit),
     ),
 
-  getVenuesByIds: (ids: string[]) => delay(VENUES.filter((v) => ids.includes(v.id))),
-  getVendorsByIds: (ids: string[]) => delay(VENDORS.filter((v) => ids.includes(v.id))),
+  getVenuesByIds: (ids: string[]) => delay(catalogueAll.venues().filter((v) => ids.includes(v.id))),
+  getVendorsByIds: (ids: string[]) => delay(catalogueAll.vendors().filter((v) => ids.includes(v.id))),
 
   getIdeas: ({ query = '', category }: { query?: string; category?: IdeaCategory | null }) =>
-    delay(IDEA_PHOTOS.filter((p) => (!category || p.category === category) && matches(query, p.title, p.category))),
+    delay(catalogue.ideas().filter((p) => (!category || p.category === category) && matches(query, p.title, p.category))),
 
   getIdea: async (id: string) => {
-    const idea = IDEA_PHOTOS.find((p) => p.id === id);
+    const idea = catalogueAll.ideas().find((p) => p.id === id);
     if (!idea) throw new NotFoundError('Photo', id);
     return delay(idea);
   },
 
-  getStories: () => delay(STORIES),
+  getStories: () => delay(catalogue.stories()),
   getStory: async (id: string) => {
-    const story = STORIES.find((s) => s.id === id);
+    const story = catalogueAll.stories().find((s) => s.id === id);
     if (!story) throw new NotFoundError('Story', id);
     return delay(story);
   },
 
-  getRealWeddings: () => delay(REAL_WEDDINGS),
+  getRealWeddings: () => delay(catalogue.realWeddings()),
   getRealWedding: async (id: string) => {
-    const wedding = REAL_WEDDINGS.find((w) => w.id === id);
+    const wedding = catalogueAll.realWeddings().find((w) => w.id === id);
     if (!wedding) throw new NotFoundError('Real wedding', id);
     return delay(wedding);
   },
@@ -226,7 +224,7 @@ export const api = {
 
     const categories: SearchResult[] = rank(
       'category',
-      VENDOR_CATEGORIES.flatMap((c) => c.subcategories.map((s) => ({ id: s.id, title: s.title, categoryId: c.id, parent: c.title }))),
+      catalogue.categories().flatMap((c) => c.subcategories.map((s) => ({ id: s.id, title: s.title, categoryId: c.id, parent: c.title }))),
       (s) => [s.title, s.parent],
     )
       .slice(0, 4)
@@ -234,7 +232,7 @@ export const api = {
 
     const venues: SearchResult[] = rank(
       'venue',
-      VENUES,
+      catalogue.venues(),
       (v) => [v.name, v.city, v.locality, v.type, 'venue wedding venues'],
       (v) => v.city,
       (a, b) => b.rating - a.rating,
@@ -244,7 +242,7 @@ export const api = {
 
     const vendors: SearchResult[] = rank(
       'vendor',
-      VENDORS,
+      catalogue.vendors(),
       (v) => [v.name, v.city, findCategory(v.categoryId)?.title, v.subcategoryId.replace(/-/g, ' '), v.services.join(' ')],
       (v) => v.city,
       (a, b) => b.rating - a.rating,
@@ -252,7 +250,7 @@ export const api = {
       .slice(0, 8)
       .map((item) => ({ kind: 'vendor', item }));
 
-    const ideas: SearchResult[] = rank('idea', IDEA_PHOTOS, (p) => [p.title, p.category])
+    const ideas: SearchResult[] = rank('idea', catalogue.ideas(), (p) => [p.title, p.category])
       .slice(0, 6)
       .map((item) => ({ kind: 'idea', item }));
 

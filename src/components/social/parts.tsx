@@ -6,7 +6,7 @@ import { Pressable, StyleSheet, View, type StyleProp, type ViewStyle } from 'rea
 import { Avatar } from '@/components/kit';
 import { triggerHaptic } from '@/components/ui/PressableScale';
 import { Text } from '@/components/ui/Text';
-import { photos } from '@/constants/images';
+import { photo } from '@/constants/images';
 import { colors, socialColors } from '@/constants/theme';
 import { NETWORK_BY_ID } from '@/data/social';
 import { socialSettingsFor } from '@/store/db/social';
@@ -19,7 +19,7 @@ import { formatShortDate, formatTime, toISODate } from '@/utils/format';
 export const whenLabel = (iso: string) => `${formatShortDate(toISODate(new Date(iso)))} · ${formatTime(iso)}`;
 
 /** Image source for a post or message attachment. */
-export const mediaSource = (m: SocialMedia) => (m.uri ? { uri: m.uri } : m.image ? photos[m.image] : undefined);
+export const mediaSource = (m: SocialMedia) => (m.uri ? { uri: m.uri } : m.image ? photo(m.image) : undefined);
 
 /**
  * The signed-in business's social data. Selects the raw arrays and filters in

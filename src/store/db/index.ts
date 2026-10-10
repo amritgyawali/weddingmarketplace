@@ -10,12 +10,14 @@ import { persist } from 'zustand/middleware';
 import { VEHICLE_SERVICES } from '@/data/occasions';
 import { buildSeedData } from '@/data/seed';
 import { occasionOf } from '@/services/experience';
+import { normalizeContent } from '@/services/content';
 import { generateTasks, WEDDING_ONLY_TASKS } from '@/services/planner';
 import { lazyStorage } from '@/store/lazyStorage';
 import type { Account } from '@/types/platform';
 
 import { adminActions, type AdminActions } from './admin';
 import { chatActions, type ChatActions, clearReplyTimers } from './chat';
+import { contentActions, type ContentActions } from './content';
 import { coreActions, type CoreActions } from './core';
 import { financeActions, type FinanceActions } from './finance';
 import { gigActions, type GigActions } from './gigs';
@@ -30,7 +32,7 @@ import { trustActions, type TrustActions } from './trust';
 import type { DbData } from './types';
 
 export type { DbData } from './types';
-export type Db = DbData & CoreActions & QuoteActions & ProjectActions & FinanceActions & GigActions & ChatActions & TrustActions & PlannerActions & ToolkitActions & PersonaActions & AdminActions & SocialActions & SupportActions;
+export type Db = DbData & CoreActions & QuoteActions & ProjectActions & FinanceActions & GigActions & ChatActions & TrustActions & PlannerActions & ToolkitActions & PersonaActions & AdminActions & SocialActions & SupportActions & ContentActions;
 
 const DATA_KEYS = Object.keys(buildSeedData()) as (keyof DbData)[];
 
@@ -110,6 +112,7 @@ export const useDb = create<Db>()(
       ...adminActions(set, get),
       ...socialActions(set, get),
       ...supportActions(set, get),
+      ...contentActions(set, get),
       resetDemo: () => {
         const denied = staffDenied('demo.reset', get);
         if (denied) return denied;
@@ -126,7 +129,8 @@ export const useDb = create<Db>()(
       // v4: adds the newborn demo project, the new demo tool records and the nwaran function (additive).
       // v5: vehicle services on the built-in occasions; feature flags, text overrides, announcements (additive).
       // v6: the social hub (connected networks, unified inbox, posts), seeded for the demo businesses (additive).
-      version: 6,
+      // v7: content edited in the super admin console (photos, listings, home sections, banners, brand); starts empty (additive).
+      version: 7,
       storage: lazyStorage<DbData>(),
       partialize: (s) => Object.fromEntries(DATA_KEYS.map((k) => [k, s[k]])) as unknown as DbData,
       migrate: (persisted, version) => {
@@ -135,6 +139,7 @@ export const useDb = create<Db>()(
         if (version < 4) data = addSeedRecords(data);
         if (version < 5) data = addVehicles(data);
         if (version < 6) data = addSocial(data);
+        if (version < 7) data = { ...data, content: normalizeContent(data.content) };
         return data as Db;
       },
     },

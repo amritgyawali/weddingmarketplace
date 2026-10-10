@@ -11,11 +11,11 @@ import { Calendar } from '@/components/ui/Calendar';
 import { triggerHaptic } from '@/components/ui/PressableScale';
 import { ScreenHeader } from '@/components/ui/ScreenHeader';
 import { Text } from '@/components/ui/Text';
-import { photos, type PhotoKey } from '@/constants/images';
+import { photo, type PhotoRef } from '@/constants/images';
 import { colors } from '@/constants/theme';
 import { CITIES, ONBOARDING_CITIES } from '@/data/cities';
 import { EVENT_TYPE_BY_ID, EVENT_TYPES, GUEST_BANDS, bandFor, isPeakSeason } from '@/data/events';
-import { IDEA_PHOTOS } from '@/data/ideas';
+import { catalogue } from '@/data/live';
 import { SERVICE_GROUPS, SERVICES, findService } from '@/data/services';
 import { allocateBudget, estimateTotal, perUnitBudget, type PlanInput } from '@/services/planner';
 import { useAppStore } from '@/store/useAppStore';
@@ -80,7 +80,7 @@ export default function PlanWizard() {
   const [styles_, setStyles] = useState<Record<string, string[]>>({});
   const [notes, setNotes] = useState('');
   const [partner, setPartner] = useState(appPartner);
-  const [inspiration, setInspiration] = useState<PhotoKey[]>([]);
+  const [inspiration, setInspiration] = useState<PhotoRef[]>([]);
   const [submitting, setSubmitting] = useState(false);
 
   const guests = Number(exactGuests) || GUEST_BANDS.find((b) => b.id === band)!.value;
@@ -336,11 +336,11 @@ export default function PlanWizard() {
               Inspiration (tap to add)
             </Text>
             <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 8 }}>
-              {IDEA_PHOTOS.slice(0, 14).map((i) => {
+              {catalogue.ideas().slice(0, 14).map((i) => {
                 const on = inspiration.includes(i.image);
                 return (
                   <Pressable key={i.id} onPress={() => setInspiration((cur) => (on ? cur.filter((x) => x !== i.image) : [...cur, i.image]))}>
-                    <Photo source={photos[i.image]} style={[styles.inspo, { borderColor: on ? colors.primary : 'transparent' }]} contentFit="cover" />
+                    <Photo source={photo(i.image)} style={[styles.inspo, { borderColor: on ? colors.primary : 'transparent' }]} contentFit="cover" />
                     {on && <Ionicons name="checkmark-circle" size={22} color={colors.primary} style={styles.inspoCheck} />}
                   </Pressable>
                 );

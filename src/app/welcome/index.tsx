@@ -22,7 +22,7 @@ import { Ornament } from '@/components/ui/Ornament';
 import { PressableScale } from '@/components/ui/PressableScale';
 import { Text } from '@/components/ui/Text';
 import { BRAND } from '@/constants/brand';
-import { photos, type PhotoKey } from '@/constants/images';
+import { photo, type PhotoKey } from '@/constants/images';
 import { colors, gradients } from '@/constants/theme';
 import { useT } from '@/i18n';
 
@@ -103,7 +103,7 @@ export default function WelcomeCarousel() {
         onMomentumScrollEnd={onMomentumEnd}
         renderItem={({ item }) => (
           <Photo
-            source={photos[item.image]}
+            source={photo(item.image)}
             style={{ width, height }}
             contentFit="cover"
             contentPosition={item.focus}
