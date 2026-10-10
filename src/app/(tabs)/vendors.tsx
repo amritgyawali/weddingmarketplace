@@ -13,10 +13,11 @@ import { Photo } from '@/components/ui/Photo';
 import { triggerHaptic } from '@/components/ui/PressableScale';
 import { Sheet } from '@/components/ui/Sheet';
 import { Text } from '@/components/ui/Text';
-import { photos } from '@/constants/images';
+import { photo } from '@/constants/images';
 import { colors, GUTTER, gradients } from '@/constants/theme';
 import { categoriesFor, enabledServices } from '@/data/categories';
 import { SERVICES } from '@/data/services';
+import { useContent } from '@/hooks/useContent';
 import { useExperience } from '@/hooks/useExperience';
 import { useLayout } from '@/hooks/useLayout';
 import { useMotion } from '@/hooks/useMotion';
@@ -53,7 +54,7 @@ function CategoryCard({ category, width, height, featured, onPress }: { category
       accessibilityLabel={`${category.title}. ${category.subtitle}`}
       accessibilityHint="Shows the services in this category"
       style={({ pressed }) => [styles.card, { width, height }, pressed && { opacity: 0.9 }]}>
-      <Photo source={photos[category.image]} style={StyleSheet.absoluteFill} />
+      <Photo source={photo(category.image)} style={StyleSheet.absoluteFill} />
       <LinearGradient colors={gradients.photoCaption} locations={[0.35, 0.6, 1]} style={[StyleSheet.absoluteFill, { pointerEvents: 'none' }]} />
       <View style={[styles.caption, featured && styles.captionFeatured]}>
         {featured && <Ornament width={56} style={{ marginBottom: 8 }} />}
@@ -92,7 +93,8 @@ export default function VendorsTab() {
   const motion = useMotion();
   const all = SERVICES.map((s) => s.id);
   const services = enabledServices(exp.occasion?.services ?? all, flags);
-  const categories = categoriesFor(services);
+  const content = useContent();
+  const categories = categoriesFor(services, content);
   const filtered = (exp.occasion?.services ?? all).length < all.length;
 
   const inner = Math.min(width, contentWidth) - GUTTER * 2;

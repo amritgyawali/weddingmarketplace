@@ -16,6 +16,7 @@ import { colors, GUTTER } from '@/constants/theme';
 import { ALL_CITIES } from '@/data/cities';
 import { categoriesFor, findCategory } from '@/data/categories';
 import { SERVICES } from '@/data/services';
+import { useContent } from '@/hooks/useContent';
 import { useExperience } from '@/hooks/useExperience';
 import { useFeatures } from '@/hooks/useFeatures';
 import { useDebounce } from '@/hooks/useDebounce';
@@ -36,7 +37,8 @@ export default function VendorListingScreen() {
   const exp = useExperience();
   const on = useFeatures();
   // Only the services the active occasion lists; a category it doesn't list at all stays browsable from a deep link.
-  const category = categoriesFor(exp.occasion?.services ?? SERVICES.map((s) => s.id)).find((c) => c.id === params.category) ?? findCategory(params.category);
+  const content = useContent();
+  const category = categoriesFor(exp.occasion?.services ?? SERVICES.map((s) => s.id), content).find((c) => c.id === params.category) ?? findCategory(params.category);
   const city = useAppStore((s) => s.city);
   const shortlistCount = useAppStore(selectShortlistCount);
   const [sub, setSub] = useState<string | undefined>(params.sub);

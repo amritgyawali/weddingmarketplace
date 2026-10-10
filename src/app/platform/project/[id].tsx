@@ -16,7 +16,7 @@ import { PaymentsPanel } from '@/components/work/Payments';
 import { nextStatuses, PipelineStepper, STATUS_LABEL } from '@/components/work/Pipeline';
 import { TaskBoard } from '@/components/work/TaskBoard';
 import { TimelineView } from '@/components/work/Timeline';
-import { photos } from '@/constants/images';
+import { photo } from '@/constants/images';
 import { colors } from '@/constants/theme';
 import { EVENT_TYPE_BY_ID } from '@/data/events';
 import { findService, serviceName, SERVICES } from '@/data/services';
@@ -126,7 +126,7 @@ function Summary({ project }: { project: Project }) {
       {project.inspiration.length > 0 && (
         <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 6 }}>
           {project.inspiration.map((p) => (
-            <Photo key={p} source={photos[p]} style={styles.inspo} contentFit="cover" />
+            <Photo key={p} source={photo(p)} style={styles.inspo} contentFit="cover" />
           ))}
         </ScrollView>
       )}

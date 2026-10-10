@@ -407,6 +407,8 @@ npm run db:test         # the core loop, sign-up, media, files, notifications an
 npm run test:parity     # money in src/services equals money in SQL
 npm run test:functions  # when you touch supabase/functions
 npm run test:telemetry  # when you touch src/backend/telemetry*
+npm run test:customer-planning  # when you touch the checklist guide, related events or listing availability
+npm run test:features   # when you add a screen or tool (top-20 feature switches, §6b)
 npm run test:social     # when you touch the social hub (rules, seed); its SQL is in db:test, its functions in test:functions
 npm run docs:generate   # after changing exports, routes, actions or SQL; commit docs/reference/ (docs:check verifies)
 npx expo-doctor         # no new failures

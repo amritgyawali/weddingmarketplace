@@ -16,7 +16,7 @@ import { SearchBar } from '@/components/ui/SearchBar';
 import { Sheet } from '@/components/ui/Sheet';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { Text } from '@/components/ui/Text';
-import { photos } from '@/constants/images';
+import { photo } from '@/constants/images';
 import { colors, GUTTER, radius } from '@/constants/theme';
 import { IDEA_CATEGORIES } from '@/data/ideas';
 import { useDebounce } from '@/hooks/useDebounce';
@@ -139,7 +139,7 @@ function StoriesPane() {
       ListEmptyComponent={isLoading ? <Skeleton height={260} borderRadius={radius.lg} /> : null}
       renderItem={({ item }) => (
         <PressableScale onPress={() => router.push({ pathname: '/story/[id]', params: { id: item.id } })} accessibilityLabel={item.title}>
-          <Photo source={photos[item.image]} style={styles.storyImage} contentFit="cover" transition={200} />
+          <Photo source={photo(item.image)} style={styles.storyImage} contentFit="cover" transition={200} />
           <Text size={13} weight="medium" color={colors.primary} style={{ marginTop: 10 }}>
             {item.category}
           </Text>
@@ -168,10 +168,10 @@ function RealWeddingsPane() {
       ListEmptyComponent={isLoading ? <Skeleton height={300} borderRadius={radius.lg} /> : null}
       renderItem={({ item }) => (
         <PressableScale onPress={() => router.push({ pathname: '/real-wedding/[id]', params: { id: item.id } })} accessibilityLabel={`${item.couple} wedding`}>
-          <Photo source={photos[item.cover]} style={styles.realCover} contentFit="cover" transition={200} />
+          <Photo source={photo(item.cover)} style={styles.realCover} contentFit="cover" transition={200} />
           <View style={styles.thumbs}>
             {item.gallery.slice(0, 3).map((g, i) => (
-              <Photo key={`${g}${i}`} source={photos[g]} style={styles.thumb} contentFit="cover" />
+              <Photo key={`${g}${i}`} source={photo(g)} style={styles.thumb} contentFit="cover" />
             ))}
           </View>
           <Text serif size={19} weight="bold" color={colors.heading} lineHeight={27} style={{ marginTop: 10 }}>

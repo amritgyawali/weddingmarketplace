@@ -10,7 +10,7 @@ import { ScreenHeader } from '@/components/ui/ScreenHeader';
 import { Text } from '@/components/ui/Text';
 import { toast } from '@/components/ui/Toast';
 import { BRAND } from '@/constants/brand';
-import { photos, type PhotoKey } from '@/constants/images';
+import { photo, type PhotoKey } from '@/constants/images';
 import { colors, GUTTER, radius, shadows } from '@/constants/theme';
 import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
 
@@ -73,7 +73,7 @@ export default function InfoScreen() {
               <View style={styles.grid}>
                 {INVITE_TEMPLATES.map((t) => (
                   <Pressable key={t.id} style={[styles.tile, shadows.card]} onPress={() => toast(`${t.title} template selected`, 'sparkles')}>
-                    <Photo source={photos[t.image]} style={styles.tileImage} contentFit="cover" />
+                    <Photo source={photo(t.image)} style={styles.tileImage} contentFit="cover" />
                     <View style={{ padding: 10 }}>
                       <Text size={14} weight="semibold" color={colors.heading} numberOfLines={1}>
                         {t.title}
@@ -95,7 +95,7 @@ export default function InfoScreen() {
             <View style={styles.grid}>
               {SHOP.map((s) => (
                 <Pressable key={s.title} style={[styles.tile, shadows.card]} onPress={() => toast('Shop launching soon — stay tuned!', 'bag-handle')}>
-                  <Photo source={photos[s.image]} style={styles.tileImage} contentFit="cover" />
+                  <Photo source={photo(s.image)} style={styles.tileImage} contentFit="cover" />
                   <View style={{ padding: 10 }}>
                     <Text size={14} weight="semibold" color={colors.heading} numberOfLines={2}>
                       {s.title}

@@ -11,9 +11,10 @@ import { ScreenHeader } from '@/components/ui/ScreenHeader';
 import { Sheet } from '@/components/ui/Sheet';
 import { Text } from '@/components/ui/Text';
 import { toast } from '@/components/ui/Toast';
-import { photos } from '@/constants/images';
+import { photo } from '@/constants/images';
 import { colors } from '@/constants/theme';
 import { IDEA_PHOTOS } from '@/data/ideas';
+import { useLiveList } from '@/hooks/useContent';
 import { findProvider, type Provider } from '@/data/providers';
 import { serviceName } from '@/data/services';
 import { useStartChat } from '@/hooks/useChat';
@@ -56,7 +57,7 @@ export default function ShortlistScreen() {
 
   const list = (entries ?? []).map((e) => ({ e, p: findProvider(e.providerId) })).filter((x): x is { e: ShortlistEntry; p: Provider } => !!x.p);
   const shown = list.filter((x) => stage === 'all' || x.e.status === stage);
-  const photosLiked = IDEA_PHOTOS.filter((p) => liked.includes(p.id));
+  const photosLiked = useLiveList('idea', IDEA_PHOTOS).filter((p) => liked.includes(p.id));
   const current = list.find((x) => x.p.id === editing);
 
   const remove = (p: Provider) => {
@@ -104,7 +105,7 @@ export default function ShortlistScreen() {
             return (
               <Card padded={false} style={{ overflow: 'hidden' }}>
                 <Pressable onPress={() => router.push(p.kind === 'venue' ? { pathname: '/venue/[id]', params: { id: p.id } } : { pathname: '/vendor/[id]', params: { id: p.id } })} style={styles.row}>
-                  <Photo source={photos[p.image]} style={styles.image} contentFit="cover" />
+                  <Photo source={photo(p.image)} style={styles.image} contentFit="cover" />
                   <View style={{ flex: 1, gap: 2 }}>
                     <Text size={12} weight="medium" color={colors.textMuted}>
                       {serviceName(p.serviceId)}

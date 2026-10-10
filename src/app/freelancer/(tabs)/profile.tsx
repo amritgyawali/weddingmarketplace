@@ -10,7 +10,7 @@ import { Sheet } from '@/components/ui/Sheet';
 import { Text } from '@/components/ui/Text';
 import { Toggle } from '@/components/ui/Toggle';
 import { toast } from '@/components/ui/Toast';
-import { photos } from '@/constants/images';
+import { photo } from '@/constants/images';
 import { craftProfileLines } from '@/components/persona/FreelancerPersona';
 import { colors } from '@/constants/theme';
 import { CRAFT_BY_ID, CRAFTS } from '@/data/crafts';
@@ -349,7 +349,7 @@ export default function FreelancerProfile() {
         ) : (
           <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 8 }}>
             {work.slice(0, 10).map((p) => (
-              <Photo key={p.id} source={p.uri ? { uri: p.uri } : photos[p.image!]} style={styles.thumb} contentFit="cover" />
+              <Photo key={p.id} source={p.uri ? { uri: p.uri } : photo(p.image)} style={styles.thumb} contentFit="cover" />
             ))}
           </ScrollView>
         )}

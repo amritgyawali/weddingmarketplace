@@ -1,4 +1,5 @@
 import type { TextOverrides } from '@/i18n/runtime';
+import type { AppContent } from '@/types/content';
 import type {
   Announcement,
   AppNotification,
@@ -102,6 +103,8 @@ export interface DbData {
   textOverrides: TextOverrides;
   /** Notices shown at the top of a role's home. */
   announcements: Announcement[];
+  /** Replacement photos, listing edits, home sections, banners and brand details (Content studio). */
+  content: AppContent;
   // social hub (business app)
   /** Facebook pages, Instagram profiles, WhatsApp numbers and TikTok accounts a business connected. */
   socialAccounts: SocialAccount[];

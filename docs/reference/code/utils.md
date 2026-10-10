@@ -25,69 +25,69 @@ one digit per month as `days − 29` (MIT data from nepali-date-converter).
 
 ### `BS_FIRST_YEAR`
 
-*const* · [src/utils/bs.ts:23](../../../src/utils/bs.ts#L23)
+*const* · [src/utils/bs.ts:24](../../../src/utils/bs.ts#L24)
 
 ```ts
 BS_FIRST_YEAR= 2000
 ```
 
-_No JSDoc yet._
+First Bikram Sambat year the month-length table covers.
 
 ### `BS_LAST_YEAR`
 
-*const* · [src/utils/bs.ts:24](../../../src/utils/bs.ts#L24)
+*const* · [src/utils/bs.ts:26](../../../src/utils/bs.ts#L26)
 
 ```ts
 BS_LAST_YEAR= BS_FIRST_YEAR + TABLE.length / 12 - 1
 ```
 
-_No JSDoc yet._
+Last Bikram Sambat year the month-length table covers (extend the table before this).
 
 ### `BS_MONTHS_EN`
 
-*const* · [src/utils/bs.ts:28](../../../src/utils/bs.ts#L28)
+*const* · [src/utils/bs.ts:31](../../../src/utils/bs.ts#L31)
 
 ```ts
 BS_MONTHS_EN= [ … 12 items ]
 ```
 
-_No JSDoc yet._
+Bikram Sambat month names in English, Baisakh first.
 
 ### `BS_MONTHS_NE`
 
-*const* · [src/utils/bs.ts:29](../../../src/utils/bs.ts#L29)
+*const* · [src/utils/bs.ts:33](../../../src/utils/bs.ts#L33)
 
 ```ts
 BS_MONTHS_NE= [ … 12 items ]
 ```
 
-_No JSDoc yet._
+Bikram Sambat month names in Nepali, Baisakh first.
 
 ### `WEEKDAYS_NE`
 
-*const* · [src/utils/bs.ts:30](../../../src/utils/bs.ts#L30)
+*const* · [src/utils/bs.ts:35](../../../src/utils/bs.ts#L35)
 
 ```ts
 WEEKDAYS_NE= ['आइत', 'सोम', 'मंगल', 'बुध', 'बिही', 'शुक्र', 'शनि']
 ```
 
-_No JSDoc yet._
+Weekday names in Nepali, Sunday first.
 
 ### `WEEKDAYS_NE_SHORT`
 
-*const* · [src/utils/bs.ts:31](../../../src/utils/bs.ts#L31)
+*const* · [src/utils/bs.ts:37](../../../src/utils/bs.ts#L37)
 
 ```ts
 WEEKDAYS_NE_SHORT= ['आ', 'सो', 'मं', 'बु', 'बि', 'शु', 'श']
 ```
 
-_No JSDoc yet._
+One-letter Nepali weekday labels for calendar headers, Sunday first.
 
 ### `BsDate`
 
-*interface* · [src/utils/bs.ts:33](../../../src/utils/bs.ts#L33)
+*interface* · [src/utils/bs.ts:40](../../../src/utils/bs.ts#L40)
 
-_No JSDoc yet._
+A Bikram Sambat calendar date; `month` is zero-based.
 
 | Member | Type | Notes |
 |---|---|---|
@@ -97,7 +97,7 @@ _No JSDoc yet._
 
 ### `bsDaysInMonth`
 
-*function* · [src/utils/bs.ts:41](../../../src/utils/bs.ts#L41)
+*function* · [src/utils/bs.ts:48](../../../src/utils/bs.ts#L48)
 
 ```ts
 bsDaysInMonth(year: number, month: number): number
@@ -107,7 +107,7 @@ Days in a BS month, or 30 outside the table.
 
 ### `adToBs`
 
-*function* · [src/utils/bs.ts:57](../../../src/utils/bs.ts#L57)
+*function* · [src/utils/bs.ts:64](../../../src/utils/bs.ts#L64)
 
 ```ts
 adToBs(iso: string): BsDate | null
@@ -117,7 +117,7 @@ AD `yyyy-mm-dd` → BS, or null outside BS 2000–2090.
 
 ### `bsToAd`
 
-*function* · [src/utils/bs.ts:73](../../../src/utils/bs.ts#L73)
+*function* · [src/utils/bs.ts:80](../../../src/utils/bs.ts#L80)
 
 ```ts
 bsToAd({ year, month, day }: BsDate): string | null
@@ -127,7 +127,7 @@ BS → AD `yyyy-mm-dd`, or null outside the table.
 
 ### `toNepaliDigits`
 
-*function* · [src/utils/bs.ts:85](../../../src/utils/bs.ts#L85)
+*function* · [src/utils/bs.ts:92](../../../src/utils/bs.ts#L92)
 
 ```ts
 toNepaliDigits(s: string | number)
@@ -137,17 +137,17 @@ toNepaliDigits(s: string | number)
 
 ### `bsMonthName`
 
-*function* · [src/utils/bs.ts:87](../../../src/utils/bs.ts#L87)
+*function* · [src/utils/bs.ts:95](../../../src/utils/bs.ts#L95)
 
 ```ts
 bsMonthName(month: number, lang: 'en' | 'ne' = 'en')
 ```
 
-_No JSDoc yet._
+Name of a BS month (0 = Baisakh) in English or Nepali; wraps around outside 0–11.
 
 ### `shiftBsMonth`
 
-*function* · [src/utils/bs.ts:90](../../../src/utils/bs.ts#L90)
+*function* · [src/utils/bs.ts:98](../../../src/utils/bs.ts#L98)
 
 ```ts
 shiftBsMonth({ year, month }: { year: number; month: number }, delta: number)
@@ -157,9 +157,9 @@ Moves a BS month cursor by `delta` months.
 
 ### `MonthCell`
 
-*interface* · [src/utils/bs.ts:101](../../../src/utils/bs.ts#L101)
+*interface* · [src/utils/bs.ts:110](../../../src/utils/bs.ts#L110)
 
-_No JSDoc yet._
+One day cell of a month grid.
 
 | Member | Type | Notes |
 |---|---|---|
@@ -169,7 +169,7 @@ _No JSDoc yet._
 
 ### `monthCells`
 
-*function* · [src/utils/bs.ts:114](../../../src/utils/bs.ts#L114)
+*function* · [src/utils/bs.ts:123](../../../src/utils/bs.ts#L123)
 
 ```ts
 monthCells(mode: 'bs' | 'ad', cursor: { year: number; month: number }): (MonthCell | null)[]
@@ -180,7 +180,7 @@ Cells of one month, padded with nulls to whole weeks starting Sunday.
 
 ### `cursorFor`
 
-*function* · [src/utils/bs.ts:139](../../../src/utils/bs.ts#L139)
+*function* · [src/utils/bs.ts:148](../../../src/utils/bs.ts#L148)
 
 ```ts
 cursorFor(mode: 'bs' | 'ad', iso: string)
@@ -210,28 +210,27 @@ Source: [src/utils/format.ts](../../../src/utils/format.ts)
 
 ### `CURRENCY`
 
-*const* · [src/utils/format.ts:9](../../../src/utils/format.ts#L9)
+*const* · [src/utils/format.ts:10](../../../src/utils/format.ts#L10)
 
 ```ts
 CURRENCY= 'NPR'
 ```
 
-Money is NPR everywhere. Grouping is done by hand because Hermes' Intl
-support varies across platforms.
+Currency code shown in every money string.
 
 ### `formatNumber`
 
-*function* · [src/utils/format.ts:11](../../../src/utils/format.ts#L11)
+*function* · [src/utils/format.ts:13](../../../src/utils/format.ts#L13)
 
 ```ts
 formatNumber(value: number): string
 ```
 
-_No JSDoc yet._
+Groups digits in thousands (150,000), keeps up to two decimals and a leading minus.
 
 ### `formatMoney`
 
-*function* · [src/utils/format.ts:21](../../../src/utils/format.ts#L21)
+*function* · [src/utils/format.ts:23](../../../src/utils/format.ts#L23)
 
 ```ts
 formatMoney(value: number)
@@ -241,7 +240,7 @@ NPR 150,000
 
 ### `formatMoneyCompact`
 
-*function* · [src/utils/format.ts:24](../../../src/utils/format.ts#L24)
+*function* · [src/utils/format.ts:26](../../../src/utils/format.ts#L26)
 
 ```ts
 formatMoneyCompact(value: number): string
@@ -251,7 +250,7 @@ Compact form used in chips and filters: NPR 800, NPR 45K, NPR 975K, NPR 2.5M.
 
 ### `formatMoneyRange`
 
-*function* · [src/utils/format.ts:33](../../../src/utils/format.ts#L33)
+*function* · [src/utils/format.ts:35](../../../src/utils/format.ts#L35)
 
 ```ts
 formatMoneyRange(lo: number, hi: number)
@@ -261,7 +260,7 @@ Budget range: NPR 40K–60K
 
 ### `formatLakh`
 
-*function* · [src/utils/format.ts:39](../../../src/utils/format.ts#L39)
+*function* · [src/utils/format.ts:41](../../../src/utils/format.ts#L41)
 
 ```ts
 formatLakh(value: number): string
@@ -271,7 +270,7 @@ How families talk about wedding budgets: "7.5 lakh", "26 lakh", "1.2 crore".
 
 ### `formatLakhRange`
 
-*function* · [src/utils/format.ts:46](../../../src/utils/format.ts#L46)
+*function* · [src/utils/format.ts:48](../../../src/utils/format.ts#L48)
 
 ```ts
 formatLakhRange(lo: number, hi: number): string
@@ -281,7 +280,7 @@ NPR 7.1–26 lakh, or NPR 45 lakh – 1.2 crore across the boundary.
 
 ### `parseMoney`
 
-*function* · [src/utils/format.ts:52](../../../src/utils/format.ts#L52)
+*function* · [src/utils/format.ts:54](../../../src/utils/format.ts#L54)
 
 ```ts
 parseMoney(input: string): number
@@ -291,17 +290,17 @@ Parse "1,50,000", "150000", "150k", "1.5m" into a number (NaN when invalid).
 
 ### `percent`
 
-*function* · [src/utils/format.ts:61](../../../src/utils/format.ts#L61)
+*function* · [src/utils/format.ts:64](../../../src/utils/format.ts#L64)
 
 ```ts
 percent(value: number, digits = 0)
 ```
 
-_No JSDoc yet._
+Turns a ratio into a percentage string: 0.13 gives "13%".
 
 ### `formatShortDate`
 
-*function* · [src/utils/format.ts:82](../../../src/utils/format.ts#L82)
+*function* · [src/utils/format.ts:85](../../../src/utils/format.ts#L85)
 
 ```ts
 formatShortDate(iso: string): string
@@ -311,7 +310,7 @@ formatShortDate(iso: string): string
 
 ### `formatLongDate`
 
-*function* · [src/utils/format.ts:90](../../../src/utils/format.ts#L90)
+*function* · [src/utils/format.ts:93](../../../src/utils/format.ts#L93)
 
 ```ts
 formatLongDate(iso: string): string
@@ -321,7 +320,7 @@ formatLongDate(iso: string): string
 
 ### `formatMonthDay`
 
-*function* · [src/utils/format.ts:98](../../../src/utils/format.ts#L98)
+*function* · [src/utils/format.ts:101](../../../src/utils/format.ts#L101)
 
 ```ts
 formatMonthDay(iso: string): string
@@ -331,7 +330,7 @@ formatMonthDay(iso: string): string
 
 ### `formatAdDate`
 
-*function* · [src/utils/format.ts:106](../../../src/utils/format.ts#L106)
+*function* · [src/utils/format.ts:109](../../../src/utils/format.ts#L109)
 
 ```ts
 formatAdDate(iso: string): string
@@ -341,7 +340,7 @@ Always Gregorian: "18 Aug 2026".
 
 ### `formatDateAlt`
 
-*function* · [src/utils/format.ts:112](../../../src/utils/format.ts#L112)
+*function* · [src/utils/format.ts:115](../../../src/utils/format.ts#L115)
 
 ```ts
 formatDateAlt(iso: string): string
@@ -351,17 +350,17 @@ The same day in the other calendar, shown beside the main date: AD under BS, or 
 
 ### `formatTime`
 
-*function* · [src/utils/format.ts:118](../../../src/utils/format.ts#L118)
+*function* · [src/utils/format.ts:122](../../../src/utils/format.ts#L122)
 
 ```ts
 formatTime(iso: string): string
 ```
 
-_No JSDoc yet._
+Local clock time of an ISO timestamp in 12-hour form, e.g. "6:30 PM".
 
 ### `formatClock`
 
-*function* · [src/utils/format.ts:126](../../../src/utils/format.ts#L126)
+*function* · [src/utils/format.ts:130](../../../src/utils/format.ts#L130)
 
 ```ts
 formatClock(hhmm: string): string
@@ -371,7 +370,7 @@ formatClock(hhmm: string): string
 
 ### `timeAgo`
 
-*function* · [src/utils/format.ts:133](../../../src/utils/format.ts#L133)
+*function* · [src/utils/format.ts:137](../../../src/utils/format.ts#L137)
 
 ```ts
 timeAgo(iso: string): string
@@ -381,17 +380,17 @@ timeAgo(iso: string): string
 
 ### `daysUntil`
 
-*function* · [src/utils/format.ts:145](../../../src/utils/format.ts#L145)
+*function* · [src/utils/format.ts:150](../../../src/utils/format.ts#L150)
 
 ```ts
 daysUntil(iso: string): number
 ```
 
-_No JSDoc yet._
+Whole days from today (local midnight) to a date; negative when the date has passed.
 
 ### `relativeDay`
 
-*function* · [src/utils/format.ts:154](../../../src/utils/format.ts#L154)
+*function* · [src/utils/format.ts:159](../../../src/utils/format.ts#L159)
 
 ```ts
 relativeDay(iso: string): string
@@ -401,7 +400,7 @@ relativeDay(iso: string): string
 
 ### `toISODate`
 
-*function* · [src/utils/format.ts:163](../../../src/utils/format.ts#L163)
+*function* · [src/utils/format.ts:168](../../../src/utils/format.ts#L168)
 
 ```ts
 toISODate(date: Date): string
@@ -411,57 +410,57 @@ Store dates as yyyy-mm-dd so they never shift across time zones.
 
 ### `fromISODate`
 
-*function* · [src/utils/format.ts:170](../../../src/utils/format.ts#L170)
+*function* · [src/utils/format.ts:176](../../../src/utils/format.ts#L176)
 
 ```ts
 fromISODate(iso: string): Date
 ```
 
-_No JSDoc yet._
+Parses yyyy-mm-dd as a local-midnight Date, never shifted by the time zone.
 
 ### `addDays`
 
-*function* · [src/utils/format.ts:175](../../../src/utils/format.ts#L175)
+*function* · [src/utils/format.ts:182](../../../src/utils/format.ts#L182)
 
 ```ts
 addDays(iso: string, days: number)
 ```
 
-_No JSDoc yet._
+Adds (or, when negative, subtracts) whole days to a yyyy-mm-dd date.
 
 ### `pluralize`
 
-*function* · [src/utils/format.ts:181](../../../src/utils/format.ts#L181)
+*function* · [src/utils/format.ts:189](../../../src/utils/format.ts#L189)
 
 ```ts
 pluralize(count: number, word: string, plural = `${word}s`)
 ```
 
-_No JSDoc yet._
+Count with its noun: pluralize(1, 'guest') is "1 guest", pluralize(3, 'guest') is "3 guests".
 
 ### `initials`
 
-*function* · [src/utils/format.ts:183](../../../src/utils/format.ts#L183)
+*function* · [src/utils/format.ts:192](../../../src/utils/format.ts#L192)
 
 ```ts
 initials(name: string)
 ```
 
-_No JSDoc yet._
+Up to two capital letters from the first two words of a name.
 
 ### `uid`
 
-*function* · [src/utils/format.ts:191](../../../src/utils/format.ts#L191)
+*function* · [src/utils/format.ts:201](../../../src/utils/format.ts#L201)
 
 ```ts
 uid(prefix = 'id')
 ```
 
-_No JSDoc yet._
+Unique-enough local id with a prefix, such as "proj_lq3k9_x7a1bc".
 
 ### `shortCode`
 
-*function* · [src/utils/format.ts:194](../../../src/utils/format.ts#L194)
+*function* · [src/utils/format.ts:204](../../../src/utils/format.ts#L204)
 
 ```ts
 shortCode(length = 6)
@@ -471,7 +470,7 @@ Short human code, e.g. for invites: "K7P2QX".
 
 ### `isNepalMobile`
 
-*function* · [src/utils/format.ts:198](../../../src/utils/format.ts#L198)
+*function* · [src/utils/format.ts:208](../../../src/utils/format.ts#L208)
 
 ```ts
 isNepalMobile(phone: string)
@@ -481,17 +480,17 @@ Nepal mobile numbers: 97/98 + 8 digits.
 
 ### `formatPhone`
 
-*function* · [src/utils/format.ts:199](../../../src/utils/format.ts#L199)
+*function* · [src/utils/format.ts:210](../../../src/utils/format.ts#L210)
 
 ```ts
 formatPhone(phone: string)
 ```
 
-_No JSDoc yet._
+Formats a Nepal mobile number as "+977 98x-xxx-xxxx"; returns the input unchanged if it has fewer than 10 digits.
 
 ### `today`
 
-*function* · [src/utils/format.ts:205](../../../src/utils/format.ts#L205)
+*function* · [src/utils/format.ts:216](../../../src/utils/format.ts#L216)
 
 ```ts
 today()

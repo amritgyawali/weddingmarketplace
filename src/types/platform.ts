@@ -11,7 +11,7 @@
  *                       ├─ ProjectTask, TimelineEntry, Deliverable
  *                       └─ Thread ── Message                 (InternalNote is separate)
  */
-import type { PhotoKey } from '@/constants/images';
+import type { PhotoRef } from '@/constants/images';
 
 import type { BusinessForm, Capability, HonoureeKind, OccasionId } from './persona';
 
@@ -533,7 +533,7 @@ export interface Project {
   styles: Record<string, string[]>;
   priorities: string[];
   notes?: string;
-  inspiration: PhotoKey[];
+  inspiration: PhotoRef[];
   events: ProjectEvent[];
   requirements: Requirement[];
   bookings: ServiceBooking[];
@@ -679,7 +679,7 @@ export interface FreelancerProfile {
   reliability: number;
   verification: VerificationStatus;
   available: boolean;
-  portfolio: PhotoKey[];
+  portfolio: PhotoRef[];
 }
 
 export type GigStatus = 'open' | 'filled' | 'in_progress' | 'completed' | 'cancelled';
@@ -769,7 +769,7 @@ export interface Thread {
   gigId?: string;
   listingId?: string;
   title: string;
-  image?: PhotoKey;
+  image?: PhotoRef;
   members: ThreadMember[];
   lastAt: string;
   archivedBy: string[];
@@ -790,7 +790,7 @@ export interface Message {
   text: string;
   meta?: {
     quoteId?: string;
-    image?: PhotoKey;
+    image?: PhotoRef;
     uri?: string;
     fileName?: string;
     location?: { label: string; lat?: number; lng?: number };
@@ -864,7 +864,7 @@ export interface ReviewRecord {
   overall: number;
   criteria: Record<string, number>;
   text: string;
-  photos: PhotoKey[];
+  photos: PhotoRef[];
   /** Photos the reviewer uploaded (Cloudinary URLs in production). */
   photoUris?: string[];
   /** yyyy-mm-dd of the event being reviewed, when the reviewer gave it (optional). */
@@ -972,8 +972,8 @@ export interface WeddingWebsite {
   font: 'serif' | 'sans';
   headline: string;
   story: string;
-  cover: PhotoKey;
-  gallery: PhotoKey[];
+  cover: PhotoRef;
+  gallery: PhotoRef[];
   sections: { schedule: boolean; travel: boolean; faq: boolean; registry: boolean; rsvp: boolean; gallery: boolean; dressCode: boolean; story: boolean };
   travel: string;
   dressCode: string;
@@ -998,7 +998,7 @@ export interface RegistryItem {
   target?: number;
   quantity?: number;
   link?: string;
-  image?: PhotoKey;
+  image?: PhotoRef;
   contributions: { id: string; name: string; amount: number; message?: string; at: string; thanked: boolean }[];
 }
 
@@ -1073,7 +1073,7 @@ export interface ProviderPackage {
 export interface PortfolioItem {
   id: string;
   providerId: string;
-  image?: PhotoKey;
+  image?: PhotoRef;
   uri?: string;
   /** Cloudinary public id when the file was uploaded (Supabase builds); `uri` then holds its card-size URL. */
   publicId?: string;

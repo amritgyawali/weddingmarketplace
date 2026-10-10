@@ -170,6 +170,7 @@ export const PLATFORM_ROUTE_RULES: Record<string, When> = {
   '/platform/admin/record': { perms: ['admin.full'] },
   '/platform/admin/features': { perms: ['admin.full'] },
   '/platform/admin/texts': { perms: ['admin.full'] },
+  '/platform/admin/content': { perms: ['admin.full'] },
   '/platform/admin/announcements': { perms: ['admin.full'] },
   '/platform/admin/bugs': { perms: ['admin.full'] },
   '/platform/admin/bug': { perms: ['admin.full'] },
@@ -199,6 +200,7 @@ export const ROUTE_AUDIENCE: Record<string, string> = {
   '/platform/admin/record': 'super admins',
   '/platform/admin/features': 'super admins',
   '/platform/admin/texts': 'super admins',
+  '/platform/admin/content': 'super admins',
   '/platform/admin/announcements': 'super admins',
 };
 

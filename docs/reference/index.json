@@ -13116,23 +13116,23 @@
     {
      "name": "PRICING_MODELS",
      "kind": "const",
-     "line": 20,
+     "line": 21,
      "signature": ": { id: PricingModel; label: string; blurb: string; defaultRate: number; rateLabel: string }[]",
-     "doc": ""
+     "doc": "The four ways the platform earns on a booking, with default rates and labels for the settings UI."
     },
     {
      "name": "pricingModel",
      "kind": "function",
-     "line": 27,
+     "line": 29,
      "signature": "(id: PricingModel)",
-     "doc": ""
+     "doc": "Looks up a pricing model definition by id."
     },
     {
      "name": "Split",
      "kind": "interface",
-     "line": 29,
+     "line": 32,
      "signature": "",
-     "doc": "",
+     "doc": "Result of splitting a booking: the agreed price, provider cost, platform fee and what the provider is paid.",
      "members": [
       {
        "name": "agreedPrice",
@@ -13163,84 +13163,84 @@
     {
      "name": "roundMoney",
      "kind": "function",
-     "line": 48,
+     "line": 44,
      "signature": "(x: number)",
      "doc": "Whole rupees, half up, without binary floating-point drift: 1,780,150 × 1.15\nis 2,047,172.5 and rounds to 2,047,173, where plain Math.round sees\n2,047,172.4999… Mirrors vivah_rupees() in supabase/migrations/0011."
     },
     {
      "name": "splitBooking",
      "kind": "function",
-     "line": 50,
+     "line": 53,
      "signature": "(model: PricingModel, rate: number, amounts: { customerPrice?: number; providerCost?: number }): Split",
-     "doc": ""
+     "doc": "Split one booking.\n A  COMMISSION        customer 100,000 → provider 90,000, platform 10,000\n B  MARKUP            provider 70,000 → customer 80,500 (15%), platform 10,500\n C  LEAD_FEE          customer pays provider price; platform nets a flat fee\n D  FREELANCER_MARGIN client 10,000 → freelancer 8,000, platform 2,000"
     },
     {
      "name": "freelancerNet",
      "kind": "function",
-     "line": 73,
+     "line": 76,
      "signature": "(clientPay: number, margin = 0.2)",
      "doc": "Freelancer pay after the platform margin (model D)."
     },
     {
      "name": "SCHEDULE_TEMPLATES",
      "kind": "const",
-     "line": 76,
+     "line": 80,
      "signature": ": { id: string; label: string; steps: ScheduleStep[] }[]",
-     "doc": ""
+     "doc": "Customer payment schedule templates; the first is the default 30/50/20 split."
     },
     {
      "name": "DEFAULT_SCHEDULE",
      "kind": "const",
-     "line": 107,
+     "line": 112,
      "signature": "= SCHEDULE_TEMPLATES[0].steps",
-     "doc": ""
+     "doc": "The default customer payment schedule (30% on confirmation, 50% fifteen days before the event, 20% after completion)."
     },
     {
      "name": "dueDateFor",
      "kind": "function",
-     "line": 115,
+     "line": 120,
      "signature": "(step: ScheduleStep, dates: { confirmed: string; event: string; lastEvent?: string }): string",
      "doc": ""
     },
     {
      "name": "buildMilestones",
      "kind": "function",
-     "line": 133,
+     "line": 138,
      "signature": "(steps: ScheduleStep[], total: number, dates: { confirmed: string; event: string; lastEvent?: string }, quoteId?: string): PaymentMilestone[]",
      "doc": "Milestones for a total; the last step absorbs rounding so amounts sum exactly."
     },
     {
      "name": "milestoneStatus",
      "kind": "function",
-     "line": 154,
+     "line": 159,
      "signature": "(m: Pick<PaymentMilestone, 'due' | 'amount' | 'paidAmount' | 'status'>): MilestoneStatus",
      "doc": "Recomputed status: due within 7 days → DUE, past due → OVERDUE."
     },
     {
      "name": "paymentSummary",
      "kind": "function",
-     "line": 163,
+     "line": 169,
      "signature": "(project: Pick<Project, 'milestones'>)",
-     "doc": ""
+     "doc": "Totals for a project's milestones: total (waived excluded), paid, outstanding, the next unpaid milestone and the overdue ones."
     },
     {
      "name": "payablesForBooking",
      "kind": "function",
-     "line": 179,
+     "line": 185,
      "signature": "(booking: ServiceBooking, project: Project): Payable[]",
      "doc": "Provider payables for a confirmed booking: 40% released before the event\n(so vendors can buy materials) and 60% after the event is completed. Held\nautomatically while a dispute is open."
     },
     {
      "name": "releasable",
      "kind": "function",
-     "line": 199,
+     "line": 205,
      "signature": "(p: Payable, project?: Project): boolean",
      "doc": "Payables that are now releasable given today's date and event state."
     },
     {
      "name": "projectEconomics",
      "kind": "function",
-     "line": 209,
+     "line": 215,
      "signature": "(project: Project)",
      "doc": "Project-level economics for the coordinator console."
     }
@@ -14885,35 +14885,35 @@
     {
      "name": "SetDb",
      "kind": "type",
-     "line": 7,
+     "line": 8,
      "signature": "= (partial: Partial<Db> | ((s: Db) => Partial<Db>)) => void",
-     "doc": ""
+     "doc": "Signature of the zustand `set` function for the DB store."
     },
     {
      "name": "GetDb",
      "kind": "type",
-     "line": 8,
+     "line": 10,
      "signature": "= () => Db",
-     "doc": ""
+     "doc": "Signature of the zustand `get` function for the DB store."
     },
     {
      "name": "now",
      "kind": "function",
-     "line": 10,
+     "line": 13,
      "signature": "()",
-     "doc": ""
+     "doc": "Current time as an ISO timestamp, used for created/updated stamps."
     },
     {
      "name": "today",
      "kind": "function",
-     "line": 11,
+     "line": 15,
      "signature": "()",
-     "doc": ""
+     "doc": "Today's date as yyyy-mm-dd (local)."
     },
     {
      "name": "Actor",
      "kind": "interface",
-     "line": 14,
+     "line": 18,
      "signature": "",
      "doc": "Actor recorded on audit entries and status history.",
      "members": [
@@ -14934,70 +14934,70 @@
     {
      "name": "SYSTEM",
      "kind": "const",
-     "line": 19,
+     "line": 24,
      "signature": ": Actor",
-     "doc": ""
+     "doc": "Actor used for automated changes that no signed-in person made."
     },
     {
      "name": "accountById",
      "kind": "function",
-     "line": 21,
+     "line": 27,
      "signature": "(id?: string): Account | undefined",
-     "doc": ""
+     "doc": "Finds an account by id in the session store; undefined when the id is missing or unknown."
     },
     {
      "name": "currentActor",
      "kind": "function",
-     "line": 22,
+     "line": 29,
      "signature": "(): Actor",
-     "doc": ""
+     "doc": "The signed-in account as an audit actor, or `SYSTEM` when nobody is signed in."
     },
     {
      "name": "ownersOf",
      "kind": "function",
-     "line": 29,
+     "line": 36,
      "signature": "(listingId: string)",
      "doc": "Vendor accounts that manage a catalogue listing."
     },
     {
      "name": "mapProject",
      "kind": "function",
-     "line": 32,
+     "line": 39,
      "signature": "(projects: Project[], id: string, fn: (p: Project) => Project)",
      "doc": "Replace one project immutably."
     },
     {
      "name": "mapBooking",
      "kind": "function",
-     "line": 36,
+     "line": 43,
      "signature": "(p: Project, bookingId: string, fn: (b: ServiceBooking) => ServiceBooking): Project",
      "doc": "Replace one booking inside a project immutably."
     },
     {
      "name": "bookingDates",
      "kind": "function",
-     "line": 42,
+     "line": 49,
      "signature": "(p: Project, b: Pick<ServiceBooking, 'eventIds'>)",
      "doc": "Dated events a booking covers, earliest first."
     },
     {
      "name": "firstDate",
      "kind": "function",
-     "line": 45,
+     "line": 53,
      "signature": "(p: Project)",
-     "doc": ""
+     "doc": "Earliest date of the project's live (not cancelled) events, falling back to the wedding date."
     },
     {
      "name": "lastDate",
      "kind": "function",
-     "line": 51,
+     "line": 60,
      "signature": "(p: Project)",
-     "doc": ""
+     "doc": "Latest date of the project's live (not cancelled) events, falling back to the wedding date."
     },
     {
      "name": "nextNumber",
      "kind": "function",
-     "line": 59,
+     "line": 68,
      "signature": "(prefix: string, existing: string[])",
      "doc": "Receipt / invoice style numbers: RCPT-2026-0145."
     }
@@ -24888,51 +24888,51 @@
     {
      "name": "BS_FIRST_YEAR",
      "kind": "const",
-     "line": 23,
+     "line": 24,
      "signature": "= 2000",
-     "doc": ""
+     "doc": "First Bikram Sambat year the month-length table covers."
     },
     {
      "name": "BS_LAST_YEAR",
      "kind": "const",
-     "line": 24,
+     "line": 26,
      "signature": "= BS_FIRST_YEAR + TABLE.length / 12 - 1",
-     "doc": ""
+     "doc": "Last Bikram Sambat year the month-length table covers (extend the table before this)."
     },
     {
      "name": "BS_MONTHS_EN",
      "kind": "const",
-     "line": 28,
+     "line": 31,
      "signature": "= [ … 12 items ]",
-     "doc": ""
+     "doc": "Bikram Sambat month names in English, Baisakh first."
     },
     {
      "name": "BS_MONTHS_NE",
      "kind": "const",
-     "line": 29,
+     "line": 33,
      "signature": "= [ … 12 items ]",
-     "doc": ""
+     "doc": "Bikram Sambat month names in Nepali, Baisakh first."
     },
     {
      "name": "WEEKDAYS_NE",
      "kind": "const",
-     "line": 30,
+     "line": 35,
      "signature": "= ['आइत', 'सोम', 'मंगल', 'बुध', 'बिही', 'शुक्र', 'शनि']",
-     "doc": ""
+     "doc": "Weekday names in Nepali, Sunday first."
     },
     {
      "name": "WEEKDAYS_NE_SHORT",
      "kind": "const",
-     "line": 31,
+     "line": 37,
      "signature": "= ['आ', 'सो', 'मं', 'बु', 'बि', 'शु', 'श']",
-     "doc": ""
+     "doc": "One-letter Nepali weekday labels for calendar headers, Sunday first."
     },
     {
      "name": "BsDate",
      "kind": "interface",
-     "line": 33,
+     "line": 40,
      "signature": "",
-     "doc": "",
+     "doc": "A Bikram Sambat calendar date; `month` is zero-based.",
      "members": [
       {
        "name": "year",
@@ -24957,51 +24957,51 @@
     {
      "name": "bsDaysInMonth",
      "kind": "function",
-     "line": 41,
+     "line": 48,
      "signature": "(year: number, month: number): number",
      "doc": "Days in a BS month, or 30 outside the table."
     },
     {
      "name": "adToBs",
      "kind": "function",
-     "line": 57,
+     "line": 64,
      "signature": "(iso: string): BsDate | null",
      "doc": "AD `yyyy-mm-dd` → BS, or null outside BS 2000–2090."
     },
     {
      "name": "bsToAd",
      "kind": "function",
-     "line": 73,
+     "line": 80,
      "signature": "({ year, month, day }: BsDate): string | null",
      "doc": "BS → AD `yyyy-mm-dd`, or null outside the table."
     },
     {
      "name": "toNepaliDigits",
      "kind": "function",
-     "line": 85,
+     "line": 92,
      "signature": "(s: string | number)",
      "doc": "\"2083\" → \"२०८३\""
     },
     {
      "name": "bsMonthName",
      "kind": "function",
-     "line": 87,
+     "line": 95,
      "signature": "(month: number, lang: 'en' | 'ne' = 'en')",
-     "doc": ""
+     "doc": "Name of a BS month (0 = Baisakh) in English or Nepali; wraps around outside 0–11."
     },
     {
      "name": "shiftBsMonth",
      "kind": "function",
-     "line": 90,
+     "line": 98,
      "signature": "({ year, month }: { year: number; month: number }, delta: number)",
      "doc": "Moves a BS month cursor by `delta` months."
     },
     {
      "name": "MonthCell",
      "kind": "interface",
-     "line": 101,
+     "line": 110,
      "signature": "",
-     "doc": "",
+     "doc": "One day cell of a month grid.",
      "members": [
       {
        "name": "iso",
@@ -25026,14 +25026,14 @@
     {
      "name": "monthCells",
      "kind": "function",
-     "line": 114,
+     "line": 123,
      "signature": "(mode: 'bs' | 'ad', cursor: { year: number; month: number }): (MonthCell | null)[]",
      "doc": "Cells of one month, padded with nulls to whole weeks starting Sunday.\n`mode: 'bs'` lays out a Nepali month; `'ad'` a Gregorian one."
     },
     {
      "name": "cursorFor",
      "kind": "function",
-     "line": 139,
+     "line": 148,
      "signature": "(mode: 'bs' | 'ad', iso: string)",
      "doc": "The month cursor (in the given calendar) that contains an AD date."
     }
@@ -25059,203 +25059,203 @@
     {
      "name": "CURRENCY",
      "kind": "const",
-     "line": 9,
+     "line": 10,
      "signature": "= 'NPR'",
-     "doc": "Money is NPR everywhere. Grouping is done by hand because Hermes' Intl\nsupport varies across platforms."
+     "doc": "Currency code shown in every money string."
     },
     {
      "name": "formatNumber",
      "kind": "function",
-     "line": 11,
+     "line": 13,
      "signature": "(value: number): string",
-     "doc": ""
+     "doc": "Groups digits in thousands (150,000), keeps up to two decimals and a leading minus."
     },
     {
      "name": "formatMoney",
      "kind": "function",
-     "line": 21,
+     "line": 23,
      "signature": "(value: number)",
      "doc": "NPR 150,000"
     },
     {
      "name": "formatMoneyCompact",
      "kind": "function",
-     "line": 24,
+     "line": 26,
      "signature": "(value: number): string",
      "doc": "Compact form used in chips and filters: NPR 800, NPR 45K, NPR 975K, NPR 2.5M."
     },
     {
      "name": "formatMoneyRange",
      "kind": "function",
-     "line": 33,
+     "line": 35,
      "signature": "(lo: number, hi: number)",
      "doc": "Budget range: NPR 40K–60K"
     },
     {
      "name": "formatLakh",
      "kind": "function",
-     "line": 39,
+     "line": 41,
      "signature": "(value: number): string",
      "doc": "How families talk about wedding budgets: \"7.5 lakh\", \"26 lakh\", \"1.2 crore\"."
     },
     {
      "name": "formatLakhRange",
      "kind": "function",
-     "line": 46,
+     "line": 48,
      "signature": "(lo: number, hi: number): string",
      "doc": "NPR 7.1–26 lakh, or NPR 45 lakh – 1.2 crore across the boundary."
     },
     {
      "name": "parseMoney",
      "kind": "function",
-     "line": 52,
+     "line": 54,
      "signature": "(input: string): number",
      "doc": "Parse \"1,50,000\", \"150000\", \"150k\", \"1.5m\" into a number (NaN when invalid)."
     },
     {
      "name": "percent",
      "kind": "function",
-     "line": 61,
+     "line": 64,
      "signature": "(value: number, digits = 0)",
-     "doc": ""
+     "doc": "Turns a ratio into a percentage string: 0.13 gives \"13%\"."
     },
     {
      "name": "formatShortDate",
      "kind": "function",
-     "line": 82,
+     "line": 85,
      "signature": "(iso: string): string",
      "doc": "\"Tue 18 Aug\" (AD) or \"Tue 2 Mangsir\" (BS, the default)."
     },
     {
      "name": "formatLongDate",
      "kind": "function",
-     "line": 90,
+     "line": 93,
      "signature": "(iso: string): string",
      "doc": "\"18 August 2026\" (AD) or \"2 Mangsir 2083\" (BS, the default)."
     },
     {
      "name": "formatMonthDay",
      "kind": "function",
-     "line": 98,
+     "line": 101,
      "signature": "(iso: string): string",
      "doc": "\"Dec 12\" (AD) or \"Mangsir 2\" (BS)."
     },
     {
      "name": "formatAdDate",
      "kind": "function",
-     "line": 106,
+     "line": 109,
      "signature": "(iso: string): string",
      "doc": "Always Gregorian: \"18 Aug 2026\"."
     },
     {
      "name": "formatDateAlt",
      "kind": "function",
-     "line": 112,
+     "line": 115,
      "signature": "(iso: string): string",
      "doc": "The same day in the other calendar, shown beside the main date: AD under BS, or \"Mangsir 2083\" under AD."
     },
     {
      "name": "formatTime",
      "kind": "function",
-     "line": 118,
+     "line": 122,
      "signature": "(iso: string): string",
-     "doc": ""
+     "doc": "Local clock time of an ISO timestamp in 12-hour form, e.g. \"6:30 PM\"."
     },
     {
      "name": "formatClock",
      "kind": "function",
-     "line": 126,
+     "line": 130,
      "signature": "(hhmm: string): string",
      "doc": "\"18:30\" → \"6:30 PM\""
     },
     {
      "name": "timeAgo",
      "kind": "function",
-     "line": 133,
+     "line": 137,
      "signature": "(iso: string): string",
      "doc": "\"2h ago\", \"3d ago\", or a short date for older timestamps."
     },
     {
      "name": "daysUntil",
      "kind": "function",
-     "line": 145,
+     "line": 150,
      "signature": "(iso: string): number",
-     "doc": ""
+     "doc": "Whole days from today (local midnight) to a date; negative when the date has passed."
     },
     {
      "name": "relativeDay",
      "kind": "function",
-     "line": 154,
+     "line": 159,
      "signature": "(iso: string): string",
      "doc": "\"in 3 days\", \"today\", \"2 days ago\""
     },
     {
      "name": "toISODate",
      "kind": "function",
-     "line": 163,
+     "line": 168,
      "signature": "(date: Date): string",
      "doc": "Store dates as yyyy-mm-dd so they never shift across time zones."
     },
     {
      "name": "fromISODate",
      "kind": "function",
-     "line": 170,
+     "line": 176,
      "signature": "(iso: string): Date",
-     "doc": ""
+     "doc": "Parses yyyy-mm-dd as a local-midnight Date, never shifted by the time zone."
     },
     {
      "name": "addDays",
      "kind": "function",
-     "line": 175,
+     "line": 182,
      "signature": "(iso: string, days: number)",
-     "doc": ""
+     "doc": "Adds (or, when negative, subtracts) whole days to a yyyy-mm-dd date."
     },
     {
      "name": "pluralize",
      "kind": "function",
-     "line": 181,
+     "line": 189,
      "signature": "(count: number, word: string, plural = `${word}s`)",
-     "doc": ""
+     "doc": "Count with its noun: pluralize(1, 'guest') is \"1 guest\", pluralize(3, 'guest') is \"3 guests\"."
     },
     {
      "name": "initials",
      "kind": "function",
-     "line": 183,
+     "line": 192,
      "signature": "(name: string)",
-     "doc": ""
+     "doc": "Up to two capital letters from the first two words of a name."
     },
     {
      "name": "uid",
      "kind": "function",
-     "line": 191,
+     "line": 201,
      "signature": "(prefix = 'id')",
-     "doc": ""
+     "doc": "Unique-enough local id with a prefix, such as \"proj_lq3k9_x7a1bc\"."
     },
     {
      "name": "shortCode",
      "kind": "function",
-     "line": 194,
+     "line": 204,
      "signature": "(length = 6)",
      "doc": "Short human code, e.g. for invites: \"K7P2QX\"."
     },
     {
      "name": "isNepalMobile",
      "kind": "function",
-     "line": 198,
+     "line": 208,
      "signature": "(phone: string)",
      "doc": "Nepal mobile numbers: 97/98 + 8 digits."
     },
     {
      "name": "formatPhone",
      "kind": "function",
-     "line": 199,
+     "line": 210,
      "signature": "(phone: string)",
-     "doc": ""
+     "doc": "Formats a Nepal mobile number as \"+977 98x-xxx-xxxx\"; returns the input unchanged if it has fewer than 10 digits."
     },
     {
      "name": "today",
      "kind": "function",
-     "line": 205,
+     "line": 216,
      "signature": "()",
      "doc": "Today's date as yyyy-mm-dd (local)."
     }

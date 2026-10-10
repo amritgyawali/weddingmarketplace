@@ -16,8 +16,7 @@ import { ONBOARDING_CITIES } from '@/data/cities';
 import { PLATFORM_ACCESS_CODE } from '@/data/seed';
 import { CRAFT_BY_ID, RATE_LABEL } from '@/data/crafts';
 import { LEGAL_VERSION } from '@/data/legal';
-import { VENDORS } from '@/data/vendors';
-import { VENUES } from '@/data/venues';
+import { catalogue } from '@/data/live';
 import { completeLogin, onAccountCreated } from '@/services/auth';
 import { useSession } from '@/store/useSession';
 import { useRoleFonts } from '@/theme/fonts';
@@ -74,8 +73,8 @@ function SetupForm({ phone, signInEmail }: { phone: string; signInEmail?: string
   const listings =
     t.role === 'vendor'
       ? (persona.primaryService === 'venue'
-          ? VENUES.filter((v) => v.city === city).map((v) => ({ id: v.id, kind: 'venue' as const, name: v.name, sub: `${v.type} · ${v.locality}` }))
-          : VENDORS.filter((v) => persona.services.includes(v.subcategoryId) && v.city === city).map((v) => ({ id: v.id, kind: 'vendor' as const, name: v.name, sub: v.subcategoryId.replace(/-/g, ' ') }))
+          ? catalogue.venues().filter((v) => v.city === city).map((v) => ({ id: v.id, kind: 'venue' as const, name: v.name, sub: `${v.type} · ${v.locality}` }))
+          : catalogue.vendors().filter((v) => persona.services.includes(v.subcategoryId) && v.city === city).map((v) => ({ id: v.id, kind: 'vendor' as const, name: v.name, sub: v.subcategoryId.replace(/-/g, ' ') }))
         )
           .filter((l) => !q || l.name.toLowerCase().includes(q))
           .slice(0, 6)

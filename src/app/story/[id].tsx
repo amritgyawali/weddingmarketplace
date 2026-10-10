@@ -7,7 +7,7 @@ import { IconButton } from '@/components/ui/IconButton';
 import { ScreenHeader } from '@/components/ui/ScreenHeader';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { Text } from '@/components/ui/Text';
-import { photos } from '@/constants/images';
+import { photo } from '@/constants/images';
 import { colors, GUTTER } from '@/constants/theme';
 import { useStory } from '@/hooks/queries';
 import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
@@ -37,7 +37,7 @@ export default function StoryScreen() {
         <EmptyState title="Story not found" actionLabel="Back to ideas" onAction={() => router.back()} />
       ) : (
         <ScrollView contentContainerStyle={{ paddingBottom: 40 }}>
-          <Photo source={photos[story.image]} style={{ width, height: width * 0.66 }} contentFit="cover" />
+          <Photo source={photo(story.image)} style={{ width, height: width * 0.66 }} contentFit="cover" />
           <View style={styles.body}>
             <Text size={12} weight="medium" color={colors.textMuted}>
               {story.category}

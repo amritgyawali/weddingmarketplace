@@ -8,6 +8,8 @@ import { Hint, StatRow, ToolPage } from '@/components/toolkit/core';
 import { Text } from '@/components/ui/Text';
 import { toast } from '@/components/ui/Toast';
 import { usesSupabase } from '@/constants/env';
+import { useContent } from '@/hooks/useContent';
+import { contentChangeCount } from '@/services/content';
 import { useDb } from '@/store/useDb';
 import { useSession } from '@/store/useSession';
 import { useRoleTheme } from '@/theme/RoleTheme';
@@ -28,6 +30,7 @@ function AdminHome() {
   const bugReports = useDb((s) => s.bugReports);
   const resetDemo = useDb((s) => s.resetDemo);
   const off = hiddenFeatureCount(flags);
+  const changes = contentChangeCount(useContent());
   const count = (role: string) => accounts.filter((a) => a.role === role).length;
 
   const sections: { title: string; rows: { icon: IconName; title: string; subtitle: string; href: Href }[] }[] = [
@@ -41,6 +44,7 @@ function AdminHome() {
     {
       title: 'What people see',
       rows: [
+        { icon: 'images-outline', title: 'Content studio', subtitle: `${changes ? `${changes} changes live` : 'Nothing changed yet'} · replace any photo, edit any listing, arrange the home, add banners`, href: '/platform/admin/content' },
         { icon: 'toggle-outline', title: 'Features', subtitle: off ? `${off} hidden · each app shows its top 20, extras are off until you switch them on` : 'Everything is on · tabs, tools, services, home sections', href: '/platform/admin/features' },
         { icon: 'language-outline', title: 'Text and translations', subtitle: `${Object.keys(overrides).length} changed · rewrite any English or Nepali text`, href: '/platform/admin/texts' },
         { icon: 'megaphone-outline', title: 'Announcements', subtitle: `${announcements.filter((a) => a.active).length} live · pin a notice on any role's home`, href: '/platform/admin/announcements' },

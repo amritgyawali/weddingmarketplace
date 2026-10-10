@@ -1,4 +1,4 @@
-import type { PhotoKey } from '@/constants/images';
+import type { PhotoRef } from '@/constants/images';
 import type { VerificationStatus } from '@/types/platform';
 import { seeded } from '@/utils/random';
 
@@ -26,7 +26,7 @@ export interface Provider {
   startingPrice: number;
   priceUnit: string;
   capacity?: { min: number; max: number };
-  image: PhotoKey;
+  image: PhotoRef;
   experienceYears: number;
   completedProjects: number;
   languages: string[];

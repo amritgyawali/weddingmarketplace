@@ -7,20 +7,20 @@ import { PressableScale } from '@/components/ui/PressableScale';
 import { SectionHeader } from '@/components/ui/SectionHeader';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { Text } from '@/components/ui/Text';
-import { photos } from '@/constants/images';
+import { photo } from '@/constants/images';
 import { colors, GUTTER, radius } from '@/constants/theme';
 import { ALL_CITIES } from '@/data/cities';
 import { useCollections } from '@/hooks/queries';
 import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
 
-/** Curated venue collections: full-bleed photos with the title set on a dark scrim. */
-export function VenueCollections({ city }: { city: string }) {
+/** Curated venue collections: full-bleed photos with the title set on a dark scrim. `title` replaces the built-in heading. */
+export function VenueCollections({ city, title }: { city: string; title?: string }) {
   const { data, isLoading } = useCollections(city);
   if (!isLoading && !data?.length) return null;
 
   return (
     <View style={styles.section}>
-      <SectionHeader title={`Collections ${city === ALL_CITIES ? 'across Nepal' : `in ${city}`}`} />
+      <SectionHeader title={title ?? `Collections ${city === ALL_CITIES ? 'across Nepal' : `in ${city}`}`} />
       <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.row} decelerationRate="fast" snapToInterval={162}>
         {isLoading
           ? [0, 1, 2].map((i) => <Skeleton key={i} width={150} height={196} borderRadius={radius.lg} />)
@@ -30,7 +30,7 @@ export function VenueCollections({ city }: { city: string }) {
                 accessibilityLabel={`${c.title}, ${c.count} venues`}
                 onPress={() => router.push({ pathname: '/collection/[id]', params: { id: c.id } })}
                 style={styles.card}>
-                <Photo source={photos[c.image]} style={StyleSheet.absoluteFill} contentFit="cover" transition={200} />
+                <Photo source={photo(c.image)} style={StyleSheet.absoluteFill} contentFit="cover" transition={200} />
                 <LinearGradient colors={['rgba(37,27,24,0)', 'rgba(37,27,24,0.82)']} style={styles.fade} />
                 <View style={styles.text}>
                   <Text serif size={15} lineHeight={21} color={colors.white} weight="semibold" numberOfLines={2}>

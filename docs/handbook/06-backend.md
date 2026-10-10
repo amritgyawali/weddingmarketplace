@@ -107,7 +107,7 @@ Environment variables are documented line by line in `.env.example`. Two kinds:
 
 - The app reads public config only through `ENV` in `src/constants/env.ts`; each variable must be written literally as `process.env.EXPO_PUBLIC_NAME` because Expo inlines them at build time.
 - `npm run env:vercel` writes `.env.vercel.local` for import into Vercel; `npm run env:functions` writes the function secrets file for `supabase secrets set --env-file`.
-- `npm run setup:supabase` (on the `feature/live-backend-config` branch as of 2 Oct 2026) automates migrations, Vault, Auth/SMTP, function secrets and deploys through the Management API; the owner runs it with their own token.
+- `npm run setup:supabase` (`scripts/supabase-setup.mjs`, merged in PR #34 on 3 Oct 2026) automates migrations, Vault, Auth/SMTP, function secrets and deploys through the Management API; the owner runs it with their own token.
 - With `EXPO_PUBLIC_BACKEND=mock` the app needs no keys at all.
 
 ## 8. Moving the demo to Supabase without breaking it

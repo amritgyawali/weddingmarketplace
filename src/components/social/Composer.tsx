@@ -13,7 +13,7 @@ import { Text } from '@/components/ui/Text';
 import { toast, toastError } from '@/components/ui/Toast';
 import { cloudMediaReady, uploadMedia } from '@/backend/media';
 import { saveSocialPostLive, sendSocialPostLive, socialLive, syncSocialFromServer } from '@/backend/social';
-import { photos } from '@/constants/images';
+import { photo } from '@/constants/images';
 import { NETWORK_BY_ID, NETWORKS } from '@/data/social';
 import { useExperience } from '@/hooks/useExperience';
 import { useLayout } from '@/hooks/useLayout';
@@ -415,7 +415,7 @@ export function SocialComposer({ postId, at }: { postId?: string; at?: string })
           )}
           {own.map((p) => {
             const picked = media.some((m) => (p.uri ? m.uri === p.uri : m.image === p.image));
-            const src = p.uri ? { uri: p.uri } : p.image ? photos[p.image] : undefined;
+            const src = p.uri ? { uri: p.uri } : p.image ? photo(p.image) : undefined;
             return (
               <Pressable
                 key={p.id}

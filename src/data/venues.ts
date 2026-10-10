@@ -1,4 +1,5 @@
 import type { PhotoKey } from '@/constants/images';
+import { patchList } from '@/services/content';
 import type { CollectionId, Review, Venue, VenueType } from '@/types';
 import { seeded } from '@/utils/random';
 
@@ -228,4 +229,5 @@ hero.collections = collectionsFor(hero);
 
 export const VENUE_TYPES = Object.keys(PRICE_BANDS) as VenueType[];
 
-export const findVenue = (id: string) => VENUES.find((v) => v.id === id);
+/** A venue by id, with a super admin's edits (Content studio) applied. */
+export const findVenue = (id: string) => patchList('venue', VENUES).find((v) => v.id === id);

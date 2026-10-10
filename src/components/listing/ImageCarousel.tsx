@@ -2,7 +2,7 @@ import { Photo } from '@/components/ui/Photo';
 import { useState } from 'react';
 import { FlatList, Pressable, StyleSheet, View, type NativeScrollEvent, type NativeSyntheticEvent } from 'react-native';
 
-import { photos, type PhotoKey } from '@/constants/images';
+import { photo, type PhotoRef } from '@/constants/images';
 import { colors } from '@/constants/theme';
 
 /** Swipeable photo strip with pagination dots (venue cards & detail heroes). */
@@ -14,7 +14,7 @@ export function ImageCarousel({
   onPressImage,
   dotsBottom = 12,
 }: {
-  images: PhotoKey[];
+  images: PhotoRef[];
   width: number;
   height: number;
   radius?: number;
@@ -42,7 +42,7 @@ export function ImageCarousel({
         getItemLayout={(_, i) => ({ length: width, offset: width * i, index: i })}
         renderItem={({ item, index: i }) => (
           <Pressable onPress={() => onPressImage?.(i)} disabled={!onPressImage}>
-            <Photo source={photos[item]} style={{ width, height }} contentFit="cover" transition={200} recyclingKey={`${item}-${i}`} />
+            <Photo source={photo(item)} style={{ width, height }} contentFit="cover" transition={200} recyclingKey={`${item}-${i}`} />
           </Pressable>
         )}
       />

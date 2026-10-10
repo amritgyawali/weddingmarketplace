@@ -1,4 +1,4 @@
-import type { PhotoKey } from '@/constants/images';
+import type { PhotoRef } from '@/constants/images';
 
 export type Role = 'bride' | 'groom' | 'other';
 
@@ -50,7 +50,7 @@ export interface Venue {
   /** Paid placement — pinned to the top of "popular" sorting. */
   sponsored?: boolean;
   collections: CollectionId[];
-  images: PhotoKey[];
+  images: PhotoRef[];
   about: string;
   amenities: string[];
   spaces: { name: string; type: string; capacity: string }[];
@@ -64,14 +64,14 @@ export type CollectionId = 'luxury' | 'budget' | 'destination' | 'heritage' | 'g
 export interface VenueCollection {
   id: CollectionId;
   title: string;
-  image: PhotoKey;
+  image: PhotoRef;
 }
 
 export interface VendorCategory {
   id: string;
   title: string;
   subtitle: string;
-  image: PhotoKey;
+  image: PhotoRef;
   bg: string;
   subcategories: { id: string; title: string }[];
 }
@@ -97,7 +97,7 @@ export interface Vendor {
   startingPrice: number;
   priceUnit: string;
   featured: boolean;
-  images: PhotoKey[];
+  images: PhotoRef[];
   about: string;
   experience: number;
   eventsDone: number;
@@ -124,7 +124,7 @@ export type IdeaCategory =
 
 export interface IdeaPhoto {
   id: string;
-  image: PhotoKey;
+  image: PhotoRef;
   title: string;
   category: IdeaCategory;
   likes: number;
@@ -137,7 +137,7 @@ export interface Story {
   title: string;
   excerpt: string;
   category: string;
-  image: PhotoKey;
+  image: PhotoRef;
   readMinutes: number;
   author: string;
   body: string[];
@@ -149,8 +149,8 @@ export interface RealWedding {
   city: string;
   venue: string;
   theme: string;
-  cover: PhotoKey;
-  gallery: PhotoKey[];
+  cover: PhotoRef;
+  gallery: PhotoRef[];
   story: string;
   vendors: { role: string; name: string }[];
 }
@@ -204,7 +204,7 @@ export interface Booking {
   refId: string;
   title: string;
   subtitle: string;
-  image?: PhotoKey;
+  image?: PhotoRef;
   eventDate?: string;
   guests?: number;
   amount?: number;
@@ -224,7 +224,7 @@ export interface Conversation {
   kind: 'venue' | 'vendor';
   refId: string;
   title: string;
-  image: PhotoKey;
+  image: PhotoRef;
   messages: ChatMessage[];
   unread: number;
 }

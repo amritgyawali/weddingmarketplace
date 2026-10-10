@@ -1129,29 +1129,29 @@ Nepal VAT.
 
 ### `PRICING_MODELS`
 
-*const* · [src/services/pricing.ts:20](../../../src/services/pricing.ts#L20)
+*const* · [src/services/pricing.ts:21](../../../src/services/pricing.ts#L21)
 
 ```ts
 PRICING_MODELS: { id: PricingModel; label: string; blurb: string; defaultRate: number; rateLabel: string }[]
 ```
 
-_No JSDoc yet._
+The four ways the platform earns on a booking, with default rates and labels for the settings UI.
 
 ### `pricingModel`
 
-*function* · [src/services/pricing.ts:27](../../../src/services/pricing.ts#L27)
+*function* · [src/services/pricing.ts:29](../../../src/services/pricing.ts#L29)
 
 ```ts
 pricingModel(id: PricingModel)
 ```
 
-_No JSDoc yet._
+Looks up a pricing model definition by id.
 
 ### `Split`
 
-*interface* · [src/services/pricing.ts:29](../../../src/services/pricing.ts#L29)
+*interface* · [src/services/pricing.ts:32](../../../src/services/pricing.ts#L32)
 
-_No JSDoc yet._
+Result of splitting a booking: the agreed price, provider cost, platform fee and what the provider is paid.
 
 | Member | Type | Notes |
 |---|---|---|
@@ -1162,7 +1162,7 @@ _No JSDoc yet._
 
 ### `roundMoney`
 
-*function* · [src/services/pricing.ts:48](../../../src/services/pricing.ts#L48)
+*function* · [src/services/pricing.ts:44](../../../src/services/pricing.ts#L44)
 
 ```ts
 roundMoney(x: number)
@@ -1174,17 +1174,21 @@ is 2,047,172.5 and rounds to 2,047,173, where plain Math.round sees
 
 ### `splitBooking`
 
-*function* · [src/services/pricing.ts:50](../../../src/services/pricing.ts#L50)
+*function* · [src/services/pricing.ts:53](../../../src/services/pricing.ts#L53)
 
 ```ts
 splitBooking(model: PricingModel, rate: number, amounts: { customerPrice?: number; providerCost?: number }): Split
 ```
 
-_No JSDoc yet._
+Split one booking.
+ A  COMMISSION        customer 100,000 → provider 90,000, platform 10,000
+ B  MARKUP            provider 70,000 → customer 80,500 (15%), platform 10,500
+ C  LEAD_FEE          customer pays provider price; platform nets a flat fee
+ D  FREELANCER_MARGIN client 10,000 → freelancer 8,000, platform 2,000
 
 ### `freelancerNet`
 
-*function* · [src/services/pricing.ts:73](../../../src/services/pricing.ts#L73)
+*function* · [src/services/pricing.ts:76](../../../src/services/pricing.ts#L76)
 
 ```ts
 freelancerNet(clientPay: number, margin = 0.2)
@@ -1194,27 +1198,27 @@ Freelancer pay after the platform margin (model D).
 
 ### `SCHEDULE_TEMPLATES`
 
-*const* · [src/services/pricing.ts:76](../../../src/services/pricing.ts#L76)
+*const* · [src/services/pricing.ts:80](../../../src/services/pricing.ts#L80)
 
 ```ts
 SCHEDULE_TEMPLATES: { id: string; label: string; steps: ScheduleStep[] }[]
 ```
 
-_No JSDoc yet._
+Customer payment schedule templates; the first is the default 30/50/20 split.
 
 ### `DEFAULT_SCHEDULE`
 
-*const* · [src/services/pricing.ts:107](../../../src/services/pricing.ts#L107)
+*const* · [src/services/pricing.ts:112](../../../src/services/pricing.ts#L112)
 
 ```ts
 DEFAULT_SCHEDULE= SCHEDULE_TEMPLATES[0].steps
 ```
 
-_No JSDoc yet._
+The default customer payment schedule (30% on confirmation, 50% fifteen days before the event, 20% after completion).
 
 ### `dueDateFor`
 
-*function* · [src/services/pricing.ts:115](../../../src/services/pricing.ts#L115)
+*function* · [src/services/pricing.ts:120](../../../src/services/pricing.ts#L120)
 
 ```ts
 dueDateFor(step: ScheduleStep, dates: { confirmed: string; event: string; lastEvent?: string }): string
@@ -1224,7 +1228,7 @@ _No JSDoc yet._
 
 ### `buildMilestones`
 
-*function* · [src/services/pricing.ts:133](../../../src/services/pricing.ts#L133)
+*function* · [src/services/pricing.ts:138](../../../src/services/pricing.ts#L138)
 
 ```ts
 buildMilestones(steps: ScheduleStep[], total: number, dates: { confirmed: string; event: string; lastEvent?: string }, quoteId?: string): PaymentMilestone[]
@@ -1234,7 +1238,7 @@ Milestones for a total; the last step absorbs rounding so amounts sum exactly.
 
 ### `milestoneStatus`
 
-*function* · [src/services/pricing.ts:154](../../../src/services/pricing.ts#L154)
+*function* · [src/services/pricing.ts:159](../../../src/services/pricing.ts#L159)
 
 ```ts
 milestoneStatus(m: Pick<PaymentMilestone, 'due' | 'amount' | 'paidAmount' | 'status'>): MilestoneStatus
@@ -1244,17 +1248,17 @@ Recomputed status: due within 7 days → DUE, past due → OVERDUE.
 
 ### `paymentSummary`
 
-*function* · [src/services/pricing.ts:163](../../../src/services/pricing.ts#L163)
+*function* · [src/services/pricing.ts:169](../../../src/services/pricing.ts#L169)
 
 ```ts
 paymentSummary(project: Pick<Project, 'milestones'>)
 ```
 
-_No JSDoc yet._
+Totals for a project's milestones: total (waived excluded), paid, outstanding, the next unpaid milestone and the overdue ones.
 
 ### `payablesForBooking`
 
-*function* · [src/services/pricing.ts:179](../../../src/services/pricing.ts#L179)
+*function* · [src/services/pricing.ts:185](../../../src/services/pricing.ts#L185)
 
 ```ts
 payablesForBooking(booking: ServiceBooking, project: Project): Payable[]
@@ -1266,7 +1270,7 @@ automatically while a dispute is open.
 
 ### `releasable`
 
-*function* · [src/services/pricing.ts:199](../../../src/services/pricing.ts#L199)
+*function* · [src/services/pricing.ts:205](../../../src/services/pricing.ts#L205)
 
 ```ts
 releasable(p: Payable, project?: Project): boolean
@@ -1276,7 +1280,7 @@ Payables that are now releasable given today's date and event state.
 
 ### `projectEconomics`
 
-*function* · [src/services/pricing.ts:209](../../../src/services/pricing.ts#L209)
+*function* · [src/services/pricing.ts:215](../../../src/services/pricing.ts#L215)
 
 ```ts
 projectEconomics(project: Project)

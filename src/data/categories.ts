@@ -1,5 +1,7 @@
-import type { PhotoKey } from '@/constants/images';
+import type { PhotoRef } from '@/constants/images';
+import { contentRuntime, patchList, visibleList } from '@/services/content';
 import type { VendorCategory, VenueCollection } from '@/types';
+import type { AppContent } from '@/types/content';
 
 import { SERVICE_GROUPS, SERVICES } from './services';
 
@@ -39,7 +41,7 @@ export const VENDOR_CATEGORIES: VendorCategory[] = SERVICE_GROUPS.map((g) =>
 export const HOME_CATEGORIES: {
   id: string;
   title: string;
-  image: PhotoKey;
+  image: PhotoRef;
   categoryId: string;
   subcategoryId?: string;
 }[] = [
@@ -64,18 +66,21 @@ export const VENUE_COLLECTIONS: VenueCollection[] = [
   { id: 'garden', title: 'Garden & Lakeside', image: 'venueGardenEstate' },
 ];
 
-export const findCategory = (id: string) => VENDOR_CATEGORIES.find((c) => c.id === id);
+/** A browse category, with a super admin's edits to its title, subtitle and photo. */
+export const findCategory = (id: string) => patchList('category', VENDOR_CATEGORIES).find((c) => c.id === id);
 
 /**
  * The marketplace for an occasion (owner decision): only the categories and
  * services it lists are shown; the rest are hidden, not ranked lower. Venue
  * types all count as the `venue` service. Every service listed keeps the full
- * catalogue (weddings, "something else").
+ * catalogue (weddings, "something else"). Components pass `useContent()` so
+ * a super admin's edits re-render them.
  */
-export function categoriesFor(services: readonly string[]): VendorCategory[] {
-  if (services.length >= SERVICES.length) return VENDOR_CATEGORIES;
+export function categoriesFor(services: readonly string[], content: AppContent = contentRuntime.content): VendorCategory[] {
+  const categories = patchList('category', VENDOR_CATEGORIES, content);
+  if (services.length >= SERVICES.length) return categories;
   const allowed = new Set(services);
-  return VENDOR_CATEGORIES.flatMap((c) => {
+  return categories.flatMap((c) => {
     if (c.id === 'venues') return allowed.has('venue') ? [c] : [];
     const subcategories = c.subcategories.filter((s) => allowed.has(s.id));
     return subcategories.length ? [{ ...c, subcategories }] : [];
@@ -86,7 +91,10 @@ export function categoriesFor(services: readonly string[]): VendorCategory[] {
 export const enabledServices = (services: readonly string[], flags: Record<string, boolean> | undefined) => services.filter((id) => flags?.[`service:${id}`] !== false);
 
 /** Home shortcuts for an occasion's services. */
-export const homeCategoriesFor = (services: readonly string[]) => (services.length >= SERVICES.length ? HOME_CATEGORIES : HOME_CATEGORIES.filter((c) => services.includes(c.categoryId === 'venues' ? 'venue' : (c.subcategoryId ?? ''))));
+export function homeCategoriesFor(services: readonly string[], content: AppContent = contentRuntime.content) {
+  const shortcuts = visibleList('shortcut', HOME_CATEGORIES, content);
+  return services.length >= SERVICES.length ? shortcuts : shortcuts.filter((c) => services.includes(c.categoryId === 'venues' ? 'venue' : (c.subcategoryId ?? '')));
+}
 
 export const findSubcategory = (categoryId: string, subId?: string) =>
   findCategory(categoryId)?.subcategories.find((s) => s.id === subId);

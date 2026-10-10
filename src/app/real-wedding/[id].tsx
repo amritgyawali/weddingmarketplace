@@ -9,7 +9,7 @@ import { PhotoViewer } from '@/components/ui/PhotoViewer';
 import { ScreenHeader } from '@/components/ui/ScreenHeader';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { Text } from '@/components/ui/Text';
-import { photos } from '@/constants/images';
+import { photo } from '@/constants/images';
 import { colors, GUTTER, radius } from '@/constants/theme';
 import { useRealWedding } from '@/hooks/queries';
 import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
@@ -33,7 +33,7 @@ export default function RealWeddingScreen() {
         <EmptyState title="Wedding not found" actionLabel="Back" onAction={() => router.back()} />
       ) : (
         <ScrollView contentContainerStyle={{ paddingBottom: 40 }}>
-          <Photo source={photos[wedding.cover]} style={{ width, height: width * 0.8 }} contentFit="cover" />
+          <Photo source={photo(wedding.cover)} style={{ width, height: width * 0.8 }} contentFit="cover" />
           <View style={styles.body}>
             <Text serif size={26} weight="bold" color={colors.heading} lineHeight={36}>
               {wedding.couple}
@@ -59,11 +59,11 @@ export default function RealWeddingScreen() {
             <View style={styles.gallery}>
               {wedding.gallery.map((g, i) => (
                 <Pressable key={`${g}${i}`} onPress={() => setViewing(i)} accessibilityRole="button" accessibilityLabel={`Open photo ${i + 1} of ${wedding.gallery.length}`}>
-                  <Photo source={photos[g]} style={{ width: tile, height: tile * 1.25, borderRadius: radius.md }} contentFit="cover" />
+                  <Photo source={photo(g)} style={{ width: tile, height: tile * 1.25, borderRadius: radius.md }} contentFit="cover" />
                 </Pressable>
               ))}
             </View>
-            <PhotoViewer sources={wedding.gallery.map((g) => photos[g])} index={viewing} onClose={() => setViewing(null)} />
+            <PhotoViewer sources={wedding.gallery.map((g) => photo(g))} index={viewing} onClose={() => setViewing(null)} />
 
             <Text size={19} weight="bold" color={colors.heading} style={{ marginTop: 16 }}>
               Vendors they loved

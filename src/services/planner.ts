@@ -4,7 +4,7 @@
  * timeline, and suggests the next best action. Swap any function for an LLM
  * call behind your own server later without touching screens.
  */
-import type { PhotoKey } from '@/constants/images';
+import type { PhotoRef } from '@/constants/images';
 import { CHECKLIST, PHASE_DUE } from '@/data/checklist';
 import { EVENT_TYPE_BY_ID, bandFor, isPeakSeason } from '@/data/events';
 import type { OccasionId } from '@/data/occasions';
@@ -42,7 +42,7 @@ export interface PlanInput {
   serviceBudgets: Record<string, [number, number]>;
   styles: Record<string, string[]>;
   notes: string;
-  inspiration: PhotoKey[];
+  inspiration: PhotoRef[];
   partnerName?: string;
   /** What is being celebrated (weddings when missing) and who it is for. */
   occasion?: OccasionId;

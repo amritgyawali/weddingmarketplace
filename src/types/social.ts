@@ -8,7 +8,7 @@
  * `social_account_secrets` (service role only) and the app only ever sees
  * the account row.
  */
-import type { PhotoKey } from '@/constants/images';
+import type { PhotoRef } from '@/constants/images';
 
 /** Networks a business can connect. */
 export type SocialNetwork = 'facebook' | 'instagram' | 'whatsapp' | 'tiktok';
@@ -45,7 +45,7 @@ export type SocialThreadStatus = 'open' | 'pending' | 'done';
 export interface SocialMedia {
   id: string;
   kind: 'image' | 'video';
-  image?: PhotoKey;
+  image?: PhotoRef;
   uri?: string;
   /** Cloudinary public id (Supabase builds): the networks fetch the file from its public URL. */
   publicId?: string;
