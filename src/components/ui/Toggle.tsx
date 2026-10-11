@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { Pressable, StyleSheet } from 'react-native';
 import Animated, { interpolateColor, useAnimatedStyle, useReducedMotion, useSharedValue, withTiming } from 'react-native-reanimated';
 
-import { colors, shadow } from '@/constants/theme';
+import { colors, shadow, themed } from '@/constants/theme';
 import { useRoleTheme } from '@/theme/RoleTheme';
 
 import { triggerHaptic } from './PressableScale';
@@ -23,7 +23,7 @@ export function Toggle({
 }) {
   const t = useRoleTheme();
   const on = t.c.primary;
-  const off = t.dark ? t.c.surfaceAlt : t.c.borderStrong;
+  const off = t.c.borderStrong;
   const progress = useSharedValue(value ? 1 : 0);
 
   const reduced = useReducedMotion();
@@ -55,13 +55,13 @@ export function Toggle({
   );
 }
 
-const styles = StyleSheet.create({
+const styles = themed(() => StyleSheet.create({
   track: { width: TRACK_W, height: TRACK_H, borderRadius: TRACK_H / 2, padding: 2, justifyContent: 'center' },
   knob: {
     width: KNOB,
     height: KNOB,
     borderRadius: KNOB / 2,
-    backgroundColor: colors.white,
+    backgroundColor: colors.onDark,
     ...shadow(2, 0.15, 3, 2, colors.black),
   },
-});
+}));

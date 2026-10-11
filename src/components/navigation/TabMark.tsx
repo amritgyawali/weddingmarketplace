@@ -1,7 +1,7 @@
 import { StyleSheet } from 'react-native';
 import Animated, { useAnimatedStyle, useReducedMotion, withTiming } from 'react-native-reanimated';
 
-import { colors, motion } from '@/constants/theme';
+import { colors, motion, themed } from '@/constants/theme';
 import { easeOut } from '@/hooks/useMotion';
 
 /**
@@ -20,7 +20,7 @@ export function TabMark({ active, vertical }: { active: boolean; vertical?: bool
   return <Animated.View style={[vertical ? styles.side : styles.top, { pointerEvents: 'none' }, style]} />;
 }
 
-const styles = StyleSheet.create({
+const styles = themed(() => StyleSheet.create({
   top: { position: 'absolute', top: 0, alignSelf: 'center', height: 3, borderBottomLeftRadius: 2, borderBottomRightRadius: 2, backgroundColor: colors.gold },
   side: { position: 'absolute', left: 0, top: '50%', marginTop: -9, width: 3, borderTopRightRadius: 2, borderBottomRightRadius: 2, backgroundColor: colors.gold },
-});
+}));

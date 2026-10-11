@@ -9,6 +9,7 @@ Every exported symbol in `src/components/home/`, file by file. The guide that ex
 - [`CategoryCircles.tsx`](#categorycirclestsx) (1 exports)
 - [`ChecklistCard.tsx`](#checklistcardtsx) (2 exports)
 - [`CityHeader.tsx`](#cityheadertsx) (1 exports)
+- [`ContentBanner.tsx`](#contentbannertsx) (2 exports)
 - [`GenieBanner.tsx`](#geniebannertsx) (1 exports)
 - [`PlanningTools.tsx`](#planningtoolstsx) (1 exports)
 - [`SearchPrompt.tsx`](#searchprompttsx) (1 exports)
@@ -21,7 +22,7 @@ Source: [src/components/home/CategoryCircles.tsx](../../../src/components/home/C
 
 ### `CategoryCircles`
 
-*component* · [src/components/home/CategoryCircles.tsx:16](../../../src/components/home/CategoryCircles.tsx#L16)
+*component* · [src/components/home/CategoryCircles.tsx:17](../../../src/components/home/CategoryCircles.tsx#L17)
 
 ```ts
 CategoryCircles()
@@ -66,6 +67,32 @@ CityHeader({ right, border = true }: { right: ReactNode; border?: boolean })
 ```
 
 City switcher plus icon actions: the top bar of the Home and Vendors tabs.
+
+## ContentBanner.tsx
+
+Source: [src/components/home/ContentBanner.tsx](../../../src/components/home/ContentBanner.tsx)
+
+### `openBannerLink`
+
+*function* · [src/components/home/ContentBanner.tsx:13](../../../src/components/home/ContentBanner.tsx#L13)
+
+```ts
+openBannerLink(href: string)
+```
+
+Opens a banner's link: a screen of the app, or a web address in the browser.
+
+### `ContentBanner`
+
+*component* · [src/components/home/ContentBanner.tsx:23](../../../src/components/home/ContentBanner.tsx#L23)
+
+```ts
+ContentBanner({ banner }: { banner: Banner })
+```
+
+A banner a super admin added to the couple's home (Content studio → Home):
+an optional photo, a title, a line of text and a link. The whole card is
+one button when it has a link.
 
 ## GenieBanner.tsx
 
@@ -118,10 +145,10 @@ Source: [src/components/home/VenueCollections.tsx](../../../src/components/home/
 *component* · [src/components/home/VenueCollections.tsx:17](../../../src/components/home/VenueCollections.tsx#L17)
 
 ```ts
-VenueCollections({ city }: { city: string })
+VenueCollections({ city, title }: { city: string; title?: string })
 ```
 
-Curated venue collections: full-bleed photos with the title set on a dark scrim.
+Curated venue collections: full-bleed photos with the title set on a dark scrim. `title` replaces the built-in heading.
 
 ## WeddingStrip.tsx
 

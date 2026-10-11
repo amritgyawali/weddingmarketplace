@@ -13,7 +13,7 @@ import { Rating } from '@/components/ui/Rating';
 import { ScreenHeader } from '@/components/ui/ScreenHeader';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { Text } from '@/components/ui/Text';
-import { colors, GUTTER, radius } from '@/constants/theme';
+import { colors, GUTTER, radius, themed } from '@/constants/theme';
 import { useSimilarVenues, useVenue } from '@/hooks/queries';
 import { NotFoundError } from '@/services/api';
 import { formatMoney } from '@/utils/format';
@@ -192,7 +192,7 @@ export default function VenueDetailScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = themed(() => StyleSheet.create({
   root: { flex: 1, backgroundColor: colors.white },
   head: { paddingHorizontal: GUTTER, paddingTop: 16, paddingBottom: 20, borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: colors.border },
   rowBetween: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
@@ -221,4 +221,4 @@ const styles = StyleSheet.create({
   amenities: { flexDirection: 'row', flexWrap: 'wrap', rowGap: 12 },
   amenity: { width: '50%', flexDirection: 'row', alignItems: 'center', gap: 8, paddingRight: 8 },
   policies: { marginTop: 16, padding: 14, borderRadius: radius.md, borderWidth: 1, borderColor: colors.border, gap: 4 },
-});
+}));

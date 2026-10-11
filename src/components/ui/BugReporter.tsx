@@ -40,7 +40,7 @@ import { createJSONStorage, persist } from 'zustand/middleware';
 import { bugReportsAvailable, captureConsole, devInboxOffered, recordRoute, reportContext, sendBugReport, setDeviceBugInbox } from '@/backend/bugReport';
 import { BRAND } from '@/constants/brand';
 import { ENV } from '@/constants/env';
-import { colors, GUTTER, radius } from '@/constants/theme';
+import { colors, GUTTER, radius, themed } from '@/constants/theme';
 import { useFeatures } from '@/hooks/useFeatures';
 import { useShake } from '@/hooks/useShake';
 import { usePrefs } from '@/i18n';
@@ -426,7 +426,7 @@ export function BugReportScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = themed(() => StyleSheet.create({
   root: { flex: 1, backgroundColor: colors.white },
   body: { paddingHorizontal: GUTTER, paddingTop: 16, gap: 16 },
   shotRow: { flexDirection: 'row', gap: 14, alignItems: 'flex-start' },
@@ -444,4 +444,4 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: colors.white,
   },
-});
+}));

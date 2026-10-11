@@ -11,7 +11,7 @@ import { Text } from '@/components/ui/Text';
 import { toast } from '@/components/ui/Toast';
 import { BRAND } from '@/constants/brand';
 import { photo, type PhotoKey } from '@/constants/images';
-import { colors, GUTTER, radius, shadows } from '@/constants/theme';
+import { colors, GUTTER, radius, shadows, themed } from '@/constants/theme';
 import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
 
 type IconName = ComponentProps<typeof Ionicons>['name'];
@@ -181,7 +181,7 @@ export default function InfoScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = themed(() => StyleSheet.create({
   root: { flex: 1, backgroundColor: colors.white },
   body: { padding: GUTTER, gap: 16, paddingBottom: 40 },
   row: { flexDirection: 'row', alignItems: 'center', gap: 14, paddingVertical: 14, borderBottomWidth: 1, borderBottomColor: colors.divider },
@@ -190,4 +190,4 @@ const styles = StyleSheet.create({
   tile: { width: '48%', backgroundColor: colors.white, borderRadius: radius.md, overflow: 'hidden' },
   tileImage: { width: '100%', aspectRatio: 1 },
   promo: { flexDirection: 'row', gap: 14, padding: 16, borderRadius: radius.md, borderWidth: 1, borderStyle: 'dashed', borderColor: colors.primary, backgroundColor: colors.primaryTint },
-});
+}));

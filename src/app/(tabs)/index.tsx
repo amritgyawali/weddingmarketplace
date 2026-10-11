@@ -24,7 +24,7 @@ import { SectionHeader } from '@/components/ui/SectionHeader';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { Text } from '@/components/ui/Text';
 import { photo } from '@/constants/images';
-import { colors, GUTTER, radius } from '@/constants/theme';
+import { colors, GUTTER, radius, themed } from '@/constants/theme';
 import { ALL_CITIES } from '@/data/cities';
 import { serviceFeature } from '@/data/features';
 import { HOME_SECTION_IDS } from '@/data/homeSections';
@@ -243,10 +243,10 @@ export default function ForYouScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = themed(() => StyleSheet.create({
   root: { flex: 1, backgroundColor: colors.white },
   section: { marginTop: 30 },
   carousel: { paddingHorizontal: GUTTER, gap: 12 },
   realCard: { width: 240, gap: 0 },
   realImage: { width: 240, height: 160, borderRadius: radius.lg, marginBottom: 8, backgroundColor: colors.bgMuted },
-});
+}));

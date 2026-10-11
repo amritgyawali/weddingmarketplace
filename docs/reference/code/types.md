@@ -6,11 +6,74 @@ Every exported symbol in `src/types/`, file by file. The guide that explains how
 
 ## Files
 
+- [`content.ts`](#contentts) (4 exports) · App content a super admin edits from the console (Super admin → Content studio): replacement photos, changes to marketplace listings, the o…
 - [`index.ts`](#indexts) (26 exports)
 - [`persona.ts`](#personats) (10 exports) · Persona model: who a user is (taxonomy), what they can do (capabilities and permissions) and what they see (surfaces). See docs/MASTER_PLAN…
-- [`platform.ts`](#platformts) (99 exports) · Shared domain model for the wedding-services orchestration marketplace. Every role (couple, provider, freelancer, platform team) reads and …
+- [`platform.ts`](#platformts) (104 exports) · Shared domain model for the wedding-services orchestration marketplace. Every role (couple, provider, freelancer, platform team) reads and …
 - [`social.ts`](#socialts) (14 exports) · Social hub (business app): the vendor's Facebook page, Instagram profile, WhatsApp Business number and TikTok account in one place. Message…
 - [`toolkit.ts`](#toolkitts) (5 exports) · Role toolkits: the smaller planning, business, freelance and operations tools each app offers on top of the core orchestration loop. They s…
+
+## content.ts
+
+Source: [src/types/content.ts](../../../src/types/content.ts)
+
+App content a super admin edits from the console (Super admin → Content
+studio): replacement photos, changes to marketplace listings, the order and
+titles of the couple's home sections, home banners and the brand details.
+It is one persisted object (`DbData.content`) laid over the bundled
+catalogue at read time, so removing an edit restores the original.
+Mirrored by supabase/migrations/0021_app_content.sql.
+
+### `ContentKind`
+
+*type* · [src/types/content.ts:11](../../../src/types/content.ts#L11)
+
+```ts
+type ContentKind = 'venue' | 'vendor' | 'category' | 'shortcut' | 'collection' | 'idea' | 'story' | 'realWedding'
+```
+
+Catalogue lists whose records can be edited.
+
+### `ContentEntry`
+
+*interface* · [src/types/content.ts:14](../../../src/types/content.ts#L14)
+
+Changes to one catalogue record: only the fields that differ from the original.
+
+| Member | Type | Notes |
+|---|---|---|
+| `fields` | `Record<string, unknown>` |  |
+| `hidden?` | `boolean` | Taken out of lists and search; links to it still open. |
+
+### `ContentBanner`
+
+*interface* · [src/types/content.ts:21](../../../src/types/content.ts#L21)
+
+A banner a super admin adds to the couple's home.
+
+| Member | Type | Notes |
+|---|---|---|
+| `id` | `string` |  |
+| `title` | `string` |  |
+| `body?` | `string` |  |
+| `image?` | `string` | A bundled photo key or an image address. |
+| `actionLabel?` | `string` |  |
+| `href?` | `string` | An app route (`/venues`) or a web address the button opens. |
+| `active` | `boolean` |  |
+
+### `AppContent`
+
+*interface* · [src/types/content.ts:33](../../../src/types/content.ts#L33)
+
+_No JSDoc yet._
+
+| Member | Type | Notes |
+|---|---|---|
+| `images` | `Record<string, string>` | Bundled photo key → the address of the photo shown instead, everywhere it appears. |
+| `entries` | `Record<string, ContentEntry>` | Keyed `${kind}:${id}`. |
+| `home` | `{ /** Section ids top to bottom (banners as `banner:<id>`); empty keeps the built-in order. */ order: string[]; /** Section id → heading; `{city}` becomes the chosen city. */ titles: Record<string, s…` |  |
+| `banners` | `ContentBanner[]` |  |
+| `brand` | `Record<string, string>` | Brand field (`constants/brand.ts`) → replacement. |
 
 ## index.ts
 
@@ -99,7 +162,7 @@ _No JSDoc yet._
 | `featured` | `boolean` |  |
 | `sponsored?` | `boolean` | Paid placement — pinned to the top of "popular" sorting. |
 | `collections` | `CollectionId[]` |  |
-| `images` | `PhotoKey[]` |  |
+| `images` | `PhotoRef[]` |  |
 | `about` | `string` |  |
 | `amenities` | `string[]` |  |
 | `spaces` | `{ name: string; type: string; capacity: string }[]` |  |
@@ -127,7 +190,7 @@ _No JSDoc yet._
 |---|---|---|
 | `id` | `CollectionId` |  |
 | `title` | `string` |  |
-| `image` | `PhotoKey` |  |
+| `image` | `PhotoRef` |  |
 
 ### `VendorCategory`
 
@@ -140,7 +203,7 @@ _No JSDoc yet._
 | `id` | `string` |  |
 | `title` | `string` |  |
 | `subtitle` | `string` |  |
-| `image` | `PhotoKey` |  |
+| `image` | `PhotoRef` |  |
 | `bg` | `string` |  |
 | `subcategories` | `{ id: string; title: string }[]` |  |
 
@@ -177,7 +240,7 @@ _No JSDoc yet._
 | `startingPrice` | `number` |  |
 | `priceUnit` | `string` |  |
 | `featured` | `boolean` |  |
-| `images` | `PhotoKey[]` |  |
+| `images` | `PhotoRef[]` |  |
 | `about` | `string` |  |
 | `experience` | `number` |  |
 | `eventsDone` | `number` |  |
@@ -211,7 +274,7 @@ _No JSDoc yet._
 | Member | Type | Notes |
 |---|---|---|
 | `id` | `string` |  |
-| `image` | `PhotoKey` |  |
+| `image` | `PhotoRef` |  |
 | `title` | `string` |  |
 | `category` | `IdeaCategory` |  |
 | `likes` | `number` |  |
@@ -230,7 +293,7 @@ _No JSDoc yet._
 | `title` | `string` |  |
 | `excerpt` | `string` |  |
 | `category` | `string` |  |
-| `image` | `PhotoKey` |  |
+| `image` | `PhotoRef` |  |
 | `readMinutes` | `number` |  |
 | `author` | `string` |  |
 | `body` | `string[]` |  |
@@ -248,8 +311,8 @@ _No JSDoc yet._
 | `city` | `string` |  |
 | `venue` | `string` |  |
 | `theme` | `string` |  |
-| `cover` | `PhotoKey` |  |
-| `gallery` | `PhotoKey[]` |  |
+| `cover` | `PhotoRef` |  |
+| `gallery` | `PhotoRef[]` |  |
 | `story` | `string` |  |
 | `vendors` | `{ role: string; name: string }[]` |  |
 
@@ -341,7 +404,7 @@ _No JSDoc yet._
 | `refId` | `string` |  |
 | `title` | `string` |  |
 | `subtitle` | `string` |  |
-| `image?` | `PhotoKey` |  |
+| `image?` | `PhotoRef` |  |
 | `eventDate?` | `string` |  |
 | `guests?` | `number` |  |
 | `amount?` | `number` |  |
@@ -373,7 +436,7 @@ _No JSDoc yet._
 | `kind` | `'venue' \| 'vendor'` |  |
 | `refId` | `string` |  |
 | `title` | `string` |  |
-| `image` | `PhotoKey` |  |
+| `image` | `PhotoRef` |  |
 | `messages` | `ChatMessage[]` |  |
 | `unread` | `number` |  |
 
@@ -675,12 +738,13 @@ _No JSDoc yet._
 | `ownVehicle?` | `boolean` |  |
 | `payoutMethod?` | `{ kind: 'esewa' \| 'khalti' \| 'bank'; detail: string }` | Where payouts land (freelancers and providers). |
 | `prefs?` | `AccountPrefs` | Notification, language and privacy preferences (every role). |
+| `photo?` | `string` | Profile photo: a file on this device or an https link. Missing shows initials. |
 | `team?` | `PlatformTeam` | platform |
 | `staffRole?` | `StaffRole` |  |
 
 ### `EventType`
 
-*type* · [src/types/platform.ts:97](../../../src/types/platform.ts#L97)
+*type* · [src/types/platform.ts:99](../../../src/types/platform.ts#L99)
 
 ```ts
 type EventType = | 'WEDDING' | 'ENGAGEMENT' | 'PRE_WEDDING' | 'POST_WEDDING' | 'PASNI' | 'NWARAN' | 'BRATABANDHA' | 'ANNIVERSARY' | 'RECEPTION' | 'MEHENDI' | 'HALDI' | 'SANGEET' | 'BACHELOR_PARTY' | 'BRIDAL_SHOWER' | 'WELCOME_DINNER' | 'AFTER_PARTY' | 'RELIGIOUS_CEREMONY' | '…
@@ -690,7 +754,7 @@ _No JSDoc yet._
 
 ### `ProjectStatus`
 
-*type* · [src/types/platform.ts:120](../../../src/types/platform.ts#L120)
+*type* · [src/types/platform.ts:122](../../../src/types/platform.ts#L122)
 
 ```ts
 type ProjectStatus = | 'NEW' | 'REVIEWING' | 'NEEDS_CLARIFICATION' | 'MATCHING_PROVIDERS' | 'QUOTE_PREPARED' | 'QUOTE_SENT' | 'CUSTOMER_NEGOTIATING' | 'CONFIRMED' | 'IN_PROGRESS' | 'COMPLETED' | 'CLOSED' | 'QUOTE_REJECTED' | 'CANCELLED'
@@ -700,7 +764,7 @@ _No JSDoc yet._
 
 ### `LeadSource`
 
-*type* · [src/types/platform.ts:135](../../../src/types/platform.ts#L135)
+*type* · [src/types/platform.ts:137](../../../src/types/platform.ts#L137)
 
 ```ts
 type LeadSource = 'plan_wizard' | 'enquiry' | 'concierge' | 'assistant' | 'phone' | 'referral'
@@ -710,7 +774,7 @@ _No JSDoc yet._
 
 ### `LeadStatus`
 
-*type* · [src/types/platform.ts:138](../../../src/types/platform.ts#L138)
+*type* · [src/types/platform.ts:140](../../../src/types/platform.ts#L140)
 
 ```ts
 type LeadStatus = 'new' | 'contacted' | 'responded' | 'quoted' | 'negotiating' | 'meeting' | 'won' | 'lost' | 'archived'
@@ -720,7 +784,7 @@ _No JSDoc yet._
 
 ### `Lead`
 
-*interface* · [src/types/platform.ts:140](../../../src/types/platform.ts#L140)
+*interface* · [src/types/platform.ts:142](../../../src/types/platform.ts#L142)
 
 _No JSDoc yet._
 
@@ -752,7 +816,7 @@ _No JSDoc yet._
 
 ### `PricingModel`
 
-*type* · [src/types/platform.ts:167](../../../src/types/platform.ts#L167)
+*type* · [src/types/platform.ts:169](../../../src/types/platform.ts#L169)
 
 ```ts
 type PricingModel = 'COMMISSION' | 'MARKUP' | 'LEAD_FEE' | 'FREELANCER_MARGIN'
@@ -762,7 +826,7 @@ _No JSDoc yet._
 
 ### `MilestoneRule`
 
-*type* · [src/types/platform.ts:168](../../../src/types/platform.ts#L168)
+*type* · [src/types/platform.ts:170](../../../src/types/platform.ts#L170)
 
 ```ts
 type MilestoneRule = 'on_confirmation' | 'days_before_event' | 'on_event_day' | 'after_completion' | 'fixed_date'
@@ -772,7 +836,7 @@ _No JSDoc yet._
 
 ### `QuoteItem`
 
-*interface* · [src/types/platform.ts:170](../../../src/types/platform.ts#L170)
+*interface* · [src/types/platform.ts:172](../../../src/types/platform.ts#L172)
 
 _No JSDoc yet._
 
@@ -795,7 +859,7 @@ _No JSDoc yet._
 
 ### `ScheduleStep`
 
-*interface* · [src/types/platform.ts:189](../../../src/types/platform.ts#L189)
+*interface* · [src/types/platform.ts:191](../../../src/types/platform.ts#L191)
 
 _No JSDoc yet._
 
@@ -808,7 +872,7 @@ _No JSDoc yet._
 
 ### `QuoteStatus`
 
-*type* · [src/types/platform.ts:196](../../../src/types/platform.ts#L196)
+*type* · [src/types/platform.ts:198](../../../src/types/platform.ts#L198)
 
 ```ts
 type QuoteStatus = 'draft' | 'sent' | 'viewed' | 'revision' | 'accepted' | 'declined' | 'expired' | 'superseded'
@@ -818,7 +882,7 @@ _No JSDoc yet._
 
 ### `QuoteVersion`
 
-*interface* · [src/types/platform.ts:199](../../../src/types/platform.ts#L199)
+*interface* · [src/types/platform.ts:201](../../../src/types/platform.ts#L201)
 
 Frozen copy of a version that was sent — quotations are never overwritten.
 
@@ -840,7 +904,7 @@ Frozen copy of a version that was sent — quotations are never overwritten.
 
 ### `Quotation`
 
-*interface* · [src/types/platform.ts:215](../../../src/types/platform.ts#L215)
+*interface* · [src/types/platform.ts:217](../../../src/types/platform.ts#L217)
 
 _No JSDoc yet._
 
@@ -878,7 +942,7 @@ _No JSDoc yet._
 
 ### `StatusChange`
 
-*interface* · [src/types/platform.ts:251](../../../src/types/platform.ts#L251)
+*interface* · [src/types/platform.ts:253](../../../src/types/platform.ts#L253)
 
 _No JSDoc yet._
 
@@ -891,7 +955,7 @@ _No JSDoc yet._
 
 ### `Collaborator`
 
-*interface* · [src/types/platform.ts:258](../../../src/types/platform.ts#L258)
+*interface* · [src/types/platform.ts:260](../../../src/types/platform.ts#L260)
 
 _No JSDoc yet._
 
@@ -908,7 +972,7 @@ _No JSDoc yet._
 
 ### `RunStatus`
 
-*type* · [src/types/platform.ts:269](../../../src/types/platform.ts#L269)
+*type* · [src/types/platform.ts:271](../../../src/types/platform.ts#L271)
 
 ```ts
 type RunStatus = 'pending' | 'in_progress' | 'done' | 'delayed'
@@ -918,7 +982,7 @@ _No JSDoc yet._
 
 ### `RunItem`
 
-*interface* · [src/types/platform.ts:271](../../../src/types/platform.ts#L271)
+*interface* · [src/types/platform.ts:273](../../../src/types/platform.ts#L273)
 
 _No JSDoc yet._
 
@@ -933,7 +997,7 @@ _No JSDoc yet._
 
 ### `EventStatus`
 
-*type* · [src/types/platform.ts:280](../../../src/types/platform.ts#L280)
+*type* · [src/types/platform.ts:282](../../../src/types/platform.ts#L282)
 
 ```ts
 type EventStatus = 'planned' | 'live' | 'done' | 'cancelled'
@@ -943,7 +1007,7 @@ _No JSDoc yet._
 
 ### `ProjectEvent`
 
-*interface* · [src/types/platform.ts:282](../../../src/types/platform.ts#L282)
+*interface* · [src/types/platform.ts:284](../../../src/types/platform.ts#L284)
 
 _No JSDoc yet._
 
@@ -968,7 +1032,7 @@ _No JSDoc yet._
 
 ### `WeddingEvent`
 
-*type* · [src/types/platform.ts:302](../../../src/types/platform.ts#L302)
+*type* · [src/types/platform.ts:304](../../../src/types/platform.ts#L304)
 
 ```ts
 type WeddingEvent = ProjectEvent
@@ -978,7 +1042,7 @@ type WeddingEvent = ProjectEvent
 
 ### `RequirementStatus`
 
-*type* · [src/types/platform.ts:304](../../../src/types/platform.ts#L304)
+*type* · [src/types/platform.ts:306](../../../src/types/platform.ts#L306)
 
 ```ts
 type RequirementStatus = 'OPEN' | 'MATCHING' | 'SHORTLISTED' | 'QUOTED' | 'CONFIRMED' | 'CANCELLED'
@@ -988,7 +1052,7 @@ _No JSDoc yet._
 
 ### `ScoreBreakdown`
 
-*interface* · [src/types/platform.ts:306](../../../src/types/platform.ts#L306)
+*interface* · [src/types/platform.ts:308](../../../src/types/platform.ts#L308)
 
 _No JSDoc yet._
 
@@ -1007,7 +1071,7 @@ _No JSDoc yet._
 
 ### `MatchCandidate`
 
-*interface* · [src/types/platform.ts:319](../../../src/types/platform.ts#L319)
+*interface* · [src/types/platform.ts:321](../../../src/types/platform.ts#L321)
 
 _No JSDoc yet._
 
@@ -1025,7 +1089,7 @@ _No JSDoc yet._
 
 ### `Requirement`
 
-*interface* · [src/types/platform.ts:331](../../../src/types/platform.ts#L331)
+*interface* · [src/types/platform.ts:333](../../../src/types/platform.ts#L333)
 
 _No JSDoc yet._
 
@@ -1045,7 +1109,7 @@ _No JSDoc yet._
 
 ### `BookingStatus`
 
-*type* · [src/types/platform.ts:346](../../../src/types/platform.ts#L346)
+*type* · [src/types/platform.ts:348](../../../src/types/platform.ts#L348)
 
 ```ts
 type BookingStatus = 'PROPOSED' | 'HELD' | 'CONFIRMED' | 'IN_PROGRESS' | 'COMPLETED' | 'CANCELLED'
@@ -1055,7 +1119,7 @@ _No JSDoc yet._
 
 ### `CrewRequirement`
 
-*interface* · [src/types/platform.ts:348](../../../src/types/platform.ts#L348)
+*interface* · [src/types/platform.ts:350](../../../src/types/platform.ts#L350)
 
 _No JSDoc yet._
 
@@ -1071,7 +1135,7 @@ _No JSDoc yet._
 
 ### `AssignmentStatus`
 
-*type* · [src/types/platform.ts:359](../../../src/types/platform.ts#L359)
+*type* · [src/types/platform.ts:361](../../../src/types/platform.ts#L361)
 
 ```ts
 type AssignmentStatus = | 'INVITED' | 'ASSIGNED' | 'CONFIRMED' | 'CHECKED_IN' | 'IN_PROGRESS' | 'COMPLETED' | 'NO_SHOW' | 'CANCELLED' | 'EMERGENCY_REPLACEMENT'
@@ -1081,7 +1145,7 @@ _No JSDoc yet._
 
 ### `Assignment`
 
-*interface* · [src/types/platform.ts:370](../../../src/types/platform.ts#L370)
+*interface* · [src/types/platform.ts:372](../../../src/types/platform.ts#L372)
 
 _No JSDoc yet._
 
@@ -1113,7 +1177,7 @@ _No JSDoc yet._
 
 ### `DeliverableStatus`
 
-*type* · [src/types/platform.ts:398](../../../src/types/platform.ts#L398)
+*type* · [src/types/platform.ts:400](../../../src/types/platform.ts#L400)
 
 ```ts
 type DeliverableStatus = 'NOT_STARTED' | 'IN_PROGRESS' | 'READY_FOR_REVIEW' | 'REVISION_REQUESTED' | 'APPROVED' | 'DELIVERED'
@@ -1123,7 +1187,7 @@ _No JSDoc yet._
 
 ### `Deliverable`
 
-*interface* · [src/types/platform.ts:400](../../../src/types/platform.ts#L400)
+*interface* · [src/types/platform.ts:402](../../../src/types/platform.ts#L402)
 
 _No JSDoc yet._
 
@@ -1144,7 +1208,7 @@ _No JSDoc yet._
 
 ### `ServiceBooking`
 
-*interface* · [src/types/platform.ts:415](../../../src/types/platform.ts#L415)
+*interface* · [src/types/platform.ts:417](../../../src/types/platform.ts#L417)
 
 _No JSDoc yet._
 
@@ -1178,7 +1242,7 @@ _No JSDoc yet._
 
 ### `TaskStatus`
 
-*type* · [src/types/platform.ts:446](../../../src/types/platform.ts#L446)
+*type* · [src/types/platform.ts:448](../../../src/types/platform.ts#L448)
 
 ```ts
 type TaskStatus = 'TODO' | 'IN_PROGRESS' | 'WAITING' | 'COMPLETED' | 'CANCELLED'
@@ -1188,7 +1252,7 @@ _No JSDoc yet._
 
 ### `TaskAssignee`
 
-*type* · [src/types/platform.ts:447](../../../src/types/platform.ts#L447)
+*type* · [src/types/platform.ts:449](../../../src/types/platform.ts#L449)
 
 ```ts
 type TaskAssignee = 'customer' | 'partner' | 'family' | 'coordinator' | 'provider' | 'freelancer'
@@ -1198,7 +1262,7 @@ _No JSDoc yet._
 
 ### `ProjectTask`
 
-*interface* · [src/types/platform.ts:449](../../../src/types/platform.ts#L449)
+*interface* · [src/types/platform.ts:451](../../../src/types/platform.ts#L451)
 
 _No JSDoc yet._
 
@@ -1224,7 +1288,7 @@ _No JSDoc yet._
 
 ### `TimelineEntry`
 
-*interface* · [src/types/platform.ts:469](../../../src/types/platform.ts#L469)
+*interface* · [src/types/platform.ts:471](../../../src/types/platform.ts#L471)
 
 _No JSDoc yet._
 
@@ -1242,7 +1306,7 @@ _No JSDoc yet._
 
 ### `MilestoneStatus`
 
-*type* · [src/types/platform.ts:481](../../../src/types/platform.ts#L481)
+*type* · [src/types/platform.ts:483](../../../src/types/platform.ts#L483)
 
 ```ts
 type MilestoneStatus = 'UPCOMING' | 'DUE' | 'OVERDUE' | 'PARTIALLY_PAID' | 'PAID' | 'WAIVED'
@@ -1252,7 +1316,7 @@ _No JSDoc yet._
 
 ### `PaymentMilestone`
 
-*interface* · [src/types/platform.ts:483](../../../src/types/platform.ts#L483)
+*interface* · [src/types/platform.ts:485](../../../src/types/platform.ts#L485)
 
 _No JSDoc yet._
 
@@ -1270,7 +1334,7 @@ _No JSDoc yet._
 
 ### `Incident`
 
-*interface* · [src/types/platform.ts:495](../../../src/types/platform.ts#L495)
+*interface* · [src/types/platform.ts:497](../../../src/types/platform.ts#L497)
 
 _No JSDoc yet._
 
@@ -1286,7 +1350,7 @@ _No JSDoc yet._
 
 ### `Project`
 
-*interface* · [src/types/platform.ts:505](../../../src/types/platform.ts#L505)
+*interface* · [src/types/platform.ts:507](../../../src/types/platform.ts#L507)
 
 _No JSDoc yet._
 
@@ -1319,7 +1383,7 @@ _No JSDoc yet._
 | `styles` | `Record<string, string[]>` |  |
 | `priorities` | `string[]` |  |
 | `notes?` | `string` |  |
-| `inspiration` | `PhotoKey[]` |  |
+| `inspiration` | `PhotoRef[]` |  |
 | `events` | `ProjectEvent[]` |  |
 | `requirements` | `Requirement[]` |  |
 | `bookings` | `ServiceBooking[]` |  |
@@ -1334,7 +1398,7 @@ _No JSDoc yet._
 
 ### `PaymentMethod`
 
-*type* · [src/types/platform.ts:551](../../../src/types/platform.ts#L551)
+*type* · [src/types/platform.ts:553](../../../src/types/platform.ts#L553)
 
 ```ts
 type PaymentMethod = 'esewa' | 'khalti' | 'fonepay' | 'connect_ips' | 'ime_pay' | 'bank_transfer' | 'card' | 'cash'
@@ -1344,7 +1408,7 @@ _No JSDoc yet._
 
 ### `Payment`
 
-*interface* · [src/types/platform.ts:553](../../../src/types/platform.ts#L553)
+*interface* · [src/types/platform.ts:555](../../../src/types/platform.ts#L555)
 
 _No JSDoc yet._
 
@@ -1365,7 +1429,7 @@ _No JSDoc yet._
 
 ### `PayableStatus`
 
-*type* · [src/types/platform.ts:568](../../../src/types/platform.ts#L568)
+*type* · [src/types/platform.ts:570](../../../src/types/platform.ts#L570)
 
 ```ts
 type PayableStatus = 'ACCRUED' | 'ON_HOLD' | 'READY' | 'PAID' | 'CANCELLED'
@@ -1375,7 +1439,7 @@ _No JSDoc yet._
 
 ### `Payable`
 
-*interface* · [src/types/platform.ts:570](../../../src/types/platform.ts#L570)
+*interface* · [src/types/platform.ts:572](../../../src/types/platform.ts#L572)
 
 _No JSDoc yet._
 
@@ -1400,7 +1464,7 @@ _No JSDoc yet._
 
 ### `RevenueKind`
 
-*type* · [src/types/platform.ts:589](../../../src/types/platform.ts#L589)
+*type* · [src/types/platform.ts:591](../../../src/types/platform.ts#L591)
 
 ```ts
 type RevenueKind = 'COMMISSION' | 'MARKUP' | 'LEAD_FEE' | 'FREELANCER_MARGIN' | 'SERVICE_FEE' | 'SUBSCRIPTION' | 'FEATURED' | 'EMERGENCY_FEE'
@@ -1410,7 +1474,7 @@ _No JSDoc yet._
 
 ### `RevenueEntry`
 
-*interface* · [src/types/platform.ts:591](../../../src/types/platform.ts#L591)
+*interface* · [src/types/platform.ts:593](../../../src/types/platform.ts#L593)
 
 _No JSDoc yet._
 
@@ -1427,7 +1491,7 @@ _No JSDoc yet._
 
 ### `Refund`
 
-*interface* · [src/types/platform.ts:602](../../../src/types/platform.ts#L602)
+*interface* · [src/types/platform.ts:604](../../../src/types/platform.ts#L604)
 
 _No JSDoc yet._
 
@@ -1445,7 +1509,7 @@ _No JSDoc yet._
 
 ### `Dispute`
 
-*interface* · [src/types/platform.ts:614](../../../src/types/platform.ts#L614)
+*interface* · [src/types/platform.ts:616](../../../src/types/platform.ts#L616)
 
 _No JSDoc yet._
 
@@ -1469,7 +1533,7 @@ _No JSDoc yet._
 
 ### `AvailabilityStatus`
 
-*type* · [src/types/platform.ts:633](../../../src/types/platform.ts#L633)
+*type* · [src/types/platform.ts:635](../../../src/types/platform.ts#L635)
 
 ```ts
 type AvailabilityStatus = 'AVAILABLE' | 'TENTATIVE' | 'HELD' | 'BOOKED' | 'UNAVAILABLE'
@@ -1479,7 +1543,7 @@ _No JSDoc yet._
 
 ### `DayPart`
 
-*type* · [src/types/platform.ts:634](../../../src/types/platform.ts#L634)
+*type* · [src/types/platform.ts:636](../../../src/types/platform.ts#L636)
 
 ```ts
 type DayPart = 'full' | 'morning' | 'afternoon' | 'evening'
@@ -1489,7 +1553,7 @@ _No JSDoc yet._
 
 ### `AvailabilityEntry`
 
-*interface* · [src/types/platform.ts:636](../../../src/types/platform.ts#L636)
+*interface* · [src/types/platform.ts:638](../../../src/types/platform.ts#L638)
 
 _No JSDoc yet._
 
@@ -1507,7 +1571,7 @@ _No JSDoc yet._
 
 ### `AvailabilityRule`
 
-*interface* · [src/types/platform.ts:648](../../../src/types/platform.ts#L648)
+*interface* · [src/types/platform.ts:650](../../../src/types/platform.ts#L650)
 
 _No JSDoc yet._
 
@@ -1521,7 +1585,7 @@ _No JSDoc yet._
 
 ### `FreelancerProfile`
 
-*interface* · [src/types/platform.ts:657](../../../src/types/platform.ts#L657)
+*interface* · [src/types/platform.ts:659](../../../src/types/platform.ts#L659)
 
 _No JSDoc yet._
 
@@ -1551,11 +1615,11 @@ _No JSDoc yet._
 | `reliability` | `number` |  |
 | `verification` | `VerificationStatus` |  |
 | `available` | `boolean` |  |
-| `portfolio` | `PhotoKey[]` |  |
+| `portfolio` | `PhotoRef[]` |  |
 
 ### `GigStatus`
 
-*type* · [src/types/platform.ts:685](../../../src/types/platform.ts#L685)
+*type* · [src/types/platform.ts:687](../../../src/types/platform.ts#L687)
 
 ```ts
 type GigStatus = 'open' | 'filled' | 'in_progress' | 'completed' | 'cancelled'
@@ -1565,7 +1629,7 @@ _No JSDoc yet._
 
 ### `ApplicationStatus`
 
-*type* · [src/types/platform.ts:686](../../../src/types/platform.ts#L686)
+*type* · [src/types/platform.ts:688](../../../src/types/platform.ts#L688)
 
 ```ts
 type ApplicationStatus = | 'invited' | 'applied' | 'shortlisted' | 'hired' | 'confirmed' | 'checked_in' | 'completed' | 'declined' | 'rejected' | 'withdrawn' | 'no_show' | 'cancelled'
@@ -1575,7 +1639,7 @@ _No JSDoc yet._
 
 ### `GigApplication`
 
-*interface* · [src/types/platform.ts:700](../../../src/types/platform.ts#L700)
+*interface* · [src/types/platform.ts:702](../../../src/types/platform.ts#L702)
 
 _No JSDoc yet._
 
@@ -1596,7 +1660,7 @@ _No JSDoc yet._
 
 ### `GigQuestion`
 
-*interface* · [src/types/platform.ts:716](../../../src/types/platform.ts#L716)
+*interface* · [src/types/platform.ts:718](../../../src/types/platform.ts#L718)
 
 _No JSDoc yet._
 
@@ -1611,7 +1675,7 @@ _No JSDoc yet._
 
 ### `Gig`
 
-*interface* · [src/types/platform.ts:725](../../../src/types/platform.ts#L725)
+*interface* · [src/types/platform.ts:727](../../../src/types/platform.ts#L727)
 
 _No JSDoc yet._
 
@@ -1648,7 +1712,7 @@ _No JSDoc yet._
 
 ### `ThreadMember`
 
-*interface* · [src/types/platform.ts:758](../../../src/types/platform.ts#L758)
+*interface* · [src/types/platform.ts:760](../../../src/types/platform.ts#L760)
 
 _No JSDoc yet._
 
@@ -1660,7 +1724,7 @@ _No JSDoc yet._
 
 ### `Thread`
 
-*interface* · [src/types/platform.ts:764](../../../src/types/platform.ts#L764)
+*interface* · [src/types/platform.ts:766](../../../src/types/platform.ts#L766)
 
 _No JSDoc yet._
 
@@ -1673,7 +1737,7 @@ _No JSDoc yet._
 | `gigId?` | `string` |  |
 | `listingId?` | `string` |  |
 | `title` | `string` |  |
-| `image?` | `PhotoKey` |  |
+| `image?` | `PhotoRef` |  |
 | `members` | `ThreadMember[]` |  |
 | `lastAt` | `string` |  |
 | `archivedBy` | `string[]` |  |
@@ -1683,7 +1747,7 @@ _No JSDoc yet._
 
 ### `MessageKind`
 
-*type* · [src/types/platform.ts:781](../../../src/types/platform.ts#L781)
+*type* · [src/types/platform.ts:783](../../../src/types/platform.ts#L783)
 
 ```ts
 type MessageKind = 'text' | 'image' | 'file' | 'quote' | 'package' | 'location' | 'meeting' | 'system' | 'voice'
@@ -1693,7 +1757,7 @@ _No JSDoc yet._
 
 ### `Message`
 
-*interface* · [src/types/platform.ts:783](../../../src/types/platform.ts#L783)
+*interface* · [src/types/platform.ts:785](../../../src/types/platform.ts#L785)
 
 _No JSDoc yet._
 
@@ -1706,13 +1770,13 @@ _No JSDoc yet._
 | `senderRole` | `UserRole` |  |
 | `kind` | `MessageKind` |  |
 | `text` | `string` |  |
-| `meta?` | `{ quoteId?: string; image?: PhotoKey; uri?: string; fileName?: string; location?: { label: string; lat?: number; lng?: number }; meeting?: { at: string; title: string }; packageName?: string; price?:…` |  |
+| `meta?` | `{ quoteId?: string; image?: PhotoRef; uri?: string; fileName?: string; location?: { label: string; lat?: number; lng?: number }; meeting?: { at: string; title: string }; packageName?: string; price?:…` |  |
 | `at` | `string` |  |
 | `readBy` | `string[]` |  |
 
 ### `InternalNote`
 
-*interface* · [src/types/platform.ts:806](../../../src/types/platform.ts#L806)
+*interface* · [src/types/platform.ts:808](../../../src/types/platform.ts#L808)
 
 _No JSDoc yet._
 
@@ -1728,7 +1792,7 @@ _No JSDoc yet._
 
 ### `FileRef`
 
-*interface* · [src/types/platform.ts:816](../../../src/types/platform.ts#L816)
+*interface* · [src/types/platform.ts:818](../../../src/types/platform.ts#L818)
 
 _No JSDoc yet._
 
@@ -1748,7 +1812,7 @@ _No JSDoc yet._
 
 ### `AuditEntry`
 
-*interface* · [src/types/platform.ts:830](../../../src/types/platform.ts#L830)
+*interface* · [src/types/platform.ts:832](../../../src/types/platform.ts#L832)
 
 _No JSDoc yet._
 
@@ -1765,7 +1829,7 @@ _No JSDoc yet._
 
 ### `AppNotification`
 
-*interface* · [src/types/platform.ts:841](../../../src/types/platform.ts#L841)
+*interface* · [src/types/platform.ts:843](../../../src/types/platform.ts#L843)
 
 _No JSDoc yet._
 
@@ -1782,7 +1846,7 @@ _No JSDoc yet._
 
 ### `ReviewRecord`
 
-*interface* · [src/types/platform.ts:854](../../../src/types/platform.ts#L854)
+*interface* · [src/types/platform.ts:856](../../../src/types/platform.ts#L856)
 
 _No JSDoc yet._
 
@@ -1800,7 +1864,7 @@ _No JSDoc yet._
 | `overall` | `number` |  |
 | `criteria` | `Record<string, number>` |  |
 | `text` | `string` |  |
-| `photos` | `PhotoKey[]` |  |
+| `photos` | `PhotoRef[]` |  |
 | `photoUris?` | `string[]` | Photos the reviewer uploaded (Cloudinary URLs in production). |
 | `eventDate?` | `string` | yyyy-mm-dd of the event being reviewed, when the reviewer gave it (optional). |
 | `verifiedBooking` | `boolean` |  |
@@ -1812,7 +1876,7 @@ _No JSDoc yet._
 
 ### `CheckState`
 
-*type* · [src/types/platform.ts:880](../../../src/types/platform.ts#L880)
+*type* · [src/types/platform.ts:882](../../../src/types/platform.ts#L882)
 
 ```ts
 type CheckState = 'pending' | 'passed' | 'failed'
@@ -1822,7 +1886,7 @@ _No JSDoc yet._
 
 ### `VerificationCase`
 
-*interface* · [src/types/platform.ts:882](../../../src/types/platform.ts#L882)
+*interface* · [src/types/platform.ts:884](../../../src/types/platform.ts#L884)
 
 _No JSDoc yet._
 
@@ -1843,7 +1907,7 @@ _No JSDoc yet._
 
 ### `RsvpStatus`
 
-*type* · [src/types/platform.ts:899](../../../src/types/platform.ts#L899)
+*type* · [src/types/platform.ts:901](../../../src/types/platform.ts#L901)
 
 ```ts
 type RsvpStatus = 'pending' | 'yes' | 'no' | 'maybe'
@@ -1853,7 +1917,7 @@ _No JSDoc yet._
 
 ### `GuestInvite`
 
-*interface* · [src/types/platform.ts:901](../../../src/types/platform.ts#L901)
+*interface* · [src/types/platform.ts:903](../../../src/types/platform.ts#L903)
 
 _No JSDoc yet._
 
@@ -1871,7 +1935,7 @@ _No JSDoc yet._
 
 ### `Guest`
 
-*interface* · [src/types/platform.ts:913](../../../src/types/platform.ts#L913)
+*interface* · [src/types/platform.ts:915](../../../src/types/platform.ts#L915)
 
 _No JSDoc yet._
 
@@ -1901,7 +1965,7 @@ _No JSDoc yet._
 
 ### `SeatingElement`
 
-*interface* · [src/types/platform.ts:937](../../../src/types/platform.ts#L937)
+*interface* · [src/types/platform.ts:939](../../../src/types/platform.ts#L939)
 
 _No JSDoc yet._
 
@@ -1917,7 +1981,7 @@ _No JSDoc yet._
 
 ### `SeatingLayout`
 
-*interface* · [src/types/platform.ts:947](../../../src/types/platform.ts#L947)
+*interface* · [src/types/platform.ts:949](../../../src/types/platform.ts#L949)
 
 _No JSDoc yet._
 
@@ -1929,7 +1993,7 @@ _No JSDoc yet._
 
 ### `BudgetLine`
 
-*interface* · [src/types/platform.ts:953](../../../src/types/platform.ts#L953)
+*interface* · [src/types/platform.ts:955](../../../src/types/platform.ts#L955)
 
 _No JSDoc yet._
 
@@ -1949,7 +2013,7 @@ _No JSDoc yet._
 
 ### `WeddingWebsite`
 
-*interface* · [src/types/platform.ts:967](../../../src/types/platform.ts#L967)
+*interface* · [src/types/platform.ts:969](../../../src/types/platform.ts#L969)
 
 _No JSDoc yet._
 
@@ -1962,8 +2026,8 @@ _No JSDoc yet._
 | `font` | `'serif' \| 'sans'` |  |
 | `headline` | `string` |  |
 | `story` | `string` |  |
-| `cover` | `PhotoKey` |  |
-| `gallery` | `PhotoKey[]` |  |
+| `cover` | `PhotoRef` |  |
+| `gallery` | `PhotoRef[]` |  |
 | `sections` | `{ schedule: boolean; travel: boolean; faq: boolean; registry: boolean; rsvp: boolean; gallery: boolean; dressCode: boolean; story: boolean }` |  |
 | `travel` | `string` |  |
 | `dressCode` | `string` |  |
@@ -1979,7 +2043,7 @@ _No JSDoc yet._
 
 ### `RegistryItem`
 
-*interface* · [src/types/platform.ts:991](../../../src/types/platform.ts#L991)
+*interface* · [src/types/platform.ts:993](../../../src/types/platform.ts#L993)
 
 _No JSDoc yet._
 
@@ -1994,12 +2058,12 @@ _No JSDoc yet._
 | `target?` | `number` |  |
 | `quantity?` | `number` |  |
 | `link?` | `string` |  |
-| `image?` | `PhotoKey` |  |
+| `image?` | `PhotoRef` |  |
 | `contributions` | `{ id: string; name: string; amount: number; message?: string; at: string; thanked: boolean }[]` |  |
 
 ### `InspirationBoard`
 
-*interface* · [src/types/platform.ts:1005](../../../src/types/platform.ts#L1005)
+*interface* · [src/types/platform.ts:1007](../../../src/types/platform.ts#L1007)
 
 _No JSDoc yet._
 
@@ -2013,7 +2077,7 @@ _No JSDoc yet._
 
 ### `Contract`
 
-*interface* · [src/types/platform.ts:1013](../../../src/types/platform.ts#L1013)
+*interface* · [src/types/platform.ts:1015](../../../src/types/platform.ts#L1015)
 
 _No JSDoc yet._
 
@@ -2034,7 +2098,7 @@ _No JSDoc yet._
 
 ### `ShortlistEntry`
 
-*interface* · [src/types/platform.ts:1028](../../../src/types/platform.ts#L1028)
+*interface* · [src/types/platform.ts:1030](../../../src/types/platform.ts#L1030)
 
 _No JSDoc yet._
 
@@ -2048,7 +2112,7 @@ _No JSDoc yet._
 
 ### `Deal`
 
-*interface* · [src/types/platform.ts:1036](../../../src/types/platform.ts#L1036)
+*interface* · [src/types/platform.ts:1038](../../../src/types/platform.ts#L1038)
 
 _No JSDoc yet._
 
@@ -2071,7 +2135,7 @@ _No JSDoc yet._
 
 ### `ProviderPackage`
 
-*interface* · [src/types/platform.ts:1053](../../../src/types/platform.ts#L1053)
+*interface* · [src/types/platform.ts:1055](../../../src/types/platform.ts#L1055)
 
 _No JSDoc yet._
 
@@ -2097,7 +2161,7 @@ _No JSDoc yet._
 
 ### `PortfolioItem`
 
-*interface* · [src/types/platform.ts:1073](../../../src/types/platform.ts#L1073)
+*interface* · [src/types/platform.ts:1075](../../../src/types/platform.ts#L1075)
 
 _No JSDoc yet._
 
@@ -2105,7 +2169,7 @@ _No JSDoc yet._
 |---|---|---|
 | `id` | `string` |  |
 | `providerId` | `string` |  |
-| `image?` | `PhotoKey` |  |
+| `image?` | `PhotoRef` |  |
 | `uri?` | `string` |  |
 | `publicId?` | `string` | Cloudinary public id when the file was uploaded (Supabase builds); `uri` then holds its card-size URL. |
 | `kind` | `'image' \| 'video'` |  |
@@ -2118,7 +2182,7 @@ _No JSDoc yet._
 
 ### `StaffMember`
 
-*interface* · [src/types/platform.ts:1089](../../../src/types/platform.ts#L1089)
+*interface* · [src/types/platform.ts:1091](../../../src/types/platform.ts#L1091)
 
 _No JSDoc yet._
 
@@ -2134,7 +2198,7 @@ _No JSDoc yet._
 
 ### `Invoice`
 
-*interface* · [src/types/platform.ts:1099](../../../src/types/platform.ts#L1099)
+*interface* · [src/types/platform.ts:1101](../../../src/types/platform.ts#L1101)
 
 _No JSDoc yet._
 
@@ -2155,7 +2219,7 @@ _No JSDoc yet._
 
 ### `PlatformSettings`
 
-*interface* · [src/types/platform.ts:1114](../../../src/types/platform.ts#L1114)
+*interface* · [src/types/platform.ts:1116](../../../src/types/platform.ts#L1116)
 
 _No JSDoc yet._
 
@@ -2174,7 +2238,7 @@ _No JSDoc yet._
 
 ### `Announcement`
 
-*interface* · [src/types/platform.ts:1128](../../../src/types/platform.ts#L1128)
+*interface* · [src/types/platform.ts:1130](../../../src/types/platform.ts#L1130)
 
 A notice a super admin pins to the top of one role's home, or every role's.
 
@@ -2191,7 +2255,7 @@ A notice a super admin pins to the top of one role's home, or every role's.
 
 ### `BugLogLine`
 
-*interface* · [src/types/platform.ts:1140](../../../src/types/platform.ts#L1140)
+*interface* · [src/types/platform.ts:1142](../../../src/types/platform.ts#L1142)
 
 _No JSDoc yet._
 
@@ -2203,7 +2267,7 @@ _No JSDoc yet._
 
 ### `BugReport`
 
-*interface* · [src/types/platform.ts:1147](../../../src/types/platform.ts#L1147)
+*interface* · [src/types/platform.ts:1149](../../../src/types/platform.ts#L1149)
 
 What the report sheet sends: the description, the screenshot and where it happened.
 
@@ -2222,7 +2286,7 @@ What the report sheet sends: the description, the screenshot and where it happen
 
 ### `BugReportStatus`
 
-*type* · [src/types/platform.ts:1162](../../../src/types/platform.ts#L1162)
+*type* · [src/types/platform.ts:1164](../../../src/types/platform.ts#L1164)
 
 ```ts
 type BugReportStatus = 'new' | 'fixed' | 'dismissed'
@@ -2232,7 +2296,7 @@ _No JSDoc yet._
 
 ### `BugReportRecord`
 
-*interface* · [src/types/platform.ts:1165](../../../src/types/platform.ts#L1165)
+*interface* · [src/types/platform.ts:1167](../../../src/types/platform.ts#L1167)
 
 `extends BugReport`
 
@@ -2247,9 +2311,82 @@ A bug report as the super admin console keeps it.
 | `resolvedAt?` | `string` |  |
 | `note?` | `string` |  |
 
+### `SupportTopic`
+
+*type* · [src/types/platform.ts:1178](../../../src/types/platform.ts#L1178)
+
+```ts
+type SupportTopic = 'booking' | 'payment' | 'account' | 'vendor' | 'technical' | 'feedback' | 'other'
+```
+
+_No JSDoc yet._
+
+### `SupportTicketStatus`
+
+*type* · [src/types/platform.ts:1180](../../../src/types/platform.ts#L1180)
+
+```ts
+type SupportTicketStatus = 'open' | 'in_progress' | 'waiting' | 'resolved' | 'closed'
+```
+
+open: waiting on the Vivah team · waiting: the team asked the person something · resolved: answered (the person can reopen) · closed: done.
+
+### `SupportPriority`
+
+*type* · [src/types/platform.ts:1181](../../../src/types/platform.ts#L1181)
+
+```ts
+type SupportPriority = 'normal' | 'high' | 'urgent'
+```
+
+_No JSDoc yet._
+
+### `SupportMessage`
+
+*interface* · [src/types/platform.ts:1184](../../../src/types/platform.ts#L1184)
+
+One message in a help request. `internal` notes are seen by staff only.
+
+| Member | Type | Notes |
+|---|---|---|
+| `id` | `string` |  |
+| `at` | `string` |  |
+| `authorId` | `string` |  |
+| `authorName` | `string` |  |
+| `authorRole` | `UserRole` |  |
+| `body` | `string` |  |
+| `internal?` | `boolean` |  |
+
+### `SupportTicket`
+
+*interface* · [src/types/platform.ts:1195](../../../src/types/platform.ts#L1195)
+
+A help request from any role, answered by the Vivah team (Platform → Help desk).
+
+| Member | Type | Notes |
+|---|---|---|
+| `id` | `string` |  |
+| `code` | `string` | Human code, e.g. SUP-2026-0101. |
+| `accountId` | `string` |  |
+| `accountName` | `string` |  |
+| `role` | `UserRole` |  |
+| `topic` | `SupportTopic` |  |
+| `subject` | `string` |  |
+| `priority` | `SupportPriority` |  |
+| `status` | `SupportTicketStatus` |  |
+| `projectId?` | `string` | The celebration or booking it is about, when the person picked one. |
+| `messages` | `SupportMessage[]` |  |
+| `createdAt` | `string` |  |
+| `updatedAt` | `string` |  |
+| `assignedTo?` | `string` | Staff member looking after it. |
+| `assignedName?` | `string` |  |
+| `resolvedAt?` | `string` |  |
+| `rating?` | `number` | How the person rated the help (1–5), once resolved. |
+| `ratingNote?` | `string` |  |
+
 ### `*`
 
-*re-export* · [src/types/platform.ts:1176](../../../src/types/platform.ts#L1176)
+*re-export* · [src/types/platform.ts:1221](../../../src/types/platform.ts#L1221)
 
 ```ts
 *from './toolkit'
@@ -2259,7 +2396,7 @@ _No JSDoc yet._
 
 ### `*`
 
-*re-export* · [src/types/platform.ts:1178](../../../src/types/platform.ts#L1178)
+*re-export* · [src/types/platform.ts:1223](../../../src/types/platform.ts#L1223)
 
 ```ts
 *from './social'
@@ -2269,7 +2406,7 @@ _No JSDoc yet._
 
 ### `*`
 
-*re-export* · [src/types/platform.ts:1180](../../../src/types/platform.ts#L1180)
+*re-export* · [src/types/platform.ts:1225](../../../src/types/platform.ts#L1225)
 
 ```ts
 *from './persona'
@@ -2360,7 +2497,7 @@ A photo or video attached to a post or a message.
 |---|---|---|
 | `id` | `string` |  |
 | `kind` | `'image' \| 'video'` |  |
-| `image?` | `PhotoKey` |  |
+| `image?` | `PhotoRef` |  |
 | `uri?` | `string` |  |
 | `publicId?` | `string` | Cloudinary public id (Supabase builds): the networks fetch the file from its public URL. |
 | `alt?` | `string` |  |

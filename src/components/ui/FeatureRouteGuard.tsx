@@ -1,7 +1,7 @@
 import { router, usePathname, type Href } from 'expo-router';
 import { StyleSheet, View } from 'react-native';
 
-import { colors } from '@/constants/theme';
+import { colors, themed } from '@/constants/theme';
 import { featureForPath } from '@/data/features';
 import { useFeatures } from '@/hooks/useFeatures';
 import { useSession } from '@/store/useSession';
@@ -30,6 +30,6 @@ export function FeatureRouteGuard() {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = themed(() => StyleSheet.create({
   cover: { position: 'absolute', top: 0, right: 0, bottom: 0, left: 0, backgroundColor: colors.white, alignItems: 'center', justifyContent: 'center', padding: 24 },
-});
+}));

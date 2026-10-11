@@ -10,6 +10,7 @@ Every exported symbol in `src/utils/`, file by file. The guide that explains how
 - [`confirm.ts`](#confirmts) (1 exports)
 - [`format.ts`](#formatts) (29 exports)
 - [`links.ts`](#linksts) (8 exports)
+- [`localImage.ts`](#localimagets) (2 exports)
 - [`random.ts`](#randomts) (2 exports)
 
 ## bs.ts
@@ -581,6 +582,32 @@ openSms(message: string, phone?: string)
 ```
 
 Opens the SMS composer with a prefilled body.
+
+## localImage.ts
+
+Source: [src/utils/localImage.ts](../../../src/utils/localImage.ts)
+
+### `LOCAL_IMAGE_DIR`
+
+*const* · [src/utils/localImage.ts:7](../../../src/utils/localImage.ts#L7)
+
+```ts
+LOCAL_IMAGE_DIR= 'content'
+```
+
+Folder, inside the app's documents, for photos a super admin picked on this device.
+
+### `imageUri`
+
+*function* · [src/utils/localImage.ts:14](../../../src/utils/localImage.ts#L14)
+
+```ts
+imageUri(address: string): string
+```
+
+The address to load an image from. Photos kept on the device are stored as
+`vivah-file://name.jpg` because the documents folder moves when the app is
+updated; every other address is returned as it is.
 
 ## random.ts
 

@@ -5,7 +5,7 @@ import { Pressable, StyleSheet, View } from 'react-native';
 
 import { SectionHeader } from '@/components/ui/SectionHeader';
 import { Text } from '@/components/ui/Text';
-import { colors, GUTTER } from '@/constants/theme';
+import { colors, GUTTER, themed } from '@/constants/theme';
 import { CHECKLIST_TOTAL } from '@/data/checklist';
 import { useExperience } from '@/hooks/useExperience';
 import { useCustomerWorkspace } from '@/hooks/useWorkspace';
@@ -66,7 +66,7 @@ export function PlanningTools() {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = themed(() => StyleSheet.create({
   section: { paddingTop: 26 },
   grid: {
     marginHorizontal: GUTTER,
@@ -89,4 +89,4 @@ const styles = StyleSheet.create({
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderColor: colors.border,
   },
-});
+}));

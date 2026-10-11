@@ -1,4 +1,4 @@
-import { colors, fonts as mukta, type FontWeight } from '@/constants/theme';
+import { colors, currentColorScheme, fonts as mukta, onColorScheme, type FontWeight } from '@/constants/theme';
 import type { UserRole } from '@/types/platform';
 
 export interface RolePalette {
@@ -39,7 +39,7 @@ export interface RoleTheme {
   cardRadius: number;
 }
 
-const neutral = {
+const buildNeutral = () => ({
   bg: colors.bg,
   surface: colors.white,
   surfaceAlt: colors.bgSoft,
@@ -57,7 +57,7 @@ const neutral = {
   warning: colors.warning,
   danger: colors.danger,
   info: colors.info,
-} as const;
+});
 
 /**
  * One design system, four apps. Every role shares the "Royal Nepali Luxury"
@@ -66,85 +66,99 @@ const neutral = {
  * freelancer apps share the burgundy accent; the staff console uses the
  * deeper wine so a coordinator can tell at a glance which app they are in.
  */
-export const ROLE_THEMES: Record<UserRole, RoleTheme> = {
-  customer: {
-    role: 'customer',
-    label: 'Couple',
-    tagline: 'Plan the wedding, compare venues and vendors, pay in one place',
-    dark: false,
-    fonts: mukta,
-    c: {
-      ...neutral,
-      primary: colors.primary,
-      primaryDark: colors.primaryDark,
-      onPrimary: colors.white,
-      soft: colors.primarySoft,
-      header: colors.white,
-      onHeader: colors.heading,
+function buildRoleThemes(): Record<UserRole, RoleTheme> {
+  const neutral = buildNeutral();
+  const dark = currentColorScheme() === 'dark';
+  return {
+    customer: {
+      role: 'customer',
+      label: 'Couple',
+      tagline: 'Plan the wedding, compare venues and vendors, pay in one place',
+      dark,
+      fonts: mukta,
+      c: {
+        ...neutral,
+        primary: colors.primary,
+        primaryDark: colors.primaryDark,
+        onPrimary: colors.white,
+        soft: colors.primarySoft,
+        header: colors.white,
+        onHeader: colors.heading,
+      },
+      gradient: [colors.primary, colors.primary],
+      cardRadius: 10,
     },
-    gradient: [colors.primary, colors.primary],
-    cardRadius: 10,
-  },
-  vendor: {
-    role: 'vendor',
-    label: 'Venue or business',
-    tagline: 'Leads, quotations, bookings and payouts for your business',
-    dark: false,
-    fonts: mukta,
-    c: {
-      ...neutral,
-      primary: colors.primary,
-      primaryDark: colors.primaryDark,
-      onPrimary: colors.white,
-      soft: colors.primarySoft,
+    vendor: {
+      role: 'vendor',
+      label: 'Venue or business',
+      tagline: 'Leads, quotations, bookings and payouts for your business',
+      dark,
+      fonts: mukta,
+      c: {
+        ...neutral,
+        primary: colors.primary,
+        primaryDark: colors.primaryDark,
+        onPrimary: colors.white,
+        soft: colors.primarySoft,
+      },
+      gradient: [colors.primary, colors.primary],
+      cardRadius: 10,
     },
-    gradient: [colors.primary, colors.primary],
-    cardRadius: 10,
-  },
-  freelancer: {
-    role: 'freelancer',
-    label: 'Freelancer',
-    tagline: 'Photographers, makeup artists and crew: find wedding work',
-    dark: false,
-    fonts: mukta,
-    c: {
-      ...neutral,
-      primary: colors.primary,
-      primaryDark: colors.primaryDark,
-      onPrimary: colors.white,
-      soft: colors.primarySoft,
+    freelancer: {
+      role: 'freelancer',
+      label: 'Freelancer',
+      tagline: 'Photographers, makeup artists and crew: find wedding work',
+      dark,
+      fonts: mukta,
+      c: {
+        ...neutral,
+        primary: colors.primary,
+        primaryDark: colors.primaryDark,
+        onPrimary: colors.white,
+        soft: colors.primarySoft,
+      },
+      gradient: [colors.primary, colors.primary],
+      cardRadius: 10,
     },
-    gradient: [colors.primary, colors.primary],
-    cardRadius: 10,
-  },
-  platform: {
-    role: 'platform',
-    label: 'Vivah staff',
-    tagline: 'Coordination, approvals, finance and wedding-day operations',
-    dark: false,
-    fonts: mukta,
-    c: {
-      ...neutral,
-      primary: colors.wine,
-      primaryDark: colors.wineDeep,
-      onPrimary: colors.white,
-      soft: colors.wineSoft,
+    platform: {
+      role: 'platform',
+      label: 'Vivah staff',
+      tagline: 'Coordination, approvals, finance and wedding-day operations',
+      dark,
+      fonts: mukta,
+      c: {
+        ...neutral,
+        primary: dark ? '#DDB0B8' : colors.wine,
+        primaryDark: dark ? '#EBC9CF' : colors.wineDeep,
+        onPrimary: colors.white,
+        soft: colors.wineSoft,
+      },
+      gradient: [colors.wine, colors.wine],
+      cardRadius: 8,
     },
-    gradient: [colors.wine, colors.wine],
-    cardRadius: 8,
-  },
-};
+  };
+}
+
+/** The live role themes; rebuilt in place when the colour scheme changes. */
+export const ROLE_THEMES: Record<UserRole, RoleTheme> = buildRoleThemes();
 
 /**
  * Small marks that tell roles apart where several meet on one screen (chat
  * bubbles, member chips). Accents stay burgundy; these are only for labels.
  */
-export const ROLE_MARK: Record<UserRole, string> = {
+const buildRoleMark = (): Record<UserRole, string> => ({
   customer: colors.primary,
   vendor: colors.goldDeep,
   freelancer: colors.roseDeep,
-  platform: colors.wine,
-};
+  platform: currentColorScheme() === 'dark' ? ROLE_THEMES.platform.c.primary : colors.wine,
+});
+
+export const ROLE_MARK: Record<UserRole, string> = buildRoleMark();
+
+onColorScheme(() => {
+  Object.assign(ROLE_THEMES, buildRoleThemes());
+  Object.assign(ROLE_MARK, buildRoleMark());
+});
 
 const TONES: Record<string, 'info' | 'muted' | 'warning' | 'danger' | 'success' | 'primary'> = {
   // neutral / informational

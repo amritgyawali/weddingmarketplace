@@ -36,9 +36,9 @@ export const PhotoTile = memo(function PhotoTile({ photo, width }: { photo: Idea
       </Pressable>
       <Pressable onPress={like} hitSlop={8} accessibilityLabel={liked ? 'Unlike photo' : 'Like photo'} style={styles.likes}>
         <Animated.View style={heartStyle}>
-          <Ionicons name={liked ? 'heart' : 'heart-outline'} size={18} color={colors.white} />
+          <Ionicons name={liked ? 'heart' : 'heart-outline'} size={18} color={colors.onDark} />
         </Animated.View>
-        <Text size={13} weight="medium" color={colors.white}>
+        <Text size={13} weight="medium" color={colors.onDark}>
           {photo.likes + (liked ? 1 : 0)}
         </Text>
       </Pressable>

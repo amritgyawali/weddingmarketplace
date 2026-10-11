@@ -59,12 +59,19 @@ const SILENT = new Set([
   'mirrorSocialData',
   'submitBugReport',
   'setHomeOrder',
+  'mirrorSupportTickets',
 ]);
 
 /** Exact messages for the most common actions. */
 const MESSAGES: Record<string, string> = {
   addGuest: 'Guest added',
   setBugReportStatus: 'Bug report updated',
+  openSupportTicket: 'Request sent',
+  replySupportTicket: 'Reply sent',
+  setSupportTicketStatus: 'Request updated',
+  assignSupportTicket: 'Request updated',
+  rateSupportTicket: 'Thank you for your rating',
+  updateMyProfile: 'Profile updated',
   removeBugReports: 'Bug report deleted',
   removeGuest: 'Guest removed',
   updateGuest: 'Guest updated',

@@ -7,7 +7,7 @@ import { ScreenHeader } from '@/components/ui/ScreenHeader';
 import { Text } from '@/components/ui/Text';
 import { BRAND } from '@/constants/brand';
 import { ENV } from '@/constants/env';
-import { colors, GUTTER } from '@/constants/theme';
+import { colors, GUTTER, themed } from '@/constants/theme';
 import { isLegalDoc, LEGAL_DOCS, type LegalDocId } from '@/data/legal';
 import { formatLongDate } from '@/utils/format';
 import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
@@ -85,7 +85,7 @@ export default function LegalScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = themed(() => StyleSheet.create({
   root: { flex: 1, backgroundColor: colors.white },
   body: { padding: GUTTER },
   // Readable line length on the web.
@@ -94,4 +94,4 @@ const styles = StyleSheet.create({
   bullet: { flexDirection: 'row', gap: 8, paddingLeft: 4 },
   more: { borderTopWidth: 1, borderTopColor: colors.divider, paddingTop: 16 },
   link: { paddingVertical: 4 },
-});
+}));

@@ -2,10 +2,12 @@ import { router, type Href } from 'expo-router';
 import { View } from 'react-native';
 
 import { Avatar, Card, KButton, ListRow, RoleHeader, SectionTitle, StatusPill, type IconName } from '@/components/kit';
+import { AppearanceSwitch } from '@/components/ui/AppearancePicker';
 import { Text } from '@/components/ui/Text';
 import { toast } from '@/components/ui/Toast';
 import { useExperience } from '@/hooks/useExperience';
 import { PLATFORM_ROUTE_RULES } from '@/data/access';
+import { isOpenTicket } from '@/data/support';
 import { allows, can } from '@/services/experience';
 import { logout } from '@/services/auth';
 import { useDb, useUnreadMessageCount } from '@/store/useDb';
@@ -31,6 +33,9 @@ export default function PlatformMore() {
   const pendingKyc = verifications.filter((v) => v.status === 'DOCUMENT_SUBMITTED' || v.status === 'UNDER_REVIEW').length;
   const flagged = reviews.filter((r) => r.status === 'flagged').length;
   const openDisputes = disputes.filter((d) => d.status === 'OPEN' || d.status === 'INVESTIGATING').length;
+  const supportTickets = useDb((s) => s.supportTickets);
+  const newRequests = supportTickets.filter((x) => x.status === 'open').length;
+  const openRequests = supportTickets.filter((x) => isOpenTicket(x.status)).length;
 
   const sections: { title: string; rows: { icon: IconName; title: string; subtitle: string; href: Href; badge?: number }[] }[] = [
     {
@@ -44,6 +49,7 @@ export default function PlatformMore() {
     {
       title: 'Operations',
       rows: [
+        { icon: 'help-buoy-outline', title: 'Help desk', subtitle: `${newRequests} new · ${openRequests} open help requests`, href: '/platform/support', badge: newRequests },
         { icon: 'chatbubbles-outline', title: 'Messages', subtitle: 'Customer, provider and crew threads', href: '/platform/inbox', badge: unread },
         { icon: 'calendar-outline', title: 'Operations calendar', subtitle: 'Every function by date with service status', href: '/platform/calendar' },
         { icon: 'megaphone-outline', title: 'Crew gigs', subtitle: 'Staffing and emergency replacements', href: '/platform/gigs' },
@@ -87,7 +93,7 @@ export default function PlatformMore() {
       <RoleHeader title="More" subtitle="Operations tools" />
       <ScrollView contentContainerStyle={{ padding: 14, gap: 16, paddingBottom: 30 }}>
         <Card style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
-          <Avatar name={account.name} size={48} />
+          <Avatar name={account.name} size={48} photo={account.photo} />
           <View style={{ flex: 1 }}>
             <Text size={16} weight="bold" color={t.c.textStrong}>
               {account.name}
@@ -97,6 +103,7 @@ export default function PlatformMore() {
             </Text>
           </View>
           <StatusPill status="verified" label={(account.staffRole ?? 'staff').replace('_', ' ')} />
+          <KButton label="Edit" size="sm" variant="secondary" icon="create-outline" onPress={() => router.push('/platform/edit-profile')} />
         </Card>
         {visible.map((section) => (
           <View key={section.title}>
@@ -112,7 +119,8 @@ export default function PlatformMore() {
           <SectionTitle title="System" />
           <Card padded={false} style={{ overflow: 'hidden' }}>
             <ListRow icon="notifications-outline" title="Notifications" onPress={() => router.push('/notifications')} />
-            <ListRow icon="settings-outline" title="Settings" onPress={() => router.push('/platform/settings')} />
+            <ListRow icon="settings-outline" title="Settings" subtitle="Appearance, notifications, language" onPress={() => router.push('/platform/settings')} />
+            <ListRow icon="contrast-outline" title="Appearance" trailing={<AppearanceSwitch />} />
             {can(exp, 'demo.reset') && (
               <ListRow
                 icon="refresh-outline"

@@ -199,7 +199,7 @@ Source: [src/components/kit/primitives.tsx](../../../src/components/kit/primitiv
 
 ### `IconName`
 
-*type* · [src/components/kit/primitives.tsx:14](../../../src/components/kit/primitives.tsx#L14)
+*type* · [src/components/kit/primitives.tsx:15](../../../src/components/kit/primitives.tsx#L15)
 
 ```ts
 type IconName = ComponentProps<typeof Ionicons>['name']
@@ -209,7 +209,7 @@ _No JSDoc yet._
 
 ### `Card`
 
-*component* · [src/components/kit/primitives.tsx:17](../../../src/components/kit/primitives.tsx#L17)
+*component* · [src/components/kit/primitives.tsx:18](../../../src/components/kit/primitives.tsx#L18)
 
 ```ts
 Card({ children, style, onPress, padded = true, accessibilityLabel, }: { children: ReactNode; style?: StyleProp<ViewStyle>; onPress?: () => void; padded?: boolean; accessibilityLabel?: string; })
@@ -219,7 +219,7 @@ Themed surface. `pressable` turns it into a card button.
 
 ### `KButton`
 
-*component* · [src/components/kit/primitives.tsx:51](../../../src/components/kit/primitives.tsx#L51)
+*component* · [src/components/kit/primitives.tsx:52](../../../src/components/kit/primitives.tsx#L52)
 
 ```ts
 KButton({ label, onPress, variant = 'primary', icon, loading, disabled, missing, onMissing, size = 'md', style, }: { label: string; onPress?: () => void; variant?: ButtonVariant; icon?: IconName; loading?: boolean; disabled?: b…)
@@ -229,7 +229,7 @@ _No JSDoc yet._
 
 ### `showMissing`
 
-*function* · [src/components/kit/primitives.tsx:125](../../../src/components/kit/primitives.tsx#L125)
+*function* · [src/components/kit/primitives.tsx:126](../../../src/components/kit/primitives.tsx#L126)
 
 ```ts
 showMissing(message: string)
@@ -239,7 +239,7 @@ Tells the person what is still missing when they tap an incomplete form's button
 
 ### `StatusPill`
 
-*component* · [src/components/kit/primitives.tsx:130](../../../src/components/kit/primitives.tsx#L130)
+*component* · [src/components/kit/primitives.tsx:131](../../../src/components/kit/primitives.tsx#L131)
 
 ```ts
 StatusPill({ status, label }: { status: string; label?: string })
@@ -249,17 +249,17 @@ _No JSDoc yet._
 
 ### `Avatar`
 
-*component* · [src/components/kit/primitives.tsx:149](../../../src/components/kit/primitives.tsx#L149)
+*component* · [src/components/kit/primitives.tsx:151](../../../src/components/kit/primitives.tsx#L151)
 
 ```ts
-Avatar({ name, size = 40 }: { name: string; size?: number })
+Avatar({ name, size = 40, photo }: { name: string; size?: number; photo?: string })
 ```
 
-_No JSDoc yet._
+Initials in a palette colour, or the person's photo when they added one.
 
 ### `ProgressBar`
 
-*component* · [src/components/kit/primitives.tsx:166](../../../src/components/kit/primitives.tsx#L166)
+*component* · [src/components/kit/primitives.tsx:170](../../../src/components/kit/primitives.tsx#L170)
 
 ```ts
 ProgressBar({ value, color, height = 4 }: { value: number; color?: string; height?: number })
@@ -269,7 +269,7 @@ _No JSDoc yet._
 
 ### `SectionTitle`
 
-*component* · [src/components/kit/primitives.tsx:175](../../../src/components/kit/primitives.tsx#L175)
+*component* · [src/components/kit/primitives.tsx:179](../../../src/components/kit/primitives.tsx#L179)
 
 ```ts
 SectionTitle({ title, action, onAction }: { title: string; action?: string; onAction?: () => void })
@@ -279,7 +279,7 @@ _No JSDoc yet._
 
 ### `EmptyBlock`
 
-*component* · [src/components/kit/primitives.tsx:194](../../../src/components/kit/primitives.tsx#L194)
+*component* · [src/components/kit/primitives.tsx:198](../../../src/components/kit/primitives.tsx#L198)
 
 ```ts
 EmptyBlock({ icon = 'file-tray-outline', art, title, message, action, onAction }: { icon?: IconName; art?: ArtName; title: string; message?: string; action?: string; onAction?: () => void })
@@ -289,7 +289,7 @@ Empty list or section in the role apps: pearl medallion, serif title, one line, 
 
 ### `Divider`
 
-*component* · [src/components/kit/primitives.tsx:214](../../../src/components/kit/primitives.tsx#L214)
+*component* · [src/components/kit/primitives.tsx:218](../../../src/components/kit/primitives.tsx#L218)
 
 ```ts
 Divider({ style }: { style?: StyleProp<ViewStyle> })
@@ -299,7 +299,7 @@ _No JSDoc yet._
 
 ### `KeyValue`
 
-*component* · [src/components/kit/primitives.tsx:220](../../../src/components/kit/primitives.tsx#L220)
+*component* · [src/components/kit/primitives.tsx:224](../../../src/components/kit/primitives.tsx#L224)
 
 ```ts
 KeyValue({ label, value, strong }: { label: string; value: string; strong?: boolean })

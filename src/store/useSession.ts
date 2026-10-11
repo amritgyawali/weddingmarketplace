@@ -3,6 +3,7 @@ import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 
 import { DEMO_ACCOUNTS, DEMO_PERSONA_KEYS } from '@/data/seed';
+import { cleanProfile, type ProfilePatch } from '@/services/profile';
 import type { Account, UserRole } from '@/types/platform';
 import { uid } from '@/utils/format';
 
@@ -26,6 +27,8 @@ interface SessionState {
   login: (accountId: string) => void;
   register: (input: Omit<Account, 'id' | 'createdAt' | 'verified'>) => Account;
   updateAccount: (id: string, patch: Partial<Account>) => void;
+  /** Saves the signed-in person's own profile edits (Edit profile), cleaned. Returns an error to show, or null. */
+  updateMyProfile: (patch: ProfilePatch) => string | null;
   /** Adds or replaces an account by id (a Supabase user mirrored on this device). */
   upsertAccount: (account: Account) => void;
   /** Removes the account from this device and signs out (right to erasure). */
@@ -91,6 +94,15 @@ export const useSession = create<SessionState>()(
 
       updateAccount: (id, patch) =>
         set((s) => ({ accounts: s.accounts.map((a) => (a.id === id ? { ...a, ...patch } : a)) })),
+
+      updateMyProfile: (patch) => {
+        const me = get().accounts.find((a) => a.id === get().session?.accountId);
+        if (!me) return 'Sign in to edit your profile';
+        const { value, error } = cleanProfile(patch, me);
+        if (error || !value) return error ?? 'Nothing to save';
+        set((s) => ({ accounts: s.accounts.map((a) => (a.id === me.id ? { ...a, ...value } : a)) }));
+        return null;
+      },
 
       upsertAccount: (account) =>
         set((s) => ({ accounts: s.accounts.some((a) => a.id === account.id) ? s.accounts.map((a) => (a.id === account.id ? { ...a, ...account } : a)) : [...s.accounts, account] })),

@@ -8,7 +8,7 @@ import { BackButton } from '@/components/ui/IconButton';
 import { triggerHaptic } from '@/components/ui/PressableScale';
 import { Text } from '@/components/ui/Text';
 import { BRAND } from '@/constants/brand';
-import { colors } from '@/constants/theme';
+import { colors, themed } from '@/constants/theme';
 import { useFeatures } from '@/hooks/useFeatures';
 import { useSession } from '@/store/useSession';
 import { ROLE_THEMES } from '@/theme/roles';
@@ -101,11 +101,11 @@ export default function RolePicker() {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = themed(() => StyleSheet.create({
   root: { flex: 1, backgroundColor: colors.white },
   head: { paddingHorizontal: 20, marginTop: 20, marginBottom: 24, gap: 4 },
   list: { borderTopWidth: StyleSheet.hairlineWidth, borderBottomWidth: StyleSheet.hairlineWidth, borderColor: colors.border },
   row: { flexDirection: 'row', alignItems: 'center', gap: 14, paddingHorizontal: 20, paddingVertical: 16 },
   rowBorder: { borderTopWidth: StyleSheet.hairlineWidth, borderTopColor: colors.divider },
   icon: { width: 44, height: 44, borderRadius: 22, borderWidth: 1, borderColor: colors.border, alignItems: 'center', justifyContent: 'center' },
-});
+}));

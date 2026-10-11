@@ -6,7 +6,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Avatar, Card, EmptyBlock, KButton } from '@/components/kit';
 import { Text } from '@/components/ui/Text';
-import { colors } from '@/constants/theme';
+import { colors, themed } from '@/constants/theme';
 import { serviceName } from '@/data/services';
 import { estimateTotal } from '@/services/planner';
 import { useDb } from '@/store/useDb';
@@ -114,7 +114,7 @@ export default function PlanSubmitted() {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = themed(() => StyleSheet.create({
   root: { flex: 1, backgroundColor: colors.bgSoft },
   badge: { width: 44, height: 44, borderRadius: 22, borderWidth: 1.5, borderColor: colors.success, alignItems: 'center', justifyContent: 'center', marginBottom: 6 },
   row: { flexDirection: 'row', alignItems: 'center', gap: 12 },
@@ -122,4 +122,4 @@ const styles = StyleSheet.create({
   stepRail: { alignItems: 'center', width: 24 },
   stepNum: { width: 24, height: 24, borderRadius: 12, borderWidth: 1, borderColor: colors.border, backgroundColor: colors.white, alignItems: 'center', justifyContent: 'center' },
   stepLine: { flex: 1, width: 1, backgroundColor: colors.border, marginVertical: 2 },
-});
+}));

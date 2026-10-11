@@ -10,7 +10,7 @@ import { PressableScale } from '@/components/ui/PressableScale';
 import { Text } from '@/components/ui/Text';
 import { BRAND } from '@/constants/brand';
 import { photos } from '@/constants/images';
-import { colors, GUTTER, radius, shadows } from '@/constants/theme';
+import { colors, GUTTER, radius, shadows, themed } from '@/constants/theme';
 import { GENIE_FEATURES } from '@/data/genie';
 import type { Faq, GeniePackage, Testimonial } from '@/types';
 import { formatNumber, formatShortDate } from '@/utils/format';
@@ -184,14 +184,14 @@ export function WhatsAppFab({ bottom = 20 }: { bottom?: number }) {
       <View style={styles.waMark}>
         <Ionicons name="logo-whatsapp" size={16} color={colors.whatsapp} />
       </View>
-      <Text size={14} weight="semibold" color={colors.white}>
+      <Text size={14} weight="semibold" color={colors.onDark}>
         WhatsApp us
       </Text>
     </PressableScale>
   );
 }
 
-const styles = StyleSheet.create({
+const styles = themed(() => StyleSheet.create({
   hero: { aspectRatio: 16 / 10, backgroundColor: colors.bgMuted, overflow: 'hidden' },
   heroContent: { paddingHorizontal: GUTTER, paddingTop: 18, paddingBottom: 6 },
   features: { gap: 8, marginTop: 14 },
@@ -237,4 +237,4 @@ const styles = StyleSheet.create({
   },
   /** WhatsApp's own green, kept to a small mark on soft white so the pill stays on-palette. */
   waMark: { width: 30, height: 30, borderRadius: 15, backgroundColor: colors.white, alignItems: 'center', justifyContent: 'center' },
-});
+}));

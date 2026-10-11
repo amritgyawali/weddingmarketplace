@@ -8,7 +8,7 @@ import { Card, ChoiceChips, EmptyBlock, KButton } from '@/components/kit';
 import { ScreenHeader } from '@/components/ui/ScreenHeader';
 import { Text } from '@/components/ui/Text';
 import { toast } from '@/components/ui/Toast';
-import { colors } from '@/constants/theme';
+import { colors, themed } from '@/constants/theme';
 import { findProvider } from '@/data/providers';
 import { serviceName } from '@/data/services';
 import { useStartChat } from '@/hooks/useChat';
@@ -117,8 +117,8 @@ export default function DealsScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = themed(() => StyleSheet.create({
   root: { flex: 1, backgroundColor: colors.bgSoft },
   hero: { borderRadius: 10, padding: 16, gap: 4, backgroundColor: colors.white, borderWidth: 1, borderStyle: 'dashed', borderColor: colors.primary },
   row: { flexDirection: 'row', alignItems: 'center', gap: 8 },
-});
+}));

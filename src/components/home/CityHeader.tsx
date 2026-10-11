@@ -6,7 +6,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { PressableScale } from '@/components/ui/PressableScale';
 import { Text } from '@/components/ui/Text';
-import { colors, GUTTER } from '@/constants/theme';
+import { colors, GUTTER, themed } from '@/constants/theme';
 import { useAppStore } from '@/store/useAppStore';
 
 /** City switcher plus icon actions: the top bar of the Home and Vendors tabs. */
@@ -31,7 +31,7 @@ export function CityHeader({ right, border = true }: { right: ReactNode; border?
   );
 }
 
-const styles = StyleSheet.create({
+const styles = themed(() => StyleSheet.create({
   wrap: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -44,4 +44,4 @@ const styles = StyleSheet.create({
   border: { borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: colors.border },
   city: { flexDirection: 'row', alignItems: 'center', gap: 4, flexShrink: 1, marginRight: 12 },
   actions: { flexDirection: 'row', alignItems: 'center', gap: 2, marginRight: -8 },
-});
+}));

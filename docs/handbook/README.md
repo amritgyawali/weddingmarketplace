@@ -59,6 +59,7 @@ This handbook explains how Vivah works, why it is built the way it is, and the r
 | 19 | [Troubleshooting](19-troubleshooting.md) | Known problems and their fixes |
 | 20 | [Decision log](20-decision-log.md) | Dated decisions and why they were made |
 | 21 | [Social hub](21-social-hub.md) | Facebook, Instagram, WhatsApp and TikTok: unified inbox, publishing, scheduling, automation |
+| 22 | [Appearance, profile and support](22-appearance-profile-support.md) | Light and dark mode, Edit profile for every role, Help and support and the staff help desk |
 
 ## Conventions used in these guides
 

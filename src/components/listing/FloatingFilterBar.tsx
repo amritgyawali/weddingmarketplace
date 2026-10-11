@@ -4,7 +4,7 @@ import Animated, { FadeIn } from 'react-native-reanimated';
 
 import { PressableScale } from '@/components/ui/PressableScale';
 import { Text } from '@/components/ui/Text';
-import { colors, shadows } from '@/constants/theme';
+import { colors, shadows, themed } from '@/constants/theme';
 
 /** Floating "Filters | Planner" button anchored above the tab bar. */
 export function FloatingFilterBar({
@@ -22,15 +22,15 @@ export function FloatingFilterBar({
     <Animated.View entering={FadeIn.delay(200)} style={[styles.wrap, { bottom, pointerEvents: 'box-none' }]}>
       <View style={styles.bar}>
         <PressableScale haptic onPress={onFilter} accessibilityLabel={`Filters, ${count} active`} style={styles.half}>
-          <Ionicons name="options-outline" size={19} color={colors.white} />
-          <Text size={15} weight="medium" color={colors.white}>
+          <Ionicons name="options-outline" size={19} color={colors.onDark} />
+          <Text size={15} weight="medium" color={colors.onDark}>
             Filters{count > 0 ? ` · ${count}` : ''}
           </Text>
         </PressableScale>
         <View style={styles.divider} />
         <PressableScale haptic onPress={onGenie} accessibilityLabel="Get a planner" style={styles.half}>
-          <Ionicons name="call-outline" size={18} color={colors.white} />
-          <Text size={15} weight="medium" color={colors.white}>
+          <Ionicons name="call-outline" size={18} color={colors.onDark} />
+          <Text size={15} weight="medium" color={colors.onDark}>
             Get a planner
           </Text>
         </PressableScale>
@@ -39,7 +39,7 @@ export function FloatingFilterBar({
   );
 }
 
-const styles = StyleSheet.create({
+const styles = themed(() => StyleSheet.create({
   wrap: { position: 'absolute', left: 0, right: 0, alignItems: 'center' },
   bar: {
     flexDirection: 'row',
@@ -54,4 +54,4 @@ const styles = StyleSheet.create({
   },
   half: { flexDirection: 'row', alignItems: 'center', gap: 8, paddingHorizontal: 14, height: '100%' },
   divider: { width: StyleSheet.hairlineWidth, height: 20, backgroundColor: colors.goldLine },
-});
+}));

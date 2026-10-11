@@ -4,7 +4,7 @@ import { Pressable, StyleSheet } from 'react-native';
 
 import { TourTarget } from '@/components/tour/AppTour';
 import { Text } from '@/components/ui/Text';
-import { colors, GUTTER } from '@/constants/theme';
+import { colors, GUTTER, themed } from '@/constants/theme';
 
 /** A search field at the top of home that opens the search screen: easier to find than an icon. */
 export function SearchPrompt() {
@@ -24,7 +24,7 @@ export function SearchPrompt() {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = themed(() => StyleSheet.create({
   wrap: { marginHorizontal: GUTTER, marginTop: 14 },
   field: {
     flexDirection: 'row',
@@ -37,4 +37,4 @@ const styles = StyleSheet.create({
     borderColor: colors.border,
     backgroundColor: colors.bgSoft,
   },
-});
+}));

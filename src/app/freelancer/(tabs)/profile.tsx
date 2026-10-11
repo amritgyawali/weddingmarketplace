@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { AppearanceSwitch } from '@/components/ui/AppearancePicker';
 import { Avatar, Card, ChoiceChips, KButton, KField, ListRow, ProgressBar, SectionTitle, StatusPill } from '@/components/kit';
 import { Sheet } from '@/components/ui/Sheet';
 import { Text } from '@/components/ui/Text';
@@ -67,6 +68,8 @@ export default function FreelancerProfile() {
   const unread = useUnreadMessageCount(account);
   const { payables, assignments, standalone, reviews } = useFreelancerWorkspace(account);
   const [editing, setEditing] = useState(false);
+  const supportTickets = useDb((s) => s.supportTickets);
+  const supportWaiting = supportTickets.filter((x) => x.accountId === account.id && x.status === 'waiting').length;
   const [draft, setDraft] = useState({ headline: '', bio: '', dayRate: '', hourlyRate: '', eventRate: '', experienceYears: '' });
   const [kitOpen, setKitOpen] = useState(false);
   const [kitKind, setKitKind] = useState<Equipment['kind']>('camera');
@@ -144,7 +147,9 @@ export default function FreelancerProfile() {
   return (
     <ScrollView style={{ flex: 1, backgroundColor: t.c.bg }} contentContainerStyle={{ paddingTop: insets.top + 20, paddingHorizontal: 16, gap: 16, paddingBottom: 32 }}>
       <View style={styles.headerRow}>
-        <Avatar name={account.name} size={64} />
+        <Pressable onPress={() => router.push('/freelancer/edit-profile')} accessibilityRole="button" accessibilityLabel="Edit profile">
+          <Avatar name={account.name} size={64} photo={account.photo} />
+        </Pressable>
         <View style={{ flex: 1, gap: 2 }}>
           <Text size={21} weight="bold" color={t.c.textStrong}>
             {account.name}
@@ -160,6 +165,7 @@ export default function FreelancerProfile() {
             </Text>
           </View>
         </View>
+        <KButton label="Edit" size="sm" variant="secondary" icon="create-outline" onPress={() => router.push('/freelancer/edit-profile')} />
       </View>
 
       <View style={styles.stats}>
@@ -392,8 +398,17 @@ export default function FreelancerProfile() {
         <ListRow icon="chatbubbles-outline" title="Messages" subtitle={unread ? `${unread} unread` : 'Organiser and team chats'} onPress={() => router.push('/freelancer/inbox')} />
         <ListRow icon="shield-checkmark-outline" title="Verification" subtitle={status === 'VERIFIED' ? `Verified${verification?.expiresAt ? ` · renews ${formatShortDate(verification.expiresAt)}` : ''}` : 'Upload citizenship & portfolio'} onPress={() => router.push('/freelancer/verification')} />
         <ListRow icon="notifications-outline" title="Notifications" onPress={() => router.push('/notifications')} />
-        <ListRow icon="settings-outline" title="Settings" subtitle="Notifications, language, privacy" onPress={() => router.push('/freelancer/settings')} />
+        <ListRow icon="settings-outline" title="Settings" subtitle="Appearance, notifications, language, privacy" onPress={() => router.push('/freelancer/settings')} />
+        <ListRow icon="help-buoy-outline" title="Help and support" subtitle={supportWaiting ? `${supportWaiting} waiting for your reply` : 'Answers, your requests, call or WhatsApp us'} trailing={supportWaiting ? <StatusPill status="due" label={String(supportWaiting)} /> : undefined} onPress={() => router.push('/freelancer/support')} />
         <ListRow icon="call-outline" title="Phone" subtitle={formatPhone(account.phone)} />
+      </Card>
+
+      <Card style={styles.row}>
+        <Ionicons name="contrast-outline" size={20} color={t.c.muted} />
+        <Text size={15} weight="semibold" color={t.c.textStrong} style={{ flex: 1 }}>
+          Appearance
+        </Text>
+        <AppearanceSwitch />
       </Card>
 
       <KButton label="Log out" variant="danger" icon="log-out-outline" onPress={() => confirm('Log out?', 'You can sign back in with your mobile number.', 'Log out', logout)} />

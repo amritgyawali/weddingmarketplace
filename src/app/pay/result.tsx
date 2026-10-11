@@ -7,7 +7,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { checkOnlinePayment, onlinePaymentsReady, PAYMENT_STATE_TEXT, type PaymentState } from '@/backend/payments';
 import { KButton } from '@/components/kit';
 import { Text } from '@/components/ui/Text';
-import { colors } from '@/constants/theme';
+import { colors, themed } from '@/constants/theme';
 import { useSession } from '@/store/useSession';
 
 const STATES = Object.keys(PAYMENT_STATE_TEXT) as PaymentState[];
@@ -82,7 +82,7 @@ export default function PaymentResultScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = themed(() => StyleSheet.create({
   root: { flex: 1, backgroundColor: colors.white, paddingHorizontal: 24, justifyContent: 'space-between', maxWidth: 520, width: '100%', alignSelf: 'center' },
   body: { alignItems: 'center', gap: 12 },
-});
+}));

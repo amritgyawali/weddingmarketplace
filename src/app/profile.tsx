@@ -5,22 +5,23 @@ import { Pressable, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { BackButton } from '@/components/ui/IconButton';
+import { Avatar } from '@/components/kit';
+import { AppearanceSwitch } from '@/components/ui/AppearancePicker';
 import { LanguageSwitch } from '@/components/ui/LanguageSwitch';
 import { Text } from '@/components/ui/Text';
-import { colors, GUTTER } from '@/constants/theme';
+import { colors, GUTTER, themed } from '@/constants/theme';
 import { useExperience } from '@/hooks/useExperience';
 import { useFeatures, useLinkOn } from '@/hooks/useFeatures';
 import { goToCoupleTab, useOpenMyWedding } from '@/hooks/useOpenMyWedding';
 import { useCustomerWorkspace } from '@/hooks/useWorkspace';
 import { logout } from '@/services/auth';
 import { selectUnreadCount, useAppStore } from '@/store/useAppStore';
-import { useInbox } from '@/store/useDb';
+import { useDb, useInbox } from '@/store/useDb';
 import { useAccount } from '@/store/useSession';
 import { useTour } from '@/store/useTour';
 import { confirm } from '@/utils/confirm';
 import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
 
-const ICON = colors.textBody;
 
 type IconName = ComponentProps<typeof Ionicons>['name'];
 
@@ -44,6 +45,8 @@ export default function ProfileMenuScreen() {
   const has = (m: 'guests' | 'invitations' | 'website') => exp.caps.has(`plan.${m}`);
   const awaitingQuotes = quotes.filter((q) => q.status === 'sent' || q.status === 'viewed').length;
   const unreadNotifications = useInbox(account).filter((n) => !n.read).length;
+  const supportTickets = useDb((s) => s.supportTickets);
+  const waitingOnMe = supportTickets.filter((x) => x.accountId === account.id && x.status === 'waiting').length;
   const on = useFeatures();
   const linkOn = useLinkOn();
   const openMyWedding = useOpenMyWedding();
@@ -54,7 +57,7 @@ export default function ProfileMenuScreen() {
     goToCoupleTab('/');
   };
 
-  const icon = (name: IconName) => <Ionicons name={name} size={21} color={ICON} />;
+  const icon = (name: IconName) => <Ionicons name={name} size={21} color={colors.textBody} />;
   const menu: { title: string; items: MenuItem[] }[] = [
     {
       title: wedding ? 'Your wedding' : `Your ${exp.vocab.noun}`,
@@ -83,7 +86,7 @@ export default function ProfileMenuScreen() {
         ...(wedding && on('tab.customer.genie') ? [{ label: 'Planner packages', icon: icon('clipboard-outline'), href: '/genie' as Href }] : []),
         ...(on('couple.tour') ? [{ label: 'How Vivah works (tour)', icon: icon('compass-outline'), onPress: showTour }] : []),
         ...(on('couple.help') ? [{ label: 'Quick help', icon: icon('chatbubble-ellipses-outline'), href: '/assistant' as Href }] : []),
-        { label: 'Contact support', icon: icon('call-outline'), href: { pathname: '/info/[slug]', params: { slug: 'support' } } },
+        { label: 'Help and support', icon: icon('help-buoy-outline'), href: '/support', badge: waitingOnMe },
       ],
     },
     {
@@ -107,24 +110,11 @@ export default function ProfileMenuScreen() {
       <View style={{ paddingTop: insets.top + 8, paddingHorizontal: GUTTER - 4 }}>
         <BackButton />
       </View>
-      <Pressable onPress={() => router.push('/edit-profile')} style={styles.profile} accessibilityRole="button" accessibilityLabel="View profile">
-        <View style={styles.avatar}>
-          {profile.name ? (
-            <Text size={20} weight="semibold" color={colors.textBody}>
-              {profile.name
-                .split(/\s+/)
-                .map((p) => p[0])
-                .slice(0, 2)
-                .join('')
-                .toUpperCase()}
-            </Text>
-          ) : (
-            <Ionicons name="person" size={30} color={colors.textSubtle} style={{ marginTop: 8 }} />
-          )}
-        </View>
+      <Pressable onPress={() => router.push('/edit-profile')} style={styles.profile} accessibilityRole="button" accessibilityLabel="Edit profile">
+        <Avatar name={account.name || profile.name || 'Guest'} size={52} photo={account.photo} />
         <View style={{ flex: 1 }}>
-          <Text size={19} weight="semibold" color={colors.heading}>
-            {profile.name || 'Guest'}
+          <Text size={19} weight="semibold" color={colors.heading} raw>
+            {account.name || profile.name || 'Guest'}
           </Text>
           <Text size={14} color={colors.textMuted}>
             Edit profile
@@ -163,11 +153,18 @@ export default function ProfileMenuScreen() {
           </View>
         ))}
         <View style={styles.langRow}>
-          <Ionicons name="language-outline" size={21} color={ICON} />
+          <Ionicons name="language-outline" size={21} color={colors.textBody} />
           <Text size={16} color={colors.text} style={{ flex: 1 }}>
             Language
           </Text>
           <LanguageSwitch compact />
+        </View>
+        <View style={[styles.langRow, { marginTop: 0 }]}>
+          <Ionicons name="contrast-outline" size={21} color={colors.textBody} />
+          <Text size={16} color={colors.text} style={{ flex: 1 }}>
+            Appearance
+          </Text>
+          <AppearanceSwitch />
         </View>
         <Pressable onPress={confirmSignOut} style={styles.logout} accessibilityRole="button">
           <Ionicons name="log-out-outline" size={22} color={colors.danger} />
@@ -180,7 +177,7 @@ export default function ProfileMenuScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = themed(() => StyleSheet.create({
   root: { flex: 1, backgroundColor: colors.white },
   langRow: { flexDirection: 'row', alignItems: 'center', gap: 16, paddingHorizontal: GUTTER - 4, paddingVertical: 14, marginTop: 10, borderTopWidth: StyleSheet.hairlineWidth, borderTopColor: colors.border },
   profile: {
@@ -225,4 +222,4 @@ const styles = StyleSheet.create({
     paddingHorizontal: 6,
   },
   logout: { flexDirection: 'row', alignItems: 'center', gap: 10, paddingHorizontal: GUTTER, paddingTop: 26 },
-});
+}));

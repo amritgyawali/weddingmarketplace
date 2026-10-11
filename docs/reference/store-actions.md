@@ -31,7 +31,7 @@ Source: [src/store/db/chat.ts:11](../../src/store/db/chat.ts#L11) · Project thr
 
 | Action | Signature | What it does |
 |---|---|---|
-| `openThread` | `(input: { kind: Thread['kind']; title: string; members: ThreadMember[]; projectId?: string; bookingId?: string; gigId?: string; listingId?: string; image?: PhotoKey }) => string` | _No JSDoc yet._ |
+| `openThread` | `(input: { kind: Thread['kind']; title: string; members: ThreadMember[]; projectId?: string; bookingId?: string; gigId?: string; listingId?: string; image?: PhotoRef }) => string` | _No JSDoc yet._ |
 | `sendMessage` | `(threadId: string, sender: ThreadMember, text: string, kind?: MessageKind, meta?: Message['meta'], opts?: { silent?: boolean }) => void` | _No JSDoc yet._ |
 | `markThreadRead` | `(threadId: string, accountId: string) => void` | _No JSDoc yet._ |
 | `toggleThreadFlag` | `(threadId: string, accountId: string, flag: 'archivedBy' \| 'mutedBy' \| 'blockedBy') => void` | _No JSDoc yet._ |
@@ -42,6 +42,23 @@ Source: [src/store/db/chat.ts:11](../../src/store/db/chat.ts#L11) · Project thr
 | `deleteNote` | `(id: string) => void` | _No JSDoc yet._ |
 | `addFile` | `(file: Omit<FileRef, 'id' \| 'at'>) => void` | _No JSDoc yet._ |
 | `removeFile` | `(id: string) => void` | _No JSDoc yet._ |
+
+## ContentActions
+
+Source: [src/store/db/content.ts:23](../../src/store/db/content.ts#L23) · Content studio (permission `admin.full`): replace any photo, edit any marketplace listing, reorder and rename the couple's home sections, add home banners and change the brand details, with no code c…
+
+| Action | Signature | What it does |
+|---|---|---|
+| `setContentImage` | `(key: string, address: string \| null) => string \| null` | Shows another photo wherever a bundled one appears; null restores the original. Returns an error to show, or null. |
+| `saveContentEntry` | `(kind: ContentKind, id: string, fields: Record<string, unknown>) => string \| null` | Saves a catalogue record's edited fields (pass every field of the form; only the differences are kept). |
+| `setContentHidden` | `(kind: ContentKind, id: string, hidden: boolean) => string \| null` | Takes a record out of lists and search, or puts it back. |
+| `restoreContentEntry` | `(kind: ContentKind, id: string) => string \| null` | Removes every edit to one record. |
+| `setHomeOrder` | `(order: string[]) => string \| null` | Saves the order of the couple's home sections, top to bottom. |
+| `setHomeTitle` | `(sectionId: string, title: string) => string \| null` | Renames a home section's heading; empty text restores the built-in one. |
+| `saveBanner` | `(input: BannerInput) => { id?: string; error?: string }` | Adds a home banner, or saves one that exists (`id`). Returns its id, or an error. |
+| `removeBanner` | `(id: string) => string \| null` | _No JSDoc yet._ |
+| `setBrandField` | `(field: BrandField, value: string) => string \| null` | Replaces one brand detail (name, support phone…); empty text restores the built-in one. |
+| `resetContent` | `(part: ContentPart) => string \| null` | Puts one part of the content, or all of it, back to what the app shipped with. |
 
 ## CoreActions
 
@@ -257,13 +274,19 @@ Source: [src/store/db/social.ts:41](../../src/store/db/social.ts#L41) · Social 
 
 ## SupportActions
 
-Source: [src/store/db/support.ts:21](../../src/store/db/support.ts#L21) · Bug reports from shake to report. Anyone can send one, signed in or not, in every build; super admins read them in the console (Super admin → Bug reports), mark them fixed or dismissed and delete the…
+Source: [src/store/db/support.ts:30](../../src/store/db/support.ts#L30) · Bug reports and help requests. Bug reports come from shake to report. Anyone can send one, signed in or not, in every build; super admins read them in the console (Super admin → Bug reports), mark th…
 
 | Action | Signature | What it does |
 |---|---|---|
 | `submitBugReport` | `(report: BugReport) => { id?: string; error?: string }` | Saves a report from the report sheet and tells the super admins. Returns its id, or an error. |
 | `setBugReportStatus` | `(id: string, status: BugReportStatus, note?: string) => string \| null` | Marks a report new, fixed or dismissed (super admins). Returns an error to show, or null. |
 | `removeBugReports` | `(ids: string[]) => string \| null` | Deletes reports (super admins). |
+| `openSupportTicket` | `(input: SupportTicketInput) => { id?: string; error?: string }` | Opens a help request for the signed-in person and tells the Vivah team. Returns its id, or an error to show. |
+| `replySupportTicket` | `(id: string, body: string, opts?: { internal?: boolean }) => string \| null` | Adds a message to a help request (its owner, or staff who answer help requests; staff may add internal notes). |
+| `setSupportTicketStatus` | `(id: string, status: SupportTicketStatus) => string \| null` | Changes a request's status. Owners can only mark it solved or reopen it; staff can set any status. |
+| `assignSupportTicket` | `(id: string, staffId: string \| null, priority?: SupportPriority) => string \| null` | Gives a request to a staff member (or nobody), and its priority (staff who answer help requests). |
+| `rateSupportTicket` | `(id: string, rating: number, note?: string) => string \| null` | The owner rates the help they got (1–5) once the request is resolved or closed. |
+| `mirrorSupportTickets` | `(tickets: SupportTicket[]) => void` | Supabase builds: replaces the device copy with the requests the server returned (rpc_my_support_tickets). |
 
 ## ToolkitActions
 

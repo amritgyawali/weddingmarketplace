@@ -4,10 +4,11 @@ import { Pressable, StyleSheet, View, type StyleProp, type ViewStyle } from 'rea
 
 import { Illustration, Medallion, type ArtName } from '@/components/ui/Illustration';
 import { Loader } from '@/components/ui/Loader';
+import { Photo } from '@/components/ui/Photo';
 import { PressableScale, triggerHaptic } from '@/components/ui/PressableScale';
 import { Text } from '@/components/ui/Text';
 import { toast } from '@/components/ui/Toast';
-import { colors } from '@/constants/theme';
+import { colors, currentColorScheme } from '@/constants/theme';
 import { statusLabel, statusTone } from '@/theme/roles';
 import { useRoleTheme } from '@/theme/RoleTheme';
 
@@ -144,16 +145,19 @@ export function StatusPill({ status, label }: { status: string; label?: string }
 }
 
 /** Initials colours from the palette: burgundy, wine, gilt, deep rose, taupe, espresso. */
-const AVATAR_COLORS = [colors.primary, colors.wine, colors.goldDeep, colors.roseDeep, colors.textMuted, colors.heading];
+const avatarColors = () => [colors.primary, currentColorScheme() === 'dark' ? colors.rose : colors.wine, colors.goldDeep, colors.roseDeep, colors.textMuted, colors.heading];
 
-export function Avatar({ name, size = 40 }: { name: string; size?: number }) {
+/** Initials in a palette colour, or the person's photo when they added one. */
+export function Avatar({ name, size = 40, photo }: { name: string; size?: number; photo?: string }) {
+  if (photo) return <Photo source={{ uri: photo }} style={{ width: size, height: size, borderRadius: size / 2 }} contentFit="cover" accessibilityLabel={name} />;
   const initials = name
     .split(/\s+/)
     .filter(Boolean)
     .slice(0, 2)
     .map((s) => s[0]?.toUpperCase())
     .join('');
-  const color = AVATAR_COLORS[[...name].reduce((sum, ch) => sum + ch.charCodeAt(0), 0) % AVATAR_COLORS.length];
+  const palette = avatarColors();
+  const color = palette[[...name].reduce((sum, ch) => sum + ch.charCodeAt(0), 0) % palette.length];
   return (
     <View style={{ width: size, height: size, borderRadius: size / 2, backgroundColor: `${color}17`, borderWidth: 1, borderColor: `${color}26`, alignItems: 'center', justifyContent: 'center' }}>
       <Text serif size={size * 0.36} weight="semibold" color={color} lineHeight={size * 0.5} maxFontSizeMultiplier={1}>

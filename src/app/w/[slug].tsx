@@ -11,7 +11,7 @@ import { Text } from '@/components/ui/Text';
 import { toast } from '@/components/ui/Toast';
 import { PaymentSheet } from '@/components/work/Payments';
 import { photo } from '@/constants/images';
-import { colors } from '@/constants/theme';
+import { colors, themed } from '@/constants/theme';
 import { useLayout } from '@/hooks/useLayout';
 import { exportCalendar } from '@/services/exporters';
 import { useDb } from '@/store/useDb';
@@ -289,7 +289,7 @@ export default function WeddingSite() {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = themed(() => StyleSheet.create({
   center: { flex: 1, alignItems: 'center', gap: 12, paddingHorizontal: 24, backgroundColor: colors.bgSoft },
   veil: { ...StyleSheet.absoluteFill, backgroundColor: 'rgba(0,0,0,0.35)', justifyContent: 'space-between', padding: 18 },
   previewBar: { flexDirection: 'row', alignItems: 'center', gap: 6, alignSelf: 'center', backgroundColor: 'rgba(0,0,0,0.5)', borderRadius: 6, paddingHorizontal: 12, paddingVertical: 6 },
@@ -300,4 +300,4 @@ const styles = StyleSheet.create({
   gallery: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, justifyContent: 'space-between' },
   photo: { aspectRatio: 1, borderRadius: 8 },
   giftCard: { position: 'absolute', left: 0, right: 0, bottom: 0, backgroundColor: '#fff', borderTopLeftRadius: 24, borderTopRightRadius: 24, padding: 20, gap: 12 },
-});
+}));

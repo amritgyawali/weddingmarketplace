@@ -1,21 +1,21 @@
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 
+import { statusBarStyle } from '@/constants/theme';
 import { useRoleFonts } from '@/theme/fonts';
 import { ROLE_THEMES } from '@/theme/roles';
 import { RoleThemeProvider } from '@/theme/RoleTheme';
 import { keyboardScreenLayout } from '@/components/ui/Keyboard';
 
-const t = ROLE_THEMES.freelancer;
-
 /** Freelancer app — dark, gig-first experience for photographers, MUAs and crew. */
 export default function FreelancerLayout() {
   const fontsReady = useRoleFonts('freelancer');
   if (!fontsReady) return null;
+  const t = ROLE_THEMES.freelancer;
 
   return (
     <RoleThemeProvider role="freelancer">
-      <StatusBar style="light" />
+      <StatusBar style={statusBarStyle()} />
       <Stack screenLayout={keyboardScreenLayout} screenOptions={{ headerShown: false, contentStyle: { backgroundColor: t.c.bg } }}>
         <Stack.Screen name="(tabs)" />
         <Stack.Screen name="gig/[id]" />
@@ -29,6 +29,10 @@ export default function FreelancerLayout() {
         <Stack.Screen name="tools" />
         <Stack.Screen name="tool/[id]" />
         <Stack.Screen name="craft" />
+        <Stack.Screen name="edit-profile" />
+        <Stack.Screen name="support/index" />
+        <Stack.Screen name="support/[id]" />
+        <Stack.Screen name="support/new" options={{ presentation: 'modal' }} />
       </Stack>
     </RoleThemeProvider>
   );

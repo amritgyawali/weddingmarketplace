@@ -13,7 +13,7 @@ import { useFeatures, useLinkOn } from '@/hooks/useFeatures';
 import { useLayout } from '@/hooks/useLayout';
 import { useRoleTheme } from '@/theme/RoleTheme';
 import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
-import { colors } from '@/constants/theme';
+import { colors, themed } from '@/constants/theme';
 
 import { TabMark } from './TabMark';
 
@@ -163,7 +163,7 @@ export function RoleTabBar({ state, navigation, tabs, links: allLinks = [] }: Bo
   );
 }
 
-const styles = StyleSheet.create({
+const styles = themed(() => StyleSheet.create({
   sidebar: { width: 228, borderRightWidth: StyleSheet.hairlineWidth, paddingBottom: 18, gap: 1 },
   sideBrand: { paddingHorizontal: 20, marginBottom: 16 },
   sideRule: { width: 24, height: 1, backgroundColor: colors.gold, marginTop: 4, marginBottom: 6 },
@@ -174,4 +174,4 @@ const styles = StyleSheet.create({
   bar: { flexDirection: 'row', borderTopWidth: 1, borderTopColor: colors.goldLine },
   item: { flex: 1, alignItems: 'center', gap: 2, minHeight: 52, paddingTop: 8, justifyContent: 'center' },
   badge: { position: 'absolute', top: -4, right: -10, minWidth: 17, height: 17, borderRadius: 9, borderWidth: 2, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 3 },
-});
+}));

@@ -7,7 +7,7 @@ import { StyleSheet, View } from 'react-native';
 import { PressableScale } from '@/components/ui/PressableScale';
 import { Text } from '@/components/ui/Text';
 import { photo, type PhotoRef } from '@/constants/images';
-import { colors, radius } from '@/constants/theme';
+import { colors, radius, themed } from '@/constants/theme';
 import type { Vendor, Venue } from '@/types';
 import { formatMoney } from '@/utils/format';
 
@@ -110,9 +110,9 @@ export function VendorMiniCard({ vendor, width = 170 }: { vendor: Vendor; width?
   );
 }
 
-const styles = StyleSheet.create({
+const styles = themed(() => StyleSheet.create({
   imageWrap: { borderRadius: radius.lg, overflow: 'hidden', backgroundColor: colors.bgMuted },
   save: { position: 'absolute', top: 8, right: 8 },
   meta: { paddingTop: 8, gap: 0 },
   row: { flexDirection: 'row', alignItems: 'center', gap: 4 },
-});
+}));

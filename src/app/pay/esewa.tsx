@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import { ActivityIndicator, Platform, StyleSheet, View } from 'react-native';
 
 import { Text } from '@/components/ui/Text';
-import { colors } from '@/constants/theme';
+import { colors, themed } from '@/constants/theme';
 
 /** The fields payment-initiate signs; nothing else is passed on to eSewa. */
 const FIELDS = [
@@ -78,6 +78,6 @@ export default function EsewaCheckoutScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = themed(() => StyleSheet.create({
   root: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: 14, padding: 24, backgroundColor: colors.white },
-});
+}));

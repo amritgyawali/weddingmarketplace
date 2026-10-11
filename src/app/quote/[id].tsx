@@ -11,7 +11,7 @@ import { Sheet } from '@/components/ui/Sheet';
 import { Text } from '@/components/ui/Text';
 import { toast } from '@/components/ui/Toast';
 import { QuoteDocument } from '@/components/work/QuoteDocument';
-import { colors } from '@/constants/theme';
+import { colors, themed } from '@/constants/theme';
 import { quoteHtml } from '@/services/documents';
 import { sharePdf } from '@/services/exporters';
 import { negotiationPoints } from '@/services/planner';
@@ -164,9 +164,9 @@ export default function CustomerQuote() {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = themed(() => StyleSheet.create({
   root: { flex: 1, backgroundColor: colors.bgSoft },
   row: { flexDirection: 'row', alignItems: 'center', gap: 10 },
   tipLink: { flexDirection: 'row', alignItems: 'center', gap: 6, alignSelf: 'center', padding: 6 },
   footer: { position: 'absolute', left: 0, right: 0, bottom: 0, padding: 14, gap: 8, backgroundColor: colors.white, borderTopWidth: StyleSheet.hairlineWidth, borderTopColor: colors.hairline },
-});
+}));

@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { colors } from '@/constants/theme';
+import { colors, themed } from '@/constants/theme';
 import { featureOn } from '@/data/features';
 import { endImpersonation } from '@/services/auth';
 import { useDb } from '@/store/useDb';
@@ -23,8 +23,8 @@ export function ImpersonationBar() {
   return (
     <View style={[styles.impHost, { top: insets.top + 4, pointerEvents: 'box-none' }]}>
       <Pressable onPress={endImpersonation} accessibilityRole="button" style={({ pressed }) => [styles.imp, pressed && { opacity: 0.85 }]}>
-        <Ionicons name="eye-outline" size={15} color={colors.white} />
-        <Text size={12} weight="semibold" color={colors.white} numberOfLines={1} style={{ flexShrink: 1 }}>
+        <Ionicons name="eye-outline" size={15} color={colors.onDark} />
+        <Text size={12} weight="semibold" color={colors.onDark} numberOfLines={1} style={{ flexShrink: 1 }}>
           Viewing as {viewing?.businessName ?? viewing?.name ?? 'user'}
         </Text>
         <Text size={12} weight="bold" color={colors.warningOnDark}>
@@ -35,11 +35,11 @@ export function ImpersonationBar() {
   );
 }
 
-const TONE = {
+const TONE = themed(() => ({
   info: { bg: colors.bgSoft, fg: colors.primary, icon: 'information-circle-outline' },
   success: { bg: colors.successSoft, fg: colors.success, icon: 'checkmark-circle-outline' },
   warning: { bg: colors.goldSoft, fg: colors.warning, icon: 'warning-outline' },
-} as const;
+} as const));
 
 /** Announcements a super admin pinned for this role (or everyone). Dismissed ones stay hidden on this screen visit. */
 export function AnnouncementBanner({ style }: { style?: object }) {
@@ -78,8 +78,8 @@ export function AnnouncementBanner({ style }: { style?: object }) {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = themed(() => StyleSheet.create({
   impHost: { position: 'absolute', left: 0, right: 0, alignItems: 'center', zIndex: 200 },
   imp: { flexDirection: 'row', alignItems: 'center', gap: 8, backgroundColor: colors.wine, borderWidth: 1, borderColor: colors.goldLine, borderRadius: 20, paddingHorizontal: 14, paddingVertical: 7, maxWidth: '92%' },
   ann: { flexDirection: 'row', alignItems: 'flex-start', gap: 10, padding: 12, borderWidth: 1 },
-});
+}));

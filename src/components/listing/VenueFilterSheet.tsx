@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/Button';
 import { Chip } from '@/components/ui/Chip';
 import { Sheet } from '@/components/ui/Sheet';
 import { Text } from '@/components/ui/Text';
-import { colors } from '@/constants/theme';
+import { colors, themed } from '@/constants/theme';
 import { VENUE_TYPES } from '@/data/venues';
 import { DEFAULT_VENUE_FILTERS } from '@/services/api';
 import type { VenueFilters, VenueType } from '@/types';
@@ -121,7 +121,7 @@ export function VenueFilterSheet({
   );
 }
 
-const styles = StyleSheet.create({
+const styles = themed(() => StyleSheet.create({
   body: { paddingHorizontal: 20, paddingBottom: 12, gap: 22 },
   group: { gap: 12 },
   chips: { flexDirection: 'row', flexWrap: 'wrap', gap: 10 },
@@ -133,4 +133,4 @@ const styles = StyleSheet.create({
     borderTopWidth: StyleSheet.hairlineWidth,
     borderTopColor: colors.hairline,
   },
-});
+}));

@@ -19,7 +19,7 @@ import { showMissing } from '@/components/kit';
 import { PressableScale, triggerHaptic } from '@/components/ui/PressableScale';
 import { Text } from '@/components/ui/Text';
 import { BRAND } from '@/constants/brand';
-import { colors, fonts, GUTTER, inputReset, radius } from '@/constants/theme';
+import { colors, fonts, GUTTER, inputReset, radius, themed } from '@/constants/theme';
 import { askAssistant, POPULAR_SUGGESTIONS, type AssistantReply } from '@/services/assistant';
 import { useAppStore } from '@/store/useAppStore';
 import { uid } from '@/utils/format';
@@ -263,7 +263,7 @@ export default function AssistantScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = themed(() => StyleSheet.create({
   root: { flex: 1, backgroundColor: colors.white },
   header: {
     flexDirection: 'row',
@@ -348,4 +348,4 @@ const styles = StyleSheet.create({
     paddingBottom: 8,
   },
   send: { width: 36, height: 36, borderRadius: 18, alignItems: 'center', justifyContent: 'center' },
-});
+}));

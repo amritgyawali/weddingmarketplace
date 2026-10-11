@@ -9,7 +9,7 @@ import { SearchBar } from '@/components/ui/SearchBar';
 import { Text } from '@/components/ui/Text';
 import { toast } from '@/components/ui/Toast';
 import { triggerHaptic } from '@/components/ui/PressableScale';
-import { colors, GUTTER } from '@/constants/theme';
+import { colors, GUTTER, themed } from '@/constants/theme';
 import { CITIES, CITY_SECTIONS } from '@/data/cities';
 import { useAppStore } from '@/store/useAppStore';
 import type { City } from '@/types';
@@ -127,7 +127,7 @@ export default function SelectCityScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = themed(() => StyleSheet.create({
   root: { flex: 1, backgroundColor: colors.white },
   location: { flexDirection: 'row', alignItems: 'center', gap: 22, paddingHorizontal: GUTTER - 4, paddingTop: 26, paddingBottom: 30 },
   sectionTitle: { paddingHorizontal: GUTTER - 10, paddingTop: 22, paddingBottom: 4 },
@@ -138,4 +138,4 @@ const styles = StyleSheet.create({
     paddingHorizontal: GUTTER - 4,
     paddingVertical: 13,
   },
-});
+}));

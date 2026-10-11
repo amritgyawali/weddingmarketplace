@@ -4,7 +4,8 @@ import { router, type Href } from 'expo-router';
 import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
-import { Card, KButton, ListRow, RoleHeader, SectionTitle, StatusPill, type IconName } from '@/components/kit';
+import { Avatar, Card, KButton, ListRow, RoleHeader, SectionTitle, StatusPill, type IconName } from '@/components/kit';
+import { AppearanceSwitch } from '@/components/ui/AppearancePicker';
 import { Text } from '@/components/ui/Text';
 import { Toggle } from '@/components/ui/Toggle';
 import { toast } from '@/components/ui/Toast';
@@ -45,6 +46,8 @@ export default function BusinessAccount() {
   const vc = verifications.find((v) => v.subjectId === account.listingId || v.subjectId === account.id);
   const cover = portfolio.filter((p) => p.providerId === account.listingId).sort((a, b) => a.order - b.order)[0];
   const ready = payables.filter((p) => p.status === 'READY');
+  const supportTickets = useDb((s) => s.supportTickets);
+  const supportWaiting = supportTickets.filter((x) => x.accountId === account.id && x.status === 'waiting').length;
 
   const rows: { icon: IconName; title: string; subtitle: string; href: Href; badge?: number }[] = [
     { icon: 'chatbubbles-outline', title: 'Messages', subtitle: 'Couples, coordinators and crew', href: '/business/inbox', badge: unread },
@@ -89,10 +92,14 @@ export default function BusinessAccount() {
                 {listing.rating.toFixed(1)}★ ({listing.reviewCount} reviews) · {leads.length} leads · from {formatMoney(listing.startingPrice)} {listing.priceUnit}
               </Text>
             )}
-            <Text size={12} color={t.c.muted}>
-              {account.name} · {formatPhone(account.phone)}
-              {account.panVat ? ` · PAN/VAT ${account.panVat}` : ''}
-            </Text>
+            <View style={styles.row}>
+              <Avatar name={account.name} size={34} photo={account.photo} />
+              <Text size={12} color={t.c.muted} style={{ flex: 1 }}>
+                {account.name} · {formatPhone(account.phone)}
+                {account.panVat ? ` · PAN/VAT ${account.panVat}` : ''}
+              </Text>
+              <KButton label="Edit profile" size="sm" variant="secondary" icon="create-outline" onPress={() => router.push('/business/edit-profile')} />
+            </View>
           </View>
         </Card>
 
@@ -127,8 +134,16 @@ export default function BusinessAccount() {
             <ListRow key={tool.title} icon={tool.icon} title={tool.title} subtitle={tool.subtitle} trailing={tool.badge ? <StatusPill status="pending" label={String(tool.badge)} /> : undefined} onPress={() => router.push(tool.href)} />
           ))}
           <ListRow icon="notifications-outline" title="Notifications" onPress={() => router.push('/notifications')} />
-          <ListRow icon="settings-outline" title="Settings" subtitle="Notifications, language, privacy" onPress={() => router.push('/business/settings')} />
-          <ListRow icon="help-buoy-outline" title="Vendor success team" subtitle="partners@vivah.com.np · 01-5970000" />
+          <ListRow icon="settings-outline" title="Settings" subtitle="Appearance, notifications, language, privacy" onPress={() => router.push('/business/settings')} />
+          <ListRow icon="help-buoy-outline" title="Help and support" subtitle={supportWaiting ? `${supportWaiting} waiting for your reply` : 'Answers, your requests, call or WhatsApp us'} trailing={supportWaiting ? <StatusPill status="due" label={String(supportWaiting)} /> : undefined} onPress={() => router.push('/business/support')} />
+        </Card>
+
+        <Card style={styles.row}>
+          <Ionicons name="contrast-outline" size={20} color={t.c.muted} />
+          <Text size={15} weight="semibold" color={t.c.textStrong} style={{ flex: 1 }}>
+            Appearance
+          </Text>
+          <AppearanceSwitch />
         </Card>
 
         <KButton label="Log out" variant="danger" icon="log-out-outline" onPress={() => confirm('Log out?', 'You can sign back in with your mobile number.', 'Log out', logout)} />

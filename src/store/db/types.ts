@@ -38,6 +38,7 @@ import type {
   SocialMessage,
   SocialPost,
   SocialSettings,
+  SupportTicket,
   SocialThread,
   StaffMember,
   Thread,
@@ -118,4 +119,6 @@ export interface DbData {
   // support
   /** Bug reports sent with shake to report, newest first (super admin console → Bug reports). */
   bugReports: BugReportRecord[];
+  /** Help requests from every role, newest activity first (Help and support; Platform → Help desk). */
+  supportTickets: SupportTicket[];
 }

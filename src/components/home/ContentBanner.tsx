@@ -6,7 +6,7 @@ import { Photo } from '@/components/ui/Photo';
 import { PressableScale } from '@/components/ui/PressableScale';
 import { Text } from '@/components/ui/Text';
 import { photo } from '@/constants/images';
-import { colors, GUTTER, radius } from '@/constants/theme';
+import { colors, GUTTER, radius, themed } from '@/constants/theme';
 import type { ContentBanner as Banner } from '@/types/content';
 
 /** Opens a banner's link: a screen of the app, or a web address in the browser. */
@@ -55,9 +55,9 @@ export function ContentBanner({ banner }: { banner: Banner }) {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = themed(() => StyleSheet.create({
   wrap: { marginTop: 24, paddingHorizontal: GUTTER },
   card: { borderRadius: radius.lg, borderWidth: 1, borderColor: colors.border, backgroundColor: colors.white, overflow: 'hidden' },
   image: { width: '100%', aspectRatio: 2.2 },
   text: { padding: 14, gap: 4 },
-});
+}));

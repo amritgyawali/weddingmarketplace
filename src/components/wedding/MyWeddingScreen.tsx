@@ -24,7 +24,7 @@ import { TimelineView } from '@/components/work/Timeline';
 import { CelebrationSwitcher } from '@/components/wedding/CelebrationSwitcher';
 import { CountdownCard, FunctionsStrip, MoneyCard, PeopleRow, Section, ServicesSummary, WeddingHero } from '@/components/wedding/WeddingParts';
 import { photos } from '@/constants/images';
-import { colors } from '@/constants/theme';
+import { colors, statusBarStyle, themed } from '@/constants/theme';
 import { type PlannerModule, planCap } from '@/data/capabilities';
 import { SERVICES, findService, serviceName } from '@/data/services';
 import { useExperience } from '@/hooks/useExperience';
@@ -444,10 +444,10 @@ function EmptyWedding({ inTab }: { inTab?: boolean }) {
           <Photo source={photos.ideaBrideParasol} style={StyleSheet.absoluteFill} contentFit="cover" contentPosition={{ left: '50%', top: '40%' }} />
           <LinearGradient colors={['rgba(0,0,0,0.35)', 'rgba(0,0,0,0)', 'rgba(0,0,0,0.8)']} locations={[0, 0.35, 1]} style={StyleSheet.absoluteFill} />
           <View style={{ paddingHorizontal: 12 }}>
-            {!inTab && <IconButton icon="chevron-back" color={colors.white} background="rgba(20,16,12,0.34)" accessibilityLabel="Go back" onPress={() => (router.canGoBack() ? router.back() : router.replace('/'))} />}
+            {!inTab && <IconButton icon="chevron-back" color={colors.onDark} background="rgba(20,16,12,0.34)" accessibilityLabel="Go back" onPress={() => (router.canGoBack() ? router.back() : router.replace('/'))} />}
           </View>
           <View style={{ paddingHorizontal: 20, paddingBottom: 24, gap: 6 }}>
-            <Text serif size={30} weight="bold" lineHeight={40} color={colors.white}>
+            <Text serif size={30} weight="bold" lineHeight={40} color={colors.onDark}>
               Tell us once. We handle the rest.
             </Text>
             <Text size={15} color="rgba(255,255,255,0.86)">
@@ -541,7 +541,7 @@ export function MyWeddingScreen({ inTab }: { inTab?: boolean }) {
 
   return (
     <View style={styles.root}>
-      {focused && <StatusBar style={collapsed ? 'dark' : 'light'} />}
+      {focused && <StatusBar style={collapsed ? statusBarStyle() : 'light'} />}
       <ScrollView ref={scrollRef} onScroll={onScroll} scrollEventThrottle={16} contentContainerStyle={{ paddingBottom: inTab ? 40 : insets.bottom + 60 }}>
         <WeddingHero
           project={project}
@@ -593,7 +593,7 @@ export function MyWeddingScreen({ inTab }: { inTab?: boolean }) {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = themed(() => StyleSheet.create({
   root: { flex: 1, backgroundColor: colors.bgSoft },
   pad: { paddingHorizontal: 16 },
   row: { flexDirection: 'row', alignItems: 'center', gap: 12 },
@@ -624,6 +624,6 @@ const styles = StyleSheet.create({
   tools: { flexDirection: 'row', flexWrap: 'wrap', backgroundColor: colors.white, borderRadius: 10, borderWidth: 1, borderColor: colors.border, overflow: 'hidden' },
   tool: { width: '25%', alignItems: 'center', gap: 6, paddingVertical: 16 },
   serviceRow: { flexDirection: 'row', alignItems: 'center', gap: 12, paddingVertical: 10, borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: colors.hairline },
-  emptyHero: { height: 380, justifyContent: 'space-between', backgroundColor: colors.heading },
+  emptyHero: { height: 380, justifyContent: 'space-between', backgroundColor: colors.inkFill },
   emptyStep: { flexDirection: 'row', gap: 12, paddingVertical: 12, borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: colors.hairline },
-});
+}));

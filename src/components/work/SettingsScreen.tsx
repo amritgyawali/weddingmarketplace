@@ -10,6 +10,7 @@ import { bugButtonOn, reportBug, screenshotToReportWorks, shakeToReportWorks, us
 import { Text } from '@/components/ui/Text';
 import { Toggle } from '@/components/ui/Toggle';
 import { toast, toastError } from '@/components/ui/Toast';
+import { AppearanceHint, AppearancePicker } from '@/components/ui/AppearancePicker';
 import { LanguageSwitch } from '@/components/ui/LanguageSwitch';
 import { BRAND } from '@/constants/brand';
 import { useFeatures } from '@/hooks/useFeatures';
@@ -141,6 +142,12 @@ export function SettingsScreen() {
     <View style={{ flex: 1, backgroundColor: t.c.bg }}>
       <StackHeader title="Settings" subtitle={`${account.name} · ${formatPhone(account.phone)}`} />
       <ScrollView contentContainerStyle={{ padding: 16, gap: 14, paddingBottom: 60 }}>
+        <SectionTitle title="Appearance" />
+        <Card style={{ gap: 10 }}>
+          <AppearancePicker />
+          <AppearanceHint />
+        </Card>
+
         <SectionTitle title="Notify me about" />
         <Card padded={false}>{kinds.map((k) => row(k.label, !prefs.muted.includes(k.id), (on) => set({ muted: on ? prefs.muted.filter((x) => x !== k.id) : [...prefs.muted, k.id] })))}</Card>
         <Text size={12} color={t.c.muted}>

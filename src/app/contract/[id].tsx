@@ -4,7 +4,7 @@ import { StyleSheet, View } from 'react-native';
 import { EmptyBlock } from '@/components/kit';
 import { ScreenHeader } from '@/components/ui/ScreenHeader';
 import { ContractView } from '@/components/work/ContractView';
-import { colors } from '@/constants/theme';
+import { colors, themed } from '@/constants/theme';
 import { useCustomerWorkspace } from '@/hooks/useWorkspace';
 import { useDb } from '@/store/useDb';
 import { useAccount } from '@/store/useSession';
@@ -33,6 +33,6 @@ export default function ContractScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = themed(() => StyleSheet.create({
   root: { flex: 1, backgroundColor: colors.bgSoft },
-});
+}));

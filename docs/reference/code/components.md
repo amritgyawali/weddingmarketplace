@@ -7,6 +7,7 @@ Every exported symbol in `src/components/`, file by file. The guide that explain
 ## Files
 
 - [`AppErrorBoundary.tsx`](#apperrorboundarytsx) (1 exports)
+- [`ContentSync.tsx`](#contentsynctsx) (1 exports)
 
 ## AppErrorBoundary.tsx
 
@@ -23,3 +24,19 @@ AppErrorBoundary({ error, retry }: ErrorBoundaryProps)
 Shown when a screen throws while rendering. Reports the error once, then
 offers to try again or go home. Plain React Native text on purpose: this can
 render before the app fonts have loaded.
+
+## ContentSync.tsx
+
+Source: [src/components/ContentSync.tsx](../../../src/components/ContentSync.tsx)
+
+### `ContentSync`
+
+*component* · [src/components/ContentSync.tsx:13](../../../src/components/ContentSync.tsx#L13)
+
+```ts
+ContentSync()
+```
+
+Sits at the root and makes a super admin's content edits show at once:
+catalogue queries are refetched whenever the content changes, and Supabase
+builds keep the content in step with the server (`backend/content.ts`).

@@ -1,21 +1,21 @@
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 
+import { statusBarStyle } from '@/constants/theme';
 import { useRoleFonts } from '@/theme/fonts';
 import { ROLE_THEMES } from '@/theme/roles';
 import { RoleThemeProvider } from '@/theme/RoleTheme';
 import { keyboardScreenLayout } from '@/components/ui/Keyboard';
 
-const t = ROLE_THEMES.platform;
-
 /** Vivah operations console — coordinators, matching, quotes, crew, finance and trust. */
 export default function PlatformLayout() {
   const fontsReady = useRoleFonts('platform');
   if (!fontsReady) return null;
+  const t = ROLE_THEMES.platform;
 
   return (
     <RoleThemeProvider role="platform">
-      <StatusBar style="light" />
+      <StatusBar style={statusBarStyle()} />
       <Stack screenLayout={keyboardScreenLayout} screenOptions={{ headerShown: false, contentStyle: { backgroundColor: t.c.bg } }}>
         <Stack.Screen name="(tabs)" />
         <Stack.Screen name="project/[id]" />
@@ -54,6 +54,9 @@ export default function PlatformLayout() {
         <Stack.Screen name="admin/announcements" />
         <Stack.Screen name="admin/bugs" />
         <Stack.Screen name="admin/bug/[id]" />
+        <Stack.Screen name="edit-profile" />
+        <Stack.Screen name="support/index" />
+        <Stack.Screen name="support/[id]" />
       </Stack>
     </RoleThemeProvider>
   );

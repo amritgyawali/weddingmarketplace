@@ -3,7 +3,7 @@ import { router } from 'expo-router';
 import { StyleSheet, View, type StyleProp, type ViewStyle } from 'react-native';
 
 import { BRAND } from '@/constants/brand';
-import { colors, shadows } from '@/constants/theme';
+import { colors, shadows, themed } from '@/constants/theme';
 
 import { PressableScale } from './PressableScale';
 
@@ -23,12 +23,12 @@ export function GenieFab({ style, bottom = 16 }: { style?: StyleProp<ViewStyle>;
       accessibilityLabel={BRAND.assistantTitle}
       onPress={() => router.push('/assistant')}
       style={[styles.fab, { bottom }, style]}>
-      <Ionicons name="chatbubble-ellipses-outline" size={22} color={colors.white} />
+      <Ionicons name="chatbubble-ellipses-outline" size={22} color={colors.onDark} />
     </PressableScale>
   );
 }
 
-const styles = StyleSheet.create({
+const styles = themed(() => StyleSheet.create({
   fab: {
     position: 'absolute',
     right: 16,
@@ -36,9 +36,9 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     borderRadius: 25,
-    backgroundColor: colors.heading,
+    backgroundColor: colors.inkFill,
     alignItems: 'center',
     justifyContent: 'center',
     ...shadows.fab,
   },
-});
+}));

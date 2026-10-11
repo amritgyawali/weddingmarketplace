@@ -12,6 +12,7 @@ import { builtInOccasions } from '@/data/occasions';
 import { PROVIDERS, type Provider } from '@/data/providers';
 import { SERVICE_BY_ID, crewPlanFor, defaultDetails } from '@/data/services';
 import { buildSocialSeed } from '@/data/socialSeed';
+import { buildSupportSeed } from '@/data/supportSeed';
 import { buildToolkitSeed } from '@/data/toolkitSeed';
 import { VENDORS } from '@/data/vendors';
 import { VENUES } from '@/data/venues';
@@ -1837,6 +1838,7 @@ export function buildSeedData(): DbData {
     content: emptyContent(),
     announcements: [],
     bugReports: [],
+    ...buildSupportSeed(),
   };
 }
 

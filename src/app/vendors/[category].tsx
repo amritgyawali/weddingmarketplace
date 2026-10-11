@@ -12,7 +12,7 @@ import { SearchBar } from '@/components/ui/SearchBar';
 import { Sheet } from '@/components/ui/Sheet';
 import { VenueCardSkeleton } from '@/components/ui/Skeleton';
 import { Text } from '@/components/ui/Text';
-import { colors, GUTTER } from '@/constants/theme';
+import { colors, GUTTER, themed } from '@/constants/theme';
 import { ALL_CITIES } from '@/data/cities';
 import { categoriesFor, findCategory } from '@/data/categories';
 import { SERVICES } from '@/data/services';
@@ -141,9 +141,9 @@ export default function VendorListingScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = themed(() => StyleSheet.create({
   root: { flex: 1, backgroundColor: colors.white },
   chips: { paddingHorizontal: GUTTER, gap: 8 },
   searchRow: { flexDirection: 'row', alignItems: 'center', gap: 10, paddingHorizontal: GUTTER },
   sortList: { paddingHorizontal: 20, gap: 12, paddingBottom: 8 },
-});
+}));

@@ -10,7 +10,7 @@ import {
   type ViewStyle,
 } from 'react-native';
 
-import { colors, fonts, inputReset, radius } from '@/constants/theme';
+import { colors, fonts, inputReset, radius, themed } from '@/constants/theme';
 import { useT } from '@/i18n';
 
 import { Text } from './Text';
@@ -74,7 +74,7 @@ export const SearchBar = forwardRef<TextInput, SearchBarProps>(function SearchBa
   return <View style={[styles.container, { height }, style]}>{content}</View>;
 });
 
-const styles = StyleSheet.create({
+const styles = themed(() => StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -93,4 +93,4 @@ const styles = StyleSheet.create({
     paddingVertical: 0,
     height: '100%',
   },
-});
+}));

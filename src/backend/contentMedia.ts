@@ -15,7 +15,7 @@ import { Platform } from 'react-native';
 import { LOCAL_IMAGE_SCHEME, MAX_INLINE_IMAGE } from '@/services/content';
 import { LOCAL_IMAGE_DIR } from '@/utils/localImage';
 
-import { cloudinaryUrl, cloudMediaReady, type UploadInput, uploadToCloud } from './media';
+import { cloudinaryUrl, cloudMediaReady, type UploadInput, uploadMedia, uploadToCloud } from './media';
 import { failResult, okResult, type Result } from './types';
 
 /** True when a picked photo reaches every device, not only this one. */
@@ -58,4 +58,17 @@ export async function keepContentImage(file: UploadInput): Promise<Result<string
   } catch {
     return failResult('Couldn’t save that photo on this phone. Try another, or paste a link.');
   }
+}
+
+/**
+ * Keeps a profile photo someone picked on Edit profile. Supabase builds with
+ * Cloudinary upload it as the account's avatar (rpc_register_media sets
+ * profiles.avatar_url); the demo keeps it on this device like a content photo.
+ */
+export async function keepProfilePhoto(file: UploadInput): Promise<Result<string>> {
+  if (cloudMediaReady()) {
+    const up = await uploadMedia(file, 'avatar');
+    return up.ok ? okResult(up.value.url) : up;
+  }
+  return keepContentImage(file);
 }

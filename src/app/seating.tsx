@@ -10,7 +10,7 @@ import { Sheet } from '@/components/ui/Sheet';
 import { Text } from '@/components/ui/Text';
 import { Toggle } from '@/components/ui/Toggle';
 import { toast } from '@/components/ui/Toast';
-import { colors } from '@/constants/theme';
+import { colors, themed } from '@/constants/theme';
 import { seatingHtml } from '@/services/documents';
 import { sharePdf } from '@/services/exporters';
 import { useDb } from '@/store/useDb';
@@ -349,7 +349,7 @@ export default function SeatingScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = themed(() => StyleSheet.create({
   canvas: { width: '100%', borderWidth: 1, borderRadius: 10, backgroundColor: colors.white, overflow: 'hidden' },
   el: { position: 'absolute', alignItems: 'center', justifyContent: 'center', paddingHorizontal: 2 },
-});
+}));

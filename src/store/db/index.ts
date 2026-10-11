@@ -148,7 +148,8 @@ export const useDb = create<Db>()(
       // v6: the social hub (connected networks, unified inbox, posts), seeded for the demo businesses (additive).
       // v7: content edited in the super admin console (photos, listings, home sections, banners, brand); starts empty (additive).
       // v8: the seeded "Dhanyabad" texts now say "Thank you" (only exact seed texts change).
-      version: 8,
+      // v9: help requests (Help and support), with the demo requests (additive).
+      version: 9,
       storage: lazyStorage<DbData>(),
       partialize: (s) => Object.fromEntries(DATA_KEYS.map((k) => [k, s[k]])) as unknown as DbData,
       migrate: (persisted, version) => {
@@ -159,6 +160,7 @@ export const useDb = create<Db>()(
         if (version < 6) data = addSocial(data);
         if (version < 7) data = { ...data, content: normalizeContent(data.content) };
         if (version < 8) data = sayThankYou(data);
+        if (version < 9) data = { ...data, supportTickets: data.supportTickets ?? buildSeedData().supportTickets };
         return data as Db;
       },
     },

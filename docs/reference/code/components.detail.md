@@ -83,7 +83,7 @@ Source: [src/components/detail/HeroGallery.tsx](../../../src/components/detail/H
 *component* · [src/components/detail/HeroGallery.tsx:16](../../../src/components/detail/HeroGallery.tsx#L16)
 
 ```ts
-HeroGallery({ images, width, height }: { images: PhotoKey[]; width: number; height: number })
+HeroGallery({ images, width, height }: { images: PhotoRef[]; width: number; height: number })
 ```
 
 The photo strip at the top of a venue or vendor page, with a "12 photos"

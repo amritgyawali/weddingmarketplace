@@ -4,11 +4,11 @@
 
 Exported symbols that have no JSDoc yet. The weekly documentation pass (see [the maintenance guide](../handbook/17-documentation-maintenance.md)) works through this list; whoever touches a file should document its exports too.
 
-**764 of 1400 exports documented (55%).** Files without a header comment: 325 of 419.
+**878 of 1540 exports documented (57%).** Files without a header comment: 365 of 471.
 
 | File | Undocumented exports |
 |---|---|
-| [src/types/platform.ts](../../src/types/platform.ts) | `UserRole`, `PlatformTeam`, `VerificationStatus`, `Equipment`, `AccountPrefs`, `Account`, `EventType`, `ProjectStatus`, `LeadSource`, `LeadStatus`, `Lead`, `PricingModel`, `MilestoneRule`, `QuoteItem`, `ScheduleStep`, `QuoteStatus`, `Quotation`, `StatusChange`, `Collaborator`, `RunStatus`, `RunItem`, `EventStatus`, `ProjectEvent`, `RequirementStatus`, `ScoreBreakdown`, `MatchCandidate`, `Requirement`, `BookingStatus`, `CrewRequirement`, `AssignmentStatus`, `Assignment`, `DeliverableStatus`, `Deliverable`, `ServiceBooking`, `TaskStatus`, `TaskAssignee`, `ProjectTask`, `TimelineEntry`, `MilestoneStatus`, `PaymentMilestone`, `Incident`, `Project`, `PaymentMethod`, `Payment`, `PayableStatus`, `Payable`, `RevenueKind`, `RevenueEntry`, `Refund`, `Dispute`, `AvailabilityStatus`, `DayPart`, `AvailabilityEntry`, `AvailabilityRule`, `FreelancerProfile`, `GigStatus`, `ApplicationStatus`, `GigApplication`, `GigQuestion`, `Gig`, `ThreadMember`, `Thread`, `MessageKind`, `Message`, `InternalNote`, `FileRef`, `AuditEntry`, `AppNotification`, `ReviewRecord`, `CheckState`, `VerificationCase`, `RsvpStatus`, `GuestInvite`, `Guest`, `SeatingElement`, `SeatingLayout`, `BudgetLine`, `WeddingWebsite`, `RegistryItem`, `InspirationBoard`, `Contract`, `ShortlistEntry`, `Deal`, `ProviderPackage`, `PortfolioItem`, `StaffMember`, `Invoice`, `PlatformSettings`, `BugLogLine`, `BugReportStatus` |
+| [src/types/platform.ts](../../src/types/platform.ts) | `UserRole`, `PlatformTeam`, `VerificationStatus`, `Equipment`, `AccountPrefs`, `Account`, `EventType`, `ProjectStatus`, `LeadSource`, `LeadStatus`, `Lead`, `PricingModel`, `MilestoneRule`, `QuoteItem`, `ScheduleStep`, `QuoteStatus`, `Quotation`, `StatusChange`, `Collaborator`, `RunStatus`, `RunItem`, `EventStatus`, `ProjectEvent`, `RequirementStatus`, `ScoreBreakdown`, `MatchCandidate`, `Requirement`, `BookingStatus`, `CrewRequirement`, `AssignmentStatus`, `Assignment`, `DeliverableStatus`, `Deliverable`, `ServiceBooking`, `TaskStatus`, `TaskAssignee`, `ProjectTask`, `TimelineEntry`, `MilestoneStatus`, `PaymentMilestone`, `Incident`, `Project`, `PaymentMethod`, `Payment`, `PayableStatus`, `Payable`, `RevenueKind`, `RevenueEntry`, `Refund`, `Dispute`, `AvailabilityStatus`, `DayPart`, `AvailabilityEntry`, `AvailabilityRule`, `FreelancerProfile`, `GigStatus`, `ApplicationStatus`, `GigApplication`, `GigQuestion`, `Gig`, `ThreadMember`, `Thread`, `MessageKind`, `Message`, `InternalNote`, `FileRef`, `AuditEntry`, `AppNotification`, `ReviewRecord`, `CheckState`, `VerificationCase`, `RsvpStatus`, `GuestInvite`, `Guest`, `SeatingElement`, `SeatingLayout`, `BudgetLine`, `WeddingWebsite`, `RegistryItem`, `InspirationBoard`, `Contract`, `ShortlistEntry`, `Deal`, `ProviderPackage`, `PortfolioItem`, `StaffMember`, `Invoice`, `PlatformSettings`, `BugLogLine`, `BugReportStatus`, `SupportTopic`, `SupportPriority` |
 | [src/types/index.ts](../../src/types/index.ts) | `Role`, `CityGroup`, `City`, `VenueType`, `Review`, `Venue`, `CollectionId`, `VenueCollection`, `VendorCategory`, `VendorPackage`, `Vendor`, `IdeaCategory`, `IdeaPhoto`, `Story`, `RealWedding`, `GeniePackage`, `Testimonial`, `Faq`, `ChecklistPhase`, `ChecklistTask`, `BookingStatus`, `Booking`, `ChatMessage`, `Conversation`, `SearchResult`, `VenueFilters` |
 | [src/hooks/queries.ts](../../src/hooks/queries.ts) | `queryKeys`, `useVenues`, `useVenue`, `useSimilarVenues`, `useCollections`, `useVendors`, `useVendor`, `useFeaturedVendors`, `useIdeas`, `useIdea`, `useStories`, `useStory`, `useRealWeddings`, `useRealWedding`, `useSearch`, `useShortlistedVenues`, `useShortlistedVendors` |
 | [src/services/planner.ts](../../src/services/planner.ts) | `PlanInput`, `estimateTotal`, `runSheetFor`, `buildEvents`, `buildRequirements`, `NextAction`, `nextBestAction`, `planningProgress`, `savingTips`, `invitationText`, `enquiryText`, `QUESTIONS_TO_ASK`, `questionsToAsk`, `negotiationPoints`, `summarizeReviews`, `guestBandLabel` |
@@ -23,17 +23,18 @@ Exported symbols that have no JSDoc yet. The weekly documentation pass (see [the
 | [src/components/toolkit/platform/insight.tsx](../../src/components/toolkit/platform/insight.tsx) | `SlaMonitor`, `Workload`, `SourceFunnel`, `CashFlow`, `Scorecards`, `DemandHeatmap`, `CitySupply`, `Targets`, `RiskWatch` |
 | [src/components/toolkit/vendor/money.tsx](../../src/components/toolkit/vendor/money.tsx) | `EXPENSE_CATEGORIES`, `Expenses`, `ProfitLoss`, `TaxSummary`, `PriceCalculator`, `Vouchers`, `Referrals`, `Goals`, `Benchmark` |
 | [src/data/seed.ts](../../src/data/seed.ts) | `day`, `at`, `DEMO_VENUE`, `DEMO_STUDIO`, `DEMO_DECOR`, `DEMO_ACCOUNTS`, `buildSeedData`, `contractSections`, `DEMO_IMAGES` |
-| [src/components/kit/primitives.tsx](../../src/components/kit/primitives.tsx) | `IconName`, `KButton`, `StatusPill`, `Avatar`, `ProgressBar`, `SectionTitle`, `Divider` |
+| [src/constants/theme.ts](../../src/constants/theme.ts) | `gradients`, `serif`, `FontWeight`, `spacing`, `radius`, `type`, `hitSlop` |
 | [src/data/events.ts](../../src/data/events.ts) | `EventTypeDef`, `EVENT_TYPES`, `EVENT_TYPE_BY_ID`, `eventLabel`, `GUEST_BANDS`, `GuestBand`, `bandFor` |
 | [src/data/features.ts](../../src/data/features.ts) | `FeatureDef`, `FEATURES`, `FEATURE_BY_ID`, `toolFeature`, `serviceFeature`, `tabFeature`, `TopFeature` |
 | [src/data/occasions.ts](../../src/data/occasions.ts) | `BuiltInOccasionId`, `HonoureeKind`, `VocabKey`, `OccasionDef`, `BUILT_IN_OCCASIONS`, `DEFAULT_OCCASION_ID`, `builtInOccasions` |
+| [src/services/content.ts](../../src/services/content.ts) | `CONTENT_KINDS`, `entryKey`, `bannerSectionId`, `MAX_TEXT`, `MAX_LIST`, `MAX_BANNERS`, `isHidden` |
 | [src/services/exporters.ts](../../src/services/exporters.ts) | `shareText`, `CalendarItem`, `buildIcs`, `googleCalendarUrl`, `addToGoogleCalendar`, `toCsv`, `exportCsv` |
 | [src/backend/telemetryPayloads.ts](../../src/backend/telemetryPayloads.ts) | `Props`, `PosthogEvent`, `ErrorInfo`, `posthogEvent`, `Dsn`, `SentryContext` |
+| [src/components/kit/primitives.tsx](../../src/components/kit/primitives.tsx) | `IconName`, `KButton`, `StatusPill`, `ProgressBar`, `SectionTitle`, `Divider` |
 | [src/components/toolkit/couple/money.tsx](../../src/components/toolkit/couple/money.tsx) | `GiftLedger`, `TipsPlanner`, `WhatIfBudget`, `SavingsGoal`, `HoneymoonPlanner`, `MenuPlanner` |
 | [src/components/toolkit/freelancer/money.tsx](../../src/components/toolkit/freelancer/money.tsx) | `TaxEstimate`, `ExpensesMileage`, `PrivateInvoices`, `EarningsGoal`, `SavingsPots`, `RateCalculator` |
 | [src/components/toolkit/vendor/clients.tsx](../../src/components/toolkit/vendor/clients.tsx) | `SavedReplies`, `FollowUps`, `SiteVisits`, `ResponseTime`, `PolicyBuilder`, `BusinessHours` |
 | [src/components/toolkit/vendor/ops.tsx](../../src/components/toolkit/vendor/ops.tsx) | `Inventory`, `Suppliers`, `StaffRoster`, `Halls`, `EventPrep`, `TeamTasks` |
-| [src/constants/theme.ts](../../src/constants/theme.ts) | `serif`, `FontWeight`, `spacing`, `radius`, `type`, `hitSlop` |
 | [src/data/capabilities.ts](../../src/data/capabilities.ts) | `ProviderCapability`, `PlannerModule`, `PlanCapability`, `Capability`, `planCap`, `isCapability` |
 | [src/data/trades.ts](../../src/data/trades.ts) | `TradeId`, `EssentialField`, `TradeDef`, `TRADES`, `TRADE_BY_ID`, `BUSINESS_FORMS` |
 | [src/services/api.ts](../../src/services/api.ts) | `NotFoundError`, `DEFAULT_VENUE_FILTERS`, `countActiveFilters`, `VenueQuery`, `filterVenues`, `api` |
@@ -54,20 +55,25 @@ Exported symbols that have no JSDoc yet. The weekly documentation pass (see [the
 | [src/components/genie/GenieSections.tsx](../../src/components/genie/GenieSections.tsx) | `PackageCard`, `Testimonials`, `Faqs`, `WhatsAppFab` |
 | [src/components/toolkit/couple/logistics.tsx](../../src/components/toolkit/couple/logistics.tsx) | `GuestRooms`, `Pickups`, `VendorMeetings`, `ContactSheet` |
 | [src/components/work/Bookings.tsx](../../src/components/work/Bookings.tsx) | `WorkMode`, `crewFill`, `CrewPanel`, `DeliverablesPanel` |
-| [src/data/categories.ts](../../src/data/categories.ts) | `HOME_CATEGORIES`, `VENUE_COLLECTIONS`, `findCategory`, `findSubcategory` |
+| [src/constants/brand.ts](../../src/constants/brand.ts) | `BRAND_DEFAULTS`, `BrandField`, `BRAND_FIELDS`, `BRAND` |
+| [src/data/contentCatalogue.ts](../../src/data/contentCatalogue.ts) | `CatalogueRecord`, `ContentKindDef`, `CONTENT_CATALOGUE`, `CONTENT_KIND_BY_ID` |
 | [src/data/crafts.ts](../../src/data/crafts.ts) | `CraftId`, `CraftDef`, `CRAFTS`, `CRAFT_BY_ID` |
 | [src/data/genie.ts](../../src/data/genie.ts) | `GENIE_PACKAGES`, `TESTIMONIALS`, `FAQS`, `GENIE_FEATURES` |
 | [src/data/permissions.ts](../../src/data/permissions.ts) | `PERMISSIONS`, `Permission`, `isPermission`, `PERMISSION_LABELS` |
-| [src/data/venues.ts](../../src/data/venues.ts) | `collectionsFor`, `VENUES`, `VENUE_TYPES`, `findVenue` |
+| [src/store/db/content.ts](../../src/store/db/content.ts) | `ContentPart`, `BannerInput`, `ContentActions`, `contentActions` |
 | [supabase/functions/_shared/fanout.ts](../../supabase/functions/_shared/fanout.ts) | `ExpoMessage`, `EmailMessage`, `FanoutPlan`, `planFanout` |
 | [src/backend/auth.ts](../../src/backend/auth.ts) | `AuthSession`, `AuthProvider`, `emailOtp` |
 | [src/backend/media.ts](../../src/backend/media.ts) | `MediaPurpose`, `UploadInput`, `Uploaded` |
 | [src/components/planner/RegistryCard.tsx](../../src/components/planner/RegistryCard.tsx) | `REGISTRY_KINDS`, `registryGoal`, `registryRaised` |
 | [src/components/toolkit/couple/occasions.tsx](../../src/components/toolkit/couple/occasions.tsx) | `BabyKeepsakes`, `SurprisePlan`, `GamesActivities` |
 | [src/components/toolkit/freelancer/crafts.tsx](../../src/components/toolkit/freelancer/crafts.tsx) | `ProductKit`, `Setlist`, `VehicleLog` |
+| [src/constants/images.ts](../../src/constants/images.ts) | `PhotoKey`, `PHOTO_KEYS`, `isPhotoKey` |
 | [src/data/access.ts](../../src/data/access.ts) | `TOOL_RULES`, `ToolId`, `VENDOR_SETUP_STEPS` |
+| [src/data/categories.ts](../../src/data/categories.ts) | `HOME_CATEGORIES`, `VENUE_COLLECTIONS`, `findSubcategory` |
 | [src/data/checklist.ts](../../src/data/checklist.ts) | `CHECKLIST_PHASES`, `CHECKLIST`, `CHECKLIST_TOTAL` |
+| [src/data/homeSections.ts](../../src/data/homeSections.ts) | `HOME_SECTIONS`, `HOME_SECTION_IDS`, `HOME_SECTION_BY_ID` |
 | [src/data/providers.ts](../../src/data/providers.ts) | `PROVIDERS`, `findProvider`, `providersFor` |
+| [src/data/venues.ts](../../src/data/venues.ts) | `collectionsFor`, `VENUES`, `VENUE_TYPES` |
 | [src/services/assistant.ts](../../src/services/assistant.ts) | `AssistantReply`, `AssistantContext`, `POPULAR_SUGGESTIONS` |
 | [src/services/quotes.ts](../../src/services/quotes.ts) | `QuoteTotals`, `lineTotal`, `DEFAULT_TERMS` |
 | [src/store/db/admin.ts](../../src/store/db/admin.ts) | `AdminCollection`, `AdminActions`, `adminActions` |
@@ -75,6 +81,7 @@ Exported symbols that have no JSDoc yet. The weekly documentation pass (see [the
 | [src/store/db/index.ts](../../src/store/db/index.ts) | `Db`, `useDb`, `useUnreadMessageCount` |
 | [src/store/db/projects.ts](../../src/store/db/projects.ts) | `ProjectActions`, `projectActions`, `SYSTEM_ACTOR` |
 | [src/store/db/toolkit.ts](../../src/store/db/toolkit.ts) | `ToolkitActions`, `toolStateKey`, `toolkitActions` |
+| [src/theme/roles.ts](../../src/theme/roles.ts) | `RolePalette`, `RoleTheme`, `ROLE_MARK` |
 | [src/types/toolkit.ts](../../src/types/toolkit.ts) | `ToolValue`, `ToolEntry`, `ToolEntryInput` |
 | [src/utils/links.ts](../../src/utils/links.ts) | `webUrl`, `rsvpPath`, `sitePath` |
 | [supabase/functions/_shared/cloudinary.ts](../../supabase/functions/_shared/cloudinary.ts) | `PurposeRule`, `PURPOSES`, `isPurpose` |
@@ -89,9 +96,8 @@ Exported symbols that have no JSDoc yet. The weekly documentation pass (see [the
 | [src/components/ui/SectionHeader.tsx](../../src/components/ui/SectionHeader.tsx) | `SectionHeader`, `NewBadge` |
 | [src/components/ui/Skeleton.tsx](../../src/components/ui/Skeleton.tsx) | `Skeleton`, `ListRowSkeleton` |
 | [src/components/ui/Toast.tsx](../../src/components/ui/Toast.tsx) | `ToastTone`, `ToastHost` |
-| [src/constants/images.ts](../../src/constants/images.ts) | `PhotoKey`, `photo` |
+| [src/components/work/ReviewComposer.tsx](../../src/components/work/ReviewComposer.tsx) | `FREELANCER_CRITERIA`, `REVIEW_MAX_CHARS` |
 | [src/data/freelancers.ts](../../src/data/freelancers.ts) | `FREELANCER_DIRECTORY`, `findFreelancer` |
-| [src/data/vendors.ts](../../src/data/vendors.ts) | `VENDORS`, `findVendor` |
 | [src/i18n/index.tsx](../../src/i18n/index.tsx) | `usePrefs`, `useI18n` |
 | [src/i18n/runtime.ts](../../src/i18n/runtime.ts) | `Lang`, `CalendarMode` |
 | [src/services/experience.ts](../../src/services/experience.ts) | `has`, `can` |
@@ -101,9 +107,7 @@ Exported symbols that have no JSDoc yet. The weekly documentation pass (see [the
 | [src/store/db/personas.ts](../../src/store/db/personas.ts) | `PersonaActions`, `personaActions` |
 | [src/store/db/planner.ts](../../src/store/db/planner.ts) | `PlannerActions`, `plannerActions` |
 | [src/store/db/quotes.ts](../../src/store/db/quotes.ts) | `QuoteActions`, `quoteActions` |
-| [src/store/db/support.ts](../../src/store/db/support.ts) | `SupportActions`, `supportActions` |
 | [src/store/db/trust.ts](../../src/store/db/trust.ts) | `TrustActions`, `trustActions` |
-| [src/theme/roles.ts](../../src/theme/roles.ts) | `RolePalette`, `RoleTheme` |
 | [supabase/functions/_shared/http.ts](../../supabase/functions/_shared/http.ts) | `json`, `preflight` |
 | [supabase/functions/_shared/ratelimit.ts](../../supabase/functions/_shared/ratelimit.ts) | `Limit`, `Verdict` |
 | [src/app/platform/(tabs)/execution.tsx](../../src/app/platform/%28tabs%29/execution.tsx) | `default` |
@@ -113,6 +117,8 @@ Exported symbols that have no JSDoc yet. The weekly documentation pass (see [the
 | [src/app/platform/admin/bug/[id].tsx](../../src/app/platform/admin/bug/%5Bid%5D.tsx) | `default` |
 | [src/app/platform/admin/bugs.tsx](../../src/app/platform/admin/bugs.tsx) | `default` |
 | [src/app/platform/admin/collection/[name].tsx](../../src/app/platform/admin/collection/%5Bname%5D.tsx) | `default` |
+| [src/app/platform/admin/content/[kind]/[id].tsx](../../src/app/platform/admin/content/%5Bkind%5D/%5Bid%5D.tsx) | `default` |
+| [src/app/platform/admin/content/index.tsx](../../src/app/platform/admin/content/index.tsx) | `default` |
 | [src/app/platform/admin/data.tsx](../../src/app/platform/admin/data.tsx) | `default` |
 | [src/app/platform/admin/features.tsx](../../src/app/platform/admin/features.tsx) | `default` |
 | [src/app/platform/admin/index.tsx](../../src/app/platform/admin/index.tsx) | `default` |
@@ -130,6 +136,8 @@ Exported symbols that have no JSDoc yet. The weekly documentation pass (see [the
 | [src/app/platform/marketplace.tsx](../../src/app/platform/marketplace.tsx) | `default` |
 | [src/app/platform/providers.tsx](../../src/app/platform/providers.tsx) | `default` |
 | [src/app/platform/quotes.tsx](../../src/app/platform/quotes.tsx) | `default` |
+| [src/app/platform/support/[id].tsx](../../src/app/platform/support/%5Bid%5D.tsx) | `default` |
+| [src/app/platform/support/index.tsx](../../src/app/platform/support/index.tsx) | `default` |
 | [src/app/platform/users.tsx](../../src/app/platform/users.tsx) | `default` |
 | [src/backend/files.ts](../../src/backend/files.ts) | `privateFilesReady` |
 | [src/backend/mock.ts](../../src/backend/mock.ts) | `mockBackend` |
@@ -156,7 +164,6 @@ Exported symbols that have no JSDoc yet. The weekly documentation pass (see [the
 | [src/components/work/MatchPanel.tsx](../../src/components/work/MatchPanel.tsx) | `fitColor` |
 | [src/components/work/Payments.tsx](../../src/components/work/Payments.tsx) | `PAYMENT_METHODS` |
 | [src/components/work/Pipeline.tsx](../../src/components/work/Pipeline.tsx) | `STATUS_LABEL` |
-| [src/components/work/ReviewComposer.tsx](../../src/components/work/ReviewComposer.tsx) | `FREELANCER_CRITERIA` |
 | [src/components/work/RunSheet.tsx](../../src/components/work/RunSheet.tsx) | `SeverityPicker` |
 | [src/components/work/SettingsScreen.tsx](../../src/components/work/SettingsScreen.tsx) | `DEFAULT_PREFS` |
 | [src/components/work/TodayFocus.tsx](../../src/components/work/TodayFocus.tsx) | `TodayFocus` |
@@ -164,10 +171,11 @@ Exported symbols that have no JSDoc yet. The weekly documentation pass (see [the
 | [src/data/skills.ts](../../src/data/skills.ts) | `skillIcon` |
 | [src/data/toolkitSeed.ts](../../src/data/toolkitSeed.ts) | `buildToolkitSeed` |
 | [src/data/tour.ts](../../src/data/tour.ts) | `COUPLE_TOUR` |
+| [src/data/vendors.ts](../../src/data/vendors.ts) | `VENDORS` |
 | [src/hooks/useDebounce.ts](../../src/hooks/useDebounce.ts) | `useDebounce` |
 | [src/i18n/ne/index.ts](../../src/i18n/ne/index.ts) | `NE` |
 | [src/services/auth.ts](../../src/services/auth.ts) | `logout` |
 | [src/services/pricing.ts](../../src/services/pricing.ts) | `dueDateFor` |
-| [src/theme/RoleTheme.tsx](../../src/theme/RoleTheme.tsx) | `useRoleTheme` |
+| [src/types/content.ts](../../src/types/content.ts) | `AppContent` |
 | [src/types/persona.ts](../../src/types/persona.ts) | `RateModel` |
 | [src/utils/random.ts](../../src/utils/random.ts) | `seeded` |

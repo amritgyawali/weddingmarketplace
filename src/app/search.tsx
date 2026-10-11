@@ -10,7 +10,7 @@ import { Chip } from '@/components/ui/Chip';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { Text } from '@/components/ui/Text';
 import { photo } from '@/constants/images';
-import { colors, fonts, GUTTER, inputReset, radius } from '@/constants/theme';
+import { colors, fonts, GUTTER, inputReset, radius, themed } from '@/constants/theme';
 import { findCategory } from '@/data/categories';
 import { POPULAR_SEARCHES } from '@/data/ideas';
 import { useDebounce } from '@/hooks/useDebounce';
@@ -189,7 +189,7 @@ export default function SearchScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = themed(() => StyleSheet.create({
   root: { flex: 1, backgroundColor: colors.white },
   bar: {
     flexDirection: 'row',
@@ -209,4 +209,4 @@ const styles = StyleSheet.create({
   row: { flexDirection: 'row', alignItems: 'center', gap: 14, paddingHorizontal: GUTTER, paddingVertical: 10 },
   thumb: { width: 52, height: 52, borderRadius: radius.sm, backgroundColor: colors.bgMuted },
   catThumb: { alignItems: 'center', justifyContent: 'center', backgroundColor: colors.primarySoft },
-});
+}));

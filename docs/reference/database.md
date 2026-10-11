@@ -474,3 +474,68 @@ NOT DEPLOYED. Never apply without the owner's say-so (AGENTS.md §1).
 - **Triggers (2):** `social_contacts_audience`, `social_messages_consent`
 - **Scheduled jobs (1):** `vivah-social-metrics`
 - **Tables altered (1):** `social_threads`
+
+## 0021_app_content.sql
+
+Source: [supabase/migrations/0021_app_content.sql](../../supabase/migrations/0021_app_content.sql)
+
+```text
+App content edited by a super admin (Content studio), and the one call that
+carries the whole console configuration to every device.
+
+  app_content              one row: replacement photos, listing edits, the
+                           order and headings of the couple's home, home
+                           banners and brand details, as the app's
+                           AppContent (types/content.ts), plus the revision
+                           every device compares against.
+  rpc_app_config           everyone, signed in or not: the content, the text
+                           overrides and the feature switches (0016) in one
+                           answer; with p_known equal to the current revision
+                           it answers with the revision only.
+  rpc_save_app_content     super admins (admin.full), audited.
+  rpc_save_text_overrides  super admins: replaces every text override.
+  rpc_save_feature_flags   super admins: replaces every feature switch.
+
+Each save moves the revision on, so phones that ask again pick the change up
+(hooks/useContentSync.ts asks when the app opens, returns to the foreground
+and every 45 seconds while it is open).
+NOT DEPLOYED. Never apply without the owner's say-so (AGENTS.md §1).
+```
+
+- **Tables created (1):** `app_content`
+- **Functions (5):** `rpc_app_config`, `rpc_save_app_content`, `rpc_save_feature_flags`, `rpc_save_text_overrides`, `vivah_bump_app_revision`
+- **Policies:** 1 · **Indexes:** 0
+
+## 0022_profile_support.sql
+
+Source: [supabase/migrations/0022_profile_support.sql](../../supabase/migrations/0022_profile_support.sql)
+
+```text
+Edit profile and Help and support.
+
+  rpc_update_my_profile          the signed-in user edits their own name,
+                                 city, photo and, by role, business name,
+                                 headline, bio, experience and languages
+                                 (same rules as services/profile.ts). Email
+                                 and phone are how people sign in, so staff
+                                 change those.
+  support_tickets                help requests from couples, businesses and
+  support_messages               freelancers, and the conversation on each
+                                 (internal notes are staff-only). Mirrors
+                                 SupportTicket in types/platform.ts and the
+                                 actions in store/db/support.ts.
+  rpc_open_support_ticket        the owner opens one (max 5 open), the team
+                                 is told.
+  rpc_reply_support_ticket       the owner or staff with support.manage;
+                                 staff may add internal notes.
+  rpc_set_support_ticket_status  owners: solved, closed or reopen; staff: any.
+  rpc_assign_support_ticket      staff: owner on the team and priority.
+  rpc_rate_support_ticket        the owner, once solved (1–5).
+  rpc_my_support_tickets         the caller's requests (staff: every one),
+                                 as the app's SupportTicket JSON.
+NOT DEPLOYED. Never apply without the owner's say-so (AGENTS.md §1).
+```
+
+- **Tables created (2):** `support_messages`, `support_tickets`
+- **Functions (10):** `rpc_assign_support_ticket`, `rpc_my_support_tickets`, `rpc_open_support_ticket`, `rpc_rate_support_ticket`, `rpc_reply_support_ticket`, `rpc_set_support_ticket_status`, `rpc_update_my_profile`, `vivah_app_role`, `vivah_notify_support_desk`, `vivah_support_href`
+- **Policies:** 2 · **Indexes:** 3

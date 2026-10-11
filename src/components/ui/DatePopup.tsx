@@ -1,7 +1,7 @@
 import { Modal, Pressable, StyleSheet, View } from 'react-native';
 import Animated, { FadeIn, ZoomIn } from 'react-native-reanimated';
 
-import { colors, radius } from '@/constants/theme';
+import { colors, radius, themed } from '@/constants/theme';
 import { useRoleTheme } from '@/theme/RoleTheme';
 
 import { Calendar } from './Calendar';
@@ -56,8 +56,8 @@ export function DatePopup({
   );
 }
 
-const styles = StyleSheet.create({
+const styles = themed(() => StyleSheet.create({
   backdrop: { flex: 1, backgroundColor: colors.overlay, alignItems: 'center', justifyContent: 'center', padding: 16 },
   card: { width: '100%', maxWidth: 420, borderRadius: radius.lg, padding: 14, paddingTop: 8, gap: 4 },
   header: { flexDirection: 'row', alignItems: 'center', paddingLeft: 4 },
-});
+}));

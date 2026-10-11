@@ -3,7 +3,8 @@ import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useFonts } from 'expo-font';
 import { StatusBar } from 'expo-status-bar';
-import { useEffect, useState } from 'react';
+import * as SystemUI from 'expo-system-ui';
+import { Fragment, useEffect, useState } from 'react';
 import { AppState, Platform } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
@@ -14,7 +15,8 @@ import { bugTouchHandlers, BugReporterHost, installBugReporter } from '@/compone
 import { DialogHost } from '@/components/ui/Dialog';
 import { FeatureRouteGuard } from '@/components/ui/FeatureRouteGuard';
 import { ToastHost } from '@/components/ui/Toast';
-import { colors } from '@/constants/theme';
+import { applyColorScheme, colors, statusBarStyle } from '@/constants/theme';
+import { useResolvedScheme } from '@/hooks/useColorMode';
 import { useHydrated } from '@/hooks/useHydrated';
 import { useTelemetry } from '@/hooks/useTelemetry';
 import { I18nProvider, usePrefs } from '@/i18n';
@@ -68,6 +70,17 @@ export default function RootLayout() {
   const ready = (fontsLoaded || !!fontError) && hydrated;
   useTelemetry();
 
+  // Light or dark: swap the palette before anything below renders, then remount the tree (key) so no screen keeps an old colour.
+  const scheme = useResolvedScheme();
+  applyColorScheme(scheme);
+  useEffect(() => {
+    SystemUI.setBackgroundColorAsync(colors.bg).catch(() => {});
+    if (Platform.OS === 'web' && typeof document !== 'undefined') {
+      document.documentElement.style.colorScheme = scheme;
+      document.body.style.backgroundColor = colors.bg;
+    }
+  }, [scheme]);
+
   useEffect(() => {
     if (ready) SplashScreen.hideAsync().catch(() => {});
   }, [ready]);
@@ -89,7 +102,8 @@ export default function RootLayout() {
     <GestureHandlerRootView style={{ flex: 1, backgroundColor: colors.white }} {...bugTouchHandlers}>
       <I18nProvider>
       <QueryClientProvider client={queryClient}>
-        <StatusBar style="dark" />
+      <Fragment key={scheme}>
+        <StatusBar style={statusBarStyle()} />
         <ContentSync />
         <Stack screenLayout={keyboardScreenLayout}
           screenOptions={{
@@ -112,6 +126,9 @@ export default function RootLayout() {
             <Stack.Screen name="search" options={{ animation: 'fade', presentation: 'transparentModal' }} />
             <Stack.Screen name="profile" />
             <Stack.Screen name="edit-profile" />
+            <Stack.Screen name="support/index" />
+            <Stack.Screen name="support/[id]" />
+            <Stack.Screen name="support/new" options={{ presentation: 'modal', animation: 'slide_from_bottom' }} />
             <Stack.Screen name="my-wedding" />
             <Stack.Screen name="plan" options={{ presentation: 'modal', animation: 'slide_from_bottom' }} />
             <Stack.Screen name="plan-submitted" options={{ animation: 'fade', gestureEnabled: false }} />
@@ -186,6 +203,7 @@ export default function RootLayout() {
         <ToastHost />
         <DialogHost />
         <BugReporterHost />
+      </Fragment>
       </QueryClientProvider>
       </I18nProvider>
     </GestureHandlerRootView>

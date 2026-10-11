@@ -5,7 +5,7 @@ import Animated, { FadeInDown, FadeOutDown } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { create } from 'zustand';
 
-import { colors, radius, shadows } from '@/constants/theme';
+import { colors, radius, shadows, themed } from '@/constants/theme';
 import { translate, useI18n } from '@/i18n';
 
 import { Text } from './Text';
@@ -68,12 +68,12 @@ useToastStore.subscribe((s, prev) => {
 });
 
 /** Wine for good news with a champagne mark, espresso for information, then amber and red for problems. */
-const TONES: Record<ToastTone, { bg: string; accent: string }> = {
+const TONES: Record<ToastTone, { bg: string; accent: string }> = themed(() => ({
   success: { bg: colors.wine, accent: colors.gold },
-  info: { bg: colors.heading, accent: colors.gold },
+  info: { bg: colors.inkFill, accent: colors.gold },
   warning: { bg: colors.warningDeep, accent: colors.warningOnDark },
   error: { bg: colors.dangerDeep, accent: colors.dangerOnDark },
-};
+}));
 
 export function ToastHost() {
   const { message, icon, tone, key, hide } = useToastStore();
@@ -93,7 +93,7 @@ export function ToastHost() {
           style={[styles.toast, { backgroundColor: palette.bg }]}>
           <View style={[styles.accent, { backgroundColor: palette.accent }]} />
           <Ionicons name={icon === 'sparkles' ? 'checkmark-circle' : icon} size={19} color={palette.accent} />
-          <Text size={14} weight="medium" color={colors.white} style={{ flexShrink: 1 }}>
+          <Text size={14} weight="medium" color={colors.onDark} style={{ flexShrink: 1 }}>
             {message}
           </Text>
         </Pressable>
@@ -102,7 +102,7 @@ export function ToastHost() {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = themed(() => StyleSheet.create({
   host: { justifyContent: 'flex-end', alignItems: 'center', zIndex: 100 },
   toast: {
     flexDirection: 'row',
@@ -118,4 +118,4 @@ const styles = StyleSheet.create({
     ...shadows.raised,
   },
   accent: { position: 'absolute', left: 0, top: 0, bottom: 0, width: 4 },
-});
+}));

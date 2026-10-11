@@ -88,6 +88,8 @@ export interface Account {
   payoutMethod?: { kind: 'esewa' | 'khalti' | 'bank'; detail: string };
   /** Notification, language and privacy preferences (every role). */
   prefs?: AccountPrefs;
+  /** Profile photo: a file on this device or an https link. Missing shows initials. */
+  photo?: string;
   /** platform */
   team?: PlatformTeam;
   staffRole?: StaffRole;
@@ -1170,6 +1172,49 @@ export interface BugReportRecord extends BugReport {
   resolvedBy?: string;
   resolvedAt?: string;
   note?: string;
+}
+
+// Help and support (every role asks; staff answer)
+export type SupportTopic = 'booking' | 'payment' | 'account' | 'vendor' | 'technical' | 'feedback' | 'other';
+/** open: waiting on the Vivah team · waiting: the team asked the person something · resolved: answered (the person can reopen) · closed: done. */
+export type SupportTicketStatus = 'open' | 'in_progress' | 'waiting' | 'resolved' | 'closed';
+export type SupportPriority = 'normal' | 'high' | 'urgent';
+
+/** One message in a help request. `internal` notes are seen by staff only. */
+export interface SupportMessage {
+  id: string;
+  at: string;
+  authorId: string;
+  authorName: string;
+  authorRole: UserRole;
+  body: string;
+  internal?: boolean;
+}
+
+/** A help request from any role, answered by the Vivah team (Platform → Help desk). */
+export interface SupportTicket {
+  id: string;
+  /** Human code, e.g. SUP-2026-0101. */
+  code: string;
+  accountId: string;
+  accountName: string;
+  role: UserRole;
+  topic: SupportTopic;
+  subject: string;
+  priority: SupportPriority;
+  status: SupportTicketStatus;
+  /** The celebration or booking it is about, when the person picked one. */
+  projectId?: string;
+  messages: SupportMessage[];
+  createdAt: string;
+  updatedAt: string;
+  /** Staff member looking after it. */
+  assignedTo?: string;
+  assignedName?: string;
+  resolvedAt?: string;
+  /** How the person rated the help (1–5), once resolved. */
+  rating?: number;
+  ratingNote?: string;
 }
 
 // Role toolkits (generic tool records, settings and broadcasts)

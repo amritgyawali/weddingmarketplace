@@ -4,7 +4,7 @@ import Animated, { useAnimatedStyle, useSharedValue, withSequence, withSpring } 
 
 import { PressableScale, triggerHaptic } from '@/components/ui/PressableScale';
 import { toast } from '@/components/ui/Toast';
-import { colors, hitSlop, shadows } from '@/constants/theme';
+import { colors, hitSlop, shadows, themed } from '@/constants/theme';
 import { useAppStore } from '@/store/useAppStore';
 import { useDb } from '@/store/useDb';
 import { useAccount } from '@/store/useSession';
@@ -52,6 +52,6 @@ export function ShortlistButton({
   );
 }
 
-const styles = StyleSheet.create({
-  btn: { backgroundColor: 'rgba(255,255,255,0.95)', alignItems: 'center', justifyContent: 'center' },
-});
+const styles = themed(() => StyleSheet.create({
+  btn: { backgroundColor: colors.white, alignItems: 'center', justifyContent: 'center' },
+}));

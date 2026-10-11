@@ -23,7 +23,7 @@ Every file in `src/app/` is a route (Expo Router). Layouts (`_layout.tsx`) defin
 | `/contract/[id]` | screen | `ContractScreen` | [contract/[id].tsx](../../src/app/contract/%5Bid%5D.tsx) | Read and e-sign one service agreement. Only the couple (or an editor collaborator) signs as customer. |
 | `/contracts` | screen | `ContractsScreen` | [contracts.tsx](../../src/app/contracts.tsx) | Every service agreement for the wedding, with signing status. |
 | `/deals` | screen | `DealsScreen` | [deals.tsx](../../src/app/deals.tsx) | Deals & offers: seasonal, last-minute (Mangsir/Poush), bundles, promo and referral codes. |
-| `/edit-profile` | screen | `EditProfileScreen` | [edit-profile.tsx](../../src/app/edit-profile.tsx) |  |
+| `/edit-profile` | screen | `EditProfile` | [edit-profile.tsx](../../src/app/edit-profile.tsx) |  |
 | `/enquiry` | screen | `EnquiryScreen` | [enquiry.tsx](../../src/app/enquiry.tsx) |  |
 | `/genie` (tabs) | screen | `GenieTab` | [(tabs)/genie.tsx](../../src/app/%28tabs%29/genie.tsx) |  |
 | `/genie-checkout/[id]` | screen | `GenieCheckoutScreen` | [genie-checkout/[id].tsx](../../src/app/genie-checkout/%5Bid%5D.tsx) | Checkout for Genie packages. Payment is simulated — plug a gateway SDK (eSewa / Khalti / Fonepay) into `pay()` and confirm the order server-side. |
@@ -52,6 +52,9 @@ Every file in `src/app/` is a route (Expo Router). Layouts (`_layout.tsx`) defin
 | `/settings` | screen | `Settings` | [settings.tsx](../../src/app/settings.tsx) |  |
 | `/shortlist` | screen | `ShortlistScreen` | [shortlist.tsx](../../src/app/shortlist.tsx) | Shortlist as a mini-CRM: stages, notes and tags per vendor, compare, and liked photos. |
 | `/story/[id]` | screen | `StoryScreen` | [story/[id].tsx](../../src/app/story/%5Bid%5D.tsx) |  |
+| `/support` | screen | `Support` | [support/index.tsx](../../src/app/support/index.tsx) |  |
+| `/support/[id]` | screen | `SupportRequest` | [support/[id].tsx](../../src/app/support/%5Bid%5D.tsx) |  |
+| `/support/new` | screen | `NewRequest` | [support/new.tsx](../../src/app/support/new.tsx) |  |
 | `/tool/[id]` | screen | `CoupleTool` | [tool/[id].tsx](../../src/app/tool/%5Bid%5D.tsx) | One couple planning tool (or why it isn't part of this celebration). |
 | `/tools` | screen | `CoupleTools` | [tools.tsx](../../src/app/tools.tsx) | Extra planning tools for the couple, picked for what they are celebrating. |
 | `/vendor/[id]` | screen | `VendorDetailScreen` | [vendor/[id].tsx](../../src/app/vendor/%5Bid%5D.tsx) |  |
@@ -75,6 +78,7 @@ Every file in `src/app/` is a route (Expo Router). Layouts (`_layout.tsx`) defin
 | `/freelancer/calendar` (tabs) | screen | `FreelancerCalendar` | [freelancer/(tabs)/calendar.tsx](../../src/app/freelancer/%28tabs%29/calendar.tsx) | Availability calendar (manual days + weekly rules) and the freelancer's booked work, exportable to any calendar. |
 | `/freelancer/craft` | screen | `YourCraft` | [freelancer/craft.tsx](../../src/app/freelancer/craft.tsx) | Profile → Your craft: main skill, extra skills and the craft profile. |
 | `/freelancer/earnings` (tabs) | screen | `Earnings` | [freelancer/(tabs)/earnings.tsx](../../src/app/freelancer/%28tabs%29/earnings.tsx) | Wallet for crew: what's earned, what's releasing next, payout history, method and statements. |
+| `/freelancer/edit-profile` | screen | `EditProfile` | [freelancer/edit-profile.tsx](../../src/app/freelancer/edit-profile.tsx) |  |
 | `/freelancer/gig/[id]` | screen | `FreelancerGigDetail` | [freelancer/gig/[id].tsx](../../src/app/freelancer/gig/%5Bid%5D.tsx) | Gig detail for crew: accept an invite, apply, ask a question or decline. |
 | `/freelancer/inbox` | screen | `Inbox` | [freelancer/inbox/index.tsx](../../src/app/freelancer/inbox/index.tsx) |  |
 | `/freelancer/inbox/[id]` | screen | `Thread` | [freelancer/inbox/[id].tsx](../../src/app/freelancer/inbox/%5Bid%5D.tsx) |  |
@@ -83,6 +87,9 @@ Every file in `src/app/` is a route (Expo Router). Layouts (`_layout.tsx`) defin
 | `/freelancer/portfolio` | screen | `Portfolio` | [freelancer/portfolio.tsx](../../src/app/freelancer/portfolio.tsx) |  |
 | `/freelancer/profile` (tabs) | screen | `FreelancerProfile` | [freelancer/(tabs)/profile.tsx](../../src/app/freelancer/%28tabs%29/profile.tsx) | Crew profile: skills, kit, rates, travel, languages, reliability, reviews and portfolio. |
 | `/freelancer/settings` | screen | `Settings` | [freelancer/settings.tsx](../../src/app/freelancer/settings.tsx) |  |
+| `/freelancer/support` | screen | `Support` | [freelancer/support/index.tsx](../../src/app/freelancer/support/index.tsx) |  |
+| `/freelancer/support/[id]` | screen | `SupportRequest` | [freelancer/support/[id].tsx](../../src/app/freelancer/support/%5Bid%5D.tsx) |  |
+| `/freelancer/support/new` | screen | `NewRequest` | [freelancer/support/new.tsx](../../src/app/freelancer/support/new.tsx) |  |
 | `/freelancer/tool/[id]` | screen | `FreelancerTool` | [freelancer/tool/[id].tsx](../../src/app/freelancer/tool/%5Bid%5D.tsx) | One freelancer tool (or why it isn't available for this craft). |
 | `/freelancer/tools` | screen | `FreelancerTools` | [freelancer/tools.tsx](../../src/app/freelancer/tools.tsx) | Extra tools for freelancers, picked for their craft. |
 | `/freelancer/verification` | screen | `Verification` | [freelancer/verification.tsx](../../src/app/freelancer/verification.tsx) |  |
@@ -99,6 +106,8 @@ Every file in `src/app/` is a route (Expo Router). Layouts (`_layout.tsx`) defin
 | `/platform/admin/bug/[id]` | screen | `` | [platform/admin/bug/[id].tsx](../../src/app/platform/admin/bug/%5Bid%5D.tsx) |  |
 | `/platform/admin/bugs` | screen | `` | [platform/admin/bugs.tsx](../../src/app/platform/admin/bugs.tsx) |  |
 | `/platform/admin/collection/[name]` | screen | `` | [platform/admin/collection/[name].tsx](../../src/app/platform/admin/collection/%5Bname%5D.tsx) |  |
+| `/platform/admin/content` | screen | `` | [platform/admin/content/index.tsx](../../src/app/platform/admin/content/index.tsx) |  |
+| `/platform/admin/content/[kind]/[id]` | screen | `` | [platform/admin/content/[kind]/[id].tsx](../../src/app/platform/admin/content/%5Bkind%5D/%5Bid%5D.tsx) |  |
 | `/platform/admin/data` | screen | `` | [platform/admin/data.tsx](../../src/app/platform/admin/data.tsx) |  |
 | `/platform/admin/features` | screen | `` | [platform/admin/features.tsx](../../src/app/platform/admin/features.tsx) |  |
 | `/platform/admin/record/[name]/[id]` | screen | `` | [platform/admin/record/[name]/[id].tsx](../../src/app/platform/admin/record/%5Bname%5D/%5Bid%5D.tsx) |  |
@@ -109,6 +118,7 @@ Every file in `src/app/` is a route (Expo Router). Layouts (`_layout.tsx`) defin
 | `/platform/approvals` | screen | `` | [platform/approvals.tsx](../../src/app/platform/approvals.tsx) |  |
 | `/platform/audit` | screen | `` | [platform/audit.tsx](../../src/app/platform/audit.tsx) |  |
 | `/platform/calendar` | screen | `` | [platform/calendar.tsx](../../src/app/platform/calendar.tsx) |  |
+| `/platform/edit-profile` | screen | `EditProfile` | [platform/edit-profile.tsx](../../src/app/platform/edit-profile.tsx) |  |
 | `/platform/execution` (tabs) | screen | `` | [platform/(tabs)/execution.tsx](../../src/app/platform/%28tabs%29/execution.tsx) |  |
 | `/platform/finance` | screen | `` | [platform/finance.tsx](../../src/app/platform/finance.tsx) |  |
 | `/platform/freelancers` | screen | `` | [platform/freelancers.tsx](../../src/app/platform/freelancers.tsx) |  |
@@ -128,6 +138,8 @@ Every file in `src/app/` is a route (Expo Router). Layouts (`_layout.tsx`) defin
 | `/platform/quote/[id]` | screen | `PlatformQuote` | [platform/quote/[id].tsx](../../src/app/platform/quote/%5Bid%5D.tsx) | Package quote builder (id = quote id, or "new" with ?projectId). Vendor quotes open read-only so ops can audit pricing. |
 | `/platform/quotes` | screen | `` | [platform/quotes.tsx](../../src/app/platform/quotes.tsx) |  |
 | `/platform/settings` | screen | `Settings` | [platform/settings.tsx](../../src/app/platform/settings.tsx) |  |
+| `/platform/support` | screen | `` | [platform/support/index.tsx](../../src/app/platform/support/index.tsx) |  |
+| `/platform/support/[id]` | screen | `` | [platform/support/[id].tsx](../../src/app/platform/support/%5Bid%5D.tsx) |  |
 | `/platform/tool/[id]` | screen | `PlatformTool` | [platform/tool/[id].tsx](../../src/app/platform/tool/%5Bid%5D.tsx) | One operations tool (or which roles it is for). |
 | `/platform/tools` | screen | `PlatformTools` | [platform/tools.tsx](../../src/app/platform/tools.tsx) | Extra operations tools for platform staff, picked by their permissions. |
 | `/platform/users` | screen | `` | [platform/users.tsx](../../src/app/platform/users.tsx) |  |
@@ -169,6 +181,7 @@ Every file in `src/app/` is a route (Expo Router). Layouts (`_layout.tsx`) defin
 | `/business/bookings` (tabs) | screen | `BookingsTab` | [business/(tabs)/bookings.tsx](../../src/app/business/%28tabs%29/bookings.tsx) | Every booking this business holds, across Vivah-managed and direct weddings. |
 | `/business/calendar` (tabs) | screen | `VendorCalendar` | [business/(tabs)/calendar.tsx](../../src/app/business/%28tabs%29/calendar.tsx) | Availability calendar that feeds the matching engine, plus bookings by day. |
 | `/business/customers` | screen | `Customers` | [business/customers.tsx](../../src/app/business/customers.tsx) | Customer CRM: everyone who enquired, got a quote or booked — with full history. |
+| `/business/edit-profile` | screen | `EditProfile` | [business/edit-profile.tsx](../../src/app/business/edit-profile.tsx) |  |
 | `/business/finance` | screen | `VendorFinance` | [business/finance.tsx](../../src/app/business/finance.tsx) | Provider finance: settlements from Vivah, invoices, commission and exports. |
 | `/business/gig/[id]` | screen | `VendorGigDetail` | [business/gig/[id].tsx](../../src/app/business/gig/%5Bid%5D.tsx) |  |
 | `/business/gig/new` | screen | `VendorNewGig` | [business/gig/new.tsx](../../src/app/business/gig/new.tsx) |  |
@@ -188,6 +201,9 @@ Every file in `src/app/` is a route (Expo Router). Layouts (`_layout.tsx`) defin
 | `/business/social` | screen | `SocialHub` | [business/social/index.tsx](../../src/app/business/social/index.tsx) | Social media hub: Facebook, Instagram, WhatsApp and TikTok in one place. One inbox for every message and comment, one composer for every network, a content calendar, connected accounts, insights and … |
 | `/business/social/compose` | screen | `ComposeSocialPost` | [business/social/compose.tsx](../../src/app/business/social/compose.tsx) | New post (or edit a draft) for every connected network. `?at=` pre-fills the schedule. |
 | `/business/social/thread/[id]` | screen | `SocialThreadScreen` | [business/social/thread/[id].tsx](../../src/app/business/social/thread/%5Bid%5D.tsx) | One social conversation on a phone (wide screens show it beside the inbox). |
+| `/business/support` | screen | `Support` | [business/support/index.tsx](../../src/app/business/support/index.tsx) |  |
+| `/business/support/[id]` | screen | `SupportRequest` | [business/support/[id].tsx](../../src/app/business/support/%5Bid%5D.tsx) |  |
+| `/business/support/new` | screen | `NewRequest` | [business/support/new.tsx](../../src/app/business/support/new.tsx) |  |
 | `/business/team` | screen | `Team` | [business/team.tsx](../../src/app/business/team.tsx) | Staff, roles, permissions and who is on which booking. |
 | `/business/tool/[id]` | screen | `BusinessTool` | [business/tool/[id].tsx](../../src/app/business/tool/%5Bid%5D.tsx) | One vendor business tool (or why it isn't available for this business). |
 | `/business/tools` | screen | `BusinessTools` | [business/tools.tsx](../../src/app/business/tools.tsx) | Business tools, picked for the services this vendor offers. |

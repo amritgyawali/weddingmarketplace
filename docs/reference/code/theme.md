@@ -26,13 +26,13 @@ Scopes palette + typography to one role's app. The customer theme is the default
 
 ### `useRoleTheme`
 
-*hook* · [src/theme/RoleTheme.tsx:14](../../../src/theme/RoleTheme.tsx#L14)
+*hook* · [src/theme/RoleTheme.tsx:15](../../../src/theme/RoleTheme.tsx#L15)
 
 ```ts
-useRoleTheme()
+useRoleTheme(): RoleTheme
 ```
 
-_No JSDoc yet._
+The current role's theme, in the colour scheme on screen (light or dark).
 
 ## fonts.ts
 
@@ -113,32 +113,27 @@ _No JSDoc yet._
 
 ### `ROLE_THEMES`
 
-*const* · [src/theme/roles.ts:69](../../../src/theme/roles.ts#L69)
+*const* · [src/theme/roles.ts:143](../../../src/theme/roles.ts#L143)
 
 ```ts
 ROLE_THEMES: Record<UserRole, RoleTheme>
 ```
 
-One design system, four apps. Every role shares the "Royal Nepali Luxury"
-palette (ivory and pearl neutrals, espresso ink, champagne accents), the
-type, the spacing and the component shapes. Couple, business and
-freelancer apps share the burgundy accent; the staff console uses the
-deeper wine so a coordinator can tell at a glance which app they are in.
+The live role themes; rebuilt in place when the colour scheme changes.
 
 ### `ROLE_MARK`
 
-*const* · [src/theme/roles.ts:142](../../../src/theme/roles.ts#L142)
+*const* · [src/theme/roles.ts:156](../../../src/theme/roles.ts#L156)
 
 ```ts
 ROLE_MARK: Record<UserRole, string>
 ```
 
-Small marks that tell roles apart where several meet on one screen (chat
-bubbles, member chips). Accents stay burgundy; these are only for labels.
+_No JSDoc yet._
 
 ### `statusTone`
 
-*function* · [src/theme/roles.ts:173](../../../src/theme/roles.ts#L173)
+*function* · [src/theme/roles.ts:187](../../../src/theme/roles.ts#L187)
 
 ```ts
 statusTone(status: string, t: RoleTheme): { fg: string; bg: string }
@@ -148,7 +143,7 @@ Colour for any workflow status string, shared by every role's status pills.
 
 ### `statusLabel`
 
-*function* · [src/theme/roles.ts:181](../../../src/theme/roles.ts#L181)
+*function* · [src/theme/roles.ts:195](../../../src/theme/roles.ts#L195)
 
 ```ts
 statusLabel(s: string)

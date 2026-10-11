@@ -5,7 +5,7 @@ import Animated, { FadeIn } from 'react-native-reanimated';
 
 import { Button } from '@/components/ui/Button';
 import { Text } from '@/components/ui/Text';
-import { colors, shadow } from '@/constants/theme';
+import { colors, shadow, themed } from '@/constants/theme';
 import { COUPLE_TOUR, type TourStep } from '@/data/tour';
 import { useFeatures } from '@/hooks/useFeatures';
 import { useHydrated } from '@/hooks/useHydrated';
@@ -215,7 +215,7 @@ function arrowPosition(rect: Rect, box: { width: number; height: number }): View
   return below ? { left, top: -7 } : { left, bottom: -7 };
 }
 
-const styles = StyleSheet.create({
+const styles = themed(() => StyleSheet.create({
   panel: { position: 'absolute', backgroundColor: SCRIM },
   ring: { position: 'absolute', borderRadius: 10, borderWidth: 2, borderColor: colors.gold },
   card: {
@@ -228,4 +228,4 @@ const styles = StyleSheet.create({
   },
   arrow: { position: 'absolute', width: 14, height: 14, backgroundColor: colors.white, transform: [{ rotate: '45deg' }] },
   footer: { flexDirection: 'row', alignItems: 'center', gap: 8, marginTop: 8 },
-});
+}));

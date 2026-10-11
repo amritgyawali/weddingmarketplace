@@ -9,7 +9,7 @@ import { SearchBar } from '@/components/ui/SearchBar';
 import { VenueCardSkeleton } from '@/components/ui/Skeleton';
 import { Text } from '@/components/ui/Text';
 import { Toggle } from '@/components/ui/Toggle';
-import { colors, GUTTER } from '@/constants/theme';
+import { colors, GUTTER, themed } from '@/constants/theme';
 import { useDebounce } from '@/hooks/useDebounce';
 import { useVenues } from '@/hooks/queries';
 import { countActiveFilters, DEFAULT_VENUE_FILTERS } from '@/services/api';
@@ -136,7 +136,7 @@ export function VenueListScreen({
   );
 }
 
-const styles = StyleSheet.create({
+const styles = themed(() => StyleSheet.create({
   root: { flex: 1, backgroundColor: colors.white },
   searchRow: { flexDirection: 'row', alignItems: 'center', gap: 12, paddingHorizontal: GUTTER, paddingTop: 12 },
   toggleRow: {
@@ -150,4 +150,4 @@ const styles = StyleSheet.create({
     borderBottomColor: colors.border,
   },
   count: { paddingHorizontal: GUTTER, paddingTop: 12 },
-});
+}));

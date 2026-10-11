@@ -4,7 +4,7 @@ import { Pressable, StyleSheet } from 'react-native';
 
 import { triggerHaptic } from '@/components/ui/PressableScale';
 import { Text } from '@/components/ui/Text';
-import { colors } from '@/constants/theme';
+import { colors, themed } from '@/constants/theme';
 import { useFeatures } from '@/hooks/useFeatures';
 import { useCustomerWorkspace } from '@/hooks/useWorkspace';
 import { occasionOf } from '@/services/experience';
@@ -62,9 +62,9 @@ export function CelebrationSwitcher() {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = themed(() => StyleSheet.create({
   row: { gap: 8, paddingVertical: 2 },
   chip: { borderWidth: 1, borderRadius: 8, paddingHorizontal: 12, paddingVertical: 8, minWidth: 140, maxWidth: 220, gap: 1 },
   add: { flexDirection: 'row', alignItems: 'center', gap: 6, borderColor: colors.border, borderStyle: 'dashed', minWidth: 0, backgroundColor: colors.white },
-});
+}));
 

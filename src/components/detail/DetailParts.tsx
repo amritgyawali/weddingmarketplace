@@ -8,7 +8,7 @@ import { ShortlistButton } from '@/components/listing/ShortlistButton';
 import { Button } from '@/components/ui/Button';
 import { IconButton } from '@/components/ui/IconButton';
 import { Text } from '@/components/ui/Text';
-import { colors, GUTTER, radius, shadows } from '@/constants/theme';
+import { colors, GUTTER, radius, shadows, themed } from '@/constants/theme';
 import type { Review } from '@/types';
 import { formatShortDate } from '@/utils/format';
 
@@ -20,7 +20,7 @@ export function HeroControls({ kind, id, shareText }: { kind: 'venues' | 'vendor
       <IconButton
         icon="chevron-back"
         size={38}
-        background="rgba(255,255,255,0.95)"
+        background={colors.white}
         accessibilityLabel="Go back"
         onPress={() => (router.canGoBack() ? router.back() : router.replace('/'))}
         style={shadows.card}
@@ -29,7 +29,7 @@ export function HeroControls({ kind, id, shareText }: { kind: 'venues' | 'vendor
         <IconButton
           icon="share-social-outline"
           size={38}
-          background="rgba(255,255,255,0.95)"
+          background={colors.white}
           accessibilityLabel="Share"
           onPress={() => Share.share({ message: shareText }).catch(() => {})}
           style={shadows.card}
@@ -177,7 +177,7 @@ export function InfoTile({ icon, label, value }: { icon: React.ComponentProps<ty
   );
 }
 
-const styles = StyleSheet.create({
+const styles = themed(() => StyleSheet.create({
   controls: {
     position: 'absolute',
     left: GUTTER - 4,
@@ -229,4 +229,4 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.border,
   },
-});
+}));

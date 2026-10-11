@@ -6,7 +6,7 @@ import { Linking, StyleSheet, useWindowDimensions, View } from 'react-native';
 import { PressableScale } from '@/components/ui/PressableScale';
 import { Rating } from '@/components/ui/Rating';
 import { Text } from '@/components/ui/Text';
-import { colors, GUTTER, radius } from '@/constants/theme';
+import { colors, GUTTER, radius, themed } from '@/constants/theme';
 import { useAppStore } from '@/store/useAppStore';
 import type { Venue } from '@/types';
 import { formatMoney } from '@/utils/format';
@@ -105,7 +105,7 @@ export const VenueCard = memo(function VenueCard({
   );
 });
 
-const styles = StyleSheet.create({
+const styles = themed(() => StyleSheet.create({
   card: {
     paddingHorizontal: GUTTER,
     paddingTop: 16,
@@ -139,4 +139,4 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-});
+}));

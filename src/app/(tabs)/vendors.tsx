@@ -14,7 +14,7 @@ import { triggerHaptic } from '@/components/ui/PressableScale';
 import { Sheet } from '@/components/ui/Sheet';
 import { Text } from '@/components/ui/Text';
 import { photo } from '@/constants/images';
-import { colors, GUTTER, gradients } from '@/constants/theme';
+import { colors, gradients, GUTTER, themed } from '@/constants/theme';
 import { categoriesFor, enabledServices } from '@/data/categories';
 import { SERVICES } from '@/data/services';
 import { useContent } from '@/hooks/useContent';
@@ -58,7 +58,7 @@ function CategoryCard({ category, width, height, featured, onPress }: { category
       <LinearGradient colors={gradients.photoCaption} locations={[0.35, 0.6, 1]} style={[StyleSheet.absoluteFill, { pointerEvents: 'none' }]} />
       <View style={[styles.caption, featured && styles.captionFeatured]}>
         {featured && <Ornament width={56} style={{ marginBottom: 8 }} />}
-        <Text serif size={featured ? 24 : 17} weight="bold" color={colors.white} lineHeight={featured ? 32 : 23} numberOfLines={2}>
+        <Text serif size={featured ? 24 : 17} weight="bold" color={colors.onDark} lineHeight={featured ? 32 : 23} numberOfLines={2}>
           {category.title}
         </Text>
         <Text size={featured ? 14 : 12} color={colors.onWineMuted} numberOfLines={featured ? 2 : 1}>
@@ -177,7 +177,7 @@ export default function VendorsTab() {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = themed(() => StyleSheet.create({
   root: { flex: 1, backgroundColor: colors.bg },
   content: { alignSelf: 'center', paddingHorizontal: GUTTER, paddingBottom: 32, gap: GAP },
   intro: { paddingTop: 6, paddingBottom: 4, gap: 2 },
@@ -201,4 +201,4 @@ const styles = StyleSheet.create({
   subItem: { flexDirection: 'row', alignItems: 'center', minHeight: 50 },
   subBorder: { borderTopWidth: StyleSheet.hairlineWidth, borderTopColor: colors.border },
   sheetFooter: { paddingHorizontal: GUTTER, paddingTop: 8 },
-});
+}));

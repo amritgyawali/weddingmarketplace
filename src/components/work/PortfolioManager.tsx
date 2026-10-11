@@ -81,7 +81,7 @@ export function PortfolioManager() {
               )}
               {i === 0 && (
                 <View style={[styles.cover, { backgroundColor: 'rgba(0,0,0,0.6)' }]}>
-                  <Text size={10} weight="bold" color={colors.white}>
+                  <Text size={10} weight="bold" color={colors.onDark}>
                     Cover
                   </Text>
                 </View>

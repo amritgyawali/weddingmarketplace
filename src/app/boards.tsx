@@ -84,7 +84,7 @@ function BoardView({ board, readOnly, onBack }: { board: InspirationBoard; readO
                   </Text>
                   {!readOnly && (
                     <Pressable onPress={() => toggle(board.id, id)} style={styles.remove} accessibilityLabel="Remove from board" hitSlop={6}>
-                      <Ionicons name="close" size={14} color={colors.white} />
+                      <Ionicons name="close" size={14} color={colors.onDark} />
                     </Pressable>
                   )}
                 </View>

@@ -1,21 +1,21 @@
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 
+import { statusBarStyle } from '@/constants/theme';
 import { useRoleFonts } from '@/theme/fonts';
 import { ROLE_THEMES } from '@/theme/roles';
 import { RoleThemeProvider } from '@/theme/RoleTheme';
 import { keyboardScreenLayout } from '@/components/ui/Keyboard';
 
-const t = ROLE_THEMES.vendor;
-
 /** Vivah for Business — venues, studios and wedding vendors. */
 export default function BusinessLayout() {
   const fontsReady = useRoleFonts('vendor');
   if (!fontsReady) return null;
+  const t = ROLE_THEMES.vendor;
 
   return (
     <RoleThemeProvider role="vendor">
-      <StatusBar style="light" />
+      <StatusBar style={statusBarStyle()} />
       <Stack screenLayout={keyboardScreenLayout} screenOptions={{ headerShown: false, contentStyle: { backgroundColor: t.c.bg } }}>
         <Stack.Screen name="(tabs)" />
         <Stack.Screen name="lead/[id]" />
@@ -43,6 +43,10 @@ export default function BusinessLayout() {
         <Stack.Screen name="social/index" />
         <Stack.Screen name="social/thread/[id]" />
         <Stack.Screen name="social/compose" options={{ presentation: 'modal' }} />
+        <Stack.Screen name="edit-profile" />
+        <Stack.Screen name="support/index" />
+        <Stack.Screen name="support/[id]" />
+        <Stack.Screen name="support/new" options={{ presentation: 'modal' }} />
       </Stack>
     </RoleThemeProvider>
   );

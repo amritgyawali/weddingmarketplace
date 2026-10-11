@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { FlatList, Modal, Pressable, StyleSheet, useWindowDimensions, View, type NativeScrollEvent, type NativeSyntheticEvent } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { colors } from '@/constants/theme';
+import { colors, themed } from '@/constants/theme';
 
 import { Photo } from './Photo';
 import { Text } from './Text';
@@ -61,11 +61,11 @@ export function PhotoViewer({
           />
         )}
         <View style={[styles.top, { paddingTop: insets.top + 8 }]} pointerEvents="box-none">
-          <Text size={15} weight="semibold" color={colors.white} numeric>
+          <Text size={15} weight="semibold" color={colors.onDark} numeric>
             {sources.length ? `${current + 1} / ${sources.length}` : ''}
           </Text>
           <Pressable onPress={onClose} hitSlop={12} accessibilityRole="button" accessibilityLabel="Close photos" style={({ pressed }) => [styles.close, pressed && { opacity: 0.7 }]}>
-            <Ionicons name="close" size={26} color={colors.white} />
+            <Ionicons name="close" size={26} color={colors.onDark} />
           </Pressable>
         </View>
       </View>
@@ -73,8 +73,8 @@ export function PhotoViewer({
   );
 }
 
-const styles = StyleSheet.create({
+const styles = themed(() => StyleSheet.create({
   root: { flex: 1, backgroundColor: colors.black },
   top: { position: 'absolute', left: 0, right: 0, top: 0, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 16 },
   close: { width: 44, height: 44, borderRadius: 22, alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(255,255,255,0.16)' },
-});
+}));

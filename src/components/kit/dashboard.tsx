@@ -7,7 +7,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ornament } from '@/components/ui/Ornament';
 import { triggerHaptic } from '@/components/ui/PressableScale';
 import { Text } from '@/components/ui/Text';
-import { colors } from '@/constants/theme';
+import { colors, themed } from '@/constants/theme';
 import { useInbox } from '@/store/useDb';
 import { useAccount } from '@/store/useSession';
 import { useRoleTheme } from '@/theme/RoleTheme';
@@ -89,7 +89,7 @@ export function FocusBand({
           <Text size={13} weight="medium" color={colors.gold}>
             {eyebrow}
           </Text>
-          <Text serif size={19} weight="bold" color={colors.white} lineHeight={26} numberOfLines={2}>
+          <Text serif size={19} weight="bold" color={colors.onDark} lineHeight={26} numberOfLines={2}>
             {title}
           </Text>
           {body && (
@@ -115,7 +115,7 @@ export function FocusBand({
         <View style={styles.focusActions}>
           {secondary && (
             <Pressable onPress={secondary.onPress} accessibilityRole="button" style={({ pressed }) => [styles.focusBtn, styles.focusBtnGhost, pressed && { opacity: 0.75 }]}>
-              <Text size={14} weight="semibold" color={colors.white} numberOfLines={1}>
+              <Text size={14} weight="semibold" color={colors.onDark} numberOfLines={1}>
                 {secondary.label}
               </Text>
             </Pressable>
@@ -324,7 +324,7 @@ export function QuickAction({ icon, label, onPress }: { icon: IconName; label: s
   );
 }
 
-const styles = StyleSheet.create({
+const styles = themed(() => StyleSheet.create({
   kpi: { flex: 1, minWidth: '46%', gap: 0, paddingTop: 12, paddingBottom: 12, paddingLeft: 14, paddingRight: 14 },
   kpiValueRow: { flexDirection: 'row', alignItems: 'baseline', gap: 8 },
   tile: { flex: 1, minWidth: 0, gap: 0, borderWidth: 1, paddingVertical: 10, paddingHorizontal: 8 },
@@ -345,4 +345,4 @@ const styles = StyleSheet.create({
   stack: { flexDirection: 'row', alignItems: 'center', gap: 8, paddingHorizontal: 14, paddingBottom: 10, borderBottomWidth: StyleSheet.hairlineWidth },
   quick: { flex: 1, alignItems: 'center', gap: 6, paddingVertical: 2 },
   quickIcon: { width: 46, height: 46, borderRadius: 23, alignItems: 'center', justifyContent: 'center' },
-});
+}));
