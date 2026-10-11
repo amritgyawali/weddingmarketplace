@@ -8,6 +8,7 @@ Every exported symbol in `src/store/db/`, file by file. The guide that explains 
 
 - [`admin.ts`](#admints) (4 exports) · Super admin console (permission `admin.full`): edit, add and delete any record of any role, switch features on and off, rewrite any text in…
 - [`chat.ts`](#chatts) (3 exports) · Project threads, service threads and direct enquiries shared by every role. Customer-visible conversation is kept apart from staff-only int…
+- [`content.ts`](#contentts) (4 exports) · Content studio (permission `admin.full`): replace any photo, edit any marketplace listing, reorder and rename the couple's home sections, a…
 - [`core.ts`](#corets) (2 exports)
 - [`finance.ts`](#financets) (2 exports) · Customer payments (milestones → payments → receipts) and payouts (payables → releases) are separate ledgers; disputes can freeze payouts.
 - [`gigs.ts`](#gigsts) (3 exports) · Freelancer gig marketplace and calendars. Hiring on a gig that belongs to a booking crew slot creates a booking assignment, so crew, payout…
@@ -18,7 +19,7 @@ Every exported symbol in `src/store/db/`, file by file. The guide that explains 
 - [`projects.ts`](#projectsts) (4 exports) · Wedding-project workflow: requirement intake, matching, provider bookings, crew assignments, emergency replacement, deliverables, tasks and…
 - [`quotes.ts`](#quotests) (4 exports) · Versioned quotations. A sent version is frozen into `versions`; any later change creates the next version, so the customer can always compa…
 - [`social.ts`](#socialts) (6 exports) · Social hub: a business connects Facebook, Instagram, WhatsApp and TikTok, answers every message and comment from one inbox, and publishes o…
-- [`support.ts`](#supportts) (4 exports) · Bug reports from shake to report. Anyone can send one, signed in or not, in every build; super admins read them in the console (Super admin…
+- [`support.ts`](#supportts) (5 exports) · Bug reports and help requests.
 - [`toolkit.ts`](#toolkitts) (3 exports) · Role toolkits: generic tool records, per-owner tool settings and ops broadcasts.
 - [`trust.ts`](#trustts) (2 exports) · Reviews (category ratings, replies, moderation) and provider/freelancer verification.
 - [`types.ts`](#typests) (1 exports)
@@ -100,7 +101,7 @@ _No JSDoc yet._
 
 | Member | Type | Notes |
 |---|---|---|
-| `openThread` | `(input: { kind: Thread['kind']; title: string; members: ThreadMember[]; projectId?: string; bookingId?: string; gigId?: string; listingId?: string; image?: PhotoKey }) => string` |  |
+| `openThread` | `(input: { kind: Thread['kind']; title: string; members: ThreadMember[]; projectId?: string; bookingId?: string; gigId?: string; listingId?: string; image?: PhotoRef }) => string` |  |
 | `sendMessage` | `(threadId: string, sender: ThreadMember, text: string, kind?: MessageKind, meta?: Message['meta'], opts?: { silent?: boolean }) => void` |  |
 | `markThreadRead` | `(threadId: string, accountId: string) => void` |  |
 | `toggleThreadFlag` | `(threadId: string, accountId: string, flag: 'archivedBy' \| 'mutedBy' \| 'blockedBy') => void` |  |
@@ -128,6 +129,66 @@ _No JSDoc yet._
 
 ```ts
 chatActions(set: SetDb, get: GetDb): ChatActions
+```
+
+_No JSDoc yet._
+
+## content.ts
+
+Source: [src/store/db/content.ts](../../../src/store/db/content.ts)
+
+Content studio (permission `admin.full`): replace any photo, edit any
+marketplace listing, reorder and rename the couple's home sections, add
+home banners and change the brand details, with no code change. Edits are
+stored as differences from the bundled catalogue, so "restore" simply
+removes them. Every write is audited. Supabase builds publish the result to
+every device (`hooks/useContentSync.ts`, 0021_app_content.sql).
+
+### `ContentPart`
+
+*type* · [src/store/db/content.ts:20](../../../src/store/db/content.ts#L20)
+
+```ts
+type ContentPart = 'images' | 'entries' | 'home' | 'banners' | 'brand' | 'all'
+```
+
+_No JSDoc yet._
+
+### `BannerInput`
+
+*type* · [src/store/db/content.ts:21](../../../src/store/db/content.ts#L21)
+
+```ts
+type BannerInput = Pick<ContentBanner, 'title'> & Partial<Omit<ContentBanner, 'title'>>
+```
+
+_No JSDoc yet._
+
+### `ContentActions`
+
+*interface* · [src/store/db/content.ts:23](../../../src/store/db/content.ts#L23)
+
+_No JSDoc yet._
+
+| Member | Type | Notes |
+|---|---|---|
+| `setContentImage` | `(key: string, address: string \| null) => string \| null` | Shows another photo wherever a bundled one appears; null restores the original. Returns an error to show, or null. |
+| `saveContentEntry` | `(kind: ContentKind, id: string, fields: Record<string, unknown>) => string \| null` | Saves a catalogue record's edited fields (pass every field of the form; only the differences are kept). |
+| `setContentHidden` | `(kind: ContentKind, id: string, hidden: boolean) => string \| null` | Takes a record out of lists and search, or puts it back. |
+| `restoreContentEntry` | `(kind: ContentKind, id: string) => string \| null` | Removes every edit to one record. |
+| `setHomeOrder` | `(order: string[]) => string \| null` | Saves the order of the couple's home sections, top to bottom. |
+| `setHomeTitle` | `(sectionId: string, title: string) => string \| null` | Renames a home section's heading; empty text restores the built-in one. |
+| `saveBanner` | `(input: BannerInput) => { id?: string; error?: string }` | Adds a home banner, or saves one that exists (`id`). Returns its id, or an error. |
+| `removeBanner` | `(id: string) => string \| null` |  |
+| `setBrandField` | `(field: BrandField, value: string) => string \| null` | Replaces one brand detail (name, support phone…); empty text restores the built-in one. |
+| `resetContent` | `(part: ContentPart) => string \| null` | Puts one part of the content, or all of it, back to what the app shipped with. |
+
+### `contentActions`
+
+*function* · [src/store/db/content.ts:48](../../../src/store/db/content.ts#L48)
+
+```ts
+contentActions(set: SetDb, get: GetDb): ContentActions
 ```
 
 _No JSDoc yet._
@@ -421,7 +482,7 @@ production each action becomes an API call against supabase/migrations.
 
 ### `DbData`
 
-*re-export* · [src/store/db/index.ts:32](../../../src/store/db/index.ts#L32)
+*re-export* · [src/store/db/index.ts:34](../../../src/store/db/index.ts#L34)
 
 ```ts
 DbDatafrom './types'
@@ -431,17 +492,17 @@ _No JSDoc yet._
 
 ### `Db`
 
-*type* · [src/store/db/index.ts:33](../../../src/store/db/index.ts#L33)
+*type* · [src/store/db/index.ts:35](../../../src/store/db/index.ts#L35)
 
 ```ts
-type Db = DbData & CoreActions & QuoteActions & ProjectActions & FinanceActions & GigActions & ChatActions & TrustActions & PlannerActions & ToolkitActions & PersonaActions & AdminActions & SocialActions & SupportActions
+type Db = DbData & CoreActions & QuoteActions & ProjectActions & FinanceActions & GigActions & ChatActions & TrustActions & PlannerActions & ToolkitActions & PersonaActions & AdminActions & SocialActions & SupportActions & ContentActions
 ```
 
 _No JSDoc yet._
 
 ### `useDb`
 
-*const* · [src/store/db/index.ts:113](../../../src/store/db/index.ts#L113)
+*const* · [src/store/db/index.ts:115](../../../src/store/db/index.ts#L115)
 
 ```ts
 useDb= create<Db>()( persist( (set, get) => ({ ...buildSeedData(), ...coreActions(set, get), ...…
@@ -451,7 +512,7 @@ _No JSDoc yet._
 
 ### `useInbox`
 
-*hook* · [src/store/db/index.ts:168](../../../src/store/db/index.ts#L168)
+*hook* · [src/store/db/index.ts:175](../../../src/store/db/index.ts#L175)
 
 ```ts
 useInbox(account: Account)
@@ -463,7 +524,7 @@ from a zustand selector would re-render forever.
 
 ### `useThreads`
 
-*hook* · [src/store/db/index.ts:174](../../../src/store/db/index.ts#L174)
+*hook* · [src/store/db/index.ts:181](../../../src/store/db/index.ts#L181)
 
 ```ts
 useThreads(account: Account)
@@ -473,7 +534,7 @@ Threads this account is a member of (platform staff see every thread).
 
 ### `useUnreadMessageCount`
 
-*hook* · [src/store/db/index.ts:186](../../../src/store/db/index.ts#L186)
+*hook* · [src/store/db/index.ts:193](../../../src/store/db/index.ts#L193)
 
 ```ts
 useUnreadMessageCount(account: Account)
@@ -894,15 +955,22 @@ The social hub actions for the shared store.
 
 Source: [src/store/db/support.ts](../../../src/store/db/support.ts)
 
-Bug reports from shake to report. Anyone can send one, signed in or not, in
-every build; super admins read them in the console (Super admin → Bug
-reports), mark them fixed or dismissed and delete them. On Supabase builds
-the same use cases are rpc_submit_bug_report and friends
+Bug reports and help requests.
+
+Bug reports come from shake to report. Anyone can send one, signed in or
+not, in every build; super admins read them in the console (Super admin →
+Bug reports), mark them fixed or dismissed and delete them. On Supabase
+builds the same use cases are rpc_submit_bug_report and friends
 (supabase/migrations/0019_bug_reports.sql).
+
+Help requests (Help and support) come from couples, businesses and
+freelancers; staff with `support.manage` answer them at Platform → Help
+desk. On Supabase builds they are rpc_open_support_ticket and friends
+(supabase/migrations/0022_profile_support.sql).
 
 ### `MAX_BUG_REPORTS`
 
-*const* · [src/store/db/support.ts:16](../../../src/store/db/support.ts#L16)
+*const* · [src/store/db/support.ts:24](../../../src/store/db/support.ts#L24)
 
 ```ts
 MAX_BUG_REPORTS= 200
@@ -912,7 +980,7 @@ Reports kept on the device; the oldest go first.
 
 ### `MAX_BUG_SCREENSHOTS`
 
-*const* · [src/store/db/support.ts:18](../../../src/store/db/support.ts#L18)
+*const* · [src/store/db/support.ts:26](../../../src/store/db/support.ts#L26)
 
 ```ts
 MAX_BUG_SCREENSHOTS= 20
@@ -922,25 +990,45 @@ Only the newest reports keep their screenshot, so the saved data stays small.
 
 ### `SupportActions`
 
-*interface* · [src/store/db/support.ts:21](../../../src/store/db/support.ts#L21)
+*interface* · [src/store/db/support.ts:30](../../../src/store/db/support.ts#L30)
 
-_No JSDoc yet._
+Bug report and help request use cases.
 
 | Member | Type | Notes |
 |---|---|---|
 | `submitBugReport` | `(report: BugReport) => { id?: string; error?: string }` | Saves a report from the report sheet and tells the super admins. Returns its id, or an error. |
 | `setBugReportStatus` | `(id: string, status: BugReportStatus, note?: string) => string \| null` | Marks a report new, fixed or dismissed (super admins). Returns an error to show, or null. |
 | `removeBugReports` | `(ids: string[]) => string \| null` | Deletes reports (super admins). |
+| `openSupportTicket` | `(input: SupportTicketInput) => { id?: string; error?: string }` | Opens a help request for the signed-in person and tells the Vivah team. Returns its id, or an error to show. |
+| `replySupportTicket` | `(id: string, body: string, opts?: { internal?: boolean }) => string \| null` | Adds a message to a help request (its owner, or staff who answer help requests; staff may add internal notes). |
+| `setSupportTicketStatus` | `(id: string, status: SupportTicketStatus) => string \| null` | Changes a request's status. Owners can only mark it solved or reopen it; staff can set any status. |
+| `assignSupportTicket` | `(id: string, staffId: string \| null, priority?: SupportPriority) => string \| null` | Gives a request to a staff member (or nobody), and its priority (staff who answer help requests). |
+| `rateSupportTicket` | `(id: string, rating: number, note?: string) => string \| null` | The owner rates the help they got (1–5) once the request is resolved or closed. |
+| `mirrorSupportTickets` | `(tickets: SupportTicket[]) => void` | Supabase builds: replaces the device copy with the requests the server returned (rpc_my_support_tickets). |
+
+### `SupportTicketInput`
+
+*interface* · [src/store/db/support.ts:52](../../../src/store/db/support.ts#L52)
+
+What "Ask the team" sends.
+
+| Member | Type | Notes |
+|---|---|---|
+| `topic` | `SupportTopic` |  |
+| `subject` | `string` |  |
+| `body` | `string` |  |
+| `priority?` | `SupportPriority` |  |
+| `projectId?` | `string` |  |
 
 ### `supportActions`
 
-*function* · [src/store/db/support.ts:30](../../../src/store/db/support.ts#L30)
+*function* · [src/store/db/support.ts:83](../../../src/store/db/support.ts#L83)
 
 ```ts
 supportActions(set: SetDb, get: GetDb): SupportActions
 ```
 
-_No JSDoc yet._
+Bug report and help request actions for the shared store.
 
 ## toolkit.ts
 
@@ -1025,7 +1113,7 @@ Source: [src/store/db/types.ts](../../../src/store/db/types.ts)
 
 ### `DbData`
 
-*interface* · [src/store/db/types.ts:50](../../../src/store/db/types.ts#L50)
+*interface* · [src/store/db/types.ts:52](../../../src/store/db/types.ts#L52)
 
 Everything the shared on-device "backend" persists. Mirrors the SQL schema.
 
@@ -1071,9 +1159,11 @@ Everything the shared on-device "backend" persists. Mirrors the SQL schema.
 | `featureFlags` | `Record<string, boolean>` | Feature switches by id (`data/features.ts`); a missing id is on. |
 | `textOverrides` | `TextOverrides` | Replacement text for any English source string, per language. |
 | `announcements` | `Announcement[]` | Notices shown at the top of a role's home. |
+| `content` | `AppContent` | Replacement photos, listing edits, home sections, banners and brand details (Content studio). |
 | `socialAccounts` | `SocialAccount[]` | Facebook pages, Instagram profiles, WhatsApp numbers and TikTok accounts a business connected. |
 | `socialThreads` | `SocialThread[]` | The unified inbox: direct messages and comments from every connected network. |
 | `socialMessages` | `SocialMessage[]` |  |
 | `socialPosts` | `SocialPost[]` | Posts sent (or scheduled) to several networks at once. |
 | `socialSettings` | `Record<string, SocialSettings>` | Saved replies, auto-replies and away message, keyed by the business account id. |
 | `bugReports` | `BugReportRecord[]` | Bug reports sent with shake to report, newest first (super admin console → Bug reports). |
+| `supportTickets` | `SupportTicket[]` | Help requests from every role, newest activity first (Help and support; Platform → Help desk). |

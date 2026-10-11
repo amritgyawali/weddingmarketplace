@@ -9,6 +9,8 @@ Every exported symbol in `src/hooks/`, file by file. The guide that explains how
 - [`queries.ts`](#queriests) (17 exports)
 - [`useBugReports.ts`](#usebugreportsts) (3 exports)
 - [`useChat.ts`](#usechatts) (1 exports)
+- [`useColorMode.ts`](#usecolormodets) (1 exports)
+- [`useContent.ts`](#usecontentts) (2 exports)
 - [`useDebounce.ts`](#usedebouncets) (1 exports)
 - [`useExperience.ts`](#useexperiencets) (1 exports)
 - [`useFeatures.ts`](#usefeaturests) (2 exports)
@@ -245,6 +247,44 @@ useStartChat()
 Opens (or reuses) a direct enquiry thread between the signed-in couple and a
 listing. Claimed listings reach the vendor account; unclaimed ones get a
 simulated reply so couples always hear back.
+
+## useColorMode.ts
+
+Source: [src/hooks/useColorMode.ts](../../../src/hooks/useColorMode.ts)
+
+### `useResolvedScheme`
+
+*hook* · [src/hooks/useColorMode.ts:7](../../../src/hooks/useColorMode.ts#L7)
+
+```ts
+useResolvedScheme(): ColorScheme
+```
+
+The scheme this device should show: the person's choice in Settings, or the phone's own when they chose "Same as phone".
+
+## useContent.ts
+
+Source: [src/hooks/useContent.ts](../../../src/hooks/useContent.ts)
+
+### `useContent`
+
+*hook* · [src/hooks/useContent.ts:15](../../../src/hooks/useContent.ts#L15)
+
+```ts
+useContent()
+```
+
+The super admin's content edits; re-renders when any of them changes.
+
+### `useLiveList`
+
+*hook* · [src/hooks/useContent.ts:18](../../../src/hooks/useContent.ts#L18)
+
+```ts
+useLiveList<T extends { id: string }>(kind: ContentKind, list: readonly T[], all = false): T[]
+```
+
+A catalogue list with content edits applied (`all` keeps hidden records, for lookups by id).
 
 ## useDebounce.ts
 

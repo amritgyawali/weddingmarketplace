@@ -7,6 +7,7 @@ Every exported symbol in `src/components/ui/`, file by file. The guide that expl
 ## Files
 
 - [`AppBanners.tsx`](#appbannerstsx) (2 exports)
+- [`AppearancePicker.tsx`](#appearancepickertsx) (3 exports)
 - [`BugReporter.tsx`](#bugreportertsx) (10 exports) · Report a bug from any screen. Any of these takes a screenshot of the screen exactly as it is and opens the report screen (`/report-bug`) to…
 - [`Button.tsx`](#buttontsx) (2 exports)
 - [`Calendar.tsx`](#calendartsx) (4 exports)
@@ -60,6 +61,41 @@ AnnouncementBanner({ style }: { style?: object })
 ```
 
 Announcements a super admin pinned for this role (or everyone). Dismissed ones stay hidden on this screen visit.
+
+## AppearancePicker.tsx
+
+Source: [src/components/ui/AppearancePicker.tsx](../../../src/components/ui/AppearancePicker.tsx)
+
+### `AppearancePicker`
+
+*component* · [src/components/ui/AppearancePicker.tsx:60](../../../src/components/ui/AppearancePicker.tsx#L60)
+
+```ts
+AppearancePicker()
+```
+
+Light, dark or "same as phone", with a small preview of each. The choice is
+kept on this device and repaints the whole app at once (every role).
+
+### `AppearanceHint`
+
+*component* · [src/components/ui/AppearancePicker.tsx:97](../../../src/components/ui/AppearancePicker.tsx#L97)
+
+```ts
+AppearanceHint()
+```
+
+One line under the picker: what the current choice does.
+
+### `AppearanceSwitch`
+
+*component* · [src/components/ui/AppearancePicker.tsx:109](../../../src/components/ui/AppearancePicker.tsx#L109)
+
+```ts
+AppearanceSwitch({ style }: { style?: StyleProp<ViewStyle> })
+```
+
+Sun / moon / phone switch for profile pages and headers.
 
 ## BugReporter.tsx
 
@@ -662,16 +698,19 @@ Source: [src/components/ui/Photo.tsx](../../../src/components/ui/Photo.tsx)
 
 ### `Photo`
 
-*component* · [src/components/ui/Photo.tsx:12](../../../src/components/ui/Photo.tsx#L12)
+*component* · [src/components/ui/Photo.tsx:24](../../../src/components/ui/Photo.tsx#L24)
 
 ```ts
-Photo({ style, transition, contentFit = 'cover', ...rest }: ImageProps)
+Photo({ style, transition, contentFit = 'cover', source, ...rest }: ImageProps)
 ```
 
 Every photo in the app. Sits on a pearl fill while it loads and
 cross-dissolves in instead of popping, so lists and galleries feel calm;
 with Reduce Motion on it simply appears. Takes every `expo-image` prop,
 and a caller's own `transition` or background wins.
+
+A bundled photo a super admin replaced (Content studio → Photos) shows the
+replacement here, so the swap reaches every screen at once.
 
 ## PhotoViewer.tsx
 

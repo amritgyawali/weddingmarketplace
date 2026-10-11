@@ -20,7 +20,7 @@
    "kind": "screen",
    "file": "src/app/(tabs)/index.tsx",
    "component": "ForYouScreen",
-   "doc": "The couple's home. It follows the active celebration: a pasni or a birthday shows its own services and checklist, and the wedding-only sections (collections, bridal makeup, real weddings, planner packages) stay with weddings. A super admin can switch any section off."
+   "doc": "The couple's home. It follows the active celebration: a pasni or a birthday shows its own services and checklist, and the wedding-only sections (collections, bridal makeup, real weddings, planner packages) stay with weddings. A super admin can switch any section off, reorder them, rename their headings and add banners (Content studio → Home)."
   },
   {
    "path": "/assistant",
@@ -112,6 +112,13 @@
    "file": "src/app/business/customers.tsx",
    "component": "Customers",
    "doc": "Customer CRM: everyone who enquired, got a quote or booked — with full history."
+  },
+  {
+   "path": "/business/edit-profile",
+   "kind": "screen",
+   "file": "src/app/business/edit-profile.tsx",
+   "component": "EditProfile",
+   "doc": ""
   },
   {
    "path": "/business/finance",
@@ -247,6 +254,27 @@
    "doc": "One social conversation on a phone (wide screens show it beside the inbox)."
   },
   {
+   "path": "/business/support",
+   "kind": "screen",
+   "file": "src/app/business/support/index.tsx",
+   "component": "Support",
+   "doc": ""
+  },
+  {
+   "path": "/business/support/[id]",
+   "kind": "screen",
+   "file": "src/app/business/support/[id].tsx",
+   "component": "SupportRequest",
+   "doc": ""
+  },
+  {
+   "path": "/business/support/new",
+   "kind": "screen",
+   "file": "src/app/business/support/new.tsx",
+   "component": "NewRequest",
+   "doc": ""
+  },
+  {
    "path": "/business/team",
    "kind": "screen",
    "file": "src/app/business/team.tsx",
@@ -334,7 +362,7 @@
    "path": "/edit-profile",
    "kind": "screen",
    "file": "src/app/edit-profile.tsx",
-   "component": "EditProfileScreen",
+   "component": "EditProfile",
    "doc": ""
   },
   {
@@ -394,6 +422,13 @@
    "doc": "Wallet for crew: what's earned, what's releasing next, payout history, method and statements."
   },
   {
+   "path": "/freelancer/edit-profile",
+   "kind": "screen",
+   "file": "src/app/freelancer/edit-profile.tsx",
+   "component": "EditProfile",
+   "doc": ""
+  },
+  {
    "path": "/freelancer/gig/[id]",
    "kind": "screen",
    "file": "src/app/freelancer/gig/[id].tsx",
@@ -447,6 +482,27 @@
    "kind": "screen",
    "file": "src/app/freelancer/settings.tsx",
    "component": "Settings",
+   "doc": ""
+  },
+  {
+   "path": "/freelancer/support",
+   "kind": "screen",
+   "file": "src/app/freelancer/support/index.tsx",
+   "component": "Support",
+   "doc": ""
+  },
+  {
+   "path": "/freelancer/support/[id]",
+   "kind": "screen",
+   "file": "src/app/freelancer/support/[id].tsx",
+   "component": "SupportRequest",
+   "doc": ""
+  },
+  {
+   "path": "/freelancer/support/new",
+   "kind": "screen",
+   "file": "src/app/freelancer/support/new.tsx",
+   "component": "NewRequest",
    "doc": ""
   },
   {
@@ -681,6 +737,20 @@
    "doc": ""
   },
   {
+   "path": "/platform/admin/content",
+   "kind": "screen",
+   "file": "src/app/platform/admin/content/index.tsx",
+   "component": "",
+   "doc": ""
+  },
+  {
+   "path": "/platform/admin/content/[kind]/[id]",
+   "kind": "screen",
+   "file": "src/app/platform/admin/content/[kind]/[id].tsx",
+   "component": "",
+   "doc": ""
+  },
+  {
    "path": "/platform/admin/data",
    "kind": "screen",
    "file": "src/app/platform/admin/data.tsx",
@@ -748,6 +818,13 @@
    "kind": "screen",
    "file": "src/app/platform/calendar.tsx",
    "component": "",
+   "doc": ""
+  },
+  {
+   "path": "/platform/edit-profile",
+   "kind": "screen",
+   "file": "src/app/platform/edit-profile.tsx",
+   "component": "EditProfile",
    "doc": ""
   },
   {
@@ -884,6 +961,20 @@
    "doc": ""
   },
   {
+   "path": "/platform/support",
+   "kind": "screen",
+   "file": "src/app/platform/support/index.tsx",
+   "component": "",
+   "doc": ""
+  },
+  {
+   "path": "/platform/support/[id]",
+   "kind": "screen",
+   "file": "src/app/platform/support/[id].tsx",
+   "component": "",
+   "doc": ""
+  },
+  {
    "path": "/platform/tool/[id]",
    "kind": "screen",
    "file": "src/app/platform/tool/[id].tsx",
@@ -993,6 +1084,27 @@
    "kind": "screen",
    "file": "src/app/story/[id].tsx",
    "component": "StoryScreen",
+   "doc": ""
+  },
+  {
+   "path": "/support",
+   "kind": "screen",
+   "file": "src/app/support/index.tsx",
+   "component": "Support",
+   "doc": ""
+  },
+  {
+   "path": "/support/[id]",
+   "kind": "screen",
+   "file": "src/app/support/[id].tsx",
+   "component": "SupportRequest",
+   "doc": ""
+  },
+  {
+   "path": "/support/new",
+   "kind": "screen",
+   "file": "src/app/support/new.tsx",
+   "component": "NewRequest",
    "doc": ""
   },
   {
@@ -1162,9 +1274,9 @@
     {
      "name": "ForYouScreen",
      "kind": "component",
-     "line": 84,
+     "line": 89,
      "signature": "()",
-     "doc": "The couple's home. It follows the active celebration: a pasni or a\nbirthday shows its own services and checklist, and the wedding-only\nsections (collections, bridal makeup, real weddings, planner packages)\nstay with weddings. A super admin can switch any section off."
+     "doc": "The couple's home. It follows the active celebration: a pasni or a\nbirthday shows its own services and checklist, and the wedding-only\nsections (collections, bridal makeup, real weddings, planner packages)\nstay with weddings. A super admin can switch any section off, reorder\nthem, rename their headings and add banners (Content studio → Home)."
     }
    ]
   },
@@ -1175,7 +1287,7 @@
     {
      "name": "VendorsTab",
      "kind": "component",
-     "line": 86,
+     "line": 87,
      "signature": "()",
      "doc": "Vendors tab: an editorial index of every service. The first category is\na full-width feature, the rest a grid of tall photo cards with serif\ncaptions; a card opens a sheet with its services and a \"View all\" link.\nOnly the services the active celebration uses are shown; search finds\nthe rest."
     }
@@ -1227,14 +1339,14 @@
     {
      "name": "ErrorBoundary",
      "kind": "re-export",
-     "line": 33,
+     "line": 36,
      "signature": "from '@/components/AppErrorBoundary'",
      "doc": ""
     },
     {
      "name": "RootLayout",
      "kind": "component",
-     "line": 49,
+     "line": 52,
      "signature": "()",
      "doc": ""
     }
@@ -1260,7 +1372,7 @@
     {
      "name": "BoardsScreen",
      "kind": "component",
-     "line": 209,
+     "line": 212,
      "signature": "()",
      "doc": "Mood boards: collect ideas by theme and share them with vendors."
     }
@@ -1312,7 +1424,7 @@
     {
      "name": "BusinessAccount",
      "kind": "component",
-     "line": 30,
+     "line": 31,
      "signature": "()",
      "doc": "Business hub: storefront, settings and every business tool."
     }
@@ -1377,7 +1489,7 @@
     {
      "name": "BusinessLayout",
      "kind": "component",
-     "line": 12,
+     "line": 11,
      "signature": "()",
      "doc": "Vivah for Business — venues, studios and wedding vendors."
     }
@@ -1419,6 +1531,19 @@
      "line": 29,
      "signature": "()",
      "doc": "Customer CRM: everyone who enquired, got a quote or booked — with full history."
+    }
+   ]
+  },
+  {
+   "file": "src/app/business/edit-profile.tsx",
+   "doc": "",
+   "exports": [
+    {
+     "name": "EditProfile",
+     "kind": "component",
+     "line": 3,
+     "signature": "()",
+     "doc": ""
     }
    ]
   },
@@ -1657,6 +1782,45 @@
    ]
   },
   {
+   "file": "src/app/business/support/[id].tsx",
+   "doc": "",
+   "exports": [
+    {
+     "name": "SupportRequest",
+     "kind": "component",
+     "line": 5,
+     "signature": "()",
+     "doc": ""
+    }
+   ]
+  },
+  {
+   "file": "src/app/business/support/index.tsx",
+   "doc": "",
+   "exports": [
+    {
+     "name": "Support",
+     "kind": "component",
+     "line": 3,
+     "signature": "()",
+     "doc": ""
+    }
+   ]
+  },
+  {
+   "file": "src/app/business/support/new.tsx",
+   "doc": "",
+   "exports": [
+    {
+     "name": "NewRequest",
+     "kind": "component",
+     "line": 3,
+     "signature": "()",
+     "doc": ""
+    }
+   ]
+  },
+  {
    "file": "src/app/business/team.tsx",
    "doc": "",
    "exports": [
@@ -1754,7 +1918,7 @@
     {
      "name": "CollectionScreen",
      "kind": "component",
-     "line": 18,
+     "line": 19,
      "signature": "()",
      "doc": ""
     }
@@ -1817,9 +1981,9 @@
    "doc": "",
    "exports": [
     {
-     "name": "EditProfileScreen",
+     "name": "EditProfile",
      "kind": "component",
-     "line": 22,
+     "line": 3,
      "signature": "()",
      "doc": ""
     }
@@ -1910,7 +2074,7 @@
     {
      "name": "FreelancerProfile",
      "kind": "component",
-     "line": 57,
+     "line": 58,
      "signature": "()",
      "doc": "Crew profile: skills, kit, rates, travel, languages, reliability, reviews and portfolio."
     }
@@ -1923,7 +2087,7 @@
     {
      "name": "FreelancerLayout",
      "kind": "component",
-     "line": 12,
+     "line": 11,
      "signature": "()",
      "doc": "Freelancer app — dark, gig-first experience for photographers, MUAs and crew."
     }
@@ -1952,6 +2116,19 @@
      "line": 16,
      "signature": "()",
      "doc": "Profile → Your craft: main skill, extra skills and the craft profile."
+    }
+   ]
+  },
+  {
+   "file": "src/app/freelancer/edit-profile.tsx",
+   "doc": "",
+   "exports": [
+    {
+     "name": "EditProfile",
+     "kind": "component",
+     "line": 3,
+     "signature": "()",
+     "doc": ""
     }
    ]
   },
@@ -2034,6 +2211,45 @@
    ]
   },
   {
+   "file": "src/app/freelancer/support/[id].tsx",
+   "doc": "",
+   "exports": [
+    {
+     "name": "SupportRequest",
+     "kind": "component",
+     "line": 5,
+     "signature": "()",
+     "doc": ""
+    }
+   ]
+  },
+  {
+   "file": "src/app/freelancer/support/index.tsx",
+   "doc": "",
+   "exports": [
+    {
+     "name": "Support",
+     "kind": "component",
+     "line": 3,
+     "signature": "()",
+     "doc": ""
+    }
+   ]
+  },
+  {
+   "file": "src/app/freelancer/support/new.tsx",
+   "doc": "",
+   "exports": [
+    {
+     "name": "NewRequest",
+     "kind": "component",
+     "line": 3,
+     "signature": "()",
+     "doc": ""
+    }
+   ]
+  },
+  {
    "file": "src/app/freelancer/tool/[id].tsx",
    "doc": "",
    "exports": [
@@ -2105,7 +2321,7 @@
     {
      "name": "IdeaViewer",
      "kind": "component",
-     "line": 18,
+     "line": 19,
      "signature": "()",
      "doc": "Full-screen swipeable photo viewer for the Ideas feed."
     }
@@ -2391,7 +2607,7 @@
     {
      "name": "PlatformMore",
      "kind": "component",
-     "line": 18,
+     "line": 20,
      "signature": "()",
      "doc": ""
     }
@@ -2417,7 +2633,7 @@
     {
      "name": "PlatformLayout",
      "kind": "component",
-     "line": 12,
+     "line": 11,
      "signature": "()",
      "doc": "Vivah operations console — coordinators, matching, quotes, crew, finance and trust."
     }
@@ -2476,6 +2692,32 @@
    ]
   },
   {
+   "file": "src/app/platform/admin/content/[kind]/[id].tsx",
+   "doc": "",
+   "exports": [
+    {
+     "name": "default",
+     "kind": "default",
+     "line": 236,
+     "signature": "staffScreen('/platform/admin/content', ContentRecord)",
+     "doc": ""
+    }
+   ]
+  },
+  {
+   "file": "src/app/platform/admin/content/index.tsx",
+   "doc": "",
+   "exports": [
+    {
+     "name": "default",
+     "kind": "default",
+     "line": 80,
+     "signature": "staffScreen('/platform/admin/content', ContentStudio)",
+     "doc": ""
+    }
+   ]
+  },
+  {
    "file": "src/app/platform/admin/data.tsx",
    "doc": "",
    "exports": [
@@ -2508,7 +2750,7 @@
     {
      "name": "default",
      "kind": "default",
-     "line": 104,
+     "line": 108,
      "signature": "staffScreen('/platform/admin', AdminHome)",
      "doc": ""
     }
@@ -2614,6 +2856,19 @@
      "kind": "default",
      "line": 119,
      "signature": "staffScreen('/platform/calendar', OpsCalendar)",
+     "doc": ""
+    }
+   ]
+  },
+  {
+   "file": "src/app/platform/edit-profile.tsx",
+   "doc": "",
+   "exports": [
+    {
+     "name": "EditProfile",
+     "kind": "component",
+     "line": 3,
+     "signature": "()",
      "doc": ""
     }
    ]
@@ -2827,6 +3082,32 @@
    ]
   },
   {
+   "file": "src/app/platform/support/[id].tsx",
+   "doc": "",
+   "exports": [
+    {
+     "name": "default",
+     "kind": "default",
+     "line": 11,
+     "signature": "staffScreen('/platform/support', DeskRequest)",
+     "doc": ""
+    }
+   ]
+  },
+  {
+   "file": "src/app/platform/support/index.tsx",
+   "doc": "",
+   "exports": [
+    {
+     "name": "default",
+     "kind": "default",
+     "line": 4,
+     "signature": "staffScreen('/platform/support', HelpDesk)",
+     "doc": ""
+    }
+   ]
+  },
+  {
    "file": "src/app/platform/tool/[id].tsx",
    "doc": "",
    "exports": [
@@ -2872,7 +3153,7 @@
     {
      "name": "ProfileMenuScreen",
      "kind": "component",
-     "line": 35,
+     "line": 36,
      "signature": "()",
      "doc": ""
     }
@@ -3002,7 +3283,7 @@
     {
      "name": "ShortlistScreen",
      "kind": "component",
-     "line": 39,
+     "line": 40,
      "signature": "()",
      "doc": "Shortlist as a mini-CRM: stages, notes and tags per vendor, compare, and liked photos."
     }
@@ -3016,6 +3297,45 @@
      "name": "StoryScreen",
      "kind": "component",
      "line": 15,
+     "signature": "()",
+     "doc": ""
+    }
+   ]
+  },
+  {
+   "file": "src/app/support/[id].tsx",
+   "doc": "",
+   "exports": [
+    {
+     "name": "SupportRequest",
+     "kind": "component",
+     "line": 5,
+     "signature": "()",
+     "doc": ""
+    }
+   ]
+  },
+  {
+   "file": "src/app/support/index.tsx",
+   "doc": "",
+   "exports": [
+    {
+     "name": "Support",
+     "kind": "component",
+     "line": 3,
+     "signature": "()",
+     "doc": ""
+    }
+   ]
+  },
+  {
+   "file": "src/app/support/new.tsx",
+   "doc": "",
+   "exports": [
+    {
+     "name": "NewRequest",
+     "kind": "component",
+     "line": 3,
      "signature": "()",
      "doc": ""
     }
@@ -3067,7 +3387,7 @@
     {
      "name": "VendorListingScreen",
      "kind": "component",
-     "line": 34,
+     "line": 35,
      "signature": "()",
      "doc": ""
     }
@@ -3171,7 +3491,7 @@
     {
      "name": "SetupScreen",
      "kind": "component",
-     "line": 373,
+     "line": 372,
      "signature": "()",
      "doc": ""
     }
@@ -3230,23 +3550,30 @@
      "doc": "The local Account for a Supabase user (same id as their auth user)."
     },
     {
+     "name": "updateMyProfile",
+     "kind": "function",
+     "line": 68,
+     "signature": "(patch: Record<string, unknown>)",
+     "doc": "Saves the signed-in user's profile edits on the server (name, city, photo,\nbusiness name, headline, bio). The server cleans them with the same rules\nas `cleanProfile`; email stays the sign-in address and isn't changed here."
+    },
+    {
      "name": "acceptLegal",
      "kind": "function",
-     "line": 64,
+     "line": 71,
      "signature": "(version: string)",
      "doc": "Records that the user accepted this version of the Terms and Privacy policy (src/data/legal.ts)."
     },
     {
      "name": "exportMyData",
      "kind": "function",
-     "line": 67,
+     "line": 74,
      "signature": "()",
      "doc": "Everything the server holds about the signed-in user, as one JSON document."
     },
     {
      "name": "deleteMyAccount",
      "kind": "function",
-     "line": 74,
+     "line": 81,
      "signature": "(): Promise<Result<void>>",
      "doc": "Closes the signed-in user's account through the account-delete Edge\nFunction: the server refuses while bookings, refunds or payouts are open,\nremoves their private files and stops the email signing in again."
     }
@@ -3571,6 +3898,60 @@
    ]
   },
   {
+   "file": "src/backend/content.ts",
+   "doc": "Publishing what a super admin changes in the console to every device (Supabase builds; supabase/migrations/0021_app_content.sql). The store stays the app's source while it runs: the console writes to it exactly as in the demo, and this module mirrors three of its parts with the server (the content, the text overrides and the feature switches). - Every device asks `rpc_app_config` for the current revision when the app opens, when it returns to the foreground and every 45 seconds while it is open; a new revision replaces the three parts in the store, so the screens re-render with the change. - …",
+   "exports": [
+    {
+     "name": "readTexts",
+     "kind": "function",
+     "line": 52,
+     "signature": "(raw: unknown): TextOverrides",
+     "doc": "Text overrides as the server sent them, with anything malformed dropped."
+    },
+    {
+     "name": "readFlags",
+     "kind": "function",
+     "line": 65,
+     "signature": "(raw: unknown): Record<string, boolean>",
+     "doc": "Feature switches as the server sent them."
+    },
+    {
+     "name": "startContentSync",
+     "kind": "function",
+     "line": 105,
+     "signature": "(onError: (message: string) => void): () => void",
+     "doc": "Keeps this device's content, text overrides and feature switches in step\nwith the server until the returned function is called. Does nothing in the\ndemo. `onError` is told when a super admin's change couldn't be published."
+    }
+   ]
+  },
+  {
+   "file": "src/backend/contentMedia.ts",
+   "doc": "Where a photo a super admin picks for the app (Content studio) is kept, so it can be shown again later: - Supabase builds with Cloudinary: uploaded through `media-sign`, stored as a web address, so every device shows it; - the demo on a phone: copied into the app's documents folder and stored as `vivah-file://name.jpg` (this device only); - the demo in a browser: kept inline when it is small; larger photos need a link, because a browser has nowhere durable to keep a file.",
+   "exports": [
+    {
+     "name": "contentImagesShared",
+     "kind": "const",
+     "line": 22,
+     "signature": "= cloudMediaReady",
+     "doc": "True when a picked photo reaches every device, not only this one."
+    },
+    {
+     "name": "keepContentImage",
+     "kind": "function",
+     "line": 46,
+     "signature": "(file: UploadInput): Promise<Result<string>>",
+     "doc": "Keeps a picked photo and returns the address to store for it."
+    },
+    {
+     "name": "keepProfilePhoto",
+     "kind": "function",
+     "line": 68,
+     "signature": "(file: UploadInput): Promise<Result<string>>",
+     "doc": "Keeps a profile photo someone picked on Edit profile. Supabase builds with\nCloudinary upload it as the account's avatar (rpc_register_media sets\nprofiles.avatar_url); the demo keeps it on this device like a content photo."
+    }
+   ]
+  },
+  {
    "file": "src/backend/files.ts",
    "doc": "Private documents in Supabase Storage (master plan §7.4): KYC papers, contracts and invoices never sit on a public CDN. Each user writes under `<their id>/…` (KYC under `<id>/kyc/…`); reading is by a signed URL that lasts five minutes. The bucket's RLS (0012) decides who may read what.",
    "exports": [
@@ -3729,9 +4110,16 @@
      ]
     },
     {
-     "name": "uploadMedia",
+     "name": "uploadToCloud",
      "kind": "function",
      "line": 71,
+     "signature": "(file: UploadInput, purpose: MediaPurpose): Promise<Result<Omit<Uploaded, 'url'>>>",
+     "doc": "Sends one picked file to Cloudinary through a signed upload, without recording it anywhere."
+    },
+    {
+     "name": "uploadMedia",
+     "kind": "function",
+     "line": 97,
      "signature": "(file: UploadInput, purpose: MediaPurpose, caption?: string): Promise<Result<Uploaded>>",
      "doc": "Uploads one picked file and records it (portfolio items land in the owner's portfolio)."
     }
@@ -4060,6 +4448,61 @@
      "line": 62,
      "signature": ": Backend",
      "doc": ""
+    }
+   ]
+  },
+  {
+   "file": "src/backend/support.ts",
+   "doc": "Help requests, in the demo or for real. The demo runs the store actions in `store/db/support.ts`; Supabase builds call the RPCs in supabase/migrations/0022_profile_support.sql and then mirror the caller's requests (every request, for staff who answer them) into the store, so the screens read the same `supportTickets` either way.",
+   "exports": [
+    {
+     "name": "supportLive",
+     "kind": "function",
+     "line": 15,
+     "signature": "()",
+     "doc": "True on Supabase builds: help requests go to the server."
+    },
+    {
+     "name": "syncSupportTickets",
+     "kind": "function",
+     "line": 18,
+     "signature": "(): Promise<string | null>",
+     "doc": "Re-reads the requests this person can see from the server (no-op in the demo)."
+    },
+    {
+     "name": "openTicket",
+     "kind": "function",
+     "line": 33,
+     "signature": "(input: { topic: SupportTopic; subject: string; body: string; priority?: SupportPriority; projectId?: string }): Promise<{ id?: string; error?: string }>",
+     "doc": "Opens a request. Returns its id, or an error to show."
+    },
+    {
+     "name": "replyTicket",
+     "kind": "function",
+     "line": 42,
+     "signature": "(id: string, body: string, internal = false)",
+     "doc": "Replies to a request (staff may add an internal note)."
+    },
+    {
+     "name": "setTicketStatus",
+     "kind": "function",
+     "line": 46,
+     "signature": "(id: string, status: SupportTicketStatus)",
+     "doc": "Marks a request solved, closed or open again (staff: any status)."
+    },
+    {
+     "name": "assignTicket",
+     "kind": "function",
+     "line": 50,
+     "signature": "(id: string, staffId: string | null, priority?: SupportPriority)",
+     "doc": "Gives a request to a staff member (or nobody) and sets its priority."
+    },
+    {
+     "name": "rateTicket",
+     "kind": "function",
+     "line": 54,
+     "signature": "(id: string, rating: number, note?: string)",
+     "doc": "The owner rates the help (1–5)."
     }
    ]
   },
@@ -4513,6 +4956,19 @@
    ]
   },
   {
+   "file": "src/components/ContentSync.tsx",
+   "doc": "",
+   "exports": [
+    {
+     "name": "ContentSync",
+     "kind": "component",
+     "line": 13,
+     "signature": "()",
+     "doc": "Sits at the root and makes a super admin's content edits show at once:\ncatalogue queries are refetched whenever the content changes, and Supabase\nbuilds keep the content in step with the server (`backend/content.ts`)."
+    }
+   ]
+  },
+  {
    "file": "src/components/admin/bugs.ts",
    "doc": "",
    "exports": [
@@ -4529,6 +4985,71 @@
      "line": 12,
      "signature": "(r: BugReportRecord)",
      "doc": "\"Aakriti Shrestha · Couple\", or \"Signed out\"."
+    }
+   ]
+  },
+  {
+   "file": "src/components/admin/content/BrandTab.tsx",
+   "doc": "",
+   "exports": [
+    {
+     "name": "BrandTab",
+     "kind": "component",
+     "line": 28,
+     "signature": "()",
+     "doc": "The app's name, the assistant's wording and how people reach support."
+    }
+   ]
+  },
+  {
+   "file": "src/components/admin/content/HomeTab.tsx",
+   "doc": "",
+   "exports": [
+    {
+     "name": "HomeTab",
+     "kind": "component",
+     "line": 31,
+     "signature": "()",
+     "doc": "The couple's home, top to bottom: move sections up and down, switch them\non and off, rename their headings, and add banners of your own."
+    }
+   ]
+  },
+  {
+   "file": "src/components/admin/content/ImageSheet.tsx",
+   "doc": "",
+   "exports": [
+    {
+     "name": "ImageSheet",
+     "kind": "component",
+     "line": 22,
+     "signature": "({ visible, onClose, title, value, bundled = true, onPick, onRestore, }: { visible: boolean; onClose: () => void; title: string; /** The photo shown now. */ value?: PhotoRef; bundled?: boolean; onPick: (ref: string) => s…)",
+     "doc": "Choose a photo for the app: from this device, by pasting a link, or (when\n`bundled`) one of the photos the app ships with. `onPick` gets a photo key\nor an address and returns an error to show, or null when it was saved."
+    }
+   ]
+  },
+  {
+   "file": "src/components/admin/content/ListingsTab.tsx",
+   "doc": "",
+   "exports": [
+    {
+     "name": "ListingsTab",
+     "kind": "component",
+     "line": 24,
+     "signature": "()",
+     "doc": "Every venue, vendor, category, collection, idea photo, story and real wedding, to open and edit."
+    }
+   ]
+  },
+  {
+   "file": "src/components/admin/content/PhotosTab.tsx",
+   "doc": "",
+   "exports": [
+    {
+     "name": "PhotosTab",
+     "kind": "component",
+     "line": 32,
+     "signature": "()",
+     "doc": "Every photo the app ships with. Replacing one changes it on every screen\nthat shows it: listings, categories, the welcome slides, ideas and so on."
     }
    ]
   },
@@ -4711,7 +5232,7 @@
      "name": "HeroGallery",
      "kind": "component",
      "line": 16,
-     "signature": "({ images, width, height }: { images: PhotoKey[]; width: number; height: number })",
+     "signature": "({ images, width, height }: { images: PhotoRef[]; width: number; height: number })",
      "doc": "The photo strip at the top of a venue or vendor page, with a \"12 photos\"\nbadge. Tapping a photo or the badge opens every photo full screen, with a\nclose (X) button."
     }
    ]
@@ -4777,7 +5298,7 @@
     {
      "name": "CategoryCircles",
      "kind": "component",
-     "line": 16,
+     "line": 17,
      "signature": "()",
      "doc": "Horizontally scrolling category shortcuts: small photo tiles with a label underneath."
     }
@@ -4813,6 +5334,26 @@
      "line": 13,
      "signature": "({ right, border = true }: { right: ReactNode; border?: boolean })",
      "doc": "City switcher plus icon actions: the top bar of the Home and Vendors tabs."
+    }
+   ]
+  },
+  {
+   "file": "src/components/home/ContentBanner.tsx",
+   "doc": "",
+   "exports": [
+    {
+     "name": "openBannerLink",
+     "kind": "function",
+     "line": 13,
+     "signature": "(href: string)",
+     "doc": "Opens a banner's link: a screen of the app, or a web address in the browser."
+    },
+    {
+     "name": "ContentBanner",
+     "kind": "component",
+     "line": 23,
+     "signature": "({ banner }: { banner: Banner })",
+     "doc": "A banner a super admin added to the couple's home (Content studio → Home):\nan optional photo, a title, a line of text and a link. The whole card is\none button when it has a link."
     }
    ]
   },
@@ -4863,8 +5404,8 @@
      "name": "VenueCollections",
      "kind": "component",
      "line": 17,
-     "signature": "({ city }: { city: string })",
-     "doc": "Curated venue collections: full-bleed photos with the title set on a dark scrim."
+     "signature": "({ city, title }: { city: string; title?: string })",
+     "doc": "Curated venue collections: full-bleed photos with the title set on a dark scrim. `title` replaces the built-in heading."
     }
    ]
   },
@@ -5031,77 +5572,77 @@
     {
      "name": "IconName",
      "kind": "type",
-     "line": 14,
+     "line": 15,
      "signature": "= ComponentProps<typeof Ionicons>['name']",
      "doc": ""
     },
     {
      "name": "Card",
      "kind": "component",
-     "line": 17,
+     "line": 18,
      "signature": "({ children, style, onPress, padded = true, accessibilityLabel, }: { children: ReactNode; style?: StyleProp<ViewStyle>; onPress?: () => void; padded?: boolean; accessibilityLabel?: string; })",
      "doc": "Themed surface. `pressable` turns it into a card button."
     },
     {
      "name": "KButton",
      "kind": "component",
-     "line": 51,
+     "line": 52,
      "signature": "({ label, onPress, variant = 'primary', icon, loading, disabled, missing, onMissing, size = 'md', style, }: { label: string; onPress?: () => void; variant?: ButtonVariant; icon?: IconName; loading?: boolean; disabled?: b…)",
      "doc": ""
     },
     {
      "name": "showMissing",
      "kind": "function",
-     "line": 125,
+     "line": 126,
      "signature": "(message: string)",
      "doc": "Tells the person what is still missing when they tap an incomplete form's button."
     },
     {
      "name": "StatusPill",
      "kind": "component",
-     "line": 130,
+     "line": 131,
      "signature": "({ status, label }: { status: string; label?: string })",
      "doc": ""
     },
     {
      "name": "Avatar",
      "kind": "component",
-     "line": 149,
-     "signature": "({ name, size = 40 }: { name: string; size?: number })",
-     "doc": ""
+     "line": 151,
+     "signature": "({ name, size = 40, photo }: { name: string; size?: number; photo?: string })",
+     "doc": "Initials in a palette colour, or the person's photo when they added one."
     },
     {
      "name": "ProgressBar",
      "kind": "component",
-     "line": 166,
+     "line": 170,
      "signature": "({ value, color, height = 4 }: { value: number; color?: string; height?: number })",
      "doc": ""
     },
     {
      "name": "SectionTitle",
      "kind": "component",
-     "line": 175,
+     "line": 179,
      "signature": "({ title, action, onAction }: { title: string; action?: string; onAction?: () => void })",
      "doc": ""
     },
     {
      "name": "EmptyBlock",
      "kind": "component",
-     "line": 194,
+     "line": 198,
      "signature": "({ icon = 'file-tray-outline', art, title, message, action, onAction }: { icon?: IconName; art?: ArtName; title: string; message?: string; action?: string; onAction?: () => void })",
      "doc": "Empty list or section in the role apps: pearl medallion, serif title, one line, one action. `art` swaps the icon for a line drawing."
     },
     {
      "name": "Divider",
      "kind": "component",
-     "line": 214,
+     "line": 218,
      "signature": "({ style }: { style?: StyleProp<ViewStyle> })",
      "doc": ""
     },
     {
      "name": "KeyValue",
      "kind": "component",
-     "line": 220,
+     "line": 224,
      "signature": "({ label, value, strong }: { label: string; value: string; strong?: boolean })",
      "doc": "Label/value line used in summaries."
     }
@@ -5128,7 +5669,7 @@
      "name": "ImageCarousel",
      "kind": "component",
      "line": 9,
-     "signature": "({ images, width, height, radius = 0, onPressImage, dotsBottom = 12, }: { images: PhotoKey[]; width: number; height: number; radius?: number; onPressImage?: (index: number) => void; dotsBottom?: number; })",
+     "signature": "({ images, width, height, radius = 0, onPressImage, dotsBottom = 12, }: { images: PhotoRef[]; width: number; height: number; radius?: number; onPressImage?: (index: number) => void; dotsBottom?: number; })",
      "doc": "Swipeable photo strip with pagination dots (venue cards & detail heroes)."
     }
    ]
@@ -5932,6 +6473,78 @@
      "line": 160,
      "signature": "({ label }: { label: string })",
      "doc": "Thin label used on threads (\"Price asked\")."
+    }
+   ]
+  },
+  {
+   "file": "src/components/support/HelpDesk.tsx",
+   "doc": "",
+   "exports": [
+    {
+     "name": "HelpDesk",
+     "kind": "component",
+     "line": 25,
+     "signature": "()",
+     "doc": "The staff queue of help requests from every role (Platform → Help desk)."
+    }
+   ]
+  },
+  {
+   "file": "src/components/support/NewSupportRequest.tsx",
+   "doc": "",
+   "exports": [
+    {
+     "name": "NewSupportRequest",
+     "kind": "component",
+     "line": 23,
+     "signature": "()",
+     "doc": "\"Ask the team\": what it is about, a subject, the details and how soon. The draft is kept on the device until it is sent."
+    }
+   ]
+  },
+  {
+   "file": "src/components/support/SupportCenter.tsx",
+   "doc": "",
+   "exports": [
+    {
+     "name": "SupportCenter",
+     "kind": "component",
+     "line": 82,
+     "signature": "()",
+     "doc": "Help and support for couples, businesses and freelancers: how to reach the\nteam, the person's own requests, and answers to common questions. Staff\nanswer requests at Platform → Help desk."
+    }
+   ]
+  },
+  {
+   "file": "src/components/support/SupportThread.tsx",
+   "doc": "",
+   "exports": [
+    {
+     "name": "SupportThread",
+     "kind": "component",
+     "line": 155,
+     "signature": "({ id, desk = false }: { id: string; desk?: boolean })",
+     "doc": "One help request: the conversation, a reply box, and for the owner \"mark\nas solved\" and a rating; for staff (`desk`) the status, priority, owner and\ninternal notes."
+    }
+   ]
+  },
+  {
+   "file": "src/components/support/parts.tsx",
+   "doc": "",
+   "exports": [
+    {
+     "name": "TicketStatus",
+     "kind": "component",
+     "line": 13,
+     "signature": "({ ticket, desk }: { ticket: SupportTicket; desk?: boolean })",
+     "doc": "The status a role sees: the person reads \"Waiting for your reply\", staff read \"Waiting on customer\"."
+    },
+    {
+     "name": "TicketRow",
+     "kind": "component",
+     "line": 19,
+     "signature": "({ ticket, desk, last }: { ticket: SupportTicket; desk?: boolean; last?: boolean })",
+     "doc": "One request in a list: subject, code, topic, last message and when."
     }
    ]
   },
@@ -7274,6 +7887,33 @@
    ]
   },
   {
+   "file": "src/components/ui/AppearancePicker.tsx",
+   "doc": "",
+   "exports": [
+    {
+     "name": "AppearancePicker",
+     "kind": "component",
+     "line": 60,
+     "signature": "()",
+     "doc": "Light, dark or \"same as phone\", with a small preview of each. The choice is\nkept on this device and repaints the whole app at once (every role)."
+    },
+    {
+     "name": "AppearanceHint",
+     "kind": "component",
+     "line": 97,
+     "signature": "()",
+     "doc": "One line under the picker: what the current choice does."
+    },
+    {
+     "name": "AppearanceSwitch",
+     "kind": "component",
+     "line": 109,
+     "signature": "({ style }: { style?: StyleProp<ViewStyle> })",
+     "doc": "Sun / moon / phone switch for profile pages and headers."
+    }
+   ]
+  },
+  {
    "file": "src/components/ui/BugReporter.tsx",
    "doc": "Report a bug from any screen. Any of these takes a screenshot of the screen exactly as it is and opens the report screen (`/report-bug`) to describe the problem: - taking a phone screenshot (side + volume up on iPhone, power + volume down on Android; `expo-screen-capture`); - holding three fingers on the screen for half a second; - the floating bug button (on by default in development and test builds); - shaking the phone, in installed builds (in Expo Go and development builds shaking opens the developer menu instead, so it is off there); - Alt+Shift+B on a computer, or Settings → Help → Repo…",
    "exports": [
@@ -7908,9 +8548,9 @@
     {
      "name": "Photo",
      "kind": "component",
-     "line": 12,
-     "signature": "({ style, transition, contentFit = 'cover', ...rest }: ImageProps)",
-     "doc": "Every photo in the app. Sits on a pearl fill while it loads and\ncross-dissolves in instead of popping, so lists and galleries feel calm;\nwith Reduce Motion on it simply appears. Takes every `expo-image` prop,\nand a caller's own `transition` or background wins."
+     "line": 24,
+     "signature": "({ style, transition, contentFit = 'cover', source, ...rest }: ImageProps)",
+     "doc": "Every photo in the app. Sits on a pearl fill while it loads and\ncross-dissolves in instead of popping, so lists and galleries feel calm;\nwith Reduce Motion on it simply appears. Takes every `expo-image` prop,\nand a caller's own `transition` or background wins.\n\nA bundled photo a super admin replaced (Content studio → Photos) shows the\nreplacement here, so the swap reaches every screen at once."
     }
    ]
   },
@@ -8508,6 +9148,19 @@
    ]
   },
   {
+   "file": "src/components/work/EditProfileScreen.tsx",
+   "doc": "",
+   "exports": [
+    {
+     "name": "EditProfileScreen",
+     "kind": "component",
+     "line": 51,
+     "signature": "()",
+     "doc": "Edit profile, for every role: photo, name, email and city, plus the\ncouple's partner and date, a business's name and story, or a freelancer's\nheadline, story, experience and languages. Mobile number, role and\nverification are changed by the Vivah team (a help request)."
+    }
+   ]
+  },
+  {
    "file": "src/components/work/EventsPanel.tsx",
    "doc": "",
    "exports": [
@@ -8801,14 +9454,14 @@
     {
      "name": "DEFAULT_PREFS",
      "kind": "const",
-     "line": 27,
+     "line": 28,
      "signature": ": AccountPrefs",
      "doc": ""
     },
     {
      "name": "SettingsScreen",
      "kind": "component",
-     "line": 52,
+     "line": 53,
      "signature": "()",
      "doc": "Notification, language, calendar and privacy settings plus data export and account deletion."
     }
@@ -8901,14 +9554,35 @@
   },
   {
    "file": "src/constants/brand.ts",
-   "doc": "",
+   "doc": "Single source of truth for every brand-specific string. Rename the product here and the whole app follows. A super admin can replace any of them without a release (Content studio → App details); `BRAND` reads the replacement first, so every screen follows.",
    "exports": [
+    {
+     "name": "BRAND_DEFAULTS",
+     "kind": "const",
+     "line": 9,
+     "signature": "= { name: 'Vivah', genieService: 'Vivah Planners', genieTagline: 'A planner makes the calls…",
+     "doc": ""
+    },
+    {
+     "name": "BrandField",
+     "kind": "type",
+     "line": 25,
+     "signature": "= keyof typeof BRAND_DEFAULTS",
+     "doc": ""
+    },
+    {
+     "name": "BRAND_FIELDS",
+     "kind": "const",
+     "line": 27,
+     "signature": "= Object.keys(BRAND_DEFAULTS) as BrandField[]",
+     "doc": ""
+    },
     {
      "name": "BRAND",
      "kind": "const",
-     "line": 5,
-     "signature": "= { name: 'Vivah', genieService: 'Vivah Planners', genieTagline: 'A planner makes the calls…",
-     "doc": "Single source of truth for every brand-specific string. Rename the product\nhere and the whole app follows."
+     "line": 29,
+     "signature": "= Object.defineProperties( {}, Object.fromEntries(BRAND_FIELDS.map((field) => [field, { enu…",
+     "doc": ""
     }
    ]
   },
@@ -8951,11 +9625,39 @@
      "doc": ""
     },
     {
+     "name": "PhotoRef",
+     "kind": "type",
+     "line": 38,
+     "signature": "= PhotoKey | (string & {})",
+     "doc": "A bundled photo's key, or the address of a photo a super admin supplied (Content studio)."
+    },
+    {
+     "name": "PHOTO_KEYS",
+     "kind": "const",
+     "line": 40,
+     "signature": "= Object.keys(photos) as PhotoKey[]",
+     "doc": ""
+    },
+    {
+     "name": "isPhotoKey",
+     "kind": "function",
+     "line": 44,
+     "signature": "(ref: string): ref is PhotoKey",
+     "doc": ""
+    },
+    {
+     "name": "photoKeyOf",
+     "kind": "function",
+     "line": 47,
+     "signature": "(source: unknown)",
+     "doc": "The bundled photo a source came from, so `Photo` can show its replacement."
+    },
+    {
      "name": "photo",
      "kind": "function",
-     "line": 37,
-     "signature": "(key: PhotoKey)",
-     "doc": ""
+     "line": 50,
+     "signature": "(ref: PhotoRef | null | undefined): ImageSourcePropType | undefined",
+     "doc": "An image source for a bundled key or an address. Always go through this: catalogue records may carry either."
     }
    ]
   },
@@ -8964,128 +9666,184 @@
    "doc": "",
    "exports": [
     {
+     "name": "Palette",
+     "kind": "type",
+     "line": 185,
+     "signature": "= { [K in keyof typeof LIGHT]: string }",
+     "doc": "Every colour token, by name (the same keys in light and dark)."
+    },
+    {
+     "name": "ColorScheme",
+     "kind": "type",
+     "line": 187,
+     "signature": "= 'light' | 'dark'",
+     "doc": "The two colour schemes."
+    },
+    {
+     "name": "PALETTES",
+     "kind": "const",
+     "line": 190,
+     "signature": ": Record<ColorScheme, Palette>",
+     "doc": "The two palettes, for screens that preview both (Settings → Appearance)."
+    },
+    {
      "name": "colors",
      "kind": "const",
-     "line": 15,
-     "signature": "= { // Burgundy family primary: '#681C2A', primaryDark: '#3D1018', primarySoft: '#F0E3DE', …",
-     "doc": "Design tokens: \"Royal Nepali Luxury\". Every hard-coded colour lives here.\n\nDeep burgundy and wine are the rich dark anchors (the colour of a bridal\nsari and a temple door), champagne gold is a restrained metallic accent for\nborders, badges and ratings, and the neutrals are warm ivory and pearl cream\nso photos of red saris and brass lamps sit on them without clashing.\n\nRough distribution on any screen: ~65% ivory/cream, ~20% burgundy/wine,\n~10% espresso text, ~5% champagne and dusty-rose accents. Gold never fills\nlarge areas, and is never used for body text (use `goldDeep` for gold text)."
+     "line": 197,
+     "signature": ": Readonly<Palette>",
+     "doc": "The live palette. Screens read `colors.x` during render (or inside a\n`themed()` style sheet); `applyColorScheme` swaps the values in place and\nthe root layout remounts the tree, so nothing keeps a stale colour."
+    },
+    {
+     "name": "currentColorScheme",
+     "kind": "function",
+     "line": 204,
+     "signature": "(): ColorScheme",
+     "doc": "The colour scheme on screen now."
+    },
+    {
+     "name": "onColorScheme",
+     "kind": "function",
+     "line": 207,
+     "signature": "(fn: (scheme: ColorScheme) => void): () => void",
+     "doc": "Runs `fn` after every scheme change (role themes and gradients rebuild themselves). Returns an unsubscribe."
+    },
+    {
+     "name": "statusBarStyle",
+     "kind": "function",
+     "line": 213,
+     "signature": "(): 'light' | 'dark'",
+     "doc": "Status bar text that reads on the current background: dark text in light mode, light text in dark mode."
+    },
+    {
+     "name": "applyColorScheme",
+     "kind": "function",
+     "line": 216,
+     "signature": "(next: ColorScheme)",
+     "doc": "Switches every token to the light or dark palette. Idempotent; call it before the tree renders with the new scheme."
+    },
+    {
+     "name": "themed",
+     "kind": "function",
+     "line": 230,
+     "signature": "<T extends object>(factory: () => T): T",
+     "doc": "A module-level style sheet that follows the colour scheme. Wrap\n`StyleSheet.create({...})` in it whenever the styles read a colour token:\n`const styles = themed(() => StyleSheet.create({ ... }))`. The factory runs\nagain on first use after the scheme changes."
     },
     {
      "name": "socialColors",
      "kind": "const",
-     "line": 105,
+     "line": 252,
      "signature": "= { facebook: '#1877F2', instagram: '#C13584', whatsapp: '#128C7E', tiktok: '#161823', } as…",
      "doc": "Network marks in the social hub. Small icons and hairlines only, never fills."
     },
     {
      "name": "gradients",
      "kind": "const",
-     "line": 117,
-     "signature": "= { … }",
-     "doc": "Only photo scrims remain; flat colour everywhere else. The remaining keys\nare kept so older call sites still type-check, and all resolve to flat or\nnear-flat fills."
+     "line": 279,
+     "signature": "= buildGradients()",
+     "doc": ""
     },
     {
      "name": "fonts",
      "kind": "const",
-     "line": 139,
+     "line": 289,
      "signature": "= { regular: 'Mukta_400Regular', medium: 'Mukta_500Medium', semibold: 'Mukta_600SemiBold', …",
      "doc": "Mukta (Ek Type) for everything you read and tap: it was drawn for\nDevanagari and Latin together, so Nepali names and \"शुभ विवाह\" set in the\nsame voice as the English UI. Martel, its serif sibling from the same\nfoundry, is kept for a handful of display lines (couple names, screen\ntitles on the couple app)."
     },
     {
      "name": "serif",
      "kind": "const",
-     "line": 147,
+     "line": 297,
      "signature": "= { regular: 'Martel_400Regular', medium: 'Martel_600SemiBold', semibold: 'Martel_600SemiBo…",
      "doc": ""
     },
     {
      "name": "FontWeight",
      "kind": "type",
-     "line": 155,
+     "line": 305,
      "signature": "= keyof typeof fonts",
      "doc": ""
     },
     {
      "name": "spacing",
      "kind": "const",
-     "line": 157,
+     "line": 307,
      "signature": "= { xxs: 2, xs: 4, sm: 8, md: 12, lg: 16, xl: 20, xxl: 24, xxxl: 32, } as const",
      "doc": ""
     },
     {
      "name": "radius",
      "kind": "const",
-     "line": 168,
+     "line": 318,
      "signature": "= { xs: 3, sm: 6, md: 8, lg: 10, xl: 12, pill: 999, } as const",
      "doc": ""
     },
     {
      "name": "GUTTER",
      "kind": "const",
-     "line": 178,
+     "line": 328,
      "signature": "= 16",
      "doc": "Page gutter."
     },
     {
      "name": "shadow",
      "kind": "function",
-     "line": 186,
+     "line": 336,
      "signature": "(elevation: number, opacity: number, radiusPx: number, offsetY: number, color = '#251B18'): ViewStyle",
      "doc": "Drop shadow for something that floats: elevation on Android, `boxShadow` on the web (shadow* props are deprecated there), shadow* on iOS."
     },
     {
      "name": "shadows",
      "kind": "const",
-     "line": 205,
+     "line": 355,
      "signature": "= { … }",
      "doc": "Shadows are reserved for things that genuinely float (sheets, toasts)."
     },
     {
      "name": "type",
      "kind": "const",
-     "line": 215,
+     "line": 365,
      "signature": "= { display: { fontFamily: serif.bold, fontSize: 30, lineHeight: 40 }, title: { fontFamily:…",
      "doc": ""
     },
     {
      "name": "tabular",
      "kind": "const",
-     "line": 227,
+     "line": 377,
      "signature": ": TextStyle",
      "doc": "Figures that line up in columns (money, counts, countdowns)."
     },
     {
      "name": "iconSize",
      "kind": "const",
-     "line": 230,
+     "line": 380,
      "signature": "= { xs: 14, sm: 16, md: 20, lg: 24, xl: 28 } as const",
      "doc": "Icon sizes: snap every Ionicon to one of these."
     },
     {
      "name": "motion",
      "kind": "const",
-     "line": 237,
+     "line": 387,
      "signature": "= { fast: 150, base: 240, slow: 360, stagger: 45 } as const",
      "doc": "Motion timing (ms). One or two things move per screen, always with the\nease-out curve in `hooks/useMotion`, and nothing moves when the device asks\nfor reduced motion."
     },
     {
      "name": "hitSlop",
      "kind": "const",
-     "line": 239,
+     "line": 389,
      "signature": "= { top: 10, bottom: 10, left: 10, right: 10 }",
      "doc": ""
     },
     {
      "name": "inputFont",
      "kind": "function",
-     "line": 248,
+     "line": 398,
      "signature": "(weight: '400' | '500' | '600' | '700' = '400'): TextStyle",
      "doc": "The font typed text uses inside inputs on phones: the system font at the\ngiven weight. Mukta's line box is 1.66 em tall (room for Devanagari marks),\nand iOS and Android size the text caret from it, so the cursor looked half\nagain taller than the text. Web keeps Mukta; the browser caret follows the\ntext. Put it after any `fontFamily` in an input's style array."
     },
     {
      "name": "inputReset",
      "kind": "const",
-     "line": 255,
+     "line": 405,
      "signature": ": TextStyle",
      "doc": "Base style for every text input: removes the browser focus ring on web and\nsets the normal-height caret font on phones (see `inputFont`)."
     }
@@ -9140,21 +9898,21 @@
     {
      "name": "ROUTE_AUDIENCE",
      "kind": "const",
-     "line": 179,
+     "line": 181,
      "signature": ": Record<string, string>",
      "doc": "Who a staff screen is for, in words (\"finance and admins\"), for the no-access message."
     },
     {
      "name": "TODAY_FOCUS",
      "kind": "const",
-     "line": 206,
+     "line": 210,
      "signature": ": { id: 'admin' | 'finance' | 'vendor_success' | 'support' | 'coordinator'; when: When }[]",
      "doc": "The staff member's focus on the Today screen, first match wins."
     },
     {
      "name": "SetupStepDef",
      "kind": "interface",
-     "line": 215,
+     "line": 219,
      "signature": "",
      "doc": "A step on the vendor home's setup checklist, shown until it is done.",
      "members": [
@@ -9205,14 +9963,14 @@
     {
      "name": "VENDOR_SETUP_STEPS",
      "kind": "const",
-     "line": 227,
+     "line": 231,
      "signature": ": SetupStepDef[]",
      "doc": ""
     },
     {
      "name": "UNIVERSAL_TOOLS",
      "kind": "function",
-     "line": 243,
+     "line": 247,
      "signature": "(Object.keys(TOOL_RULES) as ToolId[]).filter((id))",
      "doc": "Tool ids that are universal for their role on purpose (the registry check lists them)."
     }
@@ -9301,63 +10059,63 @@
     {
      "name": "VENDOR_CATEGORIES",
      "kind": "function",
-     "line": 10,
+     "line": 12,
      "signature": "SERVICE_GROUPS.map((g))",
      "doc": "Browse categories for the marketplace. Venues are browsed by venue type;\nevery other group lists its services (subcategory id === service id)."
     },
     {
      "name": "HOME_CATEGORIES",
      "kind": "const",
-     "line": 39,
-     "signature": ": { id: string; title: string; image: PhotoKey; categoryId: string; subcategoryId?: string; }[]",
+     "line": 41,
+     "signature": ": { id: string; title: string; image: PhotoRef; categoryId: string; subcategoryId?: string; }[]",
      "doc": ""
     },
     {
      "name": "VENUE_COLLECTIONS",
      "kind": "const",
-     "line": 59,
+     "line": 61,
      "signature": ": VenueCollection[]",
      "doc": ""
     },
     {
      "name": "findCategory",
      "kind": "function",
-     "line": 67,
+     "line": 70,
      "signature": "(id: string)",
-     "doc": ""
+     "doc": "A browse category, with a super admin's edits to its title, subtitle and photo."
     },
     {
      "name": "categoriesFor",
      "kind": "function",
-     "line": 75,
-     "signature": "(services: readonly string[]): VendorCategory[]",
-     "doc": "The marketplace for an occasion (owner decision): only the categories and\nservices it lists are shown; the rest are hidden, not ranked lower. Venue\ntypes all count as the `venue` service. Every service listed keeps the full\ncatalogue (weddings, \"something else\")."
+     "line": 79,
+     "signature": "(services: readonly string[], content: AppContent = contentRuntime.content): VendorCategory[]",
+     "doc": "The marketplace for an occasion (owner decision): only the categories and\nservices it lists are shown; the rest are hidden, not ranked lower. Venue\ntypes all count as the `venue` service. Every service listed keeps the full\ncatalogue (weddings, \"something else\"). Components pass `useContent()` so\na super admin's edits re-render them."
     },
     {
      "name": "enabledServices",
      "kind": "function",
-     "line": 86,
+     "line": 91,
      "signature": "(services: readonly string[], flags: Record<string, boolean> | undefined)",
      "doc": "The services a super admin hasn't switched off (feature `service:<id>`)."
     },
     {
      "name": "homeCategoriesFor",
      "kind": "function",
-     "line": 89,
-     "signature": "(services: readonly string[])",
+     "line": 94,
+     "signature": "(services: readonly string[], content: AppContent = contentRuntime.content)",
      "doc": "Home shortcuts for an occasion's services."
     },
     {
      "name": "findSubcategory",
      "kind": "function",
-     "line": 91,
+     "line": 99,
      "signature": "(categoryId: string, subId?: string)",
      "doc": ""
     },
     {
      "name": "categoryForService",
      "kind": "function",
-     "line": 95,
+     "line": 103,
      "signature": "(serviceId: string)",
      "doc": "Browse category that contains a service id."
     }
@@ -9477,6 +10235,117 @@
      "line": 94,
      "signature": "(a: string, b: string)",
      "doc": ""
+    }
+   ]
+  },
+  {
+   "file": "src/data/contentCatalogue.ts",
+   "doc": "The catalogue lists a super admin can edit from Content studio → Listings, with what the console needs to show and check each one. The lists themselves stay as bundled; edits are laid over them by `services/content`.",
+   "exports": [
+    {
+     "name": "CatalogueRecord",
+     "kind": "type",
+     "line": 15,
+     "signature": "= { id: string } & Record<string, unknown>",
+     "doc": ""
+    },
+    {
+     "name": "ContentKindDef",
+     "kind": "interface",
+     "line": 17,
+     "signature": "",
+     "doc": "",
+     "members": [
+      {
+       "name": "id",
+       "optional": false,
+       "type": "ContentKind",
+       "doc": ""
+      },
+      {
+       "name": "label",
+       "optional": false,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "one",
+       "optional": false,
+       "type": "string",
+       "doc": "\"venue\", for messages."
+      },
+      {
+       "name": "hint",
+       "optional": false,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "items",
+       "optional": false,
+       "type": "readonly CatalogueRecord[]",
+       "doc": "The bundled records, unedited."
+      },
+      {
+       "name": "title",
+       "optional": false,
+       "type": "string",
+       "doc": "Field that names a record."
+      },
+      {
+       "name": "detail",
+       "optional": false,
+       "type": "string[]",
+       "doc": "Fields shown under the name in lists."
+      },
+      {
+       "name": "imageFields",
+       "optional": false,
+       "type": "string[]",
+       "doc": "Fields holding one photo or a list of photos."
+      },
+      {
+       "name": "hideable",
+       "optional": false,
+       "type": "boolean",
+       "doc": "Can a record be taken out of lists and search?"
+      }
+     ]
+    },
+    {
+     "name": "CONTENT_CATALOGUE",
+     "kind": "const",
+     "line": 37,
+     "signature": ": ContentKindDef[]",
+     "doc": ""
+    },
+    {
+     "name": "CONTENT_KIND_BY_ID",
+     "kind": "const",
+     "line": 48,
+     "signature": "= Object.fromEntries(CONTENT_CATALOGUE.map((k) => [k.id, k])) as Record<ContentKind, Conten…",
+     "doc": ""
+    },
+    {
+     "name": "isImageRef",
+     "kind": "function",
+     "line": 51,
+     "signature": "(ref: string)",
+     "doc": "A bundled photo key or an address the app can load."
+    },
+    {
+     "name": "recordCover",
+     "kind": "function",
+     "line": 54,
+     "signature": "(def: ContentKindDef, record: CatalogueRecord): PhotoRef | undefined",
+     "doc": "The first photo of a record, for list rows."
+    },
+    {
+     "name": "fieldLabel",
+     "kind": "function",
+     "line": 64,
+     "signature": "(key: string)",
+     "doc": "`startingPrice` → \"Starting price\"."
     }
    ]
   },
@@ -9983,6 +10852,85 @@
    ]
   },
   {
+   "file": "src/data/homeSections.ts",
+   "doc": "",
+   "exports": [
+    {
+     "name": "HomeSectionDef",
+     "kind": "interface",
+     "line": 6,
+     "signature": "",
+     "doc": "The sections of the couple's home, top to bottom. A super admin reorders\nthem, renames the headings and switches them off from Content studio →\nHome; banners they add sit in the same list as `banner:<id>`.",
+     "members": [
+      {
+       "name": "id",
+       "optional": false,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "label",
+       "optional": false,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "hint",
+       "optional": false,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "feature",
+       "optional": true,
+       "type": "string",
+       "doc": "The feature switch that hides it (`data/features.ts`); sections without one always show."
+      },
+      {
+       "name": "title",
+       "optional": true,
+       "type": "string",
+       "doc": "Built-in heading a super admin may replace; `{city}` becomes the chosen city."
+      },
+      {
+       "name": "weddingOnly",
+       "optional": true,
+       "type": "boolean",
+       "doc": "Shown for weddings and engagements only."
+      }
+     ]
+    },
+    {
+     "name": "HOME_SECTIONS",
+     "kind": "const",
+     "line": 18,
+     "signature": ": HomeSectionDef[]",
+     "doc": ""
+    },
+    {
+     "name": "HOME_SECTION_IDS",
+     "kind": "function",
+     "line": 32,
+     "signature": "HOME_SECTIONS.map((s))",
+     "doc": ""
+    },
+    {
+     "name": "HOME_SECTION_BY_ID",
+     "kind": "const",
+     "line": 33,
+     "signature": ": Record<string, HomeSectionDef>",
+     "doc": ""
+    },
+    {
+     "name": "BANNER_LINKS",
+     "kind": "const",
+     "line": 36,
+     "signature": ": { label: string; href: string }[]",
+     "doc": "Places a home banner's button can open, offered as shortcuts in the editor."
+    }
+   ]
+  },
+  {
    "file": "src/data/ideas.ts",
    "doc": "",
    "exports": [
@@ -10114,6 +11062,26 @@
      "line": 322,
      "signature": "(x: unknown): x is LegalDocId",
      "doc": ""
+    }
+   ]
+  },
+  {
+   "file": "src/data/live.ts",
+   "doc": "The marketplace catalogue as the app shows it: the bundled lists with a super admin's edits applied (Content studio → Listings). Read the catalogue through these, or through `useLiveList` in a component, never from the bundled arrays, so an edit shows everywhere.",
+   "exports": [
+    {
+     "name": "catalogue",
+     "kind": "const",
+     "line": 15,
+     "signature": "= { … }",
+     "doc": "For lists and search: records a super admin hid are left out."
+    },
+    {
+     "name": "catalogueAll",
+     "kind": "const",
+     "line": 27,
+     "signature": "= { … }",
+     "doc": "For lookups by id: hidden records stay, so a shortlist or booking that points at one still opens."
     }
    ]
   },
@@ -10353,49 +11321,49 @@
     {
      "name": "Permission",
      "kind": "type",
-     "line": 30,
+     "line": 31,
      "signature": "= (typeof PERMISSIONS)[number]",
      "doc": ""
     },
     {
      "name": "isPermission",
      "kind": "function",
-     "line": 33,
+     "line": 34,
      "signature": "(x: string): x is Permission",
      "doc": ""
     },
     {
      "name": "PERMISSION_LABELS",
      "kind": "const",
-     "line": 35,
+     "line": 36,
      "signature": ": Record<Permission, string>",
      "doc": ""
     },
     {
      "name": "STAFF_PERMISSIONS",
      "kind": "const",
-     "line": 62,
+     "line": 64,
      "signature": ": Record<StaffRole, readonly Permission[]>",
      "doc": "The permission matrix (master plan §4.4). A coordinator's project rights\napply to their own projects; `PERMISSION_SCOPE` records that for the server."
     },
     {
      "name": "TEAM_PERMISSIONS",
      "kind": "const",
-     "line": 71,
+     "line": 73,
      "signature": ": Partial<Record<PlatformTeam, readonly Permission[]>>",
      "doc": "Extra permissions a team adds on top of the staff role."
     },
     {
      "name": "PERMISSION_SCOPE",
      "kind": "const",
-     "line": 76,
+     "line": 78,
      "signature": ": Partial<Record<StaffRole, Partial<Record<Permission, 'own'>>>>",
      "doc": "Permissions limited to the staff member's own records for a role."
     },
     {
      "name": "permissionsFor",
      "kind": "function",
-     "line": 81,
+     "line": 83,
      "signature": "(staffRole?: StaffRole, team?: PlatformTeam): Permission[]",
      "doc": "Permissions for a staff role and team. Unknown roles get none."
     }
@@ -10499,7 +11467,7 @@
       {
        "name": "image",
        "optional": false,
-       "type": "PhotoKey",
+       "type": "PhotoRef",
        "doc": ""
       },
       {
@@ -10576,84 +11544,84 @@
     {
      "name": "day",
      "kind": "function",
-     "line": 52,
+     "line": 54,
      "signature": "(offset: number)",
      "doc": ""
     },
     {
      "name": "at",
      "kind": "function",
-     "line": 57,
+     "line": 59,
      "signature": "(offset: number, hour = 10, minute = 0)",
      "doc": ""
     },
     {
      "name": "DEMO_VENUE",
      "kind": "const",
-     "line": 70,
+     "line": 72,
      "signature": "= VENUES[0]",
      "doc": ""
     },
     {
      "name": "DEMO_STUDIO",
      "kind": "const",
-     "line": 71,
+     "line": 73,
      "signature": "= VENDORS.find((v) => v.id === 'wedding-story-nepal-kathmandu')!",
      "doc": ""
     },
     {
      "name": "DEMO_DECOR",
      "kind": "const",
-     "line": 72,
+     "line": 74,
      "signature": "= VENDORS.find((v) => v.id === 'phoolbari-decor-lalitpur')!",
      "doc": ""
     },
     {
      "name": "DEMO_ACCOUNTS",
      "kind": "const",
-     "line": 76,
+     "line": 78,
      "signature": ": Account[]",
      "doc": ""
     },
     {
      "name": "DEMO_PERSONA_KEYS",
      "kind": "const",
-     "line": 270,
+     "line": 272,
      "signature": "= ['services', 'primaryService', 'businessForm', 'teamSize', 'tradeProfile', 'primarySkill'…",
      "doc": "Persona fields that demo accounts on older installs are missing (filled in by the session migration)."
     },
     {
      "name": "DEMO_OTP",
      "kind": "const",
-     "line": 273,
+     "line": 275,
      "signature": "= '1234'",
      "doc": "Demo OTP for every phone number (no SMS gateway in the prototype)."
     },
     {
      "name": "PLATFORM_ACCESS_CODE",
      "kind": "const",
-     "line": 275,
+     "line": 277,
      "signature": "= 'VIVAH2026'",
      "doc": "Access code required to register a platform-team account."
     },
     {
      "name": "buildSeedData",
      "kind": "function",
-     "line": 1480,
+     "line": 1482,
      "signature": "(): DbData",
      "doc": ""
     },
     {
      "name": "contractSections",
      "kind": "function",
-     "line": 1841,
+     "line": 1845,
      "signature": "(provider: string, scope: string, amount: number): { heading: string; body: string }[]",
      "doc": ""
     },
     {
      "name": "DEMO_IMAGES",
      "kind": "const",
-     "line": 1854,
+     "line": 1858,
      "signature": ": PhotoKey[]",
      "doc": ""
     }
@@ -11078,6 +12046,128 @@
    ]
   },
   {
+   "file": "src/data/support.ts",
+   "doc": "Help and support: request topics, limits, where each role reads its requests, and the answers to common questions (per role). Pure data, used by the help centre screens and the store actions in `store/db/support.ts`.",
+   "exports": [
+    {
+     "name": "SUPPORT_LIMITS",
+     "kind": "const",
+     "line": 9,
+     "signature": "= { subjectMin: 4, subjectMax: 120, bodyMin: 10, bodyMax: 4000, /** Open requests one perso…",
+     "doc": "Lengths and counts the store actions and the SQL enforce for help requests."
+    },
+    {
+     "name": "SUPPORT_TOPICS",
+     "kind": "const",
+     "line": 19,
+     "signature": ": { id: SupportTopic; label: string; icon: string; hint: string }[]",
+     "doc": "What a help request can be about, with an icon and a hint for the picker."
+    },
+    {
+     "name": "SUPPORT_TOPIC_LABEL",
+     "kind": "const",
+     "line": 30,
+     "signature": ": Record<SupportTopic, string>",
+     "doc": "Topic id → label."
+    },
+    {
+     "name": "SUPPORT_PRIORITIES",
+     "kind": "const",
+     "line": 33,
+     "signature": ": { id: SupportPriority; label: string; hint: string }[]",
+     "doc": "How soon the person needs an answer (Normal, Soon, Urgent)."
+    },
+    {
+     "name": "SUPPORT_STATUS_LABEL",
+     "kind": "const",
+     "line": 40,
+     "signature": ": Record<SupportTicketStatus, string>",
+     "doc": "What the person who asked reads for each status."
+    },
+    {
+     "name": "SUPPORT_DESK_STATUS_LABEL",
+     "kind": "const",
+     "line": 49,
+     "signature": ": Record<SupportTicketStatus, string>",
+     "doc": "What staff call each status on the help desk."
+    },
+    {
+     "name": "isOpenTicket",
+     "kind": "function",
+     "line": 58,
+     "signature": "(status: SupportTicketStatus)",
+     "doc": "Still needs someone: not solved or closed."
+    },
+    {
+     "name": "supportHref",
+     "kind": "function",
+     "line": 61,
+     "signature": "(role: UserRole, id?: string): string",
+     "doc": "Where a role reads its help centre, or one request in it."
+    },
+    {
+     "name": "editProfileHref",
+     "kind": "function",
+     "line": 67,
+     "signature": "(role: UserRole): string",
+     "doc": "Where a role edits its profile."
+    },
+    {
+     "name": "FaqItem",
+     "kind": "interface",
+     "line": 72,
+     "signature": "",
+     "doc": "One common question and its answer.",
+     "members": [
+      {
+       "name": "id",
+       "optional": false,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "q",
+       "optional": false,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "a",
+       "optional": false,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "topic",
+       "optional": false,
+       "type": "SupportTopic",
+       "doc": ""
+      }
+     ]
+    },
+    {
+     "name": "faqFor",
+     "kind": "function",
+     "line": 120,
+     "signature": "(role: UserRole): FaqItem[]",
+     "doc": "Common questions for a role, most useful first."
+    }
+   ]
+  },
+  {
+   "file": "src/data/supportSeed.ts",
+   "doc": "Demo help requests, one story per role: the couple asked about changing the reception menu (the team asked a question back) and had a receipt question answered; the venue is waiting on a payout answer; the photographer's payout number change is being handled. Times are relative to now, so the demo always looks recent.",
+   "exports": [
+    {
+     "name": "buildSupportSeed",
+     "kind": "function",
+     "line": 28,
+     "signature": "(): { supportTickets: SupportTicket[] }",
+     "doc": "The demo help requests (`DbData.supportTickets`)."
+    }
+   ]
+  },
+  {
    "file": "src/data/toolkitSeed.ts",
    "doc": "Demo records for the role toolkits, so the main tools open with a believable story.",
    "exports": [
@@ -11307,16 +12397,16 @@
     {
      "name": "VENDORS",
      "kind": "const",
-     "line": 168,
+     "line": 169,
      "signature": ": Vendor[]",
      "doc": ""
     },
     {
      "name": "findVendor",
      "kind": "function",
-     "line": 206,
+     "line": 208,
      "signature": "(id: string)",
-     "doc": ""
+     "doc": "A vendor by id, with a super admin's edits (Content studio) applied."
     }
    ]
   },
@@ -11327,30 +12417,30 @@
     {
      "name": "collectionsFor",
      "kind": "function",
-     "line": 132,
+     "line": 133,
      "signature": "(v: Pick<Venue, 'type' | 'rentalCost'>)",
      "doc": ""
     },
     {
      "name": "VENUES",
      "kind": "function",
-     "line": 212,
+     "line": 213,
      "signature": "Object.entries(SEEDS).flatMap(([city, seeds]))",
      "doc": ""
     },
     {
      "name": "VENUE_TYPES",
      "kind": "const",
-     "line": 229,
+     "line": 230,
      "signature": "= Object.keys(PRICE_BANDS) as VenueType[]",
      "doc": ""
     },
     {
      "name": "findVenue",
      "kind": "function",
-     "line": 231,
+     "line": 233,
      "signature": "(id: string)",
-     "doc": ""
+     "doc": "A venue by id, with a super admin's edits (Content studio) applied."
     }
    ]
   },
@@ -11516,6 +12606,39 @@
      "line": 12,
      "signature": "()",
      "doc": "Opens (or reuses) a direct enquiry thread between the signed-in couple and a\nlisting. Claimed listings reach the vendor account; unclaimed ones get a\nsimulated reply so couples always hear back."
+    }
+   ]
+  },
+  {
+   "file": "src/hooks/useColorMode.ts",
+   "doc": "",
+   "exports": [
+    {
+     "name": "useResolvedScheme",
+     "kind": "hook",
+     "line": 7,
+     "signature": "(): ColorScheme",
+     "doc": "The scheme this device should show: the person's choice in Settings, or the phone's own when they chose \"Same as phone\"."
+    }
+   ]
+  },
+  {
+   "file": "src/hooks/useContent.ts",
+   "doc": "",
+   "exports": [
+    {
+     "name": "useContent",
+     "kind": "hook",
+     "line": 15,
+     "signature": "()",
+     "doc": "The super admin's content edits; re-renders when any of them changes."
+    },
+    {
+     "name": "useLiveList",
+     "kind": "hook",
+     "line": 18,
+     "signature": "<T extends { id: string }>(kind: ContentKind, list: readonly T[], all = false): T[]",
+     "doc": "A catalogue list with content edits applied (`all` keeps hidden records, for lookups by id)."
     }
    ]
   },
@@ -11793,32 +12916,52 @@
      "doc": ""
     },
     {
+     "name": "Appearance",
+     "kind": "type",
+     "line": 19,
+     "signature": "= 'system' | 'light' | 'dark'",
+     "doc": "Light, dark, or whatever the phone uses."
+    },
+    {
      "name": "usePrefs",
      "kind": "const",
-     "line": 25,
-     "signature": "= create<PrefsState>()( persist( (set) => ({ lang: 'en', calendar: 'bs', setLang: (lang) =>…",
+     "line": 31,
+     "signature": "= create<PrefsState>()( persist( (set) => ({ lang: 'en', calendar: 'bs', appearance: 'syste…",
      "doc": ""
     },
     {
      "name": "I18nProvider",
      "kind": "component",
-     "line": 67,
+     "line": 75,
      "signature": "({ children }: { children: ReactNode })",
      "doc": "Re-renders the tree when the language, calendar or a text override changes."
     },
     {
      "name": "useI18n",
      "kind": "hook",
-     "line": 75,
+     "line": 83,
      "signature": "()",
      "doc": ""
     },
     {
      "name": "useT",
      "kind": "hook",
-     "line": 78,
+     "line": 86,
      "signature": "()",
      "doc": "`t('Save')` in the current language; re-renders on language change."
+    }
+   ]
+  },
+  {
+   "file": "src/i18n/ne/content.ts",
+   "doc": "",
+   "exports": [
+    {
+     "name": "CONTENT_NE",
+     "kind": "const",
+     "line": 6,
+     "signature": ": Record<string, string>",
+     "doc": "English → Nepali for the Content studio (Super admin → Content studio) and\nthe home banners it adds. Merged into the main dictionary by `./index.ts`;\nan entry there wins where both have one."
     }
    ]
   },
@@ -11842,7 +12985,7 @@
     {
      "name": "NE",
      "kind": "const",
-     "line": 10,
+     "line": 12,
      "signature": ": Record<string, string>",
      "doc": ""
     }
@@ -11858,6 +13001,19 @@
      "line": 6,
      "signature": ": Record<string, string>",
      "doc": "Nepali for the social hub (Business → Social media). Same form as the main\ndictionary: keys are the English text exactly as written in the code,\n`{0}`, `{1}`… match any text."
+    }
+   ]
+  },
+  {
+   "file": "src/i18n/ne/support.ts",
+   "doc": "",
+   "exports": [
+    {
+     "name": "SUPPORT_NE",
+     "kind": "const",
+     "line": 6,
+     "signature": ": Record<string, string>",
+     "doc": "Nepali for Help and support, the help desk, Edit profile and Appearance\n(light and dark mode). Same form as the main dictionary: keys are the\nEnglish text exactly as written in the code, `{0}`, `{1}`… match any text."
     }
    ]
   },
@@ -11930,28 +13086,28 @@
     {
      "name": "NotFoundError",
      "kind": "class",
-     "line": 27,
+     "line": 25,
      "signature": "",
      "doc": ""
     },
     {
      "name": "DEFAULT_VENUE_FILTERS",
      "kind": "const",
-     "line": 63,
+     "line": 61,
      "signature": ": VenueFilters",
      "doc": ""
     },
     {
      "name": "countActiveFilters",
      "kind": "function",
-     "line": 71,
+     "line": 69,
      "signature": "(f: VenueFilters)",
      "doc": ""
     },
     {
      "name": "VenueQuery",
      "kind": "interface",
-     "line": 78,
+     "line": 76,
      "signature": "",
      "doc": "",
      "members": [
@@ -11990,14 +13146,14 @@
     {
      "name": "filterVenues",
      "kind": "function",
-     "line": 86,
+     "line": 84,
      "signature": "({ city, query = '', collection, filters = DEFAULT_VENUE_FILTERS, destinationPricing }: VenueQuery)",
      "doc": ""
     },
     {
      "name": "api",
      "kind": "const",
-     "line": 112,
+     "line": 110,
      "signature": "= { … }",
      "doc": ""
     }
@@ -12010,7 +13166,7 @@
     {
      "name": "AssistantReply",
      "kind": "interface",
-     "line": 17,
+     "line": 16,
      "signature": "",
      "doc": "",
      "members": [
@@ -12049,7 +13205,7 @@
     {
      "name": "AssistantContext",
      "kind": "interface",
-     "line": 25,
+     "line": 24,
      "signature": "",
      "doc": "",
      "members": [
@@ -12076,14 +13232,14 @@
     {
      "name": "POPULAR_SUGGESTIONS",
      "kind": "const",
-     "line": 31,
+     "line": 30,
      "signature": "= [ … 3 items ]",
      "doc": ""
     },
     {
      "name": "askAssistant",
      "kind": "function",
-     "line": 263,
+     "line": 262,
      "signature": "(message: string, ctx: AssistantContext): Promise<AssistantReply>",
      "doc": "Simulates network + \"thinking\" latency proportional to answer length."
     }
@@ -12127,6 +13283,159 @@
      "line": 56,
      "signature": "()",
      "doc": ""
+    }
+   ]
+  },
+  {
+   "file": "src/services/content.ts",
+   "doc": "App content edited by a super admin, laid over the bundled catalogue. Pure: no React, no store and no catalogue imports, so data modules, the API layer and Node scripts can all use it. The store keeps `content` in sync with `contentRuntime` (see `hooks/useContent.ts`), the same way the translation runtime follows the language.",
+   "exports": [
+    {
+     "name": "CONTENT_KINDS",
+     "kind": "const",
+     "line": 11,
+     "signature": ": ContentKind[]",
+     "doc": ""
+    },
+    {
+     "name": "emptyContent",
+     "kind": "function",
+     "line": 14,
+     "signature": "(): AppContent",
+     "doc": "Content with nothing changed."
+    },
+    {
+     "name": "EMPTY_CONTENT",
+     "kind": "const",
+     "line": 17,
+     "signature": ": AppContent",
+     "doc": "Shared, never mutated: the content of an install nobody has edited."
+    },
+    {
+     "name": "contentRuntime",
+     "kind": "const",
+     "line": 20,
+     "signature": ": { content: AppContent }",
+     "doc": "Current content, kept in sync with the store for callers outside React."
+    },
+    {
+     "name": "entryKey",
+     "kind": "function",
+     "line": 22,
+     "signature": "(kind: ContentKind, id: string)",
+     "doc": ""
+    },
+    {
+     "name": "bannerSectionId",
+     "kind": "function",
+     "line": 23,
+     "signature": "(id: string)",
+     "doc": ""
+    },
+    {
+     "name": "LOCAL_IMAGE_SCHEME",
+     "kind": "const",
+     "line": 26,
+     "signature": "= 'vivah-file://'",
+     "doc": "Addresses of photos kept on this device (`backend/contentMedia.ts`)."
+    },
+    {
+     "name": "MAX_TEXT",
+     "kind": "const",
+     "line": 28,
+     "signature": "= 4000",
+     "doc": ""
+    },
+    {
+     "name": "MAX_LIST",
+     "kind": "const",
+     "line": 29,
+     "signature": "= 60",
+     "doc": ""
+    },
+    {
+     "name": "MAX_BANNERS",
+     "kind": "const",
+     "line": 30,
+     "signature": "= 12",
+     "doc": ""
+    },
+    {
+     "name": "MAX_INLINE_IMAGE",
+     "kind": "const",
+     "line": 32,
+     "signature": "= 400_000",
+     "doc": "Small images picked in a browser are kept inline; larger ones need a link."
+    },
+    {
+     "name": "imageAddress",
+     "kind": "function",
+     "line": 41,
+     "signature": "(input: unknown): string | null",
+     "doc": "A photo address the app can show: a web link, a photo kept on this device,\nor a small inline image. Returns it trimmed, or null when it is none of these."
+    },
+    {
+     "name": "patchList",
+     "kind": "function",
+     "line": 83,
+     "signature": "<T extends { id: string }>(kind: ContentKind, list: readonly T[], content: AppContent = contentRuntime.content): T[]",
+     "doc": "A catalogue list with the super admin's edits applied. Untouched records\nkeep their identity, and the list itself comes back when nothing of this\nkind was edited. Hidden records stay in, so links to them still open."
+    },
+    {
+     "name": "visibleList",
+     "kind": "function",
+     "line": 88,
+     "signature": "<T extends { id: string }>(kind: ContentKind, list: readonly T[], content: AppContent = contentRuntime.content): T[]",
+     "doc": "The edited list without the records a super admin hid: what lists and search show."
+    },
+    {
+     "name": "isHidden",
+     "kind": "function",
+     "line": 92,
+     "signature": "(kind: ContentKind, id: string, content: AppContent = contentRuntime.content)",
+     "doc": ""
+    },
+    {
+     "name": "checkFields",
+     "kind": "function",
+     "line": 100,
+     "signature": "(original: Record<string, unknown>, fields: Record<string, unknown>, imageFields: readonly string[] = [], okImage: (ref: string) => boolean = (ref) => !!imageAddress(ref)): { fields?: Record<string, unknown>; error?: string }",
+     "doc": "Checks edited fields against the original record and returns only those\nthat differ from it. A field must exist on the original and keep its type;\nwhole-number fields (prices, counts) are rounded and never negative, and\nphoto fields must pass `okImage`."
+    },
+    {
+     "name": "orderSections",
+     "kind": "function",
+     "line": 152,
+     "signature": "(defaults: readonly string[], saved: readonly string[], banners: readonly ContentBanner[]): string[]",
+     "doc": "Section ids top to bottom. The saved order comes first; a built-in section\nit doesn't mention (added in a later version) goes back after the section\nit follows by default, and a new banner goes to the top."
+    },
+    {
+     "name": "sectionTitle",
+     "kind": "function",
+     "line": 166,
+     "signature": "(id: string, fallback: string, city: string, content: AppContent = contentRuntime.content): string",
+     "doc": "A section heading: the super admin's wording (with `{city}` filled in), else the built-in one."
+    },
+    {
+     "name": "normalizeContent",
+     "kind": "function",
+     "line": 206,
+     "signature": "(raw: unknown): AppContent",
+     "doc": "Content from storage or the server, with anything malformed dropped, so a\nbad value can never break the screens that read it. Content that is\nalready clean comes back as the same object."
+    },
+    {
+     "name": "contentStats",
+     "kind": "function",
+     "line": 238,
+     "signature": "(content: AppContent)",
+     "doc": "How much has been changed, for the console."
+    },
+    {
+     "name": "contentChangeCount",
+     "kind": "function",
+     "line": 252,
+     "signature": "(content: AppContent)",
+     "doc": "Total number of changes; zero means the app shows exactly what it shipped with."
     }
    ]
   },
@@ -12865,7 +14174,7 @@
       {
        "name": "inspiration",
        "optional": false,
-       "type": "PhotoKey[]",
+       "type": "PhotoRef[]",
        "doc": ""
       },
       {
@@ -13243,6 +14552,47 @@
      "line": 215,
      "signature": "(project: Project)",
      "doc": "Project-level economics for the coordinator console."
+    }
+   ]
+  },
+  {
+   "file": "src/services/profile.ts",
+   "doc": "Profile edits for every role: what a person may change about themselves and how it is cleaned before it is saved (on the device by `useSession.updateMyProfile`, on Supabase by rpc_update_my_profile in supabase/migrations/0022_profile_support.sql, which applies the same rules).",
+   "exports": [
+    {
+     "name": "ProfilePatch",
+     "kind": "type",
+     "line": 11,
+     "signature": "= Partial<Pick<Account, 'name' | 'email' | 'city' | 'photo' | 'businessName' | 'bio' | 'headline' | 'experienceYears' | 'languages'>>",
+     "doc": "The fields a person edits on Edit profile. Phone (how they sign in), role and verification are changed by the Vivah team."
+    },
+    {
+     "name": "PROFILE_LIMITS",
+     "kind": "const",
+     "line": 14,
+     "signature": "= { nameMin: 2, nameMax: 60, businessMax: 80, headlineMax: 80, bioMax: 600, experienceMax: …",
+     "doc": "Lengths and ranges for profile fields (the SQL uses the same)."
+    },
+    {
+     "name": "PROFILE_CITIES",
+     "kind": "function",
+     "line": 25,
+     "signature": "CITIES.filter((c) => c.group !== 'state' && c.id !== 'all').map((c))",
+     "doc": "Cities a profile can be in (Nepal cities and towns, not provinces or \"All Nepal\")."
+    },
+    {
+     "name": "isEmail",
+     "kind": "function",
+     "line": 28,
+     "signature": "(value: string)",
+     "doc": "A plausible email address."
+    },
+    {
+     "name": "cleanProfile",
+     "kind": "function",
+     "line": 36,
+     "signature": "(patch: ProfilePatch, account: Pick<Account, 'role'>): { value?: ProfilePatch; error?: string }",
+     "doc": "Cleans an edit for this account. Returns the fields to save, or the first\nproblem to show. Fields that don't apply to the role are dropped."
     }
    ]
   },
@@ -14355,14 +15705,14 @@
     {
      "name": "messageFor",
      "kind": "function",
-     "line": 213,
+     "line": 230,
      "signature": "(action: string, args: unknown[] = []): string | null",
      "doc": "\"addBudgetLine\" → \"Budget line added\"."
     },
     {
      "name": "installActionToasts",
      "kind": "function",
-     "line": 275,
+     "line": 292,
      "signature": "()",
      "doc": "Wraps the store actions once (root layout). Timers that call actions use `quietly()`."
     }
@@ -14502,7 +15852,7 @@
       {
        "name": "openThread",
        "optional": false,
-       "type": "(input: { kind: Thread['kind']; title: string; members: ThreadMember[]; projectId?: string; bookingId?: string; gigId?: string; listingId?: string; image?: PhotoKey }) => string",
+       "type": "(input: { kind: Thread['kind']; title: string; members: ThreadMember[]; projectId?: string; bookingId?: string; gigId?: string; listingId?: string; image?: PhotoRef }) => string",
        "doc": ""
       },
       {
@@ -14579,6 +15929,102 @@
      "kind": "function",
      "line": 43,
      "signature": "(set: SetDb, get: GetDb): ChatActions",
+     "doc": ""
+    }
+   ]
+  },
+  {
+   "file": "src/store/db/content.ts",
+   "doc": "Content studio (permission `admin.full`): replace any photo, edit any marketplace listing, reorder and rename the couple's home sections, add home banners and change the brand details, with no code change. Edits are stored as differences from the bundled catalogue, so \"restore\" simply removes them. Every write is audited. Supabase builds publish the result to every device (`hooks/useContentSync.ts`, 0021_app_content.sql).",
+   "exports": [
+    {
+     "name": "ContentPart",
+     "kind": "type",
+     "line": 20,
+     "signature": "= 'images' | 'entries' | 'home' | 'banners' | 'brand' | 'all'",
+     "doc": ""
+    },
+    {
+     "name": "BannerInput",
+     "kind": "type",
+     "line": 21,
+     "signature": "= Pick<ContentBanner, 'title'> & Partial<Omit<ContentBanner, 'title'>>",
+     "doc": ""
+    },
+    {
+     "name": "ContentActions",
+     "kind": "interface",
+     "line": 23,
+     "signature": "",
+     "doc": "",
+     "members": [
+      {
+       "name": "setContentImage",
+       "optional": false,
+       "type": "(key: string, address: string | null) => string | null",
+       "doc": "Shows another photo wherever a bundled one appears; null restores the original. Returns an error to show, or null."
+      },
+      {
+       "name": "saveContentEntry",
+       "optional": false,
+       "type": "(kind: ContentKind, id: string, fields: Record<string, unknown>) => string | null",
+       "doc": "Saves a catalogue record's edited fields (pass every field of the form; only the differences are kept)."
+      },
+      {
+       "name": "setContentHidden",
+       "optional": false,
+       "type": "(kind: ContentKind, id: string, hidden: boolean) => string | null",
+       "doc": "Takes a record out of lists and search, or puts it back."
+      },
+      {
+       "name": "restoreContentEntry",
+       "optional": false,
+       "type": "(kind: ContentKind, id: string) => string | null",
+       "doc": "Removes every edit to one record."
+      },
+      {
+       "name": "setHomeOrder",
+       "optional": false,
+       "type": "(order: string[]) => string | null",
+       "doc": "Saves the order of the couple's home sections, top to bottom."
+      },
+      {
+       "name": "setHomeTitle",
+       "optional": false,
+       "type": "(sectionId: string, title: string) => string | null",
+       "doc": "Renames a home section's heading; empty text restores the built-in one."
+      },
+      {
+       "name": "saveBanner",
+       "optional": false,
+       "type": "(input: BannerInput) => { id?: string; error?: string }",
+       "doc": "Adds a home banner, or saves one that exists (`id`). Returns its id, or an error."
+      },
+      {
+       "name": "removeBanner",
+       "optional": false,
+       "type": "(id: string) => string | null",
+       "doc": ""
+      },
+      {
+       "name": "setBrandField",
+       "optional": false,
+       "type": "(field: BrandField, value: string) => string | null",
+       "doc": "Replaces one brand detail (name, support phone…); empty text restores the built-in one."
+      },
+      {
+       "name": "resetContent",
+       "optional": false,
+       "type": "(part: ContentPart) => string | null",
+       "doc": "Puts one part of the content, or all of it, back to what the app shipped with."
+      }
+     ]
+    },
+    {
+     "name": "contentActions",
+     "kind": "function",
+     "line": 48,
+     "signature": "(set: SetDb, get: GetDb): ContentActions",
      "doc": ""
     }
    ]
@@ -15010,42 +16456,42 @@
     {
      "name": "DbData",
      "kind": "re-export",
-     "line": 32,
+     "line": 34,
      "signature": "from './types'",
      "doc": ""
     },
     {
      "name": "Db",
      "kind": "type",
-     "line": 33,
-     "signature": "= DbData & CoreActions & QuoteActions & ProjectActions & FinanceActions & GigActions & ChatActions & TrustActions & PlannerActions & ToolkitActions & PersonaActions & AdminActions & SocialActions & SupportActions",
+     "line": 35,
+     "signature": "= DbData & CoreActions & QuoteActions & ProjectActions & FinanceActions & GigActions & ChatActions & TrustActions & PlannerActions & ToolkitActions & PersonaActions & AdminActions & SocialActions & SupportActions & ContentActions",
      "doc": ""
     },
     {
      "name": "useDb",
      "kind": "const",
-     "line": 113,
+     "line": 115,
      "signature": "= create<Db>()( persist( (set, get) => ({ ...buildSeedData(), ...coreActions(set, get), ...…",
      "doc": ""
     },
     {
      "name": "useInbox",
      "kind": "hook",
-     "line": 168,
+     "line": 175,
      "signature": "(account: Account)",
      "doc": "Notifications addressed to the account directly or to its whole role.\nSelects the stable array and filters in render — returning a fresh array\nfrom a zustand selector would re-render forever."
     },
     {
      "name": "useThreads",
      "kind": "hook",
-     "line": 174,
+     "line": 181,
      "signature": "(account: Account)",
      "doc": "Threads this account is a member of (platform staff see every thread)."
     },
     {
      "name": "useUnreadMessageCount",
      "kind": "hook",
-     "line": 186,
+     "line": 193,
      "signature": "(account: Account)",
      "doc": ""
     }
@@ -16115,28 +17561,28 @@
   },
   {
    "file": "src/store/db/support.ts",
-   "doc": "Bug reports from shake to report. Anyone can send one, signed in or not, in every build; super admins read them in the console (Super admin → Bug reports), mark them fixed or dismissed and delete them. On Supabase builds the same use cases are rpc_submit_bug_report and friends (supabase/migrations/0019_bug_reports.sql).",
+   "doc": "Bug reports and help requests. Bug reports come from shake to report. Anyone can send one, signed in or not, in every build; super admins read them in the console (Super admin → Bug reports), mark them fixed or dismissed and delete them. On Supabase builds the same use cases are rpc_submit_bug_report and friends (supabase/migrations/0019_bug_reports.sql). Help requests (Help and support) come from couples, businesses and freelancers; staff with `support.manage` answer them at Platform → Help desk. On Supabase builds they are rpc_open_support_ticket and friends (supabase/migrations/0022_profil…",
    "exports": [
     {
      "name": "MAX_BUG_REPORTS",
      "kind": "const",
-     "line": 16,
+     "line": 24,
      "signature": "= 200",
      "doc": "Reports kept on the device; the oldest go first."
     },
     {
      "name": "MAX_BUG_SCREENSHOTS",
      "kind": "const",
-     "line": 18,
+     "line": 26,
      "signature": "= 20",
      "doc": "Only the newest reports keep their screenshot, so the saved data stays small."
     },
     {
      "name": "SupportActions",
      "kind": "interface",
-     "line": 21,
+     "line": 30,
      "signature": "",
-     "doc": "",
+     "doc": "Bug report and help request use cases.",
      "members": [
       {
        "name": "submitBugReport",
@@ -16155,15 +17601,90 @@
        "optional": false,
        "type": "(ids: string[]) => string | null",
        "doc": "Deletes reports (super admins)."
+      },
+      {
+       "name": "openSupportTicket",
+       "optional": false,
+       "type": "(input: SupportTicketInput) => { id?: string; error?: string }",
+       "doc": "Opens a help request for the signed-in person and tells the Vivah team. Returns its id, or an error to show."
+      },
+      {
+       "name": "replySupportTicket",
+       "optional": false,
+       "type": "(id: string, body: string, opts?: { internal?: boolean }) => string | null",
+       "doc": "Adds a message to a help request (its owner, or staff who answer help requests; staff may add internal notes)."
+      },
+      {
+       "name": "setSupportTicketStatus",
+       "optional": false,
+       "type": "(id: string, status: SupportTicketStatus) => string | null",
+       "doc": "Changes a request's status. Owners can only mark it solved or reopen it; staff can set any status."
+      },
+      {
+       "name": "assignSupportTicket",
+       "optional": false,
+       "type": "(id: string, staffId: string | null, priority?: SupportPriority) => string | null",
+       "doc": "Gives a request to a staff member (or nobody), and its priority (staff who answer help requests)."
+      },
+      {
+       "name": "rateSupportTicket",
+       "optional": false,
+       "type": "(id: string, rating: number, note?: string) => string | null",
+       "doc": "The owner rates the help they got (1–5) once the request is resolved or closed."
+      },
+      {
+       "name": "mirrorSupportTickets",
+       "optional": false,
+       "type": "(tickets: SupportTicket[]) => void",
+       "doc": "Supabase builds: replaces the device copy with the requests the server returned (rpc_my_support_tickets)."
+      }
+     ]
+    },
+    {
+     "name": "SupportTicketInput",
+     "kind": "interface",
+     "line": 52,
+     "signature": "",
+     "doc": "What \"Ask the team\" sends.",
+     "members": [
+      {
+       "name": "topic",
+       "optional": false,
+       "type": "SupportTopic",
+       "doc": ""
+      },
+      {
+       "name": "subject",
+       "optional": false,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "body",
+       "optional": false,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "priority",
+       "optional": true,
+       "type": "SupportPriority",
+       "doc": ""
+      },
+      {
+       "name": "projectId",
+       "optional": true,
+       "type": "string",
+       "doc": ""
       }
      ]
     },
     {
      "name": "supportActions",
      "kind": "function",
-     "line": 30,
+     "line": 83,
      "signature": "(set: SetDb, get: GetDb): SupportActions",
-     "doc": ""
+     "doc": "Bug report and help request actions for the shared store."
     }
    ]
   },
@@ -16327,7 +17848,7 @@
     {
      "name": "DbData",
      "kind": "interface",
-     "line": 50,
+     "line": 52,
      "signature": "",
      "doc": "Everything the shared on-device \"backend\" persists. Mirrors the SQL schema.",
      "members": [
@@ -16572,6 +18093,12 @@
        "doc": "Notices shown at the top of a role's home."
       },
       {
+       "name": "content",
+       "optional": false,
+       "type": "AppContent",
+       "doc": "Replacement photos, listing edits, home sections, banners and brand details (Content studio)."
+      },
+      {
        "name": "socialAccounts",
        "optional": false,
        "type": "SocialAccount[]",
@@ -16606,6 +18133,12 @@
        "optional": false,
        "type": "BugReportRecord[]",
        "doc": "Bug reports sent with shake to report, newest first (super admin console → Bug reports)."
+      },
+      {
+       "name": "supportTickets",
+       "optional": false,
+       "type": "SupportTicket[]",
+       "doc": "Help requests from every role, newest activity first (Help and support; Platform → Help desk)."
       }
      ]
     }
@@ -16818,28 +18351,28 @@
     {
      "name": "syncDemoAccounts",
      "kind": "function",
-     "line": 43,
+     "line": 46,
      "signature": "(accounts: Account[]): Account[]",
      "doc": "Brings the demo accounts of an older install up to date: adds demo accounts\nit doesn't have yet and copies the demo persona fields onto the existing\nones. Other accounts are left alone."
     },
     {
      "name": "useSession",
      "kind": "const",
-     "line": 59,
+     "line": 62,
      "signature": "= create<SessionState>()( persist( (set, get) => ({ accounts: DEMO_ACCOUNTS, session: null,…",
      "doc": "Mock auth: accounts live on-device and any number verifies with the demo OTP.\nReplace `login`/`register` with your auth provider (Supabase, Firebase, …)."
     },
     {
      "name": "useCurrentAccount",
      "kind": "hook",
-     "line": 122,
+     "line": 134,
      "signature": "()",
      "doc": "The signed-in account (null when logged out)."
     },
     {
      "name": "useAccount",
      "kind": "hook",
-     "line": 130,
+     "line": 142,
      "signature": "(): Account",
      "doc": "Non-null account for screens that only render inside a role app. During\nlogout a screen may render once more before its protected route unmounts,\nso this falls back to the last signed-in account instead of throwing."
     }
@@ -16879,9 +18412,9 @@
     {
      "name": "useRoleTheme",
      "kind": "hook",
-     "line": 14,
-     "signature": "()",
-     "doc": ""
+     "line": 15,
+     "signature": "(): RoleTheme",
+     "doc": "The current role's theme, in the colour scheme on screen (light or dark)."
     }
    ]
   },
@@ -17104,30 +18637,154 @@
     {
      "name": "ROLE_THEMES",
      "kind": "const",
-     "line": 69,
+     "line": 143,
      "signature": ": Record<UserRole, RoleTheme>",
-     "doc": "One design system, four apps. Every role shares the \"Royal Nepali Luxury\"\npalette (ivory and pearl neutrals, espresso ink, champagne accents), the\ntype, the spacing and the component shapes. Couple, business and\nfreelancer apps share the burgundy accent; the staff console uses the\ndeeper wine so a coordinator can tell at a glance which app they are in."
+     "doc": "The live role themes; rebuilt in place when the colour scheme changes."
     },
     {
      "name": "ROLE_MARK",
      "kind": "const",
-     "line": 142,
+     "line": 156,
      "signature": ": Record<UserRole, string>",
-     "doc": "Small marks that tell roles apart where several meet on one screen (chat\nbubbles, member chips). Accents stay burgundy; these are only for labels."
+     "doc": ""
     },
     {
      "name": "statusTone",
      "kind": "function",
-     "line": 173,
+     "line": 187,
      "signature": "(status: string, t: RoleTheme): { fg: string; bg: string }",
      "doc": "Colour for any workflow status string, shared by every role's status pills."
     },
     {
      "name": "statusLabel",
      "kind": "function",
-     "line": 181,
+     "line": 195,
      "signature": "(s: string)",
      "doc": "\"QUOTE_SENT\" / \"in_progress\" → \"Quote sent\" / \"In progress\"."
+    }
+   ]
+  },
+  {
+   "file": "src/types/content.ts",
+   "doc": "App content a super admin edits from the console (Super admin → Content studio): replacement photos, changes to marketplace listings, the order and titles of the couple's home sections, home banners and the brand details. It is one persisted object (`DbData.content`) laid over the bundled catalogue at read time, so removing an edit restores the original. Mirrored by supabase/migrations/0021_app_content.sql.",
+   "exports": [
+    {
+     "name": "ContentKind",
+     "kind": "type",
+     "line": 11,
+     "signature": "= 'venue' | 'vendor' | 'category' | 'shortcut' | 'collection' | 'idea' | 'story' | 'realWedding'",
+     "doc": "Catalogue lists whose records can be edited."
+    },
+    {
+     "name": "ContentEntry",
+     "kind": "interface",
+     "line": 14,
+     "signature": "",
+     "doc": "Changes to one catalogue record: only the fields that differ from the original.",
+     "members": [
+      {
+       "name": "fields",
+       "optional": false,
+       "type": "Record<string, unknown>",
+       "doc": ""
+      },
+      {
+       "name": "hidden",
+       "optional": true,
+       "type": "boolean",
+       "doc": "Taken out of lists and search; links to it still open."
+      }
+     ]
+    },
+    {
+     "name": "ContentBanner",
+     "kind": "interface",
+     "line": 21,
+     "signature": "",
+     "doc": "A banner a super admin adds to the couple's home.",
+     "members": [
+      {
+       "name": "id",
+       "optional": false,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "title",
+       "optional": false,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "body",
+       "optional": true,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "image",
+       "optional": true,
+       "type": "string",
+       "doc": "A bundled photo key or an image address."
+      },
+      {
+       "name": "actionLabel",
+       "optional": true,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "href",
+       "optional": true,
+       "type": "string",
+       "doc": "An app route (`/venues`) or a web address the button opens."
+      },
+      {
+       "name": "active",
+       "optional": false,
+       "type": "boolean",
+       "doc": ""
+      }
+     ]
+    },
+    {
+     "name": "AppContent",
+     "kind": "interface",
+     "line": 33,
+     "signature": "",
+     "doc": "",
+     "members": [
+      {
+       "name": "images",
+       "optional": false,
+       "type": "Record<string, string>",
+       "doc": "Bundled photo key → the address of the photo shown instead, everywhere it appears."
+      },
+      {
+       "name": "entries",
+       "optional": false,
+       "type": "Record<string, ContentEntry>",
+       "doc": "Keyed `${kind}:${id}`."
+      },
+      {
+       "name": "home",
+       "optional": false,
+       "type": "{ /** Section ids top to bottom (banners as `banner:<id>`); empty keeps the built-in order. */ order: string[]; /** Section id → heading; `{city}` becomes the chosen city. */ titles: Record<string, s…",
+       "doc": ""
+      },
+      {
+       "name": "banners",
+       "optional": false,
+       "type": "ContentBanner[]",
+       "doc": ""
+      },
+      {
+       "name": "brand",
+       "optional": false,
+       "type": "Record<string, string>",
+       "doc": "Brand field (`constants/brand.ts`) → replacement."
+      }
+     ]
     }
    ]
   },
@@ -17346,7 +19003,7 @@
       {
        "name": "images",
        "optional": false,
-       "type": "PhotoKey[]",
+       "type": "PhotoRef[]",
        "doc": ""
       },
       {
@@ -17416,7 +19073,7 @@
       {
        "name": "image",
        "optional": false,
-       "type": "PhotoKey",
+       "type": "PhotoRef",
        "doc": ""
       }
      ]
@@ -17449,7 +19106,7 @@
       {
        "name": "image",
        "optional": false,
-       "type": "PhotoKey",
+       "type": "PhotoRef",
        "doc": ""
       },
       {
@@ -17581,7 +19238,7 @@
       {
        "name": "images",
        "optional": false,
-       "type": "PhotoKey[]",
+       "type": "PhotoRef[]",
        "doc": ""
       },
       {
@@ -17687,7 +19344,7 @@
       {
        "name": "image",
        "optional": false,
-       "type": "PhotoKey",
+       "type": "PhotoRef",
        "doc": ""
       },
       {
@@ -17756,7 +19413,7 @@
       {
        "name": "image",
        "optional": false,
-       "type": "PhotoKey",
+       "type": "PhotoRef",
        "doc": ""
       },
       {
@@ -17819,13 +19476,13 @@
       {
        "name": "cover",
        "optional": false,
-       "type": "PhotoKey",
+       "type": "PhotoRef",
        "doc": ""
       },
       {
        "name": "gallery",
        "optional": false,
-       "type": "PhotoKey[]",
+       "type": "PhotoRef[]",
        "doc": ""
       },
       {
@@ -18046,7 +19703,7 @@
       {
        "name": "image",
        "optional": true,
-       "type": "PhotoKey",
+       "type": "PhotoRef",
        "doc": ""
       },
       {
@@ -18148,7 +19805,7 @@
       {
        "name": "image",
        "optional": false,
-       "type": "PhotoKey",
+       "type": "PhotoRef",
        "doc": ""
       },
       {
@@ -18859,6 +20516,12 @@
        "doc": "Notification, language and privacy preferences (every role)."
       },
       {
+       "name": "photo",
+       "optional": true,
+       "type": "string",
+       "doc": "Profile photo: a file on this device or an https link. Missing shows initials."
+      },
+      {
        "name": "team",
        "optional": true,
        "type": "PlatformTeam",
@@ -18875,35 +20538,35 @@
     {
      "name": "EventType",
      "kind": "type",
-     "line": 97,
+     "line": 99,
      "signature": "= | 'WEDDING' | 'ENGAGEMENT' | 'PRE_WEDDING' | 'POST_WEDDING' | 'PASNI' | 'NWARAN' | 'BRATABANDHA' | 'ANNIVERSARY' | 'RECEPTION' | 'MEHENDI' | 'HALDI' | 'SANGEET' | 'BACHELOR_PARTY' | 'BRIDAL_SHOWER' | 'WELCOME_DINNER' | 'AFTER_PARTY' | 'RELIGIOUS_CEREMONY' | '…",
      "doc": ""
     },
     {
      "name": "ProjectStatus",
      "kind": "type",
-     "line": 120,
+     "line": 122,
      "signature": "= | 'NEW' | 'REVIEWING' | 'NEEDS_CLARIFICATION' | 'MATCHING_PROVIDERS' | 'QUOTE_PREPARED' | 'QUOTE_SENT' | 'CUSTOMER_NEGOTIATING' | 'CONFIRMED' | 'IN_PROGRESS' | 'COMPLETED' | 'CLOSED' | 'QUOTE_REJECTED' | 'CANCELLED'",
      "doc": ""
     },
     {
      "name": "LeadSource",
      "kind": "type",
-     "line": 135,
+     "line": 137,
      "signature": "= 'plan_wizard' | 'enquiry' | 'concierge' | 'assistant' | 'phone' | 'referral'",
      "doc": ""
     },
     {
      "name": "LeadStatus",
      "kind": "type",
-     "line": 138,
+     "line": 140,
      "signature": "= 'new' | 'contacted' | 'responded' | 'quoted' | 'negotiating' | 'meeting' | 'won' | 'lost' | 'archived'",
      "doc": ""
     },
     {
      "name": "Lead",
      "kind": "interface",
-     "line": 140,
+     "line": 142,
      "signature": "",
      "doc": "",
      "members": [
@@ -19050,21 +20713,21 @@
     {
      "name": "PricingModel",
      "kind": "type",
-     "line": 167,
+     "line": 169,
      "signature": "= 'COMMISSION' | 'MARKUP' | 'LEAD_FEE' | 'FREELANCER_MARGIN'",
      "doc": ""
     },
     {
      "name": "MilestoneRule",
      "kind": "type",
-     "line": 168,
+     "line": 170,
      "signature": "= 'on_confirmation' | 'days_before_event' | 'on_event_day' | 'after_completion' | 'fixed_date'",
      "doc": ""
     },
     {
      "name": "QuoteItem",
      "kind": "interface",
-     "line": 170,
+     "line": 172,
      "signature": "",
      "doc": "",
      "members": [
@@ -19157,7 +20820,7 @@
     {
      "name": "ScheduleStep",
      "kind": "interface",
-     "line": 189,
+     "line": 191,
      "signature": "",
      "doc": "",
      "members": [
@@ -19190,14 +20853,14 @@
     {
      "name": "QuoteStatus",
      "kind": "type",
-     "line": 196,
+     "line": 198,
      "signature": "= 'draft' | 'sent' | 'viewed' | 'revision' | 'accepted' | 'declined' | 'expired' | 'superseded'",
      "doc": ""
     },
     {
      "name": "QuoteVersion",
      "kind": "interface",
-     "line": 199,
+     "line": 201,
      "signature": "",
      "doc": "Frozen copy of a version that was sent — quotations are never overwritten.",
      "members": [
@@ -19284,7 +20947,7 @@
     {
      "name": "Quotation",
      "kind": "interface",
-     "line": 215,
+     "line": 217,
      "signature": "",
      "doc": "",
      "members": [
@@ -19467,7 +21130,7 @@
     {
      "name": "StatusChange",
      "kind": "interface",
-     "line": 251,
+     "line": 253,
      "signature": "",
      "doc": "",
      "members": [
@@ -19500,7 +21163,7 @@
     {
      "name": "Collaborator",
      "kind": "interface",
-     "line": 258,
+     "line": 260,
      "signature": "",
      "doc": "",
      "members": [
@@ -19557,14 +21220,14 @@
     {
      "name": "RunStatus",
      "kind": "type",
-     "line": 269,
+     "line": 271,
      "signature": "= 'pending' | 'in_progress' | 'done' | 'delayed'",
      "doc": ""
     },
     {
      "name": "RunItem",
      "kind": "interface",
-     "line": 271,
+     "line": 273,
      "signature": "",
      "doc": "",
      "members": [
@@ -19609,14 +21272,14 @@
     {
      "name": "EventStatus",
      "kind": "type",
-     "line": 280,
+     "line": 282,
      "signature": "= 'planned' | 'live' | 'done' | 'cancelled'",
      "doc": ""
     },
     {
      "name": "ProjectEvent",
      "kind": "interface",
-     "line": 282,
+     "line": 284,
      "signature": "",
      "doc": "",
      "members": [
@@ -19721,21 +21384,21 @@
     {
      "name": "WeddingEvent",
      "kind": "type",
-     "line": 302,
+     "line": 304,
      "signature": "= ProjectEvent",
      "doc": "@deprecated kept for older screens — use ProjectEvent."
     },
     {
      "name": "RequirementStatus",
      "kind": "type",
-     "line": 304,
+     "line": 306,
      "signature": "= 'OPEN' | 'MATCHING' | 'SHORTLISTED' | 'QUOTED' | 'CONFIRMED' | 'CANCELLED'",
      "doc": ""
     },
     {
      "name": "ScoreBreakdown",
      "kind": "interface",
-     "line": 306,
+     "line": 308,
      "signature": "",
      "doc": "",
      "members": [
@@ -19804,7 +21467,7 @@
     {
      "name": "MatchCandidate",
      "kind": "interface",
-     "line": 319,
+     "line": 321,
      "signature": "",
      "doc": "",
      "members": [
@@ -19867,7 +21530,7 @@
     {
      "name": "Requirement",
      "kind": "interface",
-     "line": 331,
+     "line": 333,
      "signature": "",
      "doc": "",
      "members": [
@@ -19942,14 +21605,14 @@
     {
      "name": "BookingStatus",
      "kind": "type",
-     "line": 346,
+     "line": 348,
      "signature": "= 'PROPOSED' | 'HELD' | 'CONFIRMED' | 'IN_PROGRESS' | 'COMPLETED' | 'CANCELLED'",
      "doc": ""
     },
     {
      "name": "CrewRequirement",
      "kind": "interface",
-     "line": 348,
+     "line": 350,
      "signature": "",
      "doc": "",
      "members": [
@@ -20000,14 +21663,14 @@
     {
      "name": "AssignmentStatus",
      "kind": "type",
-     "line": 359,
+     "line": 361,
      "signature": "= | 'INVITED' | 'ASSIGNED' | 'CONFIRMED' | 'CHECKED_IN' | 'IN_PROGRESS' | 'COMPLETED' | 'NO_SHOW' | 'CANCELLED' | 'EMERGENCY_REPLACEMENT'",
      "doc": ""
     },
     {
      "name": "Assignment",
      "kind": "interface",
-     "line": 370,
+     "line": 372,
      "signature": "",
      "doc": "",
      "members": [
@@ -20154,14 +21817,14 @@
     {
      "name": "DeliverableStatus",
      "kind": "type",
-     "line": 398,
+     "line": 400,
      "signature": "= 'NOT_STARTED' | 'IN_PROGRESS' | 'READY_FOR_REVIEW' | 'REVISION_REQUESTED' | 'APPROVED' | 'DELIVERED'",
      "doc": ""
     },
     {
      "name": "Deliverable",
      "kind": "interface",
-     "line": 400,
+     "line": 402,
      "signature": "",
      "doc": "",
      "members": [
@@ -20242,7 +21905,7 @@
     {
      "name": "ServiceBooking",
      "kind": "interface",
-     "line": 415,
+     "line": 417,
      "signature": "",
      "doc": "",
      "members": [
@@ -20401,21 +22064,21 @@
     {
      "name": "TaskStatus",
      "kind": "type",
-     "line": 446,
+     "line": 448,
      "signature": "= 'TODO' | 'IN_PROGRESS' | 'WAITING' | 'COMPLETED' | 'CANCELLED'",
      "doc": ""
     },
     {
      "name": "TaskAssignee",
      "kind": "type",
-     "line": 447,
+     "line": 449,
      "signature": "= 'customer' | 'partner' | 'family' | 'coordinator' | 'provider' | 'freelancer'",
      "doc": ""
     },
     {
      "name": "ProjectTask",
      "kind": "interface",
-     "line": 449,
+     "line": 451,
      "signature": "",
      "doc": "",
      "members": [
@@ -20526,7 +22189,7 @@
     {
      "name": "TimelineEntry",
      "kind": "interface",
-     "line": 469,
+     "line": 471,
      "signature": "",
      "doc": "",
      "members": [
@@ -20589,14 +22252,14 @@
     {
      "name": "MilestoneStatus",
      "kind": "type",
-     "line": 481,
+     "line": 483,
      "signature": "= 'UPCOMING' | 'DUE' | 'OVERDUE' | 'PARTIALLY_PAID' | 'PAID' | 'WAIVED'",
      "doc": ""
     },
     {
      "name": "PaymentMilestone",
      "kind": "interface",
-     "line": 483,
+     "line": 485,
      "signature": "",
      "doc": "",
      "members": [
@@ -20659,7 +22322,7 @@
     {
      "name": "Incident",
      "kind": "interface",
-     "line": 495,
+     "line": 497,
      "signature": "",
      "doc": "",
      "members": [
@@ -20710,7 +22373,7 @@
     {
      "name": "Project",
      "kind": "interface",
-     "line": 505,
+     "line": 507,
      "signature": "",
      "doc": "",
      "members": [
@@ -20879,7 +22542,7 @@
       {
        "name": "inspiration",
        "optional": false,
-       "type": "PhotoKey[]",
+       "type": "PhotoRef[]",
        "doc": ""
       },
       {
@@ -20953,14 +22616,14 @@
     {
      "name": "PaymentMethod",
      "kind": "type",
-     "line": 551,
+     "line": 553,
      "signature": "= 'esewa' | 'khalti' | 'fonepay' | 'connect_ips' | 'ime_pay' | 'bank_transfer' | 'card' | 'cash'",
      "doc": ""
     },
     {
      "name": "Payment",
      "kind": "interface",
-     "line": 553,
+     "line": 555,
      "signature": "",
      "doc": "",
      "members": [
@@ -21041,14 +22704,14 @@
     {
      "name": "PayableStatus",
      "kind": "type",
-     "line": 568,
+     "line": 570,
      "signature": "= 'ACCRUED' | 'ON_HOLD' | 'READY' | 'PAID' | 'CANCELLED'",
      "doc": ""
     },
     {
      "name": "Payable",
      "kind": "interface",
-     "line": 570,
+     "line": 572,
      "signature": "",
      "doc": "",
      "members": [
@@ -21153,14 +22816,14 @@
     {
      "name": "RevenueKind",
      "kind": "type",
-     "line": 589,
+     "line": 591,
      "signature": "= 'COMMISSION' | 'MARKUP' | 'LEAD_FEE' | 'FREELANCER_MARGIN' | 'SERVICE_FEE' | 'SUBSCRIPTION' | 'FEATURED' | 'EMERGENCY_FEE'",
      "doc": ""
     },
     {
      "name": "RevenueEntry",
      "kind": "interface",
-     "line": 591,
+     "line": 593,
      "signature": "",
      "doc": "",
      "members": [
@@ -21217,7 +22880,7 @@
     {
      "name": "Refund",
      "kind": "interface",
-     "line": 602,
+     "line": 604,
      "signature": "",
      "doc": "",
      "members": [
@@ -21280,7 +22943,7 @@
     {
      "name": "Dispute",
      "kind": "interface",
-     "line": 614,
+     "line": 616,
      "signature": "",
      "doc": "",
      "members": [
@@ -21379,21 +23042,21 @@
     {
      "name": "AvailabilityStatus",
      "kind": "type",
-     "line": 633,
+     "line": 635,
      "signature": "= 'AVAILABLE' | 'TENTATIVE' | 'HELD' | 'BOOKED' | 'UNAVAILABLE'",
      "doc": ""
     },
     {
      "name": "DayPart",
      "kind": "type",
-     "line": 634,
+     "line": 636,
      "signature": "= 'full' | 'morning' | 'afternoon' | 'evening'",
      "doc": ""
     },
     {
      "name": "AvailabilityEntry",
      "kind": "interface",
-     "line": 636,
+     "line": 638,
      "signature": "",
      "doc": "",
      "members": [
@@ -21456,7 +23119,7 @@
     {
      "name": "AvailabilityRule",
      "kind": "interface",
-     "line": 648,
+     "line": 650,
      "signature": "",
      "doc": "",
      "members": [
@@ -21495,7 +23158,7 @@
     {
      "name": "FreelancerProfile",
      "kind": "interface",
-     "line": 657,
+     "line": 659,
      "signature": "",
      "doc": "",
      "members": [
@@ -21646,7 +23309,7 @@
       {
        "name": "portfolio",
        "optional": false,
-       "type": "PhotoKey[]",
+       "type": "PhotoRef[]",
        "doc": ""
       }
      ]
@@ -21654,21 +23317,21 @@
     {
      "name": "GigStatus",
      "kind": "type",
-     "line": 685,
+     "line": 687,
      "signature": "= 'open' | 'filled' | 'in_progress' | 'completed' | 'cancelled'",
      "doc": ""
     },
     {
      "name": "ApplicationStatus",
      "kind": "type",
-     "line": 686,
+     "line": 688,
      "signature": "= | 'invited' | 'applied' | 'shortlisted' | 'hired' | 'confirmed' | 'checked_in' | 'completed' | 'declined' | 'rejected' | 'withdrawn' | 'no_show' | 'cancelled'",
      "doc": ""
     },
     {
      "name": "GigApplication",
      "kind": "interface",
-     "line": 700,
+     "line": 702,
      "signature": "",
      "doc": "",
      "members": [
@@ -21749,7 +23412,7 @@
     {
      "name": "GigQuestion",
      "kind": "interface",
-     "line": 716,
+     "line": 718,
      "signature": "",
      "doc": "",
      "members": [
@@ -21794,7 +23457,7 @@
     {
      "name": "Gig",
      "kind": "interface",
-     "line": 725,
+     "line": 727,
      "signature": "",
      "doc": "",
      "members": [
@@ -21971,7 +23634,7 @@
     {
      "name": "ThreadMember",
      "kind": "interface",
-     "line": 758,
+     "line": 760,
      "signature": "",
      "doc": "",
      "members": [
@@ -21998,7 +23661,7 @@
     {
      "name": "Thread",
      "kind": "interface",
-     "line": 764,
+     "line": 766,
      "signature": "",
      "doc": "",
      "members": [
@@ -22047,7 +23710,7 @@
       {
        "name": "image",
        "optional": true,
-       "type": "PhotoKey",
+       "type": "PhotoRef",
        "doc": ""
       },
       {
@@ -22091,14 +23754,14 @@
     {
      "name": "MessageKind",
      "kind": "type",
-     "line": 781,
+     "line": 783,
      "signature": "= 'text' | 'image' | 'file' | 'quote' | 'package' | 'location' | 'meeting' | 'system' | 'voice'",
      "doc": ""
     },
     {
      "name": "Message",
      "kind": "interface",
-     "line": 783,
+     "line": 785,
      "signature": "",
      "doc": "",
      "members": [
@@ -22147,7 +23810,7 @@
       {
        "name": "meta",
        "optional": true,
-       "type": "{ quoteId?: string; image?: PhotoKey; uri?: string; fileName?: string; location?: { label: string; lat?: number; lng?: number }; meeting?: { at: string; title: string }; packageName?: string; price?:…",
+       "type": "{ quoteId?: string; image?: PhotoRef; uri?: string; fileName?: string; location?: { label: string; lat?: number; lng?: number }; meeting?: { at: string; title: string }; packageName?: string; price?:…",
        "doc": ""
       },
       {
@@ -22167,7 +23830,7 @@
     {
      "name": "InternalNote",
      "kind": "interface",
-     "line": 806,
+     "line": 808,
      "signature": "",
      "doc": "",
      "members": [
@@ -22218,7 +23881,7 @@
     {
      "name": "FileRef",
      "kind": "interface",
-     "line": 816,
+     "line": 818,
      "signature": "",
      "doc": "",
      "members": [
@@ -22293,7 +23956,7 @@
     {
      "name": "AuditEntry",
      "kind": "interface",
-     "line": 830,
+     "line": 832,
      "signature": "",
      "doc": "",
      "members": [
@@ -22350,7 +24013,7 @@
     {
      "name": "AppNotification",
      "kind": "interface",
-     "line": 841,
+     "line": 843,
      "signature": "",
      "doc": "",
      "members": [
@@ -22407,7 +24070,7 @@
     {
      "name": "ReviewRecord",
      "kind": "interface",
-     "line": 854,
+     "line": 856,
      "signature": "",
      "doc": "",
      "members": [
@@ -22486,7 +24149,7 @@
       {
        "name": "photos",
        "optional": false,
-       "type": "PhotoKey[]",
+       "type": "PhotoRef[]",
        "doc": ""
       },
       {
@@ -22542,14 +24205,14 @@
     {
      "name": "CheckState",
      "kind": "type",
-     "line": 880,
+     "line": 882,
      "signature": "= 'pending' | 'passed' | 'failed'",
      "doc": ""
     },
     {
      "name": "VerificationCase",
      "kind": "interface",
-     "line": 882,
+     "line": 884,
      "signature": "",
      "doc": "",
      "members": [
@@ -22630,14 +24293,14 @@
     {
      "name": "RsvpStatus",
      "kind": "type",
-     "line": 899,
+     "line": 901,
      "signature": "= 'pending' | 'yes' | 'no' | 'maybe'",
      "doc": ""
     },
     {
      "name": "GuestInvite",
      "kind": "interface",
-     "line": 901,
+     "line": 903,
      "signature": "",
      "doc": "",
      "members": [
@@ -22700,7 +24363,7 @@
     {
      "name": "Guest",
      "kind": "interface",
-     "line": 913,
+     "line": 915,
      "signature": "",
      "doc": "",
      "members": [
@@ -22835,7 +24498,7 @@
     {
      "name": "SeatingElement",
      "kind": "interface",
-     "line": 937,
+     "line": 939,
      "signature": "",
      "doc": "",
      "members": [
@@ -22886,7 +24549,7 @@
     {
      "name": "SeatingLayout",
      "kind": "interface",
-     "line": 947,
+     "line": 949,
      "signature": "",
      "doc": "",
      "members": [
@@ -22913,7 +24576,7 @@
     {
      "name": "BudgetLine",
      "kind": "interface",
-     "line": 953,
+     "line": 955,
      "signature": "",
      "doc": "",
      "members": [
@@ -22988,7 +24651,7 @@
     {
      "name": "WeddingWebsite",
      "kind": "interface",
-     "line": 967,
+     "line": 969,
      "signature": "",
      "doc": "",
      "members": [
@@ -23037,13 +24700,13 @@
       {
        "name": "cover",
        "optional": false,
-       "type": "PhotoKey",
+       "type": "PhotoRef",
        "doc": ""
       },
       {
        "name": "gallery",
        "optional": false,
-       "type": "PhotoKey[]",
+       "type": "PhotoRef[]",
        "doc": ""
       },
       {
@@ -23123,7 +24786,7 @@
     {
      "name": "RegistryItem",
      "kind": "interface",
-     "line": 991,
+     "line": 993,
      "signature": "",
      "doc": "",
      "members": [
@@ -23184,7 +24847,7 @@
       {
        "name": "image",
        "optional": true,
-       "type": "PhotoKey",
+       "type": "PhotoRef",
        "doc": ""
       },
       {
@@ -23198,7 +24861,7 @@
     {
      "name": "InspirationBoard",
      "kind": "interface",
-     "line": 1005,
+     "line": 1007,
      "signature": "",
      "doc": "",
      "members": [
@@ -23237,7 +24900,7 @@
     {
      "name": "Contract",
      "kind": "interface",
-     "line": 1013,
+     "line": 1015,
      "signature": "",
      "doc": "",
      "members": [
@@ -23318,7 +24981,7 @@
     {
      "name": "ShortlistEntry",
      "kind": "interface",
-     "line": 1028,
+     "line": 1030,
      "signature": "",
      "doc": "",
      "members": [
@@ -23357,7 +25020,7 @@
     {
      "name": "Deal",
      "kind": "interface",
-     "line": 1036,
+     "line": 1038,
      "signature": "",
      "doc": "",
      "members": [
@@ -23450,7 +25113,7 @@
     {
      "name": "ProviderPackage",
      "kind": "interface",
-     "line": 1053,
+     "line": 1055,
      "signature": "",
      "doc": "",
      "members": [
@@ -23561,7 +25224,7 @@
     {
      "name": "PortfolioItem",
      "kind": "interface",
-     "line": 1073,
+     "line": 1075,
      "signature": "",
      "doc": "",
      "members": [
@@ -23580,7 +25243,7 @@
       {
        "name": "image",
        "optional": true,
-       "type": "PhotoKey",
+       "type": "PhotoRef",
        "doc": ""
       },
       {
@@ -23642,7 +25305,7 @@
     {
      "name": "StaffMember",
      "kind": "interface",
-     "line": 1089,
+     "line": 1091,
      "signature": "",
      "doc": "",
      "members": [
@@ -23693,7 +25356,7 @@
     {
      "name": "Invoice",
      "kind": "interface",
-     "line": 1099,
+     "line": 1101,
      "signature": "",
      "doc": "",
      "members": [
@@ -23774,7 +25437,7 @@
     {
      "name": "PlatformSettings",
      "kind": "interface",
-     "line": 1114,
+     "line": 1116,
      "signature": "",
      "doc": "",
      "members": [
@@ -23843,7 +25506,7 @@
     {
      "name": "Announcement",
      "kind": "interface",
-     "line": 1128,
+     "line": 1130,
      "signature": "",
      "doc": "A notice a super admin pins to the top of one role's home, or every role's.",
      "members": [
@@ -23900,7 +25563,7 @@
     {
      "name": "BugLogLine",
      "kind": "interface",
-     "line": 1140,
+     "line": 1142,
      "signature": "",
      "doc": "",
      "members": [
@@ -23927,7 +25590,7 @@
     {
      "name": "BugReport",
      "kind": "interface",
-     "line": 1147,
+     "line": 1149,
      "signature": "",
      "doc": "What the report sheet sends: the description, the screenshot and where it happened.",
      "members": [
@@ -23996,14 +25659,14 @@
     {
      "name": "BugReportStatus",
      "kind": "type",
-     "line": 1162,
+     "line": 1164,
      "signature": "= 'new' | 'fixed' | 'dismissed'",
      "doc": ""
     },
     {
      "name": "BugReportRecord",
      "kind": "interface",
-     "line": 1165,
+     "line": 1167,
      "signature": "extends BugReport",
      "doc": "A bug report as the super admin console keeps it.",
      "members": [
@@ -24046,23 +25709,212 @@
      ]
     },
     {
+     "name": "SupportTopic",
+     "kind": "type",
+     "line": 1178,
+     "signature": "= 'booking' | 'payment' | 'account' | 'vendor' | 'technical' | 'feedback' | 'other'",
+     "doc": ""
+    },
+    {
+     "name": "SupportTicketStatus",
+     "kind": "type",
+     "line": 1180,
+     "signature": "= 'open' | 'in_progress' | 'waiting' | 'resolved' | 'closed'",
+     "doc": "open: waiting on the Vivah team · waiting: the team asked the person something · resolved: answered (the person can reopen) · closed: done."
+    },
+    {
+     "name": "SupportPriority",
+     "kind": "type",
+     "line": 1181,
+     "signature": "= 'normal' | 'high' | 'urgent'",
+     "doc": ""
+    },
+    {
+     "name": "SupportMessage",
+     "kind": "interface",
+     "line": 1184,
+     "signature": "",
+     "doc": "One message in a help request. `internal` notes are seen by staff only.",
+     "members": [
+      {
+       "name": "id",
+       "optional": false,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "at",
+       "optional": false,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "authorId",
+       "optional": false,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "authorName",
+       "optional": false,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "authorRole",
+       "optional": false,
+       "type": "UserRole",
+       "doc": ""
+      },
+      {
+       "name": "body",
+       "optional": false,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "internal",
+       "optional": true,
+       "type": "boolean",
+       "doc": ""
+      }
+     ]
+    },
+    {
+     "name": "SupportTicket",
+     "kind": "interface",
+     "line": 1195,
+     "signature": "",
+     "doc": "A help request from any role, answered by the Vivah team (Platform → Help desk).",
+     "members": [
+      {
+       "name": "id",
+       "optional": false,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "code",
+       "optional": false,
+       "type": "string",
+       "doc": "Human code, e.g. SUP-2026-0101."
+      },
+      {
+       "name": "accountId",
+       "optional": false,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "accountName",
+       "optional": false,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "role",
+       "optional": false,
+       "type": "UserRole",
+       "doc": ""
+      },
+      {
+       "name": "topic",
+       "optional": false,
+       "type": "SupportTopic",
+       "doc": ""
+      },
+      {
+       "name": "subject",
+       "optional": false,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "priority",
+       "optional": false,
+       "type": "SupportPriority",
+       "doc": ""
+      },
+      {
+       "name": "status",
+       "optional": false,
+       "type": "SupportTicketStatus",
+       "doc": ""
+      },
+      {
+       "name": "projectId",
+       "optional": true,
+       "type": "string",
+       "doc": "The celebration or booking it is about, when the person picked one."
+      },
+      {
+       "name": "messages",
+       "optional": false,
+       "type": "SupportMessage[]",
+       "doc": ""
+      },
+      {
+       "name": "createdAt",
+       "optional": false,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "updatedAt",
+       "optional": false,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "assignedTo",
+       "optional": true,
+       "type": "string",
+       "doc": "Staff member looking after it."
+      },
+      {
+       "name": "assignedName",
+       "optional": true,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "resolvedAt",
+       "optional": true,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "rating",
+       "optional": true,
+       "type": "number",
+       "doc": "How the person rated the help (1–5), once resolved."
+      },
+      {
+       "name": "ratingNote",
+       "optional": true,
+       "type": "string",
+       "doc": ""
+      }
+     ]
+    },
+    {
      "name": "*",
      "kind": "re-export",
-     "line": 1176,
+     "line": 1221,
      "signature": "from './toolkit'",
      "doc": ""
     },
     {
      "name": "*",
      "kind": "re-export",
-     "line": 1178,
+     "line": 1223,
      "signature": "from './social'",
      "doc": ""
     },
     {
      "name": "*",
      "kind": "re-export",
-     "line": 1180,
+     "line": 1225,
      "signature": "from './persona'",
      "doc": ""
     }
@@ -24197,7 +26049,7 @@
       {
        "name": "image",
        "optional": true,
-       "type": "PhotoKey",
+       "type": "PhotoRef",
        "doc": ""
       },
       {
@@ -25320,6 +27172,26 @@
      "line": 32,
      "signature": "(message: string, phone?: string)",
      "doc": "Opens the SMS composer with a prefilled body."
+    }
+   ]
+  },
+  {
+   "file": "src/utils/localImage.ts",
+   "doc": "",
+   "exports": [
+    {
+     "name": "LOCAL_IMAGE_DIR",
+     "kind": "const",
+     "line": 7,
+     "signature": "= 'content'",
+     "doc": "Folder, inside the app's documents, for photos a super admin picked on this device."
+    },
+    {
+     "name": "imageUri",
+     "kind": "function",
+     "line": 14,
+     "signature": "(address: string): string",
+     "doc": "The address to load an image from. Photos kept on the device are stored as\n`vivah-file://name.jpg` because the documents folder moves when the app is\nupdated; every other address is returned as it is."
     }
    ]
   },

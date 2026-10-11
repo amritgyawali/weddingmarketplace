@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import { Card, EmptyBlock, KField, Segmented, StackHeader, StatTile } from '@/components/kit';
+import { syncSupportTickets } from '@/backend/support';
 import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
 import { Text } from '@/components/ui/Text';
 import { isOpenTicket } from '@/data/support';
@@ -26,6 +27,9 @@ export function HelpDesk() {
   const me = useAccount();
   const { wide } = useLayout();
   const tickets = useDb((s) => s.supportTickets);
+  useEffect(() => {
+    void syncSupportTickets();
+  }, []);
   const [filter, setFilter] = useState<Filter>('new');
   const [query, setQuery] = useState('');
   const open = tickets.filter((x) => isOpenTicket(x.status));

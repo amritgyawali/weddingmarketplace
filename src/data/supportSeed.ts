@@ -24,6 +24,7 @@ const msg = (id: string, minutesAgo: number, who: { id: string; name: string; ro
   ...(internal ? { internal: true } : {}),
 });
 
+/** The demo help requests (`DbData.supportTickets`). */
 export function buildSupportSeed(): { supportTickets: SupportTicket[] } {
   const aakriti = { id: 'acc_customer_demo', name: 'Aakriti Shrestha', role: 'customer' as const };
   const rajesh = { id: 'acc_vendor_demo', name: 'Rajesh Pradhan', role: 'vendor' as const };

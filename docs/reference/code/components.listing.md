@@ -38,7 +38,7 @@ Source: [src/components/listing/ImageCarousel.tsx](../../../src/components/listi
 *component* · [src/components/listing/ImageCarousel.tsx:9](../../../src/components/listing/ImageCarousel.tsx#L9)
 
 ```ts
-ImageCarousel({ images, width, height, radius = 0, onPressImage, dotsBottom = 12, }: { images: PhotoKey[]; width: number; height: number; radius?: number; onPressImage?: (index: number) => void; dotsBottom?: number; })
+ImageCarousel({ images, width, height, radius = 0, onPressImage, dotsBottom = 12, }: { images: PhotoRef[]; width: number; height: number; radius?: number; onPressImage?: (index: number) => void; dotsBottom?: number; })
 ```
 
 Swipeable photo strip with pagination dots (venue cards & detail heroes).

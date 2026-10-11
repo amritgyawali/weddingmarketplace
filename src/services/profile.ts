@@ -10,6 +10,7 @@ import type { Account } from '@/types/platform';
 /** The fields a person edits on Edit profile. Phone (how they sign in), role and verification are changed by the Vivah team. */
 export type ProfilePatch = Partial<Pick<Account, 'name' | 'email' | 'city' | 'photo' | 'businessName' | 'bio' | 'headline' | 'experienceYears' | 'languages'>>;
 
+/** Lengths and ranges for profile fields (the SQL uses the same). */
 export const PROFILE_LIMITS = {
   nameMin: 2,
   nameMax: 60,
@@ -23,6 +24,7 @@ export const PROFILE_LIMITS = {
 /** Cities a profile can be in (Nepal cities and towns, not provinces or "All Nepal"). */
 export const PROFILE_CITIES = CITIES.filter((c) => c.group !== 'state' && c.id !== 'all').map((c) => c.name);
 
+/** A plausible email address. */
 export const isEmail = (value: string) => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(value);
 
 const tidy = (value: string) => value.trim().replace(/\s+/g, ' ');

@@ -1,10 +1,11 @@
 import { Ionicons } from '@expo/vector-icons';
 import { router, type Href } from 'expo-router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Linking, Pressable, StyleSheet, View } from 'react-native';
 
 import { Card, EmptyBlock, FilterChip, KButton, ListRow, SectionTitle, StackHeader } from '@/components/kit';
 import { reportBug } from '@/components/ui/BugReporter';
+import { syncSupportTickets } from '@/backend/support';
 import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
 import { SearchBar } from '@/components/ui/SearchBar';
 import { Text } from '@/components/ui/Text';
@@ -84,6 +85,9 @@ export function SupportCenter() {
   const { wide } = useLayout();
   const on = useFeatures();
   const all = useDb((s) => s.supportTickets);
+  useEffect(() => {
+    void syncSupportTickets();
+  }, []);
   const mine = all.filter((x) => x.accountId === account.id);
   const open = mine.filter((x) => isOpenTicket(x.status));
   const done = mine.filter((x) => !isOpenTicket(x.status));

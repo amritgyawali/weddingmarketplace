@@ -17,6 +17,7 @@ import { ONBOARDING_CITIES } from '@/data/cities';
 import { supportHref } from '@/data/support';
 import { useFormCheck } from '@/hooks/useFormCheck';
 import { useLayout } from '@/hooks/useLayout';
+import { useCustomerWorkspace } from '@/hooks/useWorkspace';
 import { isEmail, PROFILE_CITIES, PROFILE_LIMITS } from '@/services/profile';
 import { useAppStore } from '@/store/useAppStore';
 import { useAccount, useSession } from '@/store/useSession';
@@ -58,6 +59,7 @@ export function EditProfileScreen() {
   const updateCouple = useAppStore((s) => s.updateProfile);
   const setCoupleRole = useAppStore((s) => s.setRole);
   const setWeddingDate = useAppStore((s) => s.setWeddingDate);
+  const { project } = useCustomerWorkspace(account.id);
   const live = usesEmailSignIn();
   const isCouple = account.role === 'customer';
   const isVendor = account.role === 'vendor';
@@ -72,7 +74,7 @@ export function EditProfileScreen() {
   const [bio, setBio] = useState(account.bio ?? '');
   const [years, setYears] = useState(account.experienceYears !== undefined ? String(account.experienceYears) : '');
   const [languages, setLanguages] = useState<string[]>(account.languages ?? []);
-  const [partner, setPartner] = useState(coupleProfile.partnerName);
+  const [partner, setPartner] = useState(coupleProfile.partnerName || (isCouple ? (project?.partnerName ?? '') : ''));
   const [coupleRole, setRole] = useState<Role | null>(coupleRoleSaved);
   const [date, setDate] = useState<string | null>(weddingDate);
   const [dateOpen, setDateOpen] = useState(false);
@@ -211,22 +213,24 @@ export function EditProfileScreen() {
           <>
             <SectionTitle title="Your celebration" />
             <Card padded={false}>
-              <Pressable onPress={() => setDateOpen(true)} accessibilityRole="button" style={({ pressed }) => [styles.dateRow, pressed && { backgroundColor: t.c.surfaceAlt }]}>
-                <Ionicons name="calendar-outline" size={20} color={t.c.primary} />
-                <View style={{ flex: 1 }}>
-                  <Text size={13} color={t.c.muted}>
-                    Main date
-                  </Text>
-                  <Text size={15} weight="semibold" color={date ? t.c.textStrong : t.c.muted}>
-                    {date ? formatLongDate(date) : 'Add your date'}
-                  </Text>
-                </View>
+              <View style={styles.dateRow}>
+                <Pressable onPress={() => setDateOpen(true)} accessibilityRole="button" style={({ pressed }) => [styles.dateTap, pressed && { opacity: 0.7 }]}>
+                  <Ionicons name="calendar-outline" size={20} color={t.c.primary} />
+                  <View style={{ flex: 1 }}>
+                    <Text size={13} color={t.c.muted}>
+                      Main date
+                    </Text>
+                    <Text size={15} weight="semibold" color={date ? t.c.textStrong : t.c.muted}>
+                      {date ? formatLongDate(date) : 'Add your date'}
+                    </Text>
+                  </View>
+                </Pressable>
                 {date && (
                   <Pressable onPress={() => setDate(null)} hitSlop={10} accessibilityRole="button" accessibilityLabel="Clear date">
                     <Ionicons name="close-circle" size={20} color={t.c.subtle} />
                   </Pressable>
                 )}
-              </Pressable>
+              </View>
             </Card>
           </>
         )}
@@ -289,6 +293,7 @@ const styles = StyleSheet.create({
   photoWrap: { width: 88, height: 88 },
   camera: { position: 'absolute', right: -2, bottom: -2, width: 30, height: 30, borderRadius: 15, borderWidth: 2, alignItems: 'center', justifyContent: 'center' },
   photoActions: { flexDirection: 'row', gap: 8, flexWrap: 'wrap', marginTop: 4 },
-  dateRow: { flexDirection: 'row', alignItems: 'center', gap: 12, padding: 16 },
+  dateRow: { flexDirection: 'row', alignItems: 'center', gap: 12, paddingRight: 16 },
+  dateTap: { flex: 1, flexDirection: 'row', alignItems: 'center', gap: 12, padding: 16 },
   lockedRow: { flexDirection: 'row', alignItems: 'center', gap: 10 },
 });

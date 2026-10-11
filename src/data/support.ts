@@ -5,6 +5,7 @@
  */
 import type { SupportPriority, SupportTicketStatus, SupportTopic, UserRole } from '@/types/platform';
 
+/** Lengths and counts the store actions and the SQL enforce for help requests. */
 export const SUPPORT_LIMITS = {
   subjectMin: 4,
   subjectMax: 120,
@@ -14,6 +15,7 @@ export const SUPPORT_LIMITS = {
   openPerPerson: 5,
 } as const;
 
+/** What a help request can be about, with an icon and a hint for the picker. */
 export const SUPPORT_TOPICS: { id: SupportTopic; label: string; icon: string; hint: string }[] = [
   { id: 'booking', label: 'A booking', icon: 'calendar-outline', hint: 'Dates, changes, cancellations' },
   { id: 'payment', label: 'Payments', icon: 'card-outline', hint: 'Receipts, refunds, payouts' },
@@ -24,14 +26,17 @@ export const SUPPORT_TOPICS: { id: SupportTopic; label: string; icon: string; hi
   { id: 'other', label: 'Something else', icon: 'help-circle-outline', hint: 'Anything at all' },
 ];
 
+/** Topic id → label. */
 export const SUPPORT_TOPIC_LABEL: Record<SupportTopic, string> = Object.fromEntries(SUPPORT_TOPICS.map((t) => [t.id, t.label])) as Record<SupportTopic, string>;
 
+/** How soon the person needs an answer (Normal, Soon, Urgent). */
 export const SUPPORT_PRIORITIES: { id: SupportPriority; label: string; hint: string }[] = [
   { id: 'normal', label: 'Normal', hint: 'Within two working hours' },
   { id: 'high', label: 'Soon', hint: 'A function in the next week' },
   { id: 'urgent', label: 'Urgent', hint: 'A function today or tomorrow' },
 ];
 
+/** What the person who asked reads for each status. */
 export const SUPPORT_STATUS_LABEL: Record<SupportTicketStatus, string> = {
   open: 'Waiting for Vivah',
   in_progress: 'Being looked at',
@@ -63,6 +68,7 @@ export function editProfileHref(role: UserRole): string {
   return role === 'vendor' ? '/business/edit-profile' : role === 'freelancer' ? '/freelancer/edit-profile' : role === 'platform' ? '/platform/edit-profile' : '/edit-profile';
 }
 
+/** One common question and its answer. */
 export interface FaqItem {
   id: string;
   q: string;

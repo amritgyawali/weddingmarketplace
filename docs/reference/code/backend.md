@@ -6,17 +6,20 @@ Every exported symbol in `src/backend/`, file by file. The guide that explains h
 
 ## Files
 
-- [`account.ts`](#accountts) (8 exports) · The signed-in user's own records on Supabase: who they are (rpc_me), the first-time sign-up (rpc_complete_signup), and mirroring them into …
+- [`account.ts`](#accountts) (9 exports) · The signed-in user's own records on Supabase: who they are (rpc_me), the first-time sign-up (rpc_complete_signup), and mirroring them into …
 - [`auth.ts`](#authts) (8 exports) · Sign-in for the Supabase backend (master plan §7.3). Owner decision: email OTP only for the first year, so every role signs in with a 6-dig…
 - [`bugReport.ts`](#bugreportts) (16 exports) · Bug reports: the payload the shake-to-report sheet sends, where it goes, and the little history kept for it (recent screens, console errors…
+- [`content.ts`](#contentts) (3 exports) · Publishing what a super admin changes in the console to every device (Supabase builds; supabase/migrations/0021_app_content.sql).
+- [`contentMedia.ts`](#contentmediats) (3 exports) · Where a photo a super admin picks for the app (Content studio) is kept, so it can be shown again later:
 - [`files.ts`](#filests) (3 exports) · Private documents in Supabase Storage (master plan §7.4): KYC papers, contracts and invoices never sit on a public CDN. Each user writes un…
 - [`index.ts`](#indexts) (3 exports) · Picks the backend from EXPO_PUBLIC_BACKEND: `mock` (the default: the demo and Expo Go) or `supabase` (staging and production, once configur…
-- [`media.ts`](#mediats) (7 exports) · Images and short video on Cloudinary (master plan §7.4). Uploads are signed by the media-sign Edge Function, go straight from the phone to …
+- [`media.ts`](#mediats) (8 exports) · Images and short video on Cloudinary (master plan §7.4). Uploads are signed by the media-sign Edge Function, go straight from the phone to …
 - [`mock.ts`](#mockts) (1 exports) · The demo backend: the on-device zustand store. Store actions stay the source of truth for the demo and Expo Go; this adapter only gives the…
 - [`payments.ts`](#paymentsts) (12 exports) · Online payments with Khalti and eSewa (master plan §7.5). The app never decides that money arrived: payment-initiate starts an attempt whos…
 - [`push.ts`](#pushts) (2 exports) · Push notifications (master plan §7.6). The device registers its Expo push token with rpc_register_push_token; the notify-fanout Edge Functi…
 - [`social.ts`](#socialts) (16 exports) · Social hub on Supabase builds. Connecting a network opens its own consent page through `social-oauth`; the tokens it returns are kept on th…
 - [`supabase.ts`](#supabasets) (3 exports) · The Supabase backend: each core-loop step is one RPC from supabase/migrations/0011_core_rpc.sql, called over PostgREST with plain fetch (no…
+- [`support.ts`](#supportts) (7 exports) · Help requests, in the demo or for real. The demo runs the store actions in `store/db/support.ts`; Supabase builds call the RPCs in supabase…
 - [`telemetry.ts`](#telemetryts) (9 exports) · Product analytics and error reports (master plan §14), without SDKs:
 - [`telemetryPayloads.ts`](#telemetrypayloadsts) (14 exports)
 - [`types.ts`](#typests) (5 exports) · The core loop as one interface, so the same screens can run on the on-device demo backend or on Supabase (master plan §7.2):
@@ -79,9 +82,21 @@ accountFromMe(me: Me, role: UserRole): Account
 
 The local Account for a Supabase user (same id as their auth user).
 
+### `updateMyProfile`
+
+*function* · [src/backend/account.ts:68](../../../src/backend/account.ts#L68)
+
+```ts
+updateMyProfile(patch: Record<string, unknown>)
+```
+
+Saves the signed-in user's profile edits on the server (name, city, photo,
+business name, headline, bio). The server cleans them with the same rules
+as `cleanProfile`; email stays the sign-in address and isn't changed here.
+
 ### `acceptLegal`
 
-*function* · [src/backend/account.ts:64](../../../src/backend/account.ts#L64)
+*function* · [src/backend/account.ts:71](../../../src/backend/account.ts#L71)
 
 ```ts
 acceptLegal(version: string)
@@ -91,7 +106,7 @@ Records that the user accepted this version of the Terms and Privacy policy (src
 
 ### `exportMyData`
 
-*function* · [src/backend/account.ts:67](../../../src/backend/account.ts#L67)
+*function* · [src/backend/account.ts:74](../../../src/backend/account.ts#L74)
 
 ```ts
 exportMyData()
@@ -101,7 +116,7 @@ Everything the server holds about the signed-in user, as one JSON document.
 
 ### `deleteMyAccount`
 
-*function* · [src/backend/account.ts:74](../../../src/backend/account.ts#L74)
+*function* · [src/backend/account.ts:81](../../../src/backend/account.ts#L81)
 
 ```ts
 deleteMyAccount(): Promise<Result<void>>
@@ -407,6 +422,103 @@ deleteBugReports(ids: string[]): Promise<Result<void>>
 
 Deletes reports on the server (super admins).
 
+## content.ts
+
+Source: [src/backend/content.ts](../../../src/backend/content.ts)
+
+Publishing what a super admin changes in the console to every device
+(Supabase builds; supabase/migrations/0021_app_content.sql).
+
+The store stays the app's source while it runs: the console writes to it
+exactly as in the demo, and this module mirrors three of its parts with the
+server (the content, the text overrides and the feature switches).
+
+  - Every device asks `rpc_app_config` for the current revision when the
+    app opens, when it returns to the foreground and every 45 seconds while
+    it is open; a new revision replaces the three parts in the store, so
+    the screens re-render with the change.
+  - A super admin's device sends a changed part a moment after the edit.
+
+The demo (`mock`) never calls this: there the store is the whole backend.
+
+### `readTexts`
+
+*function* · [src/backend/content.ts:52](../../../src/backend/content.ts#L52)
+
+```ts
+readTexts(raw: unknown): TextOverrides
+```
+
+Text overrides as the server sent them, with anything malformed dropped.
+
+### `readFlags`
+
+*function* · [src/backend/content.ts:65](../../../src/backend/content.ts#L65)
+
+```ts
+readFlags(raw: unknown): Record<string, boolean>
+```
+
+Feature switches as the server sent them.
+
+### `startContentSync`
+
+*function* · [src/backend/content.ts:105](../../../src/backend/content.ts#L105)
+
+```ts
+startContentSync(onError: (message: string) => void): () => void
+```
+
+Keeps this device's content, text overrides and feature switches in step
+with the server until the returned function is called. Does nothing in the
+demo. `onError` is told when a super admin's change couldn't be published.
+
+## contentMedia.ts
+
+Source: [src/backend/contentMedia.ts](../../../src/backend/contentMedia.ts)
+
+Where a photo a super admin picks for the app (Content studio) is kept, so
+it can be shown again later:
+
+  - Supabase builds with Cloudinary: uploaded through `media-sign`, stored
+    as a web address, so every device shows it;
+  - the demo on a phone: copied into the app's documents folder and stored
+    as `vivah-file://name.jpg` (this device only);
+  - the demo in a browser: kept inline when it is small; larger photos need
+    a link, because a browser has nowhere durable to keep a file.
+
+### `contentImagesShared`
+
+*const* · [src/backend/contentMedia.ts:22](../../../src/backend/contentMedia.ts#L22)
+
+```ts
+contentImagesShared= cloudMediaReady
+```
+
+True when a picked photo reaches every device, not only this one.
+
+### `keepContentImage`
+
+*function* · [src/backend/contentMedia.ts:46](../../../src/backend/contentMedia.ts#L46)
+
+```ts
+keepContentImage(file: UploadInput): Promise<Result<string>>
+```
+
+Keeps a picked photo and returns the address to store for it.
+
+### `keepProfilePhoto`
+
+*function* · [src/backend/contentMedia.ts:68](../../../src/backend/contentMedia.ts#L68)
+
+```ts
+keepProfilePhoto(file: UploadInput): Promise<Result<string>>
+```
+
+Keeps a profile photo someone picked on Edit profile. Supabase builds with
+Cloudinary upload it as the account's avatar (rpc_register_media sets
+profiles.avatar_url); the demo keeps it on this device like a content photo.
+
 ## files.ts
 
 Source: [src/backend/files.ts](../../../src/backend/files.ts)
@@ -560,9 +672,19 @@ _No JSDoc yet._
 | `height?` | `number` |  |
 | `url` | `string` |  |
 
-### `uploadMedia`
+### `uploadToCloud`
 
 *function* · [src/backend/media.ts:71](../../../src/backend/media.ts#L71)
+
+```ts
+uploadToCloud(file: UploadInput, purpose: MediaPurpose): Promise<Result<Omit<Uploaded, 'url'>>>
+```
+
+Sends one picked file to Cloudinary through a signed upload, without recording it anywhere.
+
+### `uploadMedia`
+
+*function* · [src/backend/media.ts:97](../../../src/backend/media.ts#L97)
 
 ```ts
 uploadMedia(file: UploadInput, purpose: MediaPurpose, caption?: string): Promise<Result<Uploaded>>
@@ -976,6 +1098,86 @@ supabaseBackend: Backend
 ```
 
 _No JSDoc yet._
+
+## support.ts
+
+Source: [src/backend/support.ts](../../../src/backend/support.ts)
+
+Help requests, in the demo or for real. The demo runs the store actions in
+`store/db/support.ts`; Supabase builds call the RPCs in
+supabase/migrations/0022_profile_support.sql and then mirror the caller's
+requests (every request, for staff who answer them) into the store, so the
+screens read the same `supportTickets` either way.
+
+### `supportLive`
+
+*function* · [src/backend/support.ts:15](../../../src/backend/support.ts#L15)
+
+```ts
+supportLive()
+```
+
+True on Supabase builds: help requests go to the server.
+
+### `syncSupportTickets`
+
+*function* · [src/backend/support.ts:18](../../../src/backend/support.ts#L18)
+
+```ts
+syncSupportTickets(): Promise<string | null>
+```
+
+Re-reads the requests this person can see from the server (no-op in the demo).
+
+### `openTicket`
+
+*function* · [src/backend/support.ts:33](../../../src/backend/support.ts#L33)
+
+```ts
+openTicket(input: { topic: SupportTopic; subject: string; body: string; priority?: SupportPriority; projectId?: string }): Promise<{ id?: string; error?: string }>
+```
+
+Opens a request. Returns its id, or an error to show.
+
+### `replyTicket`
+
+*function* · [src/backend/support.ts:42](../../../src/backend/support.ts#L42)
+
+```ts
+replyTicket(id: string, body: string, internal = false)
+```
+
+Replies to a request (staff may add an internal note).
+
+### `setTicketStatus`
+
+*function* · [src/backend/support.ts:46](../../../src/backend/support.ts#L46)
+
+```ts
+setTicketStatus(id: string, status: SupportTicketStatus)
+```
+
+Marks a request solved, closed or open again (staff: any status).
+
+### `assignTicket`
+
+*function* · [src/backend/support.ts:50](../../../src/backend/support.ts#L50)
+
+```ts
+assignTicket(id: string, staffId: string | null, priority?: SupportPriority)
+```
+
+Gives a request to a staff member (or nobody) and sets its priority.
+
+### `rateTicket`
+
+*function* · [src/backend/support.ts:54](../../../src/backend/support.ts#L54)
+
+```ts
+rateTicket(id: string, rating: number, note?: string)
+```
+
+The owner rates the help (1–5).
 
 ## telemetry.ts
 

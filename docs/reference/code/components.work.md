@@ -11,6 +11,7 @@ Every exported symbol in `src/components/work/`, file by file. The guide that ex
 - [`Bookings.tsx`](#bookingstsx) (6 exports)
 - [`Collab.tsx`](#collabtsx) (5 exports)
 - [`ContractView.tsx`](#contractviewtsx) (1 exports)
+- [`EditProfileScreen.tsx`](#editprofilescreentsx) (1 exports)
 - [`EventsPanel.tsx`](#eventspaneltsx) (1 exports)
 - [`GigCard.tsx`](#gigcardtsx) (1 exports)
 - [`GigForm.tsx`](#gigformtsx) (2 exports)
@@ -215,6 +216,23 @@ ContractView({ contract, party, signerName }: { contract: Contract; party?: Cont
 A three-party service agreement with e-signatures. Each party reads every
 clause, types their name and draws a signature; the contract locks once all
 three have signed.
+
+## EditProfileScreen.tsx
+
+Source: [src/components/work/EditProfileScreen.tsx](../../../src/components/work/EditProfileScreen.tsx)
+
+### `EditProfileScreen`
+
+*component* · [src/components/work/EditProfileScreen.tsx:51](../../../src/components/work/EditProfileScreen.tsx#L51)
+
+```ts
+EditProfileScreen()
+```
+
+Edit profile, for every role: photo, name, email and city, plus the
+couple's partner and date, a business's name and story, or a freelancer's
+headline, story, experience and languages. Mobile number, role and
+verification are changed by the Vivah team (a help request).
 
 ## EventsPanel.tsx
 
@@ -583,7 +601,7 @@ Source: [src/components/work/SettingsScreen.tsx](../../../src/components/work/Se
 
 ### `DEFAULT_PREFS`
 
-*const* · [src/components/work/SettingsScreen.tsx:27](../../../src/components/work/SettingsScreen.tsx#L27)
+*const* · [src/components/work/SettingsScreen.tsx:28](../../../src/components/work/SettingsScreen.tsx#L28)
 
 ```ts
 DEFAULT_PREFS: AccountPrefs
@@ -593,7 +611,7 @@ _No JSDoc yet._
 
 ### `SettingsScreen`
 
-*component* · [src/components/work/SettingsScreen.tsx:52](../../../src/components/work/SettingsScreen.tsx#L52)
+*component* · [src/components/work/SettingsScreen.tsx:53](../../../src/components/work/SettingsScreen.tsx#L53)
 
 ```ts
 SettingsScreen()

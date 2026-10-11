@@ -31,7 +31,7 @@ off with the `app.notifications` feature.
 
 ### `messageFor`
 
-*function* · [src/store/actionToasts.ts:213](../../../src/store/actionToasts.ts#L213)
+*function* · [src/store/actionToasts.ts:230](../../../src/store/actionToasts.ts#L230)
 
 ```ts
 messageFor(action: string, args: unknown[] = []): string | null
@@ -41,7 +41,7 @@ messageFor(action: string, args: unknown[] = []): string | null
 
 ### `installActionToasts`
 
-*function* · [src/store/actionToasts.ts:275](../../../src/store/actionToasts.ts#L275)
+*function* · [src/store/actionToasts.ts:292](../../../src/store/actionToasts.ts#L292)
 
 ```ts
 installActionToasts()
@@ -249,7 +249,7 @@ Source: [src/store/useSession.ts](../../../src/store/useSession.ts)
 
 ### `syncDemoAccounts`
 
-*function* · [src/store/useSession.ts:43](../../../src/store/useSession.ts#L43)
+*function* · [src/store/useSession.ts:46](../../../src/store/useSession.ts#L46)
 
 ```ts
 syncDemoAccounts(accounts: Account[]): Account[]
@@ -261,7 +261,7 @@ ones. Other accounts are left alone.
 
 ### `useSession`
 
-*const* · [src/store/useSession.ts:59](../../../src/store/useSession.ts#L59)
+*const* · [src/store/useSession.ts:62](../../../src/store/useSession.ts#L62)
 
 ```ts
 useSession= create<SessionState>()( persist( (set, get) => ({ accounts: DEMO_ACCOUNTS, session: null,…
@@ -272,7 +272,7 @@ Replace `login`/`register` with your auth provider (Supabase, Firebase, …).
 
 ### `useCurrentAccount`
 
-*hook* · [src/store/useSession.ts:122](../../../src/store/useSession.ts#L122)
+*hook* · [src/store/useSession.ts:134](../../../src/store/useSession.ts#L134)
 
 ```ts
 useCurrentAccount()
@@ -282,7 +282,7 @@ The signed-in account (null when logged out).
 
 ### `useAccount`
 
-*hook* · [src/store/useSession.ts:130](../../../src/store/useSession.ts#L130)
+*hook* · [src/store/useSession.ts:142](../../../src/store/useSession.ts#L142)
 
 ```ts
 useAccount(): Account

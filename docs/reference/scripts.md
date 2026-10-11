@@ -17,13 +17,14 @@ npm scripts and the Node scripts behind them. All run locally with no network un
 | `npm run check:personas` | `node scripts/check-personas.mjs` |
 | `npm run env:vercel` | `node scripts/env-vercel.mjs` |
 | `npm run db:check` | `node scripts/db/db-check.mjs` |
-| `npm run db:test` | `node scripts/db/core-loop.mjs && node scripts/db/accounts.mjs && node scripts/db/payments.mjs && node scripts/db/launch.mjs && node scripts/db/social.mjs && node scripts/db/bugs.mjs` |
+| `npm run db:test` | `node scripts/db/core-loop.mjs && node scripts/db/accounts.mjs && node scripts/db/payments.mjs && node scripts/db/launch.mjs && node scripts/db/social.mjs && node scripts/db/bugs.mjs && node scripts/db/content.mjs && node scripts/db/support.mjs` |
 | `npm run test:parity` | `node scripts/db/parity.mjs` |
 | `npm run test:functions` | `node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/test-functions.mjs` |
 | `npm run env:functions` | `node scripts/env-functions.mjs` |
 | `npm run test:telemetry` | `node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/test-telemetry.mjs` |
 | `npm run test:social` | `node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/test-social.mjs` |
 | `npm run test:customer-planning` | `node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/test-customer-planning.mjs` |
+| `npm run test:content` | `node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/test-content.mjs` |
 | `npm run test:features` | `node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/test-features.mjs` |
 | `npm run docs:generate` | `node scripts/docs/generate-reference.mjs` |
 | `npm run docs:check` | `node scripts/docs/generate-reference.mjs --check` |
@@ -83,6 +84,18 @@ senders, super admins are told, only super admins read, mark and delete
 reports, and the rate limit stops a flood.
 
   npm run db:test   (runs this after social.mjs)
+
+### scripts/db/content.mjs
+
+Source: [scripts/db/content.mjs](../../scripts/db/content.mjs)
+
+App content checks on a real Postgres with RLS on (PGlite, in-process):
+everyone reads the console configuration (signed in or out), only super
+admins publish content, text overrides and feature switches, every save
+moves the revision on and is audited, a device that is up to date gets the
+revision alone, and nobody writes the table directly.
+
+  npm run db:test   (runs this after bugs.mjs)
 
 ### scripts/db/core-loop.mjs
 
@@ -182,6 +195,19 @@ that can't be marked published by a client, scheduling, the scheduled run,
 the post status following its networks, and "create lead".
 
   npm run db:test   (runs this after launch.mjs)
+
+### scripts/db/support.mjs
+
+Source: [scripts/db/support.mjs](../../scripts/db/support.mjs)
+
+Edit profile and Help and support on a real Postgres with RLS on (PGlite,
+in-process): people edit only their own profile within the limits; couples,
+businesses and freelancers open help requests and see only theirs (never
+internal notes); staff with support.manage see and answer every request,
+assign it and change its status; finance staff can't; owners mark a
+request solved, reopen it and rate it; nobody writes the tables directly.
+
+  npm run db:test   (runs this after content.mjs)
 
 ### scripts/docs/generate-reference.mjs
 
@@ -296,6 +322,20 @@ and no Docker:
                                                after signing up as staff: approve yourself as super admin
 
 Secrets are read from .env.local and never printed.
+
+### scripts/test-content.mjs
+
+Source: [scripts/test-content.mjs](../../scripts/test-content.mjs)
+
+Checks the content a super admin edits in the console (src/services/content.ts):
+edits are laid over the bundled catalogue without touching it, hidden
+records leave lists but still resolve, field checks keep a record's shape,
+the home keeps a sensible order when sections or banners come and go,
+photo addresses are validated, saved content is read defensively, and the
+brand details and the marketplace categories follow the edits. Node 24+
+strips the TypeScript.
+
+  npm run test:content
 
 ### scripts/test-customer-planning.mjs
 

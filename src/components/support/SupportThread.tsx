@@ -1,8 +1,9 @@
 import { Ionicons } from '@expo/vector-icons';
 import { router, type Href } from 'expo-router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 
+import { assignTicket, rateTicket, replyTicket, setTicketStatus, syncSupportTickets } from '@/backend/support';
 import { Avatar, Card, ChoiceChips, EmptyBlock, KButton, KField, KeyValue, SectionTitle, StackHeader, StatusPill } from '@/components/kit';
 import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
 import { Text } from '@/components/ui/Text';
@@ -72,7 +73,6 @@ function Stars({ value, onChange }: { value: number; onChange: (n: number) => vo
 /** Owner: rate the help once it is solved. */
 function RateCard({ ticket }: { ticket: SupportTicket }) {
   const t = useRoleTheme();
-  const rate = useDb((s) => s.rateSupportTicket);
   const [stars, setStars] = useState(ticket.rating ?? 0);
   const [note, setNote] = useState(ticket.ratingNote ?? '');
   if (ticket.rating)
@@ -96,10 +96,7 @@ function RateCard({ ticket }: { ticket: SupportTicket }) {
       </Text>
       <Stars value={stars} onChange={setStars} />
       <KField value={note} onChangeText={setNote} placeholder="Anything we could do better? (optional)" maxLength={300} />
-      <KButton label="Send rating" size="sm" style={{ alignSelf: 'flex-start' }} missing={!stars && 'Pick one to five stars'} onPress={() => {
-        const error = rate(ticket.id, stars, note);
-        if (error) toastError(error);
-      }} />
+      <KButton label="Send rating" size="sm" style={{ alignSelf: 'flex-start' }} missing={!stars && 'Pick one to five stars'} onPress={() => void rateTicket(ticket.id, stars, note).then((error) => error && toastError(error))} />
     </Card>
   );
 }
@@ -109,10 +106,10 @@ function DeskPanel({ ticket }: { ticket: SupportTicket }) {
   const t = useRoleTheme();
   const me = useAccount();
   const accounts = useSession((s) => s.accounts);
-  const setStatus = useDb((s) => s.setSupportTicketStatus);
-  const assign = useDb((s) => s.assignSupportTicket);
   const customer = accounts.find((a) => a.id === ticket.accountId);
-  const run = (error: string | null) => error && toastError(error);
+  const run = (pending: Promise<string | null>) => void pending.then((error) => error && toastError(error));
+  const assign = assignTicket;
+  const setStatus = setTicketStatus;
   const statuses: SupportTicketStatus[] = ['open', 'in_progress', 'waiting', 'resolved', 'closed'];
   return (
     <Card style={{ gap: 12 }}>
@@ -160,10 +157,11 @@ export function SupportThread({ id, desk = false }: { id: string; desk?: boolean
   const me = useAccount();
   const { wide } = useLayout();
   const ticket = useDb((s) => s.supportTickets.find((x) => x.id === id));
-  const reply = useDb((s) => s.replySupportTicket);
-  const setStatus = useDb((s) => s.setSupportTicketStatus);
   const [text, setText, clearText] = useDraft(ticket ? `support-reply:${me.id}:${ticket.id}` : null, '');
   const [internal, setInternal] = useState(false);
+  useEffect(() => {
+    void syncSupportTickets();
+  }, []);
 
   if (!ticket || (!desk && ticket.accountId !== me.id))
     return (
@@ -174,8 +172,8 @@ export function SupportThread({ id, desk = false }: { id: string; desk?: boolean
     );
 
   const messages = ticket.messages.filter((m) => desk || !m.internal);
-  const send = () => {
-    const error = reply(ticket.id, text, { internal: desk && internal });
+  const send = async () => {
+    const error = await replyTicket(ticket.id, text, desk && internal);
     if (error) {
       toastError(error);
       return;
@@ -183,7 +181,7 @@ export function SupportThread({ id, desk = false }: { id: string; desk?: boolean
     clearText();
     setInternal(false);
   };
-  const run = (error: string | null) => error && toastError(error);
+  const run = (pending: Promise<string | null>) => void pending.then((error) => error && toastError(error));
   const solved = !isOpenTicket(ticket.status);
 
   const conversation = (
@@ -237,15 +235,15 @@ export function SupportThread({ id, desk = false }: { id: string; desk?: boolean
               </Pressable>
             )}
             <View style={{ flex: 1 }} />
-            <KButton label={desk && internal ? 'Add note' : 'Send'} icon="send" size="sm" missing={!text.trim() && 'Write a message first'} onPress={send} />
+            <KButton label={desk && internal ? 'Add note' : 'Send'} icon="send" size="sm" missing={!text.trim() && 'Write a message first'} onPress={() => void send()} />
           </View>
         </Card>
       )}
       {!desk && !solved && (
-        <KButton label="My problem is solved" variant="secondary" icon="checkmark-circle-outline" onPress={() => run(setStatus(ticket.id, 'resolved'))} />
+        <KButton label="My problem is solved" variant="secondary" icon="checkmark-circle-outline" onPress={() => run(setTicketStatus(ticket.id, 'resolved'))} />
       )}
       {!desk && ticket.status === 'resolved' && (
-        <KButton label="I still need help" variant="ghost" icon="refresh-outline" onPress={() => run(setStatus(ticket.id, 'open'))} />
+        <KButton label="I still need help" variant="ghost" icon="refresh-outline" onPress={() => run(setTicketStatus(ticket.id, 'open'))} />
       )}
       {!desk && solved && <RateCard ticket={ticket} />}
     </View>

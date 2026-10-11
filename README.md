@@ -12,6 +12,12 @@ backend, which runs on the device for the demo, and one Postgres/Supabase schema
 | **Freelancer** (photographers, MUAs, crew) | Gig marketplace | Covers crew work: discovering gigs and invites, including emergency gigs. Crew can manage assignments (confirm, GPS check-in, check-out with proof), keep a calendar with weekly rules, and track earnings and payouts. They also maintain a profile with kit, rates and reliability. Sign-up asks the craft first, and the profile, rate model, equipment, tools and gig feed follow it. |
 | **Platform team** | Operations console (web-ready) | Covers running the platform: leads kanban, a 12-tab project console, a matching engine and quote builder, a control room and emergency replacement. It also covers approvals, finance (revenue, payables, refunds, disputes), users, providers, freelancers, analytics, the marketplace and the audit log. Each staff role sees only what its permissions allow (coordinator, support, Vendor Success, finance, admin), with its own Today focus and an occasion × trade × city filter on the lists. |
 
+Every app also shares three basics:
+
+- **Light and dark mode**: Settings → Appearance (light, dark or same as the phone), with a quick sun/moon switch on each profile page. Every screen has both palettes.
+- **Edit profile**: photo, name, email, city and the fields that matter for the role (partner and date, business name and story, freelancer headline, experience and languages).
+- **Help and support**: call, WhatsApp or email the team, search answers written for each role, and ask the team in the app, with replies, notifications, "my problem is solved" and a rating. Staff answer in the **Help desk** (assign, priority, status, internal notes).
+
 Each app also has a **toolkit of 20 extra tools**, opened from a searchable hub:
 
 | User type | Hub | Tools |

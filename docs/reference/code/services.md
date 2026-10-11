@@ -9,6 +9,7 @@ Every exported symbol in `src/services/`, file by file. The guide that explains 
 - [`api.ts`](#apits) (6 exports) · Data-access layer. Every screen reads through these async functions (via React Query), so replacing the mock data with a real backend only …
 - [`assistant.ts`](#assistantts) (4 exports) · Wedika — on-device wedding assistant. It resolves intent + city from the user's message and answers with real listings from the catalogue. …
 - [`auth.ts`](#authts) (5 exports)
+- [`content.ts`](#contentts) (21 exports) · App content edited by a super admin, laid over the bundled catalogue.
 - [`customerPlanning.ts`](#customerplanningts) (5 exports)
 - [`documents.ts`](#documentsts) (7 exports) · Printable HTML documents (quotation, receipt, contract, guest list, seating, run sheet).
 - [`experience.ts`](#experiencets) (16 exports) · The persona resolver: identify the user, derive what they can do, and show only that. Pure and deterministic (no React, no store), like the…
@@ -16,6 +17,7 @@ Every exported symbol in `src/services/`, file by file. The guide that explains 
 - [`matching.ts`](#matchingts) (16 exports) · Matching engine. Scores providers for a requirement and freelancers for a crew slot / gig. Weights mirror supabase/migrations/0003 so on-de…
 - [`planner.ts`](#plannerts) (25 exports) · Rule-based wedding planner ("AI" without paid AI): turns the requirement wizard into a project, allocates budgets, generates checklists and…
 - [`pricing.ts`](#pricingts) (16 exports) · Marketplace economics: the four business models, payment schedules, milestone status and payables. Customer payments and provider/freelance…
+- [`profile.ts`](#profilets) (5 exports) · Profile edits for every role: what a person may change about themselves and how it is cleaned before it is saved (on the device by `useSess…
 - [`quotes.ts`](#quotests) (10 exports)
 - [`risk.ts`](#riskts) (5 exports) · Risk detection for coordinators — the same rules as the `project_risks` view in supabase/migrations/0003, evaluated on-device.
 - [`segments.ts`](#segmentsts) (7 exports) · Segments for the operations console (master plan §4.4): every list can be cut by occasion × trade × city, so Vendor Success can open "decor…
@@ -32,13 +34,13 @@ swapping the bodies below for `fetch` calls.
 
 ### `NotFoundError`
 
-*class* · [src/services/api.ts:27](../../../src/services/api.ts#L27)
+*class* · [src/services/api.ts:25](../../../src/services/api.ts#L25)
 
 _No JSDoc yet._
 
 ### `DEFAULT_VENUE_FILTERS`
 
-*const* · [src/services/api.ts:63](../../../src/services/api.ts#L63)
+*const* · [src/services/api.ts:61](../../../src/services/api.ts#L61)
 
 ```ts
 DEFAULT_VENUE_FILTERS: VenueFilters
@@ -48,7 +50,7 @@ _No JSDoc yet._
 
 ### `countActiveFilters`
 
-*function* · [src/services/api.ts:71](../../../src/services/api.ts#L71)
+*function* · [src/services/api.ts:69](../../../src/services/api.ts#L69)
 
 ```ts
 countActiveFilters(f: VenueFilters)
@@ -58,7 +60,7 @@ _No JSDoc yet._
 
 ### `VenueQuery`
 
-*interface* · [src/services/api.ts:78](../../../src/services/api.ts#L78)
+*interface* · [src/services/api.ts:76](../../../src/services/api.ts#L76)
 
 _No JSDoc yet._
 
@@ -72,7 +74,7 @@ _No JSDoc yet._
 
 ### `filterVenues`
 
-*function* · [src/services/api.ts:86](../../../src/services/api.ts#L86)
+*function* · [src/services/api.ts:84](../../../src/services/api.ts#L84)
 
 ```ts
 filterVenues({ city, query = '', collection, filters = DEFAULT_VENUE_FILTERS, destinationPricing }: VenueQuery)
@@ -82,7 +84,7 @@ _No JSDoc yet._
 
 ### `api`
 
-*const* · [src/services/api.ts:112](../../../src/services/api.ts#L112)
+*const* · [src/services/api.ts:110](../../../src/services/api.ts#L110)
 
 ```ts
 api= { … }
@@ -102,7 +104,7 @@ LLM API key inside the app bundle — proxy it through your own server.)
 
 ### `AssistantReply`
 
-*interface* · [src/services/assistant.ts:17](../../../src/services/assistant.ts#L17)
+*interface* · [src/services/assistant.ts:16](../../../src/services/assistant.ts#L16)
 
 _No JSDoc yet._
 
@@ -116,7 +118,7 @@ _No JSDoc yet._
 
 ### `AssistantContext`
 
-*interface* · [src/services/assistant.ts:25](../../../src/services/assistant.ts#L25)
+*interface* · [src/services/assistant.ts:24](../../../src/services/assistant.ts#L24)
 
 _No JSDoc yet._
 
@@ -128,7 +130,7 @@ _No JSDoc yet._
 
 ### `POPULAR_SUGGESTIONS`
 
-*const* · [src/services/assistant.ts:31](../../../src/services/assistant.ts#L31)
+*const* · [src/services/assistant.ts:30](../../../src/services/assistant.ts#L30)
 
 ```ts
 POPULAR_SUGGESTIONS= [ … 3 items ]
@@ -138,7 +140,7 @@ _No JSDoc yet._
 
 ### `askAssistant`
 
-*function* · [src/services/assistant.ts:263](../../../src/services/assistant.ts#L263)
+*function* · [src/services/assistant.ts:262](../../../src/services/assistant.ts#L262)
 
 ```ts
 askAssistant(message: string, ctx: AssistantContext): Promise<AssistantReply>
@@ -200,6 +202,237 @@ logout()
 ```
 
 _No JSDoc yet._
+
+## content.ts
+
+Source: [src/services/content.ts](../../../src/services/content.ts)
+
+App content edited by a super admin, laid over the bundled catalogue.
+
+Pure: no React, no store and no catalogue imports, so data modules, the
+API layer and Node scripts can all use it. The store keeps `content` in
+sync with `contentRuntime` (see `hooks/useContent.ts`), the same way the
+translation runtime follows the language.
+
+### `CONTENT_KINDS`
+
+*const* · [src/services/content.ts:11](../../../src/services/content.ts#L11)
+
+```ts
+CONTENT_KINDS: ContentKind[]
+```
+
+_No JSDoc yet._
+
+### `emptyContent`
+
+*function* · [src/services/content.ts:14](../../../src/services/content.ts#L14)
+
+```ts
+emptyContent(): AppContent
+```
+
+Content with nothing changed.
+
+### `EMPTY_CONTENT`
+
+*const* · [src/services/content.ts:17](../../../src/services/content.ts#L17)
+
+```ts
+EMPTY_CONTENT: AppContent
+```
+
+Shared, never mutated: the content of an install nobody has edited.
+
+### `contentRuntime`
+
+*const* · [src/services/content.ts:20](../../../src/services/content.ts#L20)
+
+```ts
+contentRuntime: { content: AppContent }
+```
+
+Current content, kept in sync with the store for callers outside React.
+
+### `entryKey`
+
+*function* · [src/services/content.ts:22](../../../src/services/content.ts#L22)
+
+```ts
+entryKey(kind: ContentKind, id: string)
+```
+
+_No JSDoc yet._
+
+### `bannerSectionId`
+
+*function* · [src/services/content.ts:23](../../../src/services/content.ts#L23)
+
+```ts
+bannerSectionId(id: string)
+```
+
+_No JSDoc yet._
+
+### `LOCAL_IMAGE_SCHEME`
+
+*const* · [src/services/content.ts:26](../../../src/services/content.ts#L26)
+
+```ts
+LOCAL_IMAGE_SCHEME= 'vivah-file://'
+```
+
+Addresses of photos kept on this device (`backend/contentMedia.ts`).
+
+### `MAX_TEXT`
+
+*const* · [src/services/content.ts:28](../../../src/services/content.ts#L28)
+
+```ts
+MAX_TEXT= 4000
+```
+
+_No JSDoc yet._
+
+### `MAX_LIST`
+
+*const* · [src/services/content.ts:29](../../../src/services/content.ts#L29)
+
+```ts
+MAX_LIST= 60
+```
+
+_No JSDoc yet._
+
+### `MAX_BANNERS`
+
+*const* · [src/services/content.ts:30](../../../src/services/content.ts#L30)
+
+```ts
+MAX_BANNERS= 12
+```
+
+_No JSDoc yet._
+
+### `MAX_INLINE_IMAGE`
+
+*const* · [src/services/content.ts:32](../../../src/services/content.ts#L32)
+
+```ts
+MAX_INLINE_IMAGE= 400_000
+```
+
+Small images picked in a browser are kept inline; larger ones need a link.
+
+### `imageAddress`
+
+*function* · [src/services/content.ts:41](../../../src/services/content.ts#L41)
+
+```ts
+imageAddress(input: unknown): string | null
+```
+
+A photo address the app can show: a web link, a photo kept on this device,
+or a small inline image. Returns it trimmed, or null when it is none of these.
+
+### `patchList`
+
+*function* · [src/services/content.ts:83](../../../src/services/content.ts#L83)
+
+```ts
+patchList<T extends { id: string }>(kind: ContentKind, list: readonly T[], content: AppContent = contentRuntime.content): T[]
+```
+
+A catalogue list with the super admin's edits applied. Untouched records
+keep their identity, and the list itself comes back when nothing of this
+kind was edited. Hidden records stay in, so links to them still open.
+
+### `visibleList`
+
+*function* · [src/services/content.ts:88](../../../src/services/content.ts#L88)
+
+```ts
+visibleList<T extends { id: string }>(kind: ContentKind, list: readonly T[], content: AppContent = contentRuntime.content): T[]
+```
+
+The edited list without the records a super admin hid: what lists and search show.
+
+### `isHidden`
+
+*function* · [src/services/content.ts:92](../../../src/services/content.ts#L92)
+
+```ts
+isHidden(kind: ContentKind, id: string, content: AppContent = contentRuntime.content)
+```
+
+_No JSDoc yet._
+
+### `checkFields`
+
+*function* · [src/services/content.ts:100](../../../src/services/content.ts#L100)
+
+```ts
+checkFields(original: Record<string, unknown>, fields: Record<string, unknown>, imageFields: readonly string[] = [], okImage: (ref: string) => boolean = (ref) => !!imageAddress(ref)): { fields?: Record<string, unknown>; error?: string }
+```
+
+Checks edited fields against the original record and returns only those
+that differ from it. A field must exist on the original and keep its type;
+whole-number fields (prices, counts) are rounded and never negative, and
+photo fields must pass `okImage`.
+
+### `orderSections`
+
+*function* · [src/services/content.ts:152](../../../src/services/content.ts#L152)
+
+```ts
+orderSections(defaults: readonly string[], saved: readonly string[], banners: readonly ContentBanner[]): string[]
+```
+
+Section ids top to bottom. The saved order comes first; a built-in section
+it doesn't mention (added in a later version) goes back after the section
+it follows by default, and a new banner goes to the top.
+
+### `sectionTitle`
+
+*function* · [src/services/content.ts:166](../../../src/services/content.ts#L166)
+
+```ts
+sectionTitle(id: string, fallback: string, city: string, content: AppContent = contentRuntime.content): string
+```
+
+A section heading: the super admin's wording (with `{city}` filled in), else the built-in one.
+
+### `normalizeContent`
+
+*function* · [src/services/content.ts:206](../../../src/services/content.ts#L206)
+
+```ts
+normalizeContent(raw: unknown): AppContent
+```
+
+Content from storage or the server, with anything malformed dropped, so a
+bad value can never break the screens that read it. Content that is
+already clean comes back as the same object.
+
+### `contentStats`
+
+*function* · [src/services/content.ts:238](../../../src/services/content.ts#L238)
+
+```ts
+contentStats(content: AppContent)
+```
+
+How much has been changed, for the console.
+
+### `contentChangeCount`
+
+*function* · [src/services/content.ts:252](../../../src/services/content.ts#L252)
+
+```ts
+contentChangeCount(content: AppContent)
+```
+
+Total number of changes; zero means the app shows exactly what it shipped with.
 
 ## customerPlanning.ts
 
@@ -854,7 +1087,7 @@ _No JSDoc yet._
 | `serviceBudgets` | `Record<string, [number, number]>` | Per-service budget in the service's own unit (e.g. per plate for catering). |
 | `styles` | `Record<string, string[]>` |  |
 | `notes` | `string` |  |
-| `inspiration` | `PhotoKey[]` |  |
+| `inspiration` | `PhotoRef[]` |  |
 | `partnerName?` | `string` |  |
 | `occasion?` | `OccasionId` | What is being celebrated (weddings when missing) and who it is for. |
 | `honourees?` | `Project['honourees']` |  |
@@ -1287,6 +1520,66 @@ projectEconomics(project: Project)
 ```
 
 Project-level economics for the coordinator console.
+
+## profile.ts
+
+Source: [src/services/profile.ts](../../../src/services/profile.ts)
+
+Profile edits for every role: what a person may change about themselves
+and how it is cleaned before it is saved (on the device by
+`useSession.updateMyProfile`, on Supabase by rpc_update_my_profile in
+supabase/migrations/0022_profile_support.sql, which applies the same rules).
+
+### `ProfilePatch`
+
+*type* · [src/services/profile.ts:11](../../../src/services/profile.ts#L11)
+
+```ts
+type ProfilePatch = Partial<Pick<Account, 'name' | 'email' | 'city' | 'photo' | 'businessName' | 'bio' | 'headline' | 'experienceYears' | 'languages'>>
+```
+
+The fields a person edits on Edit profile. Phone (how they sign in), role and verification are changed by the Vivah team.
+
+### `PROFILE_LIMITS`
+
+*const* · [src/services/profile.ts:14](../../../src/services/profile.ts#L14)
+
+```ts
+PROFILE_LIMITS= { nameMin: 2, nameMax: 60, businessMax: 80, headlineMax: 80, bioMax: 600, experienceMax: …
+```
+
+Lengths and ranges for profile fields (the SQL uses the same).
+
+### `PROFILE_CITIES`
+
+*function* · [src/services/profile.ts:25](../../../src/services/profile.ts#L25)
+
+```ts
+PROFILE_CITIESCITIES.filter((c) => c.group !== 'state' && c.id !== 'all').map((c))
+```
+
+Cities a profile can be in (Nepal cities and towns, not provinces or "All Nepal").
+
+### `isEmail`
+
+*function* · [src/services/profile.ts:28](../../../src/services/profile.ts#L28)
+
+```ts
+isEmail(value: string)
+```
+
+A plausible email address.
+
+### `cleanProfile`
+
+*function* · [src/services/profile.ts:36](../../../src/services/profile.ts#L36)
+
+```ts
+cleanProfile(patch: ProfilePatch, account: Pick<Account, 'role'>): { value?: ProfilePatch; error?: string }
+```
+
+Cleans an edit for this account. Returns the fields to save, or the first
+problem to show. Fields that don't apply to the role are dropped.
 
 ## quotes.ts
 

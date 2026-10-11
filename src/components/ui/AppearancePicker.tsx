@@ -11,10 +11,10 @@ import { toast } from './Toast';
 
 type IconName = keyof typeof Ionicons.glyphMap;
 
-const OPTIONS: { id: Appearance; label: string; hint: string; icon: IconName }[] = [
-  { id: 'light', label: 'Light', hint: 'Ivory and burgundy', icon: 'sunny-outline' },
-  { id: 'dark', label: 'Dark', hint: 'Easy on the eyes at night', icon: 'moon-outline' },
-  { id: 'system', label: 'Same as phone', hint: 'Follows your phone setting', icon: 'phone-portrait-outline' },
+const OPTIONS: { id: Appearance; label: string; short: string; hint: string; icon: IconName }[] = [
+  { id: 'light', label: 'Light', short: 'Light', hint: 'Ivory and burgundy', icon: 'sunny-outline' },
+  { id: 'dark', label: 'Dark', short: 'Dark', hint: 'Easy on the eyes at night', icon: 'moon-outline' },
+  { id: 'system', label: 'Same as phone', short: 'Auto', hint: 'Follows your phone setting', icon: 'phone-portrait-outline' },
 ];
 
 const TOAST: Record<Appearance, string> = {
@@ -82,8 +82,8 @@ export function AppearancePicker() {
             )}
             <View style={styles.label}>
               <Ionicons name={on ? 'radio-button-on' : 'radio-button-off'} size={16} color={on ? t.c.primary : t.c.subtle} />
-              <Text size={13} weight={on ? 'semibold' : 'medium'} color={t.c.textStrong} numberOfLines={1} style={{ flexShrink: 1 }}>
-                {o.label}
+              <Text size={13} weight={on ? 'semibold' : 'medium'} color={t.c.textStrong} numberOfLines={2} lineHeight={17} style={{ flexShrink: 1 }}>
+                {o.short}
               </Text>
             </View>
           </Pressable>

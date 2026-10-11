@@ -4,7 +4,7 @@ One design system serves all four apps. Its name is **"Royal Nepali Luxury"** (a
 
 Rules: R-UI-1 … R-UI-8 in [00-rules-and-regulations.md](00-rules-and-regulations.md).
 
-Open improvements (accessibility fixes, motion, dark mode, imagery) are prioritised in `docs/UI_UX_REPORT.md` (PR #21, 2 Oct 2026); check it before starting visual work. The 3 October 2026 pass (§10 below) closed its quick wins and most of its "next" list.
+Every screen has a light and a dark ("Wine night") palette; how it works and the rules for new screens are in [22-appearance-profile-support.md](22-appearance-profile-support.md) (R-UI-9). Open improvements (accessibility fixes, motion, imagery) are prioritised in `docs/UI_UX_REPORT.md` (PR #21, 2 Oct 2026); check it before starting visual work. The 3 October 2026 pass (§10 below) closed its quick wins and most of its "next" list.
 
 ## 1. Principles
 

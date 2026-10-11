@@ -5,7 +5,7 @@ import { Pressable, StyleSheet, View } from 'react-native';
 import { ImageCarousel } from '@/components/listing/ImageCarousel';
 import { PhotoViewer } from '@/components/ui/PhotoViewer';
 import { Text } from '@/components/ui/Text';
-import { photos, type PhotoKey } from '@/constants/images';
+import { photo, type PhotoRef } from '@/constants/images';
 import { colors, radius } from '@/constants/theme';
 
 /**
@@ -13,7 +13,7 @@ import { colors, radius } from '@/constants/theme';
  * badge. Tapping a photo or the badge opens every photo full screen, with a
  * close (X) button.
  */
-export function HeroGallery({ images, width, height }: { images: PhotoKey[]; width: number; height: number }) {
+export function HeroGallery({ images, width, height }: { images: PhotoRef[]; width: number; height: number }) {
   const [open, setOpen] = useState<number | null>(null);
   return (
     <View>
@@ -27,7 +27,7 @@ export function HeroGallery({ images, width, height }: { images: PhotoKey[]; wid
           <Ionicons name="expand-outline" size={13} color={colors.onDark} />
         </Pressable>
       )}
-      <PhotoViewer sources={images.map((k) => photos[k])} index={open} onClose={() => setOpen(null)} />
+      <PhotoViewer sources={images.map((k) => photo(k))} index={open} onClose={() => setOpen(null)} />
     </View>
   );
 }

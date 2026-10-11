@@ -816,6 +816,7 @@
     "route:/platform/leads",
     "route:/platform/providers",
     "route:/platform/quotes",
+    "route:/platform/support",
     "route:/platform/weddings"
   ],
   "platform:support": [
@@ -838,6 +839,7 @@
     "route:/platform/execution",
     "route:/platform/freelancers",
     "route:/platform/gigs",
+    "route:/platform/support",
     "route:/platform/weddings"
   ],
   "platform:finance": [
@@ -893,6 +895,7 @@
     "route:/platform/marketplace",
     "route:/platform/providers",
     "route:/platform/quotes",
+    "route:/platform/support",
     "route:/platform/users",
     "route:/platform/weddings"
   ],
@@ -941,6 +944,7 @@
     "route:/platform/marketplace",
     "route:/platform/providers",
     "route:/platform/quotes",
+    "route:/platform/support",
     "route:/platform/users",
     "route:/platform/weddings"
   ],
@@ -967,6 +971,7 @@
     "route:/platform/freelancers",
     "route:/platform/gigs",
     "route:/platform/providers",
+    "route:/platform/support",
     "route:/platform/weddings"
   ]
 }

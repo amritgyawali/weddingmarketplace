@@ -208,7 +208,7 @@ The finish-and-craft pass worked through the roadmap at the component level, so 
 | 14 | Numerals | **Done** in the components: `<Text numeric>` (tabular figures) on KPI and stat figures, pills, key-value rows, countdown and focus-band amounts | `ui/Text.tsx` |
 | 15 | Empty states with character | **Done.** Pearl medallion with a champagne ring on every empty state; five line drawings (mandap, marigold garland, kalash, diya, rings) on the couple's first-run lists | `ui/Illustration.tsx`, `EmptyState`, `EmptyBlock` |
 | 16 | FlashList, skeletons | Open | |
-| 17 | Dark mode | Open | |
+| 17 | Dark mode | **Done** (11 Oct 2026). Settings → Appearance: light, dark or same as phone; "Wine night" palette; see handbook 22 | |
 | 18 | Photography | Open (non-code) | |
 | 19 | Wordmark | **Partly.** Devanagari "विवाह" under "Vivah" on the welcome screen and a gilt rule under the sidebar brand | |
 | 20 | Signature tier | Open (product) | |

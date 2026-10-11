@@ -181,7 +181,9 @@ const DARK: Palette = {
   inkFill: '#2B211E',
 };
 
+/** Every colour token, by name (the same keys in light and dark). */
 export type Palette = { [K in keyof typeof LIGHT]: string };
+/** The two colour schemes. */
 export type ColorScheme = 'light' | 'dark';
 
 /** The two palettes, for screens that preview both (Settings → Appearance). */

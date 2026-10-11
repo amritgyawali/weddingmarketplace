@@ -26,6 +26,7 @@ export const MAX_BUG_REPORTS = 200;
 export const MAX_BUG_SCREENSHOTS = 20;
 const MAX_DESCRIPTION = 4000;
 
+/** Bug report and help request use cases. */
 export interface SupportActions {
   /** Saves a report from the report sheet and tells the super admins. Returns its id, or an error. */
   submitBugReport: (report: BugReport) => { id?: string; error?: string };
@@ -43,8 +44,11 @@ export interface SupportActions {
   assignSupportTicket: (id: string, staffId: string | null, priority?: SupportPriority) => string | null;
   /** The owner rates the help they got (1–5) once the request is resolved or closed. */
   rateSupportTicket: (id: string, rating: number, note?: string) => string | null;
+  /** Supabase builds: replaces the device copy with the requests the server returned (rpc_my_support_tickets). */
+  mirrorSupportTickets: (tickets: SupportTicket[]) => void;
 }
 
+/** What "Ask the team" sends. */
 export interface SupportTicketInput {
   topic: SupportTopic;
   subject: string;
@@ -75,6 +79,7 @@ const byActivity = (list: SupportTicket[]) => [...list].sort((a, b) => b.updated
 
 const OWNER_STATUSES = new Set<SupportTicketStatus>(['resolved', 'closed', 'open']);
 
+/** Bug report and help request actions for the shared store. */
 export const supportActions = (set: SetDb, get: GetDb): SupportActions => ({
   submitBugReport: (report) => {
     const description = report.description?.trim() ?? '';
@@ -246,4 +251,6 @@ export const supportActions = (set: SetDb, get: GetDb): SupportActions => ({
     get().log({ id: me.id, name: me.name }, 'support.rate', 'support_ticket', id, `${stars}/5`);
     return null;
   },
+
+  mirrorSupportTickets: (tickets) => set({ supportTickets: byActivity(tickets) }),
 });

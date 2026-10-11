@@ -6,25 +6,59 @@ Every exported symbol in `src/constants/`, file by file. The guide that explains
 
 ## Files
 
-- [`brand.ts`](#brandts) (1 exports)
+- [`brand.ts`](#brandts) (4 exports) · Single source of truth for every brand-specific string. Rename the product here and the whole app follows. A super admin can replace any of…
 - [`env.ts`](#envts) (2 exports) · Public configuration from `EXPO_PUBLIC_*` variables (`.env.local`, EAS and Vercel environment variables; see `.env.example`). Expo inlines …
-- [`images.ts`](#imagests) (3 exports)
-- [`theme.ts`](#themets) (18 exports)
+- [`images.ts`](#imagests) (7 exports)
+- [`theme.ts`](#themets) (26 exports)
 
 ## brand.ts
 
 Source: [src/constants/brand.ts](../../../src/constants/brand.ts)
 
-### `BRAND`
+Single source of truth for every brand-specific string. Rename the product
+here and the whole app follows. A super admin can replace any of them
+without a release (Content studio → App details); `BRAND` reads the
+replacement first, so every screen follows.
 
-*const* · [src/constants/brand.ts:5](../../../src/constants/brand.ts#L5)
+### `BRAND_DEFAULTS`
+
+*const* · [src/constants/brand.ts:9](../../../src/constants/brand.ts#L9)
 
 ```ts
-BRAND= { name: 'Vivah', genieService: 'Vivah Planners', genieTagline: 'A planner makes the calls…
+BRAND_DEFAULTS= { name: 'Vivah', genieService: 'Vivah Planners', genieTagline: 'A planner makes the calls…
 ```
 
-Single source of truth for every brand-specific string. Rename the product
-here and the whole app follows.
+_No JSDoc yet._
+
+### `BrandField`
+
+*type* · [src/constants/brand.ts:25](../../../src/constants/brand.ts#L25)
+
+```ts
+type BrandField = keyof typeof BRAND_DEFAULTS
+```
+
+_No JSDoc yet._
+
+### `BRAND_FIELDS`
+
+*const* · [src/constants/brand.ts:27](../../../src/constants/brand.ts#L27)
+
+```ts
+BRAND_FIELDS= Object.keys(BRAND_DEFAULTS) as BrandField[]
+```
+
+_No JSDoc yet._
+
+### `BRAND`
+
+*const* · [src/constants/brand.ts:29](../../../src/constants/brand.ts#L29)
+
+```ts
+BRAND= Object.defineProperties( {}, Object.fromEntries(BRAND_FIELDS.map((field) => [field, { enu…
+```
+
+_No JSDoc yet._
 
 ## env.ts
 
@@ -81,42 +115,158 @@ type PhotoKey = keyof typeof photos
 
 _No JSDoc yet._
 
-### `photo`
+### `PhotoRef`
 
-*function* · [src/constants/images.ts:37](../../../src/constants/images.ts#L37)
+*type* · [src/constants/images.ts:38](../../../src/constants/images.ts#L38)
 
 ```ts
-photo(key: PhotoKey)
+type PhotoRef = PhotoKey | (string & {})
+```
+
+A bundled photo's key, or the address of a photo a super admin supplied (Content studio).
+
+### `PHOTO_KEYS`
+
+*const* · [src/constants/images.ts:40](../../../src/constants/images.ts#L40)
+
+```ts
+PHOTO_KEYS= Object.keys(photos) as PhotoKey[]
 ```
 
 _No JSDoc yet._
+
+### `isPhotoKey`
+
+*function* · [src/constants/images.ts:44](../../../src/constants/images.ts#L44)
+
+```ts
+isPhotoKey(ref: string): ref is PhotoKey
+```
+
+_No JSDoc yet._
+
+### `photoKeyOf`
+
+*function* · [src/constants/images.ts:47](../../../src/constants/images.ts#L47)
+
+```ts
+photoKeyOf(source: unknown)
+```
+
+The bundled photo a source came from, so `Photo` can show its replacement.
+
+### `photo`
+
+*function* · [src/constants/images.ts:50](../../../src/constants/images.ts#L50)
+
+```ts
+photo(ref: PhotoRef | null | undefined): ImageSourcePropType | undefined
+```
+
+An image source for a bundled key or an address. Always go through this: catalogue records may carry either.
 
 ## theme.ts
 
 Source: [src/constants/theme.ts](../../../src/constants/theme.ts)
 
-### `colors`
+### `Palette`
 
-*const* · [src/constants/theme.ts:15](../../../src/constants/theme.ts#L15)
+*type* · [src/constants/theme.ts:185](../../../src/constants/theme.ts#L185)
 
 ```ts
-colors= { // Burgundy family primary: '#681C2A', primaryDark: '#3D1018', primarySoft: '#F0E3DE', …
+type Palette = { [K in keyof typeof LIGHT]: string }
 ```
 
-Design tokens: "Royal Nepali Luxury". Every hard-coded colour lives here.
+Every colour token, by name (the same keys in light and dark).
 
-Deep burgundy and wine are the rich dark anchors (the colour of a bridal
-sari and a temple door), champagne gold is a restrained metallic accent for
-borders, badges and ratings, and the neutrals are warm ivory and pearl cream
-so photos of red saris and brass lamps sit on them without clashing.
+### `ColorScheme`
 
-Rough distribution on any screen: ~65% ivory/cream, ~20% burgundy/wine,
-~10% espresso text, ~5% champagne and dusty-rose accents. Gold never fills
-large areas, and is never used for body text (use `goldDeep` for gold text).
+*type* · [src/constants/theme.ts:187](../../../src/constants/theme.ts#L187)
+
+```ts
+type ColorScheme = 'light' | 'dark'
+```
+
+The two colour schemes.
+
+### `PALETTES`
+
+*const* · [src/constants/theme.ts:190](../../../src/constants/theme.ts#L190)
+
+```ts
+PALETTES: Record<ColorScheme, Palette>
+```
+
+The two palettes, for screens that preview both (Settings → Appearance).
+
+### `colors`
+
+*const* · [src/constants/theme.ts:197](../../../src/constants/theme.ts#L197)
+
+```ts
+colors: Readonly<Palette>
+```
+
+The live palette. Screens read `colors.x` during render (or inside a
+`themed()` style sheet); `applyColorScheme` swaps the values in place and
+the root layout remounts the tree, so nothing keeps a stale colour.
+
+### `currentColorScheme`
+
+*function* · [src/constants/theme.ts:204](../../../src/constants/theme.ts#L204)
+
+```ts
+currentColorScheme(): ColorScheme
+```
+
+The colour scheme on screen now.
+
+### `onColorScheme`
+
+*function* · [src/constants/theme.ts:207](../../../src/constants/theme.ts#L207)
+
+```ts
+onColorScheme(fn: (scheme: ColorScheme) => void): () => void
+```
+
+Runs `fn` after every scheme change (role themes and gradients rebuild themselves). Returns an unsubscribe.
+
+### `statusBarStyle`
+
+*function* · [src/constants/theme.ts:213](../../../src/constants/theme.ts#L213)
+
+```ts
+statusBarStyle(): 'light' | 'dark'
+```
+
+Status bar text that reads on the current background: dark text in light mode, light text in dark mode.
+
+### `applyColorScheme`
+
+*function* · [src/constants/theme.ts:216](../../../src/constants/theme.ts#L216)
+
+```ts
+applyColorScheme(next: ColorScheme)
+```
+
+Switches every token to the light or dark palette. Idempotent; call it before the tree renders with the new scheme.
+
+### `themed`
+
+*function* · [src/constants/theme.ts:230](../../../src/constants/theme.ts#L230)
+
+```ts
+themed<T extends object>(factory: () => T): T
+```
+
+A module-level style sheet that follows the colour scheme. Wrap
+`StyleSheet.create({...})` in it whenever the styles read a colour token:
+`const styles = themed(() => StyleSheet.create({ ... }))`. The factory runs
+again on first use after the scheme changes.
 
 ### `socialColors`
 
-*const* · [src/constants/theme.ts:105](../../../src/constants/theme.ts#L105)
+*const* · [src/constants/theme.ts:252](../../../src/constants/theme.ts#L252)
 
 ```ts
 socialColors= { facebook: '#1877F2', instagram: '#C13584', whatsapp: '#128C7E', tiktok: '#161823', } as…
@@ -126,19 +276,17 @@ Network marks in the social hub. Small icons and hairlines only, never fills.
 
 ### `gradients`
 
-*const* · [src/constants/theme.ts:117](../../../src/constants/theme.ts#L117)
+*const* · [src/constants/theme.ts:279](../../../src/constants/theme.ts#L279)
 
 ```ts
-gradients= { … }
+gradients= buildGradients()
 ```
 
-Only photo scrims remain; flat colour everywhere else. The remaining keys
-are kept so older call sites still type-check, and all resolve to flat or
-near-flat fills.
+_No JSDoc yet._
 
 ### `fonts`
 
-*const* · [src/constants/theme.ts:139](../../../src/constants/theme.ts#L139)
+*const* · [src/constants/theme.ts:289](../../../src/constants/theme.ts#L289)
 
 ```ts
 fonts= { regular: 'Mukta_400Regular', medium: 'Mukta_500Medium', semibold: 'Mukta_600SemiBold', …
@@ -152,7 +300,7 @@ titles on the couple app).
 
 ### `serif`
 
-*const* · [src/constants/theme.ts:147](../../../src/constants/theme.ts#L147)
+*const* · [src/constants/theme.ts:297](../../../src/constants/theme.ts#L297)
 
 ```ts
 serif= { regular: 'Martel_400Regular', medium: 'Martel_600SemiBold', semibold: 'Martel_600SemiBo…
@@ -162,7 +310,7 @@ _No JSDoc yet._
 
 ### `FontWeight`
 
-*type* · [src/constants/theme.ts:155](../../../src/constants/theme.ts#L155)
+*type* · [src/constants/theme.ts:305](../../../src/constants/theme.ts#L305)
 
 ```ts
 type FontWeight = keyof typeof fonts
@@ -172,7 +320,7 @@ _No JSDoc yet._
 
 ### `spacing`
 
-*const* · [src/constants/theme.ts:157](../../../src/constants/theme.ts#L157)
+*const* · [src/constants/theme.ts:307](../../../src/constants/theme.ts#L307)
 
 ```ts
 spacing= { xxs: 2, xs: 4, sm: 8, md: 12, lg: 16, xl: 20, xxl: 24, xxxl: 32, } as const
@@ -182,7 +330,7 @@ _No JSDoc yet._
 
 ### `radius`
 
-*const* · [src/constants/theme.ts:168](../../../src/constants/theme.ts#L168)
+*const* · [src/constants/theme.ts:318](../../../src/constants/theme.ts#L318)
 
 ```ts
 radius= { xs: 3, sm: 6, md: 8, lg: 10, xl: 12, pill: 999, } as const
@@ -192,7 +340,7 @@ _No JSDoc yet._
 
 ### `GUTTER`
 
-*const* · [src/constants/theme.ts:178](../../../src/constants/theme.ts#L178)
+*const* · [src/constants/theme.ts:328](../../../src/constants/theme.ts#L328)
 
 ```ts
 GUTTER= 16
@@ -202,7 +350,7 @@ Page gutter.
 
 ### `shadow`
 
-*function* · [src/constants/theme.ts:186](../../../src/constants/theme.ts#L186)
+*function* · [src/constants/theme.ts:336](../../../src/constants/theme.ts#L336)
 
 ```ts
 shadow(elevation: number, opacity: number, radiusPx: number, offsetY: number, color = '#251B18'): ViewStyle
@@ -212,7 +360,7 @@ Drop shadow for something that floats: elevation on Android, `boxShadow` on the 
 
 ### `shadows`
 
-*const* · [src/constants/theme.ts:205](../../../src/constants/theme.ts#L205)
+*const* · [src/constants/theme.ts:355](../../../src/constants/theme.ts#L355)
 
 ```ts
 shadows= { … }
@@ -222,7 +370,7 @@ Shadows are reserved for things that genuinely float (sheets, toasts).
 
 ### `type`
 
-*const* · [src/constants/theme.ts:215](../../../src/constants/theme.ts#L215)
+*const* · [src/constants/theme.ts:365](../../../src/constants/theme.ts#L365)
 
 ```ts
 type= { display: { fontFamily: serif.bold, fontSize: 30, lineHeight: 40 }, title: { fontFamily:…
@@ -232,7 +380,7 @@ _No JSDoc yet._
 
 ### `tabular`
 
-*const* · [src/constants/theme.ts:227](../../../src/constants/theme.ts#L227)
+*const* · [src/constants/theme.ts:377](../../../src/constants/theme.ts#L377)
 
 ```ts
 tabular: TextStyle
@@ -242,7 +390,7 @@ Figures that line up in columns (money, counts, countdowns).
 
 ### `iconSize`
 
-*const* · [src/constants/theme.ts:230](../../../src/constants/theme.ts#L230)
+*const* · [src/constants/theme.ts:380](../../../src/constants/theme.ts#L380)
 
 ```ts
 iconSize= { xs: 14, sm: 16, md: 20, lg: 24, xl: 28 } as const
@@ -252,7 +400,7 @@ Icon sizes: snap every Ionicon to one of these.
 
 ### `motion`
 
-*const* · [src/constants/theme.ts:237](../../../src/constants/theme.ts#L237)
+*const* · [src/constants/theme.ts:387](../../../src/constants/theme.ts#L387)
 
 ```ts
 motion= { fast: 150, base: 240, slow: 360, stagger: 45 } as const
@@ -264,7 +412,7 @@ for reduced motion.
 
 ### `hitSlop`
 
-*const* · [src/constants/theme.ts:239](../../../src/constants/theme.ts#L239)
+*const* · [src/constants/theme.ts:389](../../../src/constants/theme.ts#L389)
 
 ```ts
 hitSlop= { top: 10, bottom: 10, left: 10, right: 10 }
@@ -274,7 +422,7 @@ _No JSDoc yet._
 
 ### `inputFont`
 
-*function* · [src/constants/theme.ts:248](../../../src/constants/theme.ts#L248)
+*function* · [src/constants/theme.ts:398](../../../src/constants/theme.ts#L398)
 
 ```ts
 inputFont(weight: '400' | '500' | '600' | '700' = '400'): TextStyle
@@ -288,7 +436,7 @@ text. Put it after any `fontFamily` in an input's style array.
 
 ### `inputReset`
 
-*const* · [src/constants/theme.ts:255](../../../src/constants/theme.ts#L255)
+*const* · [src/constants/theme.ts:405](../../../src/constants/theme.ts#L405)
 
 ```ts
 inputReset: TextStyle

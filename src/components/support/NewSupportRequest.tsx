@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 
 import { Card, KButton, KField, SectionTitle, StackHeader } from '@/components/kit';
+import { openTicket } from '@/backend/support';
 import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
 import { Text } from '@/components/ui/Text';
 import { toastError } from '@/components/ui/Toast';
@@ -12,7 +13,6 @@ import { useFormCheck } from '@/hooks/useFormCheck';
 import { useLayout } from '@/hooks/useLayout';
 import { useCustomerWorkspace } from '@/hooks/useWorkspace';
 import { useDraft } from '@/store/drafts';
-import { useDb } from '@/store/useDb';
 import { useAccount } from '@/store/useSession';
 import { useRoleTheme } from '@/theme/RoleTheme';
 import type { SupportPriority, SupportTopic } from '@/types/platform';
@@ -28,7 +28,6 @@ export function NewSupportRequest() {
   const initialTopic = SUPPORT_TOPICS.some((x) => x.id === params.topic) ? (params.topic as SupportTopic) : null;
   const { projects } = useCustomerWorkspace(account.id);
   const celebrations = account.role === 'customer' ? projects.filter((p) => p.status !== 'CANCELLED') : [];
-  const open = useDb((s) => s.openSupportTicket);
   const [topic, setTopic] = useDraft<SupportTopic | null>(`support:${account.id}:topic`, initialTopic);
   const [subject, setSubject, clearSubject] = useDraft(`support:${account.id}:subject`, '');
   const [body, setBody, clearBody] = useDraft(`support:${account.id}:body`, '');
@@ -41,10 +40,10 @@ export function NewSupportRequest() {
     body: body.trim().length < SUPPORT_LIMITS.bodyMin && `Tell us a little more (at least ${SUPPORT_LIMITS.bodyMin} characters)`,
   });
 
-  const send = () => {
+  const send = async () => {
     if (!topic) return;
     setBusy(true);
-    const res = open({ topic, subject, body, priority, projectId: projectId ?? undefined });
+    const res = await openTicket({ topic, subject, body, priority, projectId: projectId ?? undefined });
     setBusy(false);
     if (res.error || !res.id) {
       toastError(res.error ?? 'Could not send. Try again.');

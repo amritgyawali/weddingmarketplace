@@ -11,13 +11,16 @@ Every exported symbol in `src/data/`, file by file. The guide that explains how 
 - [`categories.ts`](#categoriests) (9 exports)
 - [`checklist.ts`](#checklistts) (7 exports)
 - [`cities.ts`](#citiests) (8 exports)
+- [`contentCatalogue.ts`](#contentcataloguets) (7 exports) · The catalogue lists a super admin can edit from Content studio → Listings, with what the console needs to show and check each one. The list…
 - [`crafts.ts`](#craftsts) (7 exports) · Freelancer crafts. The crew roles in `services.ts` stay the source of truth (a freelancer's skills are crew roles, and their trade and capa…
 - [`events.ts`](#eventsts) (11 exports)
 - [`features.ts`](#featurests) (19 exports) · Feature switches a super admin flips from the console (Platform → More → Super admin → Features), with no code change. Each switch hides a …
 - [`freelancers.ts`](#freelancersts) (3 exports)
 - [`genie.ts`](#geniets) (4 exports)
+- [`homeSections.ts`](#homesectionsts) (5 exports)
 - [`ideas.ts`](#ideasts) (5 exports)
 - [`legal.ts`](#legalts) (6 exports) · The public legal pages (/legal/terms, /legal/privacy, /legal/refunds, /legal/delete-account). The Play Store listing, the payment gateways …
+- [`live.ts`](#livets) (2 exports) · The marketplace catalogue as the app shows it: the bundled lists with a super admin's edits applied (Content studio → Listings). Read the c…
 - [`occasions.ts`](#occasionsts) (14 exports) · Customer occasions: what a family is celebrating. Each occasion decides the functions offered, the services suggested and shown in the mark…
 - [`permissions.ts`](#permissionsts) (8 exports) · What each platform staff role may do. Staff don't onboard with a trade: their staff role (and, for support, their team) decides their permi…
 - [`providers.ts`](#providersts) (4 exports)
@@ -26,6 +29,8 @@ Every exported symbol in `src/data/`, file by file. The guide that explains how 
 - [`skills.ts`](#skillsts) (3 exports)
 - [`social.ts`](#socialts) (9 exports) · The four networks of the social hub and what each one allows, as the networks' own APIs define it (Meta Graph API for Facebook, Instagram a…
 - [`socialSeed.ts`](#socialseedts) (1 exports) · Demo records for the social hub: Everest Grand Party Palace has Facebook, Instagram and WhatsApp connected (TikTok left to connect in the d…
+- [`support.ts`](#supportts) (11 exports) · Help and support: request topics, limits, where each role reads its requests, and the answers to common questions (per role). Pure data, us…
+- [`supportSeed.ts`](#supportseedts) (1 exports) · Demo help requests, one story per role: the couple asked about changing the reception menu (the team asked a question back) and had a recei…
 - [`toolkitSeed.ts`](#toolkitseedts) (1 exports) · Demo records for the role toolkits, so the main tools open with a believable story.
 - [`tour.ts`](#tourts) (2 exports)
 - [`trades.ts`](#tradests) (12 exports) · Provider trades. The 43 services in `services.ts` stay the source of truth; trades group them for onboarding tiles, navigation headings and…
@@ -106,7 +111,7 @@ staff member can't use shows who it is for instead of opening.
 
 ### `ROUTE_AUDIENCE`
 
-*const* · [src/data/access.ts:179](../../../src/data/access.ts#L179)
+*const* · [src/data/access.ts:181](../../../src/data/access.ts#L181)
 
 ```ts
 ROUTE_AUDIENCE: Record<string, string>
@@ -116,7 +121,7 @@ Who a staff screen is for, in words ("finance and admins"), for the no-access me
 
 ### `TODAY_FOCUS`
 
-*const* · [src/data/access.ts:206](../../../src/data/access.ts#L206)
+*const* · [src/data/access.ts:210](../../../src/data/access.ts#L210)
 
 ```ts
 TODAY_FOCUS: { id: 'admin' | 'finance' | 'vendor_success' | 'support' | 'coordinator'; when: When }[]
@@ -126,7 +131,7 @@ The staff member's focus on the Today screen, first match wins.
 
 ### `SetupStepDef`
 
-*interface* · [src/data/access.ts:215](../../../src/data/access.ts#L215)
+*interface* · [src/data/access.ts:219](../../../src/data/access.ts#L219)
 
 A step on the vendor home's setup checklist, shown until it is done.
 
@@ -142,7 +147,7 @@ A step on the vendor home's setup checklist, shown until it is done.
 
 ### `VENDOR_SETUP_STEPS`
 
-*const* · [src/data/access.ts:227](../../../src/data/access.ts#L227)
+*const* · [src/data/access.ts:231](../../../src/data/access.ts#L231)
 
 ```ts
 VENDOR_SETUP_STEPS: SetupStepDef[]
@@ -152,7 +157,7 @@ _No JSDoc yet._
 
 ### `UNIVERSAL_TOOLS`
 
-*function* · [src/data/access.ts:243](../../../src/data/access.ts#L243)
+*function* · [src/data/access.ts:247](../../../src/data/access.ts#L247)
 
 ```ts
 UNIVERSAL_TOOLS(Object.keys(TOOL_RULES) as ToolId[]).filter((id))
@@ -276,7 +281,7 @@ Source: [src/data/categories.ts](../../../src/data/categories.ts)
 
 ### `VENDOR_CATEGORIES`
 
-*function* · [src/data/categories.ts:10](../../../src/data/categories.ts#L10)
+*function* · [src/data/categories.ts:12](../../../src/data/categories.ts#L12)
 
 ```ts
 VENDOR_CATEGORIESSERVICE_GROUPS.map((g))
@@ -287,17 +292,17 @@ every other group lists its services (subcategory id === service id).
 
 ### `HOME_CATEGORIES`
 
-*const* · [src/data/categories.ts:39](../../../src/data/categories.ts#L39)
+*const* · [src/data/categories.ts:41](../../../src/data/categories.ts#L41)
 
 ```ts
-HOME_CATEGORIES: { id: string; title: string; image: PhotoKey; categoryId: string; subcategoryId?: string; }[]
+HOME_CATEGORIES: { id: string; title: string; image: PhotoRef; categoryId: string; subcategoryId?: string; }[]
 ```
 
 _No JSDoc yet._
 
 ### `VENUE_COLLECTIONS`
 
-*const* · [src/data/categories.ts:59](../../../src/data/categories.ts#L59)
+*const* · [src/data/categories.ts:61](../../../src/data/categories.ts#L61)
 
 ```ts
 VENUE_COLLECTIONS: VenueCollection[]
@@ -307,30 +312,31 @@ _No JSDoc yet._
 
 ### `findCategory`
 
-*function* · [src/data/categories.ts:67](../../../src/data/categories.ts#L67)
+*function* · [src/data/categories.ts:70](../../../src/data/categories.ts#L70)
 
 ```ts
 findCategory(id: string)
 ```
 
-_No JSDoc yet._
+A browse category, with a super admin's edits to its title, subtitle and photo.
 
 ### `categoriesFor`
 
-*function* · [src/data/categories.ts:75](../../../src/data/categories.ts#L75)
+*function* · [src/data/categories.ts:79](../../../src/data/categories.ts#L79)
 
 ```ts
-categoriesFor(services: readonly string[]): VendorCategory[]
+categoriesFor(services: readonly string[], content: AppContent = contentRuntime.content): VendorCategory[]
 ```
 
 The marketplace for an occasion (owner decision): only the categories and
 services it lists are shown; the rest are hidden, not ranked lower. Venue
 types all count as the `venue` service. Every service listed keeps the full
-catalogue (weddings, "something else").
+catalogue (weddings, "something else"). Components pass `useContent()` so
+a super admin's edits re-render them.
 
 ### `enabledServices`
 
-*function* · [src/data/categories.ts:86](../../../src/data/categories.ts#L86)
+*function* · [src/data/categories.ts:91](../../../src/data/categories.ts#L91)
 
 ```ts
 enabledServices(services: readonly string[], flags: Record<string, boolean> | undefined)
@@ -340,17 +346,17 @@ The services a super admin hasn't switched off (feature `service:<id>`).
 
 ### `homeCategoriesFor`
 
-*function* · [src/data/categories.ts:89](../../../src/data/categories.ts#L89)
+*function* · [src/data/categories.ts:94](../../../src/data/categories.ts#L94)
 
 ```ts
-homeCategoriesFor(services: readonly string[])
+homeCategoriesFor(services: readonly string[], content: AppContent = contentRuntime.content)
 ```
 
 Home shortcuts for an occasion's services.
 
 ### `findSubcategory`
 
-*function* · [src/data/categories.ts:91](../../../src/data/categories.ts#L91)
+*function* · [src/data/categories.ts:99](../../../src/data/categories.ts#L99)
 
 ```ts
 findSubcategory(categoryId: string, subId?: string)
@@ -360,7 +366,7 @@ _No JSDoc yet._
 
 ### `categoryForService`
 
-*function* · [src/data/categories.ts:95](../../../src/data/categories.ts#L95)
+*function* · [src/data/categories.ts:103](../../../src/data/categories.ts#L103)
 
 ```ts
 categoryForService(serviceId: string)
@@ -526,6 +532,92 @@ sameServiceArea(a: string, b: string)
 ```
 
 _No JSDoc yet._
+
+## contentCatalogue.ts
+
+Source: [src/data/contentCatalogue.ts](../../../src/data/contentCatalogue.ts)
+
+The catalogue lists a super admin can edit from Content studio → Listings,
+with what the console needs to show and check each one. The lists
+themselves stay as bundled; edits are laid over them by `services/content`.
+
+### `CatalogueRecord`
+
+*type* · [src/data/contentCatalogue.ts:15](../../../src/data/contentCatalogue.ts#L15)
+
+```ts
+type CatalogueRecord = { id: string } & Record<string, unknown>
+```
+
+_No JSDoc yet._
+
+### `ContentKindDef`
+
+*interface* · [src/data/contentCatalogue.ts:17](../../../src/data/contentCatalogue.ts#L17)
+
+_No JSDoc yet._
+
+| Member | Type | Notes |
+|---|---|---|
+| `id` | `ContentKind` |  |
+| `label` | `string` |  |
+| `one` | `string` | "venue", for messages. |
+| `hint` | `string` |  |
+| `items` | `readonly CatalogueRecord[]` | The bundled records, unedited. |
+| `title` | `string` | Field that names a record. |
+| `detail` | `string[]` | Fields shown under the name in lists. |
+| `imageFields` | `string[]` | Fields holding one photo or a list of photos. |
+| `hideable` | `boolean` | Can a record be taken out of lists and search? |
+
+### `CONTENT_CATALOGUE`
+
+*const* · [src/data/contentCatalogue.ts:37](../../../src/data/contentCatalogue.ts#L37)
+
+```ts
+CONTENT_CATALOGUE: ContentKindDef[]
+```
+
+_No JSDoc yet._
+
+### `CONTENT_KIND_BY_ID`
+
+*const* · [src/data/contentCatalogue.ts:48](../../../src/data/contentCatalogue.ts#L48)
+
+```ts
+CONTENT_KIND_BY_ID= Object.fromEntries(CONTENT_CATALOGUE.map((k) => [k.id, k])) as Record<ContentKind, Conten…
+```
+
+_No JSDoc yet._
+
+### `isImageRef`
+
+*function* · [src/data/contentCatalogue.ts:51](../../../src/data/contentCatalogue.ts#L51)
+
+```ts
+isImageRef(ref: string)
+```
+
+A bundled photo key or an address the app can load.
+
+### `recordCover`
+
+*function* · [src/data/contentCatalogue.ts:54](../../../src/data/contentCatalogue.ts#L54)
+
+```ts
+recordCover(def: ContentKindDef, record: CatalogueRecord): PhotoRef | undefined
+```
+
+The first photo of a record, for list rows.
+
+### `fieldLabel`
+
+*function* · [src/data/contentCatalogue.ts:64](../../../src/data/contentCatalogue.ts#L64)
+
+```ts
+fieldLabel(key: string)
+```
+
+`startingPrice` → "Starting price".
 
 ## crafts.ts
 
@@ -1037,6 +1129,67 @@ GENIE_FEATURES= [ { icon: 'search', label: 'Venues and vendors picked for your b
 
 _No JSDoc yet._
 
+## homeSections.ts
+
+Source: [src/data/homeSections.ts](../../../src/data/homeSections.ts)
+
+### `HomeSectionDef`
+
+*interface* · [src/data/homeSections.ts:6](../../../src/data/homeSections.ts#L6)
+
+The sections of the couple's home, top to bottom. A super admin reorders
+them, renames the headings and switches them off from Content studio →
+Home; banners they add sit in the same list as `banner:<id>`.
+
+| Member | Type | Notes |
+|---|---|---|
+| `id` | `string` |  |
+| `label` | `string` |  |
+| `hint` | `string` |  |
+| `feature?` | `string` | The feature switch that hides it (`data/features.ts`); sections without one always show. |
+| `title?` | `string` | Built-in heading a super admin may replace; `{city}` becomes the chosen city. |
+| `weddingOnly?` | `boolean` | Shown for weddings and engagements only. |
+
+### `HOME_SECTIONS`
+
+*const* · [src/data/homeSections.ts:18](../../../src/data/homeSections.ts#L18)
+
+```ts
+HOME_SECTIONS: HomeSectionDef[]
+```
+
+_No JSDoc yet._
+
+### `HOME_SECTION_IDS`
+
+*function* · [src/data/homeSections.ts:32](../../../src/data/homeSections.ts#L32)
+
+```ts
+HOME_SECTION_IDSHOME_SECTIONS.map((s))
+```
+
+_No JSDoc yet._
+
+### `HOME_SECTION_BY_ID`
+
+*const* · [src/data/homeSections.ts:33](../../../src/data/homeSections.ts#L33)
+
+```ts
+HOME_SECTION_BY_ID: Record<string, HomeSectionDef>
+```
+
+_No JSDoc yet._
+
+### `BANNER_LINKS`
+
+*const* · [src/data/homeSections.ts:36](../../../src/data/homeSections.ts#L36)
+
+```ts
+BANNER_LINKS: { label: string; href: string }[]
+```
+
+Places a home banner's button can open, offered as shortcuts in the editor.
+
 ## ideas.ts
 
 Source: [src/data/ideas.ts](../../../src/data/ideas.ts)
@@ -1168,6 +1321,35 @@ isLegalDoc(x: unknown): x is LegalDocId
 ```
 
 _No JSDoc yet._
+
+## live.ts
+
+Source: [src/data/live.ts](../../../src/data/live.ts)
+
+The marketplace catalogue as the app shows it: the bundled lists with a
+super admin's edits applied (Content studio → Listings). Read the catalogue
+through these, or through `useLiveList` in a component, never from the
+bundled arrays, so an edit shows everywhere.
+
+### `catalogue`
+
+*const* · [src/data/live.ts:15](../../../src/data/live.ts#L15)
+
+```ts
+catalogue= { … }
+```
+
+For lists and search: records a super admin hid are left out.
+
+### `catalogueAll`
+
+*const* · [src/data/live.ts:27](../../../src/data/live.ts#L27)
+
+```ts
+catalogueAll= { … }
+```
+
+For lookups by id: hidden records stay, so a shortlist or booking that points at one still opens.
 
 ## occasions.ts
 
@@ -1359,7 +1541,7 @@ _No JSDoc yet._
 
 ### `Permission`
 
-*type* · [src/data/permissions.ts:30](../../../src/data/permissions.ts#L30)
+*type* · [src/data/permissions.ts:31](../../../src/data/permissions.ts#L31)
 
 ```ts
 type Permission = (typeof PERMISSIONS)[number]
@@ -1369,7 +1551,7 @@ _No JSDoc yet._
 
 ### `isPermission`
 
-*function* · [src/data/permissions.ts:33](../../../src/data/permissions.ts#L33)
+*function* · [src/data/permissions.ts:34](../../../src/data/permissions.ts#L34)
 
 ```ts
 isPermission(x: string): x is Permission
@@ -1379,7 +1561,7 @@ _No JSDoc yet._
 
 ### `PERMISSION_LABELS`
 
-*const* · [src/data/permissions.ts:35](../../../src/data/permissions.ts#L35)
+*const* · [src/data/permissions.ts:36](../../../src/data/permissions.ts#L36)
 
 ```ts
 PERMISSION_LABELS: Record<Permission, string>
@@ -1389,7 +1571,7 @@ _No JSDoc yet._
 
 ### `STAFF_PERMISSIONS`
 
-*const* · [src/data/permissions.ts:62](../../../src/data/permissions.ts#L62)
+*const* · [src/data/permissions.ts:64](../../../src/data/permissions.ts#L64)
 
 ```ts
 STAFF_PERMISSIONS: Record<StaffRole, readonly Permission[]>
@@ -1400,7 +1582,7 @@ apply to their own projects; `PERMISSION_SCOPE` records that for the server.
 
 ### `TEAM_PERMISSIONS`
 
-*const* · [src/data/permissions.ts:71](../../../src/data/permissions.ts#L71)
+*const* · [src/data/permissions.ts:73](../../../src/data/permissions.ts#L73)
 
 ```ts
 TEAM_PERMISSIONS: Partial<Record<PlatformTeam, readonly Permission[]>>
@@ -1410,7 +1592,7 @@ Extra permissions a team adds on top of the staff role.
 
 ### `PERMISSION_SCOPE`
 
-*const* · [src/data/permissions.ts:76](../../../src/data/permissions.ts#L76)
+*const* · [src/data/permissions.ts:78](../../../src/data/permissions.ts#L78)
 
 ```ts
 PERMISSION_SCOPE: Partial<Record<StaffRole, Partial<Record<Permission, 'own'>>>>
@@ -1420,7 +1602,7 @@ Permissions limited to the staff member's own records for a role.
 
 ### `permissionsFor`
 
-*function* · [src/data/permissions.ts:81](../../../src/data/permissions.ts#L81)
+*function* · [src/data/permissions.ts:83](../../../src/data/permissions.ts#L83)
 
 ```ts
 permissionsFor(staffRole?: StaffRole, team?: PlatformTeam): Permission[]
@@ -1457,7 +1639,7 @@ only shown to the platform team.
 | `startingPrice` | `number` |  |
 | `priceUnit` | `string` |  |
 | `capacity?` | `{ min: number; max: number }` |  |
-| `image` | `PhotoKey` |  |
+| `image` | `PhotoRef` |  |
 | `experienceYears` | `number` |  |
 | `completedProjects` | `number` |  |
 | `languages` | `string[]` |  |
@@ -1507,7 +1689,7 @@ to today so the demo always has: a new lead, projects in matching / quoting
 
 ### `day`
 
-*function* · [src/data/seed.ts:52](../../../src/data/seed.ts#L52)
+*function* · [src/data/seed.ts:54](../../../src/data/seed.ts#L54)
 
 ```ts
 day(offset: number)
@@ -1517,7 +1699,7 @@ _No JSDoc yet._
 
 ### `at`
 
-*function* · [src/data/seed.ts:57](../../../src/data/seed.ts#L57)
+*function* · [src/data/seed.ts:59](../../../src/data/seed.ts#L59)
 
 ```ts
 at(offset: number, hour = 10, minute = 0)
@@ -1527,7 +1709,7 @@ _No JSDoc yet._
 
 ### `DEMO_VENUE`
 
-*const* · [src/data/seed.ts:70](../../../src/data/seed.ts#L70)
+*const* · [src/data/seed.ts:72](../../../src/data/seed.ts#L72)
 
 ```ts
 DEMO_VENUE= VENUES[0]
@@ -1537,7 +1719,7 @@ _No JSDoc yet._
 
 ### `DEMO_STUDIO`
 
-*const* · [src/data/seed.ts:71](../../../src/data/seed.ts#L71)
+*const* · [src/data/seed.ts:73](../../../src/data/seed.ts#L73)
 
 ```ts
 DEMO_STUDIO= VENDORS.find((v) => v.id === 'wedding-story-nepal-kathmandu')!
@@ -1547,7 +1729,7 @@ _No JSDoc yet._
 
 ### `DEMO_DECOR`
 
-*const* · [src/data/seed.ts:72](../../../src/data/seed.ts#L72)
+*const* · [src/data/seed.ts:74](../../../src/data/seed.ts#L74)
 
 ```ts
 DEMO_DECOR= VENDORS.find((v) => v.id === 'phoolbari-decor-lalitpur')!
@@ -1557,7 +1739,7 @@ _No JSDoc yet._
 
 ### `DEMO_ACCOUNTS`
 
-*const* · [src/data/seed.ts:76](../../../src/data/seed.ts#L76)
+*const* · [src/data/seed.ts:78](../../../src/data/seed.ts#L78)
 
 ```ts
 DEMO_ACCOUNTS: Account[]
@@ -1567,7 +1749,7 @@ _No JSDoc yet._
 
 ### `DEMO_PERSONA_KEYS`
 
-*const* · [src/data/seed.ts:270](../../../src/data/seed.ts#L270)
+*const* · [src/data/seed.ts:272](../../../src/data/seed.ts#L272)
 
 ```ts
 DEMO_PERSONA_KEYS= ['services', 'primaryService', 'businessForm', 'teamSize', 'tradeProfile', 'primarySkill'…
@@ -1577,7 +1759,7 @@ Persona fields that demo accounts on older installs are missing (filled in by th
 
 ### `DEMO_OTP`
 
-*const* · [src/data/seed.ts:273](../../../src/data/seed.ts#L273)
+*const* · [src/data/seed.ts:275](../../../src/data/seed.ts#L275)
 
 ```ts
 DEMO_OTP= '1234'
@@ -1587,7 +1769,7 @@ Demo OTP for every phone number (no SMS gateway in the prototype).
 
 ### `PLATFORM_ACCESS_CODE`
 
-*const* · [src/data/seed.ts:275](../../../src/data/seed.ts#L275)
+*const* · [src/data/seed.ts:277](../../../src/data/seed.ts#L277)
 
 ```ts
 PLATFORM_ACCESS_CODE= 'VIVAH2026'
@@ -1597,7 +1779,7 @@ Access code required to register a platform-team account.
 
 ### `buildSeedData`
 
-*function* · [src/data/seed.ts:1480](../../../src/data/seed.ts#L1480)
+*function* · [src/data/seed.ts:1482](../../../src/data/seed.ts#L1482)
 
 ```ts
 buildSeedData(): DbData
@@ -1607,7 +1789,7 @@ _No JSDoc yet._
 
 ### `contractSections`
 
-*function* · [src/data/seed.ts:1841](../../../src/data/seed.ts#L1841)
+*function* · [src/data/seed.ts:1845](../../../src/data/seed.ts#L1845)
 
 ```ts
 contractSections(provider: string, scope: string, amount: number): { heading: string; body: string }[]
@@ -1617,7 +1799,7 @@ _No JSDoc yet._
 
 ### `DEMO_IMAGES`
 
-*const* · [src/data/seed.ts:1854](../../../src/data/seed.ts#L1854)
+*const* · [src/data/seed.ts:1858](../../../src/data/seed.ts#L1858)
 
 ```ts
 DEMO_IMAGES: PhotoKey[]
@@ -1964,6 +2146,147 @@ buildSocialSeed(): { socialAccounts: SocialAccount[]; socialThreads: SocialThrea
 
 Social accounts, threads, messages, posts and settings for the demo businesses.
 
+## support.ts
+
+Source: [src/data/support.ts](../../../src/data/support.ts)
+
+Help and support: request topics, limits, where each role reads its
+requests, and the answers to common questions (per role). Pure data, used
+by the help centre screens and the store actions in `store/db/support.ts`.
+
+### `SUPPORT_LIMITS`
+
+*const* · [src/data/support.ts:9](../../../src/data/support.ts#L9)
+
+```ts
+SUPPORT_LIMITS= { subjectMin: 4, subjectMax: 120, bodyMin: 10, bodyMax: 4000, /** Open requests one perso…
+```
+
+Lengths and counts the store actions and the SQL enforce for help requests.
+
+### `SUPPORT_TOPICS`
+
+*const* · [src/data/support.ts:19](../../../src/data/support.ts#L19)
+
+```ts
+SUPPORT_TOPICS: { id: SupportTopic; label: string; icon: string; hint: string }[]
+```
+
+What a help request can be about, with an icon and a hint for the picker.
+
+### `SUPPORT_TOPIC_LABEL`
+
+*const* · [src/data/support.ts:30](../../../src/data/support.ts#L30)
+
+```ts
+SUPPORT_TOPIC_LABEL: Record<SupportTopic, string>
+```
+
+Topic id → label.
+
+### `SUPPORT_PRIORITIES`
+
+*const* · [src/data/support.ts:33](../../../src/data/support.ts#L33)
+
+```ts
+SUPPORT_PRIORITIES: { id: SupportPriority; label: string; hint: string }[]
+```
+
+How soon the person needs an answer (Normal, Soon, Urgent).
+
+### `SUPPORT_STATUS_LABEL`
+
+*const* · [src/data/support.ts:40](../../../src/data/support.ts#L40)
+
+```ts
+SUPPORT_STATUS_LABEL: Record<SupportTicketStatus, string>
+```
+
+What the person who asked reads for each status.
+
+### `SUPPORT_DESK_STATUS_LABEL`
+
+*const* · [src/data/support.ts:49](../../../src/data/support.ts#L49)
+
+```ts
+SUPPORT_DESK_STATUS_LABEL: Record<SupportTicketStatus, string>
+```
+
+What staff call each status on the help desk.
+
+### `isOpenTicket`
+
+*function* · [src/data/support.ts:58](../../../src/data/support.ts#L58)
+
+```ts
+isOpenTicket(status: SupportTicketStatus)
+```
+
+Still needs someone: not solved or closed.
+
+### `supportHref`
+
+*function* · [src/data/support.ts:61](../../../src/data/support.ts#L61)
+
+```ts
+supportHref(role: UserRole, id?: string): string
+```
+
+Where a role reads its help centre, or one request in it.
+
+### `editProfileHref`
+
+*function* · [src/data/support.ts:67](../../../src/data/support.ts#L67)
+
+```ts
+editProfileHref(role: UserRole): string
+```
+
+Where a role edits its profile.
+
+### `FaqItem`
+
+*interface* · [src/data/support.ts:72](../../../src/data/support.ts#L72)
+
+One common question and its answer.
+
+| Member | Type | Notes |
+|---|---|---|
+| `id` | `string` |  |
+| `q` | `string` |  |
+| `a` | `string` |  |
+| `topic` | `SupportTopic` |  |
+
+### `faqFor`
+
+*function* · [src/data/support.ts:120](../../../src/data/support.ts#L120)
+
+```ts
+faqFor(role: UserRole): FaqItem[]
+```
+
+Common questions for a role, most useful first.
+
+## supportSeed.ts
+
+Source: [src/data/supportSeed.ts](../../../src/data/supportSeed.ts)
+
+Demo help requests, one story per role: the couple asked about changing
+the reception menu (the team asked a question back) and had a receipt
+question answered; the venue is waiting on a payout answer; the
+photographer's payout number change is being handled. Times are relative to
+now, so the demo always looks recent.
+
+### `buildSupportSeed`
+
+*function* · [src/data/supportSeed.ts:28](../../../src/data/supportSeed.ts#L28)
+
+```ts
+buildSupportSeed(): { supportTickets: SupportTicket[] }
+```
+
+The demo help requests (`DbData.supportTickets`).
+
 ## toolkitSeed.ts
 
 Source: [src/data/toolkitSeed.ts](../../../src/data/toolkitSeed.ts)
@@ -2157,7 +2480,7 @@ Source: [src/data/vendors.ts](../../../src/data/vendors.ts)
 
 ### `VENDORS`
 
-*const* · [src/data/vendors.ts:168](../../../src/data/vendors.ts#L168)
+*const* · [src/data/vendors.ts:169](../../../src/data/vendors.ts#L169)
 
 ```ts
 VENDORS: Vendor[]
@@ -2167,13 +2490,13 @@ _No JSDoc yet._
 
 ### `findVendor`
 
-*function* · [src/data/vendors.ts:206](../../../src/data/vendors.ts#L206)
+*function* · [src/data/vendors.ts:208](../../../src/data/vendors.ts#L208)
 
 ```ts
 findVendor(id: string)
 ```
 
-_No JSDoc yet._
+A vendor by id, with a super admin's edits (Content studio) applied.
 
 ## venues.ts
 
@@ -2181,7 +2504,7 @@ Source: [src/data/venues.ts](../../../src/data/venues.ts)
 
 ### `collectionsFor`
 
-*function* · [src/data/venues.ts:132](../../../src/data/venues.ts#L132)
+*function* · [src/data/venues.ts:133](../../../src/data/venues.ts#L133)
 
 ```ts
 collectionsFor(v: Pick<Venue, 'type' | 'rentalCost'>)
@@ -2191,7 +2514,7 @@ _No JSDoc yet._
 
 ### `VENUES`
 
-*function* · [src/data/venues.ts:212](../../../src/data/venues.ts#L212)
+*function* · [src/data/venues.ts:213](../../../src/data/venues.ts#L213)
 
 ```ts
 VENUESObject.entries(SEEDS).flatMap(([city, seeds]))
@@ -2201,7 +2524,7 @@ _No JSDoc yet._
 
 ### `VENUE_TYPES`
 
-*const* · [src/data/venues.ts:229](../../../src/data/venues.ts#L229)
+*const* · [src/data/venues.ts:230](../../../src/data/venues.ts#L230)
 
 ```ts
 VENUE_TYPES= Object.keys(PRICE_BANDS) as VenueType[]
@@ -2211,10 +2534,10 @@ _No JSDoc yet._
 
 ### `findVenue`
 
-*function* · [src/data/venues.ts:231](../../../src/data/venues.ts#L231)
+*function* · [src/data/venues.ts:233](../../../src/data/venues.ts#L233)
 
 ```ts
 findVenue(id: string)
 ```
 
-_No JSDoc yet._
+A venue by id, with a super admin's edits (Content studio) applied.
