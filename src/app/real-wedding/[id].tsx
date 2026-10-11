@@ -10,7 +10,7 @@ import { ScreenHeader } from '@/components/ui/ScreenHeader';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { Text } from '@/components/ui/Text';
 import { photo } from '@/constants/images';
-import { colors, GUTTER, radius } from '@/constants/theme';
+import { colors, GUTTER, radius, themed } from '@/constants/theme';
 import { useRealWedding } from '@/hooks/queries';
 import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
 
@@ -85,11 +85,11 @@ export default function RealWeddingScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = themed(() => StyleSheet.create({
   root: { flex: 1, backgroundColor: colors.white },
   body: { padding: GUTTER, gap: 8 },
   meta: { flexDirection: 'row', alignItems: 'center', gap: 4 },
   theme: { alignSelf: 'flex-start', backgroundColor: colors.primarySoft, borderRadius: radius.sm, paddingHorizontal: 10, paddingVertical: 4, marginTop: 4 },
   gallery: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginTop: 4 },
   vendor: { flexDirection: 'row', paddingVertical: 12, borderBottomWidth: 1, borderBottomColor: colors.divider },
-});
+}));

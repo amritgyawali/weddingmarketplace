@@ -11,7 +11,7 @@ import { Calendar } from '@/components/ui/Calendar';
 import { triggerHaptic } from '@/components/ui/PressableScale';
 import { Text } from '@/components/ui/Text';
 import { photos } from '@/constants/images';
-import { colors } from '@/constants/theme';
+import { colors, themed } from '@/constants/theme';
 import { CITIES, ONBOARDING_CITIES } from '@/data/cities';
 import { EVENT_TYPE_BY_ID, GUEST_BANDS, bandFor, isPeakSeason, type GuestBand } from '@/data/events';
 import { BUILT_IN_OCCASIONS, type OccasionDef } from '@/data/occasions';
@@ -574,7 +574,7 @@ export function CelebrationOnboarding({ another = false }: { another?: boolean }
                 <Text size={13} color="rgba(255,255,255,0.85)">
                   {date ? `${formatLongDate(date)} · ${formatDateAlt(date)}` : 'Date to be fixed'}
                 </Text>
-                <Text serif size={26} weight="bold" lineHeight={34} color={colors.white} numberOfLines={2}>
+                <Text serif size={26} weight="bold" lineHeight={34} color={colors.onDark} numberOfLines={2}>
                   {title}
                 </Text>
               </View>
@@ -625,7 +625,7 @@ function SummaryRow({ label, value, onPress, last }: { label: string; value: str
   );
 }
 
-const styles = StyleSheet.create({
+const styles = themed(() => StyleSheet.create({
   card: { borderWidth: 1, borderColor: colors.border, borderRadius: 10, padding: 12 },
   dateNote: { gap: 2, paddingHorizontal: 2, marginBottom: 4 },
   grid: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', rowGap: 10 },
@@ -637,4 +637,4 @@ const styles = StyleSheet.create({
   summaryRow: { flexDirection: 'row', alignItems: 'center', gap: 10, paddingHorizontal: 16, paddingVertical: 13 },
   summaryRowBorder: { borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: colors.hairline },
   next: { gap: 4, marginTop: 16, paddingTop: 16, borderTopWidth: StyleSheet.hairlineWidth, borderTopColor: colors.hairline },
-});
+}));

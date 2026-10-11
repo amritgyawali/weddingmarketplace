@@ -6,7 +6,7 @@ import { Linking, StyleSheet, useWindowDimensions, View } from 'react-native';
 import { PressableScale } from '@/components/ui/PressableScale';
 import { Rating } from '@/components/ui/Rating';
 import { Text } from '@/components/ui/Text';
-import { colors, GUTTER, radius } from '@/constants/theme';
+import { colors, GUTTER, radius, themed } from '@/constants/theme';
 import type { Vendor } from '@/types';
 import { formatMoney } from '@/utils/format';
 
@@ -76,7 +76,7 @@ export const VendorCard = memo(function VendorCard({ vendor }: { vendor: Vendor 
   );
 });
 
-const styles = StyleSheet.create({
+const styles = themed(() => StyleSheet.create({
   card: { paddingHorizontal: GUTTER, paddingTop: 16, paddingBottom: 18, borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: colors.border },
   featured: { position: 'absolute', top: 10, left: 10, backgroundColor: colors.wine, borderWidth: 1, borderColor: colors.goldLine, borderRadius: 4, paddingHorizontal: 7, paddingVertical: 2 },
   save: { position: 'absolute', top: 10, right: 10 },
@@ -96,4 +96,4 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   call: { width: 48, height: 42, borderRadius: 8, borderWidth: 1, borderColor: colors.border, alignItems: 'center', justifyContent: 'center' },
-});
+}));

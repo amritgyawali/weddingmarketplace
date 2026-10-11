@@ -4,7 +4,7 @@ import { StyleSheet, View } from 'react-native';
 
 import { EmptyBlock } from '@/components/kit';
 import { ScreenHeader } from '@/components/ui/ScreenHeader';
-import { colors } from '@/constants/theme';
+import { colors, themed } from '@/constants/theme';
 import { useCustomerWorkspace } from '@/hooks/useWorkspace';
 import { useAccount } from '@/store/useSession';
 import type { Project } from '@/types/platform';
@@ -59,6 +59,6 @@ export const toolStyles = StyleSheet.create({
   stat: { flex: 1, gap: 0, paddingVertical: 10, paddingHorizontal: 12 },
 });
 
-const styles = StyleSheet.create({
+const styles = themed(() => StyleSheet.create({
   root: { flex: 1, backgroundColor: colors.bgSoft },
-});
+}));

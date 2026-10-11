@@ -4,7 +4,7 @@ import { Pressable, StyleSheet, View } from 'react-native';
 
 import { Ornament } from '@/components/ui/Ornament';
 import { Text } from '@/components/ui/Text';
-import { colors, GUTTER } from '@/constants/theme';
+import { colors, GUTTER, themed } from '@/constants/theme';
 import { useOpenMyWedding } from '@/hooks/useOpenMyWedding';
 import { useCustomerWorkspace } from '@/hooks/useWorkspace';
 import { nextBestAction, planningProgress } from '@/services/planner';
@@ -26,10 +26,10 @@ export function WeddingStrip() {
       <View style={styles.wrap}>
         <View style={styles.band}>
           <Ornament width={64} style={styles.ornament} />
-          <Text serif size={24} weight="bold" color={colors.white} lineHeight={34}>
+          <Text serif size={24} weight="bold" color={colors.onDark} lineHeight={34}>
             Planning a wedding?
           </Text>
-          <Text size={15} color={ON_WINE_MUTED} style={{ marginTop: 2 }}>
+          <Text size={15} color={colors.onWineMuted} style={{ marginTop: 2 }}>
             Tell us the date, the city and what you need. A coordinator matches venues and vendors and sends one quotation.
           </Text>
           <Pressable onPress={() => router.push('/plan')} accessibilityRole="button" style={({ pressed }) => [styles.start, pressed && { opacity: 0.85 }]}>
@@ -59,10 +59,10 @@ export function WeddingStrip() {
             <Text size={13} color={colors.gold}>
               {formatLongDate(project.weddingDate)} · {formatDateAlt(project.weddingDate)}
             </Text>
-            <Text serif size={26} weight="bold" color={colors.white} lineHeight={36} numberOfLines={1}>
+            <Text serif size={26} weight="bold" color={colors.onDark} lineHeight={36} numberOfLines={1}>
               {project.title}
             </Text>
-            <Text size={14} color={ON_WINE_MUTED}>
+            <Text size={14} color={colors.onWineMuted}>
               {progress.services.confirmed} of {progress.services.total} services booked · {project.city}
             </Text>
           </View>
@@ -71,7 +71,7 @@ export function WeddingStrip() {
               <Text serif size={30} weight="bold" color={colors.gold} lineHeight={38} numeric>
                 {days}
               </Text>
-              <Text size={12} color={ON_WINE_MUTED} lineHeight={14}>
+              <Text size={12} color={colors.onWineMuted} lineHeight={14}>
                 {days === 1 ? 'day to go' : 'days to go'}
               </Text>
             </View>
@@ -103,9 +103,8 @@ export function WeddingStrip() {
 }
 
 /** Secondary text on the wine band: soft white at reduced strength. */
-const ON_WINE_MUTED = colors.onWineMuted;
 
-const styles = StyleSheet.create({
+const styles = themed(() => StyleSheet.create({
   wrap: { paddingHorizontal: GUTTER, paddingTop: 16, paddingBottom: 6 },
   band: {
     backgroundColor: colors.wine,
@@ -147,4 +146,4 @@ const styles = StyleSheet.create({
     height: 42,
     justifyContent: 'center',
   },
-});
+}));

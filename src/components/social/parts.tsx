@@ -7,7 +7,7 @@ import { Avatar } from '@/components/kit';
 import { triggerHaptic } from '@/components/ui/PressableScale';
 import { Text } from '@/components/ui/Text';
 import { photo } from '@/constants/images';
-import { colors, socialColors } from '@/constants/theme';
+import { colors, socialColors, themed } from '@/constants/theme';
 import { NETWORK_BY_ID } from '@/data/social';
 import { socialSettingsFor } from '@/store/db/social';
 import { useDb } from '@/store/useDb';
@@ -133,7 +133,7 @@ export function PostThumb({ media, size = 56, style }: { media: SocialMedia[]; s
       {src ? <Photo source={src} style={{ width: size, height: size }} contentFit="cover" /> : <Ionicons name="text-outline" size={size * 0.4} color={t.c.subtle} />}
       {first?.kind === 'video' && (
         <View style={styles.play}>
-          <Ionicons name="play" size={14} color={colors.white} />
+          <Ionicons name="play" size={14} color={colors.onDark} />
         </View>
       )}
       {media.length > 1 && (
@@ -168,10 +168,10 @@ export function LabelTag({ label }: { label: string }) {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = themed(() => StyleSheet.create({
   badge: { position: 'absolute', right: -3, bottom: -3, width: 20, height: 20, borderRadius: 10, borderWidth: 1, alignItems: 'center', justifyContent: 'center' },
   chip: { flexDirection: 'row', alignItems: 'center', gap: 6, borderWidth: 1, borderRadius: 6, paddingHorizontal: 10, paddingVertical: 6 },
   play: { position: 'absolute', width: 24, height: 24, borderRadius: 12, backgroundColor: colors.overlay, alignItems: 'center', justifyContent: 'center' },
   count: { position: 'absolute', right: 3, top: 3, borderRadius: 4, paddingHorizontal: 4 },
   tag: { borderWidth: 1, borderRadius: 4, paddingHorizontal: 5, paddingVertical: 0 },
-});
+}));

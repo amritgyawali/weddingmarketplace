@@ -8,7 +8,7 @@ import { SectionHeader } from '@/components/ui/SectionHeader';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { Text } from '@/components/ui/Text';
 import { photo } from '@/constants/images';
-import { colors, GUTTER, radius } from '@/constants/theme';
+import { colors, GUTTER, radius, themed } from '@/constants/theme';
 import { ALL_CITIES } from '@/data/cities';
 import { useCollections } from '@/hooks/queries';
 import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
@@ -33,7 +33,7 @@ export function VenueCollections({ city, title }: { city: string; title?: string
                 <Photo source={photo(c.image)} style={StyleSheet.absoluteFill} contentFit="cover" transition={200} />
                 <LinearGradient colors={['rgba(37,27,24,0)', 'rgba(37,27,24,0.82)']} style={styles.fade} />
                 <View style={styles.text}>
-                  <Text serif size={15} lineHeight={21} color={colors.white} weight="semibold" numberOfLines={2}>
+                  <Text serif size={15} lineHeight={21} color={colors.onDark} weight="semibold" numberOfLines={2}>
                     {c.title}
                   </Text>
                   <Text size={13} color={colors.gold}>
@@ -47,10 +47,10 @@ export function VenueCollections({ city, title }: { city: string; title?: string
   );
 }
 
-const styles = StyleSheet.create({
+const styles = themed(() => StyleSheet.create({
   section: { marginTop: 30 },
   row: { paddingHorizontal: GUTTER, gap: 12 },
   card: { width: 150, height: 196, borderRadius: radius.lg, overflow: 'hidden', backgroundColor: colors.bgMuted },
   fade: { position: 'absolute', left: 0, right: 0, bottom: 0, height: 110 },
   text: { position: 'absolute', left: 10, right: 10, bottom: 10, gap: 2 },
-});
+}));

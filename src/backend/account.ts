@@ -60,6 +60,13 @@ export function accountFromMe(me: Me, role: UserRole): Account {
   };
 }
 
+/**
+ * Saves the signed-in user's profile edits on the server (name, city, photo,
+ * business name, headline, bio). The server cleans them with the same rules
+ * as `cleanProfile`; email stays the sign-in address and isn't changed here.
+ */
+export const updateMyProfile = (patch: Record<string, unknown>) => rpc<Me>('rpc_update_my_profile', { p_patch: patch });
+
 /** Records that the user accepted this version of the Terms and Privacy policy (src/data/legal.ts). */
 export const acceptLegal = (version: string) => rpc<void>('rpc_accept_legal', { p_version: version });
 

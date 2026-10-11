@@ -9,7 +9,7 @@ import { Card, ChoiceChips, KButton, KField } from '@/components/kit';
 import { triggerHaptic } from '@/components/ui/PressableScale';
 import { Text } from '@/components/ui/Text';
 import { photo } from '@/constants/images';
-import { colors } from '@/constants/theme';
+import { colors, themed } from '@/constants/theme';
 import { exportCalendar } from '@/services/exporters';
 import { useDb } from '@/store/useDb';
 import type { RsvpStatus } from '@/types/platform';
@@ -114,10 +114,10 @@ export default function RsvpScreen() {
         <View>
           <Photo source={photo(site?.cover ?? 'ideaCoupleGardenWalk')} style={{ width: '100%', height: 220 }} contentFit="cover" />
           <View style={[styles.veil, { paddingTop: insets.top + 12 }]}>
-            <Text size={13} weight="bold" color={colors.white}>
+            <Text size={13} weight="bold" color={colors.onDark}>
               You’re invited
             </Text>
-            <Text serif size={30} weight="bold" color={colors.white} lineHeight={40}>
+            <Text serif size={30} weight="bold" color={colors.onDark} lineHeight={40}>
               {site?.headline ?? project.title}
             </Text>
             <Text size={14} color="rgba(255,255,255,0.9)">
@@ -221,9 +221,9 @@ export default function RsvpScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = themed(() => StyleSheet.create({
   root: { flex: 1, backgroundColor: colors.bgSoft },
   veil: { ...StyleSheet.absoluteFill, backgroundColor: 'rgba(0,0,0,0.38)', paddingHorizontal: 18, justifyContent: 'flex-end', paddingBottom: 18, gap: 2 },
   choice: { flexDirection: 'row', alignItems: 'center', gap: 10, borderWidth: 1, borderRadius: 8, padding: 12 },
   row: { flexDirection: 'row', alignItems: 'center', gap: 12 },
-});
+}));

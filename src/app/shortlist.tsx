@@ -12,7 +12,7 @@ import { Sheet } from '@/components/ui/Sheet';
 import { Text } from '@/components/ui/Text';
 import { toast } from '@/components/ui/Toast';
 import { photo } from '@/constants/images';
-import { colors } from '@/constants/theme';
+import { colors, themed } from '@/constants/theme';
 import { IDEA_PHOTOS } from '@/data/ideas';
 import { useLiveList } from '@/hooks/useContent';
 import { findProvider, type Provider } from '@/data/providers';
@@ -195,11 +195,11 @@ export default function ShortlistScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = themed(() => StyleSheet.create({
   root: { flex: 1, backgroundColor: colors.bgSoft },
   row: { flexDirection: 'row', alignItems: 'center', gap: 12, padding: 12 },
   image: { width: 64, height: 64, borderRadius: 8 },
   actions: { flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 8, paddingVertical: 6, borderTopWidth: StyleSheet.hairlineWidth },
   action: { flexDirection: 'row', alignItems: 'center', gap: 4, padding: 6 },
   footer: { position: 'absolute', left: 0, right: 0, bottom: 0, flexDirection: 'row', gap: 10, padding: 14, paddingBottom: 26, backgroundColor: colors.white, borderTopWidth: StyleSheet.hairlineWidth, borderTopColor: colors.border },
-});
+}));

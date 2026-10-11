@@ -5,7 +5,7 @@ import { Faqs, GenieHero, PackageCard, Testimonials, WhatsAppFab } from '@/compo
 import { ScreenHeader } from '@/components/ui/ScreenHeader';
 import { Text } from '@/components/ui/Text';
 import { BRAND } from '@/constants/brand';
-import { colors, GUTTER } from '@/constants/theme';
+import { colors, GUTTER, themed } from '@/constants/theme';
 import { FAQS, GENIE_PACKAGES, TESTIMONIALS } from '@/data/genie';
 import { useAppStore } from '@/store/useAppStore';
 import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
@@ -50,7 +50,7 @@ export default function GenieTab() {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = themed(() => StyleSheet.create({
   root: { flex: 1, backgroundColor: colors.white },
   packagesHead: { paddingHorizontal: GUTTER, paddingTop: 28 },
-});
+}));

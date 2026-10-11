@@ -7,7 +7,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { triggerHaptic } from '@/components/ui/PressableScale';
 import { TourTarget } from '@/components/tour/AppTour';
 import { Text } from '@/components/ui/Text';
-import { colors } from '@/constants/theme';
+import { colors, themed } from '@/constants/theme';
 import { serviceFeature, tabFeature } from '@/data/features';
 import { useExperience } from '@/hooks/useExperience';
 import { useFeatures } from '@/hooks/useFeatures';
@@ -85,7 +85,7 @@ export function TabBar({ state, navigation }: BottomTabBarProps) {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = themed(() => StyleSheet.create({
   bar: {
     flexDirection: 'row',
     backgroundColor: colors.white,
@@ -94,4 +94,4 @@ const styles = StyleSheet.create({
   },
   slot: { flex: 1 },
   item: { flex: 1, alignItems: 'center', gap: 2, minHeight: 52, paddingTop: 8, justifyContent: 'center' },
-});
+}));

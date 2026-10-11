@@ -161,6 +161,7 @@ export const PLATFORM_ROUTE_RULES: Record<string, When> = {
   '/platform/analytics': { perms: ['project.view_all'] },
   '/platform/marketplace': { perms: ['settings.edit'] },
   '/platform/audit': { perms: ['audit.view'] },
+  '/platform/support': { perms: ['support.manage'] },
   // Super admin console: edit anything, switch features, rewrite text
   '/platform/admin': { perms: ['admin.full'] },
   '/platform/admin/users': { perms: ['admin.full'] },
@@ -192,6 +193,7 @@ export const ROUTE_AUDIENCE: Record<string, string> = {
   '/platform/analytics': 'the operations team',
   '/platform/marketplace': 'admins',
   '/platform/audit': 'finance and admins',
+  '/platform/support': 'coordinators, support and admins',
   '/platform/admin': 'super admins',
   '/platform/admin/users': 'super admins',
   '/platform/admin/user': 'super admins',

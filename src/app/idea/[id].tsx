@@ -10,7 +10,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { triggerHaptic } from '@/components/ui/PressableScale';
 import { Text } from '@/components/ui/Text';
 import { photo as photoSource } from '@/constants/images';
-import { colors } from '@/constants/theme';
+import { colors, themed } from '@/constants/theme';
 import { IDEA_PHOTOS } from '@/data/ideas';
 import { useLiveList } from '@/hooks/useContent';
 import { useAppStore } from '@/store/useAppStore';
@@ -46,9 +46,9 @@ export default function IdeaViewer() {
 
       <LinearGradient colors={['rgba(0,0,0,0.6)', 'transparent']} style={[styles.top, { paddingTop: insets.top + 8 }]}>
         <Pressable onPress={() => router.back()} hitSlop={12} accessibilityLabel="Close" style={styles.circle}>
-          <Ionicons name="close" size={24} color={colors.white} />
+          <Ionicons name="close" size={24} color={colors.onDark} />
         </Pressable>
-        <Text size={14} color={colors.white}>
+        <Text size={14} color={colors.onDark}>
           {index + 1} / {ideas.length}
         </Text>
         <Pressable
@@ -56,7 +56,7 @@ export default function IdeaViewer() {
           hitSlop={12}
           accessibilityLabel="Share"
           style={styles.circle}>
-          <Ionicons name="share-outline" size={22} color={colors.white} />
+          <Ionicons name="share-outline" size={22} color={colors.onDark} />
         </Pressable>
       </LinearGradient>
 
@@ -65,7 +65,7 @@ export default function IdeaViewer() {
           <Text size={12} weight="medium" color={colors.textMuted}>
             {photo.category}
           </Text>
-          <Text size={18} weight="semibold" color={colors.white} style={{ marginTop: 4 }}>
+          <Text size={18} weight="semibold" color={colors.onDark} style={{ marginTop: 4 }}>
             {photo.title}
           </Text>
           <Text size={13} color="rgba(255,255,255,0.75)" style={{ marginTop: 2 }}>
@@ -79,8 +79,8 @@ export default function IdeaViewer() {
           }}
           accessibilityLabel={liked ? 'Unlike' : 'Like'}
           style={styles.like}>
-          <Ionicons name={liked ? 'heart' : 'heart-outline'} size={28} color={liked ? colors.primary : colors.white} />
-          <Text size={13} weight="semibold" color={colors.white}>
+          <Ionicons name={liked ? 'heart' : 'heart-outline'} size={28} color={liked ? colors.primary : colors.onDark} />
+          <Text size={13} weight="semibold" color={colors.onDark}>
             {photo.likes + (liked ? 1 : 0)}
           </Text>
         </Pressable>
@@ -89,7 +89,7 @@ export default function IdeaViewer() {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = themed(() => StyleSheet.create({
   root: { flex: 1, backgroundColor: colors.black },
   top: {
     position: 'absolute',
@@ -115,4 +115,4 @@ const styles = StyleSheet.create({
     paddingTop: 60,
   },
   like: { alignItems: 'center', gap: 2 },
-});
+}));

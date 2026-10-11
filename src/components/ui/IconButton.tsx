@@ -3,7 +3,7 @@ import { router } from 'expo-router';
 import type { ComponentProps, ReactNode } from 'react';
 import { StyleSheet, View, type StyleProp, type ViewStyle } from 'react-native';
 
-import { colors, hitSlop } from '@/constants/theme';
+import { colors, hitSlop, themed } from '@/constants/theme';
 
 import { PressableScale } from './PressableScale';
 import { Text } from './Text';
@@ -73,7 +73,7 @@ export function BackButton({ onPress, style }: { onPress?: () => void; style?: S
   );
 }
 
-const styles = StyleSheet.create({
+const styles = themed(() => StyleSheet.create({
   base: { alignItems: 'center', justifyContent: 'center' },
   badge: {
     position: 'absolute',
@@ -89,4 +89,4 @@ const styles = StyleSheet.create({
     borderWidth: 1.5,
     borderColor: colors.white,
   },
-});
+}));

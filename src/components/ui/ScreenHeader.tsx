@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 import { StyleSheet, View, type StyleProp, type ViewStyle } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { colors, GUTTER } from '@/constants/theme';
+import { colors, GUTTER, themed } from '@/constants/theme';
 
 import { BackButton } from './IconButton';
 import { Text } from './Text';
@@ -59,7 +59,7 @@ export function ScreenHeader({
   );
 }
 
-const styles = StyleSheet.create({
+const styles = themed(() => StyleSheet.create({
   wrap: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -72,4 +72,4 @@ const styles = StyleSheet.create({
   side: { minWidth: 76, flexDirection: 'row', alignItems: 'center', gap: 4 },
   right: { justifyContent: 'flex-end' },
   center: { flex: 1, alignItems: 'center' },
-});
+}));

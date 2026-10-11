@@ -144,7 +144,7 @@ export function PaymentSheet({
                 accessibilityRole="button"
                 accessibilityLabel={`Pay with ${x.label}`}>
                 <View style={[styles.methodIcon, { backgroundColor: x.color }]}>
-                  <Ionicons name={x.icon as never} size={18} color={colors.white} />
+                  <Ionicons name={x.icon as never} size={18} color={colors.onDark} />
                 </View>
                 <View style={{ flex: 1 }}>
                   <Text size={15} weight="semibold" color={t.c.textStrong}>
@@ -173,11 +173,11 @@ export function PaymentSheet({
         {step === 'confirm' && m && (
           <>
             <View style={[styles.gateway, { backgroundColor: m.color }]}>
-              <Ionicons name={m.icon as never} size={26} color={colors.white} />
-              <Text size={18} weight="bold" color={colors.white}>
+              <Ionicons name={m.icon as never} size={26} color={colors.onDark} />
+              <Text size={18} weight="bold" color={colors.onDark}>
                 {m.label}
               </Text>
-              <Text size={24} weight="bold" color={colors.white}>
+              <Text size={24} weight="bold" color={colors.onDark}>
                 {formatMoney(payAmount)}
               </Text>
             </View>
@@ -374,7 +374,7 @@ export function PaymentsPanel({ project, mode, openMilestoneId, focusMilestoneId
           {payments.map((p) => (
             <Card key={p.id} style={styles.receipt}>
               <View style={[styles.methodIcon, { backgroundColor: PAYMENT_METHODS.find((x) => x.id === p.method)?.color ?? t.c.primary }]}>
-                <Ionicons name="receipt-outline" size={16} color={colors.white} />
+                <Ionicons name="receipt-outline" size={16} color={colors.onDark} />
               </View>
               <View style={{ flex: 1 }}>
                 <Text size={14} weight="semibold" color={t.c.textStrong}>

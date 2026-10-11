@@ -16,7 +16,7 @@ import { ScreenHeader } from '@/components/ui/ScreenHeader';
 import { Sheet } from '@/components/ui/Sheet';
 import { Text } from '@/components/ui/Text';
 import { photo } from '@/constants/images';
-import { colors, GUTTER, radius } from '@/constants/theme';
+import { colors, GUTTER, radius, themed } from '@/constants/theme';
 import { EVENT_TYPE_BY_ID } from '@/data/events';
 import { useCustomerWorkspace } from '@/hooks/useWorkspace';
 import { useListingAvailability } from '@/hooks/useListingAvailability';
@@ -236,7 +236,7 @@ export default function EnquiryScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = themed(() => StyleSheet.create({
   root: { flex: 1, backgroundColor: colors.white },
   body: { padding: GUTTER, gap: 18, paddingBottom: 30 },
   itemCard: {
@@ -272,4 +272,4 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginBottom: 10,
   },
-});
+}));

@@ -7,7 +7,7 @@ import { PressableScale } from '@/components/ui/PressableScale';
 import { Text } from '@/components/ui/Text';
 import { BRAND } from '@/constants/brand';
 import { photos } from '@/constants/images';
-import { colors, GUTTER } from '@/constants/theme';
+import { colors, GUTTER, themed } from '@/constants/theme';
 
 /** Promo for the paid planning service: a photo over a wine panel with champagne details. */
 export function GenieBanner() {
@@ -21,7 +21,7 @@ export function GenieBanner() {
         </Text>
       </View>
       <View style={styles.body}>
-        <Text serif size={18} weight="bold" color={colors.white} lineHeight={26}>
+        <Text serif size={18} weight="bold" color={colors.onDark} lineHeight={26}>
           Hand the phone calls to a planner
         </Text>
         <Text size={14} color="rgba(255,252,248,0.74)">
@@ -35,9 +35,9 @@ export function GenieBanner() {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = themed(() => StyleSheet.create({
   card: { marginHorizontal: GUTTER, borderWidth: 1, borderColor: colors.goldLine, borderRadius: 12, overflow: 'hidden', backgroundColor: colors.wine },
   photoWrap: { height: 150, backgroundColor: colors.bgMuted, justifyContent: 'flex-end' },
   caption: { padding: 12 },
   body: { padding: 16, gap: 2 },
-});
+}));

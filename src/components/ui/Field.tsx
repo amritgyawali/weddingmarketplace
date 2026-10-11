@@ -2,7 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { forwardRef, useState } from 'react';
 import { StyleSheet, TextInput, View, type TextInputProps } from 'react-native';
 
-import { colors, fonts, inputReset, radius } from '@/constants/theme';
+import { colors, fonts, inputReset, radius, themed } from '@/constants/theme';
 import { useT } from '@/i18n';
 
 import { FieldNote } from './FieldNote';
@@ -62,7 +62,7 @@ export const Field = forwardRef<TextInput, FieldProps>(function Field({ label, e
   );
 });
 
-const styles = StyleSheet.create({
+const styles = themed(() => StyleSheet.create({
   input: {
     minHeight: 48,
     borderRadius: radius.md,
@@ -78,4 +78,4 @@ const styles = StyleSheet.create({
   inputFocused: { borderColor: colors.primary, borderWidth: 2, paddingHorizontal: 13 },
   inputError: { borderColor: colors.danger },
   errorRow: { flexDirection: 'row', alignItems: 'center', gap: 5 },
-});
+}));

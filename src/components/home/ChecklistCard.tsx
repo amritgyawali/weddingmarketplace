@@ -7,7 +7,7 @@ import Svg, { Circle } from 'react-native-svg';
 import { triggerHaptic } from '@/components/ui/PressableScale';
 import { SectionHeader } from '@/components/ui/SectionHeader';
 import { Text } from '@/components/ui/Text';
-import { colors, GUTTER } from '@/constants/theme';
+import { colors, GUTTER, themed } from '@/constants/theme';
 import { CHECKLIST, CHECKLIST_TOTAL } from '@/data/checklist';
 import { guideSections } from '@/services/customerPlanning';
 import { useExperience } from '@/hooks/useExperience';
@@ -24,7 +24,7 @@ const SHOWN = 5;
 export function ProgressRing({ percent, size = 58, stroke = 3, light }: { percent: number; size?: number; stroke?: number; light?: boolean }) {
   const r = (size - stroke) / 2;
   const c = 2 * Math.PI * r;
-  const fg = light ? colors.white : colors.primary;
+  const fg = light ? colors.onDark : colors.primary;
   return (
     <View style={{ width: size, height: size, alignItems: 'center', justifyContent: 'center' }}>
       <View style={[StyleSheet.absoluteFill, { transform: [{ rotate: '-90deg' }] }]}>
@@ -42,7 +42,7 @@ export function ProgressRing({ percent, size = 58, stroke = 3, light }: { percen
           />
         </Svg>
       </View>
-      <Text size={size > 50 ? 15 : 12} weight="semibold" color={light ? colors.white : colors.heading}>
+      <Text size={size > 50 ? 15 : 12} weight="semibold" color={light ? colors.onDark : colors.heading}>
         {percent}%
       </Text>
     </View>
@@ -192,7 +192,7 @@ function WeddingChecklist() {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = themed(() => StyleSheet.create({
   section: { marginTop: 30 },
   card: { marginHorizontal: GUTTER, borderWidth: 1, borderColor: colors.border, borderRadius: 8, paddingHorizontal: 14, paddingTop: 12, paddingBottom: 4 },
   summary: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'baseline' },
@@ -200,4 +200,4 @@ const styles = StyleSheet.create({
   fill: { height: 3, backgroundColor: colors.primary },
   task: { flexDirection: 'row', alignItems: 'center', gap: 10, paddingVertical: 11 },
   taskBorder: { borderTopWidth: StyleSheet.hairlineWidth, borderTopColor: colors.divider },
-});
+}));

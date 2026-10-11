@@ -13,7 +13,7 @@ import { triggerHaptic } from '@/components/ui/PressableScale';
 import { ScreenHeader } from '@/components/ui/ScreenHeader';
 import { Text } from '@/components/ui/Text';
 import { BRAND } from '@/constants/brand';
-import { colors, GUTTER, radius } from '@/constants/theme';
+import { colors, GUTTER, radius, themed } from '@/constants/theme';
 import { ALL_CITIES } from '@/data/cities';
 import { GENIE_PACKAGES } from '@/data/genie';
 import { useAppStore } from '@/store/useAppStore';
@@ -229,7 +229,7 @@ function BillRow({ label, value, bold, strike, accent }: { label: string; value:
   );
 }
 
-const styles = StyleSheet.create({
+const styles = themed(() => StyleSheet.create({
   root: { flex: 1, backgroundColor: colors.white },
   body: { padding: GUTTER, gap: 14, paddingBottom: 30 },
   summary: { padding: 16, borderRadius: radius.lg, backgroundColor: colors.primaryTint, gap: 4, borderWidth: 1, borderColor: colors.primarySoft },
@@ -259,4 +259,4 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginBottom: 10,
   },
-});
+}));

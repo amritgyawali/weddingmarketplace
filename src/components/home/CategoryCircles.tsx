@@ -10,7 +10,7 @@ import { useContent } from '@/hooks/useContent';
 import { useExperience } from '@/hooks/useExperience';
 import { useDb } from '@/store/useDb';
 import { photo } from '@/constants/images';
-import { colors, GUTTER } from '@/constants/theme';
+import { colors, GUTTER, themed } from '@/constants/theme';
 import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
 
 /** Horizontally scrolling category shortcuts: small photo tiles with a label underneath. */
@@ -49,9 +49,9 @@ export function CategoryCircles() {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = themed(() => StyleSheet.create({
   band: { flexGrow: 0, marginTop: 22 },
   content: { paddingHorizontal: GUTTER, gap: 12 },
   item: { width: 76, alignItems: 'center', gap: 6 },
   circle: { width: 76, height: 76, borderRadius: 8, backgroundColor: colors.bgMuted },
-});
+}));

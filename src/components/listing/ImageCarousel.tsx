@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { FlatList, Pressable, StyleSheet, View, type NativeScrollEvent, type NativeSyntheticEvent } from 'react-native';
 
 import { photo, type PhotoRef } from '@/constants/images';
-import { colors } from '@/constants/theme';
+import { colors, themed } from '@/constants/theme';
 
 /** Swipeable photo strip with pagination dots (venue cards & detail heroes). */
 export function ImageCarousel({
@@ -57,9 +57,9 @@ export function ImageCarousel({
   );
 }
 
-const styles = StyleSheet.create({
+const styles = themed(() => StyleSheet.create({
   dots: { position: 'absolute', left: 0, right: 0, flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 6 },
   dot: { width: 7, height: 7, borderRadius: 4, backgroundColor: colors.onWineMuted },
   /** The current photo: a champagne pill, so it reads on light and dark photos alike. */
   dotActive: { width: 20, backgroundColor: colors.gold },
-});
+}));

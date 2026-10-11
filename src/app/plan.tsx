@@ -12,7 +12,7 @@ import { triggerHaptic } from '@/components/ui/PressableScale';
 import { ScreenHeader } from '@/components/ui/ScreenHeader';
 import { Text } from '@/components/ui/Text';
 import { photo, type PhotoRef } from '@/constants/images';
-import { colors } from '@/constants/theme';
+import { colors, themed } from '@/constants/theme';
 import { CITIES, ONBOARDING_CITIES } from '@/data/cities';
 import { EVENT_TYPE_BY_ID, EVENT_TYPES, GUEST_BANDS, bandFor, isPeakSeason } from '@/data/events';
 import { catalogue } from '@/data/live';
@@ -432,7 +432,7 @@ export default function PlanWizard() {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = themed(() => StyleSheet.create({
   root: { flex: 1, backgroundColor: colors.white },
   progress: { flexDirection: 'row', gap: 4, paddingHorizontal: 20, paddingVertical: 10 },
   progressSeg: { flex: 1, height: 4, borderRadius: 2 },
@@ -445,4 +445,4 @@ const styles = StyleSheet.create({
   inspoCheck: { position: 'absolute', top: 6, right: 6 },
   summary: { backgroundColor: colors.bgMuted, borderRadius: 8, padding: 12, gap: 4 },
   footer: { position: 'absolute', left: 0, right: 0, bottom: 0, flexDirection: 'row', gap: 10, padding: 14, backgroundColor: colors.white, borderTopWidth: StyleSheet.hairlineWidth, borderTopColor: colors.hairline },
-});
+}));

@@ -23,7 +23,7 @@ import { PressableScale } from '@/components/ui/PressableScale';
 import { Text } from '@/components/ui/Text';
 import { BRAND } from '@/constants/brand';
 import { photo, type PhotoKey } from '@/constants/images';
-import { colors, gradients } from '@/constants/theme';
+import { colors, gradients, themed } from '@/constants/theme';
 import { useT } from '@/i18n';
 
 const SLIDES: { image: PhotoKey; credit: string; headline: string; focus: ImageContentPosition }[] = [
@@ -120,7 +120,7 @@ export default function WelcomeCarousel() {
 
       <View style={[styles.top, { paddingTop: insets.top + 14, pointerEvents: 'none' }]}>
         <View>
-          <Text serif size={24} weight="bold" color={colors.white} lineHeight={32}>
+          <Text serif size={24} weight="bold" color={colors.onDark} lineHeight={32}>
             {BRAND.name}
           </Text>
           <Text serif size={13} color={colors.gold} lineHeight={18} raw>
@@ -136,7 +136,7 @@ export default function WelcomeCarousel() {
       <View style={[styles.bottom, { paddingBottom: insets.bottom + 18 }]}>
         <Ornament width={72} style={styles.ornament} />
         <Animated.View key={index} entering={reduced ? undefined : FadeIn.duration(450)}>
-          <Text serif size={24} lineHeight={34} weight="bold" color={colors.white} style={styles.headline} accessibilityLiveRegion={paused ? 'polite' : 'none'}>
+          <Text serif size={24} lineHeight={34} weight="bold" color={colors.onDark} style={styles.headline} accessibilityLiveRegion={paused ? 'polite' : 'none'}>
             {slide.headline}
           </Text>
         </Animated.View>
@@ -154,13 +154,13 @@ export default function WelcomeCarousel() {
 
           <View style={styles.links}>
             <Pressable onPress={() => router.push('/welcome/role')} hitSlop={12} accessibilityRole="button">
-              <Text size={15} weight="medium" color={colors.white}>
+              <Text size={15} weight="medium" color={colors.onDark}>
                 Log in
               </Text>
             </Pressable>
             <View style={styles.sep} />
             <Pressable onPress={() => router.push('/join-wedding')} hitSlop={12} accessibilityRole="button">
-              <Text size={15} weight="medium" color={colors.white}>
+              <Text size={15} weight="medium" color={colors.onDark}>
                 I have an invite code
               </Text>
             </Pressable>
@@ -182,7 +182,7 @@ export default function WelcomeCarousel() {
             accessibilityRole="button"
             accessibilityLabel={tr(paused ? 'Play slideshow' : 'Pause slideshow')}
             style={({ pressed }) => [styles.pause, pressed && { opacity: 0.7 }]}>
-            <Ionicons name={paused ? 'play' : 'pause'} size={14} color={colors.white} />
+            <Ionicons name={paused ? 'play' : 'pause'} size={14} color={colors.onDark} />
           </Pressable>
         </View>
       </View>
@@ -190,7 +190,7 @@ export default function WelcomeCarousel() {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = themed(() => StyleSheet.create({
   root: { flex: 1, backgroundColor: colors.black },
   lang: { position: 'absolute', right: 16, zIndex: 5 },
   top: {
@@ -219,4 +219,4 @@ const styles = StyleSheet.create({
   dots: { flexDirection: 'row', alignItems: 'center', gap: 6 },
   pause: { width: 30, height: 30, borderRadius: 15, borderWidth: 1, borderColor: 'rgba(255,255,255,0.45)', alignItems: 'center', justifyContent: 'center' },
   dot: { height: 3, borderRadius: 2 },
-});
+}));

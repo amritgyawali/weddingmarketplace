@@ -12,7 +12,7 @@ import { registerForPush } from '@/backend/push';
 import { KButton } from '@/components/kit';
 import { triggerHaptic } from '@/components/ui/PressableScale';
 import { Text } from '@/components/ui/Text';
-import { inputFont, inputReset } from '@/constants/theme';
+import { inputFont, inputReset, statusBarStyle } from '@/constants/theme';
 import { LEGAL_VERSION } from '@/data/legal';
 import { DEMO_ACCOUNTS, DEMO_OTP } from '@/data/seed';
 import { completeLogin } from '@/services/auth';
@@ -148,7 +148,7 @@ function LoginForm() {
 
   return (
     <View style={{ flex: 1, backgroundColor: t.c.bg }}>
-      <StatusBar style="dark" />
+      <StatusBar style={statusBarStyle()} />
       <View style={[styles.hero, { paddingTop: insets.top + 6 }]}>
         <Pressable onPress={() => router.back()} hitSlop={12} accessibilityLabel="Go back" style={styles.back}>
           <Ionicons name="chevron-back" size={24} color={t.c.textStrong} />

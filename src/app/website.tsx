@@ -14,7 +14,7 @@ import { Text } from '@/components/ui/Text';
 import { Toggle } from '@/components/ui/Toggle';
 import { toast } from '@/components/ui/Toast';
 import { photo, type PhotoKey } from '@/constants/images';
-import { colors } from '@/constants/theme';
+import { colors, themed } from '@/constants/theme';
 import { useDb } from '@/store/useDb';
 import { useRoleTheme } from '@/theme/RoleTheme';
 import type { Project, WeddingWebsite } from '@/types/platform';
@@ -323,7 +323,7 @@ export default function WebsiteScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = themed(() => StyleSheet.create({
   template: { width: 128, borderRadius: 8, borderWidth: 2, overflow: 'hidden', backgroundColor: colors.white },
   templateImg: { width: '100%', height: 90 },
   swatch: { width: 34, height: 34, borderRadius: 17, borderWidth: 3 },
@@ -332,4 +332,4 @@ const styles = StyleSheet.create({
   toggleRow: { paddingHorizontal: 14, paddingVertical: 10 },
   footer: { position: 'absolute', left: 0, right: 0, bottom: 0, flexDirection: 'row', gap: 10, padding: 14, paddingBottom: 26, borderTopWidth: StyleSheet.hairlineWidth },
   qr: { padding: 16, backgroundColor: '#fff', borderRadius: 10 },
-});
+}));

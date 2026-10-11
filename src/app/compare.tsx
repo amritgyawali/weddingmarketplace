@@ -8,7 +8,7 @@ import { Card, EmptyBlock, KButton } from '@/components/kit';
 import { Text } from '@/components/ui/Text';
 import { ScreenHeader } from '@/components/ui/ScreenHeader';
 import { photo } from '@/constants/images';
-import { colors } from '@/constants/theme';
+import { colors, themed } from '@/constants/theme';
 import { findProvider, type Provider } from '@/data/providers';
 import { serviceName } from '@/data/services';
 import { useStartChat } from '@/hooks/useChat';
@@ -156,7 +156,7 @@ export default function CompareScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = themed(() => StyleSheet.create({
   root: { flex: 1, backgroundColor: colors.bgSoft },
   chips: { padding: 16, gap: 14 },
   group: { gap: 6 },
@@ -166,4 +166,4 @@ const styles = StyleSheet.create({
   col: { width: COL, paddingHorizontal: 8 },
   cell: { paddingVertical: 10, flexDirection: 'row', gap: 4, alignItems: 'flex-start' },
   image: { width: COL - 16, height: 96, borderRadius: 8 },
-});
+}));

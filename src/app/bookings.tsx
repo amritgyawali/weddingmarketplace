@@ -10,18 +10,18 @@ import { EmptyState } from '@/components/ui/EmptyState';
 import { ScreenHeader } from '@/components/ui/ScreenHeader';
 import { Text } from '@/components/ui/Text';
 import { photo } from '@/constants/images';
-import { colors, GUTTER, radius, shadows } from '@/constants/theme';
+import { colors, GUTTER, radius, shadows, themed } from '@/constants/theme';
 import { useAppStore } from '@/store/useAppStore';
 import type { Booking, BookingStatus } from '@/types';
 import { formatMoney, formatLongDate, formatShortDate } from '@/utils/format';
 import { confirm } from '@/utils/confirm';
 import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
 
-const STATUS: Record<BookingStatus, { label: string; color: string; bg: string }> = {
+const STATUS: Record<BookingStatus, { label: string; color: string; bg: string }> = themed(() => ({
   pending: { label: 'Awaiting response', color: colors.warning, bg: `${colors.warning}14` },
   confirmed: { label: 'Confirmed', color: colors.success, bg: `${colors.success}14` },
   cancelled: { label: 'Cancelled', color: colors.danger, bg: `${colors.danger}14` },
-};
+}));
 
 type Filter = 'all' | Booking['kind'];
 
@@ -141,7 +141,7 @@ export default function BookingsScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = themed(() => StyleSheet.create({
   root: { flex: 1, backgroundColor: colors.bgSoft },
   filters: { paddingHorizontal: GUTTER, paddingVertical: 12, gap: 8 },
   list: { padding: GUTTER, paddingTop: 4, gap: 14 },
@@ -153,4 +153,4 @@ const styles = StyleSheet.create({
   meta: { gap: 6 },
   metaItem: { flexDirection: 'row', alignItems: 'center', gap: 6 },
   actions: { flexDirection: 'row', gap: 10 },
-});
+}));

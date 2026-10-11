@@ -15,11 +15,17 @@ import { runtime, translate, type CalendarMode, type Lang, type TextOverrides } 
 export { tr, translate } from './runtime';
 export type { CalendarMode, Lang, TextOverrides } from './runtime';
 
+/** Light, dark, or whatever the phone uses. */
+export type Appearance = 'system' | 'light' | 'dark';
+
 interface PrefsState {
   lang: Lang;
   calendar: CalendarMode;
+  /** Colour scheme for this device. Missing on older installs, which means `system`. */
+  appearance: Appearance;
   setLang: (lang: Lang) => void;
   setCalendar: (calendar: CalendarMode) => void;
+  setAppearance: (appearance: Appearance) => void;
 }
 
 export const usePrefs = create<PrefsState>()(
@@ -27,14 +33,16 @@ export const usePrefs = create<PrefsState>()(
     (set) => ({
       lang: 'en',
       calendar: 'bs',
+      appearance: 'system',
       setLang: (lang) => set({ lang }),
       setCalendar: (calendar) => set({ calendar }),
+      setAppearance: (appearance) => set({ appearance }),
     }),
     {
       name: 'vivah-prefs',
       version: 1,
       storage: createJSONStorage(() => AsyncStorage),
-      partialize: (s) => ({ lang: s.lang, calendar: s.calendar }),
+      partialize: (s) => ({ lang: s.lang, calendar: s.calendar, appearance: s.appearance }),
     },
   ),
 );

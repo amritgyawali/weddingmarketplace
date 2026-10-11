@@ -12,7 +12,7 @@ import { Platform, type TextStyle, type ViewStyle } from 'react-native';
  * ~10% espresso text, ~5% champagne and dusty-rose accents. Gold never fills
  * large areas, and is never used for body text (use `goldDeep` for gold text).
  */
-export const colors = {
+const LIGHT = {
   // Burgundy family
   primary: '#681C2A',
   primaryDark: '#3D1018',
@@ -99,7 +99,152 @@ export const colors = {
   lavenderTop: '#F5ECE2',
   lavenderBottom: '#F5ECE2',
   overlay: 'rgba(37,27,24,0.55)',
-} as const;
+  /** Text and icons on surfaces that stay dark in both modes (wine bands, photos, dark toasts). */
+  onDark: '#FFFCF8',
+  /** Fills that stay dark in both modes (floating pills, photo placeholders). */
+  inkFill: '#251B18',
+};
+
+/**
+ * "Wine night": the dark palette. Same names as the light one, so every
+ * screen that reads `colors.x` changes with the scheme. Surfaces are warm
+ * espresso blacks (never grey), the burgundy accent lifts to a dusty rose
+ * that reads as text and as a fill (with dark text on it), and champagne
+ * gold stays the metal. Every text pair is at least 4.5 : 1 on `bg`,
+ * `white` (cards) and `bgSoft`; control borders are 3 : 1.
+ */
+const DARK: Palette = {
+  primary: '#E8A3AE',
+  primaryDark: '#F2C3CA',
+  primarySoft: '#3A1E24',
+  primaryTint: '#2A181B',
+  wine: '#3D1018',
+  wineDeep: '#260A0F',
+  wineSoft: '#3A1E24',
+  onWineMuted: 'rgba(255,252,248,0.72)',
+
+  gold: '#C8A46B',
+  goldDeep: '#D9BC86',
+  goldSoft: '#33281A',
+  goldLine: 'rgba(200,164,107,0.45)',
+  goldTrack: 'rgba(200,164,107,0.22)',
+  rose: '#C98991',
+  roseSoft: '#3A2327',
+  roseDeep: '#DFA2AA',
+
+  heading: '#F7EDE5',
+  text: '#EADFD6',
+  textStrong: '#F7EDE5',
+  textBody: '#D8CAC0',
+  textMuted: '#B6A69B',
+  textSubtle: '#8F7F74',
+  placeholder: '#8F8076',
+
+  white: '#1C1513',
+  black: '#000000',
+  bg: '#130D0C',
+  bgSoft: '#241B19',
+  bgMuted: '#2E2421',
+  bgChip: '#2E2421',
+
+  border: '#3A2E2A',
+  borderStrong: '#8A766A',
+  divider: '#2C2220',
+  hairline: '#30251F',
+
+  stepInactive: '#4F423C',
+  badgeNew: '#D9BC86',
+  whatsapp: '#1F9D55',
+  call: '#7FC49B',
+  crown: '#C8A46B',
+  star: '#C8A46B',
+  marigold: '#C8A46B',
+  success: '#86C9A0',
+  danger: '#F2A097',
+  warning: '#E4B65A',
+  info: '#9DBDE0',
+  successSoft: '#1C2E23',
+  dangerSoft: '#3D1C19',
+  warningDeep: '#3A2E12',
+  dangerDeep: '#4A1515',
+  successOnDark: '#7FC49B',
+  warningOnDark: '#E0B04C',
+  dangerOnDark: '#F09A90',
+
+  toolBlue: '#241B19',
+  toolWarm: '#241B19',
+  collectionBand: '#241B19',
+  lavenderTop: '#241B19',
+  lavenderBottom: '#241B19',
+  overlay: 'rgba(0,0,0,0.66)',
+  onDark: '#FFFCF8',
+  inkFill: '#2B211E',
+};
+
+export type Palette = { [K in keyof typeof LIGHT]: string };
+export type ColorScheme = 'light' | 'dark';
+
+/** The two palettes, for screens that preview both (Settings → Appearance). */
+export const PALETTES: Record<ColorScheme, Palette> = { light: LIGHT, dark: DARK };
+
+/**
+ * The live palette. Screens read `colors.x` during render (or inside a
+ * `themed()` style sheet); `applyColorScheme` swaps the values in place and
+ * the root layout remounts the tree, so nothing keeps a stale colour.
+ */
+export const colors: Readonly<Palette> = { ...LIGHT };
+
+let scheme: ColorScheme = 'light';
+let schemeVersion = 0;
+const schemeListeners = new Set<(scheme: ColorScheme) => void>();
+
+/** The colour scheme on screen now. */
+export const currentColorScheme = (): ColorScheme => scheme;
+
+/** Runs `fn` after every scheme change (role themes and gradients rebuild themselves). Returns an unsubscribe. */
+export function onColorScheme(fn: (scheme: ColorScheme) => void): () => void {
+  schemeListeners.add(fn);
+  return () => schemeListeners.delete(fn);
+}
+
+/** Status bar text that reads on the current background: dark text in light mode, light text in dark mode. */
+export const statusBarStyle = (): 'light' | 'dark' => (scheme === 'dark' ? 'light' : 'dark');
+
+/** Switches every token to the light or dark palette. Idempotent; call it before the tree renders with the new scheme. */
+export function applyColorScheme(next: ColorScheme) {
+  if (next === scheme) return;
+  scheme = next;
+  schemeVersion += 1;
+  Object.assign(colors as Palette, PALETTES[next]);
+  for (const fn of schemeListeners) fn(next);
+}
+
+/**
+ * A module-level style sheet that follows the colour scheme. Wrap
+ * `StyleSheet.create({...})` in it whenever the styles read a colour token:
+ * `const styles = themed(() => StyleSheet.create({ ... }))`. The factory runs
+ * again on first use after the scheme changes.
+ */
+export function themed<T extends object>(factory: () => T): T {
+  let cache: T | null = null;
+  let version = -1;
+  const read = (): T => {
+    if (version !== schemeVersion || !cache) {
+      cache = factory();
+      version = schemeVersion;
+    }
+    return cache;
+  };
+  return new Proxy({} as T, {
+    get: (_, key) => (read() as Record<PropertyKey, unknown>)[key],
+    has: (_, key) => key in read(),
+    ownKeys: () => Reflect.ownKeys(read()),
+    getOwnPropertyDescriptor: (_, key) => {
+      const d = Reflect.getOwnPropertyDescriptor(read(), key);
+      return d ? { ...d, configurable: true } : undefined;
+    },
+  });
+}
 
 /** Network marks in the social hub. Small icons and hairlines only, never fills. */
 export const socialColors = {
@@ -114,7 +259,7 @@ export const socialColors = {
  * are kept so older call sites still type-check, and all resolve to flat or
  * near-flat fills.
  */
-export const gradients = {
+const buildGradients = () => ({
   genieRing: [colors.primary, colors.primary] as const,
   checklist: [colors.primary, colors.primary] as const,
   filterBar: [colors.heading, colors.heading] as const,
@@ -127,7 +272,10 @@ export const gradients = {
   collectionGarden: ['rgba(0,0,0,0)', 'rgba(0,0,0,0.7)'] as const,
   /** Wine-tinted scrim under captions on photo cards (never grey). */
   photoCaption: ['rgba(37,14,18,0)', 'rgba(37,14,18,0.35)', 'rgba(37,14,18,0.86)'] as const,
-};
+});
+
+export const gradients = buildGradients();
+onColorScheme(() => Object.assign(gradients, buildGradients()));
 
 /**
  * Mukta (Ek Type) for everything you read and tap: it was drawn for

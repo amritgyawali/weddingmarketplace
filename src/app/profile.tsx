@@ -7,7 +7,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { BackButton } from '@/components/ui/IconButton';
 import { LanguageSwitch } from '@/components/ui/LanguageSwitch';
 import { Text } from '@/components/ui/Text';
-import { colors, GUTTER } from '@/constants/theme';
+import { colors, GUTTER, themed } from '@/constants/theme';
 import { useExperience } from '@/hooks/useExperience';
 import { useFeatures, useLinkOn } from '@/hooks/useFeatures';
 import { goToCoupleTab, useOpenMyWedding } from '@/hooks/useOpenMyWedding';
@@ -20,7 +20,6 @@ import { useTour } from '@/store/useTour';
 import { confirm } from '@/utils/confirm';
 import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
 
-const ICON = colors.textBody;
 
 type IconName = ComponentProps<typeof Ionicons>['name'];
 
@@ -54,7 +53,7 @@ export default function ProfileMenuScreen() {
     goToCoupleTab('/');
   };
 
-  const icon = (name: IconName) => <Ionicons name={name} size={21} color={ICON} />;
+  const icon = (name: IconName) => <Ionicons name={name} size={21} color={colors.textBody} />;
   const menu: { title: string; items: MenuItem[] }[] = [
     {
       title: wedding ? 'Your wedding' : `Your ${exp.vocab.noun}`,
@@ -163,7 +162,7 @@ export default function ProfileMenuScreen() {
           </View>
         ))}
         <View style={styles.langRow}>
-          <Ionicons name="language-outline" size={21} color={ICON} />
+          <Ionicons name="language-outline" size={21} color={colors.textBody} />
           <Text size={16} color={colors.text} style={{ flex: 1 }}>
             Language
           </Text>
@@ -180,7 +179,7 @@ export default function ProfileMenuScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = themed(() => StyleSheet.create({
   root: { flex: 1, backgroundColor: colors.white },
   langRow: { flexDirection: 'row', alignItems: 'center', gap: 16, paddingHorizontal: GUTTER - 4, paddingVertical: 14, marginTop: 10, borderTopWidth: StyleSheet.hairlineWidth, borderTopColor: colors.border },
   profile: {
@@ -225,4 +224,4 @@ const styles = StyleSheet.create({
     paddingHorizontal: 6,
   },
   logout: { flexDirection: 'row', alignItems: 'center', gap: 10, paddingHorizontal: GUTTER, paddingTop: 26 },
-});
+}));

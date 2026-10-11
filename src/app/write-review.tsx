@@ -10,7 +10,7 @@ import { Text } from '@/components/ui/Text';
 import { toast } from '@/components/ui/Toast';
 import { ReviewComposer } from '@/components/work/ReviewComposer';
 import { photo } from '@/constants/images';
-import { colors } from '@/constants/theme';
+import { colors, themed } from '@/constants/theme';
 import { findProvider, PROVIDERS } from '@/data/providers';
 import { serviceName } from '@/data/services';
 import { useCustomerWorkspace } from '@/hooks/useWorkspace';
@@ -170,8 +170,8 @@ export default function WriteReviewScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = themed(() => StyleSheet.create({
   root: { flex: 1, backgroundColor: colors.bgSoft },
   row: { flexDirection: 'row', alignItems: 'center', gap: 12 },
   thumb: { width: 48, height: 48, borderRadius: 10 },
-});
+}));

@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/Button';
 import { triggerHaptic } from '@/components/ui/PressableScale';
 import { ScreenHeader } from '@/components/ui/ScreenHeader';
 import { Text } from '@/components/ui/Text';
-import { colors, fonts, GUTTER, inputFont, inputReset, radius } from '@/constants/theme';
+import { colors, fonts, GUTTER, inputFont, inputReset, radius, themed } from '@/constants/theme';
 import { useAppStore } from '@/store/useAppStore';
 import { useDb } from '@/store/useDb';
 import { useAccount, useSession } from '@/store/useSession';
@@ -131,7 +131,7 @@ export default function JoinWeddingScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = themed(() => StyleSheet.create({
   root: { flex: 1, backgroundColor: colors.white },
   center: { alignItems: 'center', justifyContent: 'center', paddingHorizontal: 28, gap: 12 },
   icon: { width: 92, height: 92, borderRadius: 46, backgroundColor: colors.primary, alignItems: 'center', justifyContent: 'center', marginBottom: 10 },
@@ -149,4 +149,4 @@ const styles = StyleSheet.create({
     color: colors.textStrong,
   },
   footer: { paddingHorizontal: GUTTER, paddingTop: 12 },
-});
+}));

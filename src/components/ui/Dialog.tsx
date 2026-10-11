@@ -3,7 +3,7 @@ import { Modal, Pressable, StyleSheet, View } from 'react-native';
 import Animated, { FadeIn, ZoomIn } from 'react-native-reanimated';
 import { create } from 'zustand';
 
-import { colors, radius, shadows } from '@/constants/theme';
+import { colors, radius, shadows, themed } from '@/constants/theme';
 
 import { triggerHaptic } from './PressableScale';
 import { Text } from './Text';
@@ -82,11 +82,11 @@ export function DialogHost() {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = themed(() => StyleSheet.create({
   backdrop: { flex: 1, backgroundColor: colors.overlay, alignItems: 'center', justifyContent: 'center', padding: 24 },
   card: { width: '100%', maxWidth: 400, backgroundColor: colors.white, borderRadius: radius.xl, padding: 24, gap: 8, alignItems: 'center', ...shadows.raised },
   icon: { width: 46, height: 46, borderRadius: 23, alignItems: 'center', justifyContent: 'center', marginBottom: 4 },
   actions: { flexDirection: 'row', gap: 10, marginTop: 12, alignSelf: 'stretch' },
   button: { flex: 1, height: 46, borderRadius: 8, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 12 },
   secondary: { borderWidth: 1, borderColor: colors.borderStrong, backgroundColor: colors.white },
-});
+}));

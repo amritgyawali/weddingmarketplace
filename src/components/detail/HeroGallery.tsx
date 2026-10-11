@@ -20,11 +20,11 @@ export function HeroGallery({ images, width, height }: { images: PhotoKey[]; wid
       <ImageCarousel images={images} width={width} height={height} dotsBottom={16} onPressImage={setOpen} />
       {images.length > 0 && (
         <Pressable onPress={() => setOpen(0)} hitSlop={8} accessibilityRole="button" accessibilityLabel={`View all ${images.length} photos`} style={({ pressed }) => [styles.count, pressed && { opacity: 0.8 }]}>
-          <Ionicons name="images-outline" size={14} color={colors.white} />
-          <Text size={12} weight="semibold" color={colors.white}>
+          <Ionicons name="images-outline" size={14} color={colors.onDark} />
+          <Text size={12} weight="semibold" color={colors.onDark}>
             {images.length} {images.length === 1 ? 'photo' : 'photos'}
           </Text>
-          <Ionicons name="expand-outline" size={13} color={colors.white} />
+          <Ionicons name="expand-outline" size={13} color={colors.onDark} />
         </Pressable>
       )}
       <PhotoViewer sources={images.map((k) => photos[k])} index={open} onClose={() => setOpen(null)} />

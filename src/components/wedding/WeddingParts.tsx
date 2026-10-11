@@ -11,7 +11,7 @@ import { Avatar, StatusPill } from '@/components/kit';
 import { IconButton } from '@/components/ui/IconButton';
 import { Text } from '@/components/ui/Text';
 import { photo } from '@/constants/images';
-import { colors } from '@/constants/theme';
+import { colors, themed } from '@/constants/theme';
 import { findService, serviceName } from '@/data/services';
 import { occasionOf } from '@/services/experience';
 import { planningProgress } from '@/services/planner';
@@ -54,10 +54,10 @@ export function WeddingHero({
       <Photo source={photo(cover)} style={StyleSheet.absoluteFill} contentFit="cover" contentPosition={{ left: '50%', top: '38%' }} transition={250} />
       <LinearGradient colors={SCRIM} locations={[0, 0.3, 0.5, 1]} style={[StyleSheet.absoluteFill, { pointerEvents: 'none' }]} />
       <View style={[styles.heroTop, { paddingTop: insets.top + 6 }]}>
-        {onBack ? <IconButton icon="chevron-back" iconSize={22} color={colors.white} background={OVERLAY_BUTTON} accessibilityLabel="Go back" onPress={onBack} /> : <View />}
+        {onBack ? <IconButton icon="chevron-back" iconSize={22} color={colors.onDark} background={OVERLAY_BUTTON} accessibilityLabel="Go back" onPress={onBack} /> : <View />}
         <View style={{ flexDirection: 'row', gap: 8 }}>
           {actions?.map((a) => (
-            <IconButton key={a.label} icon={a.icon} iconSize={20} color={colors.white} background={OVERLAY_BUTTON} accessibilityLabel={a.label} onPress={a.onPress} />
+            <IconButton key={a.label} icon={a.icon} iconSize={20} color={colors.onDark} background={OVERLAY_BUTTON} accessibilityLabel={a.label} onPress={a.onPress} />
           ))}
         </View>
       </View>
@@ -65,7 +65,7 @@ export function WeddingHero({
         <Text size={13} color="rgba(255,255,255,0.86)">
           {main?.date ? `${formatLongDate(main.date)} · ${formatDateAlt(main.date)}` : 'Date to be fixed'}
         </Text>
-        <Text serif size={32} weight="bold" lineHeight={42} color={colors.white} numberOfLines={2}>
+        <Text serif size={32} weight="bold" lineHeight={42} color={colors.onDark} numberOfLines={2}>
           {project.title}
         </Text>
         <Text size={13} color="rgba(255,255,255,0.78)">
@@ -431,8 +431,8 @@ export function PeopleRow({ project, onOpen }: { project: Project; onOpen: () =>
   );
 }
 
-const styles = StyleSheet.create({
-  hero: { width: '100%', backgroundColor: colors.heading, justifyContent: 'space-between' },
+const styles = themed(() => StyleSheet.create({
+  hero: { width: '100%', backgroundColor: colors.inkFill, justifyContent: 'space-between' },
   heroTop: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 12 },
   heroBottom: { paddingHorizontal: 20, paddingBottom: 44, gap: 2 },
   countdown: { backgroundColor: colors.white, borderRadius: 10, borderWidth: 1, borderColor: colors.border, marginTop: -28 },
@@ -458,4 +458,4 @@ const styles = StyleSheet.create({
   avatars: { flexDirection: 'row', alignItems: 'center' },
   avatarRing: { borderRadius: 19, borderWidth: 2, borderColor: colors.white, backgroundColor: colors.white },
   addAvatar: { width: 38, height: 38, alignItems: 'center', justifyContent: 'center', borderColor: colors.white, backgroundColor: colors.bgMuted },
-});
+}));

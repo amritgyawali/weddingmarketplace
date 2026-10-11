@@ -5,7 +5,7 @@ import { Pressable, Text, View, StyleSheet } from 'react-native';
 
 import { reportError } from '@/backend/telemetry';
 import { BRAND } from '@/constants/brand';
-import { colors } from '@/constants/theme';
+import { colors, themed } from '@/constants/theme';
 
 /**
  * Shown when a screen throws while rendering. Reports the error once, then
@@ -33,7 +33,7 @@ export function AppErrorBoundary({ error, retry }: ErrorBoundaryProps) {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = themed(() => StyleSheet.create({
   root: { flex: 1, justifyContent: 'center', padding: 24, gap: 12, backgroundColor: colors.white },
   title: { fontSize: 20, fontWeight: '700', color: colors.heading },
   body: { fontSize: 15, lineHeight: 22, color: colors.textBody },
@@ -42,4 +42,4 @@ const styles = StyleSheet.create({
   primary: { backgroundColor: colors.primary, borderColor: colors.primary },
   primaryLabel: { fontSize: 15, fontWeight: '600', color: colors.white },
   label: { fontSize: 15, fontWeight: '600', color: colors.heading },
-});
+}));

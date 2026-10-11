@@ -17,7 +17,7 @@ import { Sheet } from '@/components/ui/Sheet';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { Text } from '@/components/ui/Text';
 import { photo } from '@/constants/images';
-import { colors, GUTTER, radius } from '@/constants/theme';
+import { colors, GUTTER, radius, themed } from '@/constants/theme';
 import { IDEA_CATEGORIES } from '@/data/ideas';
 import { useDebounce } from '@/hooks/useDebounce';
 import { useIdeas, useRealWeddings, useStories } from '@/hooks/queries';
@@ -218,7 +218,7 @@ export default function IdeasTab() {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = themed(() => StyleSheet.create({
   root: { flex: 1, backgroundColor: colors.white },
   header: {
     flexDirection: 'row',
@@ -249,4 +249,4 @@ const styles = StyleSheet.create({
   realCover: { width: '100%', aspectRatio: 4 / 3, borderRadius: radius.lg, backgroundColor: colors.bgMuted },
   thumbs: { flexDirection: 'row', gap: 6, marginTop: 6 },
   thumb: { flex: 1, aspectRatio: 1, borderRadius: radius.sm, backgroundColor: colors.bgMuted },
-});
+}));

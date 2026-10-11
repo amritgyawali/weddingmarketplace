@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 
-import { colors, GUTTER } from '@/constants/theme';
+import { colors, GUTTER, themed } from '@/constants/theme';
 
 import { Text } from './Text';
 
@@ -50,9 +50,9 @@ export function NewBadge() {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = themed(() => StyleSheet.create({
   row: { flexDirection: 'row', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 12 },
   titleRow: { flexDirection: 'row', alignItems: 'center', gap: 10, flexShrink: 1 },
   action: { flexDirection: 'row', alignItems: 'center', gap: 2 },
   badge: { borderWidth: 1, borderColor: colors.gold, borderRadius: 3, paddingHorizontal: 5, paddingVertical: 1 },
-});
+}));

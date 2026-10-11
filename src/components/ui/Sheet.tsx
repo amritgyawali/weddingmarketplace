@@ -3,7 +3,7 @@ import { Modal, Pressable, StyleSheet, View } from 'react-native';
 import Animated, { FadeIn, FadeOut, SlideInDown, SlideOutDown } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { colors } from '@/constants/theme';
+import { colors, themed } from '@/constants/theme';
 import { useRoleTheme } from '@/theme/RoleTheme';
 
 import { IconButton } from './IconButton';
@@ -56,7 +56,7 @@ export function Sheet({
   );
 }
 
-const styles = StyleSheet.create({
+const styles = themed(() => StyleSheet.create({
   root: { flex: 1, justifyContent: 'flex-end' },
   backdrop: { flex: 1, backgroundColor: colors.overlay },
   sheet: {
@@ -82,4 +82,4 @@ const styles = StyleSheet.create({
     paddingRight: 8,
     paddingVertical: 6,
   },
-});
+}));

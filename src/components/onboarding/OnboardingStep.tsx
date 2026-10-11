@@ -7,7 +7,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { BackButton } from '@/components/ui/IconButton';
 import { triggerHaptic } from '@/components/ui/PressableScale';
 import { Text } from '@/components/ui/Text';
-import { colors, GUTTER } from '@/constants/theme';
+import { colors, GUTTER, themed } from '@/constants/theme';
 import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
 
 function Segment({ filled }: { filled: boolean }) {
@@ -176,7 +176,7 @@ export function ChoiceRow({
   );
 }
 
-const styles = StyleSheet.create({
+const styles = themed(() => StyleSheet.create({
   root: { flex: 1, backgroundColor: colors.white },
   top: { paddingHorizontal: GUTTER, paddingBottom: 10, backgroundColor: colors.white },
   topRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginLeft: -8, marginBottom: 6 },
@@ -200,4 +200,4 @@ const styles = StyleSheet.create({
   choice: { flexDirection: 'row', alignItems: 'center', gap: 12, borderWidth: 1, borderRadius: 10, paddingHorizontal: 16, minHeight: 64, paddingVertical: 10 },
   choiceCompact: { minHeight: 58, paddingHorizontal: 14 },
   radio: { width: 22, height: 22, borderRadius: 11, borderWidth: 1.5, borderColor: colors.border, alignItems: 'center', justifyContent: 'center' },
-});
+}));
