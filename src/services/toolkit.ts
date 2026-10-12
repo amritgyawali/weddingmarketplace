@@ -21,6 +21,7 @@ function dateHash(iso: string) {
   return ((h >>> 0) % 1000) / 1000;
 }
 
+/** One indicative wedding sait date with its Bikram Sambat month, weekday and whether it falls on a Saturday or in peak season. */
 export interface SaitDate {
   date: string;
   bsMonth: string;
@@ -91,6 +92,7 @@ export function lastMonths(iso: string, n: number): string[] {
 }
 
 const MONTHS_SHORT = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+/** Short English month name for a `yyyy-mm` key. */
 export const monthLabel = (key: string) => MONTHS_SHORT[Number(key.slice(5, 7)) - 1] ?? key;
 
 // ─── Weather ────────────────────────────────────────────────────────────────
@@ -115,6 +117,7 @@ const REGION_OF: Record<string, Region> = {
   Hetauda: 'terai',
   Dharan: 'terai',
 };
+/** Climate region (valley, Pokhara, Terai or hills) for a city; unknown cities count as valley. */
 export const regionFor = (city: string): Region => (VALLEY.includes(city) ? 'valley' : (REGION_OF[city] ?? 'valley'));
 
 /** [min °C, max °C, rain days] per AD month, Jan → Dec. Long-run averages, rounded. */
@@ -125,6 +128,7 @@ const CLIMATE: Record<Region, [number, number, number][]> = {
   hills: [[1, 14, 2], [2, 15, 3], [6, 19, 4], [9, 22, 6], [13, 23, 12], [15, 23, 21], [16, 22, 27], [16, 22, 26], [15, 21, 18], [11, 20, 6], [6, 17, 1], [2, 15, 1]],
 };
 
+/** Typical weather for a city and month: temperatures, rain days, a verdict and planning tips. */
 export interface ClimateNote {
   min: number;
   max: number;
@@ -162,7 +166,9 @@ export const HONEYMOON_SPOTS: { id: string; name: string; perNight: [number, num
   { id: 'rara', name: 'Rara Lake', perNight: [2_500, 5_000, 9_000], travel: 45_000, blurb: 'Remote, pristine, for adventurous couples' },
 ];
 
+/** The three honeymoon spending tiers, cheapest first. */
 export const TIERS = ['Budget', 'Comfort', 'Luxury'] as const;
+/** One of the honeymoon spending tiers. */
 export type Tier = (typeof TIERS)[number];
 
 /** Honeymoon estimate for two: stay, food and activities, travel. */
@@ -211,6 +217,7 @@ export const TIP_GUIDE: Record<string, { label: string; amount: number; per: 'bo
   dj: { label: 'DJ and sound crew', amount: 1_000, per: 'booking' },
   mehendi: { label: 'Mehendi artists', amount: 500, per: 'crew' },
 };
+/** Suggested tip for a service's crew (label and NPR amount), falling back to NPR 500 per crew member. */
 export const tipFor = (serviceId: string, crewCount: number) => {
   const g = TIP_GUIDE[serviceId];
   if (!g) return { label: 'Crew', amount: 500 * Math.max(1, crewCount) };
@@ -268,6 +275,7 @@ export function nps(scores: number[]) {
 
 // ─── Pricing helpers ────────────────────────────────────────────────────────
 
+/** Inputs for `suggestPrice`: base price, date, guest counts and the uplift or discount percentages. */
 export interface PriceInput {
   base: number;
   date: string;
@@ -303,8 +311,10 @@ export const LAYOUTS: { id: string; label: string; sqft: number }[] = [
   { id: 'round', label: 'Round tables of 10', sqft: 14 },
   { id: 'buffet', label: 'Seated with buffet line', sqft: 16 },
 ];
+/** How many guests fit a hall of the given area at a given space per guest; 0 when the space is not positive. */
 export const hallCapacity = (areaSqft: number, sqftPerGuest: number) => (sqftPerGuest > 0 ? Math.floor(Math.max(0, areaSqft) / sqftPerGuest) : 0);
 
+/** Inputs for `freelancerQuote`: hours, hourly and day rates, travel, assistants and the rush and overnight options. */
 export interface RateInput {
   hours: number;
   hourlyRate: number;

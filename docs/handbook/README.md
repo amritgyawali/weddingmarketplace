@@ -2,7 +2,7 @@
 
 This handbook explains how Vivah works, why it is built the way it is, and the rules every change must follow. It is written so that someone who has never seen the project (a developer joining in five years, or an AI coding agent starting a fresh session) can read it and work safely.
 
-> **Last full review:** 5 October 2026 (`main` at PR #36). The weekly documentation pass updates this line. See [17-documentation-maintenance.md](17-documentation-maintenance.md).
+> **Last full review:** 12 October 2026 (`main` at PR #40). The weekly documentation pass updates this line. See [17-documentation-maintenance.md](17-documentation-maintenance.md).
 
 ## How the documentation is organised
 
@@ -60,6 +60,7 @@ This handbook explains how Vivah works, why it is built the way it is, and the r
 | 20 | [Decision log](20-decision-log.md) | Dated decisions and why they were made |
 | 21 | [Social hub](21-social-hub.md) | Facebook, Instagram, WhatsApp and TikTok: unified inbox, publishing, scheduling, automation |
 | 22 | [Appearance, profile and support](22-appearance-profile-support.md) | Light and dark mode, Edit profile for every role, Help and support and the staff help desk |
+| 23 | [Content studio](23-content-studio.md) | Super admin edits to photos, listings, the home, banners and brand, laid over the bundled catalogue |
 
 ## Conventions used in these guides
 
