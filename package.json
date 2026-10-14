@@ -71,6 +71,7 @@
     "test:customer-planning": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/test-customer-planning.mjs",
     "test:content": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/test-content.mjs",
     "test:features": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/test-features.mjs",
+    "test:insights": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/test-insights.mjs",
     "docs:generate": "node scripts/docs/generate-reference.mjs",
     "docs:check": "node scripts/docs/generate-reference.mjs --check",
     "bugs:inbox": "node scripts/bug-inbox.cjs",

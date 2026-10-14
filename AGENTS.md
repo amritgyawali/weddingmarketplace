@@ -52,7 +52,7 @@ Public pages need no sign-in: `/w/[slug]` (the couple's wedding website and regi
 
 **Every role** also has **Edit profile** (`/edit-profile`, `/business/edit-profile`, `/freelancer/edit-profile`, `/platform/edit-profile`), **Help and support** (`/support`, `/business/support`, `/freelancer/support`; staff answer at `/platform/support`, the Help desk) and **Settings → Appearance** (light, dark, same as phone). See §6b items 10–11.
 
-**Role toolkits.** Each role also has 20 smaller tools on top of the core loop, listed by a searchable hub and opened through one dynamic route per role:
+**Role toolkits.** Each role also has 20 smaller tools on top of the core loop, plus five smart tools (scores, forecasts and checks from live data; rules in `services/insights.ts`), listed by a searchable hub and opened through one dynamic route per role:
 
 | Role | Hub → tool route | Entry point | Registry |
 |---|---|---|---|
@@ -418,6 +418,7 @@ npm run test:functions  # when you touch supabase/functions
 npm run test:telemetry  # when you touch src/backend/telemetry*
 npm run test:customer-planning  # when you touch the checklist guide, related events or listing availability
 npm run test:features   # when you add a screen or tool (top-20 feature switches, §6b)
+npm run test:insights   # when you touch src/services/insights.ts (the smart tools' rules)
 npm run test:social     # when you touch the social hub (rules, seed); its SQL is in db:test, its functions in test:functions
 npm run docs:generate   # after changing exports, routes, actions or SQL; commit docs/reference/ (docs:check verifies)
 npx expo-doctor         # no new failures

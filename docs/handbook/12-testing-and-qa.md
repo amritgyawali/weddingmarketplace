@@ -20,6 +20,7 @@ npm run test:telemetry  # when you touch src/backend/telemetry*
 npm run test:social     # when you touch the social hub
 npm run test:customer-planning  # when you touch the checklist guide, related events or listing availability
 npm run test:features   # when you add a screen or tool (top-20 feature switches)
+npm run test:insights   # when you touch src/services/insights.ts (smart tools' rules)
 npm run docs:check      # docs/reference matches the code (run docs:generate if not); not in CI, the weekly pass catches drift
 npx expo-doctor         # no new failures
 npx expo start          # loads in Expo Go; press w for web
@@ -40,6 +41,7 @@ npx expo start          # loads in Expo Go; press w for web
 | `test:social` | Social hub rules: each network's post limits, reply windows, reading BS/AD dates, guests, budget and phone from messages, auto-replies, away hours, best times, hashtags, and the demo seed | The networks' live APIs |
 | `test:customer-planning` | The month-by-month checklist guide (`guideSections`), related functions per occasion, vendor package estimates, daily capacity and public listing availability | Screens |
 | `test:features` | Each app has exactly 20 top features, other surfaces start off, super admin overrides resolve, every `FEATURE_ROUTES` screen exists under `src/app` | That a feature works |
+| `test:insights` | The smart tools' rules: health score, headcount, price check, votes, lead scores, revenue forecast, date demand, gig fit, workload, money reconciliation, rate simulator, satisfaction, listing quality | The tool screens |
 | `docs:check` | The generated reference is current | Handbook prose is current (that is the weekly pass) |
 | `expo export -p web` (CI) | The web build compiles; `_headers`, `robots.txt`, `sitemap.xml` ship | Runtime errors |
 

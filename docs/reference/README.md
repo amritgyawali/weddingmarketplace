@@ -35,10 +35,10 @@ Generated from the source. For the *why*, read [the handbook](../handbook/README
 | `src/components/social/` | 8 | 28 | [components.social.md](code/components.social.md) |
 | `src/components/support/` | 5 | 6 | [components.support.md](code/components.support.md) |
 | `src/components/toolkit/` | 2 | 23 | [components.toolkit.md](code/components.toolkit.md) |
-| `src/components/toolkit/couple/` | 6 | 25 | [components.toolkit.couple.md](code/components.toolkit.couple.md) |
-| `src/components/toolkit/freelancer/` | 6 | 26 | [components.toolkit.freelancer.md](code/components.toolkit.freelancer.md) |
-| `src/components/toolkit/platform/` | 3 | 21 | [components.toolkit.platform.md](code/components.toolkit.platform.md) |
-| `src/components/toolkit/vendor/` | 5 | 36 | [components.toolkit.vendor.md](code/components.toolkit.vendor.md) |
+| `src/components/toolkit/couple/` | 7 | 30 | [components.toolkit.couple.md](code/components.toolkit.couple.md) |
+| `src/components/toolkit/freelancer/` | 7 | 31 | [components.toolkit.freelancer.md](code/components.toolkit.freelancer.md) |
+| `src/components/toolkit/platform/` | 4 | 26 | [components.toolkit.platform.md](code/components.toolkit.platform.md) |
+| `src/components/toolkit/vendor/` | 6 | 42 | [components.toolkit.vendor.md](code/components.toolkit.vendor.md) |
 | `src/components/tour/` | 1 | 3 | [components.tour.md](code/components.tour.md) |
 | `src/components/ui/` | 31 | 75 | [components.ui.md](code/components.ui.md) |
 | `src/components/wedding/` | 3 | 12 | [components.wedding.md](code/components.wedding.md) |
@@ -47,8 +47,8 @@ Generated from the source. For the *why*, read [the handbook](../handbook/README
 | `src/data/` | 30 | 213 | [data.md](code/data.md) |
 | `src/hooks/` | 17 | 47 | [hooks.md](code/hooks.md) |
 | `src/i18n/` | 2 | 15 | [i18n.md](code/i18n.md) |
-| `src/i18n/ne/` | 5 | 5 | [i18n.ne.md](code/i18n.ne.md) |
-| `src/services/` | 17 | 221 | [services.md](code/services.md) |
+| `src/i18n/ne/` | 6 | 6 | [i18n.ne.md](code/i18n.ne.md) |
+| `src/services/` | 18 | 265 | [services.md](code/services.md) |
 | `src/store/` | 8 | 24 | [store.md](code/store.md) |
 | `src/store/db/` | 17 | 74 | [store.db.md](code/store.db.md) |
 | `src/theme/` | 3 | 10 | [theme.md](code/theme.md) |

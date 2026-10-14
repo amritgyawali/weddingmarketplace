@@ -12,6 +12,7 @@ Every exported symbol in `src/components/toolkit/couple/`, file by file. The gui
 - [`money.tsx`](#moneytsx) (6 exports) · Couple toolkit: gifts, tips, savings, what-if budgets, honeymoon and the bhoj menu.
 - [`occasions.tsx`](#occasionstsx) (3 exports) · Occasion tools: the planning tools only some celebrations get (baby keepsakes for a newborn, a surprise plan for an anniversary, games for …
 - [`shared.ts`](#sharedts) (1 exports)
+- [`smart.tsx`](#smarttsx) (5 exports) · Couple toolkit, smart planning: health check, headcount forecast, fair price check, family vote and marriage registration.
 
 ## ceremony.tsx
 
@@ -125,7 +126,7 @@ Source: [src/components/toolkit/couple/index.ts](../../../src/components/toolkit
 
 ### `COUPLE_TOOLS`
 
-*const* · [src/components/toolkit/couple/index.ts:9](../../../src/components/toolkit/couple/index.ts#L9)
+*const* · [src/components/toolkit/couple/index.ts:10](../../../src/components/toolkit/couple/index.ts#L10)
 
 ```ts
 COUPLE_TOOLS: ToolDef[]
@@ -298,3 +299,59 @@ useWedding()
 ```
 
 The couple's wedding context for toolkit screens (works before a plan exists too).
+
+## smart.tsx
+
+Source: [src/components/toolkit/couple/smart.tsx](../../../src/components/toolkit/couple/smart.tsx)
+
+Couple toolkit, smart planning: health check, headcount forecast, fair price check, family vote and marriage registration.
+
+### `HealthCheck`
+
+*component* · [src/components/toolkit/couple/smart.tsx:48](../../../src/components/toolkit/couple/smart.tsx#L48)
+
+```ts
+HealthCheck()
+```
+
+_No JSDoc yet._
+
+### `HeadcountForecast`
+
+*component* · [src/components/toolkit/couple/smart.tsx:133](../../../src/components/toolkit/couple/smart.tsx#L133)
+
+```ts
+HeadcountForecast()
+```
+
+_No JSDoc yet._
+
+### `PriceCheck`
+
+*component* · [src/components/toolkit/couple/smart.tsx:218](../../../src/components/toolkit/couple/smart.tsx#L218)
+
+```ts
+PriceCheck()
+```
+
+_No JSDoc yet._
+
+### `FamilyVote`
+
+*component* · [src/components/toolkit/couple/smart.tsx:305](../../../src/components/toolkit/couple/smart.tsx#L305)
+
+```ts
+FamilyVote()
+```
+
+_No JSDoc yet._
+
+### `MarriageRegistration`
+
+*component* · [src/components/toolkit/couple/smart.tsx:415](../../../src/components/toolkit/couple/smart.tsx#L415)
+
+```ts
+MarriageRegistration()
+```
+
+_No JSDoc yet._

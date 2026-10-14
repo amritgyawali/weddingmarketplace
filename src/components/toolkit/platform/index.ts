@@ -1,9 +1,10 @@
 import type { ToolDef } from '../hub';
 
 import { CashFlow, CitySupply, DemandHeatmap, RiskWatch, Scorecards, SlaMonitor, SourceFunnel, Targets, Workload } from './insight';
+import { CommissionSimulator, ListingQuality, PeakDates, Reconciliation, Satisfaction } from './smart';
 import { Broadcasts, ExportCentre, Helpdesk, Holidays, Macros, OnCall, PayoutBatches, PromoCampaigns, QualityAudits, Recruitment, WinBack } from './ops';
 
-/** The operations team's 20 extra tools (`/platform/tools`). */
+/** The operations team's extra tools (`/platform/tools`): 20 general and five smart ones. */
 export const PLATFORM_TOOLS: ToolDef[] = [
   { id: 'platform.sla', title: 'SLA monitor', subtitle: 'Work that has waited too long', icon: 'timer-outline', group: 'Operations', Component: SlaMonitor },
   { id: 'platform.workload', title: 'Coordinator workload', subtitle: 'Balance weddings across the team', icon: 'people-outline', group: 'Operations', Component: Workload },
@@ -24,5 +25,10 @@ export const PLATFORM_TOOLS: ToolDef[] = [
   { id: 'platform.cashflow', title: 'Cash-flow forecast', subtitle: 'Milestones in, payouts out, by week', icon: 'trending-up-outline', group: 'Money and trust', Component: CashFlow },
   { id: 'platform.batches', title: 'Payout batches', subtitle: 'Ready payouts by eSewa, Khalti, bank', icon: 'wallet-outline', group: 'Money and trust', Component: PayoutBatches },
   { id: 'platform.risk', title: 'Risk and fraud watch', subtitle: 'Patterns worth a second look', icon: 'warning-outline', group: 'Money and trust', Component: RiskWatch },
+  { id: 'platform.reconcile', title: 'Money reconciliation', subtitle: 'Quotes, milestones, splits and payouts that disagree', icon: 'git-compare-outline', group: 'Money and trust', Component: Reconciliation },
+  { id: 'platform.commission', title: 'Commission simulator', subtitle: 'What-if on platform rates', icon: 'calculator-outline', group: 'Money and trust', Component: CommissionSimulator },
+  { id: 'platform.peakdates', title: 'Peak-date capacity', subtitle: 'Dates where supply could run short', icon: 'calendar-number-outline', group: 'Operations', Component: PeakDates },
+  { id: 'platform.nps', title: 'Customer satisfaction', subtitle: 'Net score, low ratings and call-backs', icon: 'happy-outline', group: 'Insights', Component: Satisfaction },
+  { id: 'platform.listings', title: 'Listing quality', subtitle: 'Profiles that need work', icon: 'ribbon-outline', group: 'Growth', Component: ListingQuality },
   { id: 'platform.exports', title: 'Export centre', subtitle: 'CSV downloads for finance', icon: 'download-outline', group: 'Money and trust', Component: ExportCentre },
 ];

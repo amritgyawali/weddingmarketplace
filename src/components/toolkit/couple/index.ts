@@ -4,6 +4,7 @@ import { EmergencyKit, FamilyDuties, JantiPlanner, MusicPlan, MyDay, Outfits, Sa
 import { ContactSheet, GuestRooms, Pickups, VendorMeetings } from './logistics';
 import { BabyKeepsakes, GamesActivities, SurprisePlan } from './occasions';
 import { GiftLedger, HoneymoonPlanner, MenuPlanner, SavingsGoal, TipsPlanner, WhatIfBudget } from './money';
+import { FamilyVote, HeadcountForecast, HealthCheck, MarriageRegistration, PriceCheck } from './smart';
 
 /** The couple's extra planning tools (`/tools`), filtered by the active occasion through `TOOL_RULES`. */
 export const COUPLE_TOOLS: ToolDef[] = [
@@ -29,5 +30,10 @@ export const COUPLE_TOOLS: ToolDef[] = [
   { id: 'couple.keepsakes', title: 'Baby keepsakes', subtitle: 'Firsts, weight and gifts from relatives', icon: 'happy-outline', group: 'Family and guests', Component: BabyKeepsakes },
   { id: 'couple.surprise', title: 'Surprise plan', subtitle: 'Keep it secret, keep it on track', icon: 'heart-circle-outline', group: 'Family and guests', Component: SurprisePlan },
   { id: 'couple.games', title: 'Games and activities', subtitle: 'What happens when, and the prizes', icon: 'dice-outline', group: 'Family and guests', Component: GamesActivities },
+  { id: 'couple.health', title: 'Plan health check', subtitle: 'Your readiness score and what to do next', icon: 'pulse-outline', group: 'Smart planning', Component: HealthCheck },
+  { id: 'couple.headcount', title: 'Headcount forecast', subtitle: 'Who will really come, and plates to order', icon: 'people-outline', group: 'Smart planning', Component: HeadcountForecast },
+  { id: 'couple.pricecheck', title: 'Fair price check', subtitle: 'Is a quote fair for your city?', icon: 'pricetags-outline', group: 'Smart planning', Component: PriceCheck },
+  { id: 'couple.votes', title: 'Family vote', subtitle: 'Decide venues, menus and outfits together', icon: 'hand-left-outline', group: 'Smart planning', Component: FamilyVote },
+  { id: 'couple.registration', title: 'Marriage registration', subtitle: 'Ward office papers and the 35-day deadline', icon: 'ribbon-outline', group: 'After the wedding', Component: MarriageRegistration },
   { id: 'couple.honeymoon', title: 'Honeymoon planner', subtitle: 'Nepal getaways for two, costed', icon: 'airplane-outline', group: 'After the wedding', Component: HoneymoonPlanner },
 ];

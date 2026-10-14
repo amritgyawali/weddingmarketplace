@@ -10,6 +10,7 @@ Every exported symbol in `src/components/toolkit/vendor/`, file by file. The gui
 - [`index.ts`](#indexts) (1 exports)
 - [`money.tsx`](#moneytsx) (9 exports) · Vendor toolkit: expenses, profit, tax, pricing, vouchers, referrals, goals and market benchmark.
 - [`ops.tsx`](#opstsx) (6 exports) · Vendor toolkit: inventory, suppliers, staff roster, halls, event prep checklists and team tasks.
+- [`smart.tsx`](#smarttsx) (6 exports) · Vendor toolkit, smart selling: lead scores, revenue forecast, date demand pricing, review requests and win/loss analysis.
 - [`trades.tsx`](#tradestsx) (13 exports) · Trade tools: the vendor tools only some businesses get (menu for caterers, themes for decorators, gallery for studios…). Each is shown by i…
 
 ## clients.tsx
@@ -94,14 +95,14 @@ Source: [src/components/toolkit/vendor/index.ts](../../../src/components/toolkit
 
 ### `VENDOR_TOOLS`
 
-*const* · [src/components/toolkit/vendor/index.ts:13](../../../src/components/toolkit/vendor/index.ts#L13)
+*const* · [src/components/toolkit/vendor/index.ts:14](../../../src/components/toolkit/vendor/index.ts#L14)
 
 ```ts
 VENDOR_TOOLS: ToolDef[]
 ```
 
 The vendor's business tools (`/business/tools`): 13 trade tools first, then
-the 20 general ones. Each business sees only the tools its services allow
+the 20 general ones and five smart-selling ones. Each business sees only the tools its services allow
 (`TOOL_RULES` in data/access.ts).
 
 ## money.tsx
@@ -262,6 +263,72 @@ _No JSDoc yet._
 
 ```ts
 TeamTasks()
+```
+
+_No JSDoc yet._
+
+## smart.tsx
+
+Source: [src/components/toolkit/vendor/smart.tsx](../../../src/components/toolkit/vendor/smart.tsx)
+
+Vendor toolkit, smart selling: lead scores, revenue forecast, date demand pricing, review requests and win/loss analysis.
+
+### `LeadScores`
+
+*component* · [src/components/toolkit/vendor/smart.tsx:47](../../../src/components/toolkit/vendor/smart.tsx#L47)
+
+```ts
+LeadScores()
+```
+
+_No JSDoc yet._
+
+### `RevenueForecast`
+
+*component* · [src/components/toolkit/vendor/smart.tsx:101](../../../src/components/toolkit/vendor/smart.tsx#L101)
+
+```ts
+RevenueForecast()
+```
+
+_No JSDoc yet._
+
+### `DateDemand`
+
+*component* · [src/components/toolkit/vendor/smart.tsx:162](../../../src/components/toolkit/vendor/smart.tsx#L162)
+
+```ts
+DateDemand()
+```
+
+_No JSDoc yet._
+
+### `ReviewRequests`
+
+*component* · [src/components/toolkit/vendor/smart.tsx:229](../../../src/components/toolkit/vendor/smart.tsx#L229)
+
+```ts
+ReviewRequests()
+```
+
+_No JSDoc yet._
+
+### `LOSS_REASONS`
+
+*const* · [src/components/toolkit/vendor/smart.tsx:292](../../../src/components/toolkit/vendor/smart.tsx#L292)
+
+```ts
+LOSS_REASONS= [ … 6 items ]
+```
+
+_No JSDoc yet._
+
+### `WinLoss`
+
+*component* · [src/components/toolkit/vendor/smart.tsx:294](../../../src/components/toolkit/vendor/smart.tsx#L294)
+
+```ts
+WinLoss()
 ```
 
 _No JSDoc yet._

@@ -1,6 +1,6 @@
 # 10. Role toolkits
 
-On top of the core loop, each role app has a hub of smaller tools: 20 general tools per role plus trade, craft and occasion tools (as of October 2026: couple 23, vendor 33, freelancer 23, platform 20). Examples: the sait (auspicious date) finder and gift ledger for couples; expenses, VAT position and menu builder for vendors; rate calculator and gear checklist for freelancers; SLA monitor and payout batches for staff.
+On top of the core loop, each role app has a hub of smaller tools: 20 general tools per role, five smart tools per role, plus trade, craft and occasion tools (as of October 2026: couple 28, vendor 38, freelancer 28, platform 25). Examples: the sait (auspicious date) finder and gift ledger for couples; expenses, VAT position and menu builder for vendors; rate calculator and gear checklist for freelancers; SLA monitor and payout batches for staff.
 
 Code: `src/components/toolkit/`. Every tool component is listed in [the toolkit reference](../reference/code/components.toolkit.md) and the per-role pages next to it.
 
@@ -13,7 +13,34 @@ Code: `src/components/toolkit/`. Every tool component is listed in [the toolkit 
 | Freelancer | `/freelancer/tools` → `/freelancer/tool/[id]` | Profile tab → Freelancer tools | `components/toolkit/freelancer/index.ts` |
 | Platform | `/platform/tools` → `/platform/tool/[id]` | More → Operations tools | `components/toolkit/platform/index.ts` |
 
-Files per role group tools by theme: couple (`ceremony`, `logistics`, `money`, `occasions`), vendor (`clients`, `money`, `ops`, `trades`), freelancer (`work`, `money`, `growth`, `crafts`), platform (`insight`, `ops`).
+Files per role group tools by theme: couple (`ceremony`, `logistics`, `money`, `occasions`, `smart`), vendor (`clients`, `money`, `ops`, `trades`, `smart`), freelancer (`work`, `money`, `growth`, `crafts`, `smart`), platform (`insight`, `ops`, `smart`).
+
+### Smart tools (October 2026)
+
+Five per role, in each role's `smart.tsx`. They score, forecast or check from live data; the rules are pure functions in `src/services/insights.ts`, covered by `npm run test:insights`. Like every tool outside the top 20 they start switched off (Super admin → Features).
+
+| Role | Tool (id) | What it does |
+|---|---|---|
+| Couple | Plan health check (`couple.health`) | Readiness 0–100 from vendors booked, payments, tasks, guests and replies, contracts and budget; compares with where couples usually are for the days left; ranks the biggest gains |
+| Couple | Headcount forecast (`couple.headcount`) | Expected attendance per function from RSVPs (yes in full, maybe and no-reply at editable turnout rates) and plates to order with a buffer |
+| Couple | Fair price check (`couple.pricecheck`) | Where a quoted unit price sits against similar listings in the city (or the service's typical range), with a verdict, negotiation tip and saved checks |
+| Couple | Family vote (`couple.votes`) | Polls shared by everyone on the plan (owner = project id); one vote per account, stored as `vote:<accountId>` fields |
+| Couple | Marriage registration (`couple.registration`) | Ward-office checklist and the 35-day registration deadline; weddings only (`plan.janti`) |
+| Vendor | Lead scores (`vendor.leadscore`) | Hot, warm or cold per open enquiry: budget fit, date, free or booked, guest fit, detail, stage, age |
+| Vendor | Revenue forecast (`vendor.forecast`) | Scheduled payouts plus open enquiries weighted by editable stage odds, by month, against the monthly goal |
+| Vendor | Date demand and pricing (`vendor.datedemand`) | High-demand open dates (sait, Saturday, peak month, requests nearby) with a suggested uplift on the starting price |
+| Vendor | Review requests (`vendor.reviewask`) | Finished bookings without a review; one-tap WhatsApp ask, logged per booking |
+| Vendor | Win and loss analysis (`vendor.winloss`) | Win rate by source, budget band, reply speed and month; loss reasons tagged per enquiry |
+| Freelancer | Best gigs for you (`freelancer.gigfit`) | Open gigs ranked by take-home pay per hour after travel, skills, radius and calendar clashes |
+| Freelancer | Season planner (`freelancer.season`) | Sait dates ahead as working, blocked or open, with a suggested peak rate |
+| Freelancer | Rest and workload (`freelancer.workload`) | Back-to-back runs, heavy weeks and late finishes against the freelancer's own limits |
+| Freelancer | Income statement (`freelancer.income`) | Vivah payouts and paid private invoices for a fiscal year, as PDF (`incomeStatementHtml`) or CSV |
+| Freelancer | Testimonials (`freelancer.testimonials`) | Client quotes, imported from reviews or typed in, copied or shared as a block |
+| Platform | Money reconciliation (`platform.reconcile`) | Checks the money invariants of §5 on every project and lists what disagrees; read-only |
+| Platform | Commission simulator (`platform.commission`) | Platform fee, couple price and provider payout under proposed rates on the last 12 months; read-only |
+| Platform | Peak-date capacity (`platform.peakdates`) | Dates whose functions could outrun free providers per service in the area |
+| Platform | Customer satisfaction (`platform.nps`) | Net score from star reviews, by service and coordinator, and a call-back list |
+| Platform | Listing quality (`platform.listings`) | Profile completeness and trust score per listing, lowest first, with what is missing |
 
 ## 2. How a tool is wired
 

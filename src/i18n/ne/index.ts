@@ -7,6 +7,7 @@
 import { CONTENT_NE } from './content';
 import { CUSTOMER_PLANNING_NE } from './customerPlanning';
 import { SOCIAL_NE } from './social';
+import { SMART_TOOLS_NE } from './smartTools';
 import { SUPPORT_NE } from './support';
 
 export const NE: Record<string, string> = {
@@ -17,6 +18,8 @@ export const NE: Record<string, string> = {
   ...CUSTOMER_PLANNING_NE,
   // Help and support, Edit profile and Appearance; entries below win where both have one.
   ...SUPPORT_NE,
+  // The smart toolkit tools (five per role); entries below win where both have one.
+  ...SMART_TOOLS_NE,
   "Add the bug inbox address first": "पहिले बग इनबक्सको ठेगाना थप्नुहोस्",
   "Add the bug inbox address in Settings → Help first": "पहिले सेटिङ → सहायतामा बग इनबक्सको ठेगाना थप्नुहोस्",
   "Attach a picture": "तस्बिर जोड्नुहोस्",

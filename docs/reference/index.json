@@ -6917,7 +6917,7 @@
     {
      "name": "COUPLE_TOOLS",
      "kind": "const",
-     "line": 9,
+     "line": 10,
      "signature": ": ToolDef[]",
      "doc": "The couple's extra planning tools (`/tools`), filtered by the active occasion through `TOOL_RULES`."
     }
@@ -7046,6 +7046,47 @@
    ]
   },
   {
+   "file": "src/components/toolkit/couple/smart.tsx",
+   "doc": "Couple toolkit, smart planning: health check, headcount forecast, fair price check, family vote and marriage registration.",
+   "exports": [
+    {
+     "name": "HealthCheck",
+     "kind": "component",
+     "line": 48,
+     "signature": "()",
+     "doc": ""
+    },
+    {
+     "name": "HeadcountForecast",
+     "kind": "component",
+     "line": 133,
+     "signature": "()",
+     "doc": ""
+    },
+    {
+     "name": "PriceCheck",
+     "kind": "component",
+     "line": 218,
+     "signature": "()",
+     "doc": ""
+    },
+    {
+     "name": "FamilyVote",
+     "kind": "component",
+     "line": 305,
+     "signature": "()",
+     "doc": ""
+    },
+    {
+     "name": "MarriageRegistration",
+     "kind": "component",
+     "line": 415,
+     "signature": "()",
+     "doc": ""
+    }
+   ]
+  },
+  {
    "file": "src/components/toolkit/freelancer/crafts.tsx",
    "doc": "Craft tools: the freelancer tools only some crafts get (a product kit for makeup and mehendi artists, a setlist for DJs and musicians, a vehicle log for drivers). Each is shown by its rule in `TOOL_RULES` and stores records in the shared tool collections.",
    "exports": [
@@ -7120,7 +7161,7 @@
     {
      "name": "FREELANCER_TOOLS",
      "kind": "const",
-     "line": 9,
+     "line": 10,
      "signature": ": ToolDef[]",
      "doc": "The freelancer's extra tools (`/freelancer/tools`): 20 for every craft plus craft tools, filtered by `TOOL_RULES`."
     }
@@ -7241,6 +7282,47 @@
      "line": 16,
      "signature": "()",
      "doc": "Every job this freelancer holds: booking assignments plus hired marketplace gigs."
+    }
+   ]
+  },
+  {
+   "file": "src/components/toolkit/freelancer/smart.tsx",
+   "doc": "Freelancer toolkit, smart work: best gigs for you, season planner, rest and workload, income statement and testimonials.",
+   "exports": [
+    {
+     "name": "GigFit",
+     "kind": "component",
+     "line": 42,
+     "signature": "()",
+     "doc": ""
+    },
+    {
+     "name": "SeasonPlanner",
+     "kind": "component",
+     "line": 107,
+     "signature": "()",
+     "doc": ""
+    },
+    {
+     "name": "RestAndWorkload",
+     "kind": "component",
+     "line": 167,
+     "signature": "()",
+     "doc": ""
+    },
+    {
+     "name": "IncomeStatement",
+     "kind": "component",
+     "line": 230,
+     "signature": "()",
+     "doc": ""
+    },
+    {
+     "name": "Testimonials",
+     "kind": "component",
+     "line": 287,
+     "signature": "()",
+     "doc": ""
     }
    ]
   },
@@ -7399,9 +7481,9 @@
     {
      "name": "PLATFORM_TOOLS",
      "kind": "const",
-     "line": 7,
+     "line": 8,
      "signature": ": ToolDef[]",
-     "doc": "The operations team's 20 extra tools (`/platform/tools`)."
+     "doc": "The operations team's extra tools (`/platform/tools`): 20 general and five smart ones."
     }
    ]
   },
@@ -7558,6 +7640,47 @@
    ]
   },
   {
+   "file": "src/components/toolkit/platform/smart.tsx",
+   "doc": "Platform toolkit, smart operations: money reconciliation, peak-date capacity, commission simulator, customer satisfaction and listing quality.",
+   "exports": [
+    {
+     "name": "Reconciliation",
+     "kind": "component",
+     "line": 37,
+     "signature": "()",
+     "doc": ""
+    },
+    {
+     "name": "PeakDates",
+     "kind": "component",
+     "line": 81,
+     "signature": "()",
+     "doc": ""
+    },
+    {
+     "name": "CommissionSimulator",
+     "kind": "component",
+     "line": 142,
+     "signature": "()",
+     "doc": ""
+    },
+    {
+     "name": "Satisfaction",
+     "kind": "component",
+     "line": 190,
+     "signature": "()",
+     "doc": ""
+    },
+    {
+     "name": "ListingQuality",
+     "kind": "component",
+     "line": 256,
+     "signature": "()",
+     "doc": ""
+    }
+   ]
+  },
+  {
    "file": "src/components/toolkit/vendor/clients.tsx",
    "doc": "Vendor toolkit: saved replies, follow-ups, site visits, reply-time goals, policies and business hours.",
    "exports": [
@@ -7619,9 +7742,9 @@
     {
      "name": "VENDOR_TOOLS",
      "kind": "const",
-     "line": 13,
+     "line": 14,
      "signature": ": ToolDef[]",
-     "doc": "The vendor's business tools (`/business/tools`): 13 trade tools first, then\nthe 20 general ones. Each business sees only the tools its services allow\n(`TOOL_RULES` in data/access.ts)."
+     "doc": "The vendor's business tools (`/business/tools`): 13 trade tools first, then\nthe 20 general ones and five smart-selling ones. Each business sees only the tools its services allow\n(`TOOL_RULES` in data/access.ts)."
     }
    ]
   },
@@ -7737,6 +7860,54 @@
      "name": "TeamTasks",
      "kind": "component",
      "line": 256,
+     "signature": "()",
+     "doc": ""
+    }
+   ]
+  },
+  {
+   "file": "src/components/toolkit/vendor/smart.tsx",
+   "doc": "Vendor toolkit, smart selling: lead scores, revenue forecast, date demand pricing, review requests and win/loss analysis.",
+   "exports": [
+    {
+     "name": "LeadScores",
+     "kind": "component",
+     "line": 47,
+     "signature": "()",
+     "doc": ""
+    },
+    {
+     "name": "RevenueForecast",
+     "kind": "component",
+     "line": 101,
+     "signature": "()",
+     "doc": ""
+    },
+    {
+     "name": "DateDemand",
+     "kind": "component",
+     "line": 162,
+     "signature": "()",
+     "doc": ""
+    },
+    {
+     "name": "ReviewRequests",
+     "kind": "component",
+     "line": 229,
+     "signature": "()",
+     "doc": ""
+    },
+    {
+     "name": "LOSS_REASONS",
+     "kind": "const",
+     "line": 292,
+     "signature": "= [ … 6 items ]",
+     "doc": ""
+    },
+    {
+     "name": "WinLoss",
+     "kind": "component",
+     "line": 294,
      "signature": "()",
      "doc": ""
     }
@@ -9863,56 +10034,56 @@
     {
      "name": "ToolId",
      "kind": "type",
-     "line": 126,
+     "line": 149,
      "signature": "= keyof typeof TOOL_RULES",
      "doc": ""
     },
     {
      "name": "toolRole",
      "kind": "function",
-     "line": 131,
+     "line": 154,
      "signature": "(id: string): UserRole | undefined",
      "doc": "The role app a tool belongs to, from its id prefix."
     },
     {
      "name": "toolRule",
      "kind": "function",
-     "line": 134,
+     "line": 157,
      "signature": "(id: string): When",
      "doc": "A tool's rule; unknown ids get a rule nobody passes."
     },
     {
      "name": "VENDOR_LINK_RULES",
      "kind": "const",
-     "line": 137,
+     "line": 160,
      "signature": ": Record<string, When>",
      "doc": "Vendor sidebar links and business-hub rows that not every business gets, keyed by route."
     },
     {
      "name": "PLATFORM_ROUTE_RULES",
      "kind": "const",
-     "line": 148,
+     "line": 171,
      "signature": ": Record<string, When>",
      "doc": "Operations tabs, screens and More rows by route. A deep link to a screen the\nstaff member can't use shows who it is for instead of opening."
     },
     {
      "name": "ROUTE_AUDIENCE",
      "kind": "const",
-     "line": 181,
+     "line": 204,
      "signature": ": Record<string, string>",
      "doc": "Who a staff screen is for, in words (\"finance and admins\"), for the no-access message."
     },
     {
      "name": "TODAY_FOCUS",
      "kind": "const",
-     "line": 210,
+     "line": 233,
      "signature": ": { id: 'admin' | 'finance' | 'vendor_success' | 'support' | 'coordinator'; when: When }[]",
      "doc": "The staff member's focus on the Today screen, first match wins."
     },
     {
      "name": "SetupStepDef",
      "kind": "interface",
-     "line": 219,
+     "line": 242,
      "signature": "",
      "doc": "A step on the vendor home's setup checklist, shown until it is done.",
      "members": [
@@ -9963,14 +10134,14 @@
     {
      "name": "VENDOR_SETUP_STEPS",
      "kind": "const",
-     "line": 231,
+     "line": 254,
      "signature": ": SetupStepDef[]",
      "doc": ""
     },
     {
      "name": "UNIVERSAL_TOOLS",
      "kind": "function",
-     "line": 247,
+     "line": 270,
      "signature": "(Object.keys(TOOL_RULES) as ToolId[]).filter((id))",
      "doc": "Tool ids that are universal for their role on purpose (the registry check lists them)."
     }
@@ -12985,9 +13156,22 @@
     {
      "name": "NE",
      "kind": "const",
-     "line": 12,
+     "line": 13,
      "signature": ": Record<string, string>",
      "doc": ""
+    }
+   ]
+  },
+  {
+   "file": "src/i18n/ne/smartTools.ts",
+   "doc": "",
+   "exports": [
+    {
+     "name": "SMART_TOOLS_NE",
+     "kind": "const",
+     "line": 9,
+     "signature": ": Record<string, string>",
+     "doc": "Nepali for the smart toolkit tools (five per role: health check, headcount,\nprice check, family vote, marriage registration; lead scores, revenue\nforecast, date demand, review requests, win and loss; best gigs, season\nplanner, rest and workload, income statement, testimonials; money\nreconciliation, commission simulator, peak-date capacity, satisfaction,\nlisting quality). Same form as the main dictionary."
     }
    ]
   },
@@ -13532,6 +13716,13 @@
      "line": 103,
      "signature": "(opts: { names: string; message: string; accent: string; background: string; events: ProjectEvent[]; footer?: string })",
      "doc": "Printable invitation card (A5) — its own design, without the Vivah letterhead."
+    },
+    {
+     "name": "incomeStatementHtml",
+     "kind": "function",
+     "line": 117,
+     "signature": "(opts: { name: string; phone?: string; pan?: string; from: string; to: string; rows: { date: string; source: 'vivah' | 'private'; label: string; amount: number }[] })",
+     "doc": "A freelancer's income statement for a period: Vivah payouts (from the ledger) and private invoices they entered."
     }
    ]
   },
@@ -13803,6 +13994,887 @@
      "line": 153,
      "signature": "(): Promise<Record<string, string>[] | null>",
      "doc": "Let the user pick a .csv file and parse it. Returns null when cancelled."
+    }
+   ]
+  },
+  {
+   "file": "src/services/insights.ts",
+   "doc": "Pure scoring and forecasting behind the \"smart\" toolkit tools: the couple's health check and headcount forecast, a vendor's lead scores and revenue forecast, a freelancer's gig fit and workload, and the ops team's money reconciliation and commission simulator. No React, no store: plain values in, plain values out, so every rule is testable (`npm run test:insights`) and can move to the server unchanged. Money is whole NPR; dates yyyy-mm-dd.",
+   "exports": [
+    {
+     "name": "quantile",
+     "kind": "function",
+     "line": 17,
+     "signature": "(sorted: number[], q: number): number",
+     "doc": "Value at quantile `q` (0–1) of an ascending list, linearly interpolated."
+    },
+    {
+     "name": "HealthInput",
+     "kind": "interface",
+     "line": 27,
+     "signature": "",
+     "doc": "",
+     "members": [
+      {
+       "name": "daysToGo",
+       "optional": false,
+       "type": "number",
+       "doc": ""
+      },
+      {
+       "name": "services",
+       "optional": false,
+       "type": "{ confirmed: number; total: number }",
+       "doc": ""
+      },
+      {
+       "name": "missingServices",
+       "optional": false,
+       "type": "number",
+       "doc": "Services usually needed for the functions but not requested yet."
+      },
+      {
+       "name": "tasks",
+       "optional": false,
+       "type": "{ done: number; total: number }",
+       "doc": ""
+      },
+      {
+       "name": "overdueMilestones",
+       "optional": false,
+       "type": "number",
+       "doc": ""
+      },
+      {
+       "name": "guests",
+       "optional": false,
+       "type": "{ total: number; responded: number; invited: number }",
+       "doc": ""
+      },
+      {
+       "name": "contracts",
+       "optional": false,
+       "type": "{ signed: number; total: number }",
+       "doc": ""
+      },
+      {
+       "name": "budget",
+       "optional": false,
+       "type": "number",
+       "doc": ""
+      },
+      {
+       "name": "committed",
+       "optional": false,
+       "type": "number",
+       "doc": "What the confirmed and proposed bookings add up to."
+      }
+     ]
+    },
+    {
+     "name": "HealthPart",
+     "kind": "interface",
+     "line": 41,
+     "signature": "",
+     "doc": "",
+     "members": [
+      {
+       "name": "id",
+       "optional": false,
+       "type": "'vendors' | 'payments' | 'tasks' | 'guests' | 'contracts' | 'budget'",
+       "doc": ""
+      },
+      {
+       "name": "label",
+       "optional": false,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "weight",
+       "optional": false,
+       "type": "number",
+       "doc": ""
+      },
+      {
+       "name": "value",
+       "optional": false,
+       "type": "number",
+       "doc": "0–1"
+      },
+      {
+       "name": "detail",
+       "optional": false,
+       "type": "string",
+       "doc": ""
+      }
+     ]
+    },
+    {
+     "name": "HealthPace",
+     "kind": "type",
+     "line": 50,
+     "signature": "= 'ahead' | 'on_track' | 'behind' | 'done'",
+     "doc": ""
+    },
+    {
+     "name": "weddingHealth",
+     "kind": "function",
+     "line": 57,
+     "signature": "(i: HealthInput)",
+     "doc": "How ready a celebration is, 0–100, from six weighted parts, and whether that\nis ahead of or behind where couples usually are with this many days to go\n(about a year of planning, most of it in the last six months)."
+    },
+    {
+     "name": "TurnoutRates",
+     "kind": "interface",
+     "line": 92,
+     "signature": "",
+     "doc": "",
+     "members": [
+      {
+       "name": "maybe",
+       "optional": false,
+       "type": "number",
+       "doc": "Share of \"maybe\" heads who usually come (0–1)."
+      },
+      {
+       "name": "pending",
+       "optional": false,
+       "type": "number",
+       "doc": "Share of heads who never replied but usually come anyway (0–1)."
+      },
+      {
+       "name": "buffer",
+       "optional": false,
+       "type": "number",
+       "doc": "Extra plates on top of the forecast (0–1)."
+      }
+     ]
+    },
+    {
+     "name": "DEFAULT_TURNOUT",
+     "kind": "const",
+     "line": 101,
+     "signature": ": TurnoutRates",
+     "doc": ""
+    },
+    {
+     "name": "guestHeads",
+     "kind": "function",
+     "line": 104,
+     "signature": "(g: Pick<Guest, 'plusOnes' | 'children'>)",
+     "doc": "Heads a guest brings: the RSVP count when given, else the guest, plus-ones and children."
+    },
+    {
+     "name": "HeadcountRow",
+     "kind": "interface",
+     "line": 106,
+     "signature": "",
+     "doc": "",
+     "members": [
+      {
+       "name": "eventId",
+       "optional": false,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "name",
+       "optional": false,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "date",
+       "optional": false,
+       "type": "string | null",
+       "doc": ""
+      },
+      {
+       "name": "planned",
+       "optional": false,
+       "type": "number",
+       "doc": ""
+      },
+      {
+       "name": "invited",
+       "optional": false,
+       "type": "number",
+       "doc": ""
+      },
+      {
+       "name": "yes",
+       "optional": false,
+       "type": "number",
+       "doc": ""
+      },
+      {
+       "name": "maybe",
+       "optional": false,
+       "type": "number",
+       "doc": ""
+      },
+      {
+       "name": "pending",
+       "optional": false,
+       "type": "number",
+       "doc": ""
+      },
+      {
+       "name": "no",
+       "optional": false,
+       "type": "number",
+       "doc": ""
+      },
+      {
+       "name": "floor",
+       "optional": false,
+       "type": "number",
+       "doc": "Lowest: confirmed heads only."
+      },
+      {
+       "name": "expected",
+       "optional": false,
+       "type": "number",
+       "doc": ""
+      },
+      {
+       "name": "ceiling",
+       "optional": false,
+       "type": "number",
+       "doc": "Everyone not declined."
+      },
+      {
+       "name": "plates",
+       "optional": false,
+       "type": "number",
+       "doc": "Expected plus buffer, rounded up to a table of 10."
+      }
+     ]
+    },
+    {
+     "name": "headcountForecast",
+     "kind": "function",
+     "line": 129,
+     "signature": "(guests: Guest[], events: Pick<ProjectEvent, 'id' | 'name' | 'date' | 'guests'>[], rates: TurnoutRates = DEFAULT_TURNOUT): HeadcountRow[]",
+     "doc": "Expected attendance per function from the RSVPs so far: yes counts in full,\nmaybe and no reply at the usual turnout, declines not at all."
+    },
+    {
+     "name": "PriceVerdict",
+     "kind": "type",
+     "line": 167,
+     "signature": "= 'good' | 'fair' | 'high' | 'very_high'",
+     "doc": ""
+    },
+    {
+     "name": "priceCheck",
+     "kind": "function",
+     "line": 174,
+     "signature": "(price: number, market: number[], range: [number, number])",
+     "doc": "Where a quoted unit price sits against the market: the listed starting\nprices of similar providers nearby, or the service's typical range when\nthere are too few of them."
+    },
+    {
+     "name": "REGISTRATION_DAYS",
+     "kind": "const",
+     "line": 189,
+     "signature": "= 35",
+     "doc": "Days after the wedding within which a marriage is registered without a late fee."
+    },
+    {
+     "name": "registrationDeadline",
+     "kind": "function",
+     "line": 192,
+     "signature": "(weddingIso: string)",
+     "doc": "The last day to register without a late fee, and how many days are left."
+    },
+    {
+     "name": "tallyVotes",
+     "kind": "function",
+     "line": 200,
+     "signature": "(options: string[], fields: Record<string, string | number | boolean> | undefined)",
+     "doc": "Votes per option and the leader(s), from `vote:<voterId>` → option index fields."
+    },
+    {
+     "name": "parseOptions",
+     "kind": "function",
+     "line": 213,
+     "signature": "(text: string)",
+     "doc": "Options typed one per line (or separated by commas), trimmed, de-duplicated, at most six."
+    },
+    {
+     "name": "LeadLike",
+     "kind": "interface",
+     "line": 217,
+     "signature": "",
+     "doc": "",
+     "members": [
+      {
+       "name": "status",
+       "optional": false,
+       "type": "LeadStatus",
+       "doc": ""
+      },
+      {
+       "name": "eventDate",
+       "optional": false,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "guests",
+       "optional": true,
+       "type": "number",
+       "doc": ""
+      },
+      {
+       "name": "budget",
+       "optional": true,
+       "type": "number",
+       "doc": ""
+      },
+      {
+       "name": "message",
+       "optional": true,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "source",
+       "optional": true,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "priority",
+       "optional": true,
+       "type": "'low' | 'medium' | 'high'",
+       "doc": ""
+      },
+      {
+       "name": "createdAt",
+       "optional": false,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "history",
+       "optional": true,
+       "type": "{ status: LeadStatus; at: string }[]",
+       "doc": ""
+      }
+     ]
+    },
+    {
+     "name": "LeadScoreContext",
+     "kind": "interface",
+     "line": 229,
+     "signature": "",
+     "doc": "",
+     "members": [
+      {
+       "name": "startingPrice",
+       "optional": false,
+       "type": "number",
+       "doc": "The vendor's listed starting price (one unit)."
+      },
+      {
+       "name": "capacity",
+       "optional": true,
+       "type": "{ min: number; max: number }",
+       "doc": "Hall capacity for venues."
+      },
+      {
+       "name": "free",
+       "optional": true,
+       "type": "boolean",
+       "doc": "Is the vendor free on the date? `undefined` when unknown."
+      },
+      {
+       "name": "nowIso",
+       "optional": false,
+       "type": "string",
+       "doc": ""
+      }
+     ]
+    },
+    {
+     "name": "LeadBand",
+     "kind": "type",
+     "line": 239,
+     "signature": "= 'hot' | 'warm' | 'cold'",
+     "doc": ""
+    },
+    {
+     "name": "leadScore",
+     "kind": "function",
+     "line": 246,
+     "signature": "(l: LeadLike, ctx: LeadScoreContext)",
+     "doc": "How likely an open enquiry is to book, 0–100, with the reasons. Budget fit,\ndate (soon, peak, free), guest fit, how complete and how fresh the enquiry\nis, and where it came from."
+    },
+    {
+     "name": "STAGE_ODDS",
+     "kind": "const",
+     "line": 313,
+     "signature": ": Record<LeadStatus, number>",
+     "doc": "Typical chance an enquiry at each stage ends in a booking (editable per vendor)."
+    },
+    {
+     "name": "revenueForecast",
+     "kind": "function",
+     "line": 319,
+     "signature": "(fromIso: string, months: number, certain: { date: string; amount: number }[], pipeline: { date: string; value: number; status: LeadStatus }[], odds: Partial<Record<LeadStatus, number>> = {})",
+     "doc": "Income by month: payouts already scheduled (certain) plus open enquiries\nweighted by their stage odds (likely), from the month of `fromIso`."
+    },
+    {
+     "name": "ConversionRow",
+     "kind": "interface",
+     "line": 349,
+     "signature": "",
+     "doc": "",
+     "members": [
+      {
+       "name": "key",
+       "optional": false,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "total",
+       "optional": false,
+       "type": "number",
+       "doc": ""
+      },
+      {
+       "name": "won",
+       "optional": false,
+       "type": "number",
+       "doc": ""
+      },
+      {
+       "name": "lost",
+       "optional": false,
+       "type": "number",
+       "doc": ""
+      },
+      {
+       "name": "open",
+       "optional": false,
+       "type": "number",
+       "doc": ""
+      },
+      {
+       "name": "rate",
+       "optional": false,
+       "type": "number | null",
+       "doc": "Won out of decided (won + lost)."
+      }
+     ]
+    },
+    {
+     "name": "conversionBy",
+     "kind": "function",
+     "line": 360,
+     "signature": "<T extends { status: LeadStatus }>(items: T[], keyOf: (x: T) => string): ConversionRow[]",
+     "doc": "Won, lost and open enquiries grouped by any key, best converting first."
+    },
+    {
+     "name": "budgetBand",
+     "kind": "function",
+     "line": 375,
+     "signature": "(budget: number | undefined, startingPrice: number)",
+     "doc": "Budget band for an enquiry, relative to the vendor's starting price."
+    },
+    {
+     "name": "replyBand",
+     "kind": "function",
+     "line": 383,
+     "signature": "(l: Pick<LeadLike, 'createdAt' | 'history'>)",
+     "doc": "First-reply speed band from the enquiry's history."
+    },
+    {
+     "name": "DateDemand",
+     "kind": "interface",
+     "line": 392,
+     "signature": "",
+     "doc": "",
+     "members": [
+      {
+       "name": "date",
+       "optional": false,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "sait",
+       "optional": false,
+       "type": "boolean",
+       "doc": ""
+      },
+      {
+       "name": "saturday",
+       "optional": false,
+       "type": "boolean",
+       "doc": ""
+      },
+      {
+       "name": "peak",
+       "optional": false,
+       "type": "boolean",
+       "doc": ""
+      },
+      {
+       "name": "requests",
+       "optional": false,
+       "type": "number",
+       "doc": "Enquiries and functions on that date in the area."
+      },
+      {
+       "name": "demand",
+       "optional": false,
+       "type": "number",
+       "doc": "0–100"
+      },
+      {
+       "name": "upliftPct",
+       "optional": false,
+       "type": "number",
+       "doc": "Suggested uplift on the normal price, in percent."
+      }
+     ]
+    },
+    {
+     "name": "dateDemand",
+     "kind": "function",
+     "line": 406,
+     "signature": "(date: string, ctx: { sait: boolean; requests: number }): DateDemand",
+     "doc": "How sought-after a date is: sait, Saturday, peak month and real requests for it."
+    },
+    {
+     "name": "GigFitInput",
+     "kind": "interface",
+     "line": 416,
+     "signature": "",
+     "doc": "",
+     "members": [
+      {
+       "name": "pay",
+       "optional": false,
+       "type": "number",
+       "doc": ""
+      },
+      {
+       "name": "hours",
+       "optional": false,
+       "type": "number",
+       "doc": ""
+      },
+      {
+       "name": "skill",
+       "optional": false,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "date",
+       "optional": false,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "emergency",
+       "optional": true,
+       "type": "boolean",
+       "doc": ""
+      },
+      {
+       "name": "km",
+       "optional": false,
+       "type": "number | null",
+       "doc": "Road distance to the gig, null when local or unknown."
+      }
+     ]
+    },
+    {
+     "name": "GigFitProfile",
+     "kind": "interface",
+     "line": 426,
+     "signature": "",
+     "doc": "",
+     "members": [
+      {
+       "name": "skills",
+       "optional": false,
+       "type": "string[]",
+       "doc": ""
+      },
+      {
+       "name": "hourlyRate",
+       "optional": false,
+       "type": "number",
+       "doc": ""
+      },
+      {
+       "name": "dayRate",
+       "optional": false,
+       "type": "number",
+       "doc": ""
+      },
+      {
+       "name": "travelRadiusKm",
+       "optional": false,
+       "type": "number",
+       "doc": ""
+      },
+      {
+       "name": "perKm",
+       "optional": false,
+       "type": "number",
+       "doc": "Fuel and fares per km, both ways."
+      },
+      {
+       "name": "busy",
+       "optional": false,
+       "type": "boolean",
+       "doc": ""
+      }
+     ]
+    },
+    {
+     "name": "gigFit",
+     "kind": "function",
+     "line": 440,
+     "signature": "(g: GigFitInput, p: GigFitProfile)",
+     "doc": "What a gig is really worth to this freelancer: pay after travel, per hour\nincluding travel time, against their own rates and calendar. Score 0–100."
+    },
+    {
+     "name": "WorkDay",
+     "kind": "interface",
+     "line": 481,
+     "signature": "",
+     "doc": "",
+     "members": [
+      {
+       "name": "date",
+       "optional": false,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "start",
+       "optional": false,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "end",
+       "optional": false,
+       "type": "string",
+       "doc": ""
+      }
+     ]
+    },
+    {
+     "name": "shiftHours",
+     "kind": "function",
+     "line": 493,
+     "signature": "(start: string, end: string)",
+     "doc": "Hours on a job; an end before the start runs past midnight."
+    },
+    {
+     "name": "workloadSummary",
+     "kind": "function",
+     "line": 503,
+     "signature": "(days: WorkDay[])",
+     "doc": "Streaks of back-to-back work days, late finishes and the busiest weeks, to\nplan rest before the long peak-season runs."
+    },
+    {
+     "name": "ReconIssue",
+     "kind": "interface",
+     "line": 530,
+     "signature": "",
+     "doc": "",
+     "members": [
+      {
+       "name": "id",
+       "optional": false,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "projectId",
+       "optional": false,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "kind",
+       "optional": false,
+       "type": "'milestones' | 'booking_split' | 'payables' | 'overpaid' | 'refund' | 'payment_link'",
+       "doc": ""
+      },
+      {
+       "name": "severity",
+       "optional": false,
+       "type": "'high' | 'medium'",
+       "doc": ""
+      },
+      {
+       "name": "title",
+       "optional": false,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "detail",
+       "optional": false,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "diff",
+       "optional": false,
+       "type": "number",
+       "doc": "How far out, in NPR (absolute)."
+      }
+     ]
+    },
+    {
+     "name": "reconcileProject",
+     "kind": "function",
+     "line": 551,
+     "signature": "(p: Project, ctx: { quotes: Quotation[]; payments: Payment[]; payables: Payable[]; refunds: Refund[] }): ReconIssue[]",
+     "doc": "Checks the money invariants of one project (AGENTS.md §5): accepted quote =\nΣ milestones, booking price = payable + fee, payables = provider payable,\nno milestone or payment over-collected, refunds within the payment."
+    },
+    {
+     "name": "Rates",
+     "kind": "interface",
+     "line": 591,
+     "signature": "",
+     "doc": "",
+     "members": [
+      {
+       "name": "commissionRate",
+       "optional": false,
+       "type": "number",
+       "doc": ""
+      },
+      {
+       "name": "markupRate",
+       "optional": false,
+       "type": "number",
+       "doc": ""
+      },
+      {
+       "name": "leadFee",
+       "optional": false,
+       "type": "number",
+       "doc": ""
+      }
+     ]
+    },
+    {
+     "name": "simulateRates",
+     "kind": "function",
+     "line": 602,
+     "signature": "(bookings: { pricingModel: PricingModel; agreedPrice: number; providerCost: number; platformFee: number }[], next: Rates)",
+     "doc": "Platform fee on the same bookings under the current and proposed rates.\nThe provider's price is held fixed, so a markup change moves the couple's\nprice and a commission change moves the provider's payout."
+    },
+    {
+     "name": "satisfaction",
+     "kind": "function",
+     "line": 628,
+     "signature": "(reviews: Pick<ReviewRecord, 'overall'>[])",
+     "doc": "Net promoter style score from star reviews: 5★ promoters, 4★ passive,\n3★ and below detractors. Also the average and star distribution."
+    },
+    {
+     "name": "ListingSignals",
+     "kind": "interface",
+     "line": 638,
+     "signature": "",
+     "doc": "",
+     "members": [
+      {
+       "name": "verified",
+       "optional": false,
+       "type": "boolean",
+       "doc": ""
+      },
+      {
+       "name": "hasPhoto",
+       "optional": false,
+       "type": "boolean",
+       "doc": ""
+      },
+      {
+       "name": "styles",
+       "optional": false,
+       "type": "number",
+       "doc": ""
+      },
+      {
+       "name": "reviewCount",
+       "optional": false,
+       "type": "number",
+       "doc": ""
+      },
+      {
+       "name": "rating",
+       "optional": false,
+       "type": "number",
+       "doc": ""
+      },
+      {
+       "name": "responseMinutes",
+       "optional": false,
+       "type": "number",
+       "doc": ""
+      },
+      {
+       "name": "priceListed",
+       "optional": false,
+       "type": "boolean",
+       "doc": ""
+      },
+      {
+       "name": "languages",
+       "optional": false,
+       "type": "number",
+       "doc": ""
+      },
+      {
+       "name": "packages",
+       "optional": false,
+       "type": "number",
+       "doc": ""
+      },
+      {
+       "name": "portfolio",
+       "optional": false,
+       "type": "number",
+       "doc": ""
+      }
+     ]
+    },
+    {
+     "name": "listingQuality",
+     "kind": "function",
+     "line": 652,
+     "signature": "(s: ListingSignals)",
+     "doc": "Profile completeness and trust, 0–100, with what to fix first."
+    },
+    {
+     "name": "busyDates",
+     "kind": "function",
+     "line": 670,
+     "signature": "(projects: Project[], fromIso: string, days: number)",
+     "doc": "Functions per date (live projects only) and how many need each service."
+    },
+    {
+     "name": "openMilestones",
+     "kind": "function",
+     "line": 688,
+     "signature": "(p: Project)",
+     "doc": "Milestones still to collect for a project (not paid or waived)."
     }
    ]
   },

@@ -60,7 +60,7 @@ _No JSDoc yet._
 
 ### `ToolId`
 
-*type* · [src/data/access.ts:126](../../../src/data/access.ts#L126)
+*type* · [src/data/access.ts:149](../../../src/data/access.ts#L149)
 
 ```ts
 type ToolId = keyof typeof TOOL_RULES
@@ -70,7 +70,7 @@ _No JSDoc yet._
 
 ### `toolRole`
 
-*function* · [src/data/access.ts:131](../../../src/data/access.ts#L131)
+*function* · [src/data/access.ts:154](../../../src/data/access.ts#L154)
 
 ```ts
 toolRole(id: string): UserRole | undefined
@@ -80,7 +80,7 @@ The role app a tool belongs to, from its id prefix.
 
 ### `toolRule`
 
-*function* · [src/data/access.ts:134](../../../src/data/access.ts#L134)
+*function* · [src/data/access.ts:157](../../../src/data/access.ts#L157)
 
 ```ts
 toolRule(id: string): When
@@ -90,7 +90,7 @@ A tool's rule; unknown ids get a rule nobody passes.
 
 ### `VENDOR_LINK_RULES`
 
-*const* · [src/data/access.ts:137](../../../src/data/access.ts#L137)
+*const* · [src/data/access.ts:160](../../../src/data/access.ts#L160)
 
 ```ts
 VENDOR_LINK_RULES: Record<string, When>
@@ -100,7 +100,7 @@ Vendor sidebar links and business-hub rows that not every business gets, keyed b
 
 ### `PLATFORM_ROUTE_RULES`
 
-*const* · [src/data/access.ts:148](../../../src/data/access.ts#L148)
+*const* · [src/data/access.ts:171](../../../src/data/access.ts#L171)
 
 ```ts
 PLATFORM_ROUTE_RULES: Record<string, When>
@@ -111,7 +111,7 @@ staff member can't use shows who it is for instead of opening.
 
 ### `ROUTE_AUDIENCE`
 
-*const* · [src/data/access.ts:181](../../../src/data/access.ts#L181)
+*const* · [src/data/access.ts:204](../../../src/data/access.ts#L204)
 
 ```ts
 ROUTE_AUDIENCE: Record<string, string>
@@ -121,7 +121,7 @@ Who a staff screen is for, in words ("finance and admins"), for the no-access me
 
 ### `TODAY_FOCUS`
 
-*const* · [src/data/access.ts:210](../../../src/data/access.ts#L210)
+*const* · [src/data/access.ts:233](../../../src/data/access.ts#L233)
 
 ```ts
 TODAY_FOCUS: { id: 'admin' | 'finance' | 'vendor_success' | 'support' | 'coordinator'; when: When }[]
@@ -131,7 +131,7 @@ The staff member's focus on the Today screen, first match wins.
 
 ### `SetupStepDef`
 
-*interface* · [src/data/access.ts:219](../../../src/data/access.ts#L219)
+*interface* · [src/data/access.ts:242](../../../src/data/access.ts#L242)
 
 A step on the vendor home's setup checklist, shown until it is done.
 
@@ -147,7 +147,7 @@ A step on the vendor home's setup checklist, shown until it is done.
 
 ### `VENDOR_SETUP_STEPS`
 
-*const* · [src/data/access.ts:231](../../../src/data/access.ts#L231)
+*const* · [src/data/access.ts:254](../../../src/data/access.ts#L254)
 
 ```ts
 VENDOR_SETUP_STEPS: SetupStepDef[]
@@ -157,7 +157,7 @@ _No JSDoc yet._
 
 ### `UNIVERSAL_TOOLS`
 
-*function* · [src/data/access.ts:247](../../../src/data/access.ts#L247)
+*function* · [src/data/access.ts:270](../../../src/data/access.ts#L270)
 
 ```ts
 UNIVERSAL_TOOLS(Object.keys(TOOL_RULES) as ToolId[]).filter((id))
