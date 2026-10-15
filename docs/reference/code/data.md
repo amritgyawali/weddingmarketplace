@@ -1825,9 +1825,9 @@ budget allocation all reference one of these ids.
 
 ### `CrewRole`
 
-*interface* · [src/data/services.ts:14](../../../src/data/services.ts#L14)
+*interface* · [src/data/services.ts:15](../../../src/data/services.ts#L15)
 
-_No JSDoc yet._
+A crew role a service needs, with how many people and the pay per person.
 
 | Member | Type | Notes |
 |---|---|---|
@@ -1838,9 +1838,9 @@ _No JSDoc yet._
 
 ### `ServiceDef`
 
-*interface* · [src/data/services.ts:23](../../../src/data/services.ts#L23)
+*interface* · [src/data/services.ts:25](../../../src/data/services.ts#L25)
 
-_No JSDoc yet._
+One bookable service: its group, requirement fields, deliverables and crew plan.
 
 | Member | Type | Notes |
 |---|---|---|
@@ -1861,97 +1861,97 @@ _No JSDoc yet._
 
 ### `DeliverableKind`
 
-*type* · [src/data/services.ts:46](../../../src/data/services.ts#L46)
+*type* · [src/data/services.ts:49](../../../src/data/services.ts#L49)
 
 ```ts
 type DeliverableKind = 'photos' | 'film' | 'highlight' | 'teaser' | 'album' | 'raw' | 'design' | 'other'
 ```
 
-_No JSDoc yet._
+The kinds of deliverable a service can produce.
 
 ### `ServiceGroupId`
 
-*type* · [src/data/services.ts:48](../../../src/data/services.ts#L48)
+*type* · [src/data/services.ts:52](../../../src/data/services.ts#L52)
 
 ```ts
 type ServiceGroupId = | 'venue' | 'photo-video' | 'beauty' | 'decor' | 'food' | 'entertainment' | 'fashion' | 'rituals' | 'logistics' | 'vehicles' | 'stationery'
 ```
 
-_No JSDoc yet._
+Id of a service group shown in the marketplace and plan wizard.
 
 ### `SERVICE_GROUPS`
 
-*const* · [src/data/services.ts:61](../../../src/data/services.ts#L61)
+*const* · [src/data/services.ts:66](../../../src/data/services.ts#L66)
 
 ```ts
 SERVICE_GROUPS: { id: ServiceGroupId; title: string; subtitle: string; image: PhotoKey; bg: string }[]
 ```
 
-_No JSDoc yet._
+Service groups in display order, with title, subtitle, photo and background.
 
 ### `SERVICES`
 
-*const* · [src/data/services.ts:78](../../../src/data/services.ts#L78)
+*const* · [src/data/services.ts:84](../../../src/data/services.ts#L84)
 
 ```ts
 SERVICES: ServiceDef[]
 ```
 
-_No JSDoc yet._
+The full service catalogue; every provider, quote line, booking and crew role refers to one of these ids.
 
 ### `SERVICE_BY_ID`
 
-*const* · [src/data/services.ts:782](../../../src/data/services.ts#L782)
+*const* · [src/data/services.ts:789](../../../src/data/services.ts#L789)
 
 ```ts
 SERVICE_BY_ID: Record<string, ServiceDef>
 ```
 
-_No JSDoc yet._
+Service definitions keyed by id.
 
 ### `findService`
 
-*function* · [src/data/services.ts:783](../../../src/data/services.ts#L783)
+*function* · [src/data/services.ts:791](../../../src/data/services.ts#L791)
 
 ```ts
 findService(id: string): ServiceDef | undefined
 ```
 
-_No JSDoc yet._
+Looks a service up by id; undefined when the id is unknown.
 
 ### `serviceName`
 
-*function* · [src/data/services.ts:784](../../../src/data/services.ts#L784)
+*function* · [src/data/services.ts:793](../../../src/data/services.ts#L793)
 
 ```ts
 serviceName(id: string)
 ```
 
-_No JSDoc yet._
+Display name of a service id, or the id itself when unknown.
 
 ### `servicesInGroup`
 
-*function* · [src/data/services.ts:785](../../../src/data/services.ts#L785)
+*function* · [src/data/services.ts:795](../../../src/data/services.ts#L795)
 
 ```ts
 servicesInGroup(group: ServiceGroupId)
 ```
 
-_No JSDoc yet._
+All services that belong to a group.
 
 ### `CORE_SERVICES`
 
-*function* · [src/data/services.ts:786](../../../src/data/services.ts#L786)
+*function* · [src/data/services.ts:797](../../../src/data/services.ts#L797)
 
 ```ts
 CORE_SERVICESSERVICES.filter((s) => s.core).map((s))
 ```
 
-_No JSDoc yet._
+Ids of the core services preselected in the plan wizard and onboarding.
 
 ### `CREW_ROLES`
 
-*const* · [src/data/services.ts:789](../../../src/data/services.ts#L789)
+*const* · [src/data/services.ts:800](../../../src/data/services.ts#L800)
 
 ```ts
 CREW_ROLES= [...new Set(SERVICES.flatMap((s) => s.crew.map((c) => c.role)).filter((r) => r !== 'Venue…
@@ -1961,7 +1961,7 @@ Freelancer roles across all services (for gig skills and profiles).
 
 ### `crewPlanFor`
 
-*function* · [src/data/services.ts:792](../../../src/data/services.ts#L792)
+*function* · [src/data/services.ts:803](../../../src/data/services.ts#L803)
 
 ```ts
 crewPlanFor(serviceId: string, details: Record<string, string | number | boolean> = {}): { role: string; count: number; pay: number; equipment: string[] }[]
@@ -1971,7 +1971,7 @@ Crew plan a booking of this service needs, scaled by the requirement details.
 
 ### `defaultDetails`
 
-*function* · [src/data/services.ts:814](../../../src/data/services.ts#L814)
+*function* · [src/data/services.ts:825](../../../src/data/services.ts#L825)
 
 ```ts
 defaultDetails(serviceId: string): Record<string, string | number | boolean>

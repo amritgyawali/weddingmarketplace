@@ -11,6 +11,7 @@ export type RequirementField =
   | { key: string; label: string; kind: 'toggle'; default: boolean }
   | { key: string; label: string; kind: 'choice'; options: string[]; default: string };
 
+/** A crew role a service needs, with how many people and the pay per person. */
 export interface CrewRole {
   role: string;
   /** Crew needed for a typical booking of this service. */
@@ -20,6 +21,7 @@ export interface CrewRole {
   equipment?: string[];
 }
 
+/** One bookable service: its group, requirement fields, deliverables and crew plan. */
 export interface ServiceDef {
   id: string;
   name: string;
@@ -43,8 +45,10 @@ export interface ServiceDef {
   core?: boolean;
 }
 
+/** The kinds of deliverable a service can produce. */
 export type DeliverableKind = 'photos' | 'film' | 'highlight' | 'teaser' | 'album' | 'raw' | 'design' | 'other';
 
+/** Id of a service group shown in the marketplace and plan wizard. */
 export type ServiceGroupId =
   | 'venue'
   | 'photo-video'
@@ -58,6 +62,7 @@ export type ServiceGroupId =
   | 'vehicles'
   | 'stationery';
 
+/** Service groups in display order, with title, subtitle, photo and background. */
 export const SERVICE_GROUPS: { id: ServiceGroupId; title: string; subtitle: string; image: PhotoKey; bg: string }[] = [
   { id: 'venue', title: 'Venues', subtitle: 'Party palaces, banquets, hotels & resorts', image: 'venueLawn', bg: '#F3E7D2' },
   { id: 'photo-video', title: 'Photo & Video', subtitle: 'Photography, films, drone, live streaming', image: 'photographerCeremony', bg: '#F6E6E5' },
@@ -75,6 +80,7 @@ export const SERVICE_GROUPS: { id: ServiceGroupId; title: string; subtitle: stri
 const PHOTO_CRITERIA = ['Photo quality', 'Communication', 'Punctuality', 'Professionalism', 'Delivery speed'];
 const DEFAULT_CRITERIA = ['Quality', 'Communication', 'Punctuality', 'Value for money'];
 
+/** The full service catalogue; every provider, quote line, booking and crew role refers to one of these ids. */
 export const SERVICES: ServiceDef[] = [
   // Venue & food
   {
@@ -779,10 +785,15 @@ export const SERVICES: ServiceDef[] = [
   },
 ];
 
+/** Service definitions keyed by id. */
 export const SERVICE_BY_ID: Record<string, ServiceDef> = Object.fromEntries(SERVICES.map((s) => [s.id, s]));
+/** Looks a service up by id; undefined when the id is unknown. */
 export const findService = (id: string): ServiceDef | undefined => SERVICE_BY_ID[id];
+/** Display name of a service id, or the id itself when unknown. */
 export const serviceName = (id: string) => SERVICE_BY_ID[id]?.name ?? id;
+/** All services that belong to a group. */
 export const servicesInGroup = (group: ServiceGroupId) => SERVICES.filter((s) => s.group === group);
+/** Ids of the core services preselected in the plan wizard and onboarding. */
 export const CORE_SERVICES = SERVICES.filter((s) => s.core).map((s) => s.id);
 
 /** Freelancer roles across all services (for gig skills and profiles). */

@@ -1419,27 +1419,27 @@ always confirms the award.
 
 ### `MATCH_WEIGHTS`
 
-*const* · [src/services/matching.ts:24](../../../src/services/matching.ts#L24)
+*const* · [src/services/matching.ts:25](../../../src/services/matching.ts#L25)
 
 ```ts
 MATCH_WEIGHTS: ScoreBreakdown
 ```
 
-_No JSDoc yet._
+Points each matching factor can earn; they sum to 100 and mirror `supabase/migrations/0003`.
 
 ### `MATCH_FACTORS`
 
-*const* · [src/services/matching.ts:37](../../../src/services/matching.ts#L37)
+*const* · [src/services/matching.ts:39](../../../src/services/matching.ts#L39)
 
 ```ts
 MATCH_FACTORS: { key: keyof ScoreBreakdown; label: string }[]
 ```
 
-_No JSDoc yet._
+Factor keys with their display labels, in the order the match breakdown is shown.
 
 ### `syntheticStatus`
 
-*function* · [src/services/matching.ts:59](../../../src/services/matching.ts#L59)
+*function* · [src/services/matching.ts:61](../../../src/services/matching.ts#L61)
 
 ```ts
 syntheticStatus(ownerId: string, date: string): AvailabilityStatus
@@ -1451,7 +1451,7 @@ engine visibly excludes some candidates. Real calendars override this.
 
 ### `statusOn`
 
-*function* · [src/services/matching.ts:71](../../../src/services/matching.ts#L71)
+*function* · [src/services/matching.ts:73](../../../src/services/matching.ts#L73)
 
 ```ts
 statusOn(ownerId: string, date: string, entries: AvailabilityEntry[], synthetic = true, rules: AvailabilityRule[] = []): AvailabilityStatus
@@ -1461,17 +1461,17 @@ Effective status for an owner on a date: explicit entries beat the synthetic cal
 
 ### `isBlocking`
 
-*function* · [src/services/matching.ts:82](../../../src/services/matching.ts#L82)
+*function* · [src/services/matching.ts:85](../../../src/services/matching.ts#L85)
 
 ```ts
 isBlocking(s: AvailabilityStatus)
 ```
 
-_No JSDoc yet._
+True when a calendar status (BOOKED or UNAVAILABLE) rules a provider out for that date.
 
 ### `requirementDates`
 
-*function* · [src/services/matching.ts:85](../../../src/services/matching.ts#L85)
+*function* · [src/services/matching.ts:88](../../../src/services/matching.ts#L88)
 
 ```ts
 requirementDates(project: Project, requirement: Pick<Requirement, 'eventIds'>): string[]
@@ -1481,9 +1481,9 @@ Dates a requirement covers (dated events only).
 
 ### `RankedProvider`
 
-*interface* · [src/services/matching.ts:92](../../../src/services/matching.ts#L92)
+*interface* · [src/services/matching.ts:96](../../../src/services/matching.ts#L96)
 
-_No JSDoc yet._
+One scored provider for a requirement: score, per-factor breakdown, reasons, warnings, any hard exclusion and the price estimate.
 
 | Member | Type | Notes |
 |---|---|---|
@@ -1497,9 +1497,9 @@ _No JSDoc yet._
 
 ### `MatchContext`
 
-*interface* · [src/services/matching.ts:103](../../../src/services/matching.ts#L103)
+*interface* · [src/services/matching.ts:108](../../../src/services/matching.ts#L108)
 
-_No JSDoc yet._
+Calendar entries and customer history the matching engine reads when scoring providers.
 
 | Member | Type | Notes |
 |---|---|---|
@@ -1511,7 +1511,7 @@ _No JSDoc yet._
 
 ### `estimateFor`
 
-*function* · [src/services/matching.ts:114](../../../src/services/matching.ts#L114)
+*function* · [src/services/matching.ts:119](../../../src/services/matching.ts#L119)
 
 ```ts
 estimateFor(provider: Provider, requirement: Requirement, project: Project): number
@@ -1521,7 +1521,7 @@ Rough price of one booking of this provider for the requirement, in NPR.
 
 ### `scoreProvider`
 
-*function* · [src/services/matching.ts:142](../../../src/services/matching.ts#L142)
+*function* · [src/services/matching.ts:147](../../../src/services/matching.ts#L147)
 
 ```ts
 scoreProvider(provider: Provider, project: Project, requirement: Requirement, ctx: MatchContext): RankedProvider
@@ -1531,27 +1531,27 @@ _No JSDoc yet._
 
 ### `rankProviders`
 
-*function* · [src/services/matching.ts:229](../../../src/services/matching.ts#L229)
+*function* · [src/services/matching.ts:235](../../../src/services/matching.ts#L235)
 
 ```ts
 rankProviders(project: Project, requirement: Requirement, ctx: MatchContext, opts: { limit?: number; includeExcluded?: boolean; pool?: Provider[] } = {}): RankedProvider[]
 ```
 
-_No JSDoc yet._
+Scores every provider of the requirement's service and returns them best first (excluded ones only on request), up to `limit` (default 10).
 
 ### `toCandidate`
 
-*function* · [src/services/matching.ts:243](../../../src/services/matching.ts#L243)
+*function* · [src/services/matching.ts:250](../../../src/services/matching.ts#L250)
 
 ```ts
 toCandidate(r: RankedProvider, status: MatchCandidate['status'] = 'suggested'): MatchCandidate
 ```
 
-_No JSDoc yet._
+Turns a ranked provider into the `MatchCandidate` stored on a requirement.
 
 ### `buildBestPackage`
 
-*function* · [src/services/matching.ts:258](../../../src/services/matching.ts#L258)
+*function* · [src/services/matching.ts:265](../../../src/services/matching.ts#L265)
 
 ```ts
 buildBestPackage(project: Project, ctx: MatchContext)
@@ -1562,9 +1562,9 @@ Package builder: best provider per requirement inside the budget, e.g.
 
 ### `RankedFreelancer`
 
-*interface* · [src/services/matching.ts:268](../../../src/services/matching.ts#L268)
+*interface* · [src/services/matching.ts:276](../../../src/services/matching.ts#L276)
 
-_No JSDoc yet._
+One scored freelancer for a crew slot, with distance, reasons, warnings and any hard exclusion.
 
 | Member | Type | Notes |
 |---|---|---|
@@ -1577,9 +1577,9 @@ _No JSDoc yet._
 
 ### `CrewSlot`
 
-*interface* · [src/services/matching.ts:277](../../../src/services/matching.ts#L277)
+*interface* · [src/services/matching.ts:286](../../../src/services/matching.ts#L286)
 
-_No JSDoc yet._
+A crew role to fill: the role, date, city, pay, required equipment and whether it is an emergency.
 
 | Member | Type | Notes |
 |---|---|---|
@@ -1592,7 +1592,7 @@ _No JSDoc yet._
 
 ### `rankFreelancers`
 
-*function* · [src/services/matching.ts:286](../../../src/services/matching.ts#L286)
+*function* · [src/services/matching.ts:295](../../../src/services/matching.ts#L295)
 
 ```ts
 rankFreelancers(slot: CrewSlot, ctx: { availability: AvailabilityEntry[]; rules?: AvailabilityRule[]; skipIds?: string[]; pool?: FreelancerProfile[] }, opts: { limit?: number; includeExcluded?: boolean } = {}): RankedFreelancer[]
@@ -2714,9 +2714,9 @@ BS months in which Nepali wedding saits usually fall.
 
 ### `SaitDate`
 
-*interface* · [src/services/toolkit.ts:24](../../../src/services/toolkit.ts#L24)
+*interface* · [src/services/toolkit.ts:25](../../../src/services/toolkit.ts#L25)
 
-_No JSDoc yet._
+One indicative wedding sait date with its Bikram Sambat month, weekday and whether it falls on a Saturday or in peak season.
 
 | Member | Type | Notes |
 |---|---|---|
@@ -2728,7 +2728,7 @@ _No JSDoc yet._
 
 ### `saitDates`
 
-*function* · [src/services/toolkit.ts:39](../../../src/services/toolkit.ts#L39)
+*function* · [src/services/toolkit.ts:40](../../../src/services/toolkit.ts#L40)
 
 ```ts
 saitDates(fromIso: string, days = 365): SaitDate[]
@@ -2740,7 +2740,7 @@ The official list comes from the Nepali patro; couples confirm with their purohi
 
 ### `NEPAL_HOLIDAYS`
 
-*const* · [src/services/toolkit.ts:53](../../../src/services/toolkit.ts#L53)
+*const* · [src/services/toolkit.ts:54](../../../src/services/toolkit.ts#L54)
 
 ```ts
 NEPAL_HOLIDAYS: { date: string; name: string }[]
@@ -2750,7 +2750,7 @@ Nepal public holidays that affect weddings and operations (approximate; the patr
 
 ### `weekStart`
 
-*function* · [src/services/toolkit.ts:75](../../../src/services/toolkit.ts#L75)
+*function* · [src/services/toolkit.ts:76](../../../src/services/toolkit.ts#L76)
 
 ```ts
 weekStart(iso: string)
@@ -2760,7 +2760,7 @@ Monday-first week start for an ISO date.
 
 ### `monthKey`
 
-*function* · [src/services/toolkit.ts:82](../../../src/services/toolkit.ts#L82)
+*function* · [src/services/toolkit.ts:83](../../../src/services/toolkit.ts#L83)
 
 ```ts
 monthKey(iso: string)
@@ -2770,7 +2770,7 @@ yyyy-mm for grouping.
 
 ### `lastMonths`
 
-*function* · [src/services/toolkit.ts:85](../../../src/services/toolkit.ts#L85)
+*function* · [src/services/toolkit.ts:86](../../../src/services/toolkit.ts#L86)
 
 ```ts
 lastMonths(iso: string, n: number): string[]
@@ -2780,29 +2780,29 @@ The last `n` month keys ending with the month of `iso`, oldest first.
 
 ### `monthLabel`
 
-*function* · [src/services/toolkit.ts:94](../../../src/services/toolkit.ts#L94)
+*function* · [src/services/toolkit.ts:96](../../../src/services/toolkit.ts#L96)
 
 ```ts
 monthLabel(key: string)
 ```
 
-_No JSDoc yet._
+Short English month name for a `yyyy-mm` key.
 
 ### `regionFor`
 
-*function* · [src/services/toolkit.ts:118](../../../src/services/toolkit.ts#L118)
+*function* · [src/services/toolkit.ts:121](../../../src/services/toolkit.ts#L121)
 
 ```ts
 regionFor(city: string): Region
 ```
 
-_No JSDoc yet._
+Climate region (valley, Pokhara, Terai or hills) for a city; unknown cities count as valley.
 
 ### `ClimateNote`
 
-*interface* · [src/services/toolkit.ts:128](../../../src/services/toolkit.ts#L128)
+*interface* · [src/services/toolkit.ts:132](../../../src/services/toolkit.ts#L132)
 
-_No JSDoc yet._
+Typical weather for a city and month: temperatures, rain days, a verdict and planning tips.
 
 | Member | Type | Notes |
 |---|---|---|
@@ -2814,7 +2814,7 @@ _No JSDoc yet._
 
 ### `climateFor`
 
-*function* · [src/services/toolkit.ts:137](../../../src/services/toolkit.ts#L137)
+*function* · [src/services/toolkit.ts:141](../../../src/services/toolkit.ts#L141)
 
 ```ts
 climateFor(city: string, iso: string): ClimateNote
@@ -2824,7 +2824,7 @@ Typical weather for a city and date, with planning tips.
 
 ### `HONEYMOON_SPOTS`
 
-*const* · [src/services/toolkit.ts:155](../../../src/services/toolkit.ts#L155)
+*const* · [src/services/toolkit.ts:159](../../../src/services/toolkit.ts#L159)
 
 ```ts
 HONEYMOON_SPOTS: { id: string; name: string; perNight: [number, number, number]; travel: number; blurb: string }[]
@@ -2834,27 +2834,27 @@ _No JSDoc yet._
 
 ### `TIERS`
 
-*const* · [src/services/toolkit.ts:165](../../../src/services/toolkit.ts#L165)
+*const* · [src/services/toolkit.ts:170](../../../src/services/toolkit.ts#L170)
 
 ```ts
 TIERS= ['Budget', 'Comfort', 'Luxury'] as const
 ```
 
-_No JSDoc yet._
+The three honeymoon spending tiers, cheapest first.
 
 ### `Tier`
 
-*type* · [src/services/toolkit.ts:166](../../../src/services/toolkit.ts#L166)
+*type* · [src/services/toolkit.ts:172](../../../src/services/toolkit.ts#L172)
 
 ```ts
 type Tier = (typeof TIERS)[number]
 ```
 
-_No JSDoc yet._
+One of the honeymoon spending tiers.
 
 ### `honeymoonEstimate`
 
-*function* · [src/services/toolkit.ts:169](../../../src/services/toolkit.ts#L169)
+*function* · [src/services/toolkit.ts:175](../../../src/services/toolkit.ts#L175)
 
 ```ts
 honeymoonEstimate(spotId: string, nights: number, tier: Tier)
@@ -2864,7 +2864,7 @@ Honeymoon estimate for two: stay, food and activities, travel.
 
 ### `jantiVehicles`
 
-*function* · [src/services/toolkit.ts:182](../../../src/services/toolkit.ts#L182)
+*function* · [src/services/toolkit.ts:188](../../../src/services/toolkit.ts#L188)
 
 ```ts
 jantiVehicles(headcount: number, opts: { bus?: number; micro?: number; car?: number } = {})
@@ -2874,7 +2874,7 @@ Vehicles for the janti (baraat): coaches first, then micro-buses, then cars.
 
 ### `savingsPlan`
 
-*function* · [src/services/toolkit.ts:194](../../../src/services/toolkit.ts#L194)
+*function* · [src/services/toolkit.ts:200](../../../src/services/toolkit.ts#L200)
 
 ```ts
 savingsPlan(target: number, saved: number, monthly: number, byIso: string)
@@ -2884,7 +2884,7 @@ Months left and monthly saving needed to hit a target by the wedding date.
 
 ### `TIP_GUIDE`
 
-*const* · [src/services/toolkit.ts:203](../../../src/services/toolkit.ts#L203)
+*const* · [src/services/toolkit.ts:209](../../../src/services/toolkit.ts#L209)
 
 ```ts
 TIP_GUIDE: Record<string, { label: string; amount: number; per: 'booking' | 'crew' }>
@@ -2894,17 +2894,17 @@ Customary tips and dakshina by service, per person or per booking.
 
 ### `tipFor`
 
-*function* · [src/services/toolkit.ts:214](../../../src/services/toolkit.ts#L214)
+*function* · [src/services/toolkit.ts:221](../../../src/services/toolkit.ts#L221)
 
 ```ts
 tipFor(serviceId: string, crewCount: number)
 ```
 
-_No JSDoc yet._
+Suggested tip for a service's crew (label and NPR amount), falling back to NPR 500 per crew member.
 
 ### `nepalIncomeTax`
 
-*function* · [src/services/toolkit.ts:241](../../../src/services/toolkit.ts#L241)
+*function* · [src/services/toolkit.ts:248](../../../src/services/toolkit.ts#L248)
 
 ```ts
 nepalIncomeTax(taxable: number, married = false)
@@ -2914,7 +2914,7 @@ Estimated annual income tax on taxable income, with the slab-by-slab breakdown.
 
 ### `vatPosition`
 
-*function* · [src/services/toolkit.ts:255](../../../src/services/toolkit.ts#L255)
+*function* · [src/services/toolkit.ts:262](../../../src/services/toolkit.ts#L262)
 
 ```ts
 vatPosition(sales: number, vatablePurchases: number, rate = 0.13)
@@ -2924,7 +2924,7 @@ VAT position for a VAT-registered business: output VAT on sales minus input cred
 
 ### `nps`
 
-*function* · [src/services/toolkit.ts:262](../../../src/services/toolkit.ts#L262)
+*function* · [src/services/toolkit.ts:269](../../../src/services/toolkit.ts#L269)
 
 ```ts
 nps(scores: number[])
@@ -2934,9 +2934,9 @@ Net Promoter Score from 0–10 ratings.
 
 ### `PriceInput`
 
-*interface* · [src/services/toolkit.ts:271](../../../src/services/toolkit.ts#L271)
+*interface* · [src/services/toolkit.ts:279](../../../src/services/toolkit.ts#L279)
 
-_No JSDoc yet._
+Inputs for `suggestPrice`: base price, date, guest counts and the uplift or discount percentages.
 
 | Member | Type | Notes |
 |---|---|---|
@@ -2951,7 +2951,7 @@ _No JSDoc yet._
 
 ### `suggestPrice`
 
-*function* · [src/services/toolkit.ts:283](../../../src/services/toolkit.ts#L283)
+*function* · [src/services/toolkit.ts:291](../../../src/services/toolkit.ts#L291)
 
 ```ts
 suggestPrice(i: PriceInput)
@@ -2961,7 +2961,7 @@ Suggested price for a date: peak-season and Saturday uplifts, last-minute discou
 
 ### `LAYOUTS`
 
-*const* · [src/services/toolkit.ts:299](../../../src/services/toolkit.ts#L299)
+*const* · [src/services/toolkit.ts:307](../../../src/services/toolkit.ts#L307)
 
 ```ts
 LAYOUTS: { id: string; label: string; sqft: number }[]
@@ -2971,19 +2971,19 @@ Square feet per guest by layout (industry rules of thumb).
 
 ### `hallCapacity`
 
-*function* · [src/services/toolkit.ts:306](../../../src/services/toolkit.ts#L306)
+*function* · [src/services/toolkit.ts:315](../../../src/services/toolkit.ts#L315)
 
 ```ts
 hallCapacity(areaSqft: number, sqftPerGuest: number)
 ```
 
-_No JSDoc yet._
+How many guests fit a hall of the given area at a given space per guest; 0 when the space is not positive.
 
 ### `RateInput`
 
-*interface* · [src/services/toolkit.ts:308](../../../src/services/toolkit.ts#L308)
+*interface* · [src/services/toolkit.ts:318](../../../src/services/toolkit.ts#L318)
 
-_No JSDoc yet._
+Inputs for `freelancerQuote`: hours, hourly and day rates, travel, assistants and the rush and overnight options.
 
 | Member | Type | Notes |
 |---|---|---|
@@ -3000,7 +3000,7 @@ _No JSDoc yet._
 
 ### `freelancerQuote`
 
-*function* · [src/services/toolkit.ts:322](../../../src/services/toolkit.ts#L322)
+*function* · [src/services/toolkit.ts:332](../../../src/services/toolkit.ts#L332)
 
 ```ts
 freelancerQuote(i: RateInput)
@@ -3010,7 +3010,7 @@ Freelancer quote: hourly up to the day-rate cap, then overtime; travel, assistan
 
 ### `hoursBetween`
 
-*function* · [src/services/toolkit.ts:341](../../../src/services/toolkit.ts#L341)
+*function* · [src/services/toolkit.ts:351](../../../src/services/toolkit.ts#L351)
 
 ```ts
 hoursBetween(a: string, b: string)
@@ -3020,7 +3020,7 @@ Hours between two ISO timestamps (never negative).
 
 ### `weeklyBuckets`
 
-*function* · [src/services/toolkit.ts:344](../../../src/services/toolkit.ts#L344)
+*function* · [src/services/toolkit.ts:354](../../../src/services/toolkit.ts#L354)
 
 ```ts
 weeklyBuckets(fromIso: string, weeks: number, items: { date: string; amount: number }[])
@@ -3030,7 +3030,7 @@ Bucket dated amounts into the next `weeks` weeks starting this week.
 
 ### `netFlow`
 
-*function* · [src/services/toolkit.ts:355](../../../src/services/toolkit.ts#L355)
+*function* · [src/services/toolkit.ts:365](../../../src/services/toolkit.ts#L365)
 
 ```ts
 netFlow(ins: { week: string; amount: number }[], outs: { week: string; amount: number }[])
@@ -3040,7 +3040,7 @@ Pairs weekly inflow and outflow buckets into net and running totals.
 
 ### `change`
 
-*function* · [src/services/toolkit.ts:364](../../../src/services/toolkit.ts#L364)
+*function* · [src/services/toolkit.ts:374](../../../src/services/toolkit.ts#L374)
 
 ```ts
 change(current: number, previous: number)
@@ -3050,7 +3050,7 @@ Simple percent change, or null when there is no base.
 
 ### `GENERATOR_SIZES`
 
-*const* · [src/services/toolkit.ts:369](../../../src/services/toolkit.ts#L369)
+*const* · [src/services/toolkit.ts:379](../../../src/services/toolkit.ts#L379)
 
 ```ts
 GENERATOR_SIZES= [5, 7.5, 10, 15, 20, 25, 30, 40, 50, 62.5, 75, 100, 125, 160, 200, 250]
@@ -3060,7 +3060,7 @@ Standard diesel generator sizes hired in Nepal (kVA).
 
 ### `generatorFor`
 
-*function* · [src/services/toolkit.ts:375](../../../src/services/toolkit.ts#L375)
+*function* · [src/services/toolkit.ts:385](../../../src/services/toolkit.ts#L385)
 
 ```ts
 generatorFor(watts: number)

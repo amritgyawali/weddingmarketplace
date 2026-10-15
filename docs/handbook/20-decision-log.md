@@ -37,6 +37,7 @@ Dated decisions and the reasons behind them, newest last. The code shows *what* 
 | D-29 | 2026-10-11 | Dark mode swaps the palette in place and remounts the tree on a scheme change (`themed()` style sheets), instead of threading a theme object through every component | owner request, team | 1,200+ static colour reads and 84 module-level style sheets; the remount keeps navigation state and touches no screen logic | [22](22-appearance-profile-support.md) |
 | D-30 | 2026-10-11 | Phone numbers (and the Supabase sign-in email) are changed by staff through a help request, not on Edit profile | team | They are how people sign in; changing them needs a check that the new number is the person's | [22 §2](22-appearance-profile-support.md#2-edit-profile) |
 | D-31 | 2026-10-11 | Help requests answered in the app by staff with `support.manage` (coordinators, support, admins); finance excluded | owner request, team | One place for questions, with notifications and an audit trail, instead of only phone and WhatsApp | [22 §3](22-appearance-profile-support.md#3-help-and-support), `0022_profile_support.sql` |
+| D-32 | 2026-10-12 | Super admin Content studio stores only the differences (`DbData.content`) and lays them over the bundled catalogue at read time; the server copy is one `app_content` row with a revision that devices poll | team (PR #39) | Photos, listings, home and brand change without a release, and removing an edit restores the original | [23](23-content-studio.md), `services/content.ts`, 0021 |
 
 ## Open questions and future deadlines
 
