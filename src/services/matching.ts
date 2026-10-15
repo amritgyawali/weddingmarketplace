@@ -21,6 +21,7 @@ import type {
 import { formatMoneyCompact, formatShortDate } from '@/utils/format';
 import { hashString } from '@/utils/random';
 
+/** Points each matching factor can earn; they sum to 100 and mirror `supabase/migrations/0003`. */
 export const MATCH_WEIGHTS: ScoreBreakdown = {
   availability: 30,
   location: 15,
@@ -34,6 +35,7 @@ export const MATCH_WEIGHTS: ScoreBreakdown = {
   repeat: 2,
 };
 
+/** Factor keys with their display labels, in the order the match breakdown is shown. */
 export const MATCH_FACTORS: { key: keyof ScoreBreakdown; label: string }[] = [
   { key: 'availability', label: 'Availability' },
   { key: 'location', label: 'Location' },
@@ -79,6 +81,7 @@ export function statusOn(ownerId: string, date: string, entries: AvailabilityEnt
   return synthetic && !managed ? syntheticStatus(ownerId, date) : 'AVAILABLE';
 }
 
+/** True when a calendar status (BOOKED or UNAVAILABLE) rules a provider out for that date. */
 export const isBlocking = (s: AvailabilityStatus) => s === 'BOOKED' || s === 'UNAVAILABLE';
 
 /** Dates a requirement covers (dated events only). */
@@ -89,6 +92,7 @@ export function requirementDates(project: Project, requirement: Pick<Requirement
 }
 
 // Providers
+/** One scored provider for a requirement: score, per-factor breakdown, reasons, warnings, any hard exclusion and the price estimate. */
 export interface RankedProvider {
   provider: Provider;
   score: number;
@@ -100,6 +104,7 @@ export interface RankedProvider {
   estimate: number;
 }
 
+/** Calendar entries and customer history the matching engine reads when scoring providers. */
 export interface MatchContext {
   availability: AvailabilityEntry[];
   rules?: AvailabilityRule[];
@@ -226,6 +231,7 @@ export function scoreProvider(provider: Provider, project: Project, requirement:
   return { provider, score, breakdown, reasons: reasons.slice(0, 4), warnings, excluded, estimate: estimateFor(provider, requirement, project) };
 }
 
+/** Scores every provider of the requirement's service and returns them best first (excluded ones only on request), up to `limit` (default 10). */
 export function rankProviders(
   project: Project,
   requirement: Requirement,
@@ -240,6 +246,7 @@ export function rankProviders(
   return ranked.slice(0, opts.limit ?? 10);
 }
 
+/** Turns a ranked provider into the `MatchCandidate` stored on a requirement. */
 export const toCandidate = (r: RankedProvider, status: MatchCandidate['status'] = 'suggested'): MatchCandidate => ({
   providerId: r.provider.id,
   providerName: r.provider.name,
@@ -265,6 +272,7 @@ export function buildBestPackage(project: Project, ctx: MatchContext) {
 }
 
 // Freelancers
+/** One scored freelancer for a crew slot, with distance, reasons, warnings and any hard exclusion. */
 export interface RankedFreelancer {
   freelancer: FreelancerProfile;
   score: number;
@@ -274,6 +282,7 @@ export interface RankedFreelancer {
   excluded?: string;
 }
 
+/** A crew role to fill: the role, date, city, pay, required equipment and whether it is an emergency. */
 export interface CrewSlot {
   role: string;
   date: string;

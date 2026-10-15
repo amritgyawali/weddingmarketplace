@@ -11641,9 +11641,9 @@
     {
      "name": "CrewRole",
      "kind": "interface",
-     "line": 14,
+     "line": 15,
      "signature": "",
-     "doc": "",
+     "doc": "A crew role a service needs, with how many people and the pay per person.",
      "members": [
       {
        "name": "role",
@@ -11674,9 +11674,9 @@
     {
      "name": "ServiceDef",
      "kind": "interface",
-     "line": 23,
+     "line": 25,
      "signature": "",
-     "doc": "",
+     "doc": "One bookable service: its group, requirement fields, deliverables and crew plan.",
      "members": [
       {
        "name": "id",
@@ -11767,84 +11767,84 @@
     {
      "name": "DeliverableKind",
      "kind": "type",
-     "line": 46,
+     "line": 49,
      "signature": "= 'photos' | 'film' | 'highlight' | 'teaser' | 'album' | 'raw' | 'design' | 'other'",
-     "doc": ""
+     "doc": "The kinds of deliverable a service can produce."
     },
     {
      "name": "ServiceGroupId",
      "kind": "type",
-     "line": 48,
+     "line": 52,
      "signature": "= | 'venue' | 'photo-video' | 'beauty' | 'decor' | 'food' | 'entertainment' | 'fashion' | 'rituals' | 'logistics' | 'vehicles' | 'stationery'",
-     "doc": ""
+     "doc": "Id of a service group shown in the marketplace and plan wizard."
     },
     {
      "name": "SERVICE_GROUPS",
      "kind": "const",
-     "line": 61,
+     "line": 66,
      "signature": ": { id: ServiceGroupId; title: string; subtitle: string; image: PhotoKey; bg: string }[]",
-     "doc": ""
+     "doc": "Service groups in display order, with title, subtitle, photo and background."
     },
     {
      "name": "SERVICES",
      "kind": "const",
-     "line": 78,
+     "line": 84,
      "signature": ": ServiceDef[]",
-     "doc": ""
+     "doc": "The full service catalogue; every provider, quote line, booking and crew role refers to one of these ids."
     },
     {
      "name": "SERVICE_BY_ID",
      "kind": "const",
-     "line": 782,
+     "line": 789,
      "signature": ": Record<string, ServiceDef>",
-     "doc": ""
+     "doc": "Service definitions keyed by id."
     },
     {
      "name": "findService",
      "kind": "function",
-     "line": 783,
+     "line": 791,
      "signature": "(id: string): ServiceDef | undefined",
-     "doc": ""
+     "doc": "Looks a service up by id; undefined when the id is unknown."
     },
     {
      "name": "serviceName",
      "kind": "function",
-     "line": 784,
+     "line": 793,
      "signature": "(id: string)",
-     "doc": ""
+     "doc": "Display name of a service id, or the id itself when unknown."
     },
     {
      "name": "servicesInGroup",
      "kind": "function",
-     "line": 785,
+     "line": 795,
      "signature": "(group: ServiceGroupId)",
-     "doc": ""
+     "doc": "All services that belong to a group."
     },
     {
      "name": "CORE_SERVICES",
      "kind": "function",
-     "line": 786,
+     "line": 797,
      "signature": "SERVICES.filter((s) => s.core).map((s))",
-     "doc": ""
+     "doc": "Ids of the core services preselected in the plan wizard and onboarding."
     },
     {
      "name": "CREW_ROLES",
      "kind": "const",
-     "line": 789,
+     "line": 800,
      "signature": "= [...new Set(SERVICES.flatMap((s) => s.crew.map((c) => c.role)).filter((r) => r !== 'Venue…",
      "doc": "Freelancer roles across all services (for gig skills and profiles)."
     },
     {
      "name": "crewPlanFor",
      "kind": "function",
-     "line": 792,
+     "line": 803,
      "signature": "(serviceId: string, details: Record<string, string | number | boolean> = {}): { role: string; count: number; pay: number; equipment: string[] }[]",
      "doc": "Crew plan a booking of this service needs, scaled by the requirement details."
     },
     {
      "name": "defaultDetails",
      "kind": "function",
-     "line": 814,
+     "line": 825,
      "signature": "(serviceId: string): Record<string, string | number | boolean>",
      "doc": "Default requirement details for a service."
     }
@@ -13813,51 +13813,51 @@
     {
      "name": "MATCH_WEIGHTS",
      "kind": "const",
-     "line": 24,
+     "line": 25,
      "signature": ": ScoreBreakdown",
-     "doc": ""
+     "doc": "Points each matching factor can earn; they sum to 100 and mirror `supabase/migrations/0003`."
     },
     {
      "name": "MATCH_FACTORS",
      "kind": "const",
-     "line": 37,
+     "line": 39,
      "signature": ": { key: keyof ScoreBreakdown; label: string }[]",
-     "doc": ""
+     "doc": "Factor keys with their display labels, in the order the match breakdown is shown."
     },
     {
      "name": "syntheticStatus",
      "kind": "function",
-     "line": 59,
+     "line": 61,
      "signature": "(ownerId: string, date: string): AvailabilityStatus",
      "doc": "Demo calendars: static catalogue providers/freelancers are \"busy\" on a\ndeterministic ~12% of dates (peak-season Saturdays more often) so the\nengine visibly excludes some candidates. Real calendars override this."
     },
     {
      "name": "statusOn",
      "kind": "function",
-     "line": 71,
+     "line": 73,
      "signature": "(ownerId: string, date: string, entries: AvailabilityEntry[], synthetic = true, rules: AvailabilityRule[] = []): AvailabilityStatus",
      "doc": "Effective status for an owner on a date: explicit entries beat the synthetic calendar."
     },
     {
      "name": "isBlocking",
      "kind": "function",
-     "line": 82,
+     "line": 85,
      "signature": "(s: AvailabilityStatus)",
-     "doc": ""
+     "doc": "True when a calendar status (BOOKED or UNAVAILABLE) rules a provider out for that date."
     },
     {
      "name": "requirementDates",
      "kind": "function",
-     "line": 85,
+     "line": 88,
      "signature": "(project: Project, requirement: Pick<Requirement, 'eventIds'>): string[]",
      "doc": "Dates a requirement covers (dated events only)."
     },
     {
      "name": "RankedProvider",
      "kind": "interface",
-     "line": 92,
+     "line": 96,
      "signature": "",
-     "doc": "",
+     "doc": "One scored provider for a requirement: score, per-factor breakdown, reasons, warnings, any hard exclusion and the price estimate.",
      "members": [
       {
        "name": "provider",
@@ -13906,9 +13906,9 @@
     {
      "name": "MatchContext",
      "kind": "interface",
-     "line": 103,
+     "line": 108,
      "signature": "",
-     "doc": "",
+     "doc": "Calendar entries and customer history the matching engine reads when scoring providers.",
      "members": [
       {
        "name": "availability",
@@ -13945,44 +13945,44 @@
     {
      "name": "estimateFor",
      "kind": "function",
-     "line": 114,
+     "line": 119,
      "signature": "(provider: Provider, requirement: Requirement, project: Project): number",
      "doc": "Rough price of one booking of this provider for the requirement, in NPR."
     },
     {
      "name": "scoreProvider",
      "kind": "function",
-     "line": 142,
+     "line": 147,
      "signature": "(provider: Provider, project: Project, requirement: Requirement, ctx: MatchContext): RankedProvider",
      "doc": ""
     },
     {
      "name": "rankProviders",
      "kind": "function",
-     "line": 229,
+     "line": 235,
      "signature": "(project: Project, requirement: Requirement, ctx: MatchContext, opts: { limit?: number; includeExcluded?: boolean; pool?: Provider[] } = {}): RankedProvider[]",
-     "doc": ""
+     "doc": "Scores every provider of the requirement's service and returns them best first (excluded ones only on request), up to `limit` (default 10)."
     },
     {
      "name": "toCandidate",
      "kind": "function",
-     "line": 243,
+     "line": 250,
      "signature": "(r: RankedProvider, status: MatchCandidate['status'] = 'suggested'): MatchCandidate",
-     "doc": ""
+     "doc": "Turns a ranked provider into the `MatchCandidate` stored on a requirement."
     },
     {
      "name": "buildBestPackage",
      "kind": "function",
-     "line": 258,
+     "line": 265,
      "signature": "(project: Project, ctx: MatchContext)",
      "doc": "Package builder: best provider per requirement inside the budget, e.g.\n\"Kathmandu, 500 guests, NPR 800K, luxury\" → Venue A + Photo B + Decor C."
     },
     {
      "name": "RankedFreelancer",
      "kind": "interface",
-     "line": 268,
+     "line": 276,
      "signature": "",
-     "doc": "",
+     "doc": "One scored freelancer for a crew slot, with distance, reasons, warnings and any hard exclusion.",
      "members": [
       {
        "name": "freelancer",
@@ -14025,9 +14025,9 @@
     {
      "name": "CrewSlot",
      "kind": "interface",
-     "line": 277,
+     "line": 286,
      "signature": "",
-     "doc": "",
+     "doc": "A crew role to fill: the role, date, city, pay, required equipment and whether it is an emergency.",
      "members": [
       {
        "name": "role",
@@ -14070,7 +14070,7 @@
     {
      "name": "rankFreelancers",
      "kind": "function",
-     "line": 286,
+     "line": 295,
      "signature": "(slot: CrewSlot, ctx: { availability: AvailabilityEntry[]; rules?: AvailabilityRule[]; skipIds?: string[]; pool?: FreelancerProfile[] }, opts: { limit?: number; includeExcluded?: boolean } = {}): RankedFreelancer[]",
      "doc": ""
     }
@@ -15292,9 +15292,9 @@
     {
      "name": "SaitDate",
      "kind": "interface",
-     "line": 24,
+     "line": 25,
      "signature": "",
-     "doc": "",
+     "doc": "One indicative wedding sait date with its Bikram Sambat month, weekday and whether it falls on a Saturday or in peak season.",
      "members": [
       {
        "name": "date",
@@ -15331,58 +15331,58 @@
     {
      "name": "saitDates",
      "kind": "function",
-     "line": 39,
+     "line": 40,
      "signature": "(fromIso: string, days = 365): SaitDate[]",
      "doc": "Indicative wedding saits for the next `days` days: roughly six to eight a\nmonth in the wedding months, none in Poush, Chaitra or the monsoon months.\nThe official list comes from the Nepali patro; couples confirm with their purohit."
     },
     {
      "name": "NEPAL_HOLIDAYS",
      "kind": "const",
-     "line": 53,
+     "line": 54,
      "signature": ": { date: string; name: string }[]",
      "doc": "Nepal public holidays that affect weddings and operations (approximate; the patro is final)."
     },
     {
      "name": "weekStart",
      "kind": "function",
-     "line": 75,
+     "line": 76,
      "signature": "(iso: string)",
      "doc": "Monday-first week start for an ISO date."
     },
     {
      "name": "monthKey",
      "kind": "function",
-     "line": 82,
+     "line": 83,
      "signature": "(iso: string)",
      "doc": "yyyy-mm for grouping."
     },
     {
      "name": "lastMonths",
      "kind": "function",
-     "line": 85,
+     "line": 86,
      "signature": "(iso: string, n: number): string[]",
      "doc": "The last `n` month keys ending with the month of `iso`, oldest first."
     },
     {
      "name": "monthLabel",
      "kind": "function",
-     "line": 94,
+     "line": 96,
      "signature": "(key: string)",
-     "doc": ""
+     "doc": "Short English month name for a `yyyy-mm` key."
     },
     {
      "name": "regionFor",
      "kind": "function",
-     "line": 118,
+     "line": 121,
      "signature": "(city: string): Region",
-     "doc": ""
+     "doc": "Climate region (valley, Pokhara, Terai or hills) for a city; unknown cities count as valley."
     },
     {
      "name": "ClimateNote",
      "kind": "interface",
-     "line": 128,
+     "line": 132,
      "signature": "",
-     "doc": "",
+     "doc": "Typical weather for a city and month: temperatures, rain days, a verdict and planning tips.",
      "members": [
       {
        "name": "min",
@@ -15419,93 +15419,93 @@
     {
      "name": "climateFor",
      "kind": "function",
-     "line": 137,
+     "line": 141,
      "signature": "(city: string, iso: string): ClimateNote",
      "doc": "Typical weather for a city and date, with planning tips."
     },
     {
      "name": "HONEYMOON_SPOTS",
      "kind": "const",
-     "line": 155,
+     "line": 159,
      "signature": ": { id: string; name: string; perNight: [number, number, number]; travel: number; blurb: string }[]",
      "doc": ""
     },
     {
      "name": "TIERS",
      "kind": "const",
-     "line": 165,
+     "line": 170,
      "signature": "= ['Budget', 'Comfort', 'Luxury'] as const",
-     "doc": ""
+     "doc": "The three honeymoon spending tiers, cheapest first."
     },
     {
      "name": "Tier",
      "kind": "type",
-     "line": 166,
+     "line": 172,
      "signature": "= (typeof TIERS)[number]",
-     "doc": ""
+     "doc": "One of the honeymoon spending tiers."
     },
     {
      "name": "honeymoonEstimate",
      "kind": "function",
-     "line": 169,
+     "line": 175,
      "signature": "(spotId: string, nights: number, tier: Tier)",
      "doc": "Honeymoon estimate for two: stay, food and activities, travel."
     },
     {
      "name": "jantiVehicles",
      "kind": "function",
-     "line": 182,
+     "line": 188,
      "signature": "(headcount: number, opts: { bus?: number; micro?: number; car?: number } = {})",
      "doc": "Vehicles for the janti (baraat): coaches first, then micro-buses, then cars."
     },
     {
      "name": "savingsPlan",
      "kind": "function",
-     "line": 194,
+     "line": 200,
      "signature": "(target: number, saved: number, monthly: number, byIso: string)",
      "doc": "Months left and monthly saving needed to hit a target by the wedding date."
     },
     {
      "name": "TIP_GUIDE",
      "kind": "const",
-     "line": 203,
+     "line": 209,
      "signature": ": Record<string, { label: string; amount: number; per: 'booking' | 'crew' }>",
      "doc": "Customary tips and dakshina by service, per person or per booking."
     },
     {
      "name": "tipFor",
      "kind": "function",
-     "line": 214,
+     "line": 221,
      "signature": "(serviceId: string, crewCount: number)",
-     "doc": ""
+     "doc": "Suggested tip for a service's crew (label and NPR amount), falling back to NPR 500 per crew member."
     },
     {
      "name": "nepalIncomeTax",
      "kind": "function",
-     "line": 241,
+     "line": 248,
      "signature": "(taxable: number, married = false)",
      "doc": "Estimated annual income tax on taxable income, with the slab-by-slab breakdown."
     },
     {
      "name": "vatPosition",
      "kind": "function",
-     "line": 255,
+     "line": 262,
      "signature": "(sales: number, vatablePurchases: number, rate = 0.13)",
      "doc": "VAT position for a VAT-registered business: output VAT on sales minus input credit on purchases."
     },
     {
      "name": "nps",
      "kind": "function",
-     "line": 262,
+     "line": 269,
      "signature": "(scores: number[])",
      "doc": "Net Promoter Score from 0–10 ratings."
     },
     {
      "name": "PriceInput",
      "kind": "interface",
-     "line": 271,
+     "line": 279,
      "signature": "",
-     "doc": "",
+     "doc": "Inputs for `suggestPrice`: base price, date, guest counts and the uplift or discount percentages.",
      "members": [
       {
        "name": "base",
@@ -15560,30 +15560,30 @@
     {
      "name": "suggestPrice",
      "kind": "function",
-     "line": 283,
+     "line": 291,
      "signature": "(i: PriceInput)",
      "doc": "Suggested price for a date: peak-season and Saturday uplifts, last-minute discount, extra guests."
     },
     {
      "name": "LAYOUTS",
      "kind": "const",
-     "line": 299,
+     "line": 307,
      "signature": ": { id: string; label: string; sqft: number }[]",
      "doc": "Square feet per guest by layout (industry rules of thumb)."
     },
     {
      "name": "hallCapacity",
      "kind": "function",
-     "line": 306,
+     "line": 315,
      "signature": "(areaSqft: number, sqftPerGuest: number)",
-     "doc": ""
+     "doc": "How many guests fit a hall of the given area at a given space per guest; 0 when the space is not positive."
     },
     {
      "name": "RateInput",
      "kind": "interface",
-     "line": 308,
+     "line": 318,
      "signature": "",
-     "doc": "",
+     "doc": "Inputs for `freelancerQuote`: hours, hourly and day rates, travel, assistants and the rush and overnight options.",
      "members": [
       {
        "name": "hours",
@@ -15650,49 +15650,49 @@
     {
      "name": "freelancerQuote",
      "kind": "function",
-     "line": 322,
+     "line": 332,
      "signature": "(i: RateInput)",
      "doc": "Freelancer quote: hourly up to the day-rate cap, then overtime; travel, assistants, rush edit and overnight stay."
     },
     {
      "name": "hoursBetween",
      "kind": "function",
-     "line": 341,
+     "line": 351,
      "signature": "(a: string, b: string)",
      "doc": "Hours between two ISO timestamps (never negative)."
     },
     {
      "name": "weeklyBuckets",
      "kind": "function",
-     "line": 344,
+     "line": 354,
      "signature": "(fromIso: string, weeks: number, items: { date: string; amount: number }[])",
      "doc": "Bucket dated amounts into the next `weeks` weeks starting this week."
     },
     {
      "name": "netFlow",
      "kind": "function",
-     "line": 355,
+     "line": 365,
      "signature": "(ins: { week: string; amount: number }[], outs: { week: string; amount: number }[])",
      "doc": "Pairs weekly inflow and outflow buckets into net and running totals."
     },
     {
      "name": "change",
      "kind": "function",
-     "line": 364,
+     "line": 374,
      "signature": "(current: number, previous: number)",
      "doc": "Simple percent change, or null when there is no base."
     },
     {
      "name": "GENERATOR_SIZES",
      "kind": "const",
-     "line": 369,
+     "line": 379,
      "signature": "= [5, 7.5, 10, 15, 20, 25, 30, 40, 50, 62.5, 75, 100, 125, 160, 200, 250]",
      "doc": "Standard diesel generator sizes hired in Nepal (kVA)."
     },
     {
      "name": "generatorFor",
      "kind": "function",
-     "line": 375,
+     "line": 385,
      "signature": "(watts: number)",
      "doc": "Generator for a connected load: kW at a 0.8 power factor, plus 25% headroom\nfor start-up surges, rounded up to a size you can actually hire."
     }

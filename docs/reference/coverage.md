@@ -4,7 +4,7 @@
 
 Exported symbols that have no JSDoc yet. The weekly documentation pass (see [the maintenance guide](../handbook/17-documentation-maintenance.md)) works through this list; whoever touches a file should document its exports too.
 
-**878 of 1540 exports documented (57%).** Files without a header comment: 365 of 471.
+**908 of 1540 exports documented (59%).** Files without a header comment: 365 of 471.
 
 | File | Undocumented exports |
 |---|---|
@@ -15,9 +15,6 @@ Exported symbols that have no JSDoc yet. The weekly documentation pass (see [the
 | [src/components/toolkit/vendor/trades.tsx](../../src/components/toolkit/vendor/trades.tsx) | `MenuBuilder`, `Tastings`, `Themes`, `Rentals`, `SetupSheets`, `GalleryDelivery`, `CoupleShotLists`, `SongRequests`, `TrialsAndLooks`, `PowerPlanner`, `Fleet`, `Fittings`, `MuhurtaPlanner` |
 | [supabase/functions/_shared/payments.ts](../../supabase/functions/_shared/payments.ts) | `Outcome`, `isGateway`, `KhaltiConfig`, `EsewaConfig`, `KHALTI_SANDBOX`, `ESEWA_SANDBOX`, `ESEWA_LIVE`, `khaltiInitiateBody`, `Lookup`, `khaltiLookup`, `esewaForm`, `EsewaCallback`, `esewaLookup` |
 | [src/components/toolkit/platform/ops.tsx](../../src/components/toolkit/platform/ops.tsx) | `Broadcasts`, `PromoCampaigns`, `Helpdesk`, `Macros`, `Recruitment`, `PayoutBatches`, `Holidays`, `OnCall`, `QualityAudits`, `WinBack`, `ExportCentre` |
-| [src/data/services.ts](../../src/data/services.ts) | `CrewRole`, `ServiceDef`, `DeliverableKind`, `ServiceGroupId`, `SERVICE_GROUPS`, `SERVICES`, `SERVICE_BY_ID`, `findService`, `serviceName`, `servicesInGroup`, `CORE_SERVICES` |
-| [src/services/matching.ts](../../src/services/matching.ts) | `MATCH_WEIGHTS`, `MATCH_FACTORS`, `isBlocking`, `RankedProvider`, `MatchContext`, `scoreProvider`, `rankProviders`, `toCandidate`, `RankedFreelancer`, `CrewSlot`, `rankFreelancers` |
-| [src/services/toolkit.ts](../../src/services/toolkit.ts) | `SaitDate`, `monthLabel`, `regionFor`, `ClimateNote`, `HONEYMOON_SPOTS`, `TIERS`, `Tier`, `tipFor`, `PriceInput`, `hallCapacity`, `RateInput` |
 | [src/components/toolkit/couple/ceremony.tsx](../../src/components/toolkit/couple/ceremony.tsx) | `SaitFinder`, `FamilyDuties`, `JantiPlanner`, `Samagri`, `EmergencyKit`, `Outfits`, `MusicPlan`, `ShotList`, `MyDay`, `WeatherGuide` |
 | [src/components/toolkit/freelancer/work.tsx](../../src/components/toolkit/freelancer/work.tsx) | `GearChecklist`, `GearCare`, `TravelPlanner`, `Deliveries`, `BackupLog`, `WorkDiary`, `SafetyChecklist`, `WeekPlanner`, `OpenDates` |
 | [src/components/toolkit/platform/insight.tsx](../../src/components/toolkit/platform/insight.tsx) | `SlaMonitor`, `Workload`, `SourceFunnel`, `CashFlow`, `Scorecards`, `DemandHeatmap`, `CitySupply`, `Targets`, `RiskWatch` |
@@ -101,6 +98,7 @@ Exported symbols that have no JSDoc yet. The weekly documentation pass (see [the
 | [src/i18n/index.tsx](../../src/i18n/index.tsx) | `usePrefs`, `useI18n` |
 | [src/i18n/runtime.ts](../../src/i18n/runtime.ts) | `Lang`, `CalendarMode` |
 | [src/services/experience.ts](../../src/services/experience.ts) | `has`, `can` |
+| [src/services/matching.ts](../../src/services/matching.ts) | `scoreProvider`, `rankFreelancers` |
 | [src/store/db/core.ts](../../src/store/db/core.ts) | `CoreActions`, `coreActions` |
 | [src/store/db/finance.ts](../../src/store/db/finance.ts) | `FinanceActions`, `financeActions` |
 | [src/store/db/gigs.ts](../../src/store/db/gigs.ts) | `GigActions`, `gigActions` |
@@ -176,6 +174,7 @@ Exported symbols that have no JSDoc yet. The weekly documentation pass (see [the
 | [src/i18n/ne/index.ts](../../src/i18n/ne/index.ts) | `NE` |
 | [src/services/auth.ts](../../src/services/auth.ts) | `logout` |
 | [src/services/pricing.ts](../../src/services/pricing.ts) | `dueDateFor` |
+| [src/services/toolkit.ts](../../src/services/toolkit.ts) | `HONEYMOON_SPOTS` |
 | [src/types/content.ts](../../src/types/content.ts) | `AppContent` |
 | [src/types/persona.ts](../../src/types/persona.ts) | `RateModel` |
 | [src/utils/random.ts](../../src/utils/random.ts) | `seeded` |
