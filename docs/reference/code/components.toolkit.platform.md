@@ -9,6 +9,7 @@ Every exported symbol in `src/components/toolkit/platform/`, file by file. The g
 - [`index.ts`](#indexts) (1 exports)
 - [`insight.tsx`](#insighttsx) (9 exports) · Platform toolkit: SLAs, workload, funnel, cash flow, scorecards, demand, city supply, targets and risk watch.
 - [`ops.tsx`](#opstsx) (11 exports) · Platform toolkit: broadcasts, promos, helpdesk, macros, recruitment, payout batches, holidays, on-call, QA, win-back and exports.
+- [`smart.tsx`](#smarttsx) (5 exports) · Platform toolkit, smart operations: money reconciliation, peak-date capacity, commission simulator, customer satisfaction and listing quali…
 
 ## index.ts
 
@@ -16,13 +17,13 @@ Source: [src/components/toolkit/platform/index.ts](../../../src/components/toolk
 
 ### `PLATFORM_TOOLS`
 
-*const* · [src/components/toolkit/platform/index.ts:7](../../../src/components/toolkit/platform/index.ts#L7)
+*const* · [src/components/toolkit/platform/index.ts:8](../../../src/components/toolkit/platform/index.ts#L8)
 
 ```ts
 PLATFORM_TOOLS: ToolDef[]
 ```
 
-The operations team's 20 extra tools (`/platform/tools`).
+The operations team's extra tools (`/platform/tools`): 20 general and five smart ones.
 
 ## insight.tsx
 
@@ -232,6 +233,62 @@ _No JSDoc yet._
 
 ```ts
 ExportCentre()
+```
+
+_No JSDoc yet._
+
+## smart.tsx
+
+Source: [src/components/toolkit/platform/smart.tsx](../../../src/components/toolkit/platform/smart.tsx)
+
+Platform toolkit, smart operations: money reconciliation, peak-date capacity, commission simulator, customer satisfaction and listing quality.
+
+### `Reconciliation`
+
+*component* · [src/components/toolkit/platform/smart.tsx:37](../../../src/components/toolkit/platform/smart.tsx#L37)
+
+```ts
+Reconciliation()
+```
+
+_No JSDoc yet._
+
+### `PeakDates`
+
+*component* · [src/components/toolkit/platform/smart.tsx:81](../../../src/components/toolkit/platform/smart.tsx#L81)
+
+```ts
+PeakDates()
+```
+
+_No JSDoc yet._
+
+### `CommissionSimulator`
+
+*component* · [src/components/toolkit/platform/smart.tsx:142](../../../src/components/toolkit/platform/smart.tsx#L142)
+
+```ts
+CommissionSimulator()
+```
+
+_No JSDoc yet._
+
+### `Satisfaction`
+
+*component* · [src/components/toolkit/platform/smart.tsx:190](../../../src/components/toolkit/platform/smart.tsx#L190)
+
+```ts
+Satisfaction()
+```
+
+_No JSDoc yet._
+
+### `ListingQuality`
+
+*component* · [src/components/toolkit/platform/smart.tsx:256](../../../src/components/toolkit/platform/smart.tsx#L256)
+
+```ts
+ListingQuality()
 ```
 
 _No JSDoc yet._

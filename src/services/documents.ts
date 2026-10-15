@@ -112,3 +112,20 @@ export function invitationHtml(opts: { names: string; message: string; accent: s
   .foot{margin-top:22px;font-size:12px;color:#6b5b4b}
   </style></head><body><div class="card"><div class="om">ॐ श्री गणेशाय नमः</div><h1>${esc(opts.names)}</h1><p>${esc(opts.message)}</p>${events}${opts.footer ? `<div class="foot">${esc(opts.footer)}</div>` : ''}</div></body></html>`;
 }
+
+/** A freelancer's income statement for a period: Vivah payouts (from the ledger) and private invoices they entered. */
+export function incomeStatementHtml(opts: { name: string; phone?: string; pan?: string; from: string; to: string; rows: { date: string; source: 'vivah' | 'private'; label: string; amount: number }[] }) {
+  const sorted = [...opts.rows].sort((a, b) => a.date.localeCompare(b.date));
+  const vivah = sorted.filter((r) => r.source === 'vivah').reduce((s, r) => s + r.amount, 0);
+  const own = sorted.filter((r) => r.source === 'private').reduce((s, r) => s + r.amount, 0);
+  const rows = sorted.map((r) => `<tr><td>${formatShortDate(r.date)}</td><td>${esc(r.label)}</td><td>${r.source === 'vivah' ? 'Vivah payout' : 'Private client'}</td><td class="r">${formatMoney(r.amount)}</td></tr>`).join('');
+  return page(
+    `Income statement · ${opts.name}`,
+    `<div class="grid"><div><h2>Earner</h2><b>${esc(opts.name)}</b>${opts.phone ? `<div class="muted">${esc(opts.phone)}</div>` : ''}${opts.pan ? `<div class="muted">PAN ${esc(opts.pan)}</div>` : ''}</div><div><h2>Period</h2>${formatLongDate(opts.from)} to ${formatLongDate(opts.to)}</div></div>
+<table><tr><th>Date</th><th>Job</th><th>Source</th><th class="r">Amount</th></tr>${rows || '<tr><td colspan="4" class="muted">No income in this period</td></tr>'}
+<tr><td colspan="3" class="r">Paid through Vivah</td><td class="r">${formatMoney(vivah)}</td></tr>
+<tr><td colspan="3" class="r">Private clients (self-declared)</td><td class="r">${formatMoney(own)}</td></tr>
+<tr class="total"><td colspan="3" class="r">Total income</td><td class="r">${formatMoney(vivah + own)}</td></tr></table>
+<p class="muted">Vivah payouts are listed from Vivah’s payout records. Private-client income was entered by the earner and is not verified by Vivah. Amounts are before income tax.</p>`,
+  );
+}

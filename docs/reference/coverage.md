@@ -4,12 +4,13 @@
 
 Exported symbols that have no JSDoc yet. The weekly documentation pass (see [the maintenance guide](../handbook/17-documentation-maintenance.md)) works through this list; whoever touches a file should document its exports too.
 
-**908 of 1540 exports documented (59%).** Files without a header comment: 365 of 471.
+**935 of 1606 exports documented (58%).** Files without a header comment: 366 of 477.
 
 | File | Undocumented exports |
 |---|---|
 | [src/types/platform.ts](../../src/types/platform.ts) | `UserRole`, `PlatformTeam`, `VerificationStatus`, `Equipment`, `AccountPrefs`, `Account`, `EventType`, `ProjectStatus`, `LeadSource`, `LeadStatus`, `Lead`, `PricingModel`, `MilestoneRule`, `QuoteItem`, `ScheduleStep`, `QuoteStatus`, `Quotation`, `StatusChange`, `Collaborator`, `RunStatus`, `RunItem`, `EventStatus`, `ProjectEvent`, `RequirementStatus`, `ScoreBreakdown`, `MatchCandidate`, `Requirement`, `BookingStatus`, `CrewRequirement`, `AssignmentStatus`, `Assignment`, `DeliverableStatus`, `Deliverable`, `ServiceBooking`, `TaskStatus`, `TaskAssignee`, `ProjectTask`, `TimelineEntry`, `MilestoneStatus`, `PaymentMilestone`, `Incident`, `Project`, `PaymentMethod`, `Payment`, `PayableStatus`, `Payable`, `RevenueKind`, `RevenueEntry`, `Refund`, `Dispute`, `AvailabilityStatus`, `DayPart`, `AvailabilityEntry`, `AvailabilityRule`, `FreelancerProfile`, `GigStatus`, `ApplicationStatus`, `GigApplication`, `GigQuestion`, `Gig`, `ThreadMember`, `Thread`, `MessageKind`, `Message`, `InternalNote`, `FileRef`, `AuditEntry`, `AppNotification`, `ReviewRecord`, `CheckState`, `VerificationCase`, `RsvpStatus`, `GuestInvite`, `Guest`, `SeatingElement`, `SeatingLayout`, `BudgetLine`, `WeddingWebsite`, `RegistryItem`, `InspirationBoard`, `Contract`, `ShortlistEntry`, `Deal`, `ProviderPackage`, `PortfolioItem`, `StaffMember`, `Invoice`, `PlatformSettings`, `BugLogLine`, `BugReportStatus`, `SupportTopic`, `SupportPriority` |
 | [src/types/index.ts](../../src/types/index.ts) | `Role`, `CityGroup`, `City`, `VenueType`, `Review`, `Venue`, `CollectionId`, `VenueCollection`, `VendorCategory`, `VendorPackage`, `Vendor`, `IdeaCategory`, `IdeaPhoto`, `Story`, `RealWedding`, `GeniePackage`, `Testimonial`, `Faq`, `ChecklistPhase`, `ChecklistTask`, `BookingStatus`, `Booking`, `ChatMessage`, `Conversation`, `SearchResult`, `VenueFilters` |
+| [src/services/insights.ts](../../src/services/insights.ts) | `HealthInput`, `HealthPart`, `HealthPace`, `TurnoutRates`, `DEFAULT_TURNOUT`, `HeadcountRow`, `PriceVerdict`, `LeadLike`, `LeadScoreContext`, `LeadBand`, `ConversionRow`, `DateDemand`, `GigFitInput`, `GigFitProfile`, `WorkDay`, `ReconIssue`, `Rates`, `ListingSignals` |
 | [src/hooks/queries.ts](../../src/hooks/queries.ts) | `queryKeys`, `useVenues`, `useVenue`, `useSimilarVenues`, `useCollections`, `useVendors`, `useVendor`, `useFeaturedVendors`, `useIdeas`, `useIdea`, `useStories`, `useStory`, `useRealWeddings`, `useRealWedding`, `useSearch`, `useShortlistedVenues`, `useShortlistedVendors` |
 | [src/services/planner.ts](../../src/services/planner.ts) | `PlanInput`, `estimateTotal`, `runSheetFor`, `buildEvents`, `buildRequirements`, `NextAction`, `nextBestAction`, `planningProgress`, `savingTips`, `invitationText`, `enquiryText`, `QUESTIONS_TO_ASK`, `questionsToAsk`, `negotiationPoints`, `summarizeReviews`, `guestBandLabel` |
 | [src/components/toolkit/vendor/trades.tsx](../../src/components/toolkit/vendor/trades.tsx) | `MenuBuilder`, `Tastings`, `Themes`, `Rentals`, `SetupSheets`, `GalleryDelivery`, `CoupleShotLists`, `SongRequests`, `TrialsAndLooks`, `PowerPlanner`, `Fleet`, `Fittings`, `MuhurtaPlanner` |
@@ -32,6 +33,7 @@ Exported symbols that have no JSDoc yet. The weekly documentation pass (see [the
 | [src/components/toolkit/freelancer/money.tsx](../../src/components/toolkit/freelancer/money.tsx) | `TaxEstimate`, `ExpensesMileage`, `PrivateInvoices`, `EarningsGoal`, `SavingsPots`, `RateCalculator` |
 | [src/components/toolkit/vendor/clients.tsx](../../src/components/toolkit/vendor/clients.tsx) | `SavedReplies`, `FollowUps`, `SiteVisits`, `ResponseTime`, `PolicyBuilder`, `BusinessHours` |
 | [src/components/toolkit/vendor/ops.tsx](../../src/components/toolkit/vendor/ops.tsx) | `Inventory`, `Suppliers`, `StaffRoster`, `Halls`, `EventPrep`, `TeamTasks` |
+| [src/components/toolkit/vendor/smart.tsx](../../src/components/toolkit/vendor/smart.tsx) | `LeadScores`, `RevenueForecast`, `DateDemand`, `ReviewRequests`, `LOSS_REASONS`, `WinLoss` |
 | [src/data/capabilities.ts](../../src/data/capabilities.ts) | `ProviderCapability`, `PlannerModule`, `PlanCapability`, `Capability`, `planCap`, `isCapability` |
 | [src/data/trades.ts](../../src/data/trades.ts) | `TradeId`, `EssentialField`, `TradeDef`, `TRADES`, `TRADE_BY_ID`, `BUSINESS_FORMS` |
 | [src/services/api.ts](../../src/services/api.ts) | `NotFoundError`, `DEFAULT_VENUE_FILTERS`, `countActiveFilters`, `VenueQuery`, `filterVenues`, `api` |
@@ -40,7 +42,10 @@ Exported symbols that have no JSDoc yet. The weekly documentation pass (see [the
 | [src/backend/types.ts](../../src/backend/types.ts) | `Result`, `okResult`, `failResult`, `BackendKind`, `Backend` |
 | [src/components/detail/DetailParts.tsx](../../src/components/detail/DetailParts.tsx) | `Section`, `ExpandableText`, `ReviewList`, `StickyCta`, `InfoTile` |
 | [src/components/toolkit/core.tsx](../../src/components/toolkit/core.tsx) | `Col`, `FieldKey`, `FieldKind`, `FieldDef`, `EntryListProps` |
+| [src/components/toolkit/couple/smart.tsx](../../src/components/toolkit/couple/smart.tsx) | `HealthCheck`, `HeadcountForecast`, `PriceCheck`, `FamilyVote`, `MarriageRegistration` |
 | [src/components/toolkit/freelancer/growth.tsx](../../src/components/toolkit/freelancer/growth.tsx) | `Clients`, `Certifications`, `ReliabilityCoach`, `Network`, `PitchBuilder` |
+| [src/components/toolkit/freelancer/smart.tsx](../../src/components/toolkit/freelancer/smart.tsx) | `GigFit`, `SeasonPlanner`, `RestAndWorkload`, `IncomeStatement`, `Testimonials` |
+| [src/components/toolkit/platform/smart.tsx](../../src/components/toolkit/platform/smart.tsx) | `Reconciliation`, `PeakDates`, `CommissionSimulator`, `Satisfaction`, `ListingQuality` |
 | [src/components/work/Collab.tsx](../../src/components/work/Collab.tsx) | `NotesPanel`, `PROJECT_FOLDERS`, `FilesPanel`, `RiskList`, `InboxList` |
 | [src/data/cities.ts](../../src/data/cities.ts) | `ALL_CITIES`, `CITIES`, `CITY_SECTIONS`, `findCity`, `sameServiceArea` |
 | [src/data/ideas.ts](../../src/data/ideas.ts) | `IDEA_PHOTOS`, `IDEA_CATEGORIES`, `STORIES`, `REAL_WEDDINGS`, `POPULAR_SEARCHES` |

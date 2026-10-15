@@ -11,6 +11,7 @@ Every exported symbol in `src/components/toolkit/freelancer/`, file by file. The
 - [`index.ts`](#indexts) (1 exports)
 - [`money.tsx`](#moneytsx) (6 exports) · Freelancer toolkit: tax, expenses and mileage, private invoices, goals, savings pots and the rate calculator.
 - [`shared.ts`](#sharedts) (2 exports)
+- [`smart.tsx`](#smarttsx) (5 exports) · Freelancer toolkit, smart work: best gigs for you, season planner, rest and workload, income statement and testimonials.
 - [`work.tsx`](#worktsx) (9 exports) · Freelancer toolkit: the job itself — gear, travel, deliveries, backups, diary, safety, the week and open dates.
 
 ## crafts.tsx
@@ -114,7 +115,7 @@ Source: [src/components/toolkit/freelancer/index.ts](../../../src/components/too
 
 ### `FREELANCER_TOOLS`
 
-*const* · [src/components/toolkit/freelancer/index.ts:9](../../../src/components/toolkit/freelancer/index.ts#L9)
+*const* · [src/components/toolkit/freelancer/index.ts:10](../../../src/components/toolkit/freelancer/index.ts#L10)
 
 ```ts
 FREELANCER_TOOLS: ToolDef[]
@@ -218,6 +219,62 @@ useJobs()
 ```
 
 Every job this freelancer holds: booking assignments plus hired marketplace gigs.
+
+## smart.tsx
+
+Source: [src/components/toolkit/freelancer/smart.tsx](../../../src/components/toolkit/freelancer/smart.tsx)
+
+Freelancer toolkit, smart work: best gigs for you, season planner, rest and workload, income statement and testimonials.
+
+### `GigFit`
+
+*component* · [src/components/toolkit/freelancer/smart.tsx:42](../../../src/components/toolkit/freelancer/smart.tsx#L42)
+
+```ts
+GigFit()
+```
+
+_No JSDoc yet._
+
+### `SeasonPlanner`
+
+*component* · [src/components/toolkit/freelancer/smart.tsx:107](../../../src/components/toolkit/freelancer/smart.tsx#L107)
+
+```ts
+SeasonPlanner()
+```
+
+_No JSDoc yet._
+
+### `RestAndWorkload`
+
+*component* · [src/components/toolkit/freelancer/smart.tsx:167](../../../src/components/toolkit/freelancer/smart.tsx#L167)
+
+```ts
+RestAndWorkload()
+```
+
+_No JSDoc yet._
+
+### `IncomeStatement`
+
+*component* · [src/components/toolkit/freelancer/smart.tsx:230](../../../src/components/toolkit/freelancer/smart.tsx#L230)
+
+```ts
+IncomeStatement()
+```
+
+_No JSDoc yet._
+
+### `Testimonials`
+
+*component* · [src/components/toolkit/freelancer/smart.tsx:287](../../../src/components/toolkit/freelancer/smart.tsx#L287)
+
+```ts
+Testimonials()
+```
+
+_No JSDoc yet._
 
 ## work.tsx
 

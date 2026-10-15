@@ -3,6 +3,7 @@ import type { ToolDef } from '../hub';
 import { ProductKit, Setlist, VehicleLog } from './crafts';
 import { Certifications, Clients, Network, PitchBuilder, ReliabilityCoach } from './growth';
 import { EarningsGoal, ExpensesMileage, PrivateInvoices, RateCalculator, SavingsPots, TaxEstimate } from './money';
+import { GigFit, IncomeStatement, RestAndWorkload, SeasonPlanner, Testimonials } from './smart';
 import { BackupLog, Deliveries, GearCare, GearChecklist, OpenDates, SafetyChecklist, TravelPlanner, WeekPlanner, WorkDiary } from './work';
 
 /** The freelancer's extra tools (`/freelancer/tools`): 20 for every craft plus craft tools, filtered by `TOOL_RULES`. */
@@ -15,6 +16,11 @@ export const FREELANCER_TOOLS: ToolDef[] = [
   { id: 'freelancer.backup', title: 'Card backup log', subtitle: 'Two copies before you format', icon: 'save-outline', group: 'On the job', Component: BackupLog },
   { id: 'freelancer.deliveries', title: 'Edits and deliveries', subtitle: 'What you owe each client, and when', icon: 'cloud-upload-outline', group: 'On the job', Component: Deliveries },
   { id: 'freelancer.diary', title: 'Work diary', subtitle: 'Notes and lessons from each job', icon: 'book-outline', group: 'On the job', Component: WorkDiary },
+  { id: 'freelancer.gigfit', title: 'Best gigs for you', subtitle: 'Open gigs ranked by take-home pay', icon: 'trophy-outline', group: 'Smart work', Component: GigFit },
+  { id: 'freelancer.season', title: 'Season planner', subtitle: 'Sait dates ahead, booked and open', icon: 'sunny-outline', group: 'Smart work', Component: SeasonPlanner },
+  { id: 'freelancer.workload', title: 'Rest and workload', subtitle: 'Long runs, heavy weeks and late nights', icon: 'bed-outline', group: 'Smart work', Component: RestAndWorkload },
+  { id: 'freelancer.income', title: 'Income statement', subtitle: 'Proof of income for loans, visas and tax', icon: 'document-attach-outline', group: 'Smart work', Component: IncomeStatement },
+  { id: 'freelancer.testimonials', title: 'Testimonials', subtitle: 'Kind words from clients, ready to share', icon: 'chatbubbles-outline', group: 'Smart work', Component: Testimonials },
   { id: 'freelancer.rates', title: 'Rate calculator', subtitle: 'Quote a private job in a minute', icon: 'calculator-outline', group: 'Money', Component: RateCalculator },
   { id: 'freelancer.invoices', title: 'Private invoices', subtitle: 'Bill clients from outside Vivah', icon: 'document-text-outline', group: 'Money', Component: PrivateInvoices },
   { id: 'freelancer.expenses', title: 'Expenses and mileage', subtitle: 'Receipts and kilometres for tax time', icon: 'receipt-outline', group: 'Money', Component: ExpensesMileage },

@@ -26,6 +26,7 @@ npm scripts and the Node scripts behind them. All run locally with no network un
 | `npm run test:customer-planning` | `node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/test-customer-planning.mjs` |
 | `npm run test:content` | `node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/test-content.mjs` |
 | `npm run test:features` | `node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/test-features.mjs` |
+| `npm run test:insights` | `node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/test-insights.mjs` |
 | `npm run docs:generate` | `node scripts/docs/generate-reference.mjs` |
 | `npm run docs:check` | `node scripts/docs/generate-reference.mjs --check` |
 | `npm run bugs:inbox` | `node scripts/bug-inbox.cjs` |
@@ -366,6 +367,17 @@ that plays Supabase Auth, Upstash, Cloudinary, Expo and Resend. Nothing
 leaves the machine.
 
   npm run test:functions
+
+### scripts/test-insights.mjs
+
+Source: [scripts/test-insights.mjs](../../scripts/test-insights.mjs)
+
+Unit checks for the smart toolkit rules (src/services/insights.ts): health
+score, headcount forecast, price check, votes, lead scores, revenue
+forecast, gig fit, workload, money reconciliation and the rate simulator.
+Node 24+ strips the TypeScript.
+
+  npm run test:insights
 
 ### scripts/test-social.mjs
 

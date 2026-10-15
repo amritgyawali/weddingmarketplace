@@ -11,9 +11,10 @@ Every exported symbol in `src/services/`, file by file. The guide that explains 
 - [`auth.ts`](#authts) (5 exports)
 - [`content.ts`](#contentts) (21 exports) · App content edited by a super admin, laid over the bundled catalogue.
 - [`customerPlanning.ts`](#customerplanningts) (5 exports)
-- [`documents.ts`](#documentsts) (7 exports) · Printable HTML documents (quotation, receipt, contract, guest list, seating, run sheet).
+- [`documents.ts`](#documentsts) (8 exports) · Printable HTML documents (quotation, receipt, contract, guest list, seating, run sheet).
 - [`experience.ts`](#experiencets) (16 exports) · The persona resolver: identify the user, derive what they can do, and show only that. Pure and deterministic (no React, no store), like the…
 - [`exporters.ts`](#exportersts) (11 exports) · Files the app hands to other apps: calendar (.ics), spreadsheets (.csv) and PDFs (via expo-print). Works on iOS/Android (share sheet) and w…
+- [`insights.ts`](#insightsts) (43 exports) · Pure scoring and forecasting behind the "smart" toolkit tools: the couple's health check and headcount forecast, a vendor's lead scores and…
 - [`matching.ts`](#matchingts) (16 exports) · Matching engine. Scores providers for a requirement and freelancers for a crew slot / gig. Weights mirror supabase/migrations/0003 so on-de…
 - [`planner.ts`](#plannerts) (25 exports) · Rule-based wedding planner ("AI" without paid AI): turns the requirement wizard into a project, allocates budgets, generates checklists and…
 - [`pricing.ts`](#pricingts) (16 exports) · Marketplace economics: the four business models, payment schedules, milestone status and payables. Customer payments and provider/freelance…
@@ -564,6 +565,16 @@ invitationHtml(opts: { names: string; message: string; accent: string; backgroun
 
 Printable invitation card (A5) — its own design, without the Vivah letterhead.
 
+### `incomeStatementHtml`
+
+*function* · [src/services/documents.ts:117](../../../src/services/documents.ts#L117)
+
+```ts
+incomeStatementHtml(opts: { name: string; phone?: string; pan?: string; from: string; to: string; rows: { date: string; source: 'vivah' | 'private'; label: string; amount: number }[] })
+```
+
+A freelancer's income statement for a period: Vivah payouts (from the ledger) and private invoices they entered.
+
 ## experience.ts
 
 Source: [src/services/experience.ts](../../../src/services/experience.ts)
@@ -863,6 +874,539 @@ pickCsv(): Promise<Record<string, string>[] | null>
 ```
 
 Let the user pick a .csv file and parse it. Returns null when cancelled.
+
+## insights.ts
+
+Source: [src/services/insights.ts](../../../src/services/insights.ts)
+
+Pure scoring and forecasting behind the "smart" toolkit tools: the couple's
+health check and headcount forecast, a vendor's lead scores and revenue
+forecast, a freelancer's gig fit and workload, and the ops team's money
+reconciliation and commission simulator. No React, no store: plain values
+in, plain values out, so every rule is testable (`npm run test:insights`)
+and can move to the server unchanged. Money is whole NPR; dates yyyy-mm-dd.
+
+### `quantile`
+
+*function* · [src/services/insights.ts:17](../../../src/services/insights.ts#L17)
+
+```ts
+quantile(sorted: number[], q: number): number
+```
+
+Value at quantile `q` (0–1) of an ascending list, linearly interpolated.
+
+### `HealthInput`
+
+*interface* · [src/services/insights.ts:27](../../../src/services/insights.ts#L27)
+
+_No JSDoc yet._
+
+| Member | Type | Notes |
+|---|---|---|
+| `daysToGo` | `number` |  |
+| `services` | `{ confirmed: number; total: number }` |  |
+| `missingServices` | `number` | Services usually needed for the functions but not requested yet. |
+| `tasks` | `{ done: number; total: number }` |  |
+| `overdueMilestones` | `number` |  |
+| `guests` | `{ total: number; responded: number; invited: number }` |  |
+| `contracts` | `{ signed: number; total: number }` |  |
+| `budget` | `number` |  |
+| `committed` | `number` | What the confirmed and proposed bookings add up to. |
+
+### `HealthPart`
+
+*interface* · [src/services/insights.ts:41](../../../src/services/insights.ts#L41)
+
+_No JSDoc yet._
+
+| Member | Type | Notes |
+|---|---|---|
+| `id` | `'vendors' \| 'payments' \| 'tasks' \| 'guests' \| 'contracts' \| 'budget'` |  |
+| `label` | `string` |  |
+| `weight` | `number` |  |
+| `value` | `number` | 0–1 |
+| `detail` | `string` |  |
+
+### `HealthPace`
+
+*type* · [src/services/insights.ts:50](../../../src/services/insights.ts#L50)
+
+```ts
+type HealthPace = 'ahead' | 'on_track' | 'behind' | 'done'
+```
+
+_No JSDoc yet._
+
+### `weddingHealth`
+
+*function* · [src/services/insights.ts:57](../../../src/services/insights.ts#L57)
+
+```ts
+weddingHealth(i: HealthInput)
+```
+
+How ready a celebration is, 0–100, from six weighted parts, and whether that
+is ahead of or behind where couples usually are with this many days to go
+(about a year of planning, most of it in the last six months).
+
+### `TurnoutRates`
+
+*interface* · [src/services/insights.ts:92](../../../src/services/insights.ts#L92)
+
+_No JSDoc yet._
+
+| Member | Type | Notes |
+|---|---|---|
+| `maybe` | `number` | Share of "maybe" heads who usually come (0–1). |
+| `pending` | `number` | Share of heads who never replied but usually come anyway (0–1). |
+| `buffer` | `number` | Extra plates on top of the forecast (0–1). |
+
+### `DEFAULT_TURNOUT`
+
+*const* · [src/services/insights.ts:101](../../../src/services/insights.ts#L101)
+
+```ts
+DEFAULT_TURNOUT: TurnoutRates
+```
+
+_No JSDoc yet._
+
+### `guestHeads`
+
+*function* · [src/services/insights.ts:104](../../../src/services/insights.ts#L104)
+
+```ts
+guestHeads(g: Pick<Guest, 'plusOnes' | 'children'>)
+```
+
+Heads a guest brings: the RSVP count when given, else the guest, plus-ones and children.
+
+### `HeadcountRow`
+
+*interface* · [src/services/insights.ts:106](../../../src/services/insights.ts#L106)
+
+_No JSDoc yet._
+
+| Member | Type | Notes |
+|---|---|---|
+| `eventId` | `string` |  |
+| `name` | `string` |  |
+| `date` | `string \| null` |  |
+| `planned` | `number` |  |
+| `invited` | `number` |  |
+| `yes` | `number` |  |
+| `maybe` | `number` |  |
+| `pending` | `number` |  |
+| `no` | `number` |  |
+| `floor` | `number` | Lowest: confirmed heads only. |
+| `expected` | `number` |  |
+| `ceiling` | `number` | Everyone not declined. |
+| `plates` | `number` | Expected plus buffer, rounded up to a table of 10. |
+
+### `headcountForecast`
+
+*function* · [src/services/insights.ts:129](../../../src/services/insights.ts#L129)
+
+```ts
+headcountForecast(guests: Guest[], events: Pick<ProjectEvent, 'id' | 'name' | 'date' | 'guests'>[], rates: TurnoutRates = DEFAULT_TURNOUT): HeadcountRow[]
+```
+
+Expected attendance per function from the RSVPs so far: yes counts in full,
+maybe and no reply at the usual turnout, declines not at all.
+
+### `PriceVerdict`
+
+*type* · [src/services/insights.ts:167](../../../src/services/insights.ts#L167)
+
+```ts
+type PriceVerdict = 'good' | 'fair' | 'high' | 'very_high'
+```
+
+_No JSDoc yet._
+
+### `priceCheck`
+
+*function* · [src/services/insights.ts:174](../../../src/services/insights.ts#L174)
+
+```ts
+priceCheck(price: number, market: number[], range: [number, number])
+```
+
+Where a quoted unit price sits against the market: the listed starting
+prices of similar providers nearby, or the service's typical range when
+there are too few of them.
+
+### `REGISTRATION_DAYS`
+
+*const* · [src/services/insights.ts:189](../../../src/services/insights.ts#L189)
+
+```ts
+REGISTRATION_DAYS= 35
+```
+
+Days after the wedding within which a marriage is registered without a late fee.
+
+### `registrationDeadline`
+
+*function* · [src/services/insights.ts:192](../../../src/services/insights.ts#L192)
+
+```ts
+registrationDeadline(weddingIso: string)
+```
+
+The last day to register without a late fee, and how many days are left.
+
+### `tallyVotes`
+
+*function* · [src/services/insights.ts:200](../../../src/services/insights.ts#L200)
+
+```ts
+tallyVotes(options: string[], fields: Record<string, string | number | boolean> | undefined)
+```
+
+Votes per option and the leader(s), from `vote:<voterId>` → option index fields.
+
+### `parseOptions`
+
+*function* · [src/services/insights.ts:213](../../../src/services/insights.ts#L213)
+
+```ts
+parseOptions(text: string)
+```
+
+Options typed one per line (or separated by commas), trimmed, de-duplicated, at most six.
+
+### `LeadLike`
+
+*interface* · [src/services/insights.ts:217](../../../src/services/insights.ts#L217)
+
+_No JSDoc yet._
+
+| Member | Type | Notes |
+|---|---|---|
+| `status` | `LeadStatus` |  |
+| `eventDate` | `string` |  |
+| `guests?` | `number` |  |
+| `budget?` | `number` |  |
+| `message?` | `string` |  |
+| `source?` | `string` |  |
+| `priority?` | `'low' \| 'medium' \| 'high'` |  |
+| `createdAt` | `string` |  |
+| `history?` | `{ status: LeadStatus; at: string }[]` |  |
+
+### `LeadScoreContext`
+
+*interface* · [src/services/insights.ts:229](../../../src/services/insights.ts#L229)
+
+_No JSDoc yet._
+
+| Member | Type | Notes |
+|---|---|---|
+| `startingPrice` | `number` | The vendor's listed starting price (one unit). |
+| `capacity?` | `{ min: number; max: number }` | Hall capacity for venues. |
+| `free?` | `boolean` | Is the vendor free on the date? `undefined` when unknown. |
+| `nowIso` | `string` |  |
+
+### `LeadBand`
+
+*type* · [src/services/insights.ts:239](../../../src/services/insights.ts#L239)
+
+```ts
+type LeadBand = 'hot' | 'warm' | 'cold'
+```
+
+_No JSDoc yet._
+
+### `leadScore`
+
+*function* · [src/services/insights.ts:246](../../../src/services/insights.ts#L246)
+
+```ts
+leadScore(l: LeadLike, ctx: LeadScoreContext)
+```
+
+How likely an open enquiry is to book, 0–100, with the reasons. Budget fit,
+date (soon, peak, free), guest fit, how complete and how fresh the enquiry
+is, and where it came from.
+
+### `STAGE_ODDS`
+
+*const* · [src/services/insights.ts:313](../../../src/services/insights.ts#L313)
+
+```ts
+STAGE_ODDS: Record<LeadStatus, number>
+```
+
+Typical chance an enquiry at each stage ends in a booking (editable per vendor).
+
+### `revenueForecast`
+
+*function* · [src/services/insights.ts:319](../../../src/services/insights.ts#L319)
+
+```ts
+revenueForecast(fromIso: string, months: number, certain: { date: string; amount: number }[], pipeline: { date: string; value: number; status: LeadStatus }[], odds: Partial<Record<LeadStatus, number>> = {})
+```
+
+Income by month: payouts already scheduled (certain) plus open enquiries
+weighted by their stage odds (likely), from the month of `fromIso`.
+
+### `ConversionRow`
+
+*interface* · [src/services/insights.ts:349](../../../src/services/insights.ts#L349)
+
+_No JSDoc yet._
+
+| Member | Type | Notes |
+|---|---|---|
+| `key` | `string` |  |
+| `total` | `number` |  |
+| `won` | `number` |  |
+| `lost` | `number` |  |
+| `open` | `number` |  |
+| `rate` | `number \| null` | Won out of decided (won + lost). |
+
+### `conversionBy`
+
+*function* · [src/services/insights.ts:360](../../../src/services/insights.ts#L360)
+
+```ts
+conversionBy<T extends { status: LeadStatus }>(items: T[], keyOf: (x: T) => string): ConversionRow[]
+```
+
+Won, lost and open enquiries grouped by any key, best converting first.
+
+### `budgetBand`
+
+*function* · [src/services/insights.ts:375](../../../src/services/insights.ts#L375)
+
+```ts
+budgetBand(budget: number | undefined, startingPrice: number)
+```
+
+Budget band for an enquiry, relative to the vendor's starting price.
+
+### `replyBand`
+
+*function* · [src/services/insights.ts:383](../../../src/services/insights.ts#L383)
+
+```ts
+replyBand(l: Pick<LeadLike, 'createdAt' | 'history'>)
+```
+
+First-reply speed band from the enquiry's history.
+
+### `DateDemand`
+
+*interface* · [src/services/insights.ts:392](../../../src/services/insights.ts#L392)
+
+_No JSDoc yet._
+
+| Member | Type | Notes |
+|---|---|---|
+| `date` | `string` |  |
+| `sait` | `boolean` |  |
+| `saturday` | `boolean` |  |
+| `peak` | `boolean` |  |
+| `requests` | `number` | Enquiries and functions on that date in the area. |
+| `demand` | `number` | 0–100 |
+| `upliftPct` | `number` | Suggested uplift on the normal price, in percent. |
+
+### `dateDemand`
+
+*function* · [src/services/insights.ts:406](../../../src/services/insights.ts#L406)
+
+```ts
+dateDemand(date: string, ctx: { sait: boolean; requests: number }): DateDemand
+```
+
+How sought-after a date is: sait, Saturday, peak month and real requests for it.
+
+### `GigFitInput`
+
+*interface* · [src/services/insights.ts:416](../../../src/services/insights.ts#L416)
+
+_No JSDoc yet._
+
+| Member | Type | Notes |
+|---|---|---|
+| `pay` | `number` |  |
+| `hours` | `number` |  |
+| `skill` | `string` |  |
+| `date` | `string` |  |
+| `emergency?` | `boolean` |  |
+| `km` | `number \| null` | Road distance to the gig, null when local or unknown. |
+
+### `GigFitProfile`
+
+*interface* · [src/services/insights.ts:426](../../../src/services/insights.ts#L426)
+
+_No JSDoc yet._
+
+| Member | Type | Notes |
+|---|---|---|
+| `skills` | `string[]` |  |
+| `hourlyRate` | `number` |  |
+| `dayRate` | `number` |  |
+| `travelRadiusKm` | `number` |  |
+| `perKm` | `number` | Fuel and fares per km, both ways. |
+| `busy` | `boolean` |  |
+
+### `gigFit`
+
+*function* · [src/services/insights.ts:440](../../../src/services/insights.ts#L440)
+
+```ts
+gigFit(g: GigFitInput, p: GigFitProfile)
+```
+
+What a gig is really worth to this freelancer: pay after travel, per hour
+including travel time, against their own rates and calendar. Score 0–100.
+
+### `WorkDay`
+
+*interface* · [src/services/insights.ts:481](../../../src/services/insights.ts#L481)
+
+_No JSDoc yet._
+
+| Member | Type | Notes |
+|---|---|---|
+| `date` | `string` |  |
+| `start` | `string` |  |
+| `end` | `string` |  |
+
+### `shiftHours`
+
+*function* · [src/services/insights.ts:493](../../../src/services/insights.ts#L493)
+
+```ts
+shiftHours(start: string, end: string)
+```
+
+Hours on a job; an end before the start runs past midnight.
+
+### `workloadSummary`
+
+*function* · [src/services/insights.ts:503](../../../src/services/insights.ts#L503)
+
+```ts
+workloadSummary(days: WorkDay[])
+```
+
+Streaks of back-to-back work days, late finishes and the busiest weeks, to
+plan rest before the long peak-season runs.
+
+### `ReconIssue`
+
+*interface* · [src/services/insights.ts:530](../../../src/services/insights.ts#L530)
+
+_No JSDoc yet._
+
+| Member | Type | Notes |
+|---|---|---|
+| `id` | `string` |  |
+| `projectId` | `string` |  |
+| `kind` | `'milestones' \| 'booking_split' \| 'payables' \| 'overpaid' \| 'refund' \| 'payment_link'` |  |
+| `severity` | `'high' \| 'medium'` |  |
+| `title` | `string` |  |
+| `detail` | `string` |  |
+| `diff` | `number` | How far out, in NPR (absolute). |
+
+### `reconcileProject`
+
+*function* · [src/services/insights.ts:551](../../../src/services/insights.ts#L551)
+
+```ts
+reconcileProject(p: Project, ctx: { quotes: Quotation[]; payments: Payment[]; payables: Payable[]; refunds: Refund[] }): ReconIssue[]
+```
+
+Checks the money invariants of one project (AGENTS.md §5): accepted quote =
+Σ milestones, booking price = payable + fee, payables = provider payable,
+no milestone or payment over-collected, refunds within the payment.
+
+### `Rates`
+
+*interface* · [src/services/insights.ts:591](../../../src/services/insights.ts#L591)
+
+_No JSDoc yet._
+
+| Member | Type | Notes |
+|---|---|---|
+| `commissionRate` | `number` |  |
+| `markupRate` | `number` |  |
+| `leadFee` | `number` |  |
+
+### `simulateRates`
+
+*function* · [src/services/insights.ts:602](../../../src/services/insights.ts#L602)
+
+```ts
+simulateRates(bookings: { pricingModel: PricingModel; agreedPrice: number; providerCost: number; platformFee: number }[], next: Rates)
+```
+
+Platform fee on the same bookings under the current and proposed rates.
+The provider's price is held fixed, so a markup change moves the couple's
+price and a commission change moves the provider's payout.
+
+### `satisfaction`
+
+*function* · [src/services/insights.ts:628](../../../src/services/insights.ts#L628)
+
+```ts
+satisfaction(reviews: Pick<ReviewRecord, 'overall'>[])
+```
+
+Net promoter style score from star reviews: 5★ promoters, 4★ passive,
+3★ and below detractors. Also the average and star distribution.
+
+### `ListingSignals`
+
+*interface* · [src/services/insights.ts:638](../../../src/services/insights.ts#L638)
+
+_No JSDoc yet._
+
+| Member | Type | Notes |
+|---|---|---|
+| `verified` | `boolean` |  |
+| `hasPhoto` | `boolean` |  |
+| `styles` | `number` |  |
+| `reviewCount` | `number` |  |
+| `rating` | `number` |  |
+| `responseMinutes` | `number` |  |
+| `priceListed` | `boolean` |  |
+| `languages` | `number` |  |
+| `packages` | `number` |  |
+| `portfolio` | `number` |  |
+
+### `listingQuality`
+
+*function* · [src/services/insights.ts:652](../../../src/services/insights.ts#L652)
+
+```ts
+listingQuality(s: ListingSignals)
+```
+
+Profile completeness and trust, 0–100, with what to fix first.
+
+### `busyDates`
+
+*function* · [src/services/insights.ts:670](../../../src/services/insights.ts#L670)
+
+```ts
+busyDates(projects: Project[], fromIso: string, days: number)
+```
+
+Functions per date (live projects only) and how many need each service.
+
+### `openMilestones`
+
+*function* · [src/services/insights.ts:688](../../../src/services/insights.ts#L688)
+
+```ts
+openMilestones(p: Project)
+```
+
+Milestones still to collect for a project (not paid or waived).
 
 ## matching.ts
 

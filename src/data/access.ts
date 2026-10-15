@@ -37,6 +37,13 @@ export const TOOL_RULES = {
   'couple.keepsakes': { capsAny: ['plan.keepsakes'] },
   'couple.surprise': { capsAny: ['plan.surprise'] },
   'couple.games': { capsAny: ['plan.games'] },
+  // Smart planning
+  'couple.health': ALL,
+  'couple.headcount': ALL,
+  'couple.pricecheck': ALL,
+  'couple.votes': ALL,
+  // Weddings only: the occasions with a janti are the weddings.
+  'couple.registration': { capsAny: ['plan.janti'] },
 
   // ─── Vendor ───────────────────────────────────────────────────────────────
   'vendor.replies': ALL,
@@ -59,6 +66,12 @@ export const TOOL_RULES = {
   'vendor.inventory': { capsAny: ['decor.rental_inventory', 'av.gear', 'media.camera', 'music.gear', 'space.halls'] },
   'vendor.suppliers': { capsAny: ['decor.suppliers', 'food.menu', 'space.halls'] },
   'vendor.halls': { capsAny: ['space.halls'] },
+  // Smart selling
+  'vendor.leadscore': ALL,
+  'vendor.forecast': ALL,
+  'vendor.datedemand': ALL,
+  'vendor.reviewask': ALL,
+  'vendor.winloss': ALL,
   // Trade tools (P1)
   'vendor.menu': { capsAny: ['food.menu', 'space.in_house_catering'] },
   'vendor.tastings': { capsAny: ['food.tastings'] },
@@ -94,6 +107,11 @@ export const TOOL_RULES = {
   'freelancer.clients': ALL,
   'freelancer.network': ALL,
   'freelancer.certs': ALL,
+  'freelancer.gigfit': ALL,
+  'freelancer.season': ALL,
+  'freelancer.workload': ALL,
+  'freelancer.income': ALL,
+  'freelancer.testimonials': ALL,
   'freelancer.gearcare': { capsAny: ['media.camera', 'music.gear', 'av.gear', 'logistics.fleet'] },
   // Craft tools (P2)
   'freelancer.kit': { capsAny: ['beauty.product_kit'] },
@@ -121,6 +139,11 @@ export const TOOL_RULES = {
   'platform.batches': { perms: ['payout.batch'] },
   'platform.risk': { perms: ['audit.view'] },
   'platform.exports': { perms: ['audit.view'] },
+  'platform.reconcile': { permsAny: ['refund.approve', 'audit.view'] },
+  'platform.commission': { perms: ['settings.edit'] },
+  'platform.peakdates': { perms: ['project.view_all'] },
+  'platform.nps': { perms: ['project.view_all'] },
+  'platform.listings': { perms: ['provider.verify'] },
 } satisfies Record<string, When>;
 
 export type ToolId = keyof typeof TOOL_RULES;

@@ -3,11 +3,12 @@ import type { ToolDef } from '../hub';
 import { BusinessHours, FollowUps, PolicyBuilder, ResponseTime, SavedReplies, SiteVisits } from './clients';
 import { Benchmark, Expenses, Goals, PriceCalculator, ProfitLoss, Referrals, TaxSummary, Vouchers } from './money';
 import { EventPrep, Halls, Inventory, StaffRoster, Suppliers, TeamTasks } from './ops';
+import { DateDemand, LeadScores, RevenueForecast, ReviewRequests, WinLoss } from './smart';
 import { CoupleShotLists, Fittings, Fleet, GalleryDelivery, MenuBuilder, MuhurtaPlanner, PowerPlanner, Rentals, SetupSheets, SongRequests, Tastings, Themes, TrialsAndLooks } from './trades';
 
 /**
  * The vendor's business tools (`/business/tools`): 13 trade tools first, then
- * the 20 general ones. Each business sees only the tools its services allow
+ * the 20 general ones and five smart-selling ones. Each business sees only the tools its services allow
  * (`TOOL_RULES` in data/access.ts).
  */
 export const VENDOR_TOOLS: ToolDef[] = [
@@ -35,6 +36,11 @@ export const VENDOR_TOOLS: ToolDef[] = [
   { id: 'vendor.vouchers', title: 'Gift vouchers', subtitle: 'Sell vouchers families can gift', icon: 'ticket-outline', group: 'Sales and pricing', Component: Vouchers },
   { id: 'vendor.referrals', title: 'Referral partners', subtitle: 'Planners and hotels who send couples', icon: 'git-network-outline', group: 'Sales and pricing', Component: Referrals },
   { id: 'vendor.goals', title: 'Monthly goals', subtitle: 'Targets for payouts, bookings and leads', icon: 'flag-outline', group: 'Sales and pricing', Component: Goals },
+  { id: 'vendor.leadscore', title: 'Lead scores', subtitle: 'Which enquiries to call first', icon: 'flame-outline', group: 'Smart selling', Component: LeadScores },
+  { id: 'vendor.forecast', title: 'Revenue forecast', subtitle: 'Booked payouts plus likely bookings, by month', icon: 'analytics-outline', group: 'Smart selling', Component: RevenueForecast },
+  { id: 'vendor.datedemand', title: 'Date demand and pricing', subtitle: 'Your most sought-after open dates', icon: 'calendar-number-outline', group: 'Smart selling', Component: DateDemand },
+  { id: 'vendor.reviewask', title: 'Review requests', subtitle: 'Ask happy couples for a review', icon: 'star-outline', group: 'Smart selling', Component: ReviewRequests },
+  { id: 'vendor.winloss', title: 'Win and loss analysis', subtitle: 'What wins bookings and why you lose them', icon: 'pie-chart-outline', group: 'Smart selling', Component: WinLoss },
   { id: 'vendor.expenses', title: 'Expenses', subtitle: 'Rent, wages, fuel and supplies', icon: 'receipt-outline', group: 'Money', Component: Expenses },
   { id: 'vendor.pnl', title: 'Profit and loss', subtitle: 'Six months of income against spend', icon: 'trending-up-outline', group: 'Money', Component: ProfitLoss },
   { id: 'vendor.tax', title: 'VAT and tax', subtitle: 'Output VAT, input credit, what you owe', icon: 'business-outline', group: 'Money', Component: TaxSummary },
