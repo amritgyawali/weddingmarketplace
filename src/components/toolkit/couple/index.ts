@@ -34,6 +34,6 @@ export const COUPLE_TOOLS: ToolDef[] = [
   { id: 'couple.headcount', title: 'Headcount forecast', subtitle: 'Who will really come, and plates to order', icon: 'people-outline', group: 'Smart planning', Component: HeadcountForecast },
   { id: 'couple.pricecheck', title: 'Fair price check', subtitle: 'Is a quote fair for your city?', icon: 'pricetags-outline', group: 'Smart planning', Component: PriceCheck },
   { id: 'couple.votes', title: 'Family vote', subtitle: 'Decide venues, menus and outfits together', icon: 'hand-left-outline', group: 'Smart planning', Component: FamilyVote },
-  { id: 'couple.registration', title: 'Marriage registration', subtitle: 'Ward office papers and the 35-day deadline', icon: 'ribbon-outline', group: 'After the wedding', Component: MarriageRegistration },
+  { id: 'couple.registration', title: 'Marriage registration', subtitle: 'Ward office papers and the 35-day deadline', icon: 'ribbon-outline', group: 'Smart planning', Component: MarriageRegistration },
   { id: 'couple.honeymoon', title: 'Honeymoon planner', subtitle: 'Nepal getaways for two, costed', icon: 'airplane-outline', group: 'After the wedding', Component: HoneymoonPlanner },
 ];

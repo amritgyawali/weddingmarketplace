@@ -17,7 +17,7 @@ Files per role group tools by theme: couple (`ceremony`, `logistics`, `money`, `
 
 ### Smart tools (October 2026)
 
-Five per role, in each role's `smart.tsx`. They score, forecast or check from live data; the rules are pure functions in `src/services/insights.ts`, covered by `npm run test:insights`. Like every tool outside the top 20 they start switched off (Super admin → Features).
+Five per role, in each role's `smart.tsx`. They score, forecast or check from live data; the rules are pure functions in `src/services/insights.ts`, covered by `npm run test:insights`. Like every tool outside the top 20 they start switched off. Each role's five share one hub group (Smart planning, Smart selling, Smart work, Smart operations), so Super admin → Features → "Tools: Smart …" → Show all turns a role's set on in one tap.
 
 | Role | Tool (id) | What it does |
 |---|---|---|

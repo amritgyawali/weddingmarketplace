@@ -10,6 +10,8 @@ export const SMART_TOOLS_NE: Record<string, string> = {
   // Groups
   "Smart planning": "स्मार्ट योजना",
   "Smart selling": "स्मार्ट बिक्री",
+  "Smart work": "स्मार्ट काम",
+  "Smart operations": "स्मार्ट सञ्चालन",
 
   // Couple: registry
   "Plan health check": "योजनाको स्वास्थ्य जाँच",

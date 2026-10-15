@@ -27,7 +27,7 @@ Each app also has a **toolkit of 20 extra tools plus five smart ones**, opened f
 | Freelancer | Profile → Freelancer tools | This week, open dates, travel planner, gear checklist, health and safety, card backup log, edits and deliveries, work diary, rate calculator, private invoices, expenses and mileage, income tax estimate, earnings goal, savings pots, pitch builder, reliability coach, clients, crew network, certificates, gear care, plus craft tools (product kit, setlist, vehicle log). Smart work: best gigs for you, season planner, rest and workload, income statement, testimonials. Tools are filtered by craft. |
 | Platform team | More → Operations tools | SLA monitor, coordinator workload, on-call roster, holidays and closures, quality audits, helpdesk, reply macros, broadcasts, win-back list, promo campaigns, vendor recruitment, city supply, demand by season, source funnel, provider scorecards, monthly targets, cash-flow forecast, payout batches, risk and fraud watch, export centre, money reconciliation, commission simulator, peak-date capacity, customer satisfaction, listing quality |
 
-The smart tools score, forecast and check from live data (rules in `src/services/insights.ts`, tested by `npm run test:insights`). Like every tool outside the top 20 they start switched off; a super admin turns them on in Super admin → Features.
+The smart tools score, forecast and check from live data (rules in `src/services/insights.ts`, tested by `npm run test:insights`). Like every tool outside the top 20 they start switched off; a super admin turns a role's five on with one "Show all" on its "Tools: Smart …" group in Super admin → Features.
 
 ## The core loop
 
