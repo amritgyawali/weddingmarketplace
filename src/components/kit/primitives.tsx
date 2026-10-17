@@ -86,7 +86,9 @@ export function KButton({
     danger: { bg: t.c.surface, fg: t.c.danger, border: t.c.borderStrong },
     success: { bg: t.c.success, fg: t.c.onPrimary, border: t.c.success },
   };
-  const p = palette[variant];
+  // A form that isn't complete yet: a quiet pearl button with readable text (5 : 1), not a faded one.
+  const waiting = !!missing && !disabled && (variant === 'primary' || variant === 'success');
+  const p = waiting ? { bg: t.c.surfaceAlt, fg: t.c.muted, border: t.c.borderStrong } : palette[variant];
   const height = size === 'sm' ? 34 : size === 'lg' ? 50 : 42;
   return (
     <PressableScale
@@ -106,7 +108,8 @@ export function KButton({
         styles.button,
         { height, backgroundColor: p.bg, borderColor: p.border, borderRadius: t.role === 'platform' ? 6 : 8 },
         style,
-        !!missing && !disabled && styles.missing,
+        !!missing && !disabled && !waiting && styles.missing,
+        waiting && { backgroundColor: p.bg, borderColor: p.border },
       ]}>
       {loading ? (
         <Loader size={7} color={p.fg} />
@@ -237,8 +240,8 @@ export function KeyValue({ label, value, strong }: { label: string; value: strin
 
 const styles = StyleSheet.create({
   button: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6, paddingHorizontal: 16, borderWidth: 1 },
-  /** Same dimming as a disabled button: the form isn't complete yet. */
-  missing: { opacity: 0.45 },
+  /** Outline buttons whose form isn't complete yet: a light dimming that keeps the label readable. */
+  missing: { opacity: 0.7 },
   pill: { flexDirection: 'row', alignItems: 'center', alignSelf: 'flex-start', gap: 5, borderRadius: 4, paddingHorizontal: 7, paddingVertical: 2 },
   pillDot: { width: 5, height: 5, borderRadius: 3 },
   sectionTitle: { flexDirection: 'row', alignItems: 'baseline', justifyContent: 'space-between', gap: 12, marginBottom: 10 },

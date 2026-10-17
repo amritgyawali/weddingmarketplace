@@ -426,6 +426,7 @@ export function CelebrationOnboarding({ another = false }: { another?: boolean }
                 setDate(d);
                 setDateLater(false);
               }}
+              onClear={() => setDate(null)}
             />
           </View>
           {date && (
@@ -545,8 +546,7 @@ export function CelebrationOnboarding({ another = false }: { another?: boolean }
             <View key={type} style={[styles.card, { gap: 10 }]}>
               <Text size={16} weight="bold">{EVENT_TYPE_BY_ID[type].label}</Text>
               {type === 'OTHER' && <KField label="Event name" value={eventNames[type] ?? ''} placeholder="e.g. Bachelor party" onChangeText={(name) => setEventNames((cur) => ({ ...cur, [type]: name }))} />}
-              <Calendar value={eventDates[type] !== undefined ? eventDates[type]! : type === 'RECEPTION' && date ? addDays(date, 1) : null} onChange={(d) => setEventDates((cur) => ({ ...cur, [type]: d }))} />
-              <KButton label="Set date later" variant="ghost" size="sm" onPress={() => setEventDates((cur) => ({ ...cur, [type]: null }))} />
+              <Calendar value={eventDates[type] !== undefined ? eventDates[type]! : type === 'RECEPTION' && date ? addDays(date, 1) : null} onChange={(d) => setEventDates((cur) => ({ ...cur, [type]: d }))} onClear={() => setEventDates((cur) => ({ ...cur, [type]: null }))} clearLabel="Set date later" />
               <KField label="City" value={eventCities[type] ?? city ?? ''} onChangeText={(c) => setEventCities((cur) => ({ ...cur, [type]: c }))} />
             </View>
           ))}

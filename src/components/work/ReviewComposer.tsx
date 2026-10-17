@@ -185,7 +185,7 @@ export function ReviewComposer({
         Rate every category and write at least {REVIEW_MIN_CHARS} characters. Your draft is saved on this phone until you submit.
       </Text>
 
-      <DatePopup visible={dateOpen} title="When was the event?" value={eventDate} minDate={minDate} onChange={(d) => setDraft((x) => ({ ...x, eventDate: d }))} onClose={() => setDateOpen(false)} />
+      <DatePopup visible={dateOpen} title="When was the event?" value={eventDate} minDate={minDate} onClear={() => setDraft((x) => ({ ...x, eventDate: null }))} onChange={(d) => setDraft((x) => ({ ...x, eventDate: d }))} onClose={() => setDateOpen(false)} />
       <PhotoViewer sources={photos.map((uri) => ({ uri }))} index={viewing} onClose={() => setViewing(null)} />
     </ScrollView>
   );

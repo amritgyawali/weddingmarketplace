@@ -224,7 +224,7 @@ export function EventPrep() {
           icon="list-outline"
           onPress={() => {
             template.forEach((title, i) => add({ ownerId: account.id, tool: 'vendor.prep', title, refId: selected, date: current.project.weddingDate, fields: { order: i } }));
-            toast('Checklist added');
+            toast('Checklist added. Tick items off as you go');
           }}
         />
       )}

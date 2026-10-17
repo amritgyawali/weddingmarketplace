@@ -16,6 +16,10 @@ import type { Project, TimelineEntry } from '@/types/platform';
 import { addDays, daysUntil, formatClock, formatMonthDay, today } from '@/utils/format';
 import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
 
+/** What each kind of entry is called on the add sheet. */
+const KIND_LABEL: Partial<Record<TimelineEntry['kind'], string>> = { meeting: 'Meeting', milestone: 'Milestone', delivery: 'Delivery', task: 'Task' };
+const KIND_BY_LABEL = Object.fromEntries(Object.entries(KIND_LABEL).map(([k, v]) => [v, k])) as Record<string, TimelineEntry['kind']>;
+
 const KIND_ICON: Record<TimelineEntry['kind'], string> = {
   milestone: 'flag',
   booking: 'checkmark-circle',
@@ -44,7 +48,7 @@ export function TimelineView({ project, mode }: { project: Project; mode: 'custo
   return (
     <View style={{ gap: 12 }}>
       <View style={styles.actions}>
-        <KButton label="Add meeting / milestone" icon="add" size="sm" variant="secondary" onPress={() => setOpen(true)} style={{ flex: 1 }} />
+        <KButton label="Add a meeting or milestone" icon="add" size="sm" variant="secondary" onPress={() => setOpen(true)} style={{ flex: 1 }} />
         <KButton
           label="Export .ics"
           icon="calendar-outline"
@@ -70,7 +74,7 @@ export function TimelineView({ project, mode }: { project: Project; mode: 'custo
                 <Text size={12} weight="bold" color={isNext ? t.c.primary : t.c.textStrong}>
                   {formatMonthDay(e.date)}
                 </Text>
-                <Text size={10} color={t.c.muted}>
+                <Text size={12} color={t.c.muted}>
                   {bsMonthLabel(e.date).split(' ')[0]}
                 </Text>
               </View>
@@ -81,7 +85,7 @@ export function TimelineView({ project, mode }: { project: Project; mode: 'custo
                 {i < entries.length - 1 && <View style={[styles.line, { backgroundColor: t.c.border }]} />}
               </View>
               <Pressable disabled={!manual} onPress={() => toggle(project.id, e.id)} onLongPress={() => addToGoogleCalendar({ title: e.title, date: e.date, time: e.time, location: e.location })} style={{ flex: 1, paddingBottom: 16 }}>
-                <Text size={14} weight={isNext ? 'bold' : 'semibold'} color={t.c.textStrong} style={e.done ? { opacity: 0.7 } : undefined}>
+                <Text size={14} weight={isNext ? 'bold' : 'semibold'} color={e.done ? t.c.muted : t.c.textStrong}>
                   {e.title}
                   {e.internal ? ' · internal' : ''}
                 </Text>
@@ -92,7 +96,7 @@ export function TimelineView({ project, mode }: { project: Project; mode: 'custo
                 )}
                 {isNext && (
                   <Text size={12} weight="medium" color={t.c.muted}>
-                    NEXT · {daysUntil(e.date) === 0 ? 'today' : `in ${daysUntil(e.date)} days`}
+                    {daysUntil(e.date) === 0 ? 'Next · today' : daysUntil(e.date) === 1 ? 'Next · tomorrow' : `Next · in ${daysUntil(e.date)} days`}
                   </Text>
                 )}
               </Pressable>
@@ -100,32 +104,32 @@ export function TimelineView({ project, mode }: { project: Project; mode: 'custo
           );
         })}
       </View>
-      <Text size={11} color={t.c.muted} align="center">
-        Long-press any item to add it to Google Calendar.
+      <Text size={12} color={t.c.muted} align="center">
+        Press and hold any item to add it to Google Calendar.
       </Text>
 
       <Sheet visible={open} onClose={() => setOpen(false)} title="Add to timeline">
         <ScrollView contentContainerStyle={{ paddingHorizontal: 20, gap: 12, paddingBottom: 12 }} keyboardShouldPersistTaps="handled">
-          <ChoiceChips options={['meeting', 'milestone', 'delivery', 'task']} selected={[kind]} onToggle={(v) => setKind(v as TimelineEntry['kind'])} />
-          <KField placeholder="Title (e.g. Menu tasting)" value={title} onChangeText={setTitle} maxLength={100} />
+          <ChoiceChips options={Object.values(KIND_LABEL) as string[]} selected={[KIND_LABEL[kind] ?? '']} onToggle={(v) => setKind(KIND_BY_LABEL[v] ?? 'meeting')} />
+          <KField label="What is it?" required value={title} onChangeText={setTitle} maxLength={100} placeholder="For example, food tasting at the venue" />
           <Calendar value={date} onChange={setDate} />
           <View style={styles.actions}>
             <View style={{ flex: 1 }}>
               <KField label="Time" value={time} onChangeText={setTime} placeholder="11:00" />
             </View>
             <View style={{ flex: 2 }}>
-              <KField label="Location" value={location} onChangeText={setLocation} placeholder="Venue / office / video call" />
+              <KField label="Location" value={location} onChangeText={setLocation} placeholder="Venue, office or video call" />
             </View>
           </View>
           {mode === 'platform' && <ChoiceChips options={['Visible to customer', 'Internal only']} selected={[internal ? 'Internal only' : 'Visible to customer']} onToggle={(v) => setInternal(v === 'Internal only')} />}
           <KButton
-            label="Add"
-            missing={!title.trim() ? 'Enter a title for the timeline entry' : kind === 'meeting' && !/^\d{1,2}:\d{2}$/.test(time) && 'Enter the meeting time, e.g. 11:00'}
+            label="Add to timeline"
+            missing={!title.trim() ? 'Write what the entry is, for example food tasting at the venue' : kind === 'meeting' && !/^\d{1,2}:\d{2}$/.test(time) && 'Enter the meeting time, for example 11:00'}
             onPress={() => {
               addEntry(project.id, { title: title.trim(), date, time: kind === 'meeting' ? time : undefined, location: location.trim() || undefined, kind, internal });
               setOpen(false);
               setTitle('');
-              toast('Added to timeline');
+              toast('Added to your timeline');
             }}
           />
         </ScrollView>

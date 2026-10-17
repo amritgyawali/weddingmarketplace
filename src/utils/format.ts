@@ -1,13 +1,31 @@
 import { runtime } from '@/i18n/runtime';
 
 import { adToBs, bsMonthName, toNepaliDigits, WEEKDAYS_NE } from './bs';
+import { BASE_CURRENCY, currencyFor, fromNpr } from './currency';
 
 /**
- * Money is NPR everywhere. Grouping is done by hand because Hermes' Intl
- * support varies across platforms.
+ * Money is stored, charged and paid out in NPR. `formatMoney` and friends show
+ * it in the person's display currency (Settings → Currency, NPR by default);
+ * `formatNpr` always shows NPR, for payments, receipts and printed documents.
+ * Grouping is done by hand because Hermes' Intl support varies across platforms.
  */
-/** Currency code shown in every money string. */
-export const CURRENCY = 'NPR';
+/** The base currency code (amounts are always NPR underneath). */
+export const CURRENCY = BASE_CURRENCY;
+
+/** The display currency code right now. */
+export const displayCurrency = () => currencyFor(runtime.currency).code;
+
+/** True when amounts are shown in a currency other than NPR. */
+export const isConverted = () => displayCurrency() !== BASE_CURRENCY;
+
+/** An NPR amount in the display currency, rounded for showing. */
+const shown = (npr: number) => {
+  const c = currencyFor(runtime.currency);
+  if (c.code === BASE_CURRENCY) return Math.round(npr);
+  const v = fromNpr(npr, c.code);
+  // Small converted amounts keep two decimals (USD 3.62), larger ones whole units.
+  return Math.abs(v) < 100 ? Math.round(v * 100) / 100 : Math.round(v);
+};
 
 /** Groups digits in thousands (150,000), keeps up to two decimals and a leading minus. */
 export function formatNumber(value: number): string {
@@ -19,11 +37,31 @@ export function formatNumber(value: number): string {
   return `${negative ? '-' : ''}${grouped}${decimals ? `.${decimals}` : ''}`;
 }
 
-/** NPR 150,000 */
-export const formatMoney = (value: number) => `${CURRENCY} ${formatNumber(Math.round(value))}`;
+/** NPR 150,000, or USD 1,087 when the person reads prices in dollars. */
+export const formatMoney = (value: number) => `${displayCurrency()} ${formatNumber(shown(value))}`;
+
+/** Always NPR (what is charged, receipted and printed): NPR 150,000. */
+export const formatNpr = (value: number) => `${CURRENCY} ${formatNumber(Math.round(value))}`;
+
+/**
+ * NPR with the display-currency figure beside it when they differ:
+ * "NPR 150,000 (about USD 1,087)". For amounts someone is about to pay.
+ */
+export const formatNprWithDisplay = (value: number) => (isConverted() ? `${formatNpr(value)} (about ${formatMoney(value)})` : formatNpr(value));
 
 /** Compact form used in chips and filters: NPR 800, NPR 45K, NPR 975K, NPR 2.5M. */
 export function formatMoneyCompact(value: number): string {
+  const code = displayCurrency();
+  const amount = shown(value);
+  const abs = Math.abs(amount);
+  const sign = amount < 0 ? '-' : '';
+  if (abs >= 1_000_000) return `${sign}${code} ${trim(abs / 1_000_000)}M`;
+  if (abs >= 1_000) return `${sign}${code} ${trim(abs / 1_000)}K`;
+  return `${sign}${code} ${abs < 100 && abs % 1 ? abs.toFixed(2) : Math.round(abs)}`;
+}
+
+/** Always NPR, compact: NPR 45K. For text that is saved and read by others (notifications, audit). */
+export function formatNprCompact(value: number): string {
   const abs = Math.abs(value);
   const sign = value < 0 ? '-' : '';
   if (abs >= 1_000_000) return `${sign}${CURRENCY} ${trim(abs / 1_000_000)}M`;
@@ -33,12 +71,13 @@ export function formatMoneyCompact(value: number): string {
 
 /** Budget range: NPR 40K–60K */
 export const formatMoneyRange = (lo: number, hi: number) =>
-  lo === hi ? formatMoneyCompact(lo) : `${formatMoneyCompact(lo)}–${formatMoneyCompact(hi).replace(`${CURRENCY} `, '')}`;
+  lo === hi ? formatMoneyCompact(lo) : `${formatMoneyCompact(lo)}–${formatMoneyCompact(hi).replace(`${displayCurrency()} `, '')}`;
 
 const trim = (n: number) => (Math.round(n * 10) / 10).toString().replace(/\.0$/, '');
 
-/** How families talk about wedding budgets: "7.5 lakh", "26 lakh", "1.2 crore". */
+/** How families talk about wedding budgets: "7.5 lakh", "26 lakh", "1.2 crore". Other display currencies get the compact form. */
 export function formatLakh(value: number): string {
+  if (isConverted()) return formatMoneyCompact(value);
   const abs = Math.abs(value);
   if (abs >= 10_000_000) return `${trim(value / 10_000_000)} crore`;
   return `${abs >= 1_000_000 ? Math.round(value / 100_000) : trim(value / 100_000)} lakh`;
@@ -46,6 +85,7 @@ export function formatLakh(value: number): string {
 
 /** NPR 7.1–26 lakh, or NPR 45 lakh – 1.2 crore across the boundary. */
 export function formatLakhRange(lo: number, hi: number): string {
+  if (isConverted()) return formatMoneyRange(lo, hi);
   if (hi < 10_000_000) return `${CURRENCY} ${formatLakh(lo).replace(' lakh', '')}–${formatLakh(hi)}`;
   return `${CURRENCY} ${formatLakh(lo)} – ${formatLakh(hi)}`;
 }

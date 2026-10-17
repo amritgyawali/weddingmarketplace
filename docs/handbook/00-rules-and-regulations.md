@@ -25,7 +25,7 @@ These are the binding rules of the Vivah codebase. Each has an id, the rule, and
 | Id | Rule | Why |
 |---|---|---|
 | R-PROD-1 | **Nepal only.** Places, ceremonies, holidays and copy are Nepali. | The product is built for one market and does it well. |
-| R-PROD-2 | Money is **NPR**, formatted through `formatMoney` (`NPR 150,000`), `formatMoneyCompact` (`NPR 45K`) or `formatLakh` ("7.5 lakh"). Tax is **13% VAT** (`VAT_RATE`/`TAX_RATE`). MUST NOT use ₹, INR or GST anywhere. | Early versions were built on an Indian template; leftovers confuse Nepali users and break invoices. |
+| R-PROD-2 | Money is **NPR**, formatted through `formatMoney` (`NPR 150,000`), `formatMoneyCompact` (`NPR 45K`) or `formatLakh` ("7.5 lakh"). Tax is **13% VAT** (`VAT_RATE`/`TAX_RATE`). MUST NOT use ₹ or GST anywhere, or store or charge any currency but NPR. A per-device display currency (Settings → Currency) may show converted amounts through `formatMoney`; payments, receipts, quotations, contracts and saved text always use `formatNpr`. | Early versions were built on an Indian template; leftovers confuse Nepali users and break invoices. |
 | R-PROD-3 | Payments: eSewa, Khalti, Fonepay QR, ConnectIPS, IME Pay, card, bank transfer; cash is recorded by staff only. | These are the methods Nepali couples use. Cash must be traceable to a staff member. |
 | R-PROD-4 | **Everything must keep running in Expo Go (SDK 57).** MUST NOT add a library with custom native code without the owner's approval. | Expo Go is the demo and development path; one native module ends that for everyone. |
 | R-PROD-5 | **Free stack only** in year one: no paid services or paid tiers without the owner's approval. | Owner decision (30 Sep 2026); the business is pre-revenue. |

@@ -19,11 +19,16 @@ import type { RegistryItem, WeddingWebsite } from '@/types/platform';
 import { daysUntil, formatClock, formatDateAlt, formatLongDate } from '@/utils/format';
 import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
 
-const TEMPLATE: Record<WeddingWebsite['template'], { bg: string; ink: string; soft: string }> = {
-  classic: { bg: '#FFFDF8', ink: '#2B2118', soft: '#F6EFE3' },
-  himalayan: { bg: '#F7FAFC', ink: '#10263A', soft: '#E7EEF5' },
-  floral: { bg: '#FFF8FA', ink: '#3A1D28', soft: '#FCE9EF' },
-  minimal: { bg: '#FFFFFF', ink: '#111111', soft: '#F3F3F3' },
+/**
+ * The couple's chosen look. The site is always light (it is the couple's
+ * printed-invitation style, not the viewer's app theme), so every text and
+ * card colour comes from here: `muted` is at least 5 : 1 on `bg` and `soft`.
+ */
+const TEMPLATE: Record<WeddingWebsite['template'], { bg: string; ink: string; soft: string; muted: string; card: string; line: string }> = {
+  classic: { bg: '#FFFDF8', ink: '#2B2118', soft: '#F6EFE3', muted: '#5F5248', card: '#FFFFFF', line: '#E8DCCB' },
+  himalayan: { bg: '#F7FAFC', ink: '#10263A', soft: '#E7EEF5', muted: '#44566A', card: '#FFFFFF', line: '#D6E0EA' },
+  floral: { bg: '#FFF8FA', ink: '#3A1D28', soft: '#FCE9EF', muted: '#6A4752', card: '#FFFFFF', line: '#F0D6DF' },
+  minimal: { bg: '#FFFFFF', ink: '#111111', soft: '#F3F3F3', muted: '#555555', card: '#FFFFFF', line: '#E2E2E2' },
 };
 
 function Section({ title, theme, serif, accent, children }: { title: string; theme: (typeof TEMPLATE)['classic']; serif?: string; accent: string; children: ReactNode }) {
@@ -35,6 +40,18 @@ function Section({ title, theme, serif, accent, children }: { title: string; the
       <View style={[styles.rule, { backgroundColor: accent }]} />
       {children}
     </View>
+  );
+}
+
+/** A small text link in the couple's accent colour (the app's ghost button would follow the viewer's dark mode). */
+function SiteLink({ label, icon, color, onPress }: { label: string; icon: keyof typeof Ionicons.glyphMap; color: string; onPress: () => void }) {
+  return (
+    <Pressable onPress={onPress} accessibilityRole="button" accessibilityLabel={label} hitSlop={8} style={({ pressed }) => [styles.link, pressed && { opacity: 0.6 }]}>
+      <Ionicons name={icon} size={16} color={color} />
+      <Text size={14} weight="semibold" color={color}>
+        {label}
+      </Text>
+    </Pressable>
   );
 }
 
@@ -90,13 +107,13 @@ export default function WeddingSite() {
         <Text size={24} weight="bold" color={theme.ink} style={{ fontFamily: serif }}>
           {site.headline}
         </Text>
-        <Text size={14} color={colors.textMuted}>
+        <Text size={14} color={theme.muted} align="center">
           This website is private. Enter the password from your invitation.
         </Text>
         <View style={{ alignSelf: 'stretch' }}>
           <KField value={password} onChangeText={setPassword} placeholder="Password" secureTextEntry />
         </View>
-        <KButton label="Enter" style={{ alignSelf: 'stretch', backgroundColor: site.accent, borderColor: site.accent }} onPress={() => (password.trim().toLowerCase() === site.password!.toLowerCase() ? setUnlocked(true) : toast('Incorrect password', 'lock-closed'))} />
+        <KButton label="Enter" style={{ alignSelf: 'stretch', backgroundColor: site.accent, borderColor: site.accent }} onPress={() => (password.trim().toLowerCase() === site.password!.toLowerCase() ? setUnlocked(true) : toast('That password doesn’t match. Check your invitation and try again', 'lock-closed'))} />
       </View>
     );
   }
@@ -111,7 +128,7 @@ export default function WeddingSite() {
               <Pressable onPress={() => router.back()} style={styles.previewBar}>
                 <Ionicons name="eye-outline" size={14} color="#fff" />
                 <Text size={12} weight="bold" color="#fff">
-                  PREVIEW{site.published ? '' : ' · NOT PUBLISHED'} · tap to close
+                  {site.published ? 'Preview · tap to close' : 'Preview, not published yet · tap to close'}
                 </Text>
               </Pressable>
             ) : (
@@ -147,7 +164,7 @@ export default function WeddingSite() {
               <Text size={18} weight="bold" color={theme.ink} style={{ fontFamily: serif }}>
                 RSVP
               </Text>
-              <Text size={13} color={colors.textMuted}>
+              <Text size={13} color={theme.muted}>
                 Enter the code from your invitation{site.rsvpDeadline ? ` — kindly reply by ${formatLongDate(site.rsvpDeadline)}` : ''}.
               </Text>
               <View style={styles.row}>
@@ -170,24 +187,23 @@ export default function WeddingSite() {
           {site.sections.schedule && events.length > 0 && (
             <Section theme={theme} serif={serif} accent={site.accent} title="Celebrations">
               {events.map((e) => (
-                <Card key={e.id} style={{ gap: 4 }}>
+                <Card key={e.id} style={{ gap: 4, backgroundColor: theme.card, borderColor: theme.line }}>
                   <Text size={17} weight="bold" color={theme.ink} style={{ fontFamily: serif }}>
                     {e.name}
                   </Text>
-                  <Text size={14} color={colors.text}>
+                  <Text size={14} color={theme.ink}>
                     {e.date ? `${formatLongDate(e.date)} · ${formatClock(e.startTime)}` : 'Date to be announced'}
                   </Text>
-                  <Text size={13} color={colors.textMuted}>
+                  <Text size={13} color={theme.muted}>
                     {e.venue}, {e.city}
                   </Text>
                   <View style={[styles.row, { marginTop: 6 }]}>
-                    <KButton label="Map" icon="navigate-outline" size="sm" variant="ghost" onPress={() => Linking.openURL(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${e.venue} ${e.city}`)}`)} />
+                    <SiteLink label="Map" icon="navigate-outline" color={site.accent} onPress={() => Linking.openURL(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${e.venue} ${e.city}`)}`)} />
                     {e.date && (
-                      <KButton
+                      <SiteLink
                         label="Add to calendar"
                         icon="calendar-outline"
-                        size="sm"
-                        variant="ghost"
+                        color={site.accent}
                         onPress={() => exportCalendar([{ title: `${site.headline} — ${e.name}`, date: e.date!, time: e.startTime, durationHours: 5, location: `${e.venue}, ${e.city}` }], `${site.slug}-${e.type.toLowerCase()}`)}
                       />
                     )}
@@ -225,7 +241,7 @@ export default function WeddingSite() {
 
           {site.sections.registry && registry.length > 0 && (
             <Section theme={theme} serif={serif} accent={site.accent} title="Gifts">
-              <Text size={14} color={colors.textMuted} align="center">
+              <Text size={14} color={theme.muted} align="center">
                 Your presence is the greatest gift. If you’d like to bless us further, here are a few ideas.
               </Text>
               {registry.map((r) => (
@@ -241,7 +257,7 @@ export default function WeddingSite() {
                   <Text size={15} weight="bold" color={theme.ink}>
                     {f.q}
                   </Text>
-                  <Text size={14} color={colors.textMuted} lineHeight={21}>
+                  <Text size={14} color={theme.muted} lineHeight={21}>
                     {f.a}
                   </Text>
                 </View>
@@ -249,7 +265,7 @@ export default function WeddingSite() {
             </Section>
           )}
 
-          <Text size={12} color={colors.textMuted} align="center">
+          <Text size={12} color={theme.muted} align="center">
             Made on Vivah
           </Text>
         </View>
@@ -297,6 +313,7 @@ const styles = themed(() => StyleSheet.create({
   body: { padding: 18, gap: 28 },
   rule: { width: 48, height: 2, alignSelf: 'center', borderRadius: 1 },
   row: { flexDirection: 'row', alignItems: 'center', gap: 8 },
+  link: { flexDirection: 'row', alignItems: 'center', gap: 6, paddingVertical: 6, paddingRight: 12 },
   gallery: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, justifyContent: 'space-between' },
   photo: { aspectRatio: 1, borderRadius: 8 },
   giftCard: { position: 'absolute', left: 0, right: 0, bottom: 0, backgroundColor: '#fff', borderTopLeftRadius: 24, borderTopRightRadius: 24, padding: 20, gap: 12 },

@@ -187,10 +187,10 @@ export function GigForm({ projects, defaultCity, initialProjectId, onSubmit }: {
         <KButton label={emergency ? 'Send emergency gig' : 'Post gig'} icon="megaphone-outline" variant={emergency ? 'danger' : 'primary'} onPress={submit} size="lg" />
       </View>
       <Sheet visible={dateOpen} onClose={() => setDateOpen(false)} title="Gig date">
-        <View style={{ paddingHorizontal: 20, gap: 14 }}>
+        <ScrollView contentContainerStyle={{ paddingHorizontal: 20, gap: 14, paddingBottom: 8 }}>
           <Calendar value={date} onChange={setDate} />
           <KButton label="Done" onPress={() => setDateOpen(false)} missing={!date && 'Pick the gig date'} />
-        </View>
+        </ScrollView>
       </Sheet>
     </View>
   );

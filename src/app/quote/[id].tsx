@@ -124,7 +124,7 @@ export default function CustomerQuote() {
               style={{ flex: 1 }}
               onPress={() => {
                 respond(quote.id, 'decline');
-                toast('Quotation declined', 'close-circle');
+                toast('Quotation declined. Your coordinator has been told', 'close-circle');
                 router.back();
               }}
             />

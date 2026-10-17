@@ -239,7 +239,7 @@ function Overview({ project, go }: { project: Project; go: (t: Tab) => void }) {
             size="sm"
             onPress={() => {
               open.forEach((r) => runMatching(project.id, r.id));
-              toast('Matching complete', 'git-compare');
+              toast('Matching done. Ranked providers are ready to review', 'git-compare');
               go('services');
             }}
             style={{ flex: 1 }}
@@ -306,7 +306,7 @@ function RequirementEditor({ project, requirement, onClose }: { project: Project
           onPress={() => {
             update(project.id, requirement.id, { details, budgetMin: Number(min) || undefined, budgetMax: Number(max) || undefined, styles: styles_, eventIds });
             onClose();
-            toast('Requirement updated');
+            toast('Service details saved');
           }}
         />
         <KButton

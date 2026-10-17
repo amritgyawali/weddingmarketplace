@@ -21,7 +21,7 @@ import type {
   TaskAssignee,
   TimelineEntry,
 } from '@/types/platform';
-import { daysUntil, formatMoney, formatMoneyCompact, formatShortDate, fromISODate, toISODate, uid } from '@/utils/format';
+import { daysUntil, formatMoney, formatMoneyCompact, formatNpr, formatShortDate, fromISODate, toISODate, uid } from '@/utils/format';
 
 export interface PlanInput {
   eventTypes: EventType[];
@@ -199,14 +199,14 @@ const TASK_TEMPLATES: TaskTemplate[] = [
   { title: 'Approve decoration theme & mood board', daysBefore: 150, category: 'Decor', assignee: 'customer', service: 'decoration' },
   { title: 'Book makeup artist', daysBefore: 130, category: 'Beauty', assignee: 'customer', service: 'makeup' },
   { title: 'Shop bridal saree / lehenga', daysBefore: 120, category: 'Fashion', assignee: 'customer', service: 'bridal-wear' },
-  { title: 'Daura Suruwal / sherwani fitting', daysBefore: 90, category: 'Fashion', assignee: 'partner', service: 'groom-wear' },
+  { title: 'Daura suruwal or sherwani fitting', daysBefore: 90, category: 'Fashion', assignee: 'partner', service: 'groom-wear' },
   { title: 'Plan the pre-wedding shoot location', daysBefore: 90, category: 'Photo & video', assignee: 'customer', service: 'pre-wedding' },
   { title: 'Approve invitation card design', daysBefore: 75, category: 'Invitations', assignee: 'customer', service: 'invitation' },
-  { title: 'Book Panche Baja for the janti', daysBefore: 70, category: 'Music', assignee: 'coordinator', service: 'panche-baja' },
+  { title: 'Book the panche baja band for the janti', daysBefore: 70, category: 'Music', assignee: 'coordinator', service: 'panche-baja' },
   { title: 'Book DJ and share must-play list', daysBefore: 60, category: 'Music', assignee: 'customer', service: 'dj' },
   { title: 'Send invitations & e-invites', daysBefore: 45, category: 'Invitations', assignee: 'customer', priority: 'high' },
   { title: 'Arrange janti transport & wedding car', daysBefore: 40, category: 'Logistics', assignee: 'coordinator', service: 'transport' },
-  { title: 'Menu tasting with the caterer', daysBefore: 30, category: 'Food', assignee: 'customer', service: 'catering' },
+  { title: 'Food tasting with the caterer', daysBefore: 30, category: 'Food', assignee: 'customer', service: 'catering' },
   { title: 'Makeup & hair trial', daysBefore: 30, category: 'Beauty', assignee: 'customer', service: 'makeup' },
   { title: 'Book mehendi artist', daysBefore: 30, category: 'Beauty', assignee: 'customer', service: 'mehendi' },
   { title: 'Chase RSVPs and finalise guest count', daysBefore: 15, category: 'Guests', assignee: 'customer', priority: 'high' },
@@ -232,7 +232,7 @@ const CELEBRATION_TEMPLATES: TaskTemplate[] = [
   { title: 'Book videography', daysBefore: 38, category: 'Photo & video', assignee: 'coordinator', service: 'videography' },
   { title: 'Choose the caterer and the menu', daysBefore: 35, category: 'Food', assignee: 'coordinator', service: 'catering', priority: 'high' },
   { title: 'Approve the decoration', daysBefore: 25, category: 'Decor', assignee: 'customer', service: 'decoration' },
-  { title: 'Book Panche Baja', daysBefore: 25, category: 'Music', assignee: 'coordinator', service: 'panche-baja' },
+  { title: 'Book the panche baja band', daysBefore: 25, category: 'Music', assignee: 'coordinator', service: 'panche-baja' },
   { title: 'Book the DJ or music', daysBefore: 25, category: 'Music', assignee: 'customer', service: 'dj' },
   { title: 'Approve the invitation card', daysBefore: 25, category: 'Invitations', assignee: 'customer', service: 'invitation' },
   { title: 'Send invitations and e-invites', daysBefore: 20, category: 'Invitations', assignee: 'customer', priority: 'high' },
@@ -276,8 +276,23 @@ const OCCASION_TASKS: Record<string, TaskTemplate[]> = {
 /** Occasions planned with the full wedding checklist. */
 const WEDDING_LIKE = new Set(['wedding', 'engagement']);
 
-/** Titles that only make sense for a wedding; older non-wedding plans drop them (store migrate v5). */
-export const WEDDING_ONLY_TASKS = new Set(TASK_TEMPLATES.map((t) => t.title).filter((title) => !CELEBRATION_TEMPLATES.some((c) => c.title === title)));
+/** Checklist titles reworded since they were first saved on plans: old title → current title. */
+export const RENAMED_TASK_TITLES: Record<string, string> = {
+  'Menu tasting with the caterer': 'Food tasting with the caterer',
+  'Daura Suruwal / sherwani fitting': 'Daura suruwal or sherwani fitting',
+  'Book Panche Baja': 'Book the panche baja band',
+  'Book Panche Baja for the janti': 'Book the panche baja band for the janti',
+};
+
+/** A task title in its current wording, so a plan saved with an older title isn't offered the same task again. */
+export const taskTitleKey = (title: string) => RENAMED_TASK_TITLES[title] ?? title;
+
+/** Titles that only make sense for a wedding; older non-wedding plans drop them (store migrate v5). Old wordings count too. */
+export const WEDDING_ONLY_TASKS = new Set(
+  TASK_TEMPLATES.map((t) => t.title)
+    .filter((title) => !CELEBRATION_TEMPLATES.some((c) => c.title === title))
+    .flatMap((title) => [title, ...Object.keys(RENAMED_TASK_TITLES).filter((old) => RENAMED_TASK_TITLES[old] === title)]),
+);
 
 /** Personalised checklist for the occasion; overdue templates are compressed into the remaining time. */
 export function generateTasks(mainDate: string, services: string[], customerName: string, coordinatorName = 'Your coordinator', occasion = 'wedding'): ProjectTask[] {
@@ -310,7 +325,7 @@ export function generateTasks(mainDate: string, services: string[], customerName
 /** Checklist tasks for the project's date and requested services that aren't on its list yet (the "Suggest tasks" sheet). */
 export function suggestedTasks(project: Project): ProjectTask[] {
   const services = project.requirements.filter((r) => r.status !== 'CANCELLED').map((r) => r.serviceId);
-  return generateTasks(project.weddingDate, services, project.customerName, project.coordinatorName, project.occasion ?? 'wedding').filter((t) => !project.tasks.some((x) => x.title === t.title));
+  return generateTasks(project.weddingDate, services, project.customerName, project.coordinatorName, project.occasion ?? 'wedding').filter((t) => !project.tasks.some((x) => taskTitleKey(x.title) === t.title));
 }
 
 /**
@@ -437,7 +452,7 @@ export function invitationText(project: Project, tone: 'traditional' | 'modern' 
 export function enquiryText(project: Project, serviceId: string): string {
   const req = project.requirements.find((r) => r.serviceId === serviceId);
   const dates = project.events.filter((e) => !req || req.eventIds.includes(e.id)).map((e) => `${e.name} ${e.date ? formatShortDate(e.date) : '(date TBC)'}`);
-  const budget = req?.budgetMax ? ` Our budget is around ${formatMoney(req.budgetMax)}${findService(serviceId)?.unit === 'per plate' ? ' per plate' : ''}.` : '';
+  const budget = req?.budgetMax ? ` Our budget is around ${formatNpr(req.budgetMax)}${findService(serviceId)?.unit === 'per plate' ? ' per plate' : ''}.` : '';
   return `Namaste! We're planning our ${project.eventType === 'WEDDING' ? 'wedding' : 'event'} in ${project.city} for about ${project.guests} guests (${dates.join(', ')}). We're looking for ${serviceName(serviceId).toLowerCase()}${req?.styles.length ? ` in a ${req.styles.join('/').toLowerCase()} style` : ''}.${budget} Could you share availability, packages and what's included? Thank you!`;
 }
 

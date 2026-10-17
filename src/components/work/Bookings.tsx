@@ -414,7 +414,7 @@ function DeliverableRow({ project, booking, d, mode }: { project: Project; booki
               missing={d.revisions >= d.revisionLimit ? `All ${d.revisionLimit} revisions have been used` : !note.trim() && 'Write what should change first'}
               onPress={() => {
                 update(project.id, booking.id, d.id, { status: 'REVISION_REQUESTED' }, note.trim());
-                toast('Changes requested', 'create');
+                toast('Changes requested. The provider will send an update', 'create');
               }}
               style={{ flex: 1 }}
             />

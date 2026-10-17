@@ -59,8 +59,8 @@ export const HOME_CATEGORIES: {
 ];
 
 export const VENUE_COLLECTIONS: VenueCollection[] = [
-  { id: 'luxury', title: 'Luxury Wedding Venues', image: 'venueLuxuryStage' },
-  { id: 'budget', title: 'Budget Party Palaces', image: 'venueOutdoorMandap' },
+  { id: 'luxury', title: 'Luxury wedding venues', image: 'venueLuxuryStage' },
+  { id: 'budget', title: 'Budget party palaces', image: 'venueOutdoorMandap' },
   { id: 'destination', title: 'Destination Weddings', image: 'venueDestinationBeach' },
   { id: 'heritage', title: 'Heritage Courtyards', image: 'decorMandapNight' },
   { id: 'garden', title: 'Garden & Lakeside', image: 'venueGardenEstate' },

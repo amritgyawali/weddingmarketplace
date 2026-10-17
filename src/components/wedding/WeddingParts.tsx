@@ -179,7 +179,7 @@ export function CountdownCard({ project, onSetDate }: { project: Project; onSetD
       </View>
       <View style={styles.stats}>
         <Stat label="Booked" value={`${progress.services.confirmed}/${progress.services.total}`} />
-        <Stat label="Paid" value={progress.pay.total ? formatMoneyCompact(progress.pay.paid).replace('NPR ', '') : '—'} tone={overdue ? colors.danger : undefined} />
+        <Stat label="Paid" value={progress.pay.total ? formatMoneyCompact(progress.pay.paid).replace(/^[A-Z]{3} /, '') : '—'} tone={overdue ? colors.danger : undefined} />
         <Stat label="Tasks done" value={`${progress.tasks.done}/${progress.tasks.total}`} />
         <Stat label="Guests" value={String(project.guests)} last />
       </View>

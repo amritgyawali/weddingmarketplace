@@ -73,7 +73,7 @@ export default function VendorDashboard() {
           body={`${serviceName(focus.booking.serviceId)} · ${bookingEvents(focus)} · ${focus.project.guests} guests`}
           figureLabel="You receive"
           figure={formatMoney(focus.booking.providerPayable)}
-          primary={{ label: 'Accept', icon: 'checkmark', onPress: () => { respond(focus.project.id, focus.booking.id, true); toast('Availability confirmed'); } }}
+          primary={{ label: 'Accept', icon: 'checkmark', onPress: () => { respond(focus.project.id, focus.booking.id, true); toast('Booking accepted. It’s on your calendar now'); } }}
           secondary={{ label: 'Details', onPress: () => openBooking(focus.booking.id) }}
           onPress={() => openBooking(focus.booking.id)}
         />
@@ -118,9 +118,9 @@ export default function VendorDashboard() {
                   </View>
                 </View>
                 <View style={styles.row}>
-                  <KButton label="Decline" size="sm" variant="danger" style={{ flex: 1 }} onPress={() => { respond(project.id, booking.id, false, 'Not available'); toast('Declined'); }} />
+                  <KButton label="Decline" size="sm" variant="danger" style={{ flex: 1 }} onPress={() => { respond(project.id, booking.id, false, 'Not available'); toast('Booking declined. The coordinator has been told'); }} />
                   <KButton label="Details" size="sm" variant="secondary" style={{ flex: 1 }} onPress={() => openBooking(booking.id)} />
-                  <KButton label="Accept" size="sm" icon="checkmark" style={{ flex: 1.2 }} onPress={() => { respond(project.id, booking.id, true); toast('Availability confirmed'); }} />
+                  <KButton label="Accept" size="sm" icon="checkmark" style={{ flex: 1.2 }} onPress={() => { respond(project.id, booking.id, true); toast('Booking accepted. It’s on your calendar now'); }} />
                 </View>
               </Card>
             ))}

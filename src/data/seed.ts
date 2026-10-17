@@ -608,7 +608,7 @@ function buildProject1021(): Project {
     timeline: [
       { id: 'tl_1021_visit', date: day(-38), title: 'Venue site visit with the families', kind: 'meeting', done: true, time: '11:00', location: DEMO_VENUE.name },
       { id: 'tl_1021_decor', date: day(10), title: 'Decoration concept approval', kind: 'milestone', done: false },
-      { id: 'tl_1021_menu', date: day(18), title: 'Menu tasting at the party palace', kind: 'meeting', done: false, time: '13:00', location: DEMO_VENUE.name },
+      { id: 'tl_1021_menu', date: day(18), title: 'Food tasting at the party palace', kind: 'meeting', done: false, time: '13:00', location: DEMO_VENUE.name },
       { id: 'tl_1021_final', date: day(46), title: 'Final coordination meeting', kind: 'meeting', done: false, time: '16:00', location: 'Vivah office, Baneshwor' },
       { id: 'tl_1021_int', date: day(40), title: 'Crew briefing (internal)', kind: 'meeting', done: false, internal: true },
     ],
@@ -982,7 +982,7 @@ function buildPipeline(): Project[] {
     requirements: [req('rq_1051_venue', 'venue', ['ev_1051_wed', 'ev_1051_rec'], 'CONFIRMED')],
     bookings: [booking({ id: 'bk_1051_venue', requirementId: 'rq_1051_venue', provider: P(DEMO_VENUE.id), accountId: 'acc_vendor_demo', eventIds: ['ev_1051_wed', 'ev_1051_rec'], price: 650_000, status: 'CONFIRMED', confirmedAt: at(-26), quoteId: 'qt_sneha', eventForCrew: 'ev_1051_wed' })],
     tasks: [
-      { id: 'tk_1051_1', title: 'Menu tasting with the couple', assigneeKind: 'provider', assigneeName: 'Rajesh Pradhan', due: day(12), status: 'TODO', priority: 'medium', category: 'Food', visibility: 'shared', createdAt: at(-20) },
+      { id: 'tk_1051_1', title: 'Food tasting with the couple', assigneeKind: 'provider', assigneeName: 'Rajesh Pradhan', due: day(12), status: 'TODO', priority: 'medium', category: 'Food', visibility: 'shared', createdAt: at(-20) },
       { id: 'tk_1051_2', title: 'Share jagge & stage layout', assigneeKind: 'provider', assigneeName: 'Rajesh Pradhan', due: day(8), status: 'IN_PROGRESS', priority: 'high', category: 'Venue', visibility: 'shared', createdAt: at(-20) },
     ],
     milestones: paid(buildMilestones(DEFAULT_SCHEDULE, 734_500, { confirmed: day(-26), event: day(30) }, 'qt_sneha'), [220_350]),
@@ -1185,7 +1185,7 @@ function buildGigs(): Gig[] {
     }),
     g({
       id: 'gig_emergency_pokhara',
-      title: 'EMERGENCY: Photographer needed today — Pokhara wedding',
+      title: 'Emergency: photographer needed today — Pokhara wedding',
       skill: 'Photographer',
       postedById: 'platform',
       postedByName: 'Vivah Operations',
@@ -1466,7 +1466,7 @@ function buildThreads(): { threads: Thread[]; messages: Message[] } {
     m('msg2', 'th_1021_project', aakriti, 'Thank you Sita! Can we see a couple more decoration options? The current one feels a bit heavy.', at(-12, 19), { readBy: ['acc_platform_demo', 'acc_customer_demo'] }),
     m('msg3', 'th_1021_project', sita, 'Of course. I’ve asked the decorator for a lighter floral concept — expect it by next week. Meanwhile, here is the updated quotation.', at(-12, 20), { readBy: ['acc_platform_demo', 'acc_customer_demo'] }),
     m('msg4', 'th_1021_project', sita, 'Quotation QT-2026-0021 (v2)', at(-35, 11), { kind: 'quote', meta: { quoteId: 'qt_1021' }, readBy: ['acc_platform_demo', 'acc_customer_demo'] }),
-    m('msg5', 'th_1021_project', sita, 'Menu tasting at the party palace', at(-2, 16), { kind: 'meeting', meta: { meeting: { at: at(18, 13), title: 'Menu tasting' } }, readBy: ['acc_platform_demo'] }),
+    m('msg5', 'th_1021_project', sita, 'Food tasting at the party palace', at(-2, 16), { kind: 'meeting', meta: { meeting: { at: at(18, 13), title: 'Food tasting' } }, readBy: ['acc_platform_demo'] }),
     m('msg6', 'th_1021_project', sita, 'Reminder: your next instalment is due soon. You can pay by eSewa, Khalti or bank transfer from the Payments tab.', at(0, 9, 5), { readBy: ['acc_platform_demo'] }),
     m('msg7', 'th_1021_photo', studio, 'Hi Aakriti! Engagement edited photos are ready for your review — please approve or send changes from Services.', at(-1, 18, 30), { readBy: ['acc_vendor_studio'] }),
     m('msg8', 'th_1021_photo', aakriti, 'For the pre-wedding, can we start at Nagarkot at 5:30 for the sunrise?', at(-3, 21), { readBy: ['acc_customer_demo', 'acc_vendor_studio', 'acc_platform_demo'] }),

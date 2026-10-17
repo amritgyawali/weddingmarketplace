@@ -70,7 +70,7 @@ export default function ShortlistScreen() {
 
   return (
     <View style={styles.root}>
-      <ScreenHeader title="My Shortlist" subtitle={`${list.length} vendors · ${photosLiked.length} photos`} />
+      <ScreenHeader title="My shortlist" subtitle={`${list.length} vendors · ${photosLiked.length} photos`} />
       <View style={{ paddingVertical: 10, backgroundColor: colors.white }}>
         <Segmented
           options={[

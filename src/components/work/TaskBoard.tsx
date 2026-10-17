@@ -128,7 +128,7 @@ function TaskSheet({ project, mode, task, onClose }: { project: Project; mode: M
         <Text size={13} weight="semibold" color={t.c.muted}>
           Priority
         </Text>
-        <ChoiceChips options={['low', 'medium', 'high', 'urgent']} selected={[priority]} onToggle={(v) => setPriority(v as ProjectTask['priority'])} />
+        <ChoiceChips labels={{ low: 'Low', medium: 'Medium', high: 'High', urgent: 'Urgent' }} options={['low', 'medium', 'high', 'urgent']} selected={[priority]} onToggle={(v) => setPriority(v as ProjectTask['priority'])} />
         <Text size={13} weight="semibold" color={t.c.muted}>
           Linked function
         </Text>
@@ -317,7 +317,7 @@ export function TaskBoard({ project, mode, openTaskId, onFocusTarget }: { projec
                   </Pressable>
                   <Pressable onPress={() => setEditing(task)} accessibilityRole="button" accessibilityLabel={`Edit ${task.title}`} style={styles.taskBody}>
                   <View style={{ flex: 1, gap: 2 }}>
-                    <Text size={14} weight="semibold" color={t.c.textStrong} style={task.status === 'COMPLETED' ? { textDecorationLine: 'line-through', opacity: 0.6 } : undefined}>
+                    <Text size={14} weight="semibold" color={task.status === 'COMPLETED' ? t.c.muted : t.c.textStrong} style={task.status === 'COMPLETED' ? { textDecorationLine: 'line-through' } : undefined}>
                       {task.title}
                     </Text>
                     <Text size={12} color={late ? t.c.danger : t.c.muted}>

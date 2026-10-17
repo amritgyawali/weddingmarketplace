@@ -155,7 +155,7 @@ export function AvailabilityCalendar({ ownerKind, ownerId, onSelectDay }: { owne
       <Sheet visible={editing} onClose={() => setEditing(false)} title={`${selected.length} day(s)`}>
         <View style={{ paddingHorizontal: 20, gap: 12 }}>
           <ChoiceChips options={['AVAILABLE', 'TENTATIVE', 'UNAVAILABLE']} selected={[status]} onToggle={(v) => setStatus(v as AvailabilityStatus)} />
-          <ChoiceChips options={['full', 'morning', 'afternoon', 'evening']} selected={[part]} onToggle={(v) => setPart(v as DayPart)} />
+          <ChoiceChips labels={{ full: 'Full day', morning: 'Morning', afternoon: 'Afternoon', evening: 'Evening' }} options={['full', 'morning', 'afternoon', 'evening']} selected={[part]} onToggle={(v) => setPart(v as DayPart)} />
           <KField placeholder="Note (e.g. family puja, travel)" value={note} onChangeText={setNote} />
           <Text size={12} color={t.c.muted}>
             Booked and held days come from confirmed bookings and can’t be changed here.

@@ -34,7 +34,7 @@ import type {
   TimelineEntry,
 } from '@/types/platform';
 import { quietly } from '@/store/quiet';
-import { addDays, daysUntil, formatMoney, formatShortDate, shortCode, uid } from '@/utils/format';
+import { addDays, daysUntil, formatNpr, formatShortDate, shortCode, uid } from '@/utils/format';
 
 import { accountById, bookingDates, currentActor, type GetDb, mapBooking, mapProject, now, ownersOf, type SetDb, SYSTEM, today } from './helpers';
 import { staffDenied } from './personas';
@@ -166,7 +166,7 @@ function activateBooking(set: SetDb, get: GetDb, projectId: string, bookingId: s
         ],
   }));
   const to = b.providerAccountId ?? ownersOf(b.providerId)[0]?.id;
-  if (to) get().notify(to, `Booking confirmed: ${project.title}`, `${serviceName(b.serviceId)} · ${formatMoney(b.providerPayable)} payable to you`, `/business/booking/${bookingId}`, 'booking');
+  if (to) get().notify(to, `Booking confirmed: ${project.title}`, `${serviceName(b.serviceId)} · ${formatNpr(b.providerPayable)} payable to you`, `/business/booking/${bookingId}`, 'booking');
   get().log(currentActor(), 'booking.confirm', 'booking', bookingId, `${b.providerName} for ${project.code}`);
 }
 
@@ -532,7 +532,7 @@ export const projectActions = (set: SetDb, get: GetDb): ProjectActions => ({
         : s.availability,
     }));
     if (owner) {
-      get().notify(owner.id, `Booking request: ${project.title}`, `${serviceName(requirement.serviceId)} · ${dates.map((d) => formatShortDate(d)).join(', ')} · ${formatMoney(split.providerPayable)} to you`, `/business/booking/${booking.id}`, 'booking');
+      get().notify(owner.id, `Booking request: ${project.title}`, `${serviceName(requirement.serviceId)} · ${dates.map((d) => formatShortDate(d)).join(', ')} · ${formatNpr(split.providerPayable)} to you`, `/business/booking/${booking.id}`, 'booking');
     } else {
       // Unclaimed catalogue listing: simulate the provider confirming by phone.
       setTimeout(() => quietly(() => get().respondToBooking(projectId, booking.id, true, 'Confirmed availability by phone')), 3500);
@@ -620,7 +620,7 @@ export const projectActions = (set: SetDb, get: GetDb): ProjectActions => ({
           : [...s.availability, { id: uid('av'), ownerKind: 'freelancer', ownerId: worker.id, date: assignment.date, part: 'full', status: 'BOOKED', source: 'assignment', refId: assignment.id }],
     }));
     if (accountById(worker.id)) {
-      get().notify(worker.id, `You're assigned: ${assignment.role}`, `${project.title} · ${formatShortDate(assignment.date)} · ${formatMoney(pay)}`, `/freelancer/assignment/${assignment.id}`, 'gig');
+      get().notify(worker.id, `You're assigned: ${assignment.role}`, `${project.title} · ${formatShortDate(assignment.date)} · ${formatNpr(pay)}`, `/freelancer/assignment/${assignment.id}`, 'gig');
     }
     if (opts.replacesId) {
       get().notify(project.coordinatorId ?? 'platform', 'Replacement confirmed', `${worker.name} replaces the ${assignment.role.toLowerCase()} for ${project.code}`, `/platform/project/${projectId}?tab=crew`, 'emergency');
@@ -699,7 +699,7 @@ export const projectActions = (set: SetDb, get: GetDb): ProjectActions => ({
       projects: mapProject(s.projects, projectId, (p) => mapBooking(p, bookingId, (b) => ({ ...b, assignments: b.assignments.map((x) => (x.id === assignmentId ? { ...x, confirmedByProvider: true } : x)) }))),
       payables: s.payables.map((p) => (p.assignmentId === assignmentId && p.status === 'ACCRUED' ? { ...p, status: 'READY' } : p)),
     }));
-    if (accountById(a.workerId)) get().notify(a.workerId, 'Work confirmed', `Your payout of ${formatMoney(a.pay)} is ready for release.`, '/freelancer/earnings', 'payment');
+    if (accountById(a.workerId)) get().notify(a.workerId, 'Work confirmed', `Your payout of ${formatNpr(a.pay)} is ready for release.`, '/freelancer/earnings', 'payment');
   },
 
   startEmergencyReplacement: (projectId, bookingId, assignmentId, reason, pay) => {
@@ -715,7 +715,7 @@ export const projectActions = (set: SetDb, get: GetDb): ProjectActions => ({
     const candidates = rankFreelancers({ role: a.role, date: a.date, city: event?.city ?? project.city, pay: offered, equipment: b.crew.find((c) => c.id === a.crewId)?.equipment ?? [], emergency: true }, { availability: get().availability, rules: get().availabilityRules, skipIds: [a.workerId], pool: get().freelancerPool() }, { limit: 6 });
     const isToday = daysUntil(a.date) === 0;
     const gig = get().postGig({
-      title: `EMERGENCY: ${a.role} needed ${isToday ? 'today' : formatShortDate(a.date)} — ${project.city}`,
+      title: `Emergency: ${a.role} needed ${isToday ? 'today' : formatShortDate(a.date)} — ${project.city}`,
       skill: a.role,
       postedById: 'platform',
       postedByName: 'Vivah Operations',
@@ -857,7 +857,7 @@ export const projectActions = (set: SetDb, get: GetDb): ProjectActions => ({
 /** Readable one-liner for a payable/assignment amount split (model D). */
 export const describeMargin = (clientPay: number, margin = 0.2) => {
   const { pay, margin: m } = freelancerNet(clientPay, margin);
-  return `Client pays ${formatMoney(clientPay)} · freelancer ${formatMoney(pay)} · platform ${formatMoney(m)}`;
+  return `Client pays ${formatNpr(clientPay)} · freelancer ${formatNpr(pay)} · platform ${formatNpr(m)}`;
 };
 
 export const SYSTEM_ACTOR = SYSTEM;

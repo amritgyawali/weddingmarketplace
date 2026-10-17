@@ -289,7 +289,7 @@ export function ThreadView({ thread }: { thread: Thread }) {
       <Sheet visible={meeting} onClose={() => setMeeting(false)} title="Schedule a meeting">
         <ScrollView contentContainerStyle={{ paddingHorizontal: 20, gap: 12, paddingBottom: 12 }}>
           <KField value={meetingTitle} onChangeText={setMeetingTitle} />
-          <ChoiceChips options={['Video call', 'Site visit', 'Menu tasting', 'Makeup trial']} selected={[]} onToggle={(v) => setMeetingTitle(v)} />
+          <ChoiceChips options={['Video call', 'Site visit', 'Food tasting', 'Makeup trial']} selected={[]} onToggle={(v) => setMeetingTitle(v)} />
           <Calendar value={meetingDate} onChange={setMeetingDate} />
           <KField label="Time" value={meetingTime} onChangeText={setMeetingTime} placeholder="16:00" />
           <KButton

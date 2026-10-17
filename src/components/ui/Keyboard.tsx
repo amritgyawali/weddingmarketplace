@@ -105,18 +105,41 @@ export function keyboardScreenLayout({ route, children }: { route: { name: strin
 
 /** Breathing room kept between the focused field and the keyboard. */
 const GAP = 24;
+/** Room kept above the focused field when the form is pulled up to show its end. */
+const TOP_ROOM = 12;
+
+/**
+ * Where to scroll so the focused field is visible and as much of the rest of
+ * the form as fits, ideally down to its end (where the submit button is).
+ * All values are in content coordinates; `view` is the height left above the
+ * keyboard. Pure, so it can be reasoned about and tested on its own.
+ */
+export function revealTarget({ fieldTop, fieldBottom, contentHeight, view, current }: { fieldTop: number; fieldBottom: number; contentHeight: number; view: number; current: number }): number {
+  // Lowest scroll that still shows the whole field, and highest that keeps its top on screen.
+  const minY = Math.max(0, fieldBottom - view);
+  const maxY = Math.max(minY, fieldTop - TOP_ROOM);
+  // Scroll that puts the end of the form right above the keyboard.
+  const endY = Math.max(0, contentHeight - view);
+  // Never scroll back up past what is already shown, unless the field is above the view.
+  const wanted = Math.min(Math.max(endY, minY), maxY);
+  if (fieldTop < current) return Math.max(0, fieldTop - TOP_ROOM);
+  return Math.max(current, wanted);
+}
 
 /**
  * ScrollView with keyboard-friendly defaults: taps on buttons work while the
  * keyboard is open (the first tap no longer just closes it), dragging closes
- * it, and the focused input scrolls into view when the keyboard opens.
+ * it, and when a field is focused the form scrolls so that field and as much
+ * of the rest as fits (down to the submit button) sit above the keyboard. It
+ * measures the space left on each device, so it adapts to any screen size.
  */
 export const KeyboardAwareScrollView = forwardRef<RNScrollView, ScrollViewProps>(function KeyboardAwareScrollView(
-  { keyboardShouldPersistTaps = 'handled', keyboardDismissMode, onScroll, onLayout, scrollEventThrottle, ...rest },
+  { keyboardShouldPersistTaps = 'handled', keyboardDismissMode, onScroll, onLayout, onContentSizeChange, scrollEventThrottle, ...rest },
   ref,
 ) {
   const inner = useRef<RNScrollView>(null);
   const offset = useRef(0);
+  const contentHeight = useRef(0);
   const visible = useKeyboardStore((s) => s.visible);
   useImperativeHandle(ref, () => inner.current as RNScrollView);
 
@@ -133,8 +156,9 @@ export const KeyboardAwareScrollView = forwardRef<RNScrollView, ScrollViewProps>
         input.measureInWindow((_ix: number, iy: number, _iw: number, ih: number) => {
           const keyboard = useKeyboardStore.getState();
           const bottom = Math.min(sy + sh, keyboard.visible ? keyboard.top : sy + sh) - GAP;
-          if (iy + ih > bottom) scroll.scrollTo({ y: Math.max(0, offset.current + iy + ih - bottom), animated: true });
-          else if (iy < sy) scroll.scrollTo({ y: Math.max(0, offset.current + iy - sy - GAP), animated: true });
+          const fieldTop = offset.current + iy - sy;
+          const y = revealTarget({ fieldTop, fieldBottom: fieldTop + ih, contentHeight: contentHeight.current, view: Math.max(0, bottom - sy), current: offset.current });
+          if (Math.abs(y - offset.current) > 4) scroll.scrollTo({ y, animated: true });
         });
       }), () => {});
     };
@@ -164,6 +188,10 @@ export const KeyboardAwareScrollView = forwardRef<RNScrollView, ScrollViewProps>
       }}
       onLayout={(e) => {
         onLayout?.(e);
+      }}
+      onContentSizeChange={(w, h) => {
+        contentHeight.current = h;
+        onContentSizeChange?.(w, h);
       }}
       {...rest}
     />

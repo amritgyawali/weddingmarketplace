@@ -50,18 +50,26 @@ export const shiftCursor = (mode: 'bs' | 'ad', c: { year: number; month: number 
 /**
  * Pure-JS month calendar so the date step looks the same on iOS, Android and
  * web. Shows the Nepali (BS) month by default with the AD day in small type;
- * the value is always an AD `yyyy-mm-dd`.
+ * the value is always an AD `yyyy-mm-dd`. With `onClear`, a "Clear date"
+ * button sits right under the days (shown once a date is picked), so nobody
+ * has to scroll to find it. Rows have a fixed height, so a six-week month
+ * always fits.
  */
 export function Calendar({
   value,
   onChange,
   minDate = new Date(),
   dateStatus,
+  onClear,
+  clearLabel = 'Clear date',
 }: {
   value: string | null;
   onChange: (iso: string) => void;
   minDate?: Date;
   dateStatus?: (date: string) => AvailabilityStatus;
+  /** Removes the picked date; shows the clear button under the grid. */
+  onClear?: () => void;
+  clearLabel?: string;
 }) {
   const t = useRoleTheme();
   const { calendar: mode, lang } = useI18n();
@@ -140,12 +148,13 @@ export function Calendar({
                   <Text
                     size={15}
                     lineHeight={19}
+                    maxFontSizeMultiplier={1.2}
                     weight={selected ? 'bold' : 'medium'}
                     color={selected ? t.c.onPrimary : blocked ? t.c.danger : disabled ? t.c.border : saturday ? t.c.danger : t.c.text}
                     raw>
                     {n(cell.day)}
                   </Text>
-                  <Text size={9} lineHeight={11} color={selected ? t.c.onPrimary : t.c.muted} raw>
+                  <Text size={9} lineHeight={11} maxFontSizeMultiplier={1.1} color={selected ? t.c.onPrimary : t.c.muted} raw>
                     {cell.alt}
                   </Text>
                   {status && !selected && <View style={[styles.dot, styles.peakDot, { backgroundColor: blocked ? t.c.danger : status === 'TENTATIVE' || status === 'HELD' ? t.c.warning : t.c.success }]} />}
@@ -156,11 +165,26 @@ export function Calendar({
           );
         })}
       </View>
-      <View style={styles.legend}>
-        <View style={[styles.dot, { backgroundColor: t.c.primary }]} />
-        <Text size={12} color={t.c.muted}>
-          {dateStatus ? 'Green: available · Red: unavailable' : 'Popular wedding dates'}
-        </Text>
+      <View style={styles.footer}>
+        <View style={styles.legend}>
+          <View style={[styles.dot, { backgroundColor: t.c.primary }]} />
+          <Text size={12} color={t.c.muted} style={{ flexShrink: 1 }}>
+            {dateStatus ? 'Green: available · Red: unavailable' : 'Popular wedding dates'}
+          </Text>
+        </View>
+        {onClear && !!value && (
+          <Pressable
+            onPress={onClear}
+            hitSlop={8}
+            accessibilityRole="button"
+            accessibilityLabel={clearLabel}
+            style={({ pressed }) => [styles.clear, { borderColor: t.c.borderStrong }, pressed && { opacity: 0.6 }]}>
+            <Ionicons name="close" size={14} color={t.c.primary} />
+            <Text size={13} weight="semibold" color={t.c.primary}>
+              {clearLabel}
+            </Text>
+          </Pressable>
+        )}
       </View>
     </View>
   );
@@ -171,9 +195,12 @@ const styles = StyleSheet.create({
   nav: { width: 36, height: 36, borderRadius: 18, alignItems: 'center', justifyContent: 'center' },
   grid: { flexDirection: 'row', flexWrap: 'wrap' },
   head: { width: `${100 / 7}%`, height: 28, alignItems: 'center', justifyContent: 'center' },
-  cell: { width: `${100 / 7}%`, aspectRatio: 1, alignItems: 'center', justifyContent: 'center' },
-  day: { width: 42, height: 42, borderRadius: 21, alignItems: 'center', justifyContent: 'center' },
+  // Fixed row height (not square cells): six weeks always fit, even in a short sheet.
+  cell: { width: `${100 / 7}%`, height: 46, alignItems: 'center', justifyContent: 'center' },
+  day: { width: 42, maxWidth: '96%', height: 42, borderRadius: 21, alignItems: 'center', justifyContent: 'center', overflow: 'hidden' },
   dot: { width: 5, height: 5, borderRadius: 3 },
   peakDot: { position: 'absolute', bottom: 1 },
-  legend: { flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: 6, alignSelf: 'center' },
+  footer: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', flexWrap: 'wrap', gap: 10, marginTop: 6 },
+  legend: { flexDirection: 'row', alignItems: 'center', gap: 6, flexShrink: 1 },
+  clear: { flexDirection: 'row', alignItems: 'center', gap: 4, borderWidth: 1, borderRadius: 6, paddingHorizontal: 10, paddingVertical: 4 },
 });

@@ -134,10 +134,13 @@ export function ChoiceChips({
   options,
   selected,
   onToggle,
+  labels,
 }: {
   options: string[];
   selected: string[];
   onToggle: (value: string) => void;
+  /** What to show for each option when the stored value isn't the words to show ("low" → "Low"). */
+  labels?: Record<string, string>;
 }) {
   const t = useRoleTheme();
   return (
@@ -156,7 +159,7 @@ export function ChoiceChips({
             style={[styles.chip, { borderColor: on ? t.c.primary : t.c.border, backgroundColor: on ? t.c.primary : t.c.surface }]}>
             {on && <Ionicons name="checkmark" size={14} color={t.c.onPrimary} />}
             <Text size={14} weight={on ? 'semibold' : 'regular'} color={on ? t.c.onPrimary : t.c.text}>
-              {o}
+              {labels?.[o] ?? o}
             </Text>
           </Pressable>
         );

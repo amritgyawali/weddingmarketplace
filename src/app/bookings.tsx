@@ -113,7 +113,7 @@ export default function BookingsScreen() {
 
   return (
     <View style={styles.root}>
-      <ScreenHeader title="My Bookings" />
+      <ScreenHeader title="My bookings" />
       <View>
         <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.filters}>
           {(['all', 'venue', 'vendor', 'genie'] as Filter[]).map((f) => (

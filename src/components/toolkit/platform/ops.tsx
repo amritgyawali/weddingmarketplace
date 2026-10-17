@@ -201,7 +201,7 @@ export function Macros() {
           { key: 'note', label: 'Message', kind: 'multiline', required: true },
         ]}
         subtitle={(e) => e.note}
-        rowActions={(e) => [{ label: 'Copy', onPress: () => Clipboard.setStringAsync(e.note ?? '').then(() => toast('Copied')) }]}
+        rowActions={(e) => [{ label: 'Copy', onPress: () => Clipboard.setStringAsync(e.note ?? '').then(() => toast('Copied. Paste it wherever you need it')) }]}
       />
     </ToolPage>
   );

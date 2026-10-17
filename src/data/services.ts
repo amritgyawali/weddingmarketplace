@@ -65,16 +65,16 @@ export type ServiceGroupId =
 /** Service groups in display order, with title, subtitle, photo and background. */
 export const SERVICE_GROUPS: { id: ServiceGroupId; title: string; subtitle: string; image: PhotoKey; bg: string }[] = [
   { id: 'venue', title: 'Venues', subtitle: 'Party palaces, banquets, hotels & resorts', image: 'venueLawn', bg: '#F3E7D2' },
-  { id: 'photo-video', title: 'Photo & Video', subtitle: 'Photography, films, drone, live streaming', image: 'photographerCeremony', bg: '#F6E6E5' },
-  { id: 'beauty', title: 'Makeup & Mehendi', subtitle: 'Bridal makeup, hair, mehendi artists', image: 'makeupBridePortrait', bg: '#EBD3D3' },
-  { id: 'decor', title: 'Planning & Decor', subtitle: 'Planners, decorators, florists, lighting', image: 'decorMandapFloral', bg: '#F0E3DE' },
-  { id: 'food', title: 'Food & Cake', subtitle: 'Catering, cakes, bartending', image: 'venueGardenPavilion', bg: '#F3E7D2' },
-  { id: 'entertainment', title: 'Music & Entertainment', subtitle: 'DJ, Panche Baja, live band, MC, sound', image: 'ideaReceptionToast', bg: '#EDE1D3' },
-  { id: 'fashion', title: 'Wear & Jewellery', subtitle: 'Bridal wear, Daura Suruwal, jewellery', image: 'ideaBrideParasol', bg: '#F6E6E5' },
-  { id: 'rituals', title: 'Pandit & Rituals', subtitle: 'Purohit, puja samagri', image: 'ideaCeremonyHands', bg: '#F3E7D2' },
-  { id: 'logistics', title: 'Transport & Logistics', subtitle: 'Wedding cars, buses, stay, security', image: 'ideaCoupleGardenWalk', bg: '#EDE1D3' },
+  { id: 'photo-video', title: 'Photo & video', subtitle: 'Photography, films, drone, live streaming', image: 'photographerCeremony', bg: '#F6E6E5' },
+  { id: 'beauty', title: 'Makeup & mehendi', subtitle: 'Bridal makeup, hair, mehendi artists', image: 'makeupBridePortrait', bg: '#EBD3D3' },
+  { id: 'decor', title: 'Planning & decor', subtitle: 'Planners, decorators, florists, lighting', image: 'decorMandapFloral', bg: '#F0E3DE' },
+  { id: 'food', title: 'Food & cake', subtitle: 'Catering, cakes, bartending', image: 'venueGardenPavilion', bg: '#F3E7D2' },
+  { id: 'entertainment', title: 'Music & entertainment', subtitle: 'DJ, panche baja, live band, MC, sound', image: 'ideaReceptionToast', bg: '#EDE1D3' },
+  { id: 'fashion', title: 'Wear & jewellery', subtitle: 'Bridal wear, daura suruwal, jewellery', image: 'ideaBrideParasol', bg: '#F6E6E5' },
+  { id: 'rituals', title: 'Pandit & rituals', subtitle: 'Purohit, puja samagri', image: 'ideaCeremonyHands', bg: '#F3E7D2' },
+  { id: 'logistics', title: 'Transport & logistics', subtitle: 'Wedding cars, buses, stay, security', image: 'ideaCoupleGardenWalk', bg: '#EDE1D3' },
   { id: 'vehicles', title: 'Vehicles', subtitle: 'Decorated cars, jeeps, buses, baggi and doli', image: 'venueResortSunset', bg: '#F3E7D2' },
-  { id: 'stationery', title: 'Invitations & Gifts', subtitle: 'Cards, e-invites, favours', image: 'virtualPlanningCouple', bg: '#F0E3DE' },
+  { id: 'stationery', title: 'Invitations & gifts', subtitle: 'Cards, e-invites, favours', image: 'virtualPlanningCouple', bg: '#F0E3DE' },
 ];
 
 const PHOTO_CRITERIA = ['Photo quality', 'Communication', 'Punctuality', 'Professionalism', 'Delivery speed'];
@@ -232,7 +232,7 @@ export const SERVICES: ServiceDef[] = [
   },
   {
     id: 'pre-wedding',
-    name: 'Pre-wedding Shoot',
+    name: 'Pre-wedding shoot',
     icon: 'heart-outline',
     group: 'photo-video',
     image: 'ideaCoupleGardenWalk',

@@ -124,7 +124,7 @@ export default function JoinWeddingScreen() {
           )}
         </View>
         <View style={[styles.footer, { paddingBottom: Math.max(insets.bottom, 14) }]}>
-          <Button label="Join Wedding" size="lg" onPress={submit} />
+          <Button label="Join the wedding" size="lg" onPress={submit} />
         </View>
       </View>
     </View>

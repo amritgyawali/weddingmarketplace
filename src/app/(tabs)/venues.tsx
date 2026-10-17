@@ -8,7 +8,7 @@ export default function VenuesTab() {
   const city = useAppStore((s) => s.city);
   return (
     <VenueListScreen
-      title={`${city === ALL_CITIES ? 'All Cities' : city} • Venues`}
+      title={`${city === ALL_CITIES ? 'All cities' : city} • Venues`}
       onBack={() => router.navigate('/')}
     />
   );

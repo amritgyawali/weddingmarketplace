@@ -110,14 +110,16 @@ Always render text with `Text` from `components/ui/Text` (it translates, picks t
 | Lists | `ListRow` (kit) or a `Card` per row; long lists use `FlatList`. |
 | Forms | `KField` (kit) or `Field` (ui) with a label above; `required` marks; error under the field; `KeyboardAwareScrollView`. Submit buttons are never silently disabled for missing input: pass `missing="Enter a title"` (and `useFormCheck` for per-field errors) so a tap says what is missing. `disabled` is only for "busy". Descriptions take `maxLength` (and `minLength`), which shows the allowed length and a live count. Longer forms keep a draft on the device with `useDraft` (`store/drafts`). |
 | Photos | A listing's photo badge and photos open `PhotoViewer` (full screen, X to close). Every photo a person uploads can be removed again. |
-| Choosing one of few | `Segmented` (counts show in a small pill); one of many: `ChoiceChips`; a filter or sort chip: `FilterChip` (burgundy with a check when selected; never style a `Pressable` as a chip by hand); on/off: `Toggle`. |
+| Choosing one of few | `Segmented` (counts show in a small pill); one of many: `ChoiceChips` (pass `labels` when the stored value isn't the words to show, e.g. `low` → "Low"); a filter or sort chip: `FilterChip` (burgundy with a check when selected; never style a `Pressable` as a chip by hand); on/off: `Toggle`. |
 | Destructive actions | Confirm through `utils/confirm`; say what will be lost. |
 | Empty | `EmptyState` / `EmptyBlock`: a pearl medallion with a champagne ring around an icon, a serif title, a sentence and, if possible, the next action. Pass `art` (`mandap`, `garland`, `kalash`, `diya`, `rings`) for a line drawing from `ui/Illustration` where a screen deserves warmth (first-run lists). |
 | Photos | `Photo` (`ui/Photo`), never `expo-image` directly: a pearl placeholder while loading and a cross-dissolve in (none with Reduce Motion). |
 | Ornament | `Ornament` (`ui/Ornament`), the Dhaka-weave gilt divider. Only on the home wedding band, the welcome headline, the Vendors feature card and `FocusBand`; never as wallpaper. |
 | Loading | `Loader` / `LoadingState`; skeletons for lists. |
 | Hidden feature (deep link) | An explanation of why, and how to unlock it (for example "Add the catering service to use Menu"). |
-| Dates | Show BS by default with `formatShortDate`/`formatLongDate`; a second line with the other calendar via `formatDateAlt` where it helps. |
+| Dates | Show BS by default with `formatShortDate`/`formatLongDate`; a second line with the other calendar via `formatDateAlt` where it helps. A date that can be removed passes `onClear` to `Calendar` (or `DatePopup`): the "Clear date" button then sits right under the days, never further down the form. Calendars in a sheet go inside a scroll view; rows have a fixed height so six weeks always fit. |
+| Not ready yet | A submit button with `missing` turns pearl with readable muted text (5 : 1) instead of fading to 45%, so the label stays legible while it explains what is missing. |
+| Popups after an action | `store/actionToasts.ts` says what happened and, when it helps, what happens next ("Quotation sent. The couple will be notified right away"). Choices change the words (`detailedMessage`: accepted or declined, won or lost, the amount paid). A screen's own toast should be just as specific; never just "Done", "Saved" or "Copied" when a few more words help. |
 | Money | `formatMoney` / `formatMoneyCompact` only. |
 | Announcements | `AnnouncementBanner` (super admin announcements). |
 
@@ -154,4 +156,5 @@ The design history (why burgundy, why these fonts) is in [20-decision-log.md](20
 
 ## 10. Change log
 
+- **17 October 2026, text and payments pass.** Readable "not ready yet" buttons, ticked-off tasks in muted ink instead of faded, the public wedding website keeps its own light colours in dark mode, meaningful popups for every action, sentence case on the remaining Title Case labels and chips, "Clear date" built into the calendar, fixed calendar rows, forms that scroll to show the submit button above the keyboard (`revealTarget` in `ui/Keyboard`), a 30-second payment window with "Pay again", clearer payment details, statuses and receipt PDF, and a per-device display currency.
 - **3 October 2026, finish and craft pass.** WCAG AA contrast for every text token and 3 : 1 control borders; gilt tab bars; `Photo` fade-in everywhere; medallion empty states with line drawings; `FilterChip`, `StatTile`, `FocusBand`; the `Ornament`; motion tokens and Reduce Motion support; editorial Vendors tab; desktop two-column business home; palette-only dialog, toast and WhatsApp pill; hex-literal lint rule. Status per roadmap item in `docs/UI_UX_REPORT.md` §6.

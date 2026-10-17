@@ -74,7 +74,7 @@ export function SavedReplies() {
         ]}
         subtitle={(e) => fillTemplate(e.note ?? '', lead, business)}
         rowActions={(e) => [
-          { label: 'Copy', onPress: () => Clipboard.setStringAsync(fillTemplate(e.note ?? '', lead, business)).then(() => toast('Copied')) },
+          { label: 'Copy', onPress: () => Clipboard.setStringAsync(fillTemplate(e.note ?? '', lead, business)).then(() => toast('Message copied with the client’s details filled in')) },
           ...(lead ? [{ label: 'WhatsApp', onPress: () => openWhatsApp(fillTemplate(e.note ?? '', lead, business), lead.customerPhone) }] : []),
         ]}
       />
@@ -357,7 +357,7 @@ export function BusinessHours() {
           <Toggle value={!!s.away} onValueChange={(v) => { set({ away: v }); toast(v ? 'Away message on' : 'Away message off'); }} accessibilityLabel="Away mode" />
         </View>
         <KField label="Away message" value={String(s.awayMessage)} onChangeText={(v) => set({ awayMessage: v })} multiline />
-        <KButton label="Copy away message" size="sm" variant="secondary" onPress={() => Clipboard.setStringAsync(String(s.awayMessage)).then(() => toast('Copied'))} />
+        <KButton label="Copy away message" size="sm" variant="secondary" onPress={() => Clipboard.setStringAsync(String(s.awayMessage)).then(() => toast('Away message copied'))} />
       </Card>
       <Hint>Your hours show on your storefront. Paste the away message as your first reply when away mode is on.</Hint>
     </ToolPage>

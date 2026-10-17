@@ -16,7 +16,8 @@ Every exported symbol in `src/services/`, file by file. The guide that explains 
 - [`exporters.ts`](#exportersts) (11 exports) · Files the app hands to other apps: calendar (.ics), spreadsheets (.csv) and PDFs (via expo-print). Works on iOS/Android (share sheet) and w…
 - [`insights.ts`](#insightsts) (43 exports) · Pure scoring and forecasting behind the "smart" toolkit tools: the couple's health check and headcount forecast, a vendor's lead scores and…
 - [`matching.ts`](#matchingts) (16 exports) · Matching engine. Scores providers for a requirement and freelancers for a crew slot / gig. Weights mirror supabase/migrations/0003 so on-de…
-- [`planner.ts`](#plannerts) (25 exports) · Rule-based wedding planner ("AI" without paid AI): turns the requirement wizard into a project, allocates budgets, generates checklists and…
+- [`paymentInfo.ts`](#paymentinfots) (9 exports) · Plain-words payment information shared by the payment sheet, the receipts list and the printable receipt: method names, what each status me…
+- [`planner.ts`](#plannerts) (27 exports) · Rule-based wedding planner ("AI" without paid AI): turns the requirement wizard into a project, allocates budgets, generates checklists and…
 - [`pricing.ts`](#pricingts) (16 exports) · Marketplace economics: the four business models, payment schedules, milestone status and payables. Customer payments and provider/freelance…
 - [`profile.ts`](#profilets) (5 exports) · Profile edits for every role: what a person may change about themselves and how it is cleaned before it is saved (on the device by `useSess…
 - [`quotes.ts`](#quotests) (10 exports)
@@ -497,7 +498,7 @@ Printable HTML documents (quotation, receipt, contract, guest list, seating, run
 
 ### `quoteHtml`
 
-*function* · [src/services/documents.ts:26](../../../src/services/documents.ts#L26)
+*function* · [src/services/documents.ts:29](../../../src/services/documents.ts#L29)
 
 ```ts
 quoteHtml(q: Quotation)
@@ -507,17 +508,17 @@ _No JSDoc yet._
 
 ### `receiptHtml`
 
-*function* · [src/services/documents.ts:46](../../../src/services/documents.ts#L46)
+*function* · [src/services/documents.ts:50](../../../src/services/documents.ts#L50)
 
 ```ts
 receiptHtml(payment: Payment, project: Project)
 ```
 
-_No JSDoc yet._
+Printable receipt: what was paid, for what, how, its status in words, and the balance left. Always in NPR.
 
 ### `contractHtml`
 
-*function* · [src/services/documents.ts:58](../../../src/services/documents.ts#L58)
+*function* · [src/services/documents.ts:82](../../../src/services/documents.ts#L82)
 
 ```ts
 contractHtml(c: Contract)
@@ -527,7 +528,7 @@ _No JSDoc yet._
 
 ### `guestListHtml`
 
-*function* · [src/services/documents.ts:70](../../../src/services/documents.ts#L70)
+*function* · [src/services/documents.ts:94](../../../src/services/documents.ts#L94)
 
 ```ts
 guestListHtml(project: Project, guests: Guest[], events: ProjectEvent[])
@@ -537,7 +538,7 @@ _No JSDoc yet._
 
 ### `seatingHtml`
 
-*function* · [src/services/documents.ts:81](../../../src/services/documents.ts#L81)
+*function* · [src/services/documents.ts:105](../../../src/services/documents.ts#L105)
 
 ```ts
 seatingHtml(project: Project, event: ProjectEvent, layout: SeatingLayout, guests: Guest[])
@@ -547,7 +548,7 @@ _No JSDoc yet._
 
 ### `runSheetHtml`
 
-*function* · [src/services/documents.ts:93](../../../src/services/documents.ts#L93)
+*function* · [src/services/documents.ts:117](../../../src/services/documents.ts#L117)
 
 ```ts
 runSheetHtml(project: Project, event: ProjectEvent)
@@ -557,7 +558,7 @@ _No JSDoc yet._
 
 ### `invitationHtml`
 
-*function* · [src/services/documents.ts:103](../../../src/services/documents.ts#L103)
+*function* · [src/services/documents.ts:127](../../../src/services/documents.ts#L127)
 
 ```ts
 invitationHtml(opts: { names: string; message: string; accent: string; background: string; events: ProjectEvent[]; footer?: string })
@@ -567,7 +568,7 @@ Printable invitation card (A5) — its own design, without the Vivah letterhead.
 
 ### `incomeStatementHtml`
 
-*function* · [src/services/documents.ts:117](../../../src/services/documents.ts#L117)
+*function* · [src/services/documents.ts:141](../../../src/services/documents.ts#L141)
 
 ```ts
 incomeStatementHtml(opts: { name: string; phone?: string; pan?: string; from: string; to: string; rows: { date: string; source: 'vivah' | 'private'; label: string; amount: number }[] })
@@ -1600,6 +1601,107 @@ rankFreelancers(slot: CrewSlot, ctx: { availability: AvailabilityEntry[]; rules?
 
 _No JSDoc yet._
 
+## paymentInfo.ts
+
+Source: [src/services/paymentInfo.ts](../../../src/services/paymentInfo.ts)
+
+Plain-words payment information shared by the payment sheet, the receipts
+list and the printable receipt: method names, what each status means, when
+an instalment is due and what a payment covers. Pure: no React, no store.
+
+### `PAYMENT_WINDOW_SECONDS`
+
+*const* · [src/services/paymentInfo.ts:15](../../../src/services/paymentInfo.ts#L15)
+
+```ts
+PAYMENT_WINDOW_SECONDS= 30
+```
+
+Seconds a payment screen stays open. If the payment isn't finished in time
+the attempt is rejected (nothing is charged) and the person starts again,
+so a stale amount or QR code is never paid.
+
+### `formatCountdown`
+
+*function* · [src/services/paymentInfo.ts:18](../../../src/services/paymentInfo.ts#L18)
+
+```ts
+formatCountdown(seconds: number): string
+```
+
+Seconds left as "0:27".
+
+### `PAYMENT_METHOD_LABEL`
+
+*const* · [src/services/paymentInfo.ts:24](../../../src/services/paymentInfo.ts#L24)
+
+```ts
+PAYMENT_METHOD_LABEL: Record<PaymentMethod, string>
+```
+
+Method names as people know them.
+
+### `PAYMENT_STATUS_TEXT`
+
+*const* · [src/services/paymentInfo.ts:36](../../../src/services/paymentInfo.ts#L36)
+
+```ts
+PAYMENT_STATUS_TEXT: Record<Payment['status'], { label: string; detail: string }>
+```
+
+What a payment record's status means, in one short label and one sentence.
+
+### `MILESTONE_STATUS_TEXT`
+
+*const* · [src/services/paymentInfo.ts:45](../../../src/services/paymentInfo.ts#L45)
+
+```ts
+MILESTONE_STATUS_TEXT: Record<MilestoneStatus, string>
+```
+
+Instalment status words for people (the enum stays as it is).
+
+### `milestoneDueText`
+
+*function* · [src/services/paymentInfo.ts:55](../../../src/services/paymentInfo.ts#L55)
+
+```ts
+milestoneDueText(m: PaymentMilestone): string
+```
+
+"Due in 5 days", "Due today", "Overdue by 3 days", "Paid in full".
+
+### `milestonePurpose`
+
+*function* · [src/services/paymentInfo.ts:67](../../../src/services/paymentInfo.ts#L67)
+
+```ts
+milestonePurpose(m: PaymentMilestone): string
+```
+
+One line on what an instalment is for, from its schedule rule.
+
+### `PaymentDetail`
+
+*interface* · [src/services/paymentInfo.ts:83](../../../src/services/paymentInfo.ts#L83)
+
+A label and a value, for the "What you’re paying for" box and the receipt.
+
+| Member | Type | Notes |
+|---|---|---|
+| `label` | `string` |  |
+| `value` | `string` |  |
+
+### `milestonePaymentDetails`
+
+*function* · [src/services/paymentInfo.ts:89](../../../src/services/paymentInfo.ts#L89)
+
+```ts
+milestonePaymentDetails(project: Project, m: PaymentMilestone, payNow: number): PaymentDetail[]
+```
+
+Everything a couple should see before paying an instalment. Amounts are NPR (what is charged).
+
 ## planner.ts
 
 Source: [src/services/planner.ts](../../../src/services/planner.ts)
@@ -1708,19 +1810,39 @@ buildRequirements(input: PlanInput, events: ProjectEvent[]): Requirement[]
 
 _No JSDoc yet._
 
-### `WEDDING_ONLY_TASKS`
+### `RENAMED_TASK_TITLES`
 
 *const* · [src/services/planner.ts:280](../../../src/services/planner.ts#L280)
 
 ```ts
-WEDDING_ONLY_TASKS= new Set(TASK_TEMPLATES.map((t) => t.title).filter((title) => !CELEBRATION_TEMPLATES.some(…
+RENAMED_TASK_TITLES: Record<string, string>
 ```
 
-Titles that only make sense for a wedding; older non-wedding plans drop them (store migrate v5).
+Checklist titles reworded since they were first saved on plans: old title → current title.
+
+### `taskTitleKey`
+
+*function* · [src/services/planner.ts:288](../../../src/services/planner.ts#L288)
+
+```ts
+taskTitleKey(title: string)
+```
+
+A task title in its current wording, so a plan saved with an older title isn't offered the same task again.
+
+### `WEDDING_ONLY_TASKS`
+
+*const* · [src/services/planner.ts:291](../../../src/services/planner.ts#L291)
+
+```ts
+WEDDING_ONLY_TASKS= new Set( TASK_TEMPLATES.map((t) => t.title) .filter((title) => !CELEBRATION_TEMPLATES.som…
+```
+
+Titles that only make sense for a wedding; older non-wedding plans drop them (store migrate v5). Old wordings count too.
 
 ### `generateTasks`
 
-*function* · [src/services/planner.ts:283](../../../src/services/planner.ts#L283)
+*function* · [src/services/planner.ts:298](../../../src/services/planner.ts#L298)
 
 ```ts
 generateTasks(mainDate: string, services: string[], customerName: string, coordinatorName = 'Your coordinator', occasion = 'wedding'): ProjectTask[]
@@ -1730,7 +1852,7 @@ Personalised checklist for the occasion; overdue templates are compressed into t
 
 ### `suggestedTasks`
 
-*function* · [src/services/planner.ts:311](../../../src/services/planner.ts#L311)
+*function* · [src/services/planner.ts:326](../../../src/services/planner.ts#L326)
 
 ```ts
 suggestedTasks(project: Project): ProjectTask[]
@@ -1740,7 +1862,7 @@ Checklist tasks for the project's date and requested services that aren't on its
 
 ### `guideSuggestions`
 
-*function* · [src/services/planner.ts:321](../../../src/services/planner.ts#L321)
+*function* · [src/services/planner.ts:336](../../../src/services/planner.ts#L336)
 
 ```ts
 guideSuggestions(project: Project, ticked: string[] = []): ProjectTask[]
@@ -1752,7 +1874,7 @@ checklist ids) are left out. Weddings and engagements only.
 
 ### `buildTimeline`
 
-*function* · [src/services/planner.ts:347](../../../src/services/planner.ts#L347)
+*function* · [src/services/planner.ts:362](../../../src/services/planner.ts#L362)
 
 ```ts
 buildTimeline(project: Project, opts: { internal?: boolean } = {}): TimelineEntry[]
@@ -1763,7 +1885,7 @@ entries (meetings, milestones) stored on the project.
 
 ### `NextAction`
 
-*interface* · [src/services/planner.ts:370](../../../src/services/planner.ts#L370)
+*interface* · [src/services/planner.ts:385](../../../src/services/planner.ts#L385)
 
 _No JSDoc yet._
 
@@ -1778,7 +1900,7 @@ _No JSDoc yet._
 
 ### `nextBestAction`
 
-*function* · [src/services/planner.ts:381](../../../src/services/planner.ts#L381)
+*function* · [src/services/planner.ts:396](../../../src/services/planner.ts#L396)
 
 ```ts
 nextBestAction(project: Project, quotes: Quotation[]): NextAction
@@ -1788,7 +1910,7 @@ _No JSDoc yet._
 
 ### `missingServices`
 
-*function* · [src/services/planner.ts:396](../../../src/services/planner.ts#L396)
+*function* · [src/services/planner.ts:411](../../../src/services/planner.ts#L411)
 
 ```ts
 missingServices(project: Project): string[]
@@ -1798,7 +1920,7 @@ Services couples usually need for their functions but haven't requested.
 
 ### `planningProgress`
 
-*function* · [src/services/planner.ts:402](../../../src/services/planner.ts#L402)
+*function* · [src/services/planner.ts:417](../../../src/services/planner.ts#L417)
 
 ```ts
 planningProgress(project: Project)
@@ -1808,7 +1930,7 @@ _No JSDoc yet._
 
 ### `savingTips`
 
-*function* · [src/services/planner.ts:414](../../../src/services/planner.ts#L414)
+*function* · [src/services/planner.ts:429](../../../src/services/planner.ts#L429)
 
 ```ts
 savingTips(project: Project): string[]
@@ -1818,7 +1940,7 @@ _No JSDoc yet._
 
 ### `invitationText`
 
-*function* · [src/services/planner.ts:426](../../../src/services/planner.ts#L426)
+*function* · [src/services/planner.ts:441](../../../src/services/planner.ts#L441)
 
 ```ts
 invitationText(project: Project, tone: 'traditional' | 'modern' | 'nepali' = 'traditional'): string
@@ -1828,7 +1950,7 @@ _No JSDoc yet._
 
 ### `enquiryText`
 
-*function* · [src/services/planner.ts:437](../../../src/services/planner.ts#L437)
+*function* · [src/services/planner.ts:452](../../../src/services/planner.ts#L452)
 
 ```ts
 enquiryText(project: Project, serviceId: string): string
@@ -1838,7 +1960,7 @@ _No JSDoc yet._
 
 ### `QUESTIONS_TO_ASK`
 
-*const* · [src/services/planner.ts:444](../../../src/services/planner.ts#L444)
+*const* · [src/services/planner.ts:459](../../../src/services/planner.ts#L459)
 
 ```ts
 QUESTIONS_TO_ASK: Record<string, string[]>
@@ -1848,7 +1970,7 @@ _No JSDoc yet._
 
 ### `questionsToAsk`
 
-*function* · [src/services/planner.ts:453](../../../src/services/planner.ts#L453)
+*function* · [src/services/planner.ts:468](../../../src/services/planner.ts#L468)
 
 ```ts
 questionsToAsk(serviceId: string)
@@ -1858,7 +1980,7 @@ _No JSDoc yet._
 
 ### `negotiationPoints`
 
-*function* · [src/services/planner.ts:456](../../../src/services/planner.ts#L456)
+*function* · [src/services/planner.ts:471](../../../src/services/planner.ts#L471)
 
 ```ts
 negotiationPoints(quote: Quotation, marketMedian?: number): string[]
@@ -1868,7 +1990,7 @@ _No JSDoc yet._
 
 ### `summarizeReviews`
 
-*function* · [src/services/planner.ts:467](../../../src/services/planner.ts#L467)
+*function* · [src/services/planner.ts:482](../../../src/services/planner.ts#L482)
 
 ```ts
 summarizeReviews(reviews: { rating: number; text: string }[]): { average: number; highlights: string[]; concerns: string[] }
@@ -1878,7 +2000,7 @@ _No JSDoc yet._
 
 ### `guestBandLabel`
 
-*function* · [src/services/planner.ts:484](../../../src/services/planner.ts#L484)
+*function* · [src/services/planner.ts:499](../../../src/services/planner.ts#L499)
 
 ```ts
 guestBandLabel(guests: number)

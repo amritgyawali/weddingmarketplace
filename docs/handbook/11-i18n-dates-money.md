@@ -48,7 +48,8 @@ Seed dates are relative (`day(n)`, `at(n)` in `data/seed.ts`), never fixed.
 
 | Need | Use |
 |---|---|
-| Display an amount | `formatMoney(150000)` → `NPR 150,000` |
+| Display an amount | `formatMoney(150000)` → `NPR 150,000` (or `USD 1,087` when the person reads prices in dollars) |
+| What is charged, receipted, printed or saved | `formatNpr` → always `NPR 150,000`; `formatNprCompact` → `NPR 45K`; `formatNprWithDisplay` → `NPR 150,000 (about USD 1,087)` on pay screens |
 | Tight spaces (chips, filters) | `formatMoneyCompact` → `NPR 45K`, `NPR 2.5M`; ranges `formatMoneyRange` |
 | Budgets the way families talk | `formatLakh` → "7.5 lakh", "1.2 crore"; `formatLakhRange` |
 | Read typed amounts | `parseMoney("1,50,000" \| "150k" \| "1.5 lakh")` → number (NaN if invalid) |
@@ -56,7 +57,11 @@ Seed dates are relative (`day(n)`, `at(n)` in `data/seed.ts`), never fixed.
 | Rounding | `roundMoney` |
 | VAT | `VAT_RATE` / `TAX_RATE` = 0.13 |
 
-Never ₹, INR, GST or `toLocaleString` on money (R-PROD-2).
+Never ₹, GST or `toLocaleString` on money (R-PROD-2).
+
+### Display currency
+
+Amounts are always NPR underneath. Settings → Currency lets a person read prices in USD, INR, EUR, GBP, AUD, CAD, AED, QAR, SAR, MYR, KRW or JPY (`DISPLAY_CURRENCIES` in `utils/currency.ts`, indicative NPR-per-unit rates reviewed October 2026; update them with care, they are labelled approximate). The choice is per device (`usePrefs().currency`, mirrored to `runtime.currency`), and the root layout remounts on a change so every formatted price redraws. `formatMoney`, `formatMoneyCompact`, `formatMoneyRange`, `formatLakh` and `formatLakhRange` follow it (lakh and crore only in NPR). Use `formatNpr`/`formatNprCompact` for anything that is paid, receipted, printed (`services/documents.ts`) or saved for someone else to read (store actions, notifications, enquiry text). Typed amounts (`parseMoney`, `KField prefix="NPR"`) stay NPR.
 
 ## 4. Phone numbers
 

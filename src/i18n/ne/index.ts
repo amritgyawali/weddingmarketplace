@@ -6,11 +6,14 @@
  */
 import { CONTENT_NE } from './content';
 import { CUSTOMER_PLANNING_NE } from './customerPlanning';
+import { POLISH_NE } from './polish';
 import { SOCIAL_NE } from './social';
 import { SMART_TOOLS_NE } from './smartTools';
 import { SUPPORT_NE } from './support';
 
 export const NE: Record<string, string> = {
+  // Text, payment and currency polish; entries below win where both have one.
+  ...POLISH_NE,
   // The Content studio (Super admin); entries below win where both have one.
   ...CONTENT_NE,
   // The social hub (Business → Social media); entries below win where both have one.

@@ -2,8 +2,8 @@ import type { ChecklistPhase, ChecklistTask } from '@/types';
 
 const RAW: Record<ChecklistPhase, [string, string][]> = {
   '12+ Months': [
-    ['Research Venue options', 'Venue'],
-    ['Research Wedding Planners', 'Planning'],
+    ['Research venue options', 'Venue'],
+    ['Research wedding planners', 'Planning'],
     ['Discuss the overall wedding budget with family', 'Budget'],
     ['Draft a tentative guest list', 'Guests'],
     ['Shortlist wedding dates with your pandit', 'Rituals'],

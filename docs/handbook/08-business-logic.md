@@ -87,6 +87,9 @@ Templates (`SCHEDULE_TEMPLATES`); `DEFAULT_SCHEDULE` is the first:
 - `milestoneStatus(m)` is always derived, never trusted from storage: `WAIVED` stays; paid in full → `PAID`; past due → `OVERDUE`; partly paid → `PARTIALLY_PAID`; due within 7 days → `DUE`; else `UPCOMING`.
 - `paymentSummary(project)` → `{ total, paid, outstanding, next, overdue }` for screens. Take totals from here, never compute in JSX.
 - The default schedule must match `DEFAULT_TERMS` in `quotes.ts` (the words in the contract).
+- Paying (`PaymentSheet`): the sheet first shows what the instalment covers (`milestonePaymentDetails`, `milestonePurpose` in `services/paymentInfo.ts`). Once a method is picked the pay screen is open for `PAYMENT_WINDOW_SECONDS` (30); if it isn't finished in time the attempt is rejected, nothing is recorded or charged, and "Pay again" opens a fresh window, so an old amount or QR code is never paid. Staff recording a payment that already happened aren't timed. Online gateway payments still settle only through `payment-verify` (§13a of `AGENTS.md`).
+- Status words for people: `PAYMENT_STATUS_TEXT` (Successful, Being confirmed, Failed, Refunded, Partly refunded) and `MILESTONE_STATUS_TEXT`; `milestoneDueText` gives "Due in 5 days" / "Overdue by 3 days". The enums themselves never change.
+- The receipt PDF (`receiptHtml`) shows the status in words, method, transaction reference, what the instalment was for, any refund, and the payment plan's balance and next instalment, always in NPR.
 
 ## 6. Payables and payouts
 

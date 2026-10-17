@@ -2,7 +2,7 @@
 import { findCategory } from '@/data/categories';
 import { useSession } from '@/store/useSession';
 import type { Account, CheckState, ReviewRecord, VerificationCase, VerificationStatus } from '@/types/platform';
-import { addDays, formatMoney, uid } from '@/utils/format';
+import { addDays, formatNpr, uid } from '@/utils/format';
 
 import { accountById, currentActor, type GetDb, now, ownersOf, type SetDb, today } from './helpers';
 import { staffOnly } from './personas';
@@ -78,7 +78,7 @@ export const trustActions = (set: SetDb, get: GetDb): TrustActions => ({
       documents: [
         ...(account.role === 'vendor' ? [{ kind: 'PAN/VAT certificate', name: account.panVat ? `pan-${account.panVat}.pdf` : 'Not uploaded', status: 'pending' as const }] : []),
         { kind: 'Citizenship / ID', name: 'id-front.jpg', status: 'pending' },
-        ...(account.role === 'freelancer' ? [{ kind: 'Day rate', name: formatMoney(account.dayRate ?? 0), status: 'passed' as const }] : []),
+        ...(account.role === 'freelancer' ? [{ kind: 'Day rate', name: formatNpr(account.dayRate ?? 0), status: 'passed' as const }] : []),
       ],
       submittedAt: now(),
     };

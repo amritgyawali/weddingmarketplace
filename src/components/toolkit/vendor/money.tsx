@@ -188,7 +188,7 @@ export function PriceCalculator() {
             style={{ marginTop: 8 }}
             onPress={async () => {
               await Clipboard.setStringAsync(`${listing ? serviceName(listing.serviceId) : 'Package'} for ${guests} guests on ${formatShortDate(date)}: ${formatMoney(q.total)} + 13% VAT`);
-              toast('Copied');
+              toast('Copied. Paste it wherever you need it');
             }}
           />
         </Card>

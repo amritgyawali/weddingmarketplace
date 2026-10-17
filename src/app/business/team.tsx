@@ -87,7 +87,7 @@ export default function Team() {
               </Text>
               <Toggle value={editing.active} onValueChange={(active) => setEditing({ ...editing, active })} accessibilityLabel="Active" />
             </View>
-            <KButton label="Save" missing={check.missing} onMissing={check.reveal} onPress={() => { save({ ...editing, name: editing.name.trim() }); setEditing(null); check.reset(); toast('Team updated'); }} />
+            <KButton label="Save" missing={check.missing} onMissing={check.reveal} onPress={() => { save({ ...editing, name: editing.name.trim() }); setEditing(null); check.reset(); toast('Team member saved'); }} />
             {staff.some((m) => m.id === editing.id) && <KButton label="Remove" variant="ghost" size="sm" onPress={() => { remove(editing.id); setEditing(null); }} />}
           </ScrollView>
         )}

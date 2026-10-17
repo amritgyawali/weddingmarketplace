@@ -85,7 +85,7 @@ export default function SelectCityScreen() {
             <Pressable onPress={detectLocation} disabled={locating} style={styles.location} accessibilityRole="button">
               {locating ? <ActivityIndicator color={colors.primary} /> : <MaterialIcons name="my-location" size={26} color={colors.textStrong} />}
               <Text size={17} color={colors.text}>
-                {locating ? 'Detecting your location…' : 'Use Current Location'}
+                {locating ? 'Detecting your location…' : 'Use my current location'}
               </Text>
             </Pressable>
             <SearchBar
