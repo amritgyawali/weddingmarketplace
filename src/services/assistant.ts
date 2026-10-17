@@ -261,7 +261,7 @@ function reply(message: string, ctx: AssistantContext): AssistantReply {
 /** Simulates network + "thinking" latency proportional to answer length. */
 export async function askAssistant(message: string, ctx: AssistantContext): Promise<AssistantReply> {
   const answer = reply(message, ctx);
-  const wait = 650 + Math.min(1400, answer.text.length * 4);
+  const wait = 300 + Math.min(500, answer.text.length * 1.5);
   await new Promise((r) => setTimeout(r, wait));
   return answer;
 }

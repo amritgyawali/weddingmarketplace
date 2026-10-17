@@ -8,12 +8,13 @@ import { QuoteEditor } from '@/components/work/QuoteEditor';
 import { useDb } from '@/store/useDb';
 import { useRoleTheme } from '@/theme/RoleTheme';
 import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
+import { deferredScreen } from '@/components/ui/DeferredScreen';
 
 /**
  * Package quote builder (id = quote id, or "new" with ?projectId). Vendor
  * quotes open read-only so ops can audit pricing.
  */
-export default function PlatformQuote() {
+function PlatformQuote() {
   const t = useRoleTheme();
   const { id, projectId } = useLocalSearchParams<{ id: string; projectId?: string }>();
   const existing = useDb((s) => s.quotes.find((q) => q.id === id));
@@ -76,3 +77,6 @@ export default function PlatformQuote() {
     </View>
   );
 }
+
+// Heavy screen: answer the tap with a light frame first (components/ui/DeferredScreen.tsx).
+export default deferredScreen(PlatformQuote);

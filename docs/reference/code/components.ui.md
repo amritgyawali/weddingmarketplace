@@ -8,11 +8,13 @@ Every exported symbol in `src/components/ui/`, file by file. The guide that expl
 
 - [`AppBanners.tsx`](#appbannerstsx) (2 exports)
 - [`AppearancePicker.tsx`](#appearancepickertsx) (3 exports)
+- [`BootScreen.tsx`](#bootscreentsx) (1 exports)
 - [`BugReporter.tsx`](#bugreportertsx) (10 exports) · Report a bug from any screen. Any of these takes a screenshot of the screen exactly as it is and opens the report screen (`/report-bug`) to…
 - [`Button.tsx`](#buttontsx) (2 exports)
 - [`Calendar.tsx`](#calendartsx) (4 exports)
 - [`Chip.tsx`](#chiptsx) (2 exports)
 - [`DatePopup.tsx`](#datepopuptsx) (1 exports)
+- [`DeferredScreen.tsx`](#deferredscreentsx) (2 exports)
 - [`Dialog.tsx`](#dialogtsx) (2 exports)
 - [`EmptyState.tsx`](#emptystatetsx) (2 exports)
 - [`FeatureRouteGuard.tsx`](#featurerouteguardtsx) (1 exports)
@@ -96,6 +98,25 @@ AppearanceSwitch({ style }: { style?: StyleProp<ViewStyle> })
 ```
 
 Sun / moon / phone switch for profile pages and headers.
+
+## BootScreen.tsx
+
+Source: [src/components/ui/BootScreen.tsx](../../../src/components/ui/BootScreen.tsx)
+
+### `BootScreen`
+
+*component* · [src/components/ui/BootScreen.tsx:25](../../../src/components/ui/BootScreen.tsx#L25)
+
+```ts
+BootScreen({ onReady }: { onReady?: () => void })
+```
+
+What the app shows while it starts: fonts load and the saved data is
+restored from the device. It looks exactly like the native splash
+(burgundy, the Vivah mark at 120 px), then adds the three-dot loader if
+start-up takes longer than a blink. Rendered before the fonts are loaded,
+so it uses the system font (and `tr`, which knows the language once the
+preferences are restored).
 
 ## BugReporter.tsx
 
@@ -357,6 +378,34 @@ DatePopup({ visible, title = 'Pick a date', value, onChange, onClose, minDate, o
 A date picker that opens as a centred popup over the screen (or over a
 sheet), so the person never has to scroll down to find the calendar.
 Picking a day closes it.
+
+## DeferredScreen.tsx
+
+Source: [src/components/ui/DeferredScreen.tsx](../../../src/components/ui/DeferredScreen.tsx)
+
+### `useAfterFirstFrame`
+
+*hook* · [src/components/ui/DeferredScreen.tsx:11](../../../src/components/ui/DeferredScreen.tsx#L11)
+
+```ts
+useAfterFirstFrame(): boolean
+```
+
+False for the screen's first frame, then true: lets a light frame go out before the heavy one.
+
+### `deferredScreen`
+
+*function* · [src/components/ui/DeferredScreen.tsx:27](../../../src/components/ui/DeferredScreen.tsx#L27)
+
+```ts
+deferredScreen<P extends object>(Screen: ComponentType<P>): ComponentType<P>
+```
+
+Wraps a heavy screen (a 12-tab console, a long guest list) so a tap answers
+at once: the first frame is the screen's background with a loader, which
+lets the navigation slide start, and the full screen is drawn on the next
+frame. The loader only fades in when that drawing takes longer than a blink
+(`LOADER_DELAY_MS`), so fast phones never see it.
 
 ## Dialog.tsx
 
@@ -676,23 +725,23 @@ Source: [src/components/ui/Loader.tsx](../../../src/components/ui/Loader.tsx)
 
 ### `Loader`
 
-*component* · [src/components/ui/Loader.tsx:20](../../../src/components/ui/Loader.tsx#L20)
+*component* · [src/components/ui/Loader.tsx:34](../../../src/components/ui/Loader.tsx#L34)
 
 ```ts
-Loader({ size = 9, color, style }: { size?: number; color?: string; style?: StyleProp<ViewStyle> })
+Loader({ size = 9, color, style, delay = 0 }: { size?: number; color?: string; style?: StyleProp<ViewStyle>; delay?: number })
 ```
 
-Three bouncing dots in the role's accent: the app's loading indicator.
+Three bouncing dots in the role's accent: the app's loading indicator. `delay` (ms) keeps it hidden for quick loads.
 
 ### `LoadingState`
 
-*component* · [src/components/ui/Loader.tsx:32](../../../src/components/ui/Loader.tsx#L32)
+*component* · [src/components/ui/Loader.tsx:47](../../../src/components/ui/Loader.tsx#L47)
 
 ```ts
-LoadingState({ message = 'Loading…', style }: { message?: string; style?: StyleProp<ViewStyle> })
+LoadingState({ message = 'Loading…', style, delay = 0 }: { message?: string; style?: StyleProp<ViewStyle>; delay?: number })
 ```
 
-A centred loader with an optional line of text, for whole screens and panels.
+A centred loader with an optional line of text, for whole screens and panels. `delay` (ms) keeps it hidden for quick loads.
 
 ## Ornament.tsx
 

@@ -1,4 +1,4 @@
-import { Ionicons } from '@expo/vector-icons';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { useState } from 'react';
 import { type LayoutChangeEvent, Pressable, StyleSheet, View } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
@@ -19,6 +19,7 @@ import type { Guest, Project, SeatingElement, SeatingLayout } from '@/types/plat
 import { confirm } from '@/utils/confirm';
 import { uid } from '@/utils/format';
 import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
+import { deferredScreen } from '@/components/ui/DeferredScreen';
 
 const W = 1000;
 const H = 700;
@@ -341,7 +342,7 @@ function Planner({ project, readOnly }: { project: Project; readOnly: boolean })
 }
 
 /** Drag-and-drop seating planner per function with auto-seating, capacity warnings and printable charts. */
-export default function SeatingScreen() {
+function SeatingScreen() {
   return (
     <ToolScreen title="Seating plan" subtitle={(p) => p.title}>
       {(project, { readOnly }) => <Planner project={project} readOnly={readOnly} />}
@@ -353,3 +354,6 @@ const styles = themed(() => StyleSheet.create({
   canvas: { width: '100%', borderWidth: 1, borderRadius: 10, backgroundColor: colors.white, overflow: 'hidden' },
   el: { position: 'absolute', alignItems: 'center', justifyContent: 'center', paddingHorizontal: 2 },
 }));
+
+// Heavy screen: answer the tap with a light frame first (components/ui/DeferredScreen.tsx).
+export default deferredScreen(SeatingScreen);

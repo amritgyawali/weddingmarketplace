@@ -1,4 +1,4 @@
-import { Ionicons } from '@expo/vector-icons';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
@@ -17,6 +17,7 @@ import type { BudgetLine, Project } from '@/types/platform';
 import { confirm } from '@/utils/confirm';
 import { formatMoney, formatMoneyCompact, parseMoney } from '@/utils/format';
 import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
+import { deferredScreen } from '@/components/ui/DeferredScreen';
 
 const money = (v: string) => {
   const n = parseMoney(v);
@@ -265,7 +266,7 @@ function BudgetRow({ row, onPress }: { row: Row; onPress?: () => void }) {
 }
 
 /** Wedding budget: suggested split per service, booked vs paid, own purchases, forecast and savings tips. */
-export default function BudgetScreen() {
+function BudgetScreen() {
   return (
     <ToolScreen title="Budget" subtitle={(p) => `${p.title} · ${p.guests} guests`}>
       {(project, { readOnly }) => <Budget project={project} readOnly={readOnly} />}
@@ -278,3 +279,6 @@ const styles = StyleSheet.create({
   dot: { width: 8, height: 8, borderRadius: 4 },
   track: { height: 6 },
 });
+
+// Heavy screen: answer the tap with a light frame first (components/ui/DeferredScreen.tsx).
+export default deferredScreen(BudgetScreen);

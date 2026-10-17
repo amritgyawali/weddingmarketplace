@@ -1,4 +1,4 @@
-import { Ionicons } from '@expo/vector-icons';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
@@ -106,7 +106,7 @@ export default function GenieCheckoutScreen() {
       subtitle: BRAND.genieService,
       amount: total,
     });
-    await new Promise((r) => setTimeout(r, 1600));
+    await new Promise((r) => setTimeout(r, 700));
     setBookingStatus(booking.id, 'confirmed');
     // Hand the wedding to the platform's Genie planners.
     const project = ensureProject(account, { weddingDate, city: city === ALL_CITIES ? account.city : city, managedBy: 'platform', geniePackageId: pkg.id });

@@ -4,7 +4,7 @@
 
 Exported symbols that have no JSDoc yet. The weekly documentation pass (see [the maintenance guide](../handbook/17-documentation-maintenance.md)) works through this list; whoever touches a file should document its exports too.
 
-**959 of 1629 exports documented (59%).** Files without a header comment: 368 of 480.
+**963 of 1642 exports documented (59%).** Files without a header comment: 370 of 482.
 
 | File | Undocumented exports |
 |---|---|
@@ -113,6 +113,11 @@ Exported symbols that have no JSDoc yet. The weekly documentation pass (see [the
 | [src/store/db/trust.ts](../../src/store/db/trust.ts) | `TrustActions`, `trustActions` |
 | [supabase/functions/_shared/http.ts](../../supabase/functions/_shared/http.ts) | `json`, `preflight` |
 | [supabase/functions/_shared/ratelimit.ts](../../supabase/functions/_shared/ratelimit.ts) | `Limit`, `Verdict` |
+| [src/app/(tabs)/wedding.tsx](../../src/app/%28tabs%29/wedding.tsx) | `default` |
+| [src/app/budget.tsx](../../src/app/budget.tsx) | `default` |
+| [src/app/business/social/index.tsx](../../src/app/business/social/index.tsx) | `default` |
+| [src/app/guests.tsx](../../src/app/guests.tsx) | `default` |
+| [src/app/my-wedding.tsx](../../src/app/my-wedding.tsx) | `default` |
 | [src/app/platform/(tabs)/execution.tsx](../../src/app/platform/%28tabs%29/execution.tsx) | `default` |
 | [src/app/platform/(tabs)/leads.tsx](../../src/app/platform/%28tabs%29/leads.tsx) | `default` |
 | [src/app/platform/(tabs)/weddings.tsx](../../src/app/platform/%28tabs%29/weddings.tsx) | `default` |
@@ -137,11 +142,15 @@ Exported symbols that have no JSDoc yet. The weekly documentation pass (see [the
 | [src/app/platform/freelancers.tsx](../../src/app/platform/freelancers.tsx) | `default` |
 | [src/app/platform/gigs.tsx](../../src/app/platform/gigs.tsx) | `default` |
 | [src/app/platform/marketplace.tsx](../../src/app/platform/marketplace.tsx) | `default` |
+| [src/app/platform/project/[id].tsx](../../src/app/platform/project/%5Bid%5D.tsx) | `default` |
 | [src/app/platform/providers.tsx](../../src/app/platform/providers.tsx) | `default` |
+| [src/app/platform/quote/[id].tsx](../../src/app/platform/quote/%5Bid%5D.tsx) | `default` |
 | [src/app/platform/quotes.tsx](../../src/app/platform/quotes.tsx) | `default` |
 | [src/app/platform/support/[id].tsx](../../src/app/platform/support/%5Bid%5D.tsx) | `default` |
 | [src/app/platform/support/index.tsx](../../src/app/platform/support/index.tsx) | `default` |
 | [src/app/platform/users.tsx](../../src/app/platform/users.tsx) | `default` |
+| [src/app/quote/[id].tsx](../../src/app/quote/%5Bid%5D.tsx) | `default` |
+| [src/app/seating.tsx](../../src/app/seating.tsx) | `default` |
 | [src/backend/files.ts](../../src/backend/files.ts) | `privateFilesReady` |
 | [src/backend/mock.ts](../../src/backend/mock.ts) | `mockBackend` |
 | [src/backend/supabase.ts](../../src/backend/supabase.ts) | `supabaseBackend` |

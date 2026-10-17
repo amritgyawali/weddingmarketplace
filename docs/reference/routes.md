@@ -14,7 +14,7 @@ Every file in `src/app/` is a route (Expo Router). Layouts (`_layout.tsx`) defin
 | `/assistant` | screen | `AssistantScreen` | [assistant.tsx](../../src/app/assistant.tsx) |  |
 | `/boards` | screen | `BoardsScreen` | [boards.tsx](../../src/app/boards.tsx) | Mood boards: collect ideas by theme and share them with vendors. |
 | `/bookings` | screen | `BookingsScreen` | [bookings.tsx](../../src/app/bookings.tsx) |  |
-| `/budget` | screen | `BudgetScreen` | [budget.tsx](../../src/app/budget.tsx) | Wedding budget: suggested split per service, booked vs paid, own purchases, forecast and savings tips. |
+| `/budget` | screen | `` | [budget.tsx](../../src/app/budget.tsx) |  |
 | `/calendar` | screen | `CalendarScreen` | [calendar.tsx](../../src/app/calendar.tsx) | Wedding calendar: functions, meetings, payment due dates and tasks, with BS dates and calendar export. |
 | `/celebrate` | screen | `PlanAnotherCelebration` | [celebrate.tsx](../../src/app/celebrate.tsx) | Profile → Plan another celebration: the onboarding questions again, adding a new project. |
 | `/checklist` | screen | `ChecklistScreen` | [checklist.tsx](../../src/app/checklist.tsx) | Our wedding's shared task list (from the project) plus the general planning guide. |
@@ -27,7 +27,7 @@ Every file in `src/app/` is a route (Expo Router). Layouts (`_layout.tsx`) defin
 | `/enquiry` | screen | `EnquiryScreen` | [enquiry.tsx](../../src/app/enquiry.tsx) |  |
 | `/genie` (tabs) | screen | `GenieTab` | [(tabs)/genie.tsx](../../src/app/%28tabs%29/genie.tsx) |  |
 | `/genie-checkout/[id]` | screen | `GenieCheckoutScreen` | [genie-checkout/[id].tsx](../../src/app/genie-checkout/%5Bid%5D.tsx) | Checkout for Genie packages. Payment is simulated — plug a gateway SDK (eSewa / Khalti / Fonepay) into `pay()` and confirm the order server-side. |
-| `/guests` | screen | `GuestsScreen` | [guests.tsx](../../src/app/guests.tsx) | Guest list & RSVP manager: sides, groups, per-function invites, dietary needs, imports and exports. |
+| `/guests` | screen | `` | [guests.tsx](../../src/app/guests.tsx) |  |
 | `/idea/[id]` | screen | `IdeaViewer` | [idea/[id].tsx](../../src/app/idea/%5Bid%5D.tsx) | Full-screen swipeable photo viewer for the Ideas feed. |
 | `/ideas` (tabs) | screen | `IdeasTab` | [(tabs)/ideas.tsx](../../src/app/%28tabs%29/ideas.tsx) |  |
 | `/inbox` | screen | `Inbox` | [inbox/index.tsx](../../src/app/inbox/index.tsx) |  |
@@ -35,19 +35,19 @@ Every file in `src/app/` is a route (Expo Router). Layouts (`_layout.tsx`) defin
 | `/info/[slug]` | screen | `InfoScreen` | [info/[slug].tsx](../../src/app/info/%5Bslug%5D.tsx) |  |
 | `/invitations` | screen | `InvitationsScreen` | [invitations.tsx](../../src/app/invitations.tsx) | Invitation studio: card designs, bilingual wording, printable PDF, QR to the website and per-guest RSVP links. |
 | `/join-wedding` | screen | `JoinWeddingScreen` | [join-wedding.tsx](../../src/app/join-wedding.tsx) | Invite codes let family & friends join a couple's wedding planning space. |
-| `/my-wedding` | screen | `MyWedding` | [my-wedding.tsx](../../src/app/my-wedding.tsx) | `/my-wedding`: the stack version of the "My wedding" tab, opened by deep links and notifications. |
+| `/my-wedding` | screen | `` | [my-wedding.tsx](../../src/app/my-wedding.tsx) |  |
 | `/notifications` | screen | `NotificationsScreen` | [notifications.tsx](../../src/app/notifications.tsx) |  |
 | `/pay/esewa` | screen | `EsewaCheckoutScreen` | [pay/esewa.tsx](../../src/app/pay/esewa.tsx) | eSewa only accepts a form POST, which a phone can't open as a link. The app opens this web page instead, with the form payment-initiate signed; the page posts it straight on to eSewa. |
 | `/pay/result` | screen | `PaymentResultScreen` | [pay/result.tsx](../../src/app/pay/result.tsx) | Where Khalti and eSewa send the couple back to (through payment-verify, which has already asked the gateway). The status in the link is only a hint: a signed-in couple's attempt is checked again here. |
 | `/plan` | screen | `PlanWizard` | [plan.tsx](../../src/app/plan.tsx) | "Plan My Wedding": one requirement → a managed wedding project. |
 | `/plan-submitted` | screen | `PlanSubmitted` | [plan-submitted.tsx](../../src/app/plan-submitted.tsx) |  |
 | `/profile` | screen | `ProfileMenuScreen` | [profile.tsx](../../src/app/profile.tsx) |  |
-| `/quote/[id]` | screen | `CustomerQuote` | [quote/[id].tsx](../../src/app/quote/%5Bid%5D.tsx) | Couple's quotation: compare versions, accept (books everything), ask for changes or decline. |
+| `/quote/[id]` | screen | `` | [quote/[id].tsx](../../src/app/quote/%5Bid%5D.tsx) |  |
 | `/real-wedding/[id]` | screen | `RealWeddingScreen` | [real-wedding/[id].tsx](../../src/app/real-wedding/%5Bid%5D.tsx) |  |
 | `/registry` | screen | `RegistryScreen` | [registry.tsx](../../src/app/registry.tsx) | Gift registry: cash, honeymoon and charity funds, gifts and store wishlists, with thank-you tracking. |
 | `/report-bug` | screen | `ReportBug` | [report-bug.tsx](../../src/app/report-bug.tsx) | Report a bug: opened by a phone screenshot, three fingers held on the screen, the bug button, a shake or Settings. Public, every role. |
 | `/search` | screen | `SearchScreen` | [search.tsx](../../src/app/search.tsx) |  |
-| `/seating` | screen | `SeatingScreen` | [seating.tsx](../../src/app/seating.tsx) | Drag-and-drop seating planner per function with auto-seating, capacity warnings and printable charts. |
+| `/seating` | screen | `` | [seating.tsx](../../src/app/seating.tsx) |  |
 | `/select-city` | screen | `SelectCityScreen` | [select-city.tsx](../../src/app/select-city.tsx) |  |
 | `/settings` | screen | `Settings` | [settings.tsx](../../src/app/settings.tsx) |  |
 | `/shortlist` | screen | `ShortlistScreen` | [shortlist.tsx](../../src/app/shortlist.tsx) | Shortlist as a mini-CRM: stages, notes and tags per vendor, compare, and liked photos. |
@@ -63,7 +63,7 @@ Every file in `src/app/` is a route (Expo Router). Layouts (`_layout.tsx`) defin
 | `/venue/[id]` | screen | `VenueDetailScreen` | [venue/[id].tsx](../../src/app/venue/%5Bid%5D.tsx) |  |
 | `/venues` (tabs) | screen | `VenuesTab` | [(tabs)/venues.tsx](../../src/app/%28tabs%29/venues.tsx) |  |
 | `/website` | screen | `WebsiteScreen` | [website.tsx](../../src/app/website.tsx) | Wedding website builder: templates, story, schedule, travel, FAQ, registry, RSVP questions, privacy and publishing. |
-| `/wedding` (tabs) | screen | `WeddingTab` | [(tabs)/wedding.tsx](../../src/app/%28tabs%29/wedding.tsx) | "My wedding" tab: the couple's plan, quotes, payments and team, one tap from anywhere. |
+| `/wedding` (tabs) | screen | `` | [(tabs)/wedding.tsx](../../src/app/%28tabs%29/wedding.tsx) |  |
 | `/write-review` | screen | `WriteReviewScreen` | [write-review.tsx](../../src/app/write-review.tsx) | Category-specific reviews tied to real bookings (verified badge), with photos and moderation. |
 | `+not-found` | special | `NotFoundScreen` | [+not-found.tsx](../../src/app/+not-found.tsx) |  |
 
@@ -132,10 +132,10 @@ Every file in `src/app/` is a route (Expo Router). Layouts (`_layout.tsx`) defin
 | `/platform/more` (tabs) | screen | `PlatformMore` | [platform/(tabs)/more.tsx](../../src/app/platform/%28tabs%29/more.tsx) |  |
 | `/platform/occasion/[id]` | screen | `OccasionEditorScreen` | [platform/occasion/[id].tsx](../../src/app/platform/occasion/%5Bid%5D.tsx) | Add or edit one occasion (`id` = "new" to add). |
 | `/platform/occasions` | screen | `Occasions` | [platform/occasions.tsx](../../src/app/platform/occasions.tsx) | The occasions families can plan (super admins add, edit and delete them). |
-| `/platform/project/[id]` | screen | `PlatformProject` | [platform/project/[id].tsx](../../src/app/platform/project/%5Bid%5D.tsx) | Coordinator console for one wedding project. |
+| `/platform/project/[id]` | screen | `` | [platform/project/[id].tsx](../../src/app/platform/project/%5Bid%5D.tsx) |  |
 | `/platform/provider/[id]` | screen | `PlatformProvider` | [platform/provider/[id].tsx](../../src/app/platform/provider/%5Bid%5D.tsx) | Coordinator view of a provider: public profile + internal reliability signals. |
 | `/platform/providers` | screen | `` | [platform/providers.tsx](../../src/app/platform/providers.tsx) |  |
-| `/platform/quote/[id]` | screen | `PlatformQuote` | [platform/quote/[id].tsx](../../src/app/platform/quote/%5Bid%5D.tsx) | Package quote builder (id = quote id, or "new" with ?projectId). Vendor quotes open read-only so ops can audit pricing. |
+| `/platform/quote/[id]` | screen | `` | [platform/quote/[id].tsx](../../src/app/platform/quote/%5Bid%5D.tsx) |  |
 | `/platform/quotes` | screen | `` | [platform/quotes.tsx](../../src/app/platform/quotes.tsx) |  |
 | `/platform/settings` | screen | `Settings` | [platform/settings.tsx](../../src/app/platform/settings.tsx) |  |
 | `/platform/support` | screen | `` | [platform/support/index.tsx](../../src/app/platform/support/index.tsx) |  |
@@ -198,7 +198,7 @@ Every file in `src/app/` is a route (Expo Router). Layouts (`_layout.tsx`) defin
 | `/business/reviews` | screen | `VendorReviews` | [business/reviews.tsx](../../src/app/business/reviews.tsx) | Reviews with per-category ratings, AI summary and public replies. |
 | `/business/services` | screen | `YourServices` | [business/services.tsx](../../src/app/business/services.tsx) | Business → Your services: main service, add-ons, business form and trade essentials. |
 | `/business/settings` | screen | `Settings` | [business/settings.tsx](../../src/app/business/settings.tsx) |  |
-| `/business/social` | screen | `SocialHub` | [business/social/index.tsx](../../src/app/business/social/index.tsx) | Social media hub: Facebook, Instagram, WhatsApp and TikTok in one place. One inbox for every message and comment, one composer for every network, a content calendar, connected accounts, insights and … |
+| `/business/social` | screen | `` | [business/social/index.tsx](../../src/app/business/social/index.tsx) |  |
 | `/business/social/compose` | screen | `ComposeSocialPost` | [business/social/compose.tsx](../../src/app/business/social/compose.tsx) | New post (or edit a draft) for every connected network. `?at=` pre-fills the schedule. |
 | `/business/social/thread/[id]` | screen | `SocialThreadScreen` | [business/social/thread/[id].tsx](../../src/app/business/social/thread/%5Bid%5D.tsx) | One social conversation on a phone (wide screens show it beside the inbox). |
 | `/business/support` | screen | `Support` | [business/support/index.tsx](../../src/app/business/support/index.tsx) |  |

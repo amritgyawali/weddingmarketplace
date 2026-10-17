@@ -23,7 +23,7 @@
  * A super admin can switch it off (`app.bug_report`); each device picks its
  * triggers in Settings → Help.
  */
-import { Ionicons } from '@expo/vector-icons';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Haptics from 'expo-haptics';
 import { Image } from 'expo-image';

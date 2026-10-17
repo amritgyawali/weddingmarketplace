@@ -3,7 +3,7 @@
  * page shell, and `EntryList`, a config-driven list + form for tools whose
  * data is a list of records (gifts, expenses, tickets…).
  */
-import { Ionicons } from '@expo/vector-icons';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { useEffect, useState, type ReactNode } from 'react';
 import { Pressable, StyleSheet, View, type StyleProp, type ViewStyle } from 'react-native';
 

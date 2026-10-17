@@ -15,12 +15,13 @@ import type {
   VenueFilters,
 } from '@/types';
 
-const LATENCY = { min: 180, max: 450 };
-
-const delay = <T>(value: T): Promise<T> =>
-  new Promise((resolve) =>
-    setTimeout(() => resolve(value), LATENCY.min + Math.random() * (LATENCY.max - LATENCY.min)),
-  );
+/**
+ * Wraps a result in a promise. The catalogue is on the device, so reads
+ * answer at once; they stay async so a real backend can drop in later.
+ * (Reads used to wait 180–450 ms to imitate a network, which made every
+ * list, search and detail screen feel slow.)
+ */
+const delay = <T>(value: T): Promise<T> => Promise.resolve(value);
 
 export class NotFoundError extends Error {
   constructor(entity: string, id: string) {

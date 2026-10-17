@@ -16,32 +16,49 @@ function Dot({ index, color, size }: { index: number; color: string; size: numbe
   return <Animated.View style={[{ width: size, height: size, borderRadius: size / 2, backgroundColor: color }, style]} />;
 }
 
-/** Three bouncing dots in the role's accent: the app's loading indicator. */
-export function Loader({ size = 9, color, style }: { size?: number; color?: string; style?: StyleProp<ViewStyle> }) {
+/**
+ * Fades its children in after `delay` ms. The fade runs on the UI thread, so it
+ * still happens while JavaScript is busy drawing a heavy screen; a screen that
+ * draws quickly replaces the loader before it ever shows.
+ */
+function Reveal({ delay, children }: { delay: number; children: React.ReactNode }) {
+  const opacity = useSharedValue(delay > 0 ? 0 : 1);
+  useEffect(() => {
+    if (delay > 0) opacity.set(withDelay(delay, withTiming(1, { duration: 180 })));
+  }, [delay, opacity]);
+  const style = useAnimatedStyle(() => ({ opacity: opacity.get() }));
+  return <Animated.View style={[styles.reveal, style]}>{children}</Animated.View>;
+}
+
+/** Three bouncing dots in the role's accent: the app's loading indicator. `delay` (ms) keeps it hidden for quick loads. */
+export function Loader({ size = 9, color, style, delay = 0 }: { size?: number; color?: string; style?: StyleProp<ViewStyle>; delay?: number }) {
   const t = useRoleTheme();
-  return (
+  const dots = (
     <View style={[styles.row, { gap: size * 0.7, height: size * 2.2 }, style]} accessibilityRole="progressbar" accessibilityLabel="Loading">
       {[0, 1, 2].map((i) => (
         <Dot key={i} index={i} size={size} color={color ?? t.c.primary} />
       ))}
     </View>
   );
+  return delay > 0 ? <Reveal delay={delay}>{dots}</Reveal> : dots;
 }
 
-/** A centred loader with an optional line of text, for whole screens and panels. */
-export function LoadingState({ message = 'Loading…', style }: { message?: string; style?: StyleProp<ViewStyle> }) {
+/** A centred loader with an optional line of text, for whole screens and panels. `delay` (ms) keeps it hidden for quick loads. */
+export function LoadingState({ message = 'Loading…', style, delay = 0 }: { message?: string; style?: StyleProp<ViewStyle>; delay?: number }) {
   const t = useRoleTheme();
-  return (
-    <View style={[styles.state, style]}>
+  const body = (
+    <>
       <Loader size={10} />
       <Text size={14} color={t.c.muted ?? colors.textMuted}>
         {message}
       </Text>
-    </View>
+    </>
   );
+  return <View style={[styles.state, style]}>{delay > 0 ? <Reveal delay={delay}>{body}</Reveal> : body}</View>;
 }
 
 const styles = StyleSheet.create({
   row: { flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'center' },
   state: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: 14, padding: 32 },
+  reveal: { alignItems: 'center', gap: 14 },
 });

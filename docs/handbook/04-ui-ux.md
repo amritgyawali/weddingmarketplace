@@ -115,7 +115,7 @@ Always render text with `Text` from `components/ui/Text` (it translates, picks t
 | Empty | `EmptyState` / `EmptyBlock`: a pearl medallion with a champagne ring around an icon, a serif title, a sentence and, if possible, the next action. Pass `art` (`mandap`, `garland`, `kalash`, `diya`, `rings`) for a line drawing from `ui/Illustration` where a screen deserves warmth (first-run lists). |
 | Photos | `Photo` (`ui/Photo`), never `expo-image` directly: a pearl placeholder while loading and a cross-dissolve in (none with Reduce Motion). |
 | Ornament | `Ornament` (`ui/Ornament`), the Dhaka-weave gilt divider. Only on the home wedding band, the welcome headline, the Vendors feature card and `FocusBand`; never as wallpaper. |
-| Loading | `Loader` / `LoadingState`; skeletons for lists. |
+| Loading | `Loader` / `LoadingState` (with `delay` so quick loads never flash a loader); skeletons for lists; `deferredScreen()` for heavy screens; `BootScreen` while the app starts. |
 | Hidden feature (deep link) | An explanation of why, and how to unlock it (for example "Add the catering service to use Menu"). |
 | Dates | Show BS by default with `formatShortDate`/`formatLongDate`; a second line with the other calendar via `formatDateAlt` where it helps. A date that can be removed passes `onClear` to `Calendar` (or `DatePopup`): the "Clear date" button then sits right under the days, never further down the form. Calendars in a sheet go inside a scroll view; rows have a fixed height so six weeks always fit. |
 | Not ready yet | A submit button with `missing` turns pearl with readable muted text (5 : 1) instead of fading to 45%, so the label stays legible while it explains what is missing. |

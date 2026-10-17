@@ -1,4 +1,4 @@
-import { Ionicons } from '@expo/vector-icons';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { Photo } from '@/components/ui/Photo';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
@@ -31,6 +31,7 @@ import type { Project, ProjectStatus, Requirement } from '@/types/platform';
 import { confirm } from '@/utils/confirm';
 import { formatLongDate, formatMoney, formatMoneyCompact, formatMoneyRange, formatPhone, formatShortDate, timeAgo } from '@/utils/format';
 import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
+import { deferredScreen } from '@/components/ui/DeferredScreen';
 
 type Tab = 'overview' | 'services' | 'quote' | 'crew' | 'events' | 'payments' | 'tasks' | 'timeline' | 'chat' | 'notes' | 'files' | 'activity';
 
@@ -661,7 +662,7 @@ function Activity({ project }: { project: Project }) {
 }
 
 /** Coordinator console for one wedding project. */
-export default function PlatformProject() {
+function PlatformProject() {
   const t = useRoleTheme();
   const { wide } = useLayout();
   const { id, tab: initial } = useLocalSearchParams<{ id: string; tab?: Tab }>();
@@ -741,3 +742,6 @@ const styles = StyleSheet.create({
   dot: { width: 8, height: 8, borderRadius: 4, marginTop: 6 },
   wide: { flex: 1, flexDirection: 'row' },
 });
+
+// Heavy screen: answer the tap with a light frame first (components/ui/DeferredScreen.tsx).
+export default deferredScreen(PlatformProject);

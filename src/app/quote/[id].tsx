@@ -1,4 +1,4 @@
-import { Ionicons } from '@expo/vector-icons';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
@@ -19,11 +19,12 @@ import { quoteTotals } from '@/services/quotes';
 import { useDb } from '@/store/useDb';
 import { daysUntil, formatMoney } from '@/utils/format';
 import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
+import { deferredScreen } from '@/components/ui/DeferredScreen';
 
 const CHANGE_PRESETS = ['Lower the total', 'Add a service', 'Remove a service', 'Change dates', 'Softer payment schedule'];
 
 /** Couple's quotation: compare versions, accept (books everything), ask for changes or decline. */
-export default function CustomerQuote() {
+function CustomerQuote() {
   const insets = useSafeAreaInsets();
   const { id } = useLocalSearchParams<{ id: string }>();
   const quote = useDb((s) => s.quotes.find((q) => q.id === id));
@@ -170,3 +171,6 @@ const styles = themed(() => StyleSheet.create({
   tipLink: { flexDirection: 'row', alignItems: 'center', gap: 6, alignSelf: 'center', padding: 6 },
   footer: { position: 'absolute', left: 0, right: 0, bottom: 0, padding: 14, gap: 8, backgroundColor: colors.white, borderTopWidth: StyleSheet.hairlineWidth, borderTopColor: colors.hairline },
 }));
+
+// Heavy screen: answer the tap with a light frame first (components/ui/DeferredScreen.tsx).
+export default deferredScreen(CustomerQuote);

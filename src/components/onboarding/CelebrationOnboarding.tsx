@@ -267,7 +267,7 @@ export function CelebrationOnboarding({ another = false }: { another?: boolean }
     }
     if (withPlan && city) {
       setBusy(true);
-      await new Promise((r) => setTimeout(r, 600));
+      await new Promise((r) => setTimeout(r, 250));
       const dates = Object.fromEntries(eventTypes.map((t, i) => [t, i === 0 ? date : eventDates[t] !== undefined ? eventDates[t] : t === 'RECEPTION' && date ? addDays(date, 1) : null]));
       const project = submitPlan(account, {
         eventTypes,

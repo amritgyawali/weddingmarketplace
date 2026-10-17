@@ -40,10 +40,10 @@ Generated from the source. For the *why*, read [the handbook](../handbook/README
 | `src/components/toolkit/platform/` | 4 | 26 | [components.toolkit.platform.md](code/components.toolkit.platform.md) |
 | `src/components/toolkit/vendor/` | 6 | 42 | [components.toolkit.vendor.md](code/components.toolkit.vendor.md) |
 | `src/components/tour/` | 1 | 3 | [components.tour.md](code/components.tour.md) |
-| `src/components/ui/` | 31 | 76 | [components.ui.md](code/components.ui.md) |
+| `src/components/ui/` | 33 | 79 | [components.ui.md](code/components.ui.md) |
 | `src/components/wedding/` | 3 | 12 | [components.wedding.md](code/components.wedding.md) |
 | `src/components/work/` | 27 | 55 | [components.work.md](code/components.work.md) |
-| `src/constants/` | 4 | 39 | [constants.md](code/constants.md) |
+| `src/constants/` | 4 | 40 | [constants.md](code/constants.md) |
 | `src/data/` | 30 | 213 | [data.md](code/data.md) |
 | `src/hooks/` | 17 | 47 | [hooks.md](code/hooks.md) |
 | `src/i18n/` | 2 | 15 | [i18n.md](code/i18n.md) |

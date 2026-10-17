@@ -34,7 +34,10 @@ import type { DbData } from './types';
 export type { DbData } from './types';
 export type Db = DbData & CoreActions & QuoteActions & ProjectActions & FinanceActions & GigActions & ChatActions & TrustActions & PlannerActions & ToolkitActions & PersonaActions & AdminActions & SocialActions & SupportActions & ContentActions;
 
-const DATA_KEYS = Object.keys(buildSeedData()) as (keyof DbData)[];
+// Built once at start-up: the first install's data, and the list of persisted keys.
+// (A returning install's saved data replaces it as soon as the store is restored.)
+const START_SEED = buildSeedData();
+const DATA_KEYS = Object.keys(START_SEED) as (keyof DbData)[];
 
 /**
  * v5: the vehicles trade. Built-in occasions saved before it get the vehicle
@@ -115,7 +118,7 @@ function sayThankYou<T>(value: T): T {
 export const useDb = create<Db>()(
   persist(
     (set, get) => ({
-      ...buildSeedData(),
+      ...START_SEED,
       ...coreActions(set, get),
       ...quoteActions(set, get),
       ...projectActions(set, get),

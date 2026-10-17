@@ -248,6 +248,17 @@ export function themed<T extends object>(factory: () => T): T {
   });
 }
 
+/**
+ * The launch screen: the same burgundy and mark as the native splash
+ * (app.json → expo-splash-screen), in both light and dark mode, so the hand-over
+ * from the splash to the app's own loading screen is seamless.
+ */
+export const splashColors = {
+  bg: '#681C2A',
+  dot: '#C8A46B',
+  text: 'rgba(255,252,248,0.78)',
+} as const;
+
 /** Network marks in the social hub. Small icons and hairlines only, never fills. */
 export const socialColors = {
   facebook: '#1877F2',

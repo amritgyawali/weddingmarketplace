@@ -1,4 +1,4 @@
-import { Ionicons } from '@expo/vector-icons';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { Link, router, useLocalSearchParams } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useRef, useState } from 'react';
@@ -78,7 +78,7 @@ function LoginForm() {
     }
     setError(null);
     setBusy(true);
-    await new Promise((r) => setTimeout(r, 700)); // simulated SMS gateway
+    await new Promise((r) => setTimeout(r, 250)); // simulated SMS gateway
     setBusy(false);
     setStep('otp');
     setTimeout(() => otpRef.current?.focus(), 250);
@@ -130,7 +130,7 @@ function LoginForm() {
       return;
     }
     setBusy(true);
-    await new Promise((r) => setTimeout(r, 500));
+    await new Promise((r) => setTimeout(r, 150));
     setBusy(false);
     const existing = findAccount(phone, t.role);
     if (existing?.suspended) {
