@@ -11,6 +11,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { getAccessToken, usesEmailSignIn } from '@/backend/auth';
 import { ContentSync } from '@/components/ContentSync';
 import { ImpersonationBar } from '@/components/ui/AppBanners';
+import { BootScreen } from '@/components/ui/BootScreen';
 import { bugTouchHandlers, BugReporterHost, installBugReporter } from '@/components/ui/BugReporter';
 import { DialogHost } from '@/components/ui/Dialog';
 import { FeatureRouteGuard } from '@/components/ui/FeatureRouteGuard';
@@ -83,8 +84,11 @@ export default function RootLayout() {
     }
   }, [scheme]);
 
+  // The native splash hands over to the look-alike BootScreen as soon as it has drawn
+  // (or straight to the app when start-up was quick), so a slow start shows a loader.
+  const hideSplash = () => SplashScreen.hideAsync().catch(() => {});
   useEffect(() => {
-    if (ready) SplashScreen.hideAsync().catch(() => {});
+    if (ready) hideSplash();
   }, [ready]);
 
   // Supabase builds: a device session whose tokens can no longer be refreshed signs out.
@@ -95,7 +99,7 @@ export default function RootLayout() {
     });
   }, [ready, role]);
 
-  if (!ready) return null;
+  if (!ready) return <BootScreen onReady={hideSplash} />;
 
   const isCustomer = role === 'customer';
 

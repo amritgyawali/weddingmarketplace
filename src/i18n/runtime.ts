@@ -26,6 +26,8 @@ export const runtime: { lang: Lang; calendar: CalendarMode; overrides: TextOverr
 interface Template {
   re: RegExp;
   out: string;
+  /** The longest fixed piece of the English key: text that doesn't contain it can't match, so the regex is skipped. */
+  needle: string;
 }
 
 const PLACEHOLDER = /\{(\w+)\}/g;
@@ -37,6 +39,7 @@ function compile(entries: Record<string, string>): Template[] {
     if (!key.includes('{')) continue;
     const literal = key.replace(PLACEHOLDER, '');
     if (!literal.trim()) continue;
+    const needle = key.split(PLACEHOLDER).filter((_, i) => i % 2 === 0).reduce((a, b) => (b.length > a.length ? b : a), '');
     const names: string[] = [];
     const source = key
       .split(PLACEHOLDER)
@@ -51,14 +54,17 @@ function compile(entries: Record<string, string>): Template[] {
     names.forEach((n, i) => {
       target = target.split(`{${n}}`).join(`\u0000${i}\u0000`);
     });
-    list.push({ re: new RegExp(`^${source}$`, 's'), out: target });
+    list.push({ re: new RegExp(`^${source}$`, 's'), out: target, needle });
   }
   // Longer literal text first, so "{0} days to go" beats "{0} days".
   const literal = (t: Template) => t.re.source.replace(/\(\.\*\?\)/g, '').length;
   return list.sort((a, b) => literal(b) - literal(a));
 }
 
-const TEMPLATES = compile(NE);
+// Compiling the ~900 template entries takes a noticeable moment on a phone, so it
+// waits for the first Nepali string that needs one (English start-ups never pay it).
+let templates: Template[] | null = null;
+const TEMPLATES = (): Template[] => (templates ??= compile(NE));
 const cache = new Map<string, string>();
 let cacheFor: TextOverrides | null = null;
 
@@ -69,7 +75,8 @@ function lookup(core: string, lang: Lang, overrides: TextOverrides, depth: numbe
   const exact = NE[core];
   if (exact) return exact;
   if (depth > 2) return undefined;
-  for (const t of TEMPLATES) {
+  for (const t of TEMPLATES()) {
+    if (!core.includes(t.needle)) continue;
     const m = t.re.exec(core);
     if (!m) continue;
     return t.out.replace(/\u0000(\d+)\u0000/g, (_, i: string) => {

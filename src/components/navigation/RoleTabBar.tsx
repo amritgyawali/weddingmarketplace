@@ -1,4 +1,4 @@
-import { Ionicons } from '@expo/vector-icons';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { router, type Href } from 'expo-router';
 import type { BottomTabBarProps } from 'expo-router/tabs';
 import type { ComponentProps } from 'react';

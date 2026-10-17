@@ -3,7 +3,7 @@
  * and extra skills, and the craft profile. Used by sign-up (one step each)
  * and by Profile → Your craft (all together).
  */
-import { Ionicons } from '@expo/vector-icons';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { Photo } from '@/components/ui/Photo';
 import { useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';

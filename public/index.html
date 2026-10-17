@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="%LANG_ISO_CODE%">
+  <head>
+    <meta charset="utf-8" />
+    <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="theme-color" content="#681C2A" />
+    <title>%WEB_TITLE%</title>
+    <!-- The `react-native-web` recommended style reset: https://necolas.github.io/react-native-web/docs/setup/#root-element -->
+    <style id="expo-reset">
+      /* These styles make the body full-height */
+      html,
+      body {
+        height: 100%;
+      }
+      /* These styles disable body scrolling if you are using <ScrollView> */
+      body {
+        overflow: hidden;
+        margin: 0;
+        background-color: #681c2a;
+      }
+      /* These styles make the root element full-height */
+      #root {
+        display: flex;
+        height: 100%;
+        flex: 1;
+      }
+    </style>
+    <!-- Shown until the app's JavaScript has loaded; the app then draws the same screen (components/ui/BootScreen.tsx). -->
+    <style id="vivah-boot">
+      .vivah-boot { flex: 1; display: flex; align-items: center; justify-content: center; position: relative; background: #681c2a; }
+      .vivah-boot img { width: 120px; height: 120px; }
+      .vivah-boot .dots { position: absolute; top: 50%; margin-top: 92px; left: 0; right: 0; display: flex; justify-content: center; align-items: flex-end; gap: 6px; height: 20px; opacity: 0; animation: vivah-in 0.2s ease-out 0.3s forwards; }
+      .vivah-boot .dots span { width: 9px; height: 9px; border-radius: 50%; background: #c8a46b; animation: vivah-dot 0.76s ease-in-out infinite; }
+      .vivah-boot .dots span:nth-child(2) { animation-delay: 0.14s; }
+      .vivah-boot .dots span:nth-child(3) { animation-delay: 0.28s; }
+      @keyframes vivah-in { to { opacity: 1; } }
+      @keyframes vivah-dot { 0%, 100% { opacity: 0.35; transform: translateY(0) scale(0.85); } 50% { opacity: 1; transform: translateY(-5px) scale(1.1); } }
+      @media (prefers-reduced-motion: reduce) { .vivah-boot .dots span { animation: none; opacity: 0.8; } }
+    </style>
+  </head>
+
+  <body>
+    <noscript>
+      You need to enable JavaScript to run Vivah.
+    </noscript>
+    <!-- The root element for your Expo app. -->
+    <div id="root">
+      <div class="vivah-boot" role="progressbar" aria-label="Loading Vivah">
+        <img src="/splash-icon.png" alt="" />
+        <div class="dots"><span></span><span></span><span></span></div>
+      </div>
+    </div>
+  </body>
+</html>

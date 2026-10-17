@@ -47,8 +47,8 @@
    "path": "/budget",
    "kind": "screen",
    "file": "src/app/budget.tsx",
-   "component": "BudgetScreen",
-   "doc": "Wedding budget: suggested split per service, booked vs paid, own purchases, forecast and savings tips."
+   "component": "",
+   "doc": ""
   },
   {
    "path": "/business",
@@ -236,8 +236,8 @@
    "path": "/business/social",
    "kind": "screen",
    "file": "src/app/business/social/index.tsx",
-   "component": "SocialHub",
-   "doc": "Social media hub: Facebook, Instagram, WhatsApp and TikTok in one place. One inbox for every message and comment, one composer for every network, a content calendar, connected accounts, insights and automation."
+   "component": "",
+   "doc": ""
   },
   {
    "path": "/business/social/compose",
@@ -544,8 +544,8 @@
    "path": "/guests",
    "kind": "screen",
    "file": "src/app/guests.tsx",
-   "component": "GuestsScreen",
-   "doc": "Guest list & RSVP manager: sides, groups, per-function invites, dietary needs, imports and exports."
+   "component": "",
+   "doc": ""
   },
   {
    "path": "/idea/[id]",
@@ -607,8 +607,8 @@
    "path": "/my-wedding",
    "kind": "screen",
    "file": "src/app/my-wedding.tsx",
-   "component": "MyWedding",
-   "doc": "`/my-wedding`: the stack version of the \"My wedding\" tab, opened by deep links and notifications."
+   "component": "",
+   "doc": ""
   },
   {
    "path": "/notifications",
@@ -922,8 +922,8 @@
    "path": "/platform/project/[id]",
    "kind": "screen",
    "file": "src/app/platform/project/[id].tsx",
-   "component": "PlatformProject",
-   "doc": "Coordinator console for one wedding project."
+   "component": "",
+   "doc": ""
   },
   {
    "path": "/platform/provider/[id]",
@@ -943,8 +943,8 @@
    "path": "/platform/quote/[id]",
    "kind": "screen",
    "file": "src/app/platform/quote/[id].tsx",
-   "component": "PlatformQuote",
-   "doc": "Package quote builder (id = quote id, or \"new\" with ?projectId). Vendor quotes open read-only so ops can audit pricing."
+   "component": "",
+   "doc": ""
   },
   {
    "path": "/platform/quotes",
@@ -1013,8 +1013,8 @@
    "path": "/quote/[id]",
    "kind": "screen",
    "file": "src/app/quote/[id].tsx",
-   "component": "CustomerQuote",
-   "doc": "Couple's quotation: compare versions, accept (books everything), ask for changes or decline."
+   "component": "",
+   "doc": ""
   },
   {
    "path": "/real-wedding/[id]",
@@ -1055,8 +1055,8 @@
    "path": "/seating",
    "kind": "screen",
    "file": "src/app/seating.tsx",
-   "component": "SeatingScreen",
-   "doc": "Drag-and-drop seating planner per function with auto-seating, capacity warnings and printable charts."
+   "component": "",
+   "doc": ""
   },
   {
    "path": "/select-city",
@@ -1174,8 +1174,8 @@
    "path": "/wedding",
    "kind": "screen",
    "file": "src/app/(tabs)/wedding.tsx",
-   "component": "WeddingTab",
-   "doc": "\"My wedding\" tab: the couple's plan, quotes, payments and team, one tap from anywhere."
+   "component": "",
+   "doc": ""
   },
   {
    "path": "/welcome",
@@ -1311,11 +1311,11 @@
    "doc": "",
    "exports": [
     {
-     "name": "WeddingTab",
-     "kind": "component",
-     "line": 4,
-     "signature": "()",
-     "doc": "\"My wedding\" tab: the couple's plan, quotes, payments and team, one tap from anywhere."
+     "name": "default",
+     "kind": "default",
+     "line": 10,
+     "signature": "deferredScreen(WeddingTab)",
+     "doc": ""
     }
    ]
   },
@@ -1339,14 +1339,14 @@
     {
      "name": "ErrorBoundary",
      "kind": "re-export",
-     "line": 36,
+     "line": 37,
      "signature": "from '@/components/AppErrorBoundary'",
      "doc": ""
     },
     {
      "name": "RootLayout",
      "kind": "component",
-     "line": 52,
+     "line": 53,
      "signature": "()",
      "doc": ""
     }
@@ -1396,11 +1396,11 @@
    "doc": "",
    "exports": [
     {
-     "name": "BudgetScreen",
-     "kind": "component",
-     "line": 268,
-     "signature": "()",
-     "doc": "Wedding budget: suggested split per service, booked vs paid, own purchases, forecast and savings tips."
+     "name": "default",
+     "kind": "default",
+     "line": 284,
+     "signature": "deferredScreen(BudgetScreen)",
+     "doc": ""
     }
    ]
   },
@@ -1760,11 +1760,11 @@
    "doc": "",
    "exports": [
     {
-     "name": "SocialHub",
-     "kind": "component",
-     "line": 37,
-     "signature": "()",
-     "doc": "Social media hub: Facebook, Instagram, WhatsApp and TikTok in one place.\nOne inbox for every message and comment, one composer for every network,\na content calendar, connected accounts, insights and automation."
+     "name": "default",
+     "kind": "default",
+     "line": 131,
+     "signature": "deferredScreen(SocialHub)",
+     "doc": ""
     }
    ]
   },
@@ -2306,11 +2306,11 @@
    "doc": "",
    "exports": [
     {
-     "name": "GuestsScreen",
-     "kind": "component",
-     "line": 532,
-     "signature": "()",
-     "doc": "Guest list & RSVP manager: sides, groups, per-function invites, dietary needs, imports and exports."
+     "name": "default",
+     "kind": "default",
+     "line": 549,
+     "signature": "deferredScreen(GuestsScreen)",
+     "doc": ""
     }
    ]
   },
@@ -2410,11 +2410,11 @@
    "doc": "",
    "exports": [
     {
-     "name": "MyWedding",
-     "kind": "component",
-     "line": 4,
-     "signature": "()",
-     "doc": "`/my-wedding`: the stack version of the \"My wedding\" tab, opened by deep links and notifications."
+     "name": "default",
+     "kind": "default",
+     "line": 10,
+     "signature": "deferredScreen(MyWedding)",
+     "doc": ""
     }
    ]
   },
@@ -3008,11 +3008,11 @@
    "doc": "",
    "exports": [
     {
-     "name": "PlatformProject",
-     "kind": "component",
-     "line": 664,
-     "signature": "()",
-     "doc": "Coordinator console for one wedding project."
+     "name": "default",
+     "kind": "default",
+     "line": 747,
+     "signature": "deferredScreen(PlatformProject)",
+     "doc": ""
     }
    ]
   },
@@ -3047,11 +3047,11 @@
    "doc": "",
    "exports": [
     {
-     "name": "PlatformQuote",
-     "kind": "component",
-     "line": 16,
-     "signature": "()",
-     "doc": "Package quote builder (id = quote id, or \"new\" with ?projectId). Vendor\nquotes open read-only so ops can audit pricing."
+     "name": "default",
+     "kind": "default",
+     "line": 82,
+     "signature": "deferredScreen(PlatformQuote)",
+     "doc": ""
     }
    ]
   },
@@ -3164,11 +3164,11 @@
    "doc": "",
    "exports": [
     {
-     "name": "CustomerQuote",
-     "kind": "component",
-     "line": 26,
-     "signature": "()",
-     "doc": "Couple's quotation: compare versions, accept (books everything), ask for changes or decline."
+     "name": "default",
+     "kind": "default",
+     "line": 176,
+     "signature": "deferredScreen(CustomerQuote)",
+     "doc": ""
     }
    ]
   },
@@ -3242,11 +3242,11 @@
    "doc": "",
    "exports": [
     {
-     "name": "SeatingScreen",
-     "kind": "component",
-     "line": 344,
-     "signature": "()",
-     "doc": "Drag-and-drop seating planner per function with auto-seating, capacity warnings and printable charts."
+     "name": "default",
+     "kind": "default",
+     "line": 359,
+     "signature": "deferredScreen(SeatingScreen)",
+     "doc": ""
     }
    ]
   },
@@ -3257,7 +3257,7 @@
     {
      "name": "SelectCityScreen",
      "kind": "component",
-     "line": 31,
+     "line": 32,
      "signature": "()",
      "doc": ""
     }
@@ -8085,6 +8085,19 @@
    ]
   },
   {
+   "file": "src/components/ui/BootScreen.tsx",
+   "doc": "",
+   "exports": [
+    {
+     "name": "BootScreen",
+     "kind": "component",
+     "line": 25,
+     "signature": "({ onReady }: { onReady?: () => void })",
+     "doc": "What the app shows while it starts: fonts load and the saved data is\nrestored from the device. It looks exactly like the native splash\n(burgundy, the Vivah mark at 120 px), then adds the three-dot loader if\nstart-up takes longer than a blink. Rendered before the fonts are loaded,\nso it uses the system font (and `tr`, which knows the language once the\npreferences are restored)."
+    }
+   ]
+  },
+  {
    "file": "src/components/ui/BugReporter.tsx",
    "doc": "Report a bug from any screen. Any of these takes a screenshot of the screen exactly as it is and opens the report screen (`/report-bug`) to describe the problem: - taking a phone screenshot (side + volume up on iPhone, power + volume down on Android; `expo-screen-capture`); - holding three fingers on the screen for half a second; - the floating bug button (on by default in development and test builds); - shaking the phone, in installed builds (in Expo Go and development builds shaking opens the developer menu instead, so it is off there); - Alt+Shift+B on a computer, or Settings → Help → Repo…",
    "exports": [
@@ -8368,6 +8381,26 @@
      "line": 16,
      "signature": "({ visible, title = 'Pick a date', value, onChange, onClose, minDate, onClear, }: { visible: boolean; title?: string; value: string | null; onChange: (iso: string) => void; onClose: () => void; minDate?: Date; /** Shows …)",
      "doc": "A date picker that opens as a centred popup over the screen (or over a\nsheet), so the person never has to scroll down to find the calendar.\nPicking a day closes it."
+    }
+   ]
+  },
+  {
+   "file": "src/components/ui/DeferredScreen.tsx",
+   "doc": "",
+   "exports": [
+    {
+     "name": "useAfterFirstFrame",
+     "kind": "hook",
+     "line": 11,
+     "signature": "(): boolean",
+     "doc": "False for the screen's first frame, then true: lets a light frame go out before the heavy one."
+    },
+    {
+     "name": "deferredScreen",
+     "kind": "function",
+     "line": 27,
+     "signature": "<P extends object>(Screen: ComponentType<P>): ComponentType<P>",
+     "doc": "Wraps a heavy screen (a 12-tab console, a long guest list) so a tap answers\nat once: the first frame is the screen's background with a loader, which\nlets the navigation slide start, and the full screen is drawn on the next\nframe. The loader only fades in when that drawing takes longer than a blink\n(`LOADER_DELAY_MS`), so fast phones never see it."
     }
    ]
   },
@@ -8693,16 +8726,16 @@
     {
      "name": "Loader",
      "kind": "component",
-     "line": 20,
-     "signature": "({ size = 9, color, style }: { size?: number; color?: string; style?: StyleProp<ViewStyle> })",
-     "doc": "Three bouncing dots in the role's accent: the app's loading indicator."
+     "line": 34,
+     "signature": "({ size = 9, color, style, delay = 0 }: { size?: number; color?: string; style?: StyleProp<ViewStyle>; delay?: number })",
+     "doc": "Three bouncing dots in the role's accent: the app's loading indicator. `delay` (ms) keeps it hidden for quick loads."
     },
     {
      "name": "LoadingState",
      "kind": "component",
-     "line": 32,
-     "signature": "({ message = 'Loading…', style }: { message?: string; style?: StyleProp<ViewStyle> })",
-     "doc": "A centred loader with an optional line of text, for whole screens and panels."
+     "line": 47,
+     "signature": "({ message = 'Loading…', style, delay = 0 }: { message?: string; style?: StyleProp<ViewStyle>; delay?: number })",
+     "doc": "A centred loader with an optional line of text, for whole screens and panels. `delay` (ms) keeps it hidden for quick loads."
     }
    ]
   },
@@ -9907,121 +9940,128 @@
      "doc": "A module-level style sheet that follows the colour scheme. Wrap\n`StyleSheet.create({...})` in it whenever the styles read a colour token:\n`const styles = themed(() => StyleSheet.create({ ... }))`. The factory runs\nagain on first use after the scheme changes."
     },
     {
+     "name": "splashColors",
+     "kind": "const",
+     "line": 256,
+     "signature": "= { bg: '#681C2A', dot: '#C8A46B', text: 'rgba(255,252,248,0.78)', } as const",
+     "doc": "The launch screen: the same burgundy and mark as the native splash\n(app.json → expo-splash-screen), in both light and dark mode, so the hand-over\nfrom the splash to the app's own loading screen is seamless."
+    },
+    {
      "name": "socialColors",
      "kind": "const",
-     "line": 252,
+     "line": 263,
      "signature": "= { facebook: '#1877F2', instagram: '#C13584', whatsapp: '#128C7E', tiktok: '#161823', } as…",
      "doc": "Network marks in the social hub. Small icons and hairlines only, never fills."
     },
     {
      "name": "gradients",
      "kind": "const",
-     "line": 279,
+     "line": 290,
      "signature": "= buildGradients()",
      "doc": ""
     },
     {
      "name": "fonts",
      "kind": "const",
-     "line": 289,
+     "line": 300,
      "signature": "= { regular: 'Mukta_400Regular', medium: 'Mukta_500Medium', semibold: 'Mukta_600SemiBold', …",
      "doc": "Mukta (Ek Type) for everything you read and tap: it was drawn for\nDevanagari and Latin together, so Nepali names and \"शुभ विवाह\" set in the\nsame voice as the English UI. Martel, its serif sibling from the same\nfoundry, is kept for a handful of display lines (couple names, screen\ntitles on the couple app)."
     },
     {
      "name": "serif",
      "kind": "const",
-     "line": 297,
+     "line": 308,
      "signature": "= { regular: 'Martel_400Regular', medium: 'Martel_600SemiBold', semibold: 'Martel_600SemiBo…",
      "doc": ""
     },
     {
      "name": "FontWeight",
      "kind": "type",
-     "line": 305,
+     "line": 316,
      "signature": "= keyof typeof fonts",
      "doc": ""
     },
     {
      "name": "spacing",
      "kind": "const",
-     "line": 307,
+     "line": 318,
      "signature": "= { xxs: 2, xs: 4, sm: 8, md: 12, lg: 16, xl: 20, xxl: 24, xxxl: 32, } as const",
      "doc": ""
     },
     {
      "name": "radius",
      "kind": "const",
-     "line": 318,
+     "line": 329,
      "signature": "= { xs: 3, sm: 6, md: 8, lg: 10, xl: 12, pill: 999, } as const",
      "doc": ""
     },
     {
      "name": "GUTTER",
      "kind": "const",
-     "line": 328,
+     "line": 339,
      "signature": "= 16",
      "doc": "Page gutter."
     },
     {
      "name": "shadow",
      "kind": "function",
-     "line": 336,
+     "line": 347,
      "signature": "(elevation: number, opacity: number, radiusPx: number, offsetY: number, color = '#251B18'): ViewStyle",
      "doc": "Drop shadow for something that floats: elevation on Android, `boxShadow` on the web (shadow* props are deprecated there), shadow* on iOS."
     },
     {
      "name": "shadows",
      "kind": "const",
-     "line": 355,
+     "line": 366,
      "signature": "= { … }",
      "doc": "Shadows are reserved for things that genuinely float (sheets, toasts)."
     },
     {
      "name": "type",
      "kind": "const",
-     "line": 365,
+     "line": 376,
      "signature": "= { display: { fontFamily: serif.bold, fontSize: 30, lineHeight: 40 }, title: { fontFamily:…",
      "doc": ""
     },
     {
      "name": "tabular",
      "kind": "const",
-     "line": 377,
+     "line": 388,
      "signature": ": TextStyle",
      "doc": "Figures that line up in columns (money, counts, countdowns)."
     },
     {
      "name": "iconSize",
      "kind": "const",
-     "line": 380,
+     "line": 391,
      "signature": "= { xs: 14, sm: 16, md: 20, lg: 24, xl: 28 } as const",
      "doc": "Icon sizes: snap every Ionicon to one of these."
     },
     {
      "name": "motion",
      "kind": "const",
-     "line": 387,
+     "line": 398,
      "signature": "= { fast: 150, base: 240, slow: 360, stagger: 45 } as const",
      "doc": "Motion timing (ms). One or two things move per screen, always with the\nease-out curve in `hooks/useMotion`, and nothing moves when the device asks\nfor reduced motion."
     },
     {
      "name": "hitSlop",
      "kind": "const",
-     "line": 389,
+     "line": 400,
      "signature": "= { top: 10, bottom: 10, left: 10, right: 10 }",
      "doc": ""
     },
     {
      "name": "inputFont",
      "kind": "function",
-     "line": 398,
+     "line": 409,
      "signature": "(weight: '400' | '500' | '600' | '700' = '400'): TextStyle",
      "doc": "The font typed text uses inside inputs on phones: the system font at the\ngiven weight. Mukta's line box is 1.66 em tall (room for Devanagari marks),\nand iOS and Android size the text caret from it, so the cursor looked half\nagain taller than the text. Web keeps Mukta; the browser caret follows the\ntext. Put it after any `fontFamily` in an input's style array."
     },
     {
      "name": "inputReset",
      "kind": "const",
-     "line": 405,
+     "line": 416,
      "signature": ": TextStyle",
      "doc": "Base style for every text input: removes the browser focus ring on web and\nsets the normal-height caret font on phones (see `inputFont`)."
     }
@@ -13256,28 +13296,28 @@
     {
      "name": "translate",
      "kind": "function",
-     "line": 96,
+     "line": 103,
      "signature": "(text: string, lang: Lang = runtime.lang, overrides: TextOverrides = runtime.overrides): string",
      "doc": "Text in the current language (with super admin overrides)."
     },
     {
      "name": "tr",
      "kind": "function",
-     "line": 112,
+     "line": 119,
      "signature": "(text: string)",
      "doc": "Shorthand for non-React callers: alerts, toasts, placeholders."
     },
     {
      "name": "hasTranslation",
      "kind": "function",
-     "line": 115,
+     "line": 122,
      "signature": "(text: string)",
      "doc": "True when `text` has a Nepali entry (exact or template). Used by the admin text editor."
     },
     {
      "name": "dictionaryKeys",
      "kind": "function",
-     "line": 118,
+     "line": 125,
      "signature": "()",
      "doc": "Every English key in the dictionary, for the admin text editor."
     }
@@ -13290,28 +13330,28 @@
     {
      "name": "NotFoundError",
      "kind": "class",
-     "line": 25,
+     "line": 26,
      "signature": "",
      "doc": ""
     },
     {
      "name": "DEFAULT_VENUE_FILTERS",
      "kind": "const",
-     "line": 61,
+     "line": 62,
      "signature": ": VenueFilters",
      "doc": ""
     },
     {
      "name": "countActiveFilters",
      "kind": "function",
-     "line": 69,
+     "line": 70,
      "signature": "(f: VenueFilters)",
      "doc": ""
     },
     {
      "name": "VenueQuery",
      "kind": "interface",
-     "line": 76,
+     "line": 77,
      "signature": "",
      "doc": "",
      "members": [
@@ -13350,14 +13390,14 @@
     {
      "name": "filterVenues",
      "kind": "function",
-     "line": 84,
+     "line": 85,
      "signature": "({ city, query = '', collection, filters = DEFAULT_VENUE_FILTERS, destinationPricing }: VenueQuery)",
      "doc": ""
     },
     {
      "name": "api",
      "kind": "const",
-     "line": 110,
+     "line": 111,
      "signature": "= { … }",
      "doc": ""
     }
@@ -17659,28 +17699,28 @@
     {
      "name": "useDb",
      "kind": "const",
-     "line": 115,
-     "signature": "= create<Db>()( persist( (set, get) => ({ ...buildSeedData(), ...coreActions(set, get), ...…",
+     "line": 118,
+     "signature": "= create<Db>()( persist( (set, get) => ({ ...START_SEED, ...coreActions(set, get), ...quote…",
      "doc": ""
     },
     {
      "name": "useInbox",
      "kind": "hook",
-     "line": 175,
+     "line": 178,
      "signature": "(account: Account)",
      "doc": "Notifications addressed to the account directly or to its whole role.\nSelects the stable array and filters in render — returning a fresh array\nfrom a zustand selector would re-render forever."
     },
     {
      "name": "useThreads",
      "kind": "hook",
-     "line": 181,
+     "line": 184,
      "signature": "(account: Account)",
      "doc": "Threads this account is a member of (platform staff see every thread)."
     },
     {
      "name": "useUnreadMessageCount",
      "kind": "hook",
-     "line": 193,
+     "line": 196,
      "signature": "(account: Account)",
      "doc": ""
     }

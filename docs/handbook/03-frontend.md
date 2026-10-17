@@ -12,7 +12,7 @@ Every file in `src/app/` is a route. `_layout.tsx` files define navigators. Fold
 
 `src/app/_layout.tsx` is the entry point. In order, it:
 
-1. keeps the splash screen up and loads the fonts (`APP_FONTS`);
+1. keeps the splash screen up and loads the fonts (`APP_FONTS`); until fonts and stores are ready it renders `BootScreen` (`components/ui/BootScreen.tsx`: the splash's burgundy and mark, a three-dot loader after 300 ms, a "Getting your app ready…" line after 4 s) and hides the native splash as soon as that has drawn. On web, `public/index.html` draws the same screen in plain HTML and CSS before the JavaScript arrives;
 2. waits until all four persisted stores have rehydrated (`useHydrated` on `useAppStore`, `useSession`, `useDb`, `usePrefs`), because routing depends on them;
 3. installs action toasts (`installActionToasts()`) and the error boundary (`AppErrorBoundary`);
 4. on Supabase builds, signs out a device whose tokens can no longer be refreshed;
@@ -88,7 +88,8 @@ Actions that can fail return an error string or `null`. Screens don't need to to
 
 - **Toasts:** automatic after actions; manual with `toast()`, `toastError()`, `toastInfo()` from `components/ui/Toast`.
 - **Confirmations:** `confirm(title, message, confirmLabel, onConfirm)` from `utils/confirm` (renders the app `Dialog`). Never `Alert.alert` (R-FE-8).
-- **Loading:** `Loader` (inline) or `LoadingState` (full area); skeletons in `components/ui/Skeleton.tsx` for lists.
+- **Loading:** `Loader` (inline) or `LoadingState` (full area); skeletons in `components/ui/Skeleton.tsx` for lists. Both take `delay` (ms): the loader fades in only if the wait lasts that long (the fade runs on the UI thread, so it shows even while JavaScript is busy).
+- **Heavy screens:** a screen that takes a noticeable moment to draw (the project console, My wedding, guests, seating, budget, quotes, the social hub) is exported as `export default deferredScreen(Screen)` (`components/ui/DeferredScreen.tsx`). Its first frame is the background with a delayed loader, so the tap answers and the slide starts at once; the full screen draws on the next frame. Use it for new screens that render a lot at once; lists should still use `FlatList` or paging.
 - **Empty and error states:** `EmptyState`/`ErrorState` (`components/ui`), `EmptyBlock` (`components/kit`).
 - **Crashes:** the root `ErrorBoundary` is `AppErrorBoundary`; it reports to PostHog/Sentry and offers a retry.
 
@@ -98,7 +99,7 @@ Actions that can fail return an error string or `null`. Screens don't need to to
 - `PressableScale` is a plain `Pressable` with a 350 ms double-tap guard and optional haptics (`triggerHaptic`). An animated press style made Android drop taps, so don't reintroduce one.
 - Web: no nested pressables (R-FE-6). Text inputs use `inputReset` to drop the browser focus ring. `public/` holds files copied as-is into the web build (`_headers`, `robots.txt`, `sitemap.xml`). Unknown URLs render `src/app/+not-found.tsx`.
 - Images: `expo-image`. Remote images on live builds come from Cloudinary through `cloudinaryUrl(publicId, 't_card')` (see [06-backend.md](06-backend.md)).
-- Icons: `Ionicons` from `@expo/vector-icons`; the `IconName` type is exported by `components/kit/primitives`.
+- Icons: `import Ionicons from '@expo/vector-icons/Ionicons'` (one set per import). Never import from the `@expo/vector-icons` barrel: it pulls every icon set's glyph map (about 1.6 MB) into the bundle. The `IconName` type is exported by `components/kit/primitives`.
 - Links and sharing: `utils/links.ts` (`webUrl`, `appUrl`, `sitePath`, `rsvpPath`, `shareMessage`, `openWhatsApp`, `openSms`).
 
 ## 6. Wide layout (the web console)

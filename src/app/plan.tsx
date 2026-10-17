@@ -1,4 +1,4 @@
-import { Ionicons } from '@expo/vector-icons';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { Photo } from '@/components/ui/Photo';
 import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
@@ -144,7 +144,7 @@ export default function PlanWizard() {
 
   const submit = async () => {
     setSubmitting(true);
-    await new Promise((r) => setTimeout(r, 700));
+    await new Promise((r) => setTimeout(r, 250));
     const project = submitPlan(account, {
       eventTypes,
       city,

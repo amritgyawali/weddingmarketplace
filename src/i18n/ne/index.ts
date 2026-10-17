@@ -2591,6 +2591,8 @@ export const NE: Record<string, string> = {
   "Live now": "अहिले लाइभ",
   "Live Streaming": "लाइभ स्ट्रिमिङ",
   "Loading…": "लोड हुँदैछ…",
+  "Loading Vivah": "Vivah लोड हुँदैछ",
+  "Getting your app ready…": "तपाईंको एप तयार हुँदैछ…",
   "Location": "स्थान",
   "Location / venue": "स्थान / भेन्यु",
   "Location confirmed": "स्थान पक्का भयो",

@@ -36,13 +36,13 @@ swapping the bodies below for `fetch` calls.
 
 ### `NotFoundError`
 
-*class* · [src/services/api.ts:25](../../../src/services/api.ts#L25)
+*class* · [src/services/api.ts:26](../../../src/services/api.ts#L26)
 
 _No JSDoc yet._
 
 ### `DEFAULT_VENUE_FILTERS`
 
-*const* · [src/services/api.ts:61](../../../src/services/api.ts#L61)
+*const* · [src/services/api.ts:62](../../../src/services/api.ts#L62)
 
 ```ts
 DEFAULT_VENUE_FILTERS: VenueFilters
@@ -52,7 +52,7 @@ _No JSDoc yet._
 
 ### `countActiveFilters`
 
-*function* · [src/services/api.ts:69](../../../src/services/api.ts#L69)
+*function* · [src/services/api.ts:70](../../../src/services/api.ts#L70)
 
 ```ts
 countActiveFilters(f: VenueFilters)
@@ -62,7 +62,7 @@ _No JSDoc yet._
 
 ### `VenueQuery`
 
-*interface* · [src/services/api.ts:76](../../../src/services/api.ts#L76)
+*interface* · [src/services/api.ts:77](../../../src/services/api.ts#L77)
 
 _No JSDoc yet._
 
@@ -76,7 +76,7 @@ _No JSDoc yet._
 
 ### `filterVenues`
 
-*function* · [src/services/api.ts:84](../../../src/services/api.ts#L84)
+*function* · [src/services/api.ts:85](../../../src/services/api.ts#L85)
 
 ```ts
 filterVenues({ city, query = '', collection, filters = DEFAULT_VENUE_FILTERS, destinationPricing }: VenueQuery)
@@ -86,7 +86,7 @@ _No JSDoc yet._
 
 ### `api`
 
-*const* · [src/services/api.ts:110](../../../src/services/api.ts#L110)
+*const* · [src/services/api.ts:111](../../../src/services/api.ts#L111)
 
 ```ts
 api= { … }

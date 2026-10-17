@@ -502,17 +502,17 @@ _No JSDoc yet._
 
 ### `useDb`
 
-*const* · [src/store/db/index.ts:115](../../../src/store/db/index.ts#L115)
+*const* · [src/store/db/index.ts:118](../../../src/store/db/index.ts#L118)
 
 ```ts
-useDb= create<Db>()( persist( (set, get) => ({ ...buildSeedData(), ...coreActions(set, get), ...…
+useDb= create<Db>()( persist( (set, get) => ({ ...START_SEED, ...coreActions(set, get), ...quote…
 ```
 
 _No JSDoc yet._
 
 ### `useInbox`
 
-*hook* · [src/store/db/index.ts:175](../../../src/store/db/index.ts#L175)
+*hook* · [src/store/db/index.ts:178](../../../src/store/db/index.ts#L178)
 
 ```ts
 useInbox(account: Account)
@@ -524,7 +524,7 @@ from a zustand selector would re-render forever.
 
 ### `useThreads`
 
-*hook* · [src/store/db/index.ts:181](../../../src/store/db/index.ts#L181)
+*hook* · [src/store/db/index.ts:184](../../../src/store/db/index.ts#L184)
 
 ```ts
 useThreads(account: Account)
@@ -534,7 +534,7 @@ Threads this account is a member of (platform staff see every thread).
 
 ### `useUnreadMessageCount`
 
-*hook* · [src/store/db/index.ts:193](../../../src/store/db/index.ts#L193)
+*hook* · [src/store/db/index.ts:196](../../../src/store/db/index.ts#L196)
 
 ```ts
 useUnreadMessageCount(account: Account)

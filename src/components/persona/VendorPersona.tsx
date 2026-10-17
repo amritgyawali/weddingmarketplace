@@ -3,7 +3,7 @@
  * main service and add-ons, business form and the trade's essentials. Used by
  * sign-up (one step each) and by Business → Your services (all together).
  */
-import { Ionicons } from '@expo/vector-icons';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { Photo } from '@/components/ui/Photo';
 import { Pressable, StyleSheet, View } from 'react-native';
 

@@ -7,7 +7,7 @@
 | App | React Native 0.86, React 19.2, **Expo SDK 57**, TypeScript (strict) | One binary for iOS, Android and web. Must run in Expo Go (R-PROD-4). |
 | Navigation | Expo Router (file-based), typed routes | `src/app/` |
 | State | zustand 5 with `persist` (AsyncStorage) | The on-device "backend" (`useDb`) and smaller stores |
-| Server reads (catalogue) | TanStack React Query 5 over `services/api.ts` | Venues, vendors, ideas: async so a real API can replace the mock data |
+| Server reads (catalogue) | TanStack React Query 5 over `services/api.ts` | Venues, vendors, ideas: async so a real API can replace the mock data (the mock answers at once) |
 | Compiler | React Compiler on (`app.json` → `experiments.reactCompiler`) | No hand-written memoisation (R-FE-5) |
 | Production backend | Supabase: Postgres + RLS, RPCs, Auth (email OTP), Storage, Edge Functions (Deno) | Written and tested, **not deployed** until the owner says so |
 | Media | Cloudinary (signed uploads) | Public images only |

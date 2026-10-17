@@ -1,5 +1,5 @@
 /** Couple toolkit: gifts, tips, savings, what-if budgets, honeymoon and the bhoj menu. */
-import { Ionicons } from '@expo/vector-icons';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 

@@ -3,7 +3,7 @@
  * themes for decorators, gallery for studios…). Each is shown by its rule in
  * `TOOL_RULES`; all of them store records in the shared tool collections.
  */
-import { Ionicons } from '@expo/vector-icons';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 

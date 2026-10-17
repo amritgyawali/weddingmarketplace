@@ -18,6 +18,7 @@ import { useDb } from '@/store/useDb';
 import { useAccount } from '@/store/useSession';
 import { useRoleTheme } from '@/theme/RoleTheme';
 import type { SocialNetwork } from '@/types/platform';
+import { deferredScreen } from '@/components/ui/DeferredScreen';
 
 type Tab = 'inbox' | 'posts' | 'calendar' | 'accounts' | 'insights' | 'automation';
 const TABS: { id: Tab; label: string }[] = [
@@ -34,7 +35,7 @@ const TABS: { id: Tab; label: string }[] = [
  * One inbox for every message and comment, one composer for every network,
  * a content calendar, connected accounts, insights and automation.
  */
-export default function SocialHub() {
+function SocialHub() {
   const t = useRoleTheme();
   const { wide } = useLayout();
   const on = useFeatures();
@@ -125,3 +126,6 @@ const styles = StyleSheet.create({
   split: { flex: 1, flexDirection: 'row' },
   list: { width: 400, borderRightWidth: StyleSheet.hairlineWidth },
 });
+
+// Heavy screen: answer the tap with a light frame first (components/ui/DeferredScreen.tsx).
+export default deferredScreen(SocialHub);

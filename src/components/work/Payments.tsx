@@ -1,4 +1,4 @@
-import { Ionicons } from '@expo/vector-icons';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { useEffect, useState } from 'react';
 import { ActivityIndicator, Pressable, StyleSheet, View } from 'react-native';
 import QRCode from 'react-native-qrcode-svg';
@@ -157,7 +157,7 @@ export function PaymentSheet({
       return setStep('gateway');
     }
     setStep('processing');
-    await new Promise((r) => setTimeout(r, 1300));
+    await new Promise((r) => setTimeout(r, 700));
     const saved = onPay(method!, payAmount);
     if (saved) {
       setPaid(saved);

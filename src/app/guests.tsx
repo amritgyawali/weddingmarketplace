@@ -1,4 +1,4 @@
-import { Ionicons } from '@expo/vector-icons';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { Contact, ContactField, requestPermissionsAsync } from 'expo-contacts';
 import { router } from 'expo-router';
 import { useState } from 'react';
@@ -20,6 +20,7 @@ import { confirm } from '@/utils/confirm';
 import { formatPhone, isNepalMobile } from '@/utils/format';
 import { openWhatsApp, rsvpPath, webUrl } from '@/utils/links';
 import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
+import { deferredScreen } from '@/components/ui/DeferredScreen';
 
 const CATEGORIES = ['Family', 'Relatives', 'Friends', 'Colleagues', 'Neighbours', 'Guru / Priest', 'Plus-ones'];
 const DIETARY = ['Vegetarian', 'Non-veg', 'Vegan', 'Jain', 'No alcohol', 'No buff', 'Diabetic', 'Allergies'];
@@ -529,7 +530,7 @@ function GuestList({ project, readOnly }: { project: Project; readOnly: boolean 
 }
 
 /** Guest list & RSVP manager: sides, groups, per-function invites, dietary needs, imports and exports. */
-export default function GuestsScreen() {
+function GuestsScreen() {
   return (
     <ToolScreen title="Guests & RSVP" subtitle={(p) => `${p.title} · ${p.events.filter((e) => e.status !== 'cancelled').length} functions`}>
       {(project, { readOnly }) => <GuestList project={project} readOnly={readOnly} />}
@@ -543,3 +544,6 @@ const styles = StyleSheet.create({
   dot: { width: 8, height: 8, borderRadius: 4 },
   stepper: { flex: 1, flexDirection: 'row', alignItems: 'center', gap: 10, borderWidth: 1, borderRadius: 8, paddingHorizontal: 12, height: 48 },
 });
+
+// Heavy screen: answer the tap with a light frame first (components/ui/DeferredScreen.tsx).
+export default deferredScreen(GuestsScreen);
