@@ -3413,7 +3413,7 @@
     {
      "name": "WeddingSite",
      "kind": "component",
-     "line": 42,
+     "line": 59,
      "signature": "()",
      "doc": "Public couple website — schedule, story, travel, FAQ, gallery, registry and RSVP."
     }
@@ -3426,7 +3426,7 @@
     {
      "name": "WebsiteScreen",
      "kind": "component",
-     "line": 318,
+     "line": 322,
      "signature": "()",
      "doc": "Wedding website builder: templates, story, schedule, travel, FAQ, registry, RSVP questions, privacy and publishing."
     }
@@ -5457,27 +5457,27 @@
      "name": "ChoiceChips",
      "kind": "component",
      "line": 133,
-     "signature": "({ options, selected, onToggle, }: { options: string[]; selected: string[]; onToggle: (value: string) => void; })",
+     "signature": "({ options, selected, onToggle, labels, }: { options: string[]; selected: string[]; onToggle: (value: string) => void; /** What to show for each option when the stored value isn't the words to show (\"low\" → \"Low\"). */ la…)",
      "doc": "Selectable chips (multi or single choice)."
     },
     {
      "name": "FilterChip",
      "kind": "component",
-     "line": 173,
+     "line": 176,
      "signature": "({ label, selected, onPress, icon }: { label: string; selected?: boolean; onPress: () => void; icon?: IconName })",
      "doc": "One filter or sort chip, the same in every role app: pearl at rest,\nburgundy with a check when selected (so the state never rests on colour\nalone). Use for ad-hoc chip rows instead of styling a Pressable by hand."
     },
     {
      "name": "ListRow",
      "kind": "component",
-     "line": 200,
+     "line": 203,
      "signature": "({ title, subtitle, leading, trailing, onPress, icon, meta, }: { title: string; subtitle?: string; leading?: ReactNode; trailing?: ReactNode; onPress?: () => void; icon?: IconName; meta?: ReactNode; })",
      "doc": "Tappable list row with leading visual and trailing slot."
     },
     {
      "name": "Fab",
      "kind": "component",
-     "line": 247,
+     "line": 250,
      "signature": "({ icon = 'add', label, onPress, bottom = 20 }: { icon?: IconName; label?: string; onPress: () => void; bottom?: number })",
      "doc": "Floating action button in the role's primary colour."
     }
@@ -5593,56 +5593,56 @@
     {
      "name": "showMissing",
      "kind": "function",
-     "line": 126,
+     "line": 129,
      "signature": "(message: string)",
      "doc": "Tells the person what is still missing when they tap an incomplete form's button."
     },
     {
      "name": "StatusPill",
      "kind": "component",
-     "line": 131,
+     "line": 134,
      "signature": "({ status, label }: { status: string; label?: string })",
      "doc": ""
     },
     {
      "name": "Avatar",
      "kind": "component",
-     "line": 151,
+     "line": 154,
      "signature": "({ name, size = 40, photo }: { name: string; size?: number; photo?: string })",
      "doc": "Initials in a palette colour, or the person's photo when they added one."
     },
     {
      "name": "ProgressBar",
      "kind": "component",
-     "line": 170,
+     "line": 173,
      "signature": "({ value, color, height = 4 }: { value: number; color?: string; height?: number })",
      "doc": ""
     },
     {
      "name": "SectionTitle",
      "kind": "component",
-     "line": 179,
+     "line": 182,
      "signature": "({ title, action, onAction }: { title: string; action?: string; onAction?: () => void })",
      "doc": ""
     },
     {
      "name": "EmptyBlock",
      "kind": "component",
-     "line": 198,
+     "line": 201,
      "signature": "({ icon = 'file-tray-outline', art, title, message, action, onAction }: { icon?: IconName; art?: ArtName; title: string; message?: string; action?: string; onAction?: () => void })",
      "doc": "Empty list or section in the role apps: pearl medallion, serif title, one line, one action. `art` swaps the icon for a line drawing."
     },
     {
      "name": "Divider",
      "kind": "component",
-     "line": 218,
+     "line": 221,
      "signature": "({ style }: { style?: StyleProp<ViewStyle> })",
      "doc": ""
     },
     {
      "name": "KeyValue",
      "kind": "component",
-     "line": 224,
+     "line": 227,
      "signature": "({ label, value, strong }: { label: string; value: string; strong?: boolean })",
      "doc": "Label/value line used in summaries."
     }
@@ -8282,9 +8282,9 @@
     {
      "name": "Calendar",
      "kind": "component",
-     "line": 55,
-     "signature": "({ value, onChange, minDate = new Date(), dateStatus, }: { value: string | null; onChange: (iso: string) => void; minDate?: Date; dateStatus?: (date: string) => AvailabilityStatus; })",
-     "doc": "Pure-JS month calendar so the date step looks the same on iOS, Android and\nweb. Shows the Nepali (BS) month by default with the AD day in small type;\nthe value is always an AD `yyyy-mm-dd`."
+     "line": 58,
+     "signature": "({ value, onChange, minDate = new Date(), dateStatus, onClear, clearLabel = 'Clear date', }: { value: string | null; onChange: (iso: string) => void; minDate?: Date; dateStatus?: (date: string) => AvailabilityStatus; /**…)",
+     "doc": "Pure-JS month calendar so the date step looks the same on iOS, Android and\nweb. Shows the Nepali (BS) month by default with the AD day in small type;\nthe value is always an AD `yyyy-mm-dd`. With `onClear`, a \"Clear date\"\nbutton sits right under the days (shown once a date is picked), so nobody\nhas to scroll to find it. Rows have a fixed height, so a six-week month\nalways fits."
     }
    ]
   },
@@ -8366,7 +8366,7 @@
      "name": "DatePopup",
      "kind": "component",
      "line": 16,
-     "signature": "({ visible, title = 'Pick a date', value, onChange, onClose, minDate, }: { visible: boolean; title?: string; value: string | null; onChange: (iso: string) => void; onClose: () => void; minDate?: Date; })",
+     "signature": "({ visible, title = 'Pick a date', value, onChange, onClose, minDate, onClear, }: { visible: boolean; title?: string; value: string | null; onChange: (iso: string) => void; onClose: () => void; minDate?: Date; /** Shows …)",
      "doc": "A date picker that opens as a centred popup over the screen (or over a\nsheet), so the person never has to scroll down to find the calendar.\nPicking a day closes it."
     }
    ]
@@ -8658,11 +8658,18 @@
      "doc": "`screenLayout` for Stack and Tabs navigators: lifts every leaf screen above the keyboard."
     },
     {
+     "name": "revealTarget",
+     "kind": "function",
+     "line": 117,
+     "signature": "({ fieldTop, fieldBottom, contentHeight, view, current }: { fieldTop: number; fieldBottom: number; contentHeight: number; view: number; current: number }): number",
+     "doc": "Where to scroll so the focused field is visible and as much of the rest of\nthe form as fits, ideally down to its end (where the submit button is).\nAll values are in content coordinates; `view` is the height left above the\nkeyboard. Pure, so it can be reasoned about and tested on its own."
+    },
+    {
      "name": "KeyboardAwareScrollView",
      "kind": "component",
-     "line": 114,
-     "signature": "forwardRef(({ keyboardShouldPersistTaps = 'handled', keyboardDismissMode, onScroll, onLayout, scrollEventThrottle, ...rest }, ref))",
-     "doc": "ScrollView with keyboard-friendly defaults: taps on buttons work while the\nkeyboard is open (the first tap no longer just closes it), dragging closes\nit, and the focused input scrolls into view when the keyboard opens."
+     "line": 136,
+     "signature": "forwardRef(({ keyboardShouldPersistTaps = 'handled', keyboardDismissMode, onScroll, onLayout, onContentSizeChange, scrollEventThrottle, ...rest }, ref))",
+     "doc": "ScrollView with keyboard-friendly defaults: taps on buttons work while the\nkeyboard is open (the first tap no longer just closes it), dragging closes\nit, and when a field is focused the form scrolls so that field and as much\nof the rest as fits (down to the submit button) sit above the keyboard. It\nmeasures the space left on each device, so it adapts to any screen size."
     }
    ]
   },
@@ -9338,7 +9345,7 @@
     {
      "name": "EventsPanel",
      "kind": "component",
-     "line": 94,
+     "line": 85,
      "signature": "({ project, mode }: { project: Project; mode: 'customer' | 'platform' | 'vendor' })",
      "doc": "Functions of a project (engagement, mehendi, wedding, reception…) with run sheets."
     }
@@ -9444,21 +9451,21 @@
     {
      "name": "PAYMENT_METHODS",
      "kind": "const",
-     "line": 24,
+     "line": 25,
      "signature": ": { id: PaymentMethod; label: string; sub: string; color: string; icon: string; staffOnly?: boolean }[]",
      "doc": ""
     },
     {
      "name": "PaymentSheet",
      "kind": "component",
-     "line": 41,
-     "signature": "({ visible, title, amount, allowPartial, staff, online, onClose, onPay, }: { visible: boolean; title: string; amount: number; allowPartial?: boolean; staff?: boolean; /** Real Khalti and eSewa payments for this milestone…)",
-     "doc": "Paying a milestone. The demo simulates the Nepali gateways (eSewa, Khalti,\nFonepay QR, ConnectIPS…). With `online` (Supabase builds, couples) Khalti and\neSewa are real: the gateway opens, and the payment counts only once\npayment-verify has confirmed it with the gateway (master plan §7.5)."
+     "line": 46,
+     "signature": "({ visible, title, amount, allowPartial, staff, online, details, purpose, onClose, onPay, onReceipt, }: { visible: boolean; title: string; amount: number; allowPartial?: boolean; staff?: boolean; /** Real Khalti and eSew…)",
+     "doc": "Paying a milestone. The demo simulates the Nepali gateways (eSewa, Khalti,\nFonepay QR, ConnectIPS…). With `online` (Supabase builds, couples) Khalti and\neSewa are real: the gateway opens, and the payment counts only once\npayment-verify has confirmed it with the gateway (master plan §7.5).\n\nThe pay screen stays open for `PAYMENT_WINDOW_SECONDS`. If the payment isn't\nfinished in time the attempt is rejected (nothing is charged) and the person\ncan pay again, so an old amount or QR code is never paid by mistake."
     },
     {
      "name": "PaymentsPanel",
      "kind": "component",
-     "line": 305,
+     "line": 536,
      "signature": "({ project, mode, openMilestoneId, focusMilestoneId, onFocusTarget }: { project: Project; mode: 'customer' | 'platform' | 'vendor'; openMilestoneId?: string; focusMilestoneId?: string; onFocusTarget?: (node: View) => voi…)",
      "doc": "`openMilestoneId` opens that milestone's payment sheet straight away (from \"Next up\" on My Wedding)."
     }
@@ -9625,14 +9632,14 @@
     {
      "name": "DEFAULT_PREFS",
      "kind": "const",
-     "line": 28,
+     "line": 29,
      "signature": ": AccountPrefs",
      "doc": ""
     },
     {
      "name": "SettingsScreen",
      "kind": "component",
-     "line": 53,
+     "line": 54,
      "signature": "()",
      "doc": "Notification, language, calendar and privacy settings plus data export and account deletion."
     }
@@ -9691,7 +9698,7 @@
     {
      "name": "TimelineView",
      "kind": "component",
-     "line": 30,
+     "line": 34,
      "signature": "({ project, mode }: { project: Project; mode: 'customer' | 'platform' | 'vendor' })",
      "doc": "Project timeline: bookings, payments, meetings, events and deliveries in date order."
     }
@@ -13096,28 +13103,28 @@
     {
      "name": "usePrefs",
      "kind": "const",
-     "line": 31,
+     "line": 34,
      "signature": "= create<PrefsState>()( persist( (set) => ({ lang: 'en', calendar: 'bs', appearance: 'syste…",
      "doc": ""
     },
     {
      "name": "I18nProvider",
      "kind": "component",
-     "line": 75,
+     "line": 81,
      "signature": "({ children }: { children: ReactNode })",
      "doc": "Re-renders the tree when the language, calendar or a text override changes."
     },
     {
      "name": "useI18n",
      "kind": "hook",
-     "line": 83,
+     "line": 89,
      "signature": "()",
      "doc": ""
     },
     {
      "name": "useT",
      "kind": "hook",
-     "line": 86,
+     "line": 92,
      "signature": "()",
      "doc": "`t('Save')` in the current language; re-renders on language change."
     }
@@ -13156,9 +13163,22 @@
     {
      "name": "NE",
      "kind": "const",
-     "line": 13,
+     "line": 14,
      "signature": ": Record<string, string>",
      "doc": ""
+    }
+   ]
+  },
+  {
+   "file": "src/i18n/ne/polish.ts",
+   "doc": "",
+   "exports": [
+    {
+     "name": "POLISH_NE",
+     "kind": "const",
+     "line": 6,
+     "signature": ": Record<string, string>",
+     "doc": "Nepali for the text, payment and currency polish (October 2026): clearer\ntoasts, the payment window, receipts, display currencies, the calendar's\nclear button and the sentence-case fixes."
     }
    ]
   },
@@ -13230,34 +13250,34 @@
      "name": "runtime",
      "kind": "const",
      "line": 19,
-     "signature": ": { lang: Lang; calendar: CalendarMode; overrides: TextOverrides }",
-     "doc": "Current settings, kept in sync by `I18nProvider`."
+     "signature": ": { lang: Lang; calendar: CalendarMode; overrides: TextOverrides; currency: string }",
+     "doc": "Current settings, kept in sync by `I18nProvider`. `currency` is the display currency (amounts are always stored in NPR)."
     },
     {
      "name": "translate",
      "kind": "function",
-     "line": 95,
+     "line": 96,
      "signature": "(text: string, lang: Lang = runtime.lang, overrides: TextOverrides = runtime.overrides): string",
      "doc": "Text in the current language (with super admin overrides)."
     },
     {
      "name": "tr",
      "kind": "function",
-     "line": 111,
+     "line": 112,
      "signature": "(text: string)",
      "doc": "Shorthand for non-React callers: alerts, toasts, placeholders."
     },
     {
      "name": "hasTranslation",
      "kind": "function",
-     "line": 114,
+     "line": 115,
      "signature": "(text: string)",
      "doc": "True when `text` has a Nepali entry (exact or template). Used by the admin text editor."
     },
     {
      "name": "dictionaryKeys",
      "kind": "function",
-     "line": 117,
+     "line": 118,
      "signature": "()",
      "doc": "Every English key in the dictionary, for the admin text editor."
     }
@@ -13671,56 +13691,56 @@
     {
      "name": "quoteHtml",
      "kind": "function",
-     "line": 26,
+     "line": 29,
      "signature": "(q: Quotation)",
      "doc": ""
     },
     {
      "name": "receiptHtml",
      "kind": "function",
-     "line": 46,
+     "line": 50,
      "signature": "(payment: Payment, project: Project)",
-     "doc": ""
+     "doc": "Printable receipt: what was paid, for what, how, its status in words, and the balance left. Always in NPR."
     },
     {
      "name": "contractHtml",
      "kind": "function",
-     "line": 58,
+     "line": 82,
      "signature": "(c: Contract)",
      "doc": ""
     },
     {
      "name": "guestListHtml",
      "kind": "function",
-     "line": 70,
+     "line": 94,
      "signature": "(project: Project, guests: Guest[], events: ProjectEvent[])",
      "doc": ""
     },
     {
      "name": "seatingHtml",
      "kind": "function",
-     "line": 81,
+     "line": 105,
      "signature": "(project: Project, event: ProjectEvent, layout: SeatingLayout, guests: Guest[])",
      "doc": ""
     },
     {
      "name": "runSheetHtml",
      "kind": "function",
-     "line": 93,
+     "line": 117,
      "signature": "(project: Project, event: ProjectEvent)",
      "doc": ""
     },
     {
      "name": "invitationHtml",
      "kind": "function",
-     "line": 103,
+     "line": 127,
      "signature": "(opts: { names: string; message: string; accent: string; background: string; events: ProjectEvent[]; footer?: string })",
      "doc": "Printable invitation card (A5) — its own design, without the Vivah letterhead."
     },
     {
      "name": "incomeStatementHtml",
      "kind": "function",
-     "line": 117,
+     "line": 141,
      "signature": "(opts: { name: string; phone?: string; pan?: string; from: string; to: string; rows: { date: string; source: 'vivah' | 'private'; label: string; amount: number }[] })",
      "doc": "A freelancer's income statement for a period: Vivah payouts (from the ledger) and private invoices they entered."
     }
@@ -15149,6 +15169,89 @@
    ]
   },
   {
+   "file": "src/services/paymentInfo.ts",
+   "doc": "Plain-words payment information shared by the payment sheet, the receipts list and the printable receipt: method names, what each status means, when an instalment is due and what a payment covers. Pure: no React, no store.",
+   "exports": [
+    {
+     "name": "PAYMENT_WINDOW_SECONDS",
+     "kind": "const",
+     "line": 15,
+     "signature": "= 30",
+     "doc": "Seconds a payment screen stays open. If the payment isn't finished in time\nthe attempt is rejected (nothing is charged) and the person starts again,\nso a stale amount or QR code is never paid."
+    },
+    {
+     "name": "formatCountdown",
+     "kind": "function",
+     "line": 18,
+     "signature": "(seconds: number): string",
+     "doc": "Seconds left as \"0:27\"."
+    },
+    {
+     "name": "PAYMENT_METHOD_LABEL",
+     "kind": "const",
+     "line": 24,
+     "signature": ": Record<PaymentMethod, string>",
+     "doc": "Method names as people know them."
+    },
+    {
+     "name": "PAYMENT_STATUS_TEXT",
+     "kind": "const",
+     "line": 36,
+     "signature": ": Record<Payment['status'], { label: string; detail: string }>",
+     "doc": "What a payment record's status means, in one short label and one sentence."
+    },
+    {
+     "name": "MILESTONE_STATUS_TEXT",
+     "kind": "const",
+     "line": 45,
+     "signature": ": Record<MilestoneStatus, string>",
+     "doc": "Instalment status words for people (the enum stays as it is)."
+    },
+    {
+     "name": "milestoneDueText",
+     "kind": "function",
+     "line": 55,
+     "signature": "(m: PaymentMilestone): string",
+     "doc": "\"Due in 5 days\", \"Due today\", \"Overdue by 3 days\", \"Paid in full\"."
+    },
+    {
+     "name": "milestonePurpose",
+     "kind": "function",
+     "line": 67,
+     "signature": "(m: PaymentMilestone): string",
+     "doc": "One line on what an instalment is for, from its schedule rule."
+    },
+    {
+     "name": "PaymentDetail",
+     "kind": "interface",
+     "line": 83,
+     "signature": "",
+     "doc": "A label and a value, for the \"What you’re paying for\" box and the receipt.",
+     "members": [
+      {
+       "name": "label",
+       "optional": false,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "value",
+       "optional": false,
+       "type": "string",
+       "doc": ""
+      }
+     ]
+    },
+    {
+     "name": "milestonePaymentDetails",
+     "kind": "function",
+     "line": 89,
+     "signature": "(project: Project, m: PaymentMilestone, payNow: number): PaymentDetail[]",
+     "doc": "Everything a couple should see before paying an instalment. Amounts are NPR (what is charged)."
+    }
+   ]
+  },
+  {
    "file": "src/services/planner.ts",
    "doc": "Rule-based wedding planner (\"AI\" without paid AI): turns the requirement wizard into a project, allocates budgets, generates checklists and a timeline, and suggests the next best action. Swap any function for an LLM call behind your own server later without touching screens.",
    "exports": [
@@ -15325,44 +15428,58 @@
      "doc": ""
     },
     {
-     "name": "WEDDING_ONLY_TASKS",
+     "name": "RENAMED_TASK_TITLES",
      "kind": "const",
      "line": 280,
-     "signature": "= new Set(TASK_TEMPLATES.map((t) => t.title).filter((title) => !CELEBRATION_TEMPLATES.some(…",
-     "doc": "Titles that only make sense for a wedding; older non-wedding plans drop them (store migrate v5)."
+     "signature": ": Record<string, string>",
+     "doc": "Checklist titles reworded since they were first saved on plans: old title → current title."
+    },
+    {
+     "name": "taskTitleKey",
+     "kind": "function",
+     "line": 288,
+     "signature": "(title: string)",
+     "doc": "A task title in its current wording, so a plan saved with an older title isn't offered the same task again."
+    },
+    {
+     "name": "WEDDING_ONLY_TASKS",
+     "kind": "const",
+     "line": 291,
+     "signature": "= new Set( TASK_TEMPLATES.map((t) => t.title) .filter((title) => !CELEBRATION_TEMPLATES.som…",
+     "doc": "Titles that only make sense for a wedding; older non-wedding plans drop them (store migrate v5). Old wordings count too."
     },
     {
      "name": "generateTasks",
      "kind": "function",
-     "line": 283,
+     "line": 298,
      "signature": "(mainDate: string, services: string[], customerName: string, coordinatorName = 'Your coordinator', occasion = 'wedding'): ProjectTask[]",
      "doc": "Personalised checklist for the occasion; overdue templates are compressed into the remaining time."
     },
     {
      "name": "suggestedTasks",
      "kind": "function",
-     "line": 311,
+     "line": 326,
      "signature": "(project: Project): ProjectTask[]",
      "doc": "Checklist tasks for the project's date and requested services that aren't on its list yet (the \"Suggest tasks\" sheet)."
     },
     {
      "name": "guideSuggestions",
      "kind": "function",
-     "line": 321,
+     "line": 336,
      "signature": "(project: Project, ticked: string[] = []): ProjectTask[]",
      "doc": "Open remaining-days guide items, including earlier preparation, not on the\nwedding's task list yet. Earlier due dates become today. Items already ticked in the guide (`ticked`,\nchecklist ids) are left out. Weddings and engagements only."
     },
     {
      "name": "buildTimeline",
      "kind": "function",
-     "line": 347,
+     "line": 362,
      "signature": "(project: Project, opts: { internal?: boolean } = {}): TimelineEntry[]",
      "doc": "Customer-facing timeline built from live project data plus any manual\nentries (meetings, milestones) stored on the project."
     },
     {
      "name": "NextAction",
      "kind": "interface",
-     "line": 370,
+     "line": 385,
      "signature": "",
      "doc": "",
      "members": [
@@ -15407,77 +15524,77 @@
     {
      "name": "nextBestAction",
      "kind": "function",
-     "line": 381,
+     "line": 396,
      "signature": "(project: Project, quotes: Quotation[]): NextAction",
      "doc": ""
     },
     {
      "name": "missingServices",
      "kind": "function",
-     "line": 396,
+     "line": 411,
      "signature": "(project: Project): string[]",
      "doc": "Services couples usually need for their functions but haven't requested."
     },
     {
      "name": "planningProgress",
      "kind": "function",
-     "line": 402,
+     "line": 417,
      "signature": "(project: Project)",
      "doc": ""
     },
     {
      "name": "savingTips",
      "kind": "function",
-     "line": 414,
+     "line": 429,
      "signature": "(project: Project): string[]",
      "doc": ""
     },
     {
      "name": "invitationText",
      "kind": "function",
-     "line": 426,
+     "line": 441,
      "signature": "(project: Project, tone: 'traditional' | 'modern' | 'nepali' = 'traditional'): string",
      "doc": ""
     },
     {
      "name": "enquiryText",
      "kind": "function",
-     "line": 437,
+     "line": 452,
      "signature": "(project: Project, serviceId: string): string",
      "doc": ""
     },
     {
      "name": "QUESTIONS_TO_ASK",
      "kind": "const",
-     "line": 444,
+     "line": 459,
      "signature": ": Record<string, string[]>",
      "doc": ""
     },
     {
      "name": "questionsToAsk",
      "kind": "function",
-     "line": 453,
+     "line": 468,
      "signature": "(serviceId: string)",
      "doc": ""
     },
     {
      "name": "negotiationPoints",
      "kind": "function",
-     "line": 456,
+     "line": 471,
      "signature": "(quote: Quotation, marketMedian?: number): string[]",
      "doc": ""
     },
     {
      "name": "summarizeReviews",
      "kind": "function",
-     "line": 467,
+     "line": 482,
      "signature": "(reviews: { rating: number; text: string }[]): { average: number; highlights: string[]; concerns: string[] }",
      "doc": ""
     },
     {
      "name": "guestBandLabel",
      "kind": "function",
-     "line": 484,
+     "line": 499,
      "signature": "(guests: number)",
      "doc": ""
     }
@@ -16777,14 +16894,14 @@
     {
      "name": "messageFor",
      "kind": "function",
-     "line": 230,
+     "line": 332,
      "signature": "(action: string, args: unknown[] = []): string | null",
      "doc": "\"addBudgetLine\" → \"Budget line added\"."
     },
     {
      "name": "installActionToasts",
      "kind": "function",
-     "line": 292,
+     "line": 401,
      "signature": "()",
      "doc": "Wraps the store actions once (root layout). Timers that call actions use `quietly()`."
     }
@@ -27977,209 +28094,311 @@
    ]
   },
   {
+   "file": "src/utils/currency.ts",
+   "doc": "",
+   "exports": [
+    {
+     "name": "DisplayCurrency",
+     "kind": "interface",
+     "line": 9,
+     "signature": "",
+     "doc": "Display currencies. Every amount is stored, charged and paid out in NPR;\na person can choose to *read* prices in another currency (Settings →\nCurrency), which helps families abroad and guests from India, the Gulf,\nMalaysia, Korea and further away. Rates are indicative (NPR per unit,\nreviewed October 2026), so converted figures are labelled approximate and\npayments, receipts, quotations and contracts always show NPR.",
+     "members": [
+      {
+       "name": "code",
+       "optional": false,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "name",
+       "optional": false,
+       "type": "string",
+       "doc": ""
+      },
+      {
+       "name": "nprPerUnit",
+       "optional": false,
+       "type": "number",
+       "doc": "NPR for one unit of this currency."
+      },
+      {
+       "name": "decimals",
+       "optional": false,
+       "type": "number",
+       "doc": "Decimal places when shown (0 for most; whole units read best in lists)."
+      }
+     ]
+    },
+    {
+     "name": "DISPLAY_CURRENCIES",
+     "kind": "const",
+     "line": 19,
+     "signature": ": readonly DisplayCurrency[]",
+     "doc": "NPR first, then the currencies Nepali families most often earn or send money in."
+    },
+    {
+     "name": "BASE_CURRENCY",
+     "kind": "const",
+     "line": 36,
+     "signature": "= 'NPR'",
+     "doc": "The base currency: what is stored, charged and paid out."
+    },
+    {
+     "name": "currencyFor",
+     "kind": "function",
+     "line": 39,
+     "signature": "(code: string | undefined): DisplayCurrency",
+     "doc": "The currency entry for a code, falling back to NPR for unknown codes."
+    },
+    {
+     "name": "fromNpr",
+     "kind": "function",
+     "line": 44,
+     "signature": "(npr: number, code: string): number",
+     "doc": "Converts whole rupees into the display currency (unrounded)."
+    }
+   ]
+  },
+  {
    "file": "src/utils/format.ts",
    "doc": "",
    "exports": [
     {
      "name": "CURRENCY",
      "kind": "const",
-     "line": 10,
-     "signature": "= 'NPR'",
-     "doc": "Currency code shown in every money string."
+     "line": 13,
+     "signature": "= BASE_CURRENCY",
+     "doc": "The base currency code (amounts are always NPR underneath)."
+    },
+    {
+     "name": "displayCurrency",
+     "kind": "function",
+     "line": 16,
+     "signature": "()",
+     "doc": "The display currency code right now."
+    },
+    {
+     "name": "isConverted",
+     "kind": "function",
+     "line": 19,
+     "signature": "()",
+     "doc": "True when amounts are shown in a currency other than NPR."
     },
     {
      "name": "formatNumber",
      "kind": "function",
-     "line": 13,
+     "line": 31,
      "signature": "(value: number): string",
      "doc": "Groups digits in thousands (150,000), keeps up to two decimals and a leading minus."
     },
     {
      "name": "formatMoney",
      "kind": "function",
-     "line": 23,
+     "line": 41,
      "signature": "(value: number)",
-     "doc": "NPR 150,000"
+     "doc": "NPR 150,000, or USD 1,087 when the person reads prices in dollars."
+    },
+    {
+     "name": "formatNpr",
+     "kind": "function",
+     "line": 44,
+     "signature": "(value: number)",
+     "doc": "Always NPR (what is charged, receipted and printed): NPR 150,000."
+    },
+    {
+     "name": "formatNprWithDisplay",
+     "kind": "function",
+     "line": 50,
+     "signature": "(value: number)",
+     "doc": "NPR with the display-currency figure beside it when they differ:\n\"NPR 150,000 (about USD 1,087)\". For amounts someone is about to pay."
     },
     {
      "name": "formatMoneyCompact",
      "kind": "function",
-     "line": 26,
+     "line": 53,
      "signature": "(value: number): string",
      "doc": "Compact form used in chips and filters: NPR 800, NPR 45K, NPR 975K, NPR 2.5M."
     },
     {
+     "name": "formatNprCompact",
+     "kind": "function",
+     "line": 64,
+     "signature": "(value: number): string",
+     "doc": "Always NPR, compact: NPR 45K. For text that is saved and read by others (notifications, audit)."
+    },
+    {
      "name": "formatMoneyRange",
      "kind": "function",
-     "line": 35,
+     "line": 73,
      "signature": "(lo: number, hi: number)",
      "doc": "Budget range: NPR 40K–60K"
     },
     {
      "name": "formatLakh",
      "kind": "function",
-     "line": 41,
+     "line": 79,
      "signature": "(value: number): string",
-     "doc": "How families talk about wedding budgets: \"7.5 lakh\", \"26 lakh\", \"1.2 crore\"."
+     "doc": "How families talk about wedding budgets: \"7.5 lakh\", \"26 lakh\", \"1.2 crore\". Other display currencies get the compact form."
     },
     {
      "name": "formatLakhRange",
      "kind": "function",
-     "line": 48,
+     "line": 87,
      "signature": "(lo: number, hi: number): string",
      "doc": "NPR 7.1–26 lakh, or NPR 45 lakh – 1.2 crore across the boundary."
     },
     {
      "name": "parseMoney",
      "kind": "function",
-     "line": 54,
+     "line": 94,
      "signature": "(input: string): number",
      "doc": "Parse \"1,50,000\", \"150000\", \"150k\", \"1.5m\" into a number (NaN when invalid)."
     },
     {
      "name": "percent",
      "kind": "function",
-     "line": 64,
+     "line": 104,
      "signature": "(value: number, digits = 0)",
      "doc": "Turns a ratio into a percentage string: 0.13 gives \"13%\"."
     },
     {
      "name": "formatShortDate",
      "kind": "function",
-     "line": 85,
+     "line": 125,
      "signature": "(iso: string): string",
      "doc": "\"Tue 18 Aug\" (AD) or \"Tue 2 Mangsir\" (BS, the default)."
     },
     {
      "name": "formatLongDate",
      "kind": "function",
-     "line": 93,
+     "line": 133,
      "signature": "(iso: string): string",
      "doc": "\"18 August 2026\" (AD) or \"2 Mangsir 2083\" (BS, the default)."
     },
     {
      "name": "formatMonthDay",
      "kind": "function",
-     "line": 101,
+     "line": 141,
      "signature": "(iso: string): string",
      "doc": "\"Dec 12\" (AD) or \"Mangsir 2\" (BS)."
     },
     {
      "name": "formatAdDate",
      "kind": "function",
-     "line": 109,
+     "line": 149,
      "signature": "(iso: string): string",
      "doc": "Always Gregorian: \"18 Aug 2026\"."
     },
     {
      "name": "formatDateAlt",
      "kind": "function",
-     "line": 115,
+     "line": 155,
      "signature": "(iso: string): string",
      "doc": "The same day in the other calendar, shown beside the main date: AD under BS, or \"Mangsir 2083\" under AD."
     },
     {
      "name": "formatTime",
      "kind": "function",
-     "line": 122,
+     "line": 162,
      "signature": "(iso: string): string",
      "doc": "Local clock time of an ISO timestamp in 12-hour form, e.g. \"6:30 PM\"."
     },
     {
      "name": "formatClock",
      "kind": "function",
-     "line": 130,
+     "line": 170,
      "signature": "(hhmm: string): string",
      "doc": "\"18:30\" → \"6:30 PM\""
     },
     {
      "name": "timeAgo",
      "kind": "function",
-     "line": 137,
+     "line": 177,
      "signature": "(iso: string): string",
      "doc": "\"2h ago\", \"3d ago\", or a short date for older timestamps."
     },
     {
      "name": "daysUntil",
      "kind": "function",
-     "line": 150,
+     "line": 190,
      "signature": "(iso: string): number",
      "doc": "Whole days from today (local midnight) to a date; negative when the date has passed."
     },
     {
      "name": "relativeDay",
      "kind": "function",
-     "line": 159,
+     "line": 199,
      "signature": "(iso: string): string",
      "doc": "\"in 3 days\", \"today\", \"2 days ago\""
     },
     {
      "name": "toISODate",
      "kind": "function",
-     "line": 168,
+     "line": 208,
      "signature": "(date: Date): string",
      "doc": "Store dates as yyyy-mm-dd so they never shift across time zones."
     },
     {
      "name": "fromISODate",
      "kind": "function",
-     "line": 176,
+     "line": 216,
      "signature": "(iso: string): Date",
      "doc": "Parses yyyy-mm-dd as a local-midnight Date, never shifted by the time zone."
     },
     {
      "name": "addDays",
      "kind": "function",
-     "line": 182,
+     "line": 222,
      "signature": "(iso: string, days: number)",
      "doc": "Adds (or, when negative, subtracts) whole days to a yyyy-mm-dd date."
     },
     {
      "name": "pluralize",
      "kind": "function",
-     "line": 189,
+     "line": 229,
      "signature": "(count: number, word: string, plural = `${word}s`)",
      "doc": "Count with its noun: pluralize(1, 'guest') is \"1 guest\", pluralize(3, 'guest') is \"3 guests\"."
     },
     {
      "name": "initials",
      "kind": "function",
-     "line": 192,
+     "line": 232,
      "signature": "(name: string)",
      "doc": "Up to two capital letters from the first two words of a name."
     },
     {
      "name": "uid",
      "kind": "function",
-     "line": 201,
+     "line": 241,
      "signature": "(prefix = 'id')",
      "doc": "Unique-enough local id with a prefix, such as \"proj_lq3k9_x7a1bc\"."
     },
     {
      "name": "shortCode",
      "kind": "function",
-     "line": 204,
+     "line": 244,
      "signature": "(length = 6)",
      "doc": "Short human code, e.g. for invites: \"K7P2QX\"."
     },
     {
      "name": "isNepalMobile",
      "kind": "function",
-     "line": 208,
+     "line": 248,
      "signature": "(phone: string)",
      "doc": "Nepal mobile numbers: 97/98 + 8 digits."
     },
     {
      "name": "formatPhone",
      "kind": "function",
-     "line": 210,
+     "line": 250,
      "signature": "(phone: string)",
      "doc": "Formats a Nepal mobile number as \"+977 98x-xxx-xxxx\"; returns the input unchanged if it has fewer than 10 digits."
     },
     {
      "name": "today",
      "kind": "function",
-     "line": 216,
+     "line": 256,
      "signature": "()",
      "doc": "Today's date as yyyy-mm-dd (local)."
     }

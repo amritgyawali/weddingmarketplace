@@ -277,15 +277,19 @@ function Builder({ project, readOnly }: { project: Project; readOnly: boolean })
       )}
 
       <Sheet visible={deadlineOpen} onClose={() => setDeadlineOpen(false)} title="RSVP deadline">
-        <View style={{ paddingHorizontal: 16 }}>
+        <ScrollView contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 8 }}>
           <Calendar
             value={site.rsvpDeadline ?? null}
             onChange={(iso) => {
               set({ rsvpDeadline: iso });
               setDeadlineOpen(false);
             }}
+            onClear={() => {
+              set({ rsvpDeadline: undefined });
+              setDeadlineOpen(false);
+            }}
           />
-        </View>
+        </ScrollView>
       </Sheet>
       <Sheet visible={shareOpen} onClose={() => setShareOpen(false)} title="Share your website">
         <View style={{ paddingHorizontal: 20, gap: 14, alignItems: 'center' }}>

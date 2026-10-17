@@ -398,7 +398,7 @@ export function EntryList(props: EntryListProps) {
       props.onAdded?.(created);
     } else if (editing) {
       update(editing.id, { ...input, fields: { ...editing.fields, ...input.fields } });
-      toast('Saved');
+      toast('Changes saved');
     }
     setEditing(null);
   };

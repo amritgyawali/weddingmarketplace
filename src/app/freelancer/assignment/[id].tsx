@@ -107,7 +107,7 @@ export default function AssignmentScreen() {
         {a.status === 'ASSIGNED' && (
           <View style={styles.row}>
             <KButton label="Can’t make it" variant="danger" size="sm" style={{ flex: 1 }} onPress={() => setCantOpen(true)} />
-            <KButton label="Confirm I’ll be there" icon="checkmark" style={{ flex: 1.5 }} onPress={() => { setStatus(project.id, booking.id, a.id, 'CONFIRMED'); toast('Confirmed'); }} />
+            <KButton label="Confirm I’ll be there" icon="checkmark" style={{ flex: 1.5 }} onPress={() => { setStatus(project.id, booking.id, a.id, 'CONFIRMED'); toast('You’re confirmed. See you on the day!'); }} />
           </View>
         )}
         {a.status === 'CONFIRMED' && (

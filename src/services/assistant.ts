@@ -145,7 +145,7 @@ function reply(message: string, ctx: AssistantContext): AssistantReply {
           'These top-rated destination venues are a great place to start:',
         venues,
         suggestions: ['Show venues in Pokhara', 'Suggest a wedding budget', 'Talk to an expert'],
-        action: { label: 'Explore Destination Venues', href: '/collection/destination' },
+        action: { label: 'Explore destination venues', href: '/collection/destination' },
       };
     }
 
@@ -237,7 +237,7 @@ function reply(message: string, ctx: AssistantContext): AssistantReply {
     case 'genie': {
       const city = GENIE_PACKAGES.find((p) => p.id === 'city')!;
       return {
-        text: `Want a person to handle it? Our planners shortlist venues and vendors, negotiate prices and stay with you until the wedding day. Packages start at NPR ${GENIE_PACKAGES[0].price} — the most popular is the ${city.title} at NPR ${city.price}.`,
+        text: `Want a person to handle it? Our planners shortlist venues and vendors, negotiate prices and stay with you until the wedding day. Packages start at ${formatMoney(GENIE_PACKAGES[0].price)}. The most popular is the ${city.title} at ${formatMoney(city.price)}.`,
         action: { label: 'See planner packages', href: '/genie' },
         suggestions: ['What do your experts do?', 'Show me the best wedding venues'],
       };

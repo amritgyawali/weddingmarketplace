@@ -62,7 +62,7 @@ function WeddingCalendar({ project }: { project: Project }) {
       <SectionTitle title={selected ? `${formatLongDate(selected)} · ${formatDateAlt(selected)}` : 'Coming up'} action={selected ? 'Show upcoming' : undefined} onAction={() => setSelected(null)} />
       {selected && isPeakSeason(selected) && (
         <Text size={12} color={t.c.warning}>
-          Peak saait season — venues and crews book out early around this date.
+          Peak sait season: venues and crews book up early around this date.
         </Text>
       )}
       {shown.length === 0 && (

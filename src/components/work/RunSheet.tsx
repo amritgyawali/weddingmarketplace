@@ -178,7 +178,7 @@ export function EventCard({ project, event, canControl, canEditRun }: { project:
 }
 
 export function SeverityPicker({ value, onChange }: { value: string; onChange: (v: 'low' | 'medium' | 'high') => void }) {
-  return <ChoiceChips options={['low', 'medium', 'high']} selected={[value]} onToggle={(v) => onChange(v as 'low' | 'medium' | 'high')} />;
+  return <ChoiceChips labels={{ low: 'Low', medium: 'Medium', high: 'High', urgent: 'Urgent' }} options={['low', 'medium', 'high']} selected={[value]} onToggle={(v) => onChange(v as 'low' | 'medium' | 'high')} />;
 }
 
 const styles = StyleSheet.create({

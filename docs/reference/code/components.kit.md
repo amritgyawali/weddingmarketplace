@@ -44,14 +44,14 @@ Underlined tab strip; scrolls horizontally when it overflows.
 *component* · [src/components/kit/controls.tsx:133](../../../src/components/kit/controls.tsx#L133)
 
 ```ts
-ChoiceChips({ options, selected, onToggle, }: { options: string[]; selected: string[]; onToggle: (value: string) => void; })
+ChoiceChips({ options, selected, onToggle, labels, }: { options: string[]; selected: string[]; onToggle: (value: string) => void; /** What to show for each option when the stored value isn't the words to show ("low" → "Low"). */ la…)
 ```
 
 Selectable chips (multi or single choice).
 
 ### `FilterChip`
 
-*component* · [src/components/kit/controls.tsx:173](../../../src/components/kit/controls.tsx#L173)
+*component* · [src/components/kit/controls.tsx:176](../../../src/components/kit/controls.tsx#L176)
 
 ```ts
 FilterChip({ label, selected, onPress, icon }: { label: string; selected?: boolean; onPress: () => void; icon?: IconName })
@@ -63,7 +63,7 @@ alone). Use for ad-hoc chip rows instead of styling a Pressable by hand.
 
 ### `ListRow`
 
-*component* · [src/components/kit/controls.tsx:200](../../../src/components/kit/controls.tsx#L200)
+*component* · [src/components/kit/controls.tsx:203](../../../src/components/kit/controls.tsx#L203)
 
 ```ts
 ListRow({ title, subtitle, leading, trailing, onPress, icon, meta, }: { title: string; subtitle?: string; leading?: ReactNode; trailing?: ReactNode; onPress?: () => void; icon?: IconName; meta?: ReactNode; })
@@ -73,7 +73,7 @@ Tappable list row with leading visual and trailing slot.
 
 ### `Fab`
 
-*component* · [src/components/kit/controls.tsx:247](../../../src/components/kit/controls.tsx#L247)
+*component* · [src/components/kit/controls.tsx:250](../../../src/components/kit/controls.tsx#L250)
 
 ```ts
 Fab({ icon = 'add', label, onPress, bottom = 20 }: { icon?: IconName; label?: string; onPress: () => void; bottom?: number })
@@ -229,7 +229,7 @@ _No JSDoc yet._
 
 ### `showMissing`
 
-*function* · [src/components/kit/primitives.tsx:126](../../../src/components/kit/primitives.tsx#L126)
+*function* · [src/components/kit/primitives.tsx:129](../../../src/components/kit/primitives.tsx#L129)
 
 ```ts
 showMissing(message: string)
@@ -239,7 +239,7 @@ Tells the person what is still missing when they tap an incomplete form's button
 
 ### `StatusPill`
 
-*component* · [src/components/kit/primitives.tsx:131](../../../src/components/kit/primitives.tsx#L131)
+*component* · [src/components/kit/primitives.tsx:134](../../../src/components/kit/primitives.tsx#L134)
 
 ```ts
 StatusPill({ status, label }: { status: string; label?: string })
@@ -249,7 +249,7 @@ _No JSDoc yet._
 
 ### `Avatar`
 
-*component* · [src/components/kit/primitives.tsx:151](../../../src/components/kit/primitives.tsx#L151)
+*component* · [src/components/kit/primitives.tsx:154](../../../src/components/kit/primitives.tsx#L154)
 
 ```ts
 Avatar({ name, size = 40, photo }: { name: string; size?: number; photo?: string })
@@ -259,7 +259,7 @@ Initials in a palette colour, or the person's photo when they added one.
 
 ### `ProgressBar`
 
-*component* · [src/components/kit/primitives.tsx:170](../../../src/components/kit/primitives.tsx#L170)
+*component* · [src/components/kit/primitives.tsx:173](../../../src/components/kit/primitives.tsx#L173)
 
 ```ts
 ProgressBar({ value, color, height = 4 }: { value: number; color?: string; height?: number })
@@ -269,7 +269,7 @@ _No JSDoc yet._
 
 ### `SectionTitle`
 
-*component* · [src/components/kit/primitives.tsx:179](../../../src/components/kit/primitives.tsx#L179)
+*component* · [src/components/kit/primitives.tsx:182](../../../src/components/kit/primitives.tsx#L182)
 
 ```ts
 SectionTitle({ title, action, onAction }: { title: string; action?: string; onAction?: () => void })
@@ -279,7 +279,7 @@ _No JSDoc yet._
 
 ### `EmptyBlock`
 
-*component* · [src/components/kit/primitives.tsx:198](../../../src/components/kit/primitives.tsx#L198)
+*component* · [src/components/kit/primitives.tsx:201](../../../src/components/kit/primitives.tsx#L201)
 
 ```ts
 EmptyBlock({ icon = 'file-tray-outline', art, title, message, action, onAction }: { icon?: IconName; art?: ArtName; title: string; message?: string; action?: string; onAction?: () => void })
@@ -289,7 +289,7 @@ Empty list or section in the role apps: pearl medallion, serif title, one line, 
 
 ### `Divider`
 
-*component* · [src/components/kit/primitives.tsx:218](../../../src/components/kit/primitives.tsx#L218)
+*component* · [src/components/kit/primitives.tsx:221](../../../src/components/kit/primitives.tsx#L221)
 
 ```ts
 Divider({ style }: { style?: StyleProp<ViewStyle> })
@@ -299,7 +299,7 @@ _No JSDoc yet._
 
 ### `KeyValue`
 
-*component* · [src/components/kit/primitives.tsx:224](../../../src/components/kit/primitives.tsx#L224)
+*component* · [src/components/kit/primitives.tsx:227](../../../src/components/kit/primitives.tsx#L227)
 
 ```ts
 KeyValue({ label, value, strong }: { label: string; value: string; strong?: boolean })

@@ -15,11 +15,12 @@ export type CalendarMode = 'bs' | 'ad';
 /** English source text → replacement per language. */
 export type TextOverrides = Record<string, { en?: string; ne?: string }>;
 
-/** Current settings, kept in sync by `I18nProvider`. */
-export const runtime: { lang: Lang; calendar: CalendarMode; overrides: TextOverrides } = {
+/** Current settings, kept in sync by `I18nProvider`. `currency` is the display currency (amounts are always stored in NPR). */
+export const runtime: { lang: Lang; calendar: CalendarMode; overrides: TextOverrides; currency: string } = {
   lang: 'en',
   calendar: 'bs',
   overrides: {},
+  currency: 'NPR',
 };
 
 interface Template {

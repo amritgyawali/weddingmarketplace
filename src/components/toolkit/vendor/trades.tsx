@@ -196,7 +196,7 @@ export function Themes() {
           { key: 'note', label: 'Notes', kind: 'text' },
         ]}
         subtitle={(e) => [e.fields?.includes ? String(e.fields.includes).split('\n')[0] : undefined, e.fields?.leadDays ? `${e.fields.leadDays} days to prepare` : undefined].filter(Boolean).join(' · ') || undefined}
-        trailing={(e) => (e.amount ? `${formatMoney(e.amount)}${e.fields?.priceTo ? `–${formatMoney(Number(e.fields.priceTo)).replace('NPR ', '')}` : '+'}` : undefined)}
+        trailing={(e) => (e.amount ? `${formatMoney(e.amount)}${e.fields?.priceTo ? `–${formatMoney(Number(e.fields.priceTo)).replace(/^[A-Z]{3} /, '')}` : '+'}` : undefined)}
         emptyMessage="Couples choose from themes faster than from a blank page. Start with your two best sellers."
       />
     </ToolPage>

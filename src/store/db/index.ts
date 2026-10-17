@@ -11,7 +11,7 @@ import { VEHICLE_SERVICES } from '@/data/occasions';
 import { buildSeedData } from '@/data/seed';
 import { occasionOf } from '@/services/experience';
 import { normalizeContent } from '@/services/content';
-import { generateTasks, WEDDING_ONLY_TASKS } from '@/services/planner';
+import { generateTasks, taskTitleKey, WEDDING_ONLY_TASKS } from '@/services/planner';
 import { lazyStorage } from '@/store/lazyStorage';
 import type { Account } from '@/types/platform';
 
@@ -53,7 +53,7 @@ function addVehicles(data: DbData): DbData {
       if (occasion === 'wedding' || occasion === 'engagement' || !p.tasks.some((t) => WEDDING_ONLY_TASKS.has(t.title))) return p;
       const kept = p.tasks.filter((t) => t.status !== 'TODO' || !WEDDING_ONLY_TASKS.has(t.title));
       const services = p.requirements.filter((r) => r.status !== 'CANCELLED').map((r) => r.serviceId);
-      const fresh = generateTasks(p.weddingDate, services, p.customerName, p.coordinatorName, occasion).filter((t) => !kept.some((k) => k.title === t.title));
+      const fresh = generateTasks(p.weddingDate, services, p.customerName, p.coordinatorName, occasion).filter((t) => !kept.some((k) => taskTitleKey(k.title) === t.title));
       return { ...p, tasks: [...kept, ...fresh] };
     }),
     occasions: (data.occasions ?? []).map((o) => {

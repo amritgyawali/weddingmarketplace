@@ -75,7 +75,7 @@ export default function LeadDetail() {
           <Text size={13} weight="semibold" color={t.c.muted}>
             Priority
           </Text>
-          <ChoiceChips options={['low', 'medium', 'high']} selected={[lead.priority ?? 'medium']} onToggle={(p) => updateLead(lead.id, { priority: p as 'low' | 'medium' | 'high' })} />
+          <ChoiceChips labels={{ low: 'Low', medium: 'Medium', high: 'High', urgent: 'Urgent' }} options={['low', 'medium', 'high']} selected={[lead.priority ?? 'medium']} onToggle={(p) => updateLead(lead.id, { priority: p as 'low' | 'medium' | 'high' })} />
           <Text size={13} weight="semibold" color={t.c.muted}>
             Labels
           </Text>
@@ -141,14 +141,14 @@ export default function LeadDetail() {
         {lead.status !== 'won' && lead.status !== 'lost' && (
           <View style={{ gap: 10 }}>
             <KButton label="Create quotation" icon="add-circle-outline" size="lg" onPress={() => router.push({ pathname: '/business/quote/[id]', params: { id: 'new', leadId: lead.id } })} />
-            <KButton label="Mark lost" variant="danger" size="sm" onPress={() => { setLeadStatus(lead.id, 'lost'); toast('Lead closed', 'close-circle'); }} />
+            <KButton label="Mark lost" variant="danger" size="sm" onPress={() => { setLeadStatus(lead.id, 'lost'); toast('Lead marked as lost', 'close-circle'); }} />
           </View>
         )}
       </ScrollView>
       <Sheet visible={followOpen} onClose={() => setFollowOpen(false)} title="Follow-up date">
-        <View style={{ paddingHorizontal: 20, gap: 12 }}>
-          <Calendar value={lead.followUp ?? null} onChange={(d) => { updateLead(lead.id, { followUp: d }); setFollowOpen(false); toast(`Reminder set for ${formatShortDate(d)}`, 'alarm'); }} />
-        </View>
+        <ScrollView contentContainerStyle={{ paddingHorizontal: 20, gap: 12, paddingBottom: 8 }}>
+          <Calendar value={lead.followUp ?? null} onClear={() => { updateLead(lead.id, { followUp: undefined }); setFollowOpen(false); }} onChange={(d) => { updateLead(lead.id, { followUp: d }); setFollowOpen(false); toast(`Reminder set for ${formatShortDate(d)}`, 'alarm'); }} />
+        </ScrollView>
       </Sheet>
     </View>
   );

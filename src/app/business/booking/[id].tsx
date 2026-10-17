@@ -97,8 +97,8 @@ export default function VendorBooking() {
                 </Text>
                 <KField placeholder="Note (optional, e.g. reason for declining)" value={declineNote} onChangeText={setDeclineNote} />
                 <View style={styles.row}>
-                  <KButton label="Decline" variant="danger" size="sm" style={{ flex: 1 }} onPress={() => { respond(project.id, booking.id, false, declineNote.trim() || 'Not available'); toast('Declined'); router.back(); }} />
-                  <KButton label="Accept booking" icon="checkmark" size="sm" style={{ flex: 1.4 }} onPress={() => { respond(project.id, booking.id, true, declineNote.trim() || undefined); toast('Availability confirmed'); }} />
+                  <KButton label="Decline" variant="danger" size="sm" style={{ flex: 1 }} onPress={() => { respond(project.id, booking.id, false, declineNote.trim() || 'Not available'); toast('Booking declined. The coordinator has been told'); router.back(); }} />
+                  <KButton label="Accept booking" icon="checkmark" size="sm" style={{ flex: 1.4 }} onPress={() => { respond(project.id, booking.id, true, declineNote.trim() || undefined); toast('Booking accepted. It’s on your calendar now'); }} />
                 </View>
               </Card>
             )}

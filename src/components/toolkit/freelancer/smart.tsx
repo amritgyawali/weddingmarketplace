@@ -306,7 +306,7 @@ export function Testimonials() {
             variant="secondary"
             onPress={() => {
               fresh.forEach((r) => add({ ownerId: account.id, tool: 'freelancer.testimonials', title: r.authorName, note: r.text.slice(0, 500), refId: r.id, date: r.at.slice(0, 10), fields: { stars: String(Math.round(r.overall)), source: 'Vivah review' } }));
-              toast('Reviews added');
+              toast('Reviews added to your profile');
             }}
           />
         </Card>
@@ -334,7 +334,7 @@ export function Testimonials() {
             label: 'Copy',
             onPress: () => {
               Clipboard.setStringAsync(quote(e.title, e.note, e.fields?.event ? String(e.fields.event) : undefined));
-              toast('Copied');
+              toast('Copied. Paste it wherever you need it');
             },
           },
         ]}

@@ -1,4 +1,4 @@
-import { Modal, Pressable, StyleSheet, View } from 'react-native';
+import { Modal, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import Animated, { FadeIn, ZoomIn } from 'react-native-reanimated';
 
 import { colors, radius, themed } from '@/constants/theme';
@@ -20,6 +20,7 @@ export function DatePopup({
   onChange,
   onClose,
   minDate,
+  onClear,
 }: {
   visible: boolean;
   title?: string;
@@ -27,6 +28,8 @@ export function DatePopup({
   onChange: (iso: string) => void;
   onClose: () => void;
   minDate?: Date;
+  /** Shows "Clear date" right under the days. */
+  onClear?: () => void;
 }) {
   const t = useRoleTheme();
   return (
@@ -41,14 +44,23 @@ export function DatePopup({
               </Text>
               <IconButton icon="close" size={34} iconSize={22} accessibilityLabel="Close" onPress={onClose} color={t.c.textStrong} />
             </View>
-            <Calendar
-              value={value}
-              minDate={minDate}
-              onChange={(d) => {
-                onChange(d);
-                onClose();
-              }}
-            />
+            <ScrollView bounces={false} contentContainerStyle={{ paddingBottom: 4 }}>
+              <Calendar
+                value={value}
+                minDate={minDate}
+                onChange={(d) => {
+                  onChange(d);
+                  onClose();
+                }}
+                onClear={
+                  onClear &&
+                  (() => {
+                    onClear();
+                    onClose();
+                  })
+                }
+              />
+            </ScrollView>
           </Animated.View>
         </Animated.View>
       )}
@@ -58,6 +70,6 @@ export function DatePopup({
 
 const styles = themed(() => StyleSheet.create({
   backdrop: { flex: 1, backgroundColor: colors.overlay, alignItems: 'center', justifyContent: 'center', padding: 16 },
-  card: { width: '100%', maxWidth: 420, borderRadius: radius.lg, padding: 14, paddingTop: 8, gap: 4 },
+  card: { width: '100%', maxWidth: 420, maxHeight: '92%', borderRadius: radius.lg, padding: 14, paddingTop: 8, gap: 4 },
   header: { flexDirection: 'row', alignItems: 'center', paddingLeft: 4 },
 }));

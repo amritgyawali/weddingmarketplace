@@ -31,7 +31,7 @@ off with the `app.notifications` feature.
 
 ### `messageFor`
 
-*function* · [src/store/actionToasts.ts:230](../../../src/store/actionToasts.ts#L230)
+*function* · [src/store/actionToasts.ts:332](../../../src/store/actionToasts.ts#L332)
 
 ```ts
 messageFor(action: string, args: unknown[] = []): string | null
@@ -41,7 +41,7 @@ messageFor(action: string, args: unknown[] = []): string | null
 
 ### `installActionToasts`
 
-*function* · [src/store/actionToasts.ts:292](../../../src/store/actionToasts.ts#L292)
+*function* · [src/store/actionToasts.ts:401](../../../src/store/actionToasts.ts#L401)
 
 ```ts
 installActionToasts()

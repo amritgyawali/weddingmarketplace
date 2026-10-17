@@ -222,15 +222,15 @@ export default function EnquiryScreen() {
         </ScrollView>
 
         <View style={[styles.footer, { paddingBottom: Math.max(insets.bottom, 14) }]}>
-          <Button label="Send Enquiry" onPress={submit} size="lg" loading={!item} />
+          <Button label="Send enquiry" onPress={submit} size="lg" loading={!item} />
         </View>
       </View>
 
       <Sheet visible={dateOpen} onClose={() => setDateOpen(false)} title="Event date">
-        <View style={{ paddingHorizontal: 20, gap: 16 }}>
-          <Calendar value={date} onChange={setDate} dateStatus={availability.published ? (d) => availability.onDate(d).status : undefined} />
+        <ScrollView contentContainerStyle={{ paddingHorizontal: 20, gap: 16, paddingBottom: 8 }}>
+          <Calendar value={date} onChange={setDate} onClear={() => setDate(null)} dateStatus={availability.published ? (d) => availability.onDate(d).status : undefined} />
           <Button label="Done" onPress={() => setDateOpen(false)} missing={!date && 'Pick your event date'} />
-        </View>
+        </ScrollView>
       </Sheet>
     </View>
   );

@@ -210,7 +210,7 @@ export default function PlanWizard() {
               When?
             </Text>
             <ChoiceChips options={eventTypes.map((e) => EVENT_TYPE_BY_ID[e].label)} selected={[EVENT_TYPE_BY_ID[dateFor]?.label ?? '']} onToggle={(label) => setDateFor(EVENT_TYPES.find((e) => e.label === label)!.id)} />
-            <Calendar value={dates[dateFor] ?? null} onChange={(d) => setDates((s) => ({ ...s, [dateFor]: d }))} />
+            <Calendar value={dates[dateFor] ?? null} onChange={(d) => setDates((s) => ({ ...s, [dateFor]: d }))} onClear={() => setDates((s) => ({ ...s, [dateFor]: null }))} />
             <OptionCard label="Date not confirmed yet" sub="Waiting for the pandit’s sait? No problem — we’ll plan around the season." selected={dates[dateFor] === null || dates[dateFor] === undefined} onPress={() => setDates((s) => ({ ...s, [dateFor]: null }))} />
             {eventTypes.map((e) => {
               const d = dates[e];

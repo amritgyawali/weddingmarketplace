@@ -278,7 +278,7 @@ function AddServiceSheet({ project, visible, onClose }: { project: Project; visi
                   {def.name}
                 </Text>
                 <Text size={12} color={colors.textMuted}>
-                  Typically {formatMoneyCompact(def.priceRange[0])}–{formatMoneyCompact(def.priceRange[1]).replace('NPR ', '')} {def.unit}
+                  Typically {formatMoneyCompact(def.priceRange[0])}–{formatMoneyCompact(def.priceRange[1]).replace(/^[A-Z]{3} /, '')} {def.unit}
                 </Text>
               </View>
               <Ionicons name="add" size={22} color={colors.primary} />

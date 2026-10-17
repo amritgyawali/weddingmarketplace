@@ -54,7 +54,7 @@ export const EVENT_TYPES: EventTypeDef[] = [
   },
   {
     id: 'PRE_WEDDING',
-    label: 'Pre-wedding Shoot',
+    label: 'Pre-wedding shoot',
     icon: 'camera',
     start: '06:00',
     guestShare: 0,
@@ -128,7 +128,7 @@ export const EVENT_TYPES: EventTypeDef[] = [
   },
   {
     id: 'POST_WEDDING',
-    label: 'Post-wedding Shoot',
+    label: 'Post-wedding shoot',
     icon: 'images',
     start: '07:00',
     guestShare: 0,
@@ -152,7 +152,7 @@ export const EVENT_TYPES: EventTypeDef[] = [
   },
   {
     id: 'WELCOME_DINNER',
-    label: 'Welcome Dinner',
+    label: 'Welcome dinner',
     icon: 'restaurant',
     start: '19:00',
     guestShare: 0.4,
@@ -172,7 +172,7 @@ export const EVENT_TYPES: EventTypeDef[] = [
   },
   {
     id: 'BRIDAL_SHOWER',
-    label: 'Bridal Shower',
+    label: 'Bridal shower',
     icon: 'rose',
     start: '15:00',
     guestShare: 0.1,
@@ -234,9 +234,9 @@ export const EVENT_TYPES: EventTypeDef[] = [
     ],
   },
   { id: 'ANNIVERSARY', label: 'Anniversary', icon: 'heart-circle', start: '18:30', guestShare: 1, wedding: false, suggestedServices: ['venue', 'catering', 'photography', 'cake', 'dj'], runSheet: [['18:30', 'Celebration', 'Coordinator']] },
-  { id: 'BABY_SHOWER', label: 'Baby Shower', icon: 'balloon', start: '15:00', guestShare: 1, wedding: false, suggestedServices: ['decoration', 'cake', 'photography', 'catering'], runSheet: [['15:00', 'Baby shower', 'Family']] },
+  { id: 'BABY_SHOWER', label: 'Baby shower', icon: 'balloon', start: '15:00', guestShare: 1, wedding: false, suggestedServices: ['decoration', 'cake', 'photography', 'catering'], runSheet: [['15:00', 'Baby shower', 'Family']] },
   { id: 'BIRTHDAY', label: 'Birthday', icon: 'balloon', start: '17:00', guestShare: 1, wedding: false, suggestedServices: ['venue', 'cake', 'decoration', 'photography', 'dj'], runSheet: [['17:00', 'Cake cutting', 'Family']] },
-  { id: 'CORPORATE_EVENT', label: 'Corporate Event', icon: 'briefcase', start: '09:00', guestShare: 1, wedding: false, suggestedServices: ['venue', 'catering', 'sound', 'led-screen', 'photography'], runSheet: [['09:00', 'Registration', 'Coordinator']] },
+  { id: 'CORPORATE_EVENT', label: 'Corporate event', icon: 'briefcase', start: '09:00', guestShare: 1, wedding: false, suggestedServices: ['venue', 'catering', 'sound', 'led-screen', 'photography'], runSheet: [['09:00', 'Registration', 'Coordinator']] },
   { id: 'OTHER', label: 'Other / Custom', icon: 'calendar', start: '11:00', guestShare: 1, wedding: false, suggestedServices: ['venue', 'catering', 'photography'], runSheet: [] },
 ];
 

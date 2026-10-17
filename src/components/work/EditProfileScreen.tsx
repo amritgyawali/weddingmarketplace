@@ -265,10 +265,10 @@ export function EditProfileScreen() {
       </ScrollView>
 
       <Sheet visible={dateOpen} onClose={() => setDateOpen(false)} title="Main date">
-        <View style={{ paddingHorizontal: 20, gap: 16 }}>
-          <Calendar value={date} onChange={setDate} />
+        <ScrollView contentContainerStyle={{ paddingHorizontal: 20, gap: 16, paddingBottom: 8 }}>
+          <Calendar value={date} onChange={setDate} onClear={() => setDate(null)} />
           <KButton label="Done" onPress={() => setDateOpen(false)} />
-        </View>
+        </ScrollView>
       </Sheet>
       <Sheet visible={cityOpen} onClose={() => setCityOpen(false)} title="Your city">
         <View style={{ paddingHorizontal: 20, paddingBottom: 12 }}>

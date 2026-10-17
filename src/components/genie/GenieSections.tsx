@@ -13,7 +13,7 @@ import { photos } from '@/constants/images';
 import { colors, GUTTER, radius, shadows, themed } from '@/constants/theme';
 import { GENIE_FEATURES } from '@/data/genie';
 import type { Faq, GeniePackage, Testimonial } from '@/types';
-import { formatNumber, formatShortDate } from '@/utils/format';
+import { formatMoney, formatShortDate } from '@/utils/format';
 
 /** Photo on top, then a plain statement of what the service does. */
 export function GenieHero() {
@@ -59,10 +59,10 @@ export function PackageCard({ pkg, active, onBuy }: { pkg: GeniePackage; active?
         </Text>
         <View style={{ alignItems: 'flex-end' }}>
           <Text size={18} weight="bold" color={colors.heading}>
-            NPR {formatNumber(pkg.price)}
+            {formatMoney(pkg.price)}
           </Text>
           <Text size={13} color={colors.textMuted} style={{ textDecorationLine: 'line-through' }}>
-            NPR {formatNumber(pkg.mrp)}
+            {formatMoney(pkg.mrp)}
           </Text>
         </View>
       </View>

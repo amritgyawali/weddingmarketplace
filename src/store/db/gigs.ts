@@ -16,7 +16,7 @@ import type {
   Gig,
   GigApplication,
 } from '@/types/platform';
-import { addDays, formatMoney, formatShortDate, uid } from '@/utils/format';
+import { addDays, formatNpr, formatShortDate, uid } from '@/utils/format';
 
 import { accountById, currentActor, type GetDb, now, type SetDb, today } from './helpers';
 
@@ -81,7 +81,7 @@ export const gigActions = (set: SetDb, get: GetDb): GigActions => ({
       get().notify(
         f.id,
         gig.emergency ? `Urgent gig ${formatShortDate(gig.date) === formatShortDate(today()) ? 'today' : formatShortDate(gig.date)} — ${gig.city}` : gig.invited?.includes(f.id) ? `You're invited: ${gig.title}` : `New ${gig.skill} gig near you`,
-        `${gig.title} · ${formatMoney(gig.pay)}`,
+        `${gig.title} · ${formatNpr(gig.pay)}`,
         `/freelancer/gig/${gig.id}`,
         gig.emergency ? 'emergency' : 'gig',
       ),
@@ -120,7 +120,7 @@ export const gigActions = (set: SetDb, get: GetDb): GigActions => ({
   inviteToGig: (gigId, freelancerId) => {
     set((s) => ({ gigs: s.gigs.map((g) => (g.id === gigId ? { ...g, invited: [...new Set([...(g.invited ?? []), freelancerId])] } : g)) }));
     const gig = get().gigs.find((g) => g.id === gigId);
-    if (gig && accountById(freelancerId)) get().notify(freelancerId, `You're invited: ${gig.title}`, `${formatShortDate(gig.date)} · ${gig.city} · ${formatMoney(gig.pay)}`, `/freelancer/gig/${gig.id}`, gig.emergency ? 'emergency' : 'gig');
+    if (gig && accountById(freelancerId)) get().notify(freelancerId, `You're invited: ${gig.title}`, `${formatShortDate(gig.date)} · ${gig.city} · ${formatNpr(gig.pay)}`, `/freelancer/gig/${gig.id}`, gig.emergency ? 'emergency' : 'gig');
   },
 
   respondToInvite: (gigId, freelancer, accept) => {

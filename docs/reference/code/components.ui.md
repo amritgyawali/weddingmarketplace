@@ -21,7 +21,7 @@ Every exported symbol in `src/components/ui/`, file by file. The guide that expl
 - [`GenieFab.tsx`](#geniefabtsx) (2 exports)
 - [`IconButton.tsx`](#iconbuttontsx) (3 exports)
 - [`Illustration.tsx`](#illustrationtsx) (3 exports)
-- [`Keyboard.tsx`](#keyboardtsx) (4 exports) · Keeps the field being typed in above the on-screen keyboard.
+- [`Keyboard.tsx`](#keyboardtsx) (5 exports) · Keeps the field being typed in above the on-screen keyboard.
 - [`LanguageSwitch.tsx`](#languageswitchtsx) (1 exports)
 - [`Loader.tsx`](#loadertsx) (2 exports)
 - [`Ornament.tsx`](#ornamenttsx) (1 exports)
@@ -298,15 +298,18 @@ Moves a month cursor in either calendar.
 
 ### `Calendar`
 
-*component* · [src/components/ui/Calendar.tsx:55](../../../src/components/ui/Calendar.tsx#L55)
+*component* · [src/components/ui/Calendar.tsx:58](../../../src/components/ui/Calendar.tsx#L58)
 
 ```ts
-Calendar({ value, onChange, minDate = new Date(), dateStatus, }: { value: string | null; onChange: (iso: string) => void; minDate?: Date; dateStatus?: (date: string) => AvailabilityStatus; })
+Calendar({ value, onChange, minDate = new Date(), dateStatus, onClear, clearLabel = 'Clear date', }: { value: string | null; onChange: (iso: string) => void; minDate?: Date; dateStatus?: (date: string) => AvailabilityStatus; /**…)
 ```
 
 Pure-JS month calendar so the date step looks the same on iOS, Android and
 web. Shows the Nepali (BS) month by default with the AD day in small type;
-the value is always an AD `yyyy-mm-dd`.
+the value is always an AD `yyyy-mm-dd`. With `onClear`, a "Clear date"
+button sits right under the days (shown once a date is picked), so nobody
+has to scroll to find it. Rows have a fixed height, so a six-week month
+always fits.
 
 ## Chip.tsx
 
@@ -348,7 +351,7 @@ Source: [src/components/ui/DatePopup.tsx](../../../src/components/ui/DatePopup.t
 *component* · [src/components/ui/DatePopup.tsx:16](../../../src/components/ui/DatePopup.tsx#L16)
 
 ```ts
-DatePopup({ visible, title = 'Pick a date', value, onChange, onClose, minDate, }: { visible: boolean; title?: string; value: string | null; onChange: (iso: string) => void; onClose: () => void; minDate?: Date; })
+DatePopup({ visible, title = 'Pick a date', value, onChange, onClose, minDate, onClear, }: { visible: boolean; title?: string; value: string | null; onChange: (iso: string) => void; onClose: () => void; minDate?: Date; /** Shows …)
 ```
 
 A date picker that opens as a centred popup over the screen (or over a
@@ -625,17 +628,32 @@ keyboardScreenLayout({ route, children }: { route: { name: string }; children: R
 
 `screenLayout` for Stack and Tabs navigators: lifts every leaf screen above the keyboard.
 
-### `KeyboardAwareScrollView`
+### `revealTarget`
 
-*component* · [src/components/ui/Keyboard.tsx:114](../../../src/components/ui/Keyboard.tsx#L114)
+*function* · [src/components/ui/Keyboard.tsx:117](../../../src/components/ui/Keyboard.tsx#L117)
 
 ```ts
-KeyboardAwareScrollViewforwardRef(({ keyboardShouldPersistTaps = 'handled', keyboardDismissMode, onScroll, onLayout, scrollEventThrottle, ...rest }, ref))
+revealTarget({ fieldTop, fieldBottom, contentHeight, view, current }: { fieldTop: number; fieldBottom: number; contentHeight: number; view: number; current: number }): number
+```
+
+Where to scroll so the focused field is visible and as much of the rest of
+the form as fits, ideally down to its end (where the submit button is).
+All values are in content coordinates; `view` is the height left above the
+keyboard. Pure, so it can be reasoned about and tested on its own.
+
+### `KeyboardAwareScrollView`
+
+*component* · [src/components/ui/Keyboard.tsx:136](../../../src/components/ui/Keyboard.tsx#L136)
+
+```ts
+KeyboardAwareScrollViewforwardRef(({ keyboardShouldPersistTaps = 'handled', keyboardDismissMode, onScroll, onLayout, onContentSizeChange, scrollEventThrottle, ...rest }, ref))
 ```
 
 ScrollView with keyboard-friendly defaults: taps on buttons work while the
 keyboard is open (the first tap no longer just closes it), dragging closes
-it, and the focused input scrolls into view when the keyboard opens.
+it, and when a field is focused the form scrolls so that field and as much
+of the rest as fits (down to the submit button) sit above the keyboard. It
+measures the space left on each device, so it adapts to any screen size.
 
 ## LanguageSwitch.tsx
 

@@ -23,9 +23,12 @@ interface PrefsState {
   calendar: CalendarMode;
   /** Colour scheme for this device. Missing on older installs, which means `system`. */
   appearance: Appearance;
+  /** Display currency code for this device (`NPR` when missing). Amounts stay NPR underneath. */
+  currency: string;
   setLang: (lang: Lang) => void;
   setCalendar: (calendar: CalendarMode) => void;
   setAppearance: (appearance: Appearance) => void;
+  setCurrency: (currency: string) => void;
 }
 
 export const usePrefs = create<PrefsState>()(
@@ -34,22 +37,25 @@ export const usePrefs = create<PrefsState>()(
       lang: 'en',
       calendar: 'bs',
       appearance: 'system',
+      currency: 'NPR',
       setLang: (lang) => set({ lang }),
       setCalendar: (calendar) => set({ calendar }),
       setAppearance: (appearance) => set({ appearance }),
+      setCurrency: (currency) => set({ currency }),
     }),
     {
       name: 'vivah-prefs',
       version: 1,
       storage: createJSONStorage(() => AsyncStorage),
-      partialize: (s) => ({ lang: s.lang, calendar: s.calendar, appearance: s.appearance }),
+      partialize: (s) => ({ lang: s.lang, calendar: s.calendar, appearance: s.appearance, currency: s.currency }),
     },
   ),
 );
 
-const sync = (s: Pick<PrefsState, 'lang' | 'calendar'>) => {
+const sync = (s: Pick<PrefsState, 'lang' | 'calendar' | 'currency'>) => {
   runtime.lang = s.lang;
   runtime.calendar = s.calendar;
+  runtime.currency = s.currency || 'NPR';
 };
 sync(usePrefs.getState());
 usePrefs.subscribe(sync);

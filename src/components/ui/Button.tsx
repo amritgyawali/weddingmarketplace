@@ -56,7 +56,9 @@ export function Button({
     ghost: { bg: 'transparent', fg: tint },
     soft: { bg: colors.primarySoft, fg: tint },
   };
-  const p = palette[variant];
+  // A form that isn't complete yet: a quiet pearl button with readable text, not a faded one.
+  const waiting = !!missing && !disabled && variant === 'primary';
+  const p = waiting ? { bg: colors.bgSoft, fg: colors.textMuted, border: colors.borderStrong } : palette[variant];
 
   return (
     <PressableScale
@@ -82,7 +84,8 @@ export function Button({
           borderWidth: p.border ? 1 : 0,
         },
         style,
-        !!missing && !disabled && { opacity: 0.45 },
+        !!missing && !disabled && !waiting && { opacity: 0.7 },
+        waiting && { backgroundColor: p.bg, borderColor: p.border, borderWidth: 1 },
       ]}>
       {loading ? (
         <Loader size={7} color={p.fg} />

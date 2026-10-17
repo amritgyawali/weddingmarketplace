@@ -4,7 +4,7 @@
 
 Exported symbols that have no JSDoc yet. The weekly documentation pass (see [the maintenance guide](../handbook/17-documentation-maintenance.md)) works through this list; whoever touches a file should document its exports too.
 
-**935 of 1606 exports documented (58%).** Files without a header comment: 366 of 477.
+**959 of 1629 exports documented (59%).** Files without a header comment: 368 of 480.
 
 | File | Undocumented exports |
 |---|---|
@@ -37,7 +37,6 @@ Exported symbols that have no JSDoc yet. The weekly documentation pass (see [the
 | [src/data/capabilities.ts](../../src/data/capabilities.ts) | `ProviderCapability`, `PlannerModule`, `PlanCapability`, `Capability`, `planCap`, `isCapability` |
 | [src/data/trades.ts](../../src/data/trades.ts) | `TradeId`, `EssentialField`, `TradeDef`, `TRADES`, `TRADE_BY_ID`, `BUSINESS_FORMS` |
 | [src/services/api.ts](../../src/services/api.ts) | `NotFoundError`, `DEFAULT_VENUE_FILTERS`, `countActiveFilters`, `VenueQuery`, `filterVenues`, `api` |
-| [src/services/documents.ts](../../src/services/documents.ts) | `quoteHtml`, `receiptHtml`, `contractHtml`, `guestListHtml`, `seatingHtml`, `runSheetHtml` |
 | [src/backend/payments.ts](../../src/backend/payments.ts) | `Gateway`, `isOnlineGateway`, `PaymentState`, `Started`, `Checked` |
 | [src/backend/types.ts](../../src/backend/types.ts) | `Result`, `okResult`, `failResult`, `BackendKind`, `Backend` |
 | [src/components/detail/DetailParts.tsx](../../src/components/detail/DetailParts.tsx) | `Section`, `ExpandableText`, `ReviewList`, `StickyCta`, `InfoTile` |
@@ -51,6 +50,7 @@ Exported symbols that have no JSDoc yet. The weekly documentation pass (see [the
 | [src/data/ideas.ts](../../src/data/ideas.ts) | `IDEA_PHOTOS`, `IDEA_CATEGORIES`, `STORIES`, `REAL_WEDDINGS`, `POPULAR_SEARCHES` |
 | [src/data/legal.ts](../../src/data/legal.ts) | `LegalDocId`, `LegalSection`, `LegalDoc`, `LEGAL_DOCS`, `isLegalDoc` |
 | [src/hooks/useWorkspace.ts](../../src/hooks/useWorkspace.ts) | `AssignmentRef`, `useVendorWorkspace`, `useFreelancerWorkspace`, `findAssignment`, `findBooking` |
+| [src/services/documents.ts](../../src/services/documents.ts) | `quoteHtml`, `contractHtml`, `guestListHtml`, `seatingHtml`, `runSheetHtml` |
 | [src/services/risk.ts](../../src/services/risk.ts) | `RiskKind`, `RiskFlag`, `firstEventDate`, `projectRisks`, `RISK_ICONS` |
 | [src/store/useAppStore.ts](../../src/store/useAppStore.ts) | `Profile`, `WrittenReview`, `AppStore`, `useAppStore`, `selectShortlistCount` |
 | [supabase/functions/_shared/env.ts](../../supabase/functions/_shared/env.ts) | `env`, `anonKey`, `serviceKey`, `redis`, `appUrl` |

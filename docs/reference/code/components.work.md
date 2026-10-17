@@ -240,7 +240,7 @@ Source: [src/components/work/EventsPanel.tsx](../../../src/components/work/Event
 
 ### `EventsPanel`
 
-*component* · [src/components/work/EventsPanel.tsx:94](../../../src/components/work/EventsPanel.tsx#L94)
+*component* · [src/components/work/EventsPanel.tsx:85](../../../src/components/work/EventsPanel.tsx#L85)
 
 ```ts
 EventsPanel({ project, mode }: { project: Project; mode: 'customer' | 'platform' | 'vendor' })
@@ -366,7 +366,7 @@ Source: [src/components/work/Payments.tsx](../../../src/components/work/Payments
 
 ### `PAYMENT_METHODS`
 
-*const* · [src/components/work/Payments.tsx:24](../../../src/components/work/Payments.tsx#L24)
+*const* · [src/components/work/Payments.tsx:25](../../../src/components/work/Payments.tsx#L25)
 
 ```ts
 PAYMENT_METHODS: { id: PaymentMethod; label: string; sub: string; color: string; icon: string; staffOnly?: boolean }[]
@@ -376,10 +376,10 @@ _No JSDoc yet._
 
 ### `PaymentSheet`
 
-*component* · [src/components/work/Payments.tsx:41](../../../src/components/work/Payments.tsx#L41)
+*component* · [src/components/work/Payments.tsx:46](../../../src/components/work/Payments.tsx#L46)
 
 ```ts
-PaymentSheet({ visible, title, amount, allowPartial, staff, online, onClose, onPay, }: { visible: boolean; title: string; amount: number; allowPartial?: boolean; staff?: boolean; /** Real Khalti and eSewa payments for this milestone…)
+PaymentSheet({ visible, title, amount, allowPartial, staff, online, details, purpose, onClose, onPay, onReceipt, }: { visible: boolean; title: string; amount: number; allowPartial?: boolean; staff?: boolean; /** Real Khalti and eSew…)
 ```
 
 Paying a milestone. The demo simulates the Nepali gateways (eSewa, Khalti,
@@ -387,9 +387,13 @@ Fonepay QR, ConnectIPS…). With `online` (Supabase builds, couples) Khalti and
 eSewa are real: the gateway opens, and the payment counts only once
 payment-verify has confirmed it with the gateway (master plan §7.5).
 
+The pay screen stays open for `PAYMENT_WINDOW_SECONDS`. If the payment isn't
+finished in time the attempt is rejected (nothing is charged) and the person
+can pay again, so an old amount or QR code is never paid by mistake.
+
 ### `PaymentsPanel`
 
-*component* · [src/components/work/Payments.tsx:305](../../../src/components/work/Payments.tsx#L305)
+*component* · [src/components/work/Payments.tsx:536](../../../src/components/work/Payments.tsx#L536)
 
 ```ts
 PaymentsPanel({ project, mode, openMilestoneId, focusMilestoneId, onFocusTarget }: { project: Project; mode: 'customer' | 'platform' | 'vendor'; openMilestoneId?: string; focusMilestoneId?: string; onFocusTarget?: (node: View) => voi…)
@@ -601,7 +605,7 @@ Source: [src/components/work/SettingsScreen.tsx](../../../src/components/work/Se
 
 ### `DEFAULT_PREFS`
 
-*const* · [src/components/work/SettingsScreen.tsx:28](../../../src/components/work/SettingsScreen.tsx#L28)
+*const* · [src/components/work/SettingsScreen.tsx:29](../../../src/components/work/SettingsScreen.tsx#L29)
 
 ```ts
 DEFAULT_PREFS: AccountPrefs
@@ -611,7 +615,7 @@ _No JSDoc yet._
 
 ### `SettingsScreen`
 
-*component* · [src/components/work/SettingsScreen.tsx:53](../../../src/components/work/SettingsScreen.tsx#L53)
+*component* · [src/components/work/SettingsScreen.tsx:54](../../../src/components/work/SettingsScreen.tsx#L54)
 
 ```ts
 SettingsScreen()
@@ -677,7 +681,7 @@ Source: [src/components/work/Timeline.tsx](../../../src/components/work/Timeline
 
 ### `TimelineView`
 
-*component* · [src/components/work/Timeline.tsx:30](../../../src/components/work/Timeline.tsx#L30)
+*component* · [src/components/work/Timeline.tsx:34](../../../src/components/work/Timeline.tsx#L34)
 
 ```ts
 TimelineView({ project, mode }: { project: Project; mode: 'customer' | 'platform' | 'vendor' })

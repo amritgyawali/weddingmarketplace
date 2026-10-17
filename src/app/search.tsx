@@ -140,7 +140,7 @@ export default function SearchScreen() {
             <>
               <View style={styles.headRow}>
                 <Text size={20} weight="semibold" color={colors.heading}>
-                  Recent Searches
+                  Recent searches
                 </Text>
                 <Pressable onPress={clearRecent} hitSlop={8}>
                   <Text size={14} weight="semibold" color={colors.primary}>
@@ -156,7 +156,7 @@ export default function SearchScreen() {
             </>
           )}
           <Text size={20} weight="semibold" color={colors.heading} style={{ marginTop: recent.length ? 26 : 0, marginBottom: 12 }}>
-            Popular Searches
+            Popular searches
           </Text>
           <View style={styles.chips}>
             {POPULAR_SEARCHES.map((s) => (

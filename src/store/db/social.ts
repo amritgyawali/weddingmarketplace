@@ -11,7 +11,7 @@ import { DEFAULT_SOCIAL_SETTINGS, NETWORK_BY_ID, SAMPLE_INBOUND, SOCIAL_LABELS }
 import { checkPost, detectIntents, fillReply, isAway, matchRule, optInKeyword, postUrl, projectedMetrics, replyWindow } from '@/services/social';
 import { useSession } from '@/store/useSession';
 import type { Account, SocialAccount, SocialMedia, SocialMessage, SocialNetwork, SocialPost, SocialPostResult, SocialSettings, SocialThread, SocialThreadKind, SocialThreadStatus } from '@/types/platform';
-import { addDays, formatMoney, isNepalMobile, today, uid } from '@/utils/format';
+import { addDays, formatNpr, isNepalMobile, today, uid } from '@/utils/format';
 
 import { currentActor, type GetDb, now, type SetDb } from './helpers';
 
@@ -132,7 +132,7 @@ export const socialActions = (set: SetDb, get: GetDb): SocialActions => {
 
   const replyContext = (owner: Account, contact: string) => {
     const pkg = get().packages.filter((p) => p.providerId === owner.listingId && p.active).sort((a, b) => b.price - a.price)[0];
-    return { business: owner.businessName ?? owner.name, city: owner.city, price: pkg ? `${formatMoney(pkg.price)} ${pkg.unit}` : undefined, contact };
+    return { business: owner.businessName ?? owner.name, city: owner.city, price: pkg ? `${formatNpr(pkg.price)} ${pkg.unit}` : undefined, contact };
   };
 
   /** Simulated delivery receipts for a sent message. */

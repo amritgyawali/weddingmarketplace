@@ -176,7 +176,7 @@ export default function FreelancerGigDetail() {
           <View style={[styles.footer, { backgroundColor: t.c.surface, borderTopColor: t.c.border, paddingBottom: Math.max(insets.bottom, 14) }]}>
             {invited && !application ? (
               <View style={styles.row}>
-                <KButton label="Decline" variant="secondary" style={{ flex: 1 }} onPress={() => { respondToInvite(gig.id, account, false); toast('Invitation declined'); router.back(); }} />
+                <KButton label="Decline" variant="secondary" style={{ flex: 1 }} onPress={() => { respondToInvite(gig.id, account, false); toast('Invitation declined. The poster has been told'); router.back(); }} />
                 <KButton
                   label={gig.emergency ? `Accept · ${formatMoney(gig.pay)}` : 'Accept invite'}
                   icon="flash"

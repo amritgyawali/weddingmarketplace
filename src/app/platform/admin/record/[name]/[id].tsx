@@ -58,7 +58,7 @@ function RecordScreen() {
     const copy = isObject ? { ...(draft as Record<string, unknown>), id: uid(String(key).slice(0, 4)) } : draft;
     const res = insert(key, copy, Array.isArray(collection) ? undefined : `${id}_copy`);
     if (res.error) return toastError(res.error);
-    toast('Copy made');
+    toast('Copy made. You’re now editing the copy');
     router.replace({ pathname: '/platform/admin/record/[name]/[id]', params: { name: key, id: res.id! } });
   };
 
@@ -82,7 +82,7 @@ function RecordScreen() {
               confirm('Delete this record?', 'It is removed for everyone. Other records that point at it may show it as missing.', 'Delete', () => {
                 const err = removeMany(key, [id]);
                 if (err) return toastError(err);
-                toast('Deleted');
+                toast('Record deleted');
                 router.back();
               })
             }

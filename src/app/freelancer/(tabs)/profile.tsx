@@ -172,7 +172,7 @@ export default function FreelancerProfile() {
         {[
           { label: 'Jobs done', value: String(completed) },
           { label: 'Reliability', value: `${reliability}` },
-          { label: 'Earned', value: formatMoney(earned).replace('NPR ', '') },
+          { label: 'Earned', value: formatMoney(earned).replace(/^[A-Z]{3} /, '') },
         ].map((s) => (
           <Card key={s.label} style={styles.stat}>
             <Text size={19} weight="semibold" color={t.c.textStrong}>

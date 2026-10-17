@@ -55,19 +55,10 @@ function EventSheet({ project, event, onClose }: { project: Project; event: Proj
             }}
           />
         )}
-        <Calendar value={date} onChange={setDate} />
-        <View style={styles.row}>
-          <Text size={13} color={t.c.muted} style={{ flex: 1 }}>
-            {date ? `${formatLongDate(date)} · ${formatDateAlt(date)}` : 'Date not confirmed yet'}
-          </Text>
-          {date && (
-            <Pressable onPress={() => setDate(null)} hitSlop={8}>
-              <Text size={13} weight="semibold" color={t.c.primary}>
-                Clear date
-              </Text>
-            </Pressable>
-          )}
-        </View>
+        <Calendar value={date} onChange={setDate} onClear={() => setDate(null)} />
+        <Text size={13} color={t.c.muted}>
+          {date ? `${formatLongDate(date)} · ${formatDateAlt(date)}` : 'Date not confirmed yet. Pick a day above when you know it.'}
+        </Text>
         <View style={styles.row}>
           <View style={{ flex: 1 }}>
             <KField label="Start time" value={time} onChangeText={setTime} placeholder="11:00" />

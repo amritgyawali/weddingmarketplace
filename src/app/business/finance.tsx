@@ -88,7 +88,7 @@ export default function VendorFinance() {
                 New invoice
               </Text>
               <ChoiceChips options={[...new Set(bookings.map((b) => b.project.customerName))]} selected={[customer]} onToggle={setCustomer} />
-              <ChoiceChips options={['deposit', 'instalment', 'balance', 'tax']} selected={[kind]} onToggle={(v) => setKind(v as Invoice['kind'])} />
+              <ChoiceChips labels={{ deposit: 'Deposit', instalment: 'Instalment', balance: 'Balance', tax: 'Tax' }} options={['deposit', 'instalment', 'balance', 'tax']} selected={[kind]} onToggle={(v) => setKind(v as Invoice['kind'])} />
               {check.error('customer') && (
                 <Text size={12} color={t.c.danger}>
                   {check.error('customer')}
@@ -117,7 +117,7 @@ export default function VendorFinance() {
                     dueAt: addDays(today(), 7),
                   });
                   setAmount('');
-                  toast('Invoice issued', 'receipt');
+                  toast('Invoice issued. Share it from the invoice page', 'receipt');
                 }}
               />
             </Card>

@@ -8,7 +8,8 @@ Every exported symbol in `src/utils/`, file by file. The guide that explains how
 
 - [`bs.ts`](#bsts) (16 exports) · Bikram Sambat (BS), the Nepali calendar. Dates are still stored as AD `yyyy-mm-dd`; this module only converts them for display and for the …
 - [`confirm.ts`](#confirmts) (1 exports)
-- [`format.ts`](#formatts) (29 exports)
+- [`currency.ts`](#currencyts) (5 exports)
+- [`format.ts`](#formatts) (34 exports)
 - [`links.ts`](#linksts) (8 exports)
 - [`localImage.ts`](#localimagets) (2 exports)
 - [`random.ts`](#randomts) (2 exports)
@@ -205,23 +206,105 @@ Confirmation before a destructive or important action. Shows the app's own
 dialog (the same on iOS, Android and web, translated with the rest of the
 app); destructive labels such as "Delete" get a red button.
 
+## currency.ts
+
+Source: [src/utils/currency.ts](../../../src/utils/currency.ts)
+
+### `DisplayCurrency`
+
+*interface* · [src/utils/currency.ts:9](../../../src/utils/currency.ts#L9)
+
+Display currencies. Every amount is stored, charged and paid out in NPR;
+a person can choose to *read* prices in another currency (Settings →
+Currency), which helps families abroad and guests from India, the Gulf,
+Malaysia, Korea and further away. Rates are indicative (NPR per unit,
+reviewed October 2026), so converted figures are labelled approximate and
+payments, receipts, quotations and contracts always show NPR.
+
+| Member | Type | Notes |
+|---|---|---|
+| `code` | `string` |  |
+| `name` | `string` |  |
+| `nprPerUnit` | `number` | NPR for one unit of this currency. |
+| `decimals` | `number` | Decimal places when shown (0 for most; whole units read best in lists). |
+
+### `DISPLAY_CURRENCIES`
+
+*const* · [src/utils/currency.ts:19](../../../src/utils/currency.ts#L19)
+
+```ts
+DISPLAY_CURRENCIES: readonly DisplayCurrency[]
+```
+
+NPR first, then the currencies Nepali families most often earn or send money in.
+
+### `BASE_CURRENCY`
+
+*const* · [src/utils/currency.ts:36](../../../src/utils/currency.ts#L36)
+
+```ts
+BASE_CURRENCY= 'NPR'
+```
+
+The base currency: what is stored, charged and paid out.
+
+### `currencyFor`
+
+*function* · [src/utils/currency.ts:39](../../../src/utils/currency.ts#L39)
+
+```ts
+currencyFor(code: string | undefined): DisplayCurrency
+```
+
+The currency entry for a code, falling back to NPR for unknown codes.
+
+### `fromNpr`
+
+*function* · [src/utils/currency.ts:44](../../../src/utils/currency.ts#L44)
+
+```ts
+fromNpr(npr: number, code: string): number
+```
+
+Converts whole rupees into the display currency (unrounded).
+
 ## format.ts
 
 Source: [src/utils/format.ts](../../../src/utils/format.ts)
 
 ### `CURRENCY`
 
-*const* · [src/utils/format.ts:10](../../../src/utils/format.ts#L10)
+*const* · [src/utils/format.ts:13](../../../src/utils/format.ts#L13)
 
 ```ts
-CURRENCY= 'NPR'
+CURRENCY= BASE_CURRENCY
 ```
 
-Currency code shown in every money string.
+The base currency code (amounts are always NPR underneath).
+
+### `displayCurrency`
+
+*function* · [src/utils/format.ts:16](../../../src/utils/format.ts#L16)
+
+```ts
+displayCurrency()
+```
+
+The display currency code right now.
+
+### `isConverted`
+
+*function* · [src/utils/format.ts:19](../../../src/utils/format.ts#L19)
+
+```ts
+isConverted()
+```
+
+True when amounts are shown in a currency other than NPR.
 
 ### `formatNumber`
 
-*function* · [src/utils/format.ts:13](../../../src/utils/format.ts#L13)
+*function* · [src/utils/format.ts:31](../../../src/utils/format.ts#L31)
 
 ```ts
 formatNumber(value: number): string
@@ -231,17 +314,38 @@ Groups digits in thousands (150,000), keeps up to two decimals and a leading min
 
 ### `formatMoney`
 
-*function* · [src/utils/format.ts:23](../../../src/utils/format.ts#L23)
+*function* · [src/utils/format.ts:41](../../../src/utils/format.ts#L41)
 
 ```ts
 formatMoney(value: number)
 ```
 
-NPR 150,000
+NPR 150,000, or USD 1,087 when the person reads prices in dollars.
+
+### `formatNpr`
+
+*function* · [src/utils/format.ts:44](../../../src/utils/format.ts#L44)
+
+```ts
+formatNpr(value: number)
+```
+
+Always NPR (what is charged, receipted and printed): NPR 150,000.
+
+### `formatNprWithDisplay`
+
+*function* · [src/utils/format.ts:50](../../../src/utils/format.ts#L50)
+
+```ts
+formatNprWithDisplay(value: number)
+```
+
+NPR with the display-currency figure beside it when they differ:
+"NPR 150,000 (about USD 1,087)". For amounts someone is about to pay.
 
 ### `formatMoneyCompact`
 
-*function* · [src/utils/format.ts:26](../../../src/utils/format.ts#L26)
+*function* · [src/utils/format.ts:53](../../../src/utils/format.ts#L53)
 
 ```ts
 formatMoneyCompact(value: number): string
@@ -249,9 +353,19 @@ formatMoneyCompact(value: number): string
 
 Compact form used in chips and filters: NPR 800, NPR 45K, NPR 975K, NPR 2.5M.
 
+### `formatNprCompact`
+
+*function* · [src/utils/format.ts:64](../../../src/utils/format.ts#L64)
+
+```ts
+formatNprCompact(value: number): string
+```
+
+Always NPR, compact: NPR 45K. For text that is saved and read by others (notifications, audit).
+
 ### `formatMoneyRange`
 
-*function* · [src/utils/format.ts:35](../../../src/utils/format.ts#L35)
+*function* · [src/utils/format.ts:73](../../../src/utils/format.ts#L73)
 
 ```ts
 formatMoneyRange(lo: number, hi: number)
@@ -261,17 +375,17 @@ Budget range: NPR 40K–60K
 
 ### `formatLakh`
 
-*function* · [src/utils/format.ts:41](../../../src/utils/format.ts#L41)
+*function* · [src/utils/format.ts:79](../../../src/utils/format.ts#L79)
 
 ```ts
 formatLakh(value: number): string
 ```
 
-How families talk about wedding budgets: "7.5 lakh", "26 lakh", "1.2 crore".
+How families talk about wedding budgets: "7.5 lakh", "26 lakh", "1.2 crore". Other display currencies get the compact form.
 
 ### `formatLakhRange`
 
-*function* · [src/utils/format.ts:48](../../../src/utils/format.ts#L48)
+*function* · [src/utils/format.ts:87](../../../src/utils/format.ts#L87)
 
 ```ts
 formatLakhRange(lo: number, hi: number): string
@@ -281,7 +395,7 @@ NPR 7.1–26 lakh, or NPR 45 lakh – 1.2 crore across the boundary.
 
 ### `parseMoney`
 
-*function* · [src/utils/format.ts:54](../../../src/utils/format.ts#L54)
+*function* · [src/utils/format.ts:94](../../../src/utils/format.ts#L94)
 
 ```ts
 parseMoney(input: string): number
@@ -291,7 +405,7 @@ Parse "1,50,000", "150000", "150k", "1.5m" into a number (NaN when invalid).
 
 ### `percent`
 
-*function* · [src/utils/format.ts:64](../../../src/utils/format.ts#L64)
+*function* · [src/utils/format.ts:104](../../../src/utils/format.ts#L104)
 
 ```ts
 percent(value: number, digits = 0)
@@ -301,7 +415,7 @@ Turns a ratio into a percentage string: 0.13 gives "13%".
 
 ### `formatShortDate`
 
-*function* · [src/utils/format.ts:85](../../../src/utils/format.ts#L85)
+*function* · [src/utils/format.ts:125](../../../src/utils/format.ts#L125)
 
 ```ts
 formatShortDate(iso: string): string
@@ -311,7 +425,7 @@ formatShortDate(iso: string): string
 
 ### `formatLongDate`
 
-*function* · [src/utils/format.ts:93](../../../src/utils/format.ts#L93)
+*function* · [src/utils/format.ts:133](../../../src/utils/format.ts#L133)
 
 ```ts
 formatLongDate(iso: string): string
@@ -321,7 +435,7 @@ formatLongDate(iso: string): string
 
 ### `formatMonthDay`
 
-*function* · [src/utils/format.ts:101](../../../src/utils/format.ts#L101)
+*function* · [src/utils/format.ts:141](../../../src/utils/format.ts#L141)
 
 ```ts
 formatMonthDay(iso: string): string
@@ -331,7 +445,7 @@ formatMonthDay(iso: string): string
 
 ### `formatAdDate`
 
-*function* · [src/utils/format.ts:109](../../../src/utils/format.ts#L109)
+*function* · [src/utils/format.ts:149](../../../src/utils/format.ts#L149)
 
 ```ts
 formatAdDate(iso: string): string
@@ -341,7 +455,7 @@ Always Gregorian: "18 Aug 2026".
 
 ### `formatDateAlt`
 
-*function* · [src/utils/format.ts:115](../../../src/utils/format.ts#L115)
+*function* · [src/utils/format.ts:155](../../../src/utils/format.ts#L155)
 
 ```ts
 formatDateAlt(iso: string): string
@@ -351,7 +465,7 @@ The same day in the other calendar, shown beside the main date: AD under BS, or 
 
 ### `formatTime`
 
-*function* · [src/utils/format.ts:122](../../../src/utils/format.ts#L122)
+*function* · [src/utils/format.ts:162](../../../src/utils/format.ts#L162)
 
 ```ts
 formatTime(iso: string): string
@@ -361,7 +475,7 @@ Local clock time of an ISO timestamp in 12-hour form, e.g. "6:30 PM".
 
 ### `formatClock`
 
-*function* · [src/utils/format.ts:130](../../../src/utils/format.ts#L130)
+*function* · [src/utils/format.ts:170](../../../src/utils/format.ts#L170)
 
 ```ts
 formatClock(hhmm: string): string
@@ -371,7 +485,7 @@ formatClock(hhmm: string): string
 
 ### `timeAgo`
 
-*function* · [src/utils/format.ts:137](../../../src/utils/format.ts#L137)
+*function* · [src/utils/format.ts:177](../../../src/utils/format.ts#L177)
 
 ```ts
 timeAgo(iso: string): string
@@ -381,7 +495,7 @@ timeAgo(iso: string): string
 
 ### `daysUntil`
 
-*function* · [src/utils/format.ts:150](../../../src/utils/format.ts#L150)
+*function* · [src/utils/format.ts:190](../../../src/utils/format.ts#L190)
 
 ```ts
 daysUntil(iso: string): number
@@ -391,7 +505,7 @@ Whole days from today (local midnight) to a date; negative when the date has pas
 
 ### `relativeDay`
 
-*function* · [src/utils/format.ts:159](../../../src/utils/format.ts#L159)
+*function* · [src/utils/format.ts:199](../../../src/utils/format.ts#L199)
 
 ```ts
 relativeDay(iso: string): string
@@ -401,7 +515,7 @@ relativeDay(iso: string): string
 
 ### `toISODate`
 
-*function* · [src/utils/format.ts:168](../../../src/utils/format.ts#L168)
+*function* · [src/utils/format.ts:208](../../../src/utils/format.ts#L208)
 
 ```ts
 toISODate(date: Date): string
@@ -411,7 +525,7 @@ Store dates as yyyy-mm-dd so they never shift across time zones.
 
 ### `fromISODate`
 
-*function* · [src/utils/format.ts:176](../../../src/utils/format.ts#L176)
+*function* · [src/utils/format.ts:216](../../../src/utils/format.ts#L216)
 
 ```ts
 fromISODate(iso: string): Date
@@ -421,7 +535,7 @@ Parses yyyy-mm-dd as a local-midnight Date, never shifted by the time zone.
 
 ### `addDays`
 
-*function* · [src/utils/format.ts:182](../../../src/utils/format.ts#L182)
+*function* · [src/utils/format.ts:222](../../../src/utils/format.ts#L222)
 
 ```ts
 addDays(iso: string, days: number)
@@ -431,7 +545,7 @@ Adds (or, when negative, subtracts) whole days to a yyyy-mm-dd date.
 
 ### `pluralize`
 
-*function* · [src/utils/format.ts:189](../../../src/utils/format.ts#L189)
+*function* · [src/utils/format.ts:229](../../../src/utils/format.ts#L229)
 
 ```ts
 pluralize(count: number, word: string, plural = `${word}s`)
@@ -441,7 +555,7 @@ Count with its noun: pluralize(1, 'guest') is "1 guest", pluralize(3, 'guest') i
 
 ### `initials`
 
-*function* · [src/utils/format.ts:192](../../../src/utils/format.ts#L192)
+*function* · [src/utils/format.ts:232](../../../src/utils/format.ts#L232)
 
 ```ts
 initials(name: string)
@@ -451,7 +565,7 @@ Up to two capital letters from the first two words of a name.
 
 ### `uid`
 
-*function* · [src/utils/format.ts:201](../../../src/utils/format.ts#L201)
+*function* · [src/utils/format.ts:241](../../../src/utils/format.ts#L241)
 
 ```ts
 uid(prefix = 'id')
@@ -461,7 +575,7 @@ Unique-enough local id with a prefix, such as "proj_lq3k9_x7a1bc".
 
 ### `shortCode`
 
-*function* · [src/utils/format.ts:204](../../../src/utils/format.ts#L204)
+*function* · [src/utils/format.ts:244](../../../src/utils/format.ts#L244)
 
 ```ts
 shortCode(length = 6)
@@ -471,7 +585,7 @@ Short human code, e.g. for invites: "K7P2QX".
 
 ### `isNepalMobile`
 
-*function* · [src/utils/format.ts:208](../../../src/utils/format.ts#L208)
+*function* · [src/utils/format.ts:248](../../../src/utils/format.ts#L248)
 
 ```ts
 isNepalMobile(phone: string)
@@ -481,7 +595,7 @@ Nepal mobile numbers: 97/98 + 8 digits.
 
 ### `formatPhone`
 
-*function* · [src/utils/format.ts:210](../../../src/utils/format.ts#L210)
+*function* · [src/utils/format.ts:250](../../../src/utils/format.ts#L250)
 
 ```ts
 formatPhone(phone: string)
@@ -491,7 +605,7 @@ Formats a Nepal mobile number as "+977 98x-xxx-xxxx"; returns the input unchange
 
 ### `today`
 
-*function* · [src/utils/format.ts:216](../../../src/utils/format.ts#L216)
+*function* · [src/utils/format.ts:256](../../../src/utils/format.ts#L256)
 
 ```ts
 today()

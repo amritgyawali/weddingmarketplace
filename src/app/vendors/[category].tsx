@@ -70,7 +70,7 @@ export default function VendorListingScreen() {
   return (
     <View style={styles.root}>
       <ScreenHeader
-        title={`${city === ALL_CITIES ? 'All Cities' : city} • ${subTitle}`}
+        title={`${city === ALL_CITIES ? 'All cities' : city} • ${subTitle}`}
         right={<IconButton icon="bookmark" iconSize={18} badge={shortlistCount} accessibilityLabel="Shortlist" onPress={() => router.push('/shortlist')} />}
       />
       <FlatList

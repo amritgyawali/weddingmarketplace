@@ -147,7 +147,7 @@ function Invitations({ project, readOnly }: { project: Project; readOnly: boolea
                 size="sm"
                 onPress={() => {
                   sendInvites(project.id, eventId, invited.filter((g) => !inv(g).sentAt).map((g) => g.id));
-                  toast('Marked as sent');
+                  toast('Marked as sent. Track replies in Guests');
                 }}
               />
             )}

@@ -73,6 +73,8 @@ export default function RootLayout() {
   // Light or dark: swap the palette before anything below renders, then remount the tree (key) so no screen keeps an old colour.
   const scheme = useResolvedScheme();
   applyColorScheme(scheme);
+  // Prices are formatted during render, so a new display currency remounts the tree the same way.
+  const currency = usePrefs((s) => s.currency) || 'NPR';
   useEffect(() => {
     SystemUI.setBackgroundColorAsync(colors.bg).catch(() => {});
     if (Platform.OS === 'web' && typeof document !== 'undefined') {
@@ -102,7 +104,7 @@ export default function RootLayout() {
     <GestureHandlerRootView style={{ flex: 1, backgroundColor: colors.white }} {...bugTouchHandlers}>
       <I18nProvider>
       <QueryClientProvider client={queryClient}>
-      <Fragment key={scheme}>
+      <Fragment key={`${scheme}-${currency}`}>
         <StatusBar style={statusBarStyle()} />
         <ContentSync />
         <Stack screenLayout={keyboardScreenLayout}

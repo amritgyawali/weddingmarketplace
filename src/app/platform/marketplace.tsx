@@ -158,7 +158,7 @@ function MarketplaceSettings() {
               setPct('');
               setTitle('');
               promoCheck.reset();
-              toast('Promo code live');
+              toast('Promo code is live. Couples can use it now');
             }}
           />
         </Card>

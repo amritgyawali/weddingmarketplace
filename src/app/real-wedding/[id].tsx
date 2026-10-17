@@ -23,7 +23,7 @@ export default function RealWeddingScreen() {
 
   return (
     <View style={styles.root}>
-      <ScreenHeader title="Real Wedding" />
+      <ScreenHeader title="Real wedding" />
       {isLoading ? (
         <View style={{ padding: GUTTER, gap: 12 }}>
           <Skeleton height={260} />

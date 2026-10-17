@@ -9,7 +9,7 @@ import { buildMilestones, splitBooking } from '@/services/pricing';
 import { DEFAULT_TERMS, lineTotal, nextQuoteNumber, quoteTotals, snapshot, TAX_RATE } from '@/services/quotes';
 import { useSession } from '@/store/useSession';
 import type { PricingModel, Project, Quotation, QuoteItem, ServiceBooking } from '@/types/platform';
-import { addDays, formatMoney, uid } from '@/utils/format';
+import { addDays, formatNpr, uid } from '@/utils/format';
 
 import { bookingDates, currentActor, firstDate, type GetDb, lastDate, mapProject, now, type SetDb, today } from './helpers';
 import { staffDenied } from './personas';
@@ -89,11 +89,11 @@ export const quoteActions = (set: SetDb, get: GetDb): QuoteActions => ({
         : s.projects,
     }));
     const total = quoteTotals(quote).total;
-    get().notify(quote.customerId, quote.version > 1 ? `Updated quotation (v${quote.version})` : `Quotation from ${quote.fromName}`, `${quote.number} · ${formatMoney(total)}`, `/quote/${id}`, 'quote');
+    get().notify(quote.customerId, quote.version > 1 ? `Updated quotation (v${quote.version})` : `Quotation from ${quote.fromName}`, `${quote.number} · ${formatNpr(total)}`, `/quote/${id}`, 'quote');
     const thread = get().threads.find((t) => t.projectId && t.projectId === quote.projectId && t.kind === 'project');
     const actor = currentActor();
     if (thread) get().sendMessage(thread.id, { id: actor.id, name: actor.name, role: quote.fromKind === 'platform' ? 'platform' : 'vendor' }, `${quote.number} (v${quote.version})`, 'quote', { quoteId: id }, { silent: true });
-    get().log(actor, 'quote.send', 'quote', id, `v${quote.version} · ${formatMoney(total)}`);
+    get().log(actor, 'quote.send', 'quote', id, `v${quote.version} · ${formatNpr(total)}`);
     return null;
   },
 
@@ -206,7 +206,7 @@ export const quoteActions = (set: SetDb, get: GetDb): QuoteActions => ({
       }));
       get().confirmBooking(projectId, booking.id);
       get().notify(vendorTo, `${quote.customerName} accepted ${quote.number}`, 'The booking is now in your projects.', `/business/booking/${booking.id}`, 'booking');
-      get().notify('platform', 'Direct booking confirmed', `${quote.customerName} booked ${quote.fromName} · ${formatMoney(total)}`, undefined, 'booking');
+      get().notify('platform', 'Direct booking confirmed', `${quote.customerName} booked ${quote.fromName} · ${formatNpr(total)}`, undefined, 'booking');
       get().log({ id: quote.customerId, name: quote.customerName }, 'quote.accept', 'quote', id, `v${quote.version}`);
       return;
     }
@@ -262,7 +262,7 @@ export const quoteActions = (set: SetDb, get: GetDb): QuoteActions => ({
         };
       }),
       revenue: [
-        ...(quote.serviceFee || quote.discount ? [{ id: uid('rev'), kind: 'SERVICE_FEE' as const, amount: quote.serviceFee - quote.discount, projectId, note: `Service fee ${formatMoney(quote.serviceFee)} − package discount ${formatMoney(quote.discount)}`, at: now() }] : []),
+        ...(quote.serviceFee || quote.discount ? [{ id: uid('rev'), kind: 'SERVICE_FEE' as const, amount: quote.serviceFee - quote.discount, projectId, note: `Service fee ${formatNpr(quote.serviceFee)} − package discount ${formatNpr(quote.discount)}`, at: now() }] : []),
         ...s.revenue,
       ],
     }));
@@ -272,9 +272,9 @@ export const quoteActions = (set: SetDb, get: GetDb): QuoteActions => ({
       const b = latest.bookings.find((x) => x.id === bid);
       if (b && b.providerResponse !== 'pending') get().confirmBooking(projectId, bid);
     }
-    get().notify(project.customerId, 'Your wedding is confirmed', `Payment schedule is ready — first instalment ${formatMoney(Math.round((total * (quote.schedule[0]?.percent ?? 30)) / 100))}.`, '/my-wedding?tab=payments', 'booking');
-    get().notify(vendorTo, `${quote.customerName} accepted ${quote.number}`, `v${quote.version} · ${formatMoney(total)}`, `/platform/project/${projectId}`, 'quote');
-    get().log({ id: quote.customerId, name: quote.customerName }, 'quote.accept', 'quote', id, `v${quote.version} · ${formatMoney(total)}`);
+    get().notify(project.customerId, 'Your wedding is confirmed', `Payment schedule is ready — first instalment ${formatNpr(Math.round((total * (quote.schedule[0]?.percent ?? 30)) / 100))}.`, '/my-wedding?tab=payments', 'booking');
+    get().notify(vendorTo, `${quote.customerName} accepted ${quote.number}`, `v${quote.version} · ${formatNpr(total)}`, `/platform/project/${projectId}`, 'quote');
+    get().log({ id: quote.customerId, name: quote.customerName }, 'quote.accept', 'quote', id, `v${quote.version} · ${formatNpr(total)}`);
   },
 
   draftProjectQuote: (projectId) => {

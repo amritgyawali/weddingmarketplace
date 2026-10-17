@@ -4,7 +4,7 @@
  */
 import { milestoneStatus } from '@/services/pricing';
 import type { Dispute, Invoice, Payment, PaymentMethod, Refund } from '@/types/platform';
-import { formatMoney, uid } from '@/utils/format';
+import { formatNpr, uid } from '@/utils/format';
 
 import { accountById, currentActor, type GetDb, mapProject, nextNumber, now, type SetDb } from './helpers';
 import { staffDenied, staffOnly } from './personas';
@@ -75,11 +75,11 @@ export const financeActions = (set: SetDb, get: GetDb): FinanceActions => ({
         ...s.files,
       ],
     }));
-    get().notify(project.coordinatorId ?? 'platform', `Payment received · ${project.code}`, `${payerName} paid ${formatMoney(amount)} via ${method.replace('_', ' ')}`, `/platform/project/${projectId}?tab=payments`, 'payment');
+    get().notify(project.coordinatorId ?? 'platform', `Payment received · ${project.code}`, `${payerName} paid ${formatNpr(amount)} via ${method.replace('_', ' ')}`, `/platform/project/${projectId}?tab=payments`, 'payment');
     if (currentActor().id !== project.customerId) {
-      get().notify(project.customerId, 'Payment recorded', `${formatMoney(amount)} · receipt ${payment.receiptNo}`, '/my-wedding?tab=payments', 'payment');
+      get().notify(project.customerId, 'Payment recorded', `${formatNpr(amount)} · receipt ${payment.receiptNo}`, '/my-wedding?tab=payments', 'payment');
     }
-    get().log({ id: 'gateway', name: method }, 'payment.succeeded', 'payment', payment.id, `${formatMoney(amount)} for ${milestone.label}`);
+    get().log({ id: 'gateway', name: method }, 'payment.succeeded', 'payment', payment.id, `${formatNpr(amount)} for ${milestone.label}`);
     return payment;
   },
 
@@ -99,8 +99,8 @@ export const financeActions = (set: SetDb, get: GetDb): FinanceActions => ({
     if (payable.status === 'PAID' || payable.status === 'ON_HOLD' || payable.status === 'CANCELLED') return `This payout is ${payable.status.toLowerCase().replace('_', ' ')} and can’t be released`;
     set((s) => ({ payables: s.payables.map((p) => (p.id === id ? { ...p, status: 'PAID', paidAt: now(), reference: ref ?? reference('bank_transfer') } : p)) }));
     const to = payable.payeeKind === 'freelancer' ? payable.payeeId : (accountById(payable.payeeId)?.id ?? payable.payeeId);
-    get().notify(to, 'Payout released', `${formatMoney(payable.amount)} · ${payable.label}`, payable.payeeKind === 'freelancer' ? '/freelancer/earnings' : '/business/finance', 'payment');
-    get().log(currentActor(), 'payable.release', 'payable', id, formatMoney(payable.amount));
+    get().notify(to, 'Payout released', `${formatNpr(payable.amount)} · ${payable.label}`, payable.payeeKind === 'freelancer' ? '/freelancer/earnings' : '/business/finance', 'payment');
+    get().log(currentActor(), 'payable.release', 'payable', id, formatNpr(payable.amount));
     return null;
   },
 
@@ -122,10 +122,10 @@ export const financeActions = (set: SetDb, get: GetDb): FinanceActions => ({
     if (!reason.trim()) return 'Give a reason for the refund';
     // Mirrors cap_refunds() in 0010: requests still open count too, so the same money can't be asked for twice.
     const taken = get().refunds.filter((r) => r.paymentId === paymentId && r.status !== 'REJECTED').reduce((s, r) => s + r.amount, 0);
-    if (taken + value > payment.amount) return `Refunds would exceed the payment: ${formatMoney(taken)} of ${formatMoney(payment.amount)} is already refunded or requested`;
+    if (taken + value > payment.amount) return `Refunds would exceed the payment: ${formatNpr(taken)} of ${formatNpr(payment.amount)} is already refunded or requested`;
     const refund: Refund = { id: uid('rf'), paymentId, projectId: payment.projectId, amount: value, reason: reason.trim(), status: 'REQUESTED', requestedBy: currentActor().name, at: now() };
     set((s) => ({ refunds: [refund, ...s.refunds] }));
-    get().notify('platform', 'Refund requested', `${formatMoney(value)} · ${reason.trim()}`, '/platform/finance?tab=refunds', 'payment');
+    get().notify('platform', 'Refund requested', `${formatNpr(value)} · ${reason.trim()}`, '/platform/finance?tab=refunds', 'payment');
     return null;
   },
 
@@ -145,8 +145,8 @@ export const financeActions = (set: SetDb, get: GetDb): FinanceActions => ({
         : s.payments,
     }));
     const project = get().projects.find((p) => p.id === refund.projectId);
-    if (project) get().notify(project.customerId, approve ? 'Refund processed' : 'Refund declined', `${formatMoney(refund.amount)} · ${refund.reason}`, '/my-wedding?tab=payments', 'payment');
-    get().log(currentActor(), approve ? 'refund.process' : 'refund.reject', 'refund', id, formatMoney(refund.amount));
+    if (project) get().notify(project.customerId, approve ? 'Refund processed' : 'Refund declined', `${formatNpr(refund.amount)} · ${refund.reason}`, '/my-wedding?tab=payments', 'payment');
+    get().log(currentActor(), approve ? 'refund.process' : 'refund.reject', 'refund', id, formatNpr(refund.amount));
     return null;
   },
 
@@ -202,6 +202,6 @@ export const financeActions = (set: SetDb, get: GetDb): FinanceActions => ({
       registry: s.registry.map((r) => (r.id === itemId ? { ...r, contributions: [...r.contributions, { id: uid('c'), name, amount, message, at: now(), thanked: false }] } : r)),
     }));
     const project = get().projects.find((p) => p.id === item.projectId);
-    if (project) get().notify(project.customerId, `${name} contributed`, `${formatMoney(amount)} to ${item.title}${message ? ` — “${message}”` : ''}`, '/registry', 'payment');
+    if (project) get().notify(project.customerId, `${name} contributed`, `${formatNpr(amount)} to ${item.title}${message ? ` — “${message}”` : ''}`, '/registry', 'payment');
   },
 });

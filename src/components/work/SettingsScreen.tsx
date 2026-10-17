@@ -22,6 +22,7 @@ import { useAccount, useSession } from '@/store/useSession';
 import { useRoleTheme } from '@/theme/RoleTheme';
 import type { AccountPrefs, AppNotification } from '@/types/platform';
 import { confirm } from '@/utils/confirm';
+import { DISPLAY_CURRENCIES, currencyFor } from '@/utils/currency';
 import { formatPhone } from '@/utils/format';
 import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
 
@@ -62,6 +63,8 @@ export function SettingsScreen() {
   const [busy, setBusy] = useState<'export' | 'delete' | null>(null);
   const calendar = usePrefs((s) => s.calendar);
   const setCalendar = usePrefs((s) => s.setCalendar);
+  const currency = usePrefs((s) => s.currency) || 'NPR';
+  const setCurrency = usePrefs((s) => s.setCurrency);
   const live = usesEmailSignIn();
   const featureOn = useFeatures();
   const bugReports = bugReportsAvailable() && featureOn('app.bug_report');
@@ -183,6 +186,27 @@ export function SettingsScreen() {
           />
           <Text size={12} color={t.c.muted}>
             Calendars show the Nepali month with the English date in small type. Dates are saved the same either way.
+          </Text>
+        </Card>
+
+        <SectionTitle title="Currency" />
+        <Card style={{ gap: 10 }}>
+          <Text size={13} color={t.c.muted}>
+            Show prices in
+          </Text>
+          <ChoiceChips
+            options={DISPLAY_CURRENCIES.map((c) => c.code)}
+            selected={[currency]}
+            onToggle={(code) => {
+              if (code === currency) return;
+              setCurrency(code);
+              toast(code === 'NPR' ? 'Prices now show in Nepali rupees' : `Prices now show in ${currencyFor(code).name}s (approximate)`, 'cash-outline');
+            }}
+          />
+          <Text size={12} color={t.c.muted}>
+            {currency === 'NPR'
+              ? 'Every price, quotation and payment is in Nepali rupees (NPR).'
+              : `Showing about 1 ${currency} = NPR ${currencyFor(currency).nprPerUnit} (${currencyFor(currency).name}). Rates are indicative. You always pay in NPR, and receipts, quotations and contracts stay in NPR.`}
           </Text>
         </Card>
 

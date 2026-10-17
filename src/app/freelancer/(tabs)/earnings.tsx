@@ -72,7 +72,7 @@ export default function Earnings() {
   const method = METHODS.find((m) => m.id === account.payoutMethod?.kind);
 
   const statement = async () => {
-    if (!payables.length) return toast('Nothing to export yet');
+    if (!payables.length) return toast('No payouts to export yet. They appear after your first gig');
     try {
       await exportCsv(
         payables.map((p) => ({ job: p.label, amount_npr: p.amount, status: p.status, due: p.due, paid_on: p.paidAt?.slice(0, 10) ?? '', reference: p.reference ?? '' })),
