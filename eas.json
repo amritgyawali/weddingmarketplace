@@ -32,8 +32,13 @@
       }
     },
     "production": {
+      "extends": "base",
       "environment": "production",
       "autoIncrement": true,
+      "env": {
+        "EXPO_PUBLIC_ROLE_ENTRY": "direct",
+        "EXPO_PUBLIC_BUG_REPORTS": "off"
+      },
       "android": {
         "buildType": "app-bundle"
       }

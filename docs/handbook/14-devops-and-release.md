@@ -15,7 +15,7 @@ npm ci                     # or npm install; never regenerate the lockfile on Wi
 npx expo start             # scan the QR with Expo Go, or press w for web, a/i for emulators
 ```
 
-Sign in with a demo account (OTP 1234). No keys are needed: `EXPO_PUBLIC_BACKEND` defaults to `mock`.
+Tap a user type to enter its local demo workspace. No keys are needed: `EXPO_PUBLIC_BACKEND` defaults to `mock`. The welcome/Get started, phone/OTP and setup routes are hidden in this mode. Set `EXPO_PUBLIC_ROLE_ENTRY=credentials` to restore the previous demo sign-in (OTP 1234). Direct entry is always disabled for `EXPO_PUBLIC_BACKEND=supabase`, including when keys are absent; real accounts still require authenticated sign-in.
 
 Useful variants:
 
@@ -57,7 +57,7 @@ EAS project `@amritgyawali/vivah-wedding-marketplace` (id in `app.json` → `ext
 |---|---|---|
 | `preview` | Android APK / iOS ad hoc, internal distribution | `EXPO_PUBLIC_BACKEND=mock`, payments sandbox |
 | `ios-simulator` | iOS simulator build | |
-| `production` | Android App Bundle, auto-incremented version | submit to Play internal track as a draft |
+| `production` | Android App Bundle, auto-incremented version | mock backend, sandbox payments, direct role selection, bug reporting off; upload to Play internal track as a draft |
 
 ```bash
 npx -y eas-cli@latest build -p android --profile preview --no-wait
@@ -65,6 +65,8 @@ npx -y eas-cli@latest build:view <id> --json
 ```
 
 iOS installable builds need a paid Apple Developer account, which conflicts with the free-only rule; the owner decides. App identifiers: `com.vivah.marketplace` on both platforms; URL scheme `vivah`.
+
+The October 2026 direct-role AAB is a local demo edition: Super admin controls only that device's demo data. It does not connect users or process live payments. Before a live marketplace release, configure the authenticated Supabase environment and an appropriate build profile.
 
 JavaScript-only changes can later ship through EAS Update; native changes need a new store build. Don't create or edit `ios/`/`android/` (R-OPS-3).
 

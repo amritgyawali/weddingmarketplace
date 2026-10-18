@@ -7,9 +7,12 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { BackButton } from '@/components/ui/IconButton';
 import { triggerHaptic } from '@/components/ui/PressableScale';
 import { Text } from '@/components/ui/Text';
+import { toastError } from '@/components/ui/Toast';
 import { BRAND } from '@/constants/brand';
+import { usesDirectRoleEntry } from '@/constants/env';
 import { colors, themed } from '@/constants/theme';
 import { useFeatures } from '@/hooks/useFeatures';
+import { enterDemoRole } from '@/services/auth';
 import { useSession } from '@/store/useSession';
 import { ROLE_THEMES } from '@/theme/roles';
 import type { UserRole } from '@/types/platform';
@@ -26,20 +29,33 @@ export default function RolePicker() {
   const insets = useSafeAreaInsets();
   const selectRole = useSession((s) => s.selectRole);
   const on = useFeatures();
+  const direct = usesDirectRoleEntry();
   const roles = ROLES.filter(({ role }) => role === 'customer' || on(`signup.${role}`));
+
+  const enter = (role: UserRole | 'super_admin') => {
+    triggerHaptic('light');
+    if (direct) {
+      const error = enterDemoRole(role);
+      if (error) return toastError(error);
+      if (role === 'super_admin') setTimeout(() => router.replace('/platform/admin'), 0);
+      return;
+    }
+    selectRole(role === 'super_admin' ? 'platform' : role);
+    router.push({ pathname: '/welcome/login', params: role === 'super_admin' ? { as: 'super_admin' } : {} });
+  };
 
   return (
     <View style={styles.root}>
       <ScrollView contentContainerStyle={{ paddingTop: insets.top + 6, paddingBottom: insets.bottom + 24 }}>
-        <View style={{ paddingHorizontal: 8 }}>
+        {!direct && <View style={{ paddingHorizontal: 8 }}>
           <BackButton />
-        </View>
+        </View>}
         <View style={styles.head}>
           <Text serif size={28} weight="bold" color={colors.heading} lineHeight={38}>
             How will you use {BRAND.name}?
           </Text>
           <Text size={15} color={colors.textMuted}>
-            Each account type opens its own app. You can switch later.
+            {direct ? 'Tap your user type to open your workspace.' : 'Each account type opens its own app. You can switch later.'}
           </Text>
         </View>
 
@@ -51,11 +67,7 @@ export default function RolePicker() {
                 key={role}
                 accessibilityRole="button"
                 accessibilityLabel={`Continue as ${theme.label}`}
-                onPress={() => {
-                  triggerHaptic('light');
-                  selectRole(role);
-                  router.push('/welcome/login');
-                }}
+                onPress={() => enter(role)}
                 style={({ pressed }) => [styles.row, i > 0 && styles.rowBorder, pressed && { backgroundColor: colors.bgSoft }]}>
                 <View style={styles.icon}>
                   <Ionicons name={icon} size={22} color={theme.c.primary} />
@@ -72,15 +84,11 @@ export default function RolePicker() {
               </Pressable>
             );
           })}
-          {/* Vivah staff with full control: login only (super admins are created from the console, never self sign-up). */}
+          {/* The local demo uses its seeded admin; live builds always require authentication. */}
           <Pressable
             accessibilityRole="button"
             accessibilityLabel="Continue as Super admin"
-            onPress={() => {
-              triggerHaptic('light');
-              selectRole('platform');
-              router.push({ pathname: '/welcome/login', params: { as: 'super_admin' } });
-            }}
+            onPress={() => enter('super_admin')}
             style={({ pressed }) => [styles.row, styles.rowBorder, pressed && { backgroundColor: colors.bgSoft }]}>
             <View style={styles.icon}>
               <Ionicons name="shield-checkmark-outline" size={22} color={ROLE_THEMES.platform.c.primary} />

@@ -117,7 +117,7 @@ export default function RootLayout() {
             contentStyle: { backgroundColor: colors.white },
             animation: Platform.OS === 'android' ? 'slide_from_right' : 'default',
           }}>
-          {/* Signed out: welcome carousel → user type → OTP login → setup. */}
+          {/* Signed out: direct role entry for the local demo; authenticated welcome for live builds. */}
           <Stack.Protected guard={!role}>
             <Stack.Screen name="welcome" options={{ animation: 'fade' }} />
           </Stack.Protected>

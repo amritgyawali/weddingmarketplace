@@ -9,6 +9,8 @@ const read = (value: string | undefined) => (value && value.trim() ? value.trim(
 export const ENV = {
   /** `mock` (the on-device demo backend, the default) or `supabase`. */
   backend: read(process.env.EXPO_PUBLIC_BACKEND) === 'supabase' ? ('supabase' as const) : ('mock' as const),
+  /** Direct role selection for the local demo; `credentials` restores its phone/OTP flow. */
+  roleEntry: read(process.env.EXPO_PUBLIC_ROLE_ENTRY) === 'credentials' ? ('credentials' as const) : ('direct' as const),
   appUrl: read(process.env.EXPO_PUBLIC_APP_URL) ?? 'https://vivah.com.np',
   supabaseUrl: read(process.env.EXPO_PUBLIC_SUPABASE_URL),
   supabasePublishableKey: read(process.env.EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY),
@@ -28,3 +30,6 @@ export const ENV = {
 
 /** True when the real backend is switched on and configured. */
 export const usesSupabase = () => ENV.backend === 'supabase' && !!ENV.supabaseUrl && !!ENV.supabasePublishableKey;
+
+/** One-tap role entry is limited to the on-device backend, even if Supabase is misconfigured. */
+export const usesDirectRoleEntry = () => ENV.backend === 'mock' && ENV.roleEntry === 'direct';

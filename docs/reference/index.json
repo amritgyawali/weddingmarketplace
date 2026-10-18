@@ -3439,7 +3439,7 @@
     {
      "name": "WelcomeLayout",
      "kind": "component",
-     "line": 8,
+     "line": 9,
      "signature": "()",
      "doc": ""
     }
@@ -3452,7 +3452,7 @@
     {
      "name": "WelcomeCarousel",
      "kind": "component",
-     "line": 60,
+     "line": 61,
      "signature": "()",
      "doc": ""
     }
@@ -3478,7 +3478,7 @@
     {
      "name": "RolePicker",
      "kind": "component",
-     "line": 25,
+     "line": 28,
      "signature": "()",
      "doc": ""
     }
@@ -9665,14 +9665,14 @@
     {
      "name": "DEFAULT_PREFS",
      "kind": "const",
-     "line": 29,
+     "line": 30,
      "signature": ": AccountPrefs",
      "doc": ""
     },
     {
      "name": "SettingsScreen",
      "kind": "component",
-     "line": 54,
+     "line": 55,
      "signature": "()",
      "doc": "Notification, language, calendar and privacy settings plus data export and account deletion."
     }
@@ -9811,9 +9811,16 @@
     {
      "name": "usesSupabase",
      "kind": "function",
-     "line": 30,
+     "line": 32,
      "signature": "()",
      "doc": "True when the real backend is switched on and configured."
+    },
+    {
+     "name": "usesDirectRoleEntry",
+     "kind": "function",
+     "line": 35,
+     "signature": "()",
+     "doc": "One-tap role entry is limited to the on-device backend, even if Supabase is misconfigured."
     }
    ]
   },
@@ -13494,37 +13501,44 @@
    "doc": "",
    "exports": [
     {
+     "name": "enterDemoRole",
+     "kind": "function",
+     "line": 9,
+     "signature": "(role: UserRole | 'super_admin'): string | null",
+     "doc": "Opens a fixed local demo account from the role picker; never bypasses live authentication. Returns an error on refusal."
+    },
+    {
      "name": "completeLogin",
      "kind": "function",
-     "line": 11,
+     "line": 34,
      "signature": "(account: Account)",
      "doc": "Finishes sign-in for any role. Setting the session flips the protected\nroute guards in the root layout, which moves the user into their role's app."
     },
     {
      "name": "onAccountCreated",
      "kind": "function",
-     "line": 29,
+     "line": 52,
      "signature": "(account: Account)",
      "doc": "Side effects for a brand-new account before it signs in."
     },
     {
      "name": "impersonate",
      "kind": "function",
-     "line": 38,
+     "line": 61,
      "signature": "(account: Account)",
      "doc": "Super admin: opens the app as another user, with a bar to come back."
     },
     {
      "name": "endImpersonation",
      "kind": "function",
-     "line": 48,
+     "line": 71,
      "signature": "()",
      "doc": "Ends \"Sign in as\" and returns to the super admin's own account."
     },
     {
      "name": "logout",
      "kind": "function",
-     "line": 56,
+     "line": 79,
      "signature": "()",
      "doc": ""
     }

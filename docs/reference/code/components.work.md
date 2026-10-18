@@ -605,7 +605,7 @@ Source: [src/components/work/SettingsScreen.tsx](../../../src/components/work/Se
 
 ### `DEFAULT_PREFS`
 
-*const* · [src/components/work/SettingsScreen.tsx:29](../../../src/components/work/SettingsScreen.tsx#L29)
+*const* · [src/components/work/SettingsScreen.tsx:30](../../../src/components/work/SettingsScreen.tsx#L30)
 
 ```ts
 DEFAULT_PREFS: AccountPrefs
@@ -615,7 +615,7 @@ _No JSDoc yet._
 
 ### `SettingsScreen`
 
-*component* · [src/components/work/SettingsScreen.tsx:54](../../../src/components/work/SettingsScreen.tsx#L54)
+*component* · [src/components/work/SettingsScreen.tsx:55](../../../src/components/work/SettingsScreen.tsx#L55)
 
 ```ts
 SettingsScreen()

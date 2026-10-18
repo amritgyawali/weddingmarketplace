@@ -379,6 +379,12 @@ Node 24+ strips the TypeScript.
 
   npm run test:insights
 
+### scripts/test-role-entry.mjs
+
+Source: [scripts/test-role-entry.mjs](../../scripts/test-role-entry.mjs)
+
+Verifies direct demo entry cannot be enabled for a Supabase build, including missing credentials.
+
 ### scripts/test-social.mjs
 
 Source: [scripts/test-social.mjs](../../scripts/test-social.mjs)

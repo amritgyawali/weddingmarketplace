@@ -1,8 +1,31 @@
 import { signOut, usesEmailSignIn } from '@/backend/auth';
+import { usesDirectRoleEntry } from '@/constants/env';
 import { useAppStore } from '@/store/useAppStore';
 import { useDb } from '@/store/useDb';
 import { useSession } from '@/store/useSession';
-import type { Account } from '@/types/platform';
+import type { Account, UserRole } from '@/types/platform';
+
+/** Opens a fixed local demo account from the role picker; never bypasses live authentication. Returns an error on refusal. */
+export function enterDemoRole(role: UserRole | 'super_admin'): string | null {
+  if (!usesDirectRoleEntry()) return 'Sign in to open your account.';
+  const accountIds = {
+    customer: 'acc_customer_demo',
+    vendor: 'acc_vendor_demo',
+    freelancer: 'acc_freelancer_demo',
+    platform: 'acc_platform_demo',
+    super_admin: 'acc_platform_admin',
+  };
+  const session = useSession.getState();
+  const account = session.accounts.find((a) => a.id === accountIds[role]);
+  const expectedRole = role === 'super_admin' ? 'platform' : role;
+  if (!account || account.suspended || account.role !== expectedRole || (role === 'super_admin' && account.staffRole !== 'super_admin')) {
+    return 'This demo account is unavailable. Ask an administrator to restore access.';
+  }
+  session.selectRole(expectedRole);
+  session.setImpersonator(null);
+  completeLogin(account);
+  return null;
+}
 
 /**
  * Finishes sign-in for any role. Setting the session flips the protected

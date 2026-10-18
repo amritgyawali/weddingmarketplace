@@ -7,7 +7,7 @@ Every exported symbol in `src/constants/`, file by file. The guide that explains
 ## Files
 
 - [`brand.ts`](#brandts) (4 exports) · Single source of truth for every brand-specific string. Rename the product here and the whole app follows. A super admin can replace any of…
-- [`env.ts`](#envts) (2 exports) · Public configuration from `EXPO_PUBLIC_*` variables (`.env.local`, EAS and Vercel environment variables; see `.env.example`). Expo inlines …
+- [`env.ts`](#envts) (3 exports) · Public configuration from `EXPO_PUBLIC_*` variables (`.env.local`, EAS and Vercel environment variables; see `.env.example`). Expo inlines …
 - [`images.ts`](#imagests) (7 exports)
 - [`theme.ts`](#themets) (27 exports)
 
@@ -81,13 +81,23 @@ _No JSDoc yet._
 
 ### `usesSupabase`
 
-*function* · [src/constants/env.ts:30](../../../src/constants/env.ts#L30)
+*function* · [src/constants/env.ts:32](../../../src/constants/env.ts#L32)
 
 ```ts
 usesSupabase()
 ```
 
 True when the real backend is switched on and configured.
+
+### `usesDirectRoleEntry`
+
+*function* · [src/constants/env.ts:35](../../../src/constants/env.ts#L35)
+
+```ts
+usesDirectRoleEntry()
+```
+
+One-tap role entry is limited to the on-device backend, even if Supabase is misconfigured.
 
 ## images.ts
 
