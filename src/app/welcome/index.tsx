@@ -1,7 +1,7 @@
 import type { ImageContentPosition } from 'expo-image';
 import { Photo } from '@/components/ui/Photo';
 import { LinearGradient } from 'expo-linear-gradient';
-import { router } from 'expo-router';
+import { Redirect, router } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect, useRef, useState } from 'react';
 import {
@@ -22,6 +22,7 @@ import { Ornament } from '@/components/ui/Ornament';
 import { PressableScale } from '@/components/ui/PressableScale';
 import { Text } from '@/components/ui/Text';
 import { BRAND } from '@/constants/brand';
+import { usesDirectRoleEntry } from '@/constants/env';
 import { photo, type PhotoKey } from '@/constants/images';
 import { colors, gradients, themed } from '@/constants/theme';
 import { useT } from '@/i18n';
@@ -85,6 +86,8 @@ export default function WelcomeCarousel() {
   };
 
   const slide = SLIDES[index];
+
+  if (usesDirectRoleEntry()) return <Redirect href="/welcome/role" />;
 
   return (
     <View style={styles.root}>

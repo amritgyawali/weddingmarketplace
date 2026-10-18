@@ -115,7 +115,11 @@ Create a status page at `status.vivah.com.np` with the API and Web monitors, and
 
 ## 8. Android release (Google Play)
 
-1. EAS → project → Environment variables → **production**: add every `EXPO_PUBLIC_*` value from §3 (including `EXPO_PUBLIC_BACKEND=supabase`). The `production` build profile reads them (`eas.json` → `"environment": "production"`); without them the build falls back to the demo backend.
+The owner-requested October 2026 `production` profile produces a **local demo AAB** with direct user-type selection, mock data and sandbox payments. Its explicit build-profile values override EAS environment values. Super admin opens only the on-device demo workspace. For that edition, upload the AAB to internal testing and describe app access as “tap a user type; no phone number or code required.” Screenshots from `scripts/capture-play-store.cjs` are production Expo web renders at phone dimensions, not native Android captures.
+
+For a **live marketplace** release, complete the following steps:
+
+1. Replace the explicit mock-backend/sandbox/direct-entry values in the release build profile with `EXPO_PUBLIC_BACKEND=supabase`, the intended payment mode, and `EXPO_PUBLIC_ROLE_ENTRY=credentials`. EAS → project → Environment variables → **production**: add every `EXPO_PUBLIC_*` value from §3. Verify the resulting build configuration before building; Supabase role access always requires authentication.
 2. Build: `npx eas-cli@latest build -p android --profile production` (an `.aab`; the version code counts up by itself).
 3. Play Console → Create app → fill the store listing. Use:
    - Privacy policy: `https://vivah.com.np/legal/privacy`

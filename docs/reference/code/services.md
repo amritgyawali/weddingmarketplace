@@ -8,7 +8,7 @@ Every exported symbol in `src/services/`, file by file. The guide that explains 
 
 - [`api.ts`](#apits) (6 exports) · Data-access layer. Every screen reads through these async functions (via React Query), so replacing the mock data with a real backend only …
 - [`assistant.ts`](#assistantts) (4 exports) · Wedika — on-device wedding assistant. It resolves intent + city from the user's message and answers with real listings from the catalogue. …
-- [`auth.ts`](#authts) (5 exports)
+- [`auth.ts`](#authts) (6 exports)
 - [`content.ts`](#contentts) (21 exports) · App content edited by a super admin, laid over the bundled catalogue.
 - [`customerPlanning.ts`](#customerplanningts) (5 exports)
 - [`documents.ts`](#documentsts) (8 exports) · Printable HTML documents (quotation, receipt, contract, guest list, seating, run sheet).
@@ -154,9 +154,19 @@ Simulates network + "thinking" latency proportional to answer length.
 
 Source: [src/services/auth.ts](../../../src/services/auth.ts)
 
+### `enterDemoRole`
+
+*function* · [src/services/auth.ts:9](../../../src/services/auth.ts#L9)
+
+```ts
+enterDemoRole(role: UserRole | 'super_admin'): string | null
+```
+
+Opens a fixed local demo account from the role picker; never bypasses live authentication. Returns an error on refusal.
+
 ### `completeLogin`
 
-*function* · [src/services/auth.ts:11](../../../src/services/auth.ts#L11)
+*function* · [src/services/auth.ts:34](../../../src/services/auth.ts#L34)
 
 ```ts
 completeLogin(account: Account)
@@ -167,7 +177,7 @@ route guards in the root layout, which moves the user into their role's app.
 
 ### `onAccountCreated`
 
-*function* · [src/services/auth.ts:29](../../../src/services/auth.ts#L29)
+*function* · [src/services/auth.ts:52](../../../src/services/auth.ts#L52)
 
 ```ts
 onAccountCreated(account: Account)
@@ -177,7 +187,7 @@ Side effects for a brand-new account before it signs in.
 
 ### `impersonate`
 
-*function* · [src/services/auth.ts:38](../../../src/services/auth.ts#L38)
+*function* · [src/services/auth.ts:61](../../../src/services/auth.ts#L61)
 
 ```ts
 impersonate(account: Account)
@@ -187,7 +197,7 @@ Super admin: opens the app as another user, with a bar to come back.
 
 ### `endImpersonation`
 
-*function* · [src/services/auth.ts:48](../../../src/services/auth.ts#L48)
+*function* · [src/services/auth.ts:71](../../../src/services/auth.ts#L71)
 
 ```ts
 endImpersonation()
@@ -197,7 +207,7 @@ Ends "Sign in as" and returns to the super admin's own account.
 
 ### `logout`
 
-*function* · [src/services/auth.ts:56](../../../src/services/auth.ts#L56)
+*function* · [src/services/auth.ts:79](../../../src/services/auth.ts#L79)
 
 ```ts
 logout()

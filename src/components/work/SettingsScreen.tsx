@@ -13,6 +13,7 @@ import { toast, toastError } from '@/components/ui/Toast';
 import { AppearanceHint, AppearancePicker } from '@/components/ui/AppearancePicker';
 import { LanguageSwitch } from '@/components/ui/LanguageSwitch';
 import { BRAND } from '@/constants/brand';
+import { usesDirectRoleEntry } from '@/constants/env';
 import { useFeatures } from '@/hooks/useFeatures';
 import { usePrefs } from '@/i18n';
 import { logout } from '@/services/auth';
@@ -220,7 +221,7 @@ export function SettingsScreen() {
         <SectionTitle title="Your data" />
         <Card style={{ gap: 10 }}>
           <KButton label="Download my data" icon="download-outline" variant="secondary" loading={busy === 'export'} onPress={exportData} />
-          <KButton label="Log out" icon="log-out-outline" variant="secondary" onPress={() => confirm('Log out?', live ? 'You can sign back in with a code sent to your email.' : 'You can sign back in with your mobile number.', 'Log out', logout)} />
+          <KButton label="Log out" icon="log-out-outline" variant="secondary" onPress={() => confirm('Log out?', live ? 'You can sign back in with a code sent to your email.' : usesDirectRoleEntry() ? 'Tap your user type to open your workspace again.' : 'You can sign back in with your mobile number.', 'Log out', logout)} />
           <KButton
             label="Delete my account"
             icon="trash-outline"
