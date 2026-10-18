@@ -33,7 +33,7 @@ async function signOut(page, route) {
 
 (async () => {
   await fs.mkdir(path.join(output, 'screenshots'), { recursive: true });
-  const browser = await chromium.launch({ headless: true });
+  let browser;
   try {
     const roles = [
       ['Couple', 'customer', 'acc_customer_demo', '/', '/settings', '02-couple-home'],
@@ -43,6 +43,7 @@ async function signOut(page, route) {
       ['Super admin', 'platform', 'acc_platform_admin', '/platform/admin', '/platform/settings', '08-super-admin'],
     ];
     for (const [label, role, accountId, route, settings, file] of roles) {
+      browser = await chromium.launch({ headless: true });
       const context = await browser.newContext({ viewport: { width: 360, height: 640 }, deviceScaleFactor: 3, isMobile: true, hasTouch: true });
       const page = await context.newPage();
       page.setDefaultTimeout(60000);
@@ -54,6 +55,9 @@ async function signOut(page, route) {
       await page.getByRole('button', { name: `Continue as ${label}`, exact: true }).click();
       await page.waitForFunction((id) => JSON.parse(localStorage.getItem('vivah-session'))?.state.session?.accountId === id, accountId);
       await page.waitForURL((url) => route === '/' ? !url.pathname.startsWith('/welcome') : url.pathname.startsWith(route));
+      if (role === 'customer') {
+        await page.getByText('Skip tour', { exact: true }).click();
+      }
       await snap(page, file);
       assert.deepEqual(await session(page), { accountId, role });
       await page.reload();
@@ -96,11 +100,12 @@ async function signOut(page, route) {
       await page.waitForFunction((id) => JSON.parse(localStorage.getItem('vivah-session'))?.state.session?.accountId === id, accountId);
       results.push(`PASS ${label}: logout, hidden login/setup deep links, sign in again`);
       await context.close();
+      await browser.close();
     }
     assert.deepEqual(errors, [], 'No browser runtime errors');
     results.push('PASS no browser runtime errors');
   } finally {
-    await browser.close();
+    await browser?.close();
     await fs.writeFile(path.join(output, 'browser-validation.json'), JSON.stringify({ source: 'Expo web at phone dimensions; not a native device test', screenshots: '1080x1920 PNG', results, errors }, null, 2));
     console.log(results.join('\n'));
     if (errors.length) console.error(errors.join('\n'));
