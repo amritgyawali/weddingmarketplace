@@ -123,8 +123,8 @@ useBugReporter.subscribe((s) => setDeviceBugInbox(s.inbox));
 
 /** Shaking is the developer menu's gesture in Expo Go and development builds, so the reporter only listens to it in installed builds. */
 export const shakeToReportWorks = () => Platform.OS !== 'web' && !__DEV__;
-/** Phone screenshots can be noticed on iOS and Android, not in a browser. */
-export const screenshotToReportWorks = () => Platform.OS !== 'web';
+/** Detect screenshots on iOS or Android 14+, without broad photo-library access. */
+export const screenshotToReportWorks = () => Platform.OS === 'ios' || (Platform.OS === 'android' && Number(Platform.Version) >= 34);
 /** Is the floating bug button showing on this device? */
 export const bugButtonOn = (button: boolean | undefined) => button ?? devInboxOffered();
 
