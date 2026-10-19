@@ -184,7 +184,7 @@ Shaking is the developer menu's gesture in Expo Go and development builds, so th
 screenshotToReportWorks()
 ```
 
-Phone screenshots can be noticed on iOS and Android, not in a browser.
+Detect screenshots on iOS or Android 14+, without broad photo-library access.
 
 ### `bugButtonOn`
 
