@@ -115,6 +115,8 @@ Create a status page at `status.vivah.com.np` with the API and Web monitors, and
 
 ## 8. Android release (Google Play)
 
+Photos and videos are selected through the system picker. `app.json` blocks `READ_MEDIA_IMAGES`, `READ_MEDIA_VIDEO` and `READ_EXTERNAL_STORAGE` inherited from native libraries. Confirm their absence in the final bundle's merged manifest. If Play Console flags an older upload, replace it with the rebuilt bundle with a higher version code and remove superseded bundles from releases being submitted. This app's selected-media uploads do not require a broad photo/video permission declaration.
+
 The owner-requested October 2026 `production` profile produces a **local demo AAB** with direct user-type selection, mock data and sandbox payments. Its explicit build-profile values override EAS environment values. Super admin opens only the on-device demo workspace. For that edition, upload the AAB to internal testing and describe app access as “tap a user type; no phone number or code required.” Screenshots from `scripts/capture-play-store.cjs` are production Expo web renders at phone dimensions, not native Android captures.
 
 For a **live marketplace** release, complete the following steps:
