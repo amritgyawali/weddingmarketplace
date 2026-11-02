@@ -298,17 +298,17 @@ Network marks in the social hub. Small icons and hairlines only, never fills.
 
 ### `gradients`
 
-*const* · [src/constants/theme.ts:290](../../../src/constants/theme.ts#L290)
+*const* · [src/constants/theme.ts:291](../../../src/constants/theme.ts#L291)
 
 ```ts
 gradients= buildGradients()
 ```
 
-_No JSDoc yet._
+Gradient stops for scrims over photos; rebuilt in place when the colour scheme changes.
 
 ### `fonts`
 
-*const* · [src/constants/theme.ts:300](../../../src/constants/theme.ts#L300)
+*const* · [src/constants/theme.ts:301](../../../src/constants/theme.ts#L301)
 
 ```ts
 fonts= { regular: 'Mukta_400Regular', medium: 'Mukta_500Medium', semibold: 'Mukta_600SemiBold', …
@@ -322,47 +322,47 @@ titles on the couple app).
 
 ### `serif`
 
-*const* · [src/constants/theme.ts:308](../../../src/constants/theme.ts#L308)
+*const* · [src/constants/theme.ts:310](../../../src/constants/theme.ts#L310)
 
 ```ts
 serif= { regular: 'Martel_400Regular', medium: 'Martel_600SemiBold', semibold: 'Martel_600SemiBo…
 ```
 
-_No JSDoc yet._
+Martel font names by weight, for display lines only (titles, couple names, headline numbers).
 
 ### `FontWeight`
 
-*type* · [src/constants/theme.ts:316](../../../src/constants/theme.ts#L316)
+*type* · [src/constants/theme.ts:319](../../../src/constants/theme.ts#L319)
 
 ```ts
 type FontWeight = keyof typeof fonts
 ```
 
-_No JSDoc yet._
+A weight name that exists in both the Mukta (`fonts`) and Martel (`serif`) tables.
 
 ### `spacing`
 
-*const* · [src/constants/theme.ts:318](../../../src/constants/theme.ts#L318)
+*const* · [src/constants/theme.ts:322](../../../src/constants/theme.ts#L322)
 
 ```ts
 spacing= { xxs: 2, xs: 4, sm: 8, md: 12, lg: 16, xl: 20, xxl: 24, xxxl: 32, } as const
 ```
 
-_No JSDoc yet._
+Spacing scale in pixels; use these instead of numbers in styles.
 
 ### `radius`
 
-*const* · [src/constants/theme.ts:329](../../../src/constants/theme.ts#L329)
+*const* · [src/constants/theme.ts:334](../../../src/constants/theme.ts#L334)
 
 ```ts
 radius= { xs: 3, sm: 6, md: 8, lg: 10, xl: 12, pill: 999, } as const
 ```
 
-_No JSDoc yet._
+Corner radii in pixels (cards 10, buttons 8, chips 4 to 6, `pill` for fully round).
 
 ### `GUTTER`
 
-*const* · [src/constants/theme.ts:339](../../../src/constants/theme.ts#L339)
+*const* · [src/constants/theme.ts:344](../../../src/constants/theme.ts#L344)
 
 ```ts
 GUTTER= 16
@@ -372,7 +372,7 @@ Page gutter.
 
 ### `shadow`
 
-*function* · [src/constants/theme.ts:347](../../../src/constants/theme.ts#L347)
+*function* · [src/constants/theme.ts:352](../../../src/constants/theme.ts#L352)
 
 ```ts
 shadow(elevation: number, opacity: number, radiusPx: number, offsetY: number, color = '#251B18'): ViewStyle
@@ -382,7 +382,7 @@ Drop shadow for something that floats: elevation on Android, `boxShadow` on the 
 
 ### `shadows`
 
-*const* · [src/constants/theme.ts:366](../../../src/constants/theme.ts#L366)
+*const* · [src/constants/theme.ts:371](../../../src/constants/theme.ts#L371)
 
 ```ts
 shadows= { … }
@@ -392,17 +392,17 @@ Shadows are reserved for things that genuinely float (sheets, toasts).
 
 ### `type`
 
-*const* · [src/constants/theme.ts:376](../../../src/constants/theme.ts#L376)
+*const* · [src/constants/theme.ts:382](../../../src/constants/theme.ts#L382)
 
 ```ts
 type= { display: { fontFamily: serif.bold, fontSize: 30, lineHeight: 40 }, title: { fontFamily:…
 ```
 
-_No JSDoc yet._
+Text styles (font, size, line height) for display, title, section, heading, body and small text.
 
 ### `tabular`
 
-*const* · [src/constants/theme.ts:388](../../../src/constants/theme.ts#L388)
+*const* · [src/constants/theme.ts:394](../../../src/constants/theme.ts#L394)
 
 ```ts
 tabular: TextStyle
@@ -412,7 +412,7 @@ Figures that line up in columns (money, counts, countdowns).
 
 ### `iconSize`
 
-*const* · [src/constants/theme.ts:391](../../../src/constants/theme.ts#L391)
+*const* · [src/constants/theme.ts:397](../../../src/constants/theme.ts#L397)
 
 ```ts
 iconSize= { xs: 14, sm: 16, md: 20, lg: 24, xl: 28 } as const
@@ -422,7 +422,7 @@ Icon sizes: snap every Ionicon to one of these.
 
 ### `motion`
 
-*const* · [src/constants/theme.ts:398](../../../src/constants/theme.ts#L398)
+*const* · [src/constants/theme.ts:404](../../../src/constants/theme.ts#L404)
 
 ```ts
 motion= { fast: 150, base: 240, slow: 360, stagger: 45 } as const
@@ -434,17 +434,17 @@ for reduced motion.
 
 ### `hitSlop`
 
-*const* · [src/constants/theme.ts:400](../../../src/constants/theme.ts#L400)
+*const* · [src/constants/theme.ts:407](../../../src/constants/theme.ts#L407)
 
 ```ts
 hitSlop= { top: 10, bottom: 10, left: 10, right: 10 }
 ```
 
-_No JSDoc yet._
+Extra 10 px of touch area around small tap targets.
 
 ### `inputFont`
 
-*function* · [src/constants/theme.ts:409](../../../src/constants/theme.ts#L409)
+*function* · [src/constants/theme.ts:416](../../../src/constants/theme.ts#L416)
 
 ```ts
 inputFont(weight: '400' | '500' | '600' | '700' = '400'): TextStyle
@@ -458,7 +458,7 @@ text. Put it after any `fontFamily` in an input's style array.
 
 ### `inputReset`
 
-*const* · [src/constants/theme.ts:416](../../../src/constants/theme.ts#L416)
+*const* · [src/constants/theme.ts:423](../../../src/constants/theme.ts#L423)
 
 ```ts
 inputReset: TextStyle

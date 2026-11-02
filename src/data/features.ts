@@ -14,6 +14,7 @@
  */
 import type { UserRole } from '@/types/platform';
 
+/** One super-admin feature switch: id, label, app (role), group and optional hint. */
 export interface FeatureDef {
   id: string;
   label: string;
@@ -23,6 +24,7 @@ export interface FeatureDef {
   hint?: string;
 }
 
+/** Catalogue of fixed screens and surfaces a super admin can switch on or off. */
 export const FEATURES: FeatureDef[] = [
   // Couple app
   { id: 'tab.customer.venues', label: 'Venues tab', role: 'customer', group: 'Tabs' },
@@ -98,12 +100,17 @@ export const FEATURES: FeatureDef[] = [
   { id: 'app.bug_report', label: 'Shake to report a bug', role: 'all', group: 'Content', hint: 'Everyone, on every screen: a phone screenshot, three fingers held down, the bug button or a shake sends a screenshot and a description to Super admin → Bug reports' },
 ];
 
+/** `FEATURES` keyed by feature id. */
 export const FEATURE_BY_ID: Record<string, FeatureDef> = Object.fromEntries(FEATURES.map((f) => [f.id, f]));
 
+/** Feature id of a toolkit tool (`tool:<ToolId>`). */
 export const toolFeature = (toolId: string) => `tool:${toolId}`;
+/** Feature id of a marketplace service (`service:<serviceId>`). */
 export const serviceFeature = (serviceId: string) => `service:${serviceId}`;
+/** Feature id of a role app tab (`tab.<role>.<tab>`). */
 export const tabFeature = (role: UserRole, tab: string) => `tab.${role}.${tab}`;
 
+/** One of the top features shown by default in a role app. */
 export interface TopFeature {
   /**
    * The switch behind it: a feature id, `tool:<ToolId>`, or `core.<role>.<name>`

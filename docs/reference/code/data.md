@@ -718,9 +718,9 @@ Source: [src/data/events.ts](../../../src/data/events.ts)
 
 ### `EventTypeDef`
 
-*interface* · [src/data/events.ts:4](../../../src/data/events.ts#L4)
+*interface* · [src/data/events.ts:5](../../../src/data/events.ts#L5)
 
-_No JSDoc yet._
+One function (event type) a celebration can include: label, icon, start time, guest share, suggested services and run sheet.
 
 | Member | Type | Notes |
 |---|---|---|
@@ -735,37 +735,37 @@ _No JSDoc yet._
 
 ### `EVENT_TYPES`
 
-*const* · [src/data/events.ts:20](../../../src/data/events.ts#L20)
+*const* · [src/data/events.ts:22](../../../src/data/events.ts#L22)
 
 ```ts
 EVENT_TYPES: EventTypeDef[]
 ```
 
-_No JSDoc yet._
+Every function the planner offers (Wedding, Reception, Mehendi, Haldi, Pasni and so on).
 
 ### `EVENT_TYPE_BY_ID`
 
-*const* · [src/data/events.ts:243](../../../src/data/events.ts#L243)
+*const* · [src/data/events.ts:246](../../../src/data/events.ts#L246)
 
 ```ts
 EVENT_TYPE_BY_ID= Object.fromEntries(EVENT_TYPES.map((e) => [e.id, e])) as Record<EventType, EventTypeDef>
 ```
 
-_No JSDoc yet._
+`EVENT_TYPES` keyed by event type id.
 
 ### `eventLabel`
 
-*function* · [src/data/events.ts:244](../../../src/data/events.ts#L244)
+*function* · [src/data/events.ts:248](../../../src/data/events.ts#L248)
 
 ```ts
 eventLabel(t: EventType)
 ```
 
-_No JSDoc yet._
+Display label for an event type; falls back to the raw id.
 
 ### `PLAN_STARTERS`
 
-*const* · [src/data/events.ts:247](../../../src/data/events.ts#L247)
+*const* · [src/data/events.ts:251](../../../src/data/events.ts#L251)
 
 ```ts
 PLAN_STARTERS: EventType[]
@@ -775,37 +775,37 @@ What couples usually pick in step 1 of "Plan my wedding".
 
 ### `GUEST_BANDS`
 
-*const* · [src/data/events.ts:249](../../../src/data/events.ts#L249)
+*const* · [src/data/events.ts:254](../../../src/data/events.ts#L254)
 
 ```ts
 GUEST_BANDS= [ { id: '<100', label: 'Under 100', value: 80 }, { id: '100-300', label: '100 – 300', val…
 ```
 
-_No JSDoc yet._
+Guest-count ranges offered in the plan wizard, each with a representative head count.
 
 ### `GuestBand`
 
-*type* · [src/data/events.ts:257](../../../src/data/events.ts#L257)
+*type* · [src/data/events.ts:263](../../../src/data/events.ts#L263)
 
 ```ts
 type GuestBand = (typeof GUEST_BANDS)[number]['id']
 ```
 
-_No JSDoc yet._
+Id of one `GUEST_BANDS` range.
 
 ### `bandFor`
 
-*function* · [src/data/events.ts:258](../../../src/data/events.ts#L258)
+*function* · [src/data/events.ts:265](../../../src/data/events.ts#L265)
 
 ```ts
 bandFor(guests: number): GuestBand
 ```
 
-_No JSDoc yet._
+Maps a guest count to its `GUEST_BANDS` range id.
 
 ### `BS_MONTHS`
 
-*const* · [src/data/events.ts:262](../../../src/data/events.ts#L262)
+*const* · [src/data/events.ts:269](../../../src/data/events.ts#L269)
 
 ```ts
 BS_MONTHS= [ … 12 items ]
@@ -815,7 +815,7 @@ Nepali (Bikram Sambat) month names, for display alongside AD dates.
 
 ### `bsMonthLabel`
 
-*function* · [src/data/events.ts:265](../../../src/data/events.ts#L265)
+*function* · [src/data/events.ts:272](../../../src/data/events.ts#L272)
 
 ```ts
 bsMonthLabel(iso: string): string
@@ -825,7 +825,7 @@ BS month and year for an AD date, from the official calendar table ("Mangsir 208
 
 ### `isPeakSeason`
 
-*function* · [src/data/events.ts:276](../../../src/data/events.ts#L276)
+*function* · [src/data/events.ts:283](../../../src/data/events.ts#L283)
 
 ```ts
 isPeakSeason(iso: string)
@@ -852,9 +852,9 @@ Tools are switched by `tool:<ToolId>` and marketplace services by
 
 ### `FeatureDef`
 
-*interface* · [src/data/features.ts:17](../../../src/data/features.ts#L17)
+*interface* · [src/data/features.ts:18](../../../src/data/features.ts#L18)
 
-_No JSDoc yet._
+One super-admin feature switch: id, label, app (role), group and optional hint.
 
 | Member | Type | Notes |
 |---|---|---|
@@ -866,59 +866,59 @@ _No JSDoc yet._
 
 ### `FEATURES`
 
-*const* · [src/data/features.ts:26](../../../src/data/features.ts#L26)
+*const* · [src/data/features.ts:28](../../../src/data/features.ts#L28)
 
 ```ts
 FEATURES: FeatureDef[]
 ```
 
-_No JSDoc yet._
+Catalogue of fixed screens and surfaces a super admin can switch on or off.
 
 ### `FEATURE_BY_ID`
 
-*const* · [src/data/features.ts:101](../../../src/data/features.ts#L101)
+*const* · [src/data/features.ts:104](../../../src/data/features.ts#L104)
 
 ```ts
 FEATURE_BY_ID: Record<string, FeatureDef>
 ```
 
-_No JSDoc yet._
+`FEATURES` keyed by feature id.
 
 ### `toolFeature`
 
-*function* · [src/data/features.ts:103](../../../src/data/features.ts#L103)
+*function* · [src/data/features.ts:107](../../../src/data/features.ts#L107)
 
 ```ts
 toolFeature(toolId: string)
 ```
 
-_No JSDoc yet._
+Feature id of a toolkit tool (`tool:<ToolId>`).
 
 ### `serviceFeature`
 
-*function* · [src/data/features.ts:104](../../../src/data/features.ts#L104)
+*function* · [src/data/features.ts:109](../../../src/data/features.ts#L109)
 
 ```ts
 serviceFeature(serviceId: string)
 ```
 
-_No JSDoc yet._
+Feature id of a marketplace service (`service:<serviceId>`).
 
 ### `tabFeature`
 
-*function* · [src/data/features.ts:105](../../../src/data/features.ts#L105)
+*function* · [src/data/features.ts:111](../../../src/data/features.ts#L111)
 
 ```ts
 tabFeature(role: UserRole, tab: string)
 ```
 
-_No JSDoc yet._
+Feature id of a role app tab (`tab.<role>.<tab>`).
 
 ### `TopFeature`
 
-*interface* · [src/data/features.ts:107](../../../src/data/features.ts#L107)
+*interface* · [src/data/features.ts:114](../../../src/data/features.ts#L114)
 
-_No JSDoc yet._
+One of the top features shown by default in a role app.
 
 | Member | Type | Notes |
 |---|---|---|
@@ -927,7 +927,7 @@ _No JSDoc yet._
 
 ### `TOP_FEATURES`
 
-*const* · [src/data/features.ts:123](../../../src/data/features.ts#L123)
+*const* · [src/data/features.ts:130](../../../src/data/features.ts#L130)
 
 ```ts
 TOP_FEATURES: Record<UserRole, TopFeature[]>
@@ -940,7 +940,7 @@ are on by default; every other tool is an extra.
 
 ### `TRADE_TOOLS`
 
-*const* · [src/data/features.ts:215](../../../src/data/features.ts#L215)
+*const* · [src/data/features.ts:222](../../../src/data/features.ts#L222)
 
 ```ts
 TRADE_TOOLS= [ … 9 items ]
@@ -950,7 +950,7 @@ The one trade tool each business gets by default ("core.vendor.trade"); a busine
 
 ### `CRAFT_TOOLS`
 
-*const* · [src/data/features.ts:217](../../../src/data/features.ts#L217)
+*const* · [src/data/features.ts:224](../../../src/data/features.ts#L224)
 
 ```ts
 CRAFT_TOOLS= ['freelancer.backup', 'freelancer.kit', 'freelancer.setlist', 'freelancer.vehicle']
@@ -960,7 +960,7 @@ The kit tool each craft gets by default ("core.freelancer.craftkit"); crew see o
 
 ### `BASIC_FEATURES`
 
-*const* · [src/data/features.ts:223](../../../src/data/features.ts#L223)
+*const* · [src/data/features.ts:230](../../../src/data/features.ts#L230)
 
 ```ts
 BASIC_FEATURES= new Set(['couple.tour'])
@@ -971,7 +971,7 @@ not counted in the top 20. The first-run tour only explains the app.
 
 ### `EXTRA_FEATURES`
 
-*const* · [src/data/features.ts:226](../../../src/data/features.ts#L226)
+*const* · [src/data/features.ts:233](../../../src/data/features.ts#L233)
 
 ```ts
 EXTRA_FEATURES= new Set([ 'home.collections', 'home.makeup', 'home.real_weddings', 'couple.celebrate', 'c…
@@ -981,7 +981,7 @@ Fixed surfaces that start hidden: extras a super admin can switch on.
 
 ### `featureDefault`
 
-*function* · [src/data/features.ts:256](../../../src/data/features.ts#L256)
+*function* · [src/data/features.ts:263](../../../src/data/features.ts#L263)
 
 ```ts
 featureDefault(id: string)
@@ -991,7 +991,7 @@ On or off before a super admin touches it: tools only if they are top features, 
 
 ### `featureOn`
 
-*function* · [src/data/features.ts:259](../../../src/data/features.ts#L259)
+*function* · [src/data/features.ts:266](../../../src/data/features.ts#L266)
 
 ```ts
 featureOn(flags: Record<string, boolean> | undefined, id: string)
@@ -1001,7 +1001,7 @@ Is the feature on? A missing id takes its default.
 
 ### `FEATURE_ROUTES`
 
-*const* · [src/data/features.ts:266](../../../src/data/features.ts#L266)
+*const* · [src/data/features.ts:273](../../../src/data/features.ts#L273)
 
 ```ts
 FEATURE_ROUTES: Record<string, string[]>
@@ -1013,7 +1013,7 @@ old link or notification can't open them. `*` matches one path segment.
 
 ### `featureForPath`
 
-*function* · [src/data/features.ts:307](../../../src/data/features.ts#L307)
+*function* · [src/data/features.ts:314](../../../src/data/features.ts#L314)
 
 ```ts
 featureForPath(path: string): string | undefined
@@ -1023,7 +1023,7 @@ The feature a path belongs to (`/contract/c1` → `couple.contracts`), if any.
 
 ### `FeatureLink`
 
-*type* · [src/data/features.ts:313](../../../src/data/features.ts#L313)
+*type* · [src/data/features.ts:320](../../../src/data/features.ts#L320)
 
 ```ts
 type FeatureLink = string | { pathname: string; params?: Record<string, unknown> }
@@ -1033,7 +1033,7 @@ A link as expo-router takes it: a path, or a pathname with params.
 
 ### `linkPath`
 
-*function* · [src/data/features.ts:316](../../../src/data/features.ts#L316)
+*function* · [src/data/features.ts:323](../../../src/data/features.ts#L323)
 
 ```ts
 linkPath(href: FeatureLink)
@@ -1043,7 +1043,7 @@ The path a link opens, with `[param]` segments filled in.
 
 ### `linkOn`
 
-*function* · [src/data/features.ts:320](../../../src/data/features.ts#L320)
+*function* · [src/data/features.ts:327](../../../src/data/features.ts#L327)
 
 ```ts
 linkOn(flags: Record<string, boolean> | undefined, href: FeatureLink)

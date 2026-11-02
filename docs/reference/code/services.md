@@ -228,17 +228,17 @@ translation runtime follows the language.
 
 ### `CONTENT_KINDS`
 
-*const* · [src/services/content.ts:11](../../../src/services/content.ts#L11)
+*const* · [src/services/content.ts:12](../../../src/services/content.ts#L12)
 
 ```ts
 CONTENT_KINDS: ContentKind[]
 ```
 
-_No JSDoc yet._
+Kinds of catalogue record the content studio can edit.
 
 ### `emptyContent`
 
-*function* · [src/services/content.ts:14](../../../src/services/content.ts#L14)
+*function* · [src/services/content.ts:15](../../../src/services/content.ts#L15)
 
 ```ts
 emptyContent(): AppContent
@@ -248,7 +248,7 @@ Content with nothing changed.
 
 ### `EMPTY_CONTENT`
 
-*const* · [src/services/content.ts:17](../../../src/services/content.ts#L17)
+*const* · [src/services/content.ts:18](../../../src/services/content.ts#L18)
 
 ```ts
 EMPTY_CONTENT: AppContent
@@ -258,7 +258,7 @@ Shared, never mutated: the content of an install nobody has edited.
 
 ### `contentRuntime`
 
-*const* · [src/services/content.ts:20](../../../src/services/content.ts#L20)
+*const* · [src/services/content.ts:21](../../../src/services/content.ts#L21)
 
 ```ts
 contentRuntime: { content: AppContent }
@@ -268,27 +268,27 @@ Current content, kept in sync with the store for callers outside React.
 
 ### `entryKey`
 
-*function* · [src/services/content.ts:22](../../../src/services/content.ts#L22)
+*function* · [src/services/content.ts:24](../../../src/services/content.ts#L24)
 
 ```ts
 entryKey(kind: ContentKind, id: string)
 ```
 
-_No JSDoc yet._
+Key of a record edit in `AppContent.entries` (`<kind>:<id>`).
 
 ### `bannerSectionId`
 
-*function* · [src/services/content.ts:23](../../../src/services/content.ts#L23)
+*function* · [src/services/content.ts:26](../../../src/services/content.ts#L26)
 
 ```ts
 bannerSectionId(id: string)
 ```
 
-_No JSDoc yet._
+Home section id of a banner (`banner:<id>`).
 
 ### `LOCAL_IMAGE_SCHEME`
 
-*const* · [src/services/content.ts:26](../../../src/services/content.ts#L26)
+*const* · [src/services/content.ts:29](../../../src/services/content.ts#L29)
 
 ```ts
 LOCAL_IMAGE_SCHEME= 'vivah-file://'
@@ -298,37 +298,37 @@ Addresses of photos kept on this device (`backend/contentMedia.ts`).
 
 ### `MAX_TEXT`
 
-*const* · [src/services/content.ts:28](../../../src/services/content.ts#L28)
+*const* · [src/services/content.ts:32](../../../src/services/content.ts#L32)
 
 ```ts
 MAX_TEXT= 4000
 ```
 
-_No JSDoc yet._
+Longest text value, in characters, the content studio accepts.
 
 ### `MAX_LIST`
 
-*const* · [src/services/content.ts:29](../../../src/services/content.ts#L29)
+*const* · [src/services/content.ts:34](../../../src/services/content.ts#L34)
 
 ```ts
 MAX_LIST= 60
 ```
 
-_No JSDoc yet._
+Most items allowed in a list field of an edited record.
 
 ### `MAX_BANNERS`
 
-*const* · [src/services/content.ts:30](../../../src/services/content.ts#L30)
+*const* · [src/services/content.ts:36](../../../src/services/content.ts#L36)
 
 ```ts
 MAX_BANNERS= 12
 ```
 
-_No JSDoc yet._
+Most home banners the content studio keeps.
 
 ### `MAX_INLINE_IMAGE`
 
-*const* · [src/services/content.ts:32](../../../src/services/content.ts#L32)
+*const* · [src/services/content.ts:38](../../../src/services/content.ts#L38)
 
 ```ts
 MAX_INLINE_IMAGE= 400_000
@@ -338,7 +338,7 @@ Small images picked in a browser are kept inline; larger ones need a link.
 
 ### `imageAddress`
 
-*function* · [src/services/content.ts:41](../../../src/services/content.ts#L41)
+*function* · [src/services/content.ts:47](../../../src/services/content.ts#L47)
 
 ```ts
 imageAddress(input: unknown): string | null
@@ -349,7 +349,7 @@ or a small inline image. Returns it trimmed, or null when it is none of these.
 
 ### `patchList`
 
-*function* · [src/services/content.ts:83](../../../src/services/content.ts#L83)
+*function* · [src/services/content.ts:89](../../../src/services/content.ts#L89)
 
 ```ts
 patchList<T extends { id: string }>(kind: ContentKind, list: readonly T[], content: AppContent = contentRuntime.content): T[]
@@ -361,7 +361,7 @@ kind was edited. Hidden records stay in, so links to them still open.
 
 ### `visibleList`
 
-*function* · [src/services/content.ts:88](../../../src/services/content.ts#L88)
+*function* · [src/services/content.ts:94](../../../src/services/content.ts#L94)
 
 ```ts
 visibleList<T extends { id: string }>(kind: ContentKind, list: readonly T[], content: AppContent = contentRuntime.content): T[]
@@ -371,17 +371,17 @@ The edited list without the records a super admin hid: what lists and search sho
 
 ### `isHidden`
 
-*function* · [src/services/content.ts:92](../../../src/services/content.ts#L92)
+*function* · [src/services/content.ts:99](../../../src/services/content.ts#L99)
 
 ```ts
 isHidden(kind: ContentKind, id: string, content: AppContent = contentRuntime.content)
 ```
 
-_No JSDoc yet._
+True when the content studio hides this record from the app.
 
 ### `checkFields`
 
-*function* · [src/services/content.ts:100](../../../src/services/content.ts#L100)
+*function* · [src/services/content.ts:107](../../../src/services/content.ts#L107)
 
 ```ts
 checkFields(original: Record<string, unknown>, fields: Record<string, unknown>, imageFields: readonly string[] = [], okImage: (ref: string) => boolean = (ref) => !!imageAddress(ref)): { fields?: Record<string, unknown>; error?: string }
@@ -394,7 +394,7 @@ photo fields must pass `okImage`.
 
 ### `orderSections`
 
-*function* · [src/services/content.ts:152](../../../src/services/content.ts#L152)
+*function* · [src/services/content.ts:159](../../../src/services/content.ts#L159)
 
 ```ts
 orderSections(defaults: readonly string[], saved: readonly string[], banners: readonly ContentBanner[]): string[]
@@ -406,7 +406,7 @@ it follows by default, and a new banner goes to the top.
 
 ### `sectionTitle`
 
-*function* · [src/services/content.ts:166](../../../src/services/content.ts#L166)
+*function* · [src/services/content.ts:173](../../../src/services/content.ts#L173)
 
 ```ts
 sectionTitle(id: string, fallback: string, city: string, content: AppContent = contentRuntime.content): string
@@ -416,7 +416,7 @@ A section heading: the super admin's wording (with `{city}` filled in), else the
 
 ### `normalizeContent`
 
-*function* · [src/services/content.ts:206](../../../src/services/content.ts#L206)
+*function* · [src/services/content.ts:213](../../../src/services/content.ts#L213)
 
 ```ts
 normalizeContent(raw: unknown): AppContent
@@ -428,7 +428,7 @@ already clean comes back as the same object.
 
 ### `contentStats`
 
-*function* · [src/services/content.ts:238](../../../src/services/content.ts#L238)
+*function* · [src/services/content.ts:245](../../../src/services/content.ts#L245)
 
 ```ts
 contentStats(content: AppContent)
@@ -438,7 +438,7 @@ How much has been changed, for the console.
 
 ### `contentChangeCount`
 
-*function* · [src/services/content.ts:252](../../../src/services/content.ts#L252)
+*function* · [src/services/content.ts:259](../../../src/services/content.ts#L259)
 
 ```ts
 contentChangeCount(content: AppContent)

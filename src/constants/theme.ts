@@ -287,6 +287,7 @@ const buildGradients = () => ({
   photoCaption: ['rgba(37,14,18,0)', 'rgba(37,14,18,0.35)', 'rgba(37,14,18,0.86)'] as const,
 });
 
+/** Gradient stops for scrims over photos; rebuilt in place when the colour scheme changes. */
 export const gradients = buildGradients();
 onColorScheme(() => Object.assign(gradients, buildGradients()));
 
@@ -305,6 +306,7 @@ export const fonts = {
   extrabold: 'Mukta_800ExtraBold',
 } as const;
 
+/** Martel font names by weight, for display lines only (titles, couple names, headline numbers). */
 export const serif = {
   regular: 'Martel_400Regular',
   medium: 'Martel_600SemiBold',
@@ -313,8 +315,10 @@ export const serif = {
   extrabold: 'Martel_800ExtraBold',
 } as const;
 
+/** A weight name that exists in both the Mukta (`fonts`) and Martel (`serif`) tables. */
 export type FontWeight = keyof typeof fonts;
 
+/** Spacing scale in pixels; use these instead of numbers in styles. */
 export const spacing = {
   xxs: 2,
   xs: 4,
@@ -326,6 +330,7 @@ export const spacing = {
   xxxl: 32,
 } as const;
 
+/** Corner radii in pixels (cards 10, buttons 8, chips 4 to 6, `pill` for fully round). */
 export const radius = {
   xs: 3,
   sm: 6,
@@ -373,6 +378,7 @@ export const shadows = {
   tabBar: {} as ViewStyle,
 };
 
+/** Text styles (font, size, line height) for display, title, section, heading, body and small text. */
 export const type = {
   display: { fontFamily: serif.bold, fontSize: 30, lineHeight: 40 },
   title: { fontFamily: fonts.bold, fontSize: 22, lineHeight: 28 },
@@ -397,6 +403,7 @@ export const iconSize = { xs: 14, sm: 16, md: 20, lg: 24, xl: 28 } as const;
  */
 export const motion = { fast: 150, base: 240, slow: 360, stagger: 45 } as const;
 
+/** Extra 10 px of touch area around small tap targets. */
 export const hitSlop = { top: 10, bottom: 10, left: 10, right: 10 };
 
 /**

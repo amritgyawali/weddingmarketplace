@@ -4,7 +4,7 @@
 
 Exported symbols that have no JSDoc yet. The weekly documentation pass (see [the maintenance guide](../handbook/17-documentation-maintenance.md)) works through this list; whoever touches a file should document its exports too.
 
-**965 of 1644 exports documented (59%).** Files without a header comment: 370 of 482.
+**993 of 1644 exports documented (60%).** Files without a header comment: 370 of 482.
 
 | File | Undocumented exports |
 |---|---|
@@ -21,11 +21,7 @@ Exported symbols that have no JSDoc yet. The weekly documentation pass (see [the
 | [src/components/toolkit/platform/insight.tsx](../../src/components/toolkit/platform/insight.tsx) | `SlaMonitor`, `Workload`, `SourceFunnel`, `CashFlow`, `Scorecards`, `DemandHeatmap`, `CitySupply`, `Targets`, `RiskWatch` |
 | [src/components/toolkit/vendor/money.tsx](../../src/components/toolkit/vendor/money.tsx) | `EXPENSE_CATEGORIES`, `Expenses`, `ProfitLoss`, `TaxSummary`, `PriceCalculator`, `Vouchers`, `Referrals`, `Goals`, `Benchmark` |
 | [src/data/seed.ts](../../src/data/seed.ts) | `day`, `at`, `DEMO_VENUE`, `DEMO_STUDIO`, `DEMO_DECOR`, `DEMO_ACCOUNTS`, `buildSeedData`, `contractSections`, `DEMO_IMAGES` |
-| [src/constants/theme.ts](../../src/constants/theme.ts) | `gradients`, `serif`, `FontWeight`, `spacing`, `radius`, `type`, `hitSlop` |
-| [src/data/events.ts](../../src/data/events.ts) | `EventTypeDef`, `EVENT_TYPES`, `EVENT_TYPE_BY_ID`, `eventLabel`, `GUEST_BANDS`, `GuestBand`, `bandFor` |
-| [src/data/features.ts](../../src/data/features.ts) | `FeatureDef`, `FEATURES`, `FEATURE_BY_ID`, `toolFeature`, `serviceFeature`, `tabFeature`, `TopFeature` |
 | [src/data/occasions.ts](../../src/data/occasions.ts) | `BuiltInOccasionId`, `HonoureeKind`, `VocabKey`, `OccasionDef`, `BUILT_IN_OCCASIONS`, `DEFAULT_OCCASION_ID`, `builtInOccasions` |
-| [src/services/content.ts](../../src/services/content.ts) | `CONTENT_KINDS`, `entryKey`, `bannerSectionId`, `MAX_TEXT`, `MAX_LIST`, `MAX_BANNERS`, `isHidden` |
 | [src/services/exporters.ts](../../src/services/exporters.ts) | `shareText`, `CalendarItem`, `buildIcs`, `googleCalendarUrl`, `addToGoogleCalendar`, `toCsv`, `exportCsv` |
 | [src/backend/telemetryPayloads.ts](../../src/backend/telemetryPayloads.ts) | `Props`, `PosthogEvent`, `ErrorInfo`, `posthogEvent`, `Dsn`, `SentryContext` |
 | [src/components/kit/primitives.tsx](../../src/components/kit/primitives.tsx) | `IconName`, `KButton`, `StatusPill`, `ProgressBar`, `SectionTitle`, `Divider` |
