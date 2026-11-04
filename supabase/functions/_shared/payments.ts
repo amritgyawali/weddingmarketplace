@@ -13,6 +13,8 @@
  *           IDs 9711111111–9711111114, password Nepal@123, token 123456
  */
 
+import { safeEqual } from './http.ts';
+
 export type Gateway = 'khalti' | 'esewa';
 export type Outcome = 'COMPLETED' | 'PENDING' | 'FAILED' | 'CANCELLED' | 'EXPIRED';
 
@@ -172,7 +174,7 @@ export async function esewaDecode(data: string, secretKey: string): Promise<{ bo
     const body = JSON.parse(atob(data.replace(/-/g, '+').replace(/_/g, '/'))) as EsewaCallback;
     if (!body.signed_field_names || !body.signature) return { body, valid: false };
     const expected = await hmacBase64(esewaMessage(body as Record<string, unknown>, body.signed_field_names), secretKey);
-    return { body, valid: expected === body.signature };
+    return { body, valid: typeof body.signature === 'string' && safeEqual(expected, body.signature) };
   } catch {
     return null;
   }

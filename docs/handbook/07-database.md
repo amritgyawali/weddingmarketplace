@@ -52,7 +52,7 @@ Rules: R-DB-1 … R-DB-5, R-BIZ-10, R-PROD-10 in [00-rules-and-regulations.md](0
 | Command | Script | Proves |
 |---|---|---|
 | `npm run db:check` | `db-check.mjs` | Every migration applies on a fresh Postgres; RLS is on for every table |
-| `npm run db:test` | `core-loop.mjs`, `accounts.mjs`, `payments.mjs`, `launch.mjs` | The core loop, sign-up, media, files, notifications, jobs, payments and launch features, run **as each role with RLS on**; every invariant and every fixed defect has a check |
+| `npm run db:test` | `core-loop.mjs`, `accounts.mjs`, `payments.mjs`, `launch.mjs`, …, `security.mjs` (attacks as ordinary users and signed-out visitors, 0023) | The core loop, sign-up, media, files, notifications, jobs, payments and launch features, run **as each role with RLS on**; every invariant and every fixed defect has a check |
 | `npm run test:parity` | `parity.mjs` | App money (`src/services`) equals SQL money (0011) on `scripts/parity-fixtures.json` plus a few hundred generated cases |
 | `node scripts/db/local-api.mjs` | `local-api.mjs` | A local stand-in for Supabase's HTTP API on `http://localhost:54321` (email code always `123456`) for testing the Supabase build in a browser. Never expose it to the internet. |
 

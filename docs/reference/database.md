@@ -539,3 +539,47 @@ NOT DEPLOYED. Never apply without the owner's say-so (AGENTS.md §1).
 - **Tables created (2):** `support_messages`, `support_tickets`
 - **Functions (10):** `rpc_assign_support_ticket`, `rpc_my_support_tickets`, `rpc_open_support_ticket`, `rpc_rate_support_ticket`, `rpc_reply_support_ticket`, `rpc_set_support_ticket_status`, `rpc_update_my_profile`, `vivah_app_role`, `vivah_notify_support_desk`, `vivah_support_href`
 - **Policies:** 2 · **Indexes:** 3
+
+## 0023_security_hardening.sql
+
+Source: [supabase/migrations/0023_security_hardening.sql](../../supabase/migrations/0023_security_hardening.sql)
+
+```text
+0023 Security hardening (November 2026 audit).
+
+Every hole below was reproduced against the migrations with RLS on, as an
+ordinary signed-in user or as nobody, and each fix has a check in
+scripts/db/security.mjs (npm run db:test):
+
+  critical  staff could edit their own profile's staff_team and pick up
+            another team's permissions (e.g. provider.verify); any user could
+            grant themselves capabilities through caps_override
+  high      vendors could rewrite reviews about them (stars, text, status),
+            not just reply
+  high      freelancers could mark themselves VERIFIED and set their own
+            rating and reliability; vendors could set their own rating,
+            reliability, platform priority, featured and sponsored flags,
+            and mark their organisation verified
+  high      a chat member could move their membership row into any other
+            conversation (and read it), or change their member role
+  medium    any vendor team member (not just the owner) could change where
+            payouts go, with nothing in the audit log
+  medium    published wedding websites exposed their password hash
+  medium    anyone could read freelancers' exact coordinates and internal
+            reliability signals (no-shows, late arrivals, cancellations)
+  medium    anyone could add registry contributions to any item, with any
+            amount (negative too), a forged payment or a "thanked" date
+  low       operations_today, recompute_reliability and vivah_event_dates
+            were callable by anyone signed out
+  low       audit_row (security definer) had no fixed search_path
+
+The approach is additive: no table, column, policy name or RPC the app uses
+changes meaning. Writes the app makes through security definer RPCs and
+jobs are unaffected, because those run as the table owner, not as the
+anon/authenticated roles the guards check.
+```
+
+- **Functions (4):** `operations_today`, `vivah_audit_payout_details`, `vivah_guard_columns`, `vivah_guard_payout_details`
+- **Triggers (10):** `aa_guard_conversation_members`, `aa_guard_freelancers_signals`, `aa_guard_freelancers_verification`, `aa_guard_organizations_kind`, `aa_guard_organizations_payout`, `aa_guard_organizations_verification`, `aa_guard_profiles`, `aa_guard_providers_signals`, `aa_guard_reviews`, `audit_organizations_payout`
+- **Tables altered (1):** `registry_contributions`
+- **Policies:** 1 · **Indexes:** 0

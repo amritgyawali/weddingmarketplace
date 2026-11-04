@@ -2,7 +2,7 @@
 
 How Vivah protects money, accounts and personal data, and what every change must respect.
 
-Rules: R-SEC-1 … R-SEC-6, R-PER-4, R-DB-2 in [00-rules-and-regulations.md](00-rules-and-regulations.md). Background: [`docs/MASTER_PLAN.md`](../MASTER_PLAN.md) §11.
+Rules: R-SEC-1 … R-SEC-8, R-PER-4, R-DB-2 in [00-rules-and-regulations.md](00-rules-and-regulations.md). Background: [`docs/MASTER_PLAN.md`](../MASTER_PLAN.md) §11.
 
 ## 1. Threat model in one paragraph
 
@@ -23,7 +23,9 @@ The app is a public client: anyone can read its bundle and call the backend with
 | App routing | `Stack.Protected` guard per role (`src/app/_layout.tsx`); `staffScreen()` for staff screens |
 | Store actions | `staffOnly`, `staffDenied`, `actorCan` (`store/db/personas.ts`); validation inside the action |
 | Database | RLS on every table (0002, 0009); `has_permission()`, `has_capability()`, `can_manage_project()`; column grants; `quote_items_public` and `service_bookings_customer` views hide provider cost and margin from couples |
-| RPCs | `security definer`, `set search_path = public`, explicit permission checks, audit log |
+| Column guards | `vivah_guard_columns(mode, bypass, cols…)` BEFORE UPDATE triggers (0023): direct client updates can't touch verification, ratings, reliability, featured/sponsored flags, review stars and text, `staff_team`, `caps_override`, sign-in phone and email, or chat membership; payout and tax details are owner-only and audited (`organization.payout_details`). RPCs and jobs run as the owner and pass (R-SEC-7) |
+| Hidden columns | Column grants keep `wedding_websites.password_hash` and freelancers' exact location and reliability signals off the public API |
+| RPCs | `security definer`, `set search_path = public`, explicit permission checks, audit log; internal helpers revoked from `anon`/`authenticated` |
 | Staff sign-up | access code (stored hashed, `rpc_set_staff_access_code`) + admin approval (`rpc_decide_staff_request`) |
 | Super admin | `admin.full` only; impersonation (`impersonate`/`endImpersonation`) shows a bar and is audited |
 
@@ -57,13 +59,28 @@ Hiding a button is never security (R-PER-4).
 
 - `send-otp` is rate-limited per email and per IP (Upstash `LIMITS`), protecting inboxes and the free email quota.
 - Cloudflare Turnstile is planned for public forms on the web (RSVP, enquiry, sign-up); keys are in `.env.example`.
-- Web security headers ship in `public/_headers` (Cloudflare) and `vercel.json`: `X-Content-Type-Options`, `Referrer-Policy`, `X-Frame-Options: DENY`, `Permissions-Policy`.
+- Web security headers ship in `public/_headers` (Cloudflare) and `vercel.json`: `X-Content-Type-Options`, `Referrer-Policy`, `X-Frame-Options: DENY`, `Strict-Transport-Security`, `Permissions-Policy`, and a `Content-Security-Policy` limited to `base-uri`, `object-src`, `frame-ancestors` and `upgrade-insecure-requests` (no `script-src` yet: the Expo web bundle has not been tested under one, and the eSewa form post must keep working).
+- Edge Function answers carry `Cache-Control: no-store`, `X-Content-Type-Options: nosniff` and `Referrer-Policy: no-referrer` (`SECURITY_HEADERS` in `_shared/http.ts`); shared secrets and gateway signatures are compared in constant time without leaking their length (`safeEqual`).
+- Registry gifts from the public website: only to items of a published site, positive amounts, a name, and no payment, guest or "thanked" fields (0023).
+- Links from user data open only for `https`, `http`, `mailto`, `tel`, `sms` and `whatsapp` (`isSafeLink` in `utils/safeUrl.ts`, `openSafeLink` in `utils/links.ts`; on-device file links only where the caller allows them). Tested by `npm run test:security` (R-SEC-8).
+
+## 7a. Security audit, November 2026
+
+An audit ran the migrations in PGlite and tried each attack as an ordinary user or a signed-out visitor. What it found and fixed is listed in the header of `supabase/migrations/0023_security_hardening.sql`; each item has a check in `scripts/db/security.mjs` (part of `npm run db:test`) that fails on the schema before 0023. The checks also confirm the honest change next to each attack still works (a vendor can reply to a review, a freelancer can edit their headline, the owner can change the bank account, a guest can give a gift), and that every `security definer` function sets `search_path`.
+
+Known limits, left for later on purpose:
+
+- Rate limits fail open when Upstash is down (so sign-in keeps working) and key the IP on the first `X-Forwarded-For` entry; Supabase Auth's own OTP limits still apply.
+- `safeReturnTo`/`allowedReturn` accept any `exp://`/`exps://` address, for Expo Go development.
+- The on-device demo store trusts its own UI (AGENTS.md §10); it holds only the device owner's data.
 
 ## 8. Security review checklist for a pull request
 
 - [ ] No secret, token or personal data in code, logs, fixtures or screenshots.
 - [ ] New table: RLS on, policies per role, indexes; checks in `scripts/db`.
-- [ ] New RPC: definer + search_path + permission check + validation + audit.
+- [ ] New RPC: definer + search_path + permission check + validation + audit; internal helpers revoked from `public, anon, authenticated`.
+- [ ] New column that decides trust, money or permissions: guarded from direct client updates (R-SEC-7), with an attack check in `scripts/db/security.mjs`.
+- [ ] Links from user data open with `openSafeLink()` (R-SEC-8).
 - [ ] New action: validates input and permission itself.
 - [ ] Couples can't see cost/margin through the new surface.
 - [ ] Telemetry: nothing identifying added to payloads.

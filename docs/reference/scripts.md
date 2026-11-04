@@ -17,7 +17,7 @@ npm scripts and the Node scripts behind them. All run locally with no network un
 | `npm run check:personas` | `node scripts/check-personas.mjs` |
 | `npm run env:vercel` | `node scripts/env-vercel.mjs` |
 | `npm run db:check` | `node scripts/db/db-check.mjs` |
-| `npm run db:test` | `node scripts/db/core-loop.mjs && node scripts/db/accounts.mjs && node scripts/db/payments.mjs && node scripts/db/launch.mjs && node scripts/db/social.mjs && node scripts/db/bugs.mjs && node scripts/db/content.mjs && node scripts/db/support.mjs` |
+| `npm run db:test` | `node scripts/db/core-loop.mjs && node scripts/db/accounts.mjs && node scripts/db/payments.mjs && node scripts/db/launch.mjs && node scripts/db/social.mjs && node scripts/db/bugs.mjs && node scripts/db/content.mjs && node scripts/db/support.mjs && node scripts/db/security.mjs` |
 | `npm run test:parity` | `node scripts/db/parity.mjs` |
 | `npm run test:functions` | `node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/test-functions.mjs` |
 | `npm run env:functions` | `node scripts/env-functions.mjs` |
@@ -26,6 +26,7 @@ npm scripts and the Node scripts behind them. All run locally with no network un
 | `npm run test:customer-planning` | `node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/test-customer-planning.mjs` |
 | `npm run test:content` | `node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/test-content.mjs` |
 | `npm run test:features` | `node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/test-features.mjs` |
+| `npm run test:security` | `node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/test-security.mjs` |
 | `npm run test:insights` | `node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/test-insights.mjs` |
 | `npm run docs:generate` | `node scripts/docs/generate-reference.mjs` |
 | `npm run docs:check` | `node scripts/docs/generate-reference.mjs --check` |
@@ -182,6 +183,17 @@ comes from the milestone, duplicate callbacks record one payment, and money
 the milestone can no longer take is kept as REFUND_DUE for finance.
 
   npm run db:test   (runs this after accounts.mjs)
+
+### scripts/db/security.mjs
+
+Source: [scripts/db/security.mjs](../../scripts/db/security.mjs)
+
+Security checks (0023): ordinary users and signed-out visitors try to
+forge data or read what isn't theirs, against the migrations with RLS on.
+Each attack must be refused, and the legitimate change next to it must
+still work, so the hardening never breaks a real flow.
+
+  npm run db:test   (or: node scripts/db/security.mjs)
 
 ### scripts/db/social.mjs
 
@@ -384,6 +396,17 @@ Node 24+ strips the TypeScript.
 Source: [scripts/test-role-entry.mjs](../../scripts/test-role-entry.mjs)
 
 Verifies direct demo entry cannot be enabled for a Supabase build, including missing credentials.
+
+### scripts/test-security.mjs
+
+Source: [scripts/test-security.mjs](../../scripts/test-security.mjs)
+
+Checks the app's link guard (src/utils/safeUrl.ts): links typed by other
+people open only when they are web, email, phone, SMS or WhatsApp links,
+so `javascript:`, `data:` and app-launching links never run. Node 24+
+strips the TypeScript (22.18+ works too).
+
+  npm run test:security
 
 ### scripts/test-social.mjs
 

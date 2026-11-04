@@ -18,6 +18,7 @@ npm run test:parity     # money in src/services equals money in SQL
 npm run test:functions  # when you touch supabase/functions
 npm run test:telemetry  # when you touch src/backend/telemetry*
 npm run test:social     # when you touch the social hub
+npm run test:security   # when you touch links opened from user data (utils/safeUrl.ts)
 npm run test:customer-planning  # when you touch the checklist guide, related events or listing availability
 npm run test:features   # when you add a screen or tool (top-20 feature switches)
 npm run test:insights   # when you touch src/services/insights.ts (smart tools' rules)
@@ -38,6 +39,7 @@ npx expo start          # loads in Expo Go; press w for web
 | `test:parity` | `src/services` money = SQL money on fixtures + generated cases | Store actions |
 | `test:functions` | Edge Function shared logic and handlers with fake Supabase/Upstash/Cloudinary/Expo/Resend | Real gateways |
 | `test:telemetry` | Payload shapes; no contact details leak | Delivery |
+| `test:security` | The link guard: which schemes open, `javascript:`/`data:`/`intent:` and look-alike tricks refused | The database (that is `security.mjs` in `db:test`) |
 | `test:social` | Social hub rules: each network's post limits, reply windows, reading BS/AD dates, guests, budget and phone from messages, auto-replies, away hours, best times, hashtags, and the demo seed | The networks' live APIs |
 | `test:customer-planning` | The month-by-month checklist guide (`guideSections`), related functions per occasion, vendor package estimates, daily capacity and public listing availability | Screens |
 | `test:features` | Each app has exactly 20 top features, other surfaces start off, super admin overrides resolve, every `FEATURE_ROUTES` screen exists under `src/app` | That a feature works |

@@ -57,10 +57,11 @@ async function hmac(secret: string, message: string): Promise<Uint8Array> {
 /** HMAC-SHA256 of a message, as hex. */
 export const hmacHex = async (secret: string, message: string) => hex(await hmac(secret, message));
 
+/** Constant-time text comparison (same rule as safeEqual in http.ts). */
 const sameText = (a: string, b: string) => {
-  if (a.length !== b.length) return false;
-  let diff = 0;
-  for (let i = 0; i < a.length; i++) diff |= a.charCodeAt(i) ^ b.charCodeAt(i);
+  const n = Math.max(a.length, b.length);
+  let diff = a.length ^ b.length;
+  for (let i = 0; i < n; i++) diff |= (a.charCodeAt(i) || 0) ^ (b.charCodeAt(i) || 0);
   return diff === 0;
 };
 

@@ -397,4 +397,5 @@ export const POLISH_NE: Record<string, string> = {
   "No payouts to export yet. They appear after your first gig": "निर्यात गर्ने भुक्तानी अझै छैन। पहिलो कामपछि देखिन्छ",
   "Marked as sent. Track replies in Guests": "पठाइएको भनी चिनो लगाइयो। जवाफ पाहुनामा हेर्नुहोस्",
   "{0} done": "{0} सकियो",
+  "This link can’t be opened safely": "यो लिङ्क सुरक्षित रूपमा खोल्न सकिँदैन",
 };
