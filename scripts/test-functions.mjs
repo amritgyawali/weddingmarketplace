@@ -514,6 +514,15 @@ const metricsRun = await (await publishFn(post({ metrics: true }, { 'x-webhook-s
 ok('social-publish: the insights run records what each network reports', metricsRun.updated === 1 && metricNet.recorded[0]?.p_reach === 400 && metricNet.recorded[0]?.p_likes === 12 && metricNet.recorded[0]?.p_saves === null, JSON.stringify(metricNet.recorded));
 globalThis.fetch = prevFetch2;
 
+// ─── Shared HTTP helpers (security) ─────────────────────────────────────────────
+const httpLib = await load('_shared/http.ts');
+ok('safeEqual: equal secrets match', httpLib.safeEqual('hook-secret', 'hook-secret'));
+ok('safeEqual: a prefix of the secret does not match', !httpLib.safeEqual('hook', 'hook-secret') && !httpLib.safeEqual('hook-secret', 'hook'));
+ok('safeEqual: empty never matches a secret', !httpLib.safeEqual('', 'hook-secret'));
+ok('safeEqual: one changed character does not match', !httpLib.safeEqual('hook-secreT', 'hook-secret'));
+const answer = httpLib.json({ ok: true });
+ok('json answers are never cached and never type-sniffed', answer.headers.get('Cache-Control') === 'no-store' && answer.headers.get('X-Content-Type-Options') === 'nosniff');
+
 const failed = results.filter((r) => !r.pass);
 results.forEach((r) => console.log(`${r.pass ? 'pass' : 'FAIL'}  ${r.name}${!r.pass && r.detail ? `  (${r.detail})` : ''}`));
 console.log(`\n${results.length - failed.length} of ${results.length} checks passed.`);

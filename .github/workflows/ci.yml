@@ -37,6 +37,8 @@ jobs:
         run: npm run test:telemetry
       - name: Social hub rules and demo data
         run: npm run test:social
+      - name: Link guard (javascript:, data: and other unsafe links refused)
+        run: npm run test:security
       - name: Web build (what Cloudflare Pages and Vercel serve)
         run: npx expo export -p web
       - name: Legal pages and headers ship with the web build

@@ -53,8 +53,8 @@ Generated from the source. For the *why*, read [the handbook](../handbook/README
 | `src/store/db/` | 17 | 74 | [store.db.md](code/store.db.md) |
 | `src/theme/` | 3 | 10 | [theme.md](code/theme.md) |
 | `src/types/` | 6 | 163 | [types.md](code/types.md) |
-| `src/utils/` | 7 | 68 | [utils.md](code/utils.md) |
-| `supabase/functions/_shared/` | 8 | 110 | [functions._shared.md](code/functions._shared.md) |
+| `src/utils/` | 8 | 74 | [utils.md](code/utils.md) |
+| `supabase/functions/_shared/` | 8 | 111 | [functions._shared.md](code/functions._shared.md) |
 | `supabase/functions/account-delete/` | 1 | 0 | [functions.account-delete.md](code/functions.account-delete.md) |
 | `supabase/functions/health/` | 1 | 0 | [functions.health.md](code/functions.health.md) |
 | `supabase/functions/media-sign/` | 1 | 0 | [functions.media-sign.md](code/functions.media-sign.md) |

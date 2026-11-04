@@ -15,7 +15,7 @@ Source: [src/components/planner/RegistryCard.tsx](../../../src/components/planne
 
 ### `REGISTRY_KINDS`
 
-*const* · [src/components/planner/RegistryCard.tsx:12](../../../src/components/planner/RegistryCard.tsx#L12)
+*const* · [src/components/planner/RegistryCard.tsx:13](../../../src/components/planner/RegistryCard.tsx#L13)
 
 ```ts
 REGISTRY_KINDS: { id: RegistryItem['kind']; label: string; icon: keyof typeof Ionicons.glyphMap }[]
@@ -25,7 +25,7 @@ _No JSDoc yet._
 
 ### `registryGoal`
 
-*function* · [src/components/planner/RegistryCard.tsx:21](../../../src/components/planner/RegistryCard.tsx#L21)
+*function* · [src/components/planner/RegistryCard.tsx:22](../../../src/components/planner/RegistryCard.tsx#L22)
 
 ```ts
 registryGoal(r: RegistryItem)
@@ -35,7 +35,7 @@ _No JSDoc yet._
 
 ### `registryRaised`
 
-*function* · [src/components/planner/RegistryCard.tsx:22](../../../src/components/planner/RegistryCard.tsx#L22)
+*function* · [src/components/planner/RegistryCard.tsx:23](../../../src/components/planner/RegistryCard.tsx#L23)
 
 ```ts
 registryRaised(r: RegistryItem)
@@ -45,7 +45,7 @@ _No JSDoc yet._
 
 ### `RegistryCard`
 
-*component* · [src/components/planner/RegistryCard.tsx:25](../../../src/components/planner/RegistryCard.tsx#L25)
+*component* · [src/components/planner/RegistryCard.tsx:26](../../../src/components/planner/RegistryCard.tsx#L26)
 
 ```ts
 RegistryCard({ item, accent = colors.primary, onContribute, onPress }: { item: RegistryItem; accent?: string; onContribute?: () => void; onPress?: () => void })

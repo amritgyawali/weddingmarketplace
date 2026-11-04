@@ -1,6 +1,6 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { Photo } from '@/components/ui/Photo';
-import { Linking, Pressable, StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 
 import { Card, KButton, ProgressBar } from '@/components/kit';
 import { Text } from '@/components/ui/Text';
@@ -8,6 +8,7 @@ import { photo } from '@/constants/images';
 import { colors } from '@/constants/theme';
 import type { RegistryItem } from '@/types/platform';
 import { formatMoney } from '@/utils/format';
+import { openSafeLink } from '@/utils/links';
 
 export const REGISTRY_KINDS: { id: RegistryItem['kind']; label: string; icon: keyof typeof Ionicons.glyphMap }[] = [
   { id: 'cash', label: 'Cash fund', icon: 'cash-outline' },
@@ -63,7 +64,7 @@ export function RegistryCard({ item, accent = colors.primary, onContribute, onPr
       </Pressable>
       <View style={{ paddingHorizontal: 14, paddingTop: 8, paddingBottom: 14 }}>
         {item.kind === 'external' && item.link ? (
-          <KButton label="Open wishlist" icon="open-outline" variant="secondary" size="sm" onPress={() => Linking.openURL(item.link!)} />
+          <KButton label="Open wishlist" icon="open-outline" variant="secondary" size="sm" onPress={() => openSafeLink(item.link)} />
         ) : (
           onContribute && !funded && <KButton label={item.kind === 'gift' ? 'Gift this' : 'Contribute'} icon="heart-outline" size="sm" onPress={onContribute} style={{ backgroundColor: accent, borderColor: accent }} />
         )}

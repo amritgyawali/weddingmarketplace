@@ -1,7 +1,7 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { Linking, Pressable, StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 
 import { Avatar, Card, ChoiceChips, KButton, KField, ProgressBar, showMissing, StatusPill } from '@/components/kit';
 import { triggerHaptic } from '@/components/ui/PressableScale';
@@ -16,6 +16,7 @@ import { useRoleTheme } from '@/theme/RoleTheme';
 import type { Assignment, CrewRequirement, Deliverable, Project, ServiceBooking } from '@/types/platform';
 import { confirm } from '@/utils/confirm';
 import { daysUntil, formatClock, formatMoney, formatShortDate, formatTime, relativeDay } from '@/utils/format';
+import { openSafeLink } from '@/utils/links';
 import { KeyboardAwareScrollView as ScrollView } from '@/components/ui/Keyboard';
 
 export type WorkMode = 'customer' | 'vendor' | 'platform' | 'freelancer';
@@ -396,7 +397,7 @@ function DeliverableRow({ project, booking, d, mode }: { project: Project; booki
       </View>
       <ProgressBar value={d.progress} color={d.status === 'REVISION_REQUESTED' ? t.c.warning : t.c.success} />
       {!!d.link && (
-        <Pressable onPress={() => Linking.openURL(d.link!)} style={styles.inline}>
+        <Pressable onPress={() => openSafeLink(d.link)} style={styles.inline}>
           <Ionicons name="link-outline" size={14} color={t.c.primary} />
           <Text size={12} weight="semibold" color={t.c.primary} numberOfLines={1}>
             Open delivery folder
