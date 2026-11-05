@@ -26,9 +26,12 @@ const toolIds = (dir) =>
   readdirSync(path.join(root, 'src/components/toolkit', dir))
     .filter((n) => n === 'index.ts')
     .flatMap((n) => [...readFileSync(path.join(root, 'src/components/toolkit', dir, n), 'utf8').matchAll(/\{ id: '([a-z]+\.[a-z]+)'/g)].map((m) => m[1]));
-const TOOLS = { customer: toolIds('couple'), vendor: toolIds('vendor'), freelancer: toolIds('freelancer'), platform: toolIds('platform') };
+// The customer edition ships only the couple's app and toolkit.
+const TOOLS = { customer: toolIds('couple') };
 const ALL_TOOLS = new Set(Object.values(TOOLS).flat());
-ok('toolkit ids read', ALL_TOOLS.size > 80, `${ALL_TOOLS.size} tools`);
+ok('toolkit ids read', ALL_TOOLS.size > 20, `${ALL_TOOLS.size} tools`);
+ok('only the couple app is listed', Object.keys(f.TOP_FEATURES).join() === 'customer');
+ok('no other role switches', f.FEATURES.every((x) => x.role === 'customer' || x.role === 'all'));
 
 for (const [role, top] of Object.entries(f.TOP_FEATURES)) {
   const ids = top.map((x) => x.id);
@@ -41,14 +44,11 @@ for (const [role, top] of Object.entries(f.TOP_FEATURES)) {
   // Nothing outside the top 20 is on by default (home sections are layout, not features; basics aren't counted).
   const loose = f.FEATURES.filter((x) => x.role === role && x.group !== 'Home' && !f.BASIC_FEATURES.has(x.id) && !ids.includes(x.id) && f.featureOn({}, x.id)).map((x) => x.id);
   ok(`${role}: every other switch is an extra`, loose.length === 0, loose.join(', '));
-  const bundled = new Set([...f.TRADE_TOOLS, ...f.CRAFT_TOOLS]);
-  const onTools = TOOLS[role].filter((t) => f.featureOn({}, f.toolFeature(t)) && !ids.includes(f.toolFeature(t)) && !bundled.has(t));
+  const onTools = TOOLS[role].filter((t) => f.featureOn({}, f.toolFeature(t)) && !ids.includes(f.toolFeature(t)));
   ok(`${role}: only top tools start on`, onTools.length === 0, onTools.join(', '));
   const visibleTools = TOOLS[role].filter((t) => f.featureOn({}, f.toolFeature(t))).length;
   ok(`${role}: tools hidden by default`, visibleTools < TOOLS[role].length, `${visibleTools} of ${TOOLS[role].length} on`);
 }
-const missingBundled = [...f.TRADE_TOOLS, ...f.CRAFT_TOOLS].filter((t) => !ALL_TOOLS.has(t));
-ok('trade and craft tools exist', missingBundled.length === 0, missingBundled.join(', '));
 
 // Defaults and overrides
 ok('extra starts off', f.featureOn({}, 'couple.seating') === false);
@@ -59,15 +59,15 @@ ok('other tool off', f.featureOn({}, 'tool:couple.janti') === false);
 ok('other tool switched on', f.featureOn({ 'tool:couple.janti': true }, 'tool:couple.janti') === true);
 ok('services stay on', f.featureOn({}, 'service:venue') === true);
 ok('unknown ids stay on (bug reports, new switches)', f.featureOn({}, 'app.bug_report') === true && f.featureOn(undefined, 'x.y') === true);
-ok('sign-up and content switches stay on', ['signup.vendor', 'login.demo', 'app.announcements', 'app.notifications'].every((id) => f.featureOn({}, id)));
+ok('sign-in and content switches stay on', ['login.demo', 'app.announcements', 'app.notifications'].every((id) => f.featureOn({}, id)));
 
 // Routes
 ok('path → feature', f.featureForPath('/contracts') === 'couple.contracts' && f.featureForPath('/contract/c_1') === 'couple.contracts');
 ok('query ignored', f.featureForPath('/seating?from=menu') === 'couple.seating');
-ok('nested vendor route', f.featureForPath('/business/quote/q1') === 'vendor.quotes' && f.featureForPath('/business/social/thread/t1') === 'vendor.social');
+ok('nested route', f.featureForPath('/inbox/t1') === 'couple.messages' && f.featureForPath('/genie-checkout/g1') === 'tab.customer.genie');
 ok('unrelated paths have no feature', f.featureForPath('/') === undefined && f.featureForPath('/info/support') === undefined && f.featureForPath('/business') === undefined);
 ok('object link filled in', f.linkOn({}, { pathname: '/info/[slug]', params: { slug: 'shop' } }) === false && f.linkOn({}, { pathname: '/info/[slug]', params: { slug: 'support' } }) === true);
-ok('link follows the switch', f.linkOn({}, '/business/team') === false && f.linkOn({ 'vendor.team': true }, '/business/team') === true);
+ok('link follows the switch', f.linkOn({}, '/seating') === false && f.linkOn({ 'couple.seating': true }, '/seating') === true);
 const unknownRouteIds = Object.keys(f.FEATURE_ROUTES).filter((id) => !f.FEATURE_BY_ID[id]);
 ok('route features are registered', unknownRouteIds.length === 0, unknownRouteIds.join(', '));
 

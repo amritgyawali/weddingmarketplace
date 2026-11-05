@@ -12,6 +12,15 @@ It is the single source of truth for the product strategy, the architecture, the
 > - When in doubt, add a new action, field or route instead of changing the meaning of an existing one.
 > - Run the checks in §9 before you say the work is done.
 
+> **Customer edition (branch `customer`).** This branch ships the couple app only, for the Google Play closed test of `com.vivah.marketplace`. It is never merged into `main`.
+>
+> - The business, freelancer, staff and super admin apps are removed: `src/app/business`, `src/app/freelancer`, `src/app/platform`, the role picker (`welcome/role`), and the components, toolkits and store slices only they used (social hub, super admin console, content studio).
+> - Signed out, the welcome carousel's **Get started** opens the couple demo account (Aakriti, WP-1021) in the mock build; `EXPO_PUBLIC_ROLE_ENTRY=credentials` and Supabase builds sign in as a couple only. A saved session of another role is signed out at start-up.
+> - Feature switches list the couple app only (`data/features.ts`); there is no super admin, so the top 20 defaults are what users get.
+> - The shared store still simulates the coordinator and providers (quotes, bookings, payouts) and keeps the full seed, so the couple's flows behave as on `main`. The SQL in `supabase/` is unchanged.
+> - Android drops the camera, microphone, activity recognition, overlay, write-contacts and storage permissions (`app.json` → `blockedPermissions`).
+> - Sections below describe the full four-role product on `main`; on this branch, parts about the other roles are background only.
+
 ---
 
 ## 1. Product: what Vivah is and why

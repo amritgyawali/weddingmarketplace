@@ -57,15 +57,14 @@ export const SUPPORT_DESK_STATUS_LABEL: Record<SupportTicketStatus, string> = {
 /** Still needs someone: not solved or closed. */
 export const isOpenTicket = (status: SupportTicketStatus) => status === 'open' || status === 'in_progress' || status === 'waiting';
 
-/** Where a role reads its help centre, or one request in it. */
-export function supportHref(role: UserRole, id?: string): string {
-  const base = role === 'vendor' ? '/business/support' : role === 'freelancer' ? '/freelancer/support' : role === 'platform' ? '/platform/support' : '/support';
-  return id ? `${base}/${id}` : base;
+/** Where the couple reads the help centre, or one request in it (the customer edition has no other role apps). */
+export function supportHref(_role: UserRole, id?: string): string {
+  return id ? `/support/${id}` : '/support';
 }
 
-/** Where a role edits its profile. */
-export function editProfileHref(role: UserRole): string {
-  return role === 'vendor' ? '/business/edit-profile' : role === 'freelancer' ? '/freelancer/edit-profile' : role === 'platform' ? '/platform/edit-profile' : '/edit-profile';
+/** Where the couple edits their profile. */
+export function editProfileHref(_role: UserRole): string {
+  return '/edit-profile';
 }
 
 /** One common question and its answer. */

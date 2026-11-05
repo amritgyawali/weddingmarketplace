@@ -463,7 +463,7 @@ Source: [src/components/ui/FeatureRouteGuard.tsx](../../../src/components/ui/Fea
 
 ### `FeatureRouteGuard`
 
-*component* · [src/components/ui/FeatureRouteGuard.tsx:19](../../../src/components/ui/FeatureRouteGuard.tsx#L19)
+*component* · [src/components/ui/FeatureRouteGuard.tsx:15](../../../src/components/ui/FeatureRouteGuard.tsx#L15)
 
 ```ts
 FeatureRouteGuard()

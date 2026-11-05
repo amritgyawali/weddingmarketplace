@@ -13,9 +13,8 @@ import { formatShortDate, formatTime } from '@/utils/format';
 
 const isToday = (iso: string) => new Date(iso).toDateString() === new Date().toDateString();
 
-/** Links are role-scoped; only follow ones that belong to the viewer's app. */
-const canOpen = (href: string, role: string) =>
-  role === 'vendor' ? href.startsWith('/business') : role === 'freelancer' ? href.startsWith('/freelancer') : role === 'platform' ? href.startsWith('/platform') : !/^\/(business|freelancer|platform)/.test(href);
+/** Only follow links into the couple app (this edition has no business or staff screens). */
+const canOpen = (href: string) => !/^\/(business|freelancer|platform)/.test(href);
 
 function NotificationList() {
   const t = useRoleTheme();
@@ -36,7 +35,7 @@ function NotificationList() {
         contentContainerStyle={{ paddingBottom: 40 }}
         ListEmptyComponent={<EmptyBlock icon="notifications-off-outline" art="diya" title="You're all caught up" />}
         renderItem={({ item }) => {
-          const openable = !!item.href && canOpen(item.href, account.role);
+          const openable = !!item.href && canOpen(item.href);
           return (
             <Pressable
               disabled={!openable}

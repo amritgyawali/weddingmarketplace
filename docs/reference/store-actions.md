@@ -4,27 +4,6 @@
 
 Screens change data only by calling these actions. Each one is a future server endpoint (see `supabase/migrations/0011_core_rpc.sql` for the ones that already have an RPC). The rules every action follows are in [the state guide](../handbook/05-state-and-data.md).
 
-## AdminActions
-
-Source: [src/store/db/admin.ts:18](../../src/store/db/admin.ts#L18) · Super admin console (permission `admin.full`): edit, add and delete any record of any role, switch features on and off, rewrite any text in either language and pin announcements, all from the app wit…
-
-| Action | Signature | What it does |
-|---|---|---|
-| `setFeature` | `(id: string, on: boolean) => string \| null` | Switches one feature for everyone. Returns an error to show, or null. |
-| `setFeatures` | `(patch: Record<string, boolean>) => string \| null` | Switches several features at once (a whole group). |
-| `resetFeatures` | `() => string \| null` | Turns every feature back on. |
-| `setTextOverride` | `(source: string, lang: Lang, text: string) => string \| null` | Replaces a piece of app text in one language; empty text removes the override. |
-| `resetTextOverrides` | `() => string \| null` | Removes every text override. |
-| `addAnnouncement` | `(input: Pick<Announcement, 'audience' \| 'title' \| 'body' \| 'tone'>) => string \| null` | _No JSDoc yet._ |
-| `updateAnnouncement` | `(id: string, patch: Partial<Pick<Announcement, 'audience' \| 'title' \| 'body' \| 'tone' \| 'active'>>) => string \| null` | _No JSDoc yet._ |
-| `removeAnnouncement` | `(id: string) => string \| null` | _No JSDoc yet._ |
-| `adminSaveRecord` | `(collection: AdminCollection, id: string, record: unknown) => string \| null` | Replaces one record of any collection (array item by id, map entry by key, or the settings object). |
-| `adminInsertRecord` | `(collection: AdminCollection, record: unknown, key?: string) => { id?: string; error?: string }` | Adds a record; arrays get an id when it has none. Returns the id, or an error. |
-| `adminDeleteRecords` | `(collection: AdminCollection, ids: string[]) => string \| null` | Deletes records by id (array) or key (map). |
-| `adminSaveAccount` | `(id: string, patch: Partial<Account>) => string \| null` | Edits any account of any role. |
-| `adminCreateAccount` | `(input: Pick<Account, 'role' \| 'name' \| 'phone' \| 'city'> & Partial<Account>) => { account?: Account; error?: string }` | Creates an account of any role (it can sign in with its phone and the demo code). |
-| `adminDeleteAccount` | `(id: string) => string \| null` | Deletes an account. You can't delete yourself or the last super admin. |
-
 ## ChatActions
 
 Source: [src/store/db/chat.ts:11](../../src/store/db/chat.ts#L11) · Project threads, service threads and direct enquiries shared by every role. Customer-visible conversation is kept apart from staff-only internal notes.
@@ -42,23 +21,6 @@ Source: [src/store/db/chat.ts:11](../../src/store/db/chat.ts#L11) · Project thr
 | `deleteNote` | `(id: string) => void` | _No JSDoc yet._ |
 | `addFile` | `(file: Omit<FileRef, 'id' \| 'at'>) => void` | _No JSDoc yet._ |
 | `removeFile` | `(id: string) => void` | _No JSDoc yet._ |
-
-## ContentActions
-
-Source: [src/store/db/content.ts:23](../../src/store/db/content.ts#L23) · Content studio (permission `admin.full`): replace any photo, edit any marketplace listing, reorder and rename the couple's home sections, add home banners and change the brand details, with no code c…
-
-| Action | Signature | What it does |
-|---|---|---|
-| `setContentImage` | `(key: string, address: string \| null) => string \| null` | Shows another photo wherever a bundled one appears; null restores the original. Returns an error to show, or null. |
-| `saveContentEntry` | `(kind: ContentKind, id: string, fields: Record<string, unknown>) => string \| null` | Saves a catalogue record's edited fields (pass every field of the form; only the differences are kept). |
-| `setContentHidden` | `(kind: ContentKind, id: string, hidden: boolean) => string \| null` | Takes a record out of lists and search, or puts it back. |
-| `restoreContentEntry` | `(kind: ContentKind, id: string) => string \| null` | Removes every edit to one record. |
-| `setHomeOrder` | `(order: string[]) => string \| null` | Saves the order of the couple's home sections, top to bottom. |
-| `setHomeTitle` | `(sectionId: string, title: string) => string \| null` | Renames a home section's heading; empty text restores the built-in one. |
-| `saveBanner` | `(input: BannerInput) => { id?: string; error?: string }` | Adds a home banner, or saves one that exists (`id`). Returns its id, or an error. |
-| `removeBanner` | `(id: string) => string \| null` | _No JSDoc yet._ |
-| `setBrandField` | `(field: BrandField, value: string) => string \| null` | Replaces one brand detail (name, support phone…); empty text restores the built-in one. |
-| `resetContent` | `(part: ContentPart) => string \| null` | Puts one part of the content, or all of it, back to what the app shipped with. |
 
 ## CoreActions
 
@@ -241,36 +203,6 @@ Source: [src/store/db/quotes.ts:17](../../src/store/db/quotes.ts#L17) · Version
 | `markQuoteViewed` | `(id: string) => void` | _No JSDoc yet._ |
 | `respondToQuote` | `(id: string, action: 'accept' \| 'decline' \| 'revision', note?: string) => void` | _No JSDoc yet._ |
 | `draftProjectQuote` | `(projectId: string) => Quotation \| null` | _No JSDoc yet._ |
-
-## SocialActions
-
-Source: [src/store/db/social.ts:41](../../src/store/db/social.ts#L41) · Social hub: a business connects Facebook, Instagram, WhatsApp and TikTok, answers every message and comment from one inbox, and publishes one post to every network. In production each action is a Sup…
-
-| Action | Signature | What it does |
-|---|---|---|
-| `connectSocialAccount` | `(input: { network: SocialNetwork; handle: string; name?: string }) => string \| null` | Connects a network for the signed-in business (in production: after the network's OAuth consent). Error text or null. |
-| `disconnectSocialAccount` | `(accountId: string) => string \| null` | _No JSDoc yet._ |
-| `reconnectSocialAccount` | `(accountId: string) => string \| null` | Renews an expired token (in production: the OAuth consent again). |
-| `receiveSocialMessage` | `(input: SocialInbound) => string \| null` | A message or comment arrives from a network (the webhook). Applies auto-replies and the away message. Returns the thread id. |
-| `syncSocialInbox` | `() => number` | Pulls anything new from the connected networks and wakes snoozed threads. Returns how many messages arrived. |
-| `sendSocialReply` | `(threadId: string, text: string, opts?: { media?: SocialMedia[]; template?: string }) => string \| null` | Replies in the thread (message or public comment reply). Outside WhatsApp's 24-hour window pass an approved template id. |
-| `addSocialNote` | `(threadId: string, text: string) => string \| null` | _No JSDoc yet._ |
-| `markSocialThreadRead` | `(threadId: string) => void` | _No JSDoc yet._ |
-| `setSocialThreadStatus` | `(threadId: string, status: SocialThreadStatus, snoozeHours?: number) => string \| null` | `pending` with `snoozeHours` hides the thread until then. |
-| `toggleSocialThreadStar` | `(threadId: string) => void` | _No JSDoc yet._ |
-| `setSocialThreadLabels` | `(threadId: string, labels: string[]) => void` | _No JSDoc yet._ |
-| `assignSocialThread` | `(threadId: string, assignee?: string) => void` | _No JSDoc yet._ |
-| `setSocialOptIn` | `(threadId: string, optedIn: boolean) => string \| null` | WhatsApp: records that the customer agreed (or no longer agrees) to broadcasts. The opted-in count is the WhatsApp audience. |
-| `createLeadFromSocialThread` | `(threadId: string, input: SocialLeadInput) => { leadId?: string; error?: string }` | Turns a conversation into a CRM lead (source `social`) and links the two. Returns the lead id, or error text. |
-| `saveSocialPost` | `(input: Partial<SocialPost> & Pick<SocialPost, 'caption' \| 'networks' \| 'media'>) => { id?: string; error?: string }` | Creates or updates a draft. Returns the post id. |
-| `scheduleSocialPost` | `(postId: string, at: string) => string \| null` | _No JSDoc yet._ |
-| `publishSocialPost` | `(postId: string) => string \| null` | Sends the post to every chosen network now. Networks that refuse it are marked failed; the rest go out. |
-| `retrySocialPost` | `(postId: string, network: SocialNetwork) => string \| null` | _No JSDoc yet._ |
-| `duplicateSocialPost` | `(postId: string) => string \| null` | _No JSDoc yet._ |
-| `deleteSocialPost` | `(postId: string) => string \| null` | _No JSDoc yet._ |
-| `runDueSocialPosts` | `() => number` | Publishes scheduled posts whose time has come and wakes snoozed threads (pg_cron + social-publish in production). Returns how many posts started. |
-| `updateSocialSettings` | `(patch: Partial<SocialSettings>) => string \| null` | _No JSDoc yet._ |
-| `mirrorSocialData` | `(ownerId: string, data: { accounts: SocialAccount[]; threads: SocialThread[]; messages: SocialMessage[]; posts: SocialPost[]; settings?: SocialSettings }) => void` | Supabase builds: replaces one business's hub on this device with what the server holds (`syncSocialFromServer`). |
 
 ## SupportActions
 

@@ -1219,7 +1219,5 @@ export interface SupportTicket {
 
 // Role toolkits (generic tool records, settings and broadcasts)
 export * from './toolkit';
-// Social hub (connected networks, unified inbox, publisher)
-export * from './social';
 // Personas (occasions, trades, capabilities, permissions)
 export type * from './persona';

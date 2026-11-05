@@ -6,146 +6,47 @@ Every exported symbol in `src/components/work/`, file by file. The guide that ex
 
 ## Files
 
-- [`ApplicantsList.tsx`](#applicantslisttsx) (2 exports)
-- [`AvailabilityCalendar.tsx`](#availabilitycalendartsx) (2 exports)
-- [`Bookings.tsx`](#bookingstsx) (6 exports)
+- [`Bookings.tsx`](#bookingstsx) (2 exports)
 - [`Collab.tsx`](#collabtsx) (5 exports)
 - [`ContractView.tsx`](#contractviewtsx) (1 exports)
 - [`EditProfileScreen.tsx`](#editprofilescreentsx) (1 exports)
 - [`EventsPanel.tsx`](#eventspaneltsx) (1 exports)
-- [`GigCard.tsx`](#gigcardtsx) (1 exports)
-- [`GigForm.tsx`](#gigformtsx) (2 exports)
 - [`InboxScreens.tsx`](#inboxscreenstsx) (2 exports)
-- [`MatchPanel.tsx`](#matchpaneltsx) (3 exports)
 - [`MonthGrid.tsx`](#monthgridtsx) (1 exports)
 - [`Payments.tsx`](#paymentstsx) (3 exports)
 - [`Pipeline.tsx`](#pipelinetsx) (5 exports)
-- [`PortfolioManager.tsx`](#portfoliomanagertsx) (1 exports)
 - [`QuoteDocument.tsx`](#quotedocumenttsx) (1 exports)
-- [`QuoteEditor.tsx`](#quoteeditortsx) (1 exports)
 - [`ReviewComposer.tsx`](#reviewcomposertsx) (4 exports)
 - [`RunSheet.tsx`](#runsheettsx) (3 exports)
-- [`SegmentFilter.tsx`](#segmentfiltertsx) (1 exports)
 - [`SettingsScreen.tsx`](#settingsscreentsx) (2 exports)
 - [`SignaturePad.tsx`](#signaturepadtsx) (2 exports)
 - [`TaskBoard.tsx`](#taskboardtsx) (1 exports)
 - [`ThreadView.tsx`](#threadviewtsx) (1 exports)
 - [`Timeline.tsx`](#timelinetsx) (1 exports)
-- [`TodayFocus.tsx`](#todayfocustsx) (1 exports) · The top of the operations Today screen, shaped by the staff member's job (master plan §4.4): coordinators see their weddings, support the h…
-- [`VerificationScreen.tsx`](#verificationscreentsx) (1 exports)
-
-## ApplicantsList.tsx
-
-Source: [src/components/work/ApplicantsList.tsx](../../../src/components/work/ApplicantsList.tsx)
-
-### `ApplicantsList`
-
-*component* · [src/components/work/ApplicantsList.tsx:20](../../../src/components/work/ApplicantsList.tsx#L20)
-
-```ts
-ApplicantsList({ gig }: { gig: Gig })
-```
-
-Applicant review for a gig: compare, shortlist, hire, reject; shows on-site check-ins.
-
-### `GigManage`
-
-*component* · [src/components/work/ApplicantsList.tsx:92](../../../src/components/work/ApplicantsList.tsx#L92)
-
-```ts
-GigManage({ gig }: { gig: Gig })
-```
-
-Full gig management for the poster (vendor or platform).
-
-## AvailabilityCalendar.tsx
-
-Source: [src/components/work/AvailabilityCalendar.tsx](../../../src/components/work/AvailabilityCalendar.tsx)
-
-### `statusColor`
-
-*function* · [src/components/work/AvailabilityCalendar.tsx:22](../../../src/components/work/AvailabilityCalendar.tsx#L22)
-
-```ts
-statusColor(s: AvailabilityStatus, t: ReturnType<typeof useRoleTheme>)
-```
-
-_No JSDoc yet._
-
-### `AvailabilityCalendar`
-
-*component* · [src/components/work/AvailabilityCalendar.tsx:30](../../../src/components/work/AvailabilityCalendar.tsx#L30)
-
-```ts
-AvailabilityCalendar({ ownerKind, ownerId, onSelectDay }: { ownerKind: AvailabilityEntry['ownerKind']; ownerId: string; onSelectDay?: (date: string) => void })
-```
-
-Month calendar of AVAILABLE / TENTATIVE / HELD / BOOKED / UNAVAILABLE days.
-Booking-driven entries are read-only; owners edit manual days and weekly rules.
 
 ## Bookings.tsx
 
 Source: [src/components/work/Bookings.tsx](../../../src/components/work/Bookings.tsx)
 
-### `WorkMode`
-
-*type* · [src/components/work/Bookings.tsx:22](../../../src/components/work/Bookings.tsx#L22)
-
-```ts
-type WorkMode = 'customer' | 'vendor' | 'platform' | 'freelancer'
-```
-
-_No JSDoc yet._
-
-### `crewFill`
-
-*function* · [src/components/work/Bookings.tsx:26](../../../src/components/work/Bookings.tsx#L26)
-
-```ts
-crewFill(b: ServiceBooking)
-```
-
-_No JSDoc yet._
-
 ### `BookingCard`
 
-*component* · [src/components/work/Bookings.tsx:33](../../../src/components/work/Bookings.tsx#L33)
+*component* · [src/components/work/Bookings.tsx:17](../../../src/components/work/Bookings.tsx#L17)
 
 ```ts
-BookingCard({ project, booking, mode, onPress }: { project: Project; booking: ServiceBooking; mode: WorkMode; onPress?: () => void })
+BookingCard({ project, booking, onPress }: { project: Project; booking: ServiceBooking; onPress?: () => void })
 ```
 
-One provider booking. Money shown depends on who is looking.
-
-### `WorkerPicker`
-
-*component* · [src/components/work/Bookings.tsx:213](../../../src/components/work/Bookings.tsx#L213)
-
-```ts
-WorkerPicker({ project, booking, crew, visible, onClose }: { project: Project; booking: ServiceBooking; crew: CrewRequirement | null; visible: boolean; onClose: () => void })
-```
-
-Pick a freelancer (ranked by fit) or in-house staff for a crew slot.
-
-### `CrewPanel`
-
-*component* · [src/components/work/Bookings.tsx:328](../../../src/components/work/Bookings.tsx#L328)
-
-```ts
-CrewPanel({ project, booking, mode }: { project: Project; booking: ServiceBooking; mode: WorkMode })
-```
-
-_No JSDoc yet._
+One provider booking, as the couple sees it: the provider, the functions and the agreed price.
 
 ### `DeliverablesPanel`
 
-*component* · [src/components/work/Bookings.tsx:484](../../../src/components/work/Bookings.tsx#L484)
+*component* · [src/components/work/Bookings.tsx:135](../../../src/components/work/Bookings.tsx#L135)
 
 ```ts
-DeliverablesPanel({ project, booking, mode }: { project: Project; booking: ServiceBooking; mode: WorkMode })
+DeliverablesPanel({ project, booking }: { project: Project; booking: ServiceBooking })
 ```
 
-_No JSDoc yet._
+The booking's deliverables, with approve and request-changes for the ones ready for review.
 
 ## Collab.tsx
 
@@ -248,44 +149,6 @@ EventsPanel({ project, mode }: { project: Project; mode: 'customer' | 'platform'
 
 Functions of a project (engagement, mehendi, wedding, reception…) with run sheets.
 
-## GigCard.tsx
-
-Source: [src/components/work/GigCard.tsx](../../../src/components/work/GigCard.tsx)
-
-### `GigCard`
-
-*component* · [src/components/work/GigCard.tsx:14](../../../src/components/work/GigCard.tsx#L14)
-
-```ts
-GigCard({ gig, onPress, showApplicants, badge, distance }: { gig: Gig; onPress?: () => void; showApplicants?: boolean; badge?: string; distance?: number | null })
-```
-
-Gig summary used by the freelancer feed and the vendor/platform hiring lists.
-
-## GigForm.tsx
-
-Source: [src/components/work/GigForm.tsx](../../../src/components/work/GigForm.tsx)
-
-### `GigDraft`
-
-*type* · [src/components/work/GigForm.tsx:17](../../../src/components/work/GigForm.tsx#L17)
-
-```ts
-type GigDraft = Omit<Gig, 'id' | 'createdAt' | 'status' | 'applications' | 'postedById' | 'postedByName' | 'postedByKind'>
-```
-
-_No JSDoc yet._
-
-### `GigForm`
-
-*component* · [src/components/work/GigForm.tsx:22](../../../src/components/work/GigForm.tsx#L22)
-
-```ts
-GigForm({ projects, defaultCity, initialProjectId, onSubmit }: { projects: Project[]; defaultCity: string; initialProjectId?: string; onSubmit: (gig: GigDraft) => void })
-```
-
-Post a staffing requirement freelancers can apply to (or accept an invite).
-
 ## InboxScreens.tsx
 
 Source: [src/components/work/InboxScreens.tsx](../../../src/components/work/InboxScreens.tsx)
@@ -309,42 +172,6 @@ ThreadScreen({ customer }: { customer?: boolean })
 ```
 
 Single conversation screen for any role, with archive / mute / block / report.
-
-## MatchPanel.tsx
-
-Source: [src/components/work/MatchPanel.tsx](../../../src/components/work/MatchPanel.tsx)
-
-### `fitColor`
-
-*function* · [src/components/work/MatchPanel.tsx:21](../../../src/components/work/MatchPanel.tsx#L21)
-
-```ts
-fitColor(score: number, t: ReturnType<typeof useRoleTheme>)
-```
-
-_No JSDoc yet._
-
-### `ScoreBreakdownView`
-
-*component* · [src/components/work/MatchPanel.tsx:26](../../../src/components/work/MatchPanel.tsx#L26)
-
-```ts
-ScoreBreakdownView({ breakdown }: { breakdown: ScoreBreakdown })
-```
-
-Weighted score breakdown bars (availability 30 · location 15 · …).
-
-### `MatchPanel`
-
-*component* · [src/components/work/MatchPanel.tsx:188](../../../src/components/work/MatchPanel.tsx#L188)
-
-```ts
-MatchPanel({ project, requirement }: { project: Project; requirement: Requirement })
-```
-
-Coordinator's matching workspace for one requirement: run the engine,
-inspect weighted fit, shortlist and send booking requests. Nothing is
-awarded automatically.
 
 ## MonthGrid.tsx
 
@@ -455,20 +282,6 @@ nextStatuses(status: ProjectStatus): ProjectStatus[]
 
 Next statuses a coordinator can move a project to.
 
-## PortfolioManager.tsx
-
-Source: [src/components/work/PortfolioManager.tsx](../../../src/components/work/PortfolioManager.tsx)
-
-### `PortfolioManager`
-
-*component* · [src/components/work/PortfolioManager.tsx:26](../../../src/components/work/PortfolioManager.tsx#L26)
-
-```ts
-PortfolioManager()
-```
-
-Portfolio manager for providers and crew: upload, caption, tag, feature and reorder. Media goes to Cloudinary in production.
-
 ## QuoteDocument.tsx
 
 Source: [src/components/work/QuoteDocument.tsx](../../../src/components/work/QuoteDocument.tsx)
@@ -483,23 +296,6 @@ QuoteDocument({ quote, showVersions = true }: { quote: Quotation; showVersions?:
 
 Printable quotation shared by every role. Sent versions are frozen, so the
 version chips let anyone compare V1 → V2 → V3. Internal costs never render.
-
-## QuoteEditor.tsx
-
-Source: [src/components/work/QuoteEditor.tsx](../../../src/components/work/QuoteEditor.tsx)
-
-### `QuoteEditor`
-
-*component* · [src/components/work/QuoteEditor.tsx:120](../../../src/components/work/QuoteEditor.tsx#L120)
-
-```ts
-QuoteEditor({ initial, onSave, saving, project, internal = false, }: { initial: Quotation; onSave: (quote: Quotation, send: boolean, changeSummary?: string) => void; saving?: boolean; project?: Project; internal?: boolean; })
-```
-
-Quotation builder for providers and the platform team: itemised lines,
-package discount, service fee, VAT, payment schedule and — for the platform
-— per-line provider cost, business model and margin. Sending freezes a new
-version; older versions stay readable.
 
 ## ReviewComposer.tsx
 
@@ -583,21 +379,6 @@ SeverityPicker({ value, onChange }: { value: string; onChange: (v: 'low' | 'medi
 ```
 
 _No JSDoc yet._
-
-## SegmentFilter.tsx
-
-Source: [src/components/work/SegmentFilter.tsx](../../../src/components/work/SegmentFilter.tsx)
-
-### `SegmentFilter`
-
-*component* · [src/components/work/SegmentFilter.tsx:18](../../../src/components/work/SegmentFilter.tsx#L18)
-
-```ts
-SegmentFilter({ value, onChange, dims = ['occasion', 'trade', 'city'] }: { value: Segment; onChange: (s: Segment) => void; dims?: ('occasion' | 'trade' | 'city')[] })
-```
-
-Occasion × trade × city filter for console lists. Collapsed it shows the
-current segment in one line; `dims` picks which of the three a list offers.
 
 ## SettingsScreen.tsx
 
@@ -688,37 +469,3 @@ TimelineView({ project, mode }: { project: Project; mode: 'customer' | 'platform
 ```
 
 Project timeline: bookings, payments, meetings, events and deliveries in date order.
-
-## TodayFocus.tsx
-
-Source: [src/components/work/TodayFocus.tsx](../../../src/components/work/TodayFocus.tsx)
-
-The top of the operations Today screen, shaped by the staff member's job
-(master plan §4.4): coordinators see their weddings, support the helpdesk,
-Vendor Success the verification queue, finance the money waiting, admins the
-platform's health. The focus comes from permissions (`TODAY_FOCUS`), not
-from the role name, so a custom role with the same rights sees the same.
-
-### `TodayFocus`
-
-*component* · [src/components/work/TodayFocus.tsx:42](../../../src/components/work/TodayFocus.tsx#L42)
-
-```ts
-TodayFocus()
-```
-
-_No JSDoc yet._
-
-## VerificationScreen.tsx
-
-Source: [src/components/work/VerificationScreen.tsx](../../../src/components/work/VerificationScreen.tsx)
-
-### `VerificationScreen`
-
-*component* · [src/components/work/VerificationScreen.tsx:19](../../../src/components/work/VerificationScreen.tsx#L19)
-
-```ts
-VerificationScreen()
-```
-
-Provider KYC: upload documents and follow the review. Shared by freelancers too.

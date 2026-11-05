@@ -6,25 +6,10 @@ Every exported symbol in `src/components/support/`, file by file. The guide that
 
 ## Files
 
-- [`HelpDesk.tsx`](#helpdesktsx) (1 exports)
 - [`NewSupportRequest.tsx`](#newsupportrequesttsx) (1 exports)
 - [`SupportCenter.tsx`](#supportcentertsx) (1 exports)
 - [`SupportThread.tsx`](#supportthreadtsx) (1 exports)
 - [`parts.tsx`](#partstsx) (2 exports)
-
-## HelpDesk.tsx
-
-Source: [src/components/support/HelpDesk.tsx](../../../src/components/support/HelpDesk.tsx)
-
-### `HelpDesk`
-
-*component* · [src/components/support/HelpDesk.tsx:25](../../../src/components/support/HelpDesk.tsx#L25)
-
-```ts
-HelpDesk()
-```
-
-The staff queue of help requests from every role (Platform → Help desk).
 
 ## NewSupportRequest.tsx
 

@@ -10,7 +10,6 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import { getAccessToken, usesEmailSignIn } from '@/backend/auth';
 import { ContentSync } from '@/components/ContentSync';
-import { ImpersonationBar } from '@/components/ui/AppBanners';
 import { BootScreen } from '@/components/ui/BootScreen';
 import { bugTouchHandlers, BugReporterHost, installBugReporter } from '@/components/ui/BugReporter';
 import { DialogHost } from '@/components/ui/Dialog';
@@ -66,7 +65,9 @@ export default function RootLayout() {
   const dbHydrated = useHydrated(useDb);
   const prefsHydrated = useHydrated(usePrefs);
   const hydrated = appHydrated && sessionHydrated && dbHydrated && prefsHydrated;
-  const role = useSession((s) => s.session?.role ?? null);
+  // The customer edition only opens the couple app: a session left by another role signs out below.
+  const sessionRole = useSession((s) => s.session?.role ?? null);
+  const role = sessionRole === 'customer' ? sessionRole : null;
   const hasOnboarded = useAppStore((s) => s.hasOnboarded);
   const ready = (fontsLoaded || !!fontError) && hydrated;
   useTelemetry();
@@ -99,6 +100,10 @@ export default function RootLayout() {
     });
   }, [ready, role]);
 
+  useEffect(() => {
+    if (ready && sessionRole && sessionRole !== 'customer') logout();
+  }, [ready, sessionRole]);
+
   if (!ready) return <BootScreen onReady={hideSplash} />;
 
   const isCustomer = role === 'customer';
@@ -117,7 +122,7 @@ export default function RootLayout() {
             contentStyle: { backgroundColor: colors.white },
             animation: Platform.OS === 'android' ? 'slide_from_right' : 'default',
           }}>
-          {/* Signed out: direct role entry for the local demo; authenticated welcome for live builds. */}
+          {/* Signed out: one tap into the couple demo for the local build; authenticated welcome for live builds. */}
           <Stack.Protected guard={!role}>
             <Stack.Screen name="welcome" options={{ animation: 'fade' }} />
           </Stack.Protected>
@@ -173,19 +178,7 @@ export default function RootLayout() {
             <Stack.Screen name="celebrate" options={{ animation: 'slide_from_bottom' }} />
           </Stack.Protected>
 
-          {/* Each business role gets a completely separate app. */}
-          <Stack.Protected guard={role === 'vendor'}>
-            <Stack.Screen name="business" options={{ animation: 'fade' }} />
-          </Stack.Protected>
-          <Stack.Protected guard={role === 'freelancer'}>
-            <Stack.Screen name="freelancer" options={{ animation: 'fade' }} />
-          </Stack.Protected>
-          <Stack.Protected guard={role === 'platform'}>
-            <Stack.Screen name="platform" options={{ animation: 'fade' }} />
-          </Stack.Protected>
-
-          {/* Shared by every signed-in role. */}
-          <Stack.Protected guard={!!role}>
+          <Stack.Protected guard={isCustomer}>
             <Stack.Screen name="notifications" />
           </Stack.Protected>
           <Stack.Protected guard={!role || isCustomer}>
@@ -205,7 +198,6 @@ export default function RootLayout() {
           <Stack.Screen name="+not-found" />
         </Stack>
         <FeatureRouteGuard />
-        <ImpersonationBar />
         <ToastHost />
         <DialogHost />
         <BugReporterHost />

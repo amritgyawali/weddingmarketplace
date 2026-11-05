@@ -23,7 +23,7 @@ export function TicketRow({ ticket, desk, last }: { ticket: SupportTicket; desk?
   const needsYou = desk ? ticket.status === 'open' : ticket.status === 'waiting';
   return (
     <Pressable
-      onPress={() => router.push((desk ? `/platform/support/${ticket.id}` : supportHref(ticket.role, ticket.id)) as Href)}
+      onPress={() => router.push(supportHref(ticket.role, ticket.id) as Href)}
       accessibilityRole="button"
       accessibilityLabel={`${ticket.subject}, ${(desk ? SUPPORT_DESK_STATUS_LABEL : SUPPORT_STATUS_LABEL)[ticket.status]}`}
       style={({ pressed }) => [styles.row, !last && { borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: t.c.border }, pressed && { backgroundColor: t.c.surfaceAlt }]}>

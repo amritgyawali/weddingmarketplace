@@ -6,9 +6,7 @@ Every exported symbol in `src/store/db/`, file by file. The guide that explains 
 
 ## Files
 
-- [`admin.ts`](#admints) (4 exports) · Super admin console (permission `admin.full`): edit, add and delete any record of any role, switch features on and off, rewrite any text in…
 - [`chat.ts`](#chatts) (3 exports) · Project threads, service threads and direct enquiries shared by every role. Customer-visible conversation is kept apart from staff-only int…
-- [`content.ts`](#contentts) (4 exports) · Content studio (permission `admin.full`): replace any photo, edit any marketplace listing, reorder and rename the couple's home sections, a…
 - [`core.ts`](#corets) (2 exports)
 - [`finance.ts`](#financets) (2 exports) · Customer payments (milestones → payments → receipts) and payouts (payables → releases) are separate ledgers; disputes can freeze payouts.
 - [`gigs.ts`](#gigsts) (3 exports) · Freelancer gig marketplace and calendars. Hiring on a gig that belongs to a booking crew slot creates a booking assignment, so crew, payout…
@@ -18,73 +16,10 @@ Every exported symbol in `src/store/db/`, file by file. The guide that explains 
 - [`planner.ts`](#plannerts) (2 exports) · Couple planning tools and business extras: guests, RSVP, seating, budget, website, registry, boards, contracts, shortlist, staff, deals.
 - [`projects.ts`](#projectsts) (4 exports) · Wedding-project workflow: requirement intake, matching, provider bookings, crew assignments, emergency replacement, deliverables, tasks and…
 - [`quotes.ts`](#quotests) (4 exports) · Versioned quotations. A sent version is frozen into `versions`; any later change creates the next version, so the customer can always compa…
-- [`social.ts`](#socialts) (6 exports) · Social hub: a business connects Facebook, Instagram, WhatsApp and TikTok, answers every message and comment from one inbox, and publishes o…
 - [`support.ts`](#supportts) (5 exports) · Bug reports and help requests.
 - [`toolkit.ts`](#toolkitts) (3 exports) · Role toolkits: generic tool records, per-owner tool settings and ops broadcasts.
 - [`trust.ts`](#trustts) (2 exports) · Reviews (category ratings, replies, moderation) and provider/freelancer verification.
 - [`types.ts`](#typests) (1 exports)
-
-## admin.ts
-
-Source: [src/store/db/admin.ts](../../../src/store/db/admin.ts)
-
-Super admin console (permission `admin.full`): edit, add and delete any
-record of any role, switch features on and off, rewrite any text in either
-language and pin announcements, all from the app with no code change.
-Every write is audited. Mirrored by supabase/migrations/0016_super_admin.sql.
-
-### `AdminCollection`
-
-*type* · [src/store/db/admin.ts:16](../../../src/store/db/admin.ts#L16)
-
-```ts
-type AdminCollection = keyof DbData
-```
-
-_No JSDoc yet._
-
-### `AdminActions`
-
-*interface* · [src/store/db/admin.ts:18](../../../src/store/db/admin.ts#L18)
-
-_No JSDoc yet._
-
-| Member | Type | Notes |
-|---|---|---|
-| `setFeature` | `(id: string, on: boolean) => string \| null` | Switches one feature for everyone. Returns an error to show, or null. |
-| `setFeatures` | `(patch: Record<string, boolean>) => string \| null` | Switches several features at once (a whole group). |
-| `resetFeatures` | `() => string \| null` | Turns every feature back on. |
-| `setTextOverride` | `(source: string, lang: Lang, text: string) => string \| null` | Replaces a piece of app text in one language; empty text removes the override. |
-| `resetTextOverrides` | `() => string \| null` | Removes every text override. |
-| `addAnnouncement` | `(input: Pick<Announcement, 'audience' \| 'title' \| 'body' \| 'tone'>) => string \| null` |  |
-| `updateAnnouncement` | `(id: string, patch: Partial<Pick<Announcement, 'audience' \| 'title' \| 'body' \| 'tone' \| 'active'>>) => string \| null` |  |
-| `removeAnnouncement` | `(id: string) => string \| null` |  |
-| `adminSaveRecord` | `(collection: AdminCollection, id: string, record: unknown) => string \| null` | Replaces one record of any collection (array item by id, map entry by key, or the settings object). |
-| `adminInsertRecord` | `(collection: AdminCollection, record: unknown, key?: string) => { id?: string; error?: string }` | Adds a record; arrays get an id when it has none. Returns the id, or an error. |
-| `adminDeleteRecords` | `(collection: AdminCollection, ids: string[]) => string \| null` | Deletes records by id (array) or key (map). |
-| `adminSaveAccount` | `(id: string, patch: Partial<Account>) => string \| null` | Edits any account of any role. |
-| `adminCreateAccount` | `(input: Pick<Account, 'role' \| 'name' \| 'phone' \| 'city'> & Partial<Account>) => { account?: Account; error?: string }` | Creates an account of any role (it can sign in with its phone and the demo code). |
-| `adminDeleteAccount` | `(id: string) => string \| null` | Deletes an account. You can't delete yourself or the last super admin. |
-
-### `adminActions`
-
-*function* · [src/store/db/admin.ts:53](../../../src/store/db/admin.ts#L53)
-
-```ts
-adminActions(set: SetDb, get: GetDb): AdminActions
-```
-
-_No JSDoc yet._
-
-### `ANNOUNCEMENT_AUDIENCES`
-
-*const* · [src/store/db/admin.ts:252](../../../src/store/db/admin.ts#L252)
-
-```ts
-ANNOUNCEMENT_AUDIENCES: (UserRole | 'all')[]
-```
-
-Roles an announcement can target, for pickers.
 
 ## chat.ts
 
@@ -129,66 +64,6 @@ _No JSDoc yet._
 
 ```ts
 chatActions(set: SetDb, get: GetDb): ChatActions
-```
-
-_No JSDoc yet._
-
-## content.ts
-
-Source: [src/store/db/content.ts](../../../src/store/db/content.ts)
-
-Content studio (permission `admin.full`): replace any photo, edit any
-marketplace listing, reorder and rename the couple's home sections, add
-home banners and change the brand details, with no code change. Edits are
-stored as differences from the bundled catalogue, so "restore" simply
-removes them. Every write is audited. Supabase builds publish the result to
-every device (`hooks/useContentSync.ts`, 0021_app_content.sql).
-
-### `ContentPart`
-
-*type* · [src/store/db/content.ts:20](../../../src/store/db/content.ts#L20)
-
-```ts
-type ContentPart = 'images' | 'entries' | 'home' | 'banners' | 'brand' | 'all'
-```
-
-_No JSDoc yet._
-
-### `BannerInput`
-
-*type* · [src/store/db/content.ts:21](../../../src/store/db/content.ts#L21)
-
-```ts
-type BannerInput = Pick<ContentBanner, 'title'> & Partial<Omit<ContentBanner, 'title'>>
-```
-
-_No JSDoc yet._
-
-### `ContentActions`
-
-*interface* · [src/store/db/content.ts:23](../../../src/store/db/content.ts#L23)
-
-_No JSDoc yet._
-
-| Member | Type | Notes |
-|---|---|---|
-| `setContentImage` | `(key: string, address: string \| null) => string \| null` | Shows another photo wherever a bundled one appears; null restores the original. Returns an error to show, or null. |
-| `saveContentEntry` | `(kind: ContentKind, id: string, fields: Record<string, unknown>) => string \| null` | Saves a catalogue record's edited fields (pass every field of the form; only the differences are kept). |
-| `setContentHidden` | `(kind: ContentKind, id: string, hidden: boolean) => string \| null` | Takes a record out of lists and search, or puts it back. |
-| `restoreContentEntry` | `(kind: ContentKind, id: string) => string \| null` | Removes every edit to one record. |
-| `setHomeOrder` | `(order: string[]) => string \| null` | Saves the order of the couple's home sections, top to bottom. |
-| `setHomeTitle` | `(sectionId: string, title: string) => string \| null` | Renames a home section's heading; empty text restores the built-in one. |
-| `saveBanner` | `(input: BannerInput) => { id?: string; error?: string }` | Adds a home banner, or saves one that exists (`id`). Returns its id, or an error. |
-| `removeBanner` | `(id: string) => string \| null` |  |
-| `setBrandField` | `(field: BrandField, value: string) => string \| null` | Replaces one brand detail (name, support phone…); empty text restores the built-in one. |
-| `resetContent` | `(part: ContentPart) => string \| null` | Puts one part of the content, or all of it, back to what the app shipped with. |
-
-### `contentActions`
-
-*function* · [src/store/db/content.ts:48](../../../src/store/db/content.ts#L48)
-
-```ts
-contentActions(set: SetDb, get: GetDb): ContentActions
 ```
 
 _No JSDoc yet._
@@ -482,7 +357,7 @@ production each action becomes an API call against supabase/migrations.
 
 ### `DbData`
 
-*re-export* · [src/store/db/index.ts:34](../../../src/store/db/index.ts#L34)
+*re-export* · [src/store/db/index.ts:31](../../../src/store/db/index.ts#L31)
 
 ```ts
 DbDatafrom './types'
@@ -492,17 +367,17 @@ _No JSDoc yet._
 
 ### `Db`
 
-*type* · [src/store/db/index.ts:35](../../../src/store/db/index.ts#L35)
+*type* · [src/store/db/index.ts:32](../../../src/store/db/index.ts#L32)
 
 ```ts
-type Db = DbData & CoreActions & QuoteActions & ProjectActions & FinanceActions & GigActions & ChatActions & TrustActions & PlannerActions & ToolkitActions & PersonaActions & AdminActions & SocialActions & SupportActions & ContentActions
+type Db = DbData & CoreActions & QuoteActions & ProjectActions & FinanceActions & GigActions & ChatActions & TrustActions & PlannerActions & ToolkitActions & PersonaActions & SupportActions
 ```
 
 _No JSDoc yet._
 
 ### `useDb`
 
-*const* · [src/store/db/index.ts:118](../../../src/store/db/index.ts#L118)
+*const* · [src/store/db/index.ts:102](../../../src/store/db/index.ts#L102)
 
 ```ts
 useDb= create<Db>()( persist( (set, get) => ({ ...START_SEED, ...coreActions(set, get), ...quote…
@@ -512,7 +387,7 @@ _No JSDoc yet._
 
 ### `useInbox`
 
-*hook* · [src/store/db/index.ts:178](../../../src/store/db/index.ts#L178)
+*hook* · [src/store/db/index.ts:157](../../../src/store/db/index.ts#L157)
 
 ```ts
 useInbox(account: Account)
@@ -524,7 +399,7 @@ from a zustand selector would re-render forever.
 
 ### `useThreads`
 
-*hook* · [src/store/db/index.ts:184](../../../src/store/db/index.ts#L184)
+*hook* · [src/store/db/index.ts:163](../../../src/store/db/index.ts#L163)
 
 ```ts
 useThreads(account: Account)
@@ -534,7 +409,7 @@ Threads this account is a member of (platform staff see every thread).
 
 ### `useUnreadMessageCount`
 
-*hook* · [src/store/db/index.ts:196](../../../src/store/db/index.ts#L196)
+*hook* · [src/store/db/index.ts:175](../../../src/store/db/index.ts#L175)
 
 ```ts
 useUnreadMessageCount(account: Account)
@@ -845,112 +720,6 @@ Add a booking's line to a draft quote (quote builder "add from bookings").
 
 _No JSDoc yet._
 
-## social.ts
-
-Source: [src/store/db/social.ts](../../../src/store/db/social.ts)
-
-Social hub: a business connects Facebook, Instagram, WhatsApp and TikTok,
-answers every message and comment from one inbox, and publishes one post to
-every network. In production each action is a Supabase call:
-connect/disconnect → `social-oauth`, replies → `social-send`, publishing and
-the scheduled-post run → `social-publish`, and `receiveSocialMessage` is what
-the `social-webhook` function does when a network delivers a message. The
-demo stands in for the networks with timers (cleared on `resetDemo`).
-
-### `SocialInbound`
-
-*interface* · [src/store/db/social.ts:19](../../../src/store/db/social.ts#L19)
-
-A message or comment as a network delivers it (the webhook payload, normalised).
-
-| Member | Type | Notes |
-|---|---|---|
-| `ownerId` | `string` |  |
-| `network` | `SocialNetwork` |  |
-| `kind` | `SocialThreadKind` |  |
-| `contactName` | `string` |  |
-| `contactHandle` | `string` |  |
-| `contactPhone?` | `string` |  |
-| `text` | `string` |  |
-| `postId?` | `string` |  |
-| `postCaption?` | `string` |  |
-
-### `SocialLeadInput`
-
-*interface* · [src/store/db/social.ts:32](../../../src/store/db/social.ts#L32)
-
-What "Create lead" saves from a conversation.
-
-| Member | Type | Notes |
-|---|---|---|
-| `eventDate` | `string` |  |
-| `guests?` | `number` |  |
-| `functions` | `string[]` |  |
-| `budget?` | `number` |  |
-| `phone?` | `string` |  |
-
-### `SocialActions`
-
-*interface* · [src/store/db/social.ts:41](../../../src/store/db/social.ts#L41)
-
-Store actions of the social hub.
-
-| Member | Type | Notes |
-|---|---|---|
-| `connectSocialAccount` | `(input: { network: SocialNetwork; handle: string; name?: string }) => string \| null` | Connects a network for the signed-in business (in production: after the network's OAuth consent). Error text or null. |
-| `disconnectSocialAccount` | `(accountId: string) => string \| null` |  |
-| `reconnectSocialAccount` | `(accountId: string) => string \| null` | Renews an expired token (in production: the OAuth consent again). |
-| `receiveSocialMessage` | `(input: SocialInbound) => string \| null` | A message or comment arrives from a network (the webhook). Applies auto-replies and the away message. Returns the thread id. |
-| `syncSocialInbox` | `() => number` | Pulls anything new from the connected networks and wakes snoozed threads. Returns how many messages arrived. |
-| `sendSocialReply` | `(threadId: string, text: string, opts?: { media?: SocialMedia[]; template?: string }) => string \| null` | Replies in the thread (message or public comment reply). Outside WhatsApp's 24-hour window pass an approved template id. |
-| `addSocialNote` | `(threadId: string, text: string) => string \| null` |  |
-| `markSocialThreadRead` | `(threadId: string) => void` |  |
-| `setSocialThreadStatus` | `(threadId: string, status: SocialThreadStatus, snoozeHours?: number) => string \| null` | `pending` with `snoozeHours` hides the thread until then. |
-| `toggleSocialThreadStar` | `(threadId: string) => void` |  |
-| `setSocialThreadLabels` | `(threadId: string, labels: string[]) => void` |  |
-| `assignSocialThread` | `(threadId: string, assignee?: string) => void` |  |
-| `setSocialOptIn` | `(threadId: string, optedIn: boolean) => string \| null` | WhatsApp: records that the customer agreed (or no longer agrees) to broadcasts. The opted-in count is the WhatsApp audience. |
-| `createLeadFromSocialThread` | `(threadId: string, input: SocialLeadInput) => { leadId?: string; error?: string }` | Turns a conversation into a CRM lead (source `social`) and links the two. Returns the lead id, or error text. |
-| `saveSocialPost` | `(input: Partial<SocialPost> & Pick<SocialPost, 'caption' \| 'networks' \| 'media'>) => { id?: string; error?: string }` | Creates or updates a draft. Returns the post id. |
-| `scheduleSocialPost` | `(postId: string, at: string) => string \| null` |  |
-| `publishSocialPost` | `(postId: string) => string \| null` | Sends the post to every chosen network now. Networks that refuse it are marked failed; the rest go out. |
-| `retrySocialPost` | `(postId: string, network: SocialNetwork) => string \| null` |  |
-| `duplicateSocialPost` | `(postId: string) => string \| null` |  |
-| `deleteSocialPost` | `(postId: string) => string \| null` |  |
-| `runDueSocialPosts` | `() => number` | Publishes scheduled posts whose time has come and wakes snoozed threads (pg_cron + social-publish in production). Returns how many posts started. |
-| `updateSocialSettings` | `(patch: Partial<SocialSettings>) => string \| null` |  |
-| `mirrorSocialData` | `(ownerId: string, data: { accounts: SocialAccount[]; threads: SocialThread[]; messages: SocialMessage[]; posts: SocialPost[]; settings?: SocialSettings }) => void` | Supabase builds: replaces one business's hub on this device with what the server holds (`syncSocialFromServer`). |
-
-### `clearSocialTimers`
-
-*function* · [src/store/db/social.ts:82](../../../src/store/db/social.ts#L82)
-
-```ts
-clearSocialTimers()
-```
-
-Stops the simulated networks (on resetDemo).
-
-### `socialSettingsFor`
-
-*function* · [src/store/db/social.ts:108](../../../src/store/db/social.ts#L108)
-
-```ts
-socialSettingsFor(all: Record<string, SocialSettings>, ownerId: string)
-```
-
-Settings for a business, with the starter set until it saves its own.
-
-### `socialActions`
-
-*function* · [src/store/db/social.ts:113](../../../src/store/db/social.ts#L113)
-
-```ts
-socialActions(set: SetDb, get: GetDb): SocialActions
-```
-
-The social hub actions for the shared store.
-
 ## support.ts
 
 Source: [src/store/db/support.ts](../../../src/store/db/support.ts)
@@ -1113,7 +882,7 @@ Source: [src/store/db/types.ts](../../../src/store/db/types.ts)
 
 ### `DbData`
 
-*interface* · [src/store/db/types.ts:52](../../../src/store/db/types.ts#L52)
+*interface* · [src/store/db/types.ts:47](../../../src/store/db/types.ts#L47)
 
 Everything the shared on-device "backend" persists. Mirrors the SQL schema.
 
@@ -1160,10 +929,5 @@ Everything the shared on-device "backend" persists. Mirrors the SQL schema.
 | `textOverrides` | `TextOverrides` | Replacement text for any English source string, per language. |
 | `announcements` | `Announcement[]` | Notices shown at the top of a role's home. |
 | `content` | `AppContent` | Replacement photos, listing edits, home sections, banners and brand details (Content studio). |
-| `socialAccounts` | `SocialAccount[]` | Facebook pages, Instagram profiles, WhatsApp numbers and TikTok accounts a business connected. |
-| `socialThreads` | `SocialThread[]` | The unified inbox: direct messages and comments from every connected network. |
-| `socialMessages` | `SocialMessage[]` |  |
-| `socialPosts` | `SocialPost[]` | Posts sent (or scheduled) to several networks at once. |
-| `socialSettings` | `Record<string, SocialSettings>` | Saved replies, auto-replies and away message, keyed by the business account id. |
 | `bugReports` | `BugReportRecord[]` | Bug reports sent with shake to report, newest first (super admin console → Bug reports). |
 | `supportTickets` | `SupportTicket[]` | Help requests from every role, newest activity first (Help and support; Platform → Help desk). |

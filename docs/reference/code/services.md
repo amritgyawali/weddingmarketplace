@@ -22,8 +22,6 @@ Every exported symbol in `src/services/`, file by file. The guide that explains 
 - [`profile.ts`](#profilets) (5 exports) · Profile edits for every role: what a person may change about themselves and how it is cleaned before it is saved (on the device by `useSess…
 - [`quotes.ts`](#quotests) (10 exports)
 - [`risk.ts`](#riskts) (5 exports) · Risk detection for coordinators — the same rules as the `project_risks` view in supabase/migrations/0003, evaluated on-device.
-- [`segments.ts`](#segmentsts) (7 exports) · Segments for the operations console (master plan §4.4): every list can be cut by occasion × trade × city, so Vendor Success can open "decor…
-- [`social.ts`](#socialts) (28 exports) · Social hub rules (pure): checking a post against each network's limits, hashtag and best-time suggestions, the networks' reply windows, rea…
 - [`toolkit.ts`](#toolkitts) (34 exports) · Pure calculators behind the role toolkits. No React, no store: every function takes plain values and returns plain values so it can move to…
 
 ## api.ts
@@ -159,14 +157,14 @@ Source: [src/services/auth.ts](../../../src/services/auth.ts)
 *function* · [src/services/auth.ts:9](../../../src/services/auth.ts#L9)
 
 ```ts
-enterDemoRole(role: UserRole | 'super_admin'): string | null
+enterDemoRole(role: 'customer'): string | null
 ```
 
-Opens a fixed local demo account from the role picker; never bypasses live authentication. Returns an error on refusal.
+Opens the couple's fixed local demo account; never bypasses live authentication. Returns an error on refusal.
 
 ### `completeLogin`
 
-*function* · [src/services/auth.ts:34](../../../src/services/auth.ts#L34)
+*function* · [src/services/auth.ts:26](../../../src/services/auth.ts#L26)
 
 ```ts
 completeLogin(account: Account)
@@ -177,7 +175,7 @@ route guards in the root layout, which moves the user into their role's app.
 
 ### `onAccountCreated`
 
-*function* · [src/services/auth.ts:52](../../../src/services/auth.ts#L52)
+*function* · [src/services/auth.ts:44](../../../src/services/auth.ts#L44)
 
 ```ts
 onAccountCreated(account: Account)
@@ -187,7 +185,7 @@ Side effects for a brand-new account before it signs in.
 
 ### `impersonate`
 
-*function* · [src/services/auth.ts:61](../../../src/services/auth.ts#L61)
+*function* · [src/services/auth.ts:53](../../../src/services/auth.ts#L53)
 
 ```ts
 impersonate(account: Account)
@@ -197,7 +195,7 @@ Super admin: opens the app as another user, with a bar to come back.
 
 ### `endImpersonation`
 
-*function* · [src/services/auth.ts:71](../../../src/services/auth.ts#L71)
+*function* · [src/services/auth.ts:63](../../../src/services/auth.ts#L63)
 
 ```ts
 endImpersonation()
@@ -207,7 +205,7 @@ Ends "Sign in as" and returns to the super admin's own account.
 
 ### `logout`
 
-*function* · [src/services/auth.ts:79](../../../src/services/auth.ts#L79)
+*function* · [src/services/auth.ts:71](../../../src/services/auth.ts#L71)
 
 ```ts
 logout()
@@ -2430,401 +2428,6 @@ RISK_ICONS: Record<RiskKind, string>
 ```
 
 _No JSDoc yet._
-
-## segments.ts
-
-Source: [src/services/segments.ts](../../../src/services/segments.ts)
-
-Segments for the operations console (master plan §4.4): every list can be
-cut by occasion × trade × city, so Vendor Success can open "decorators in
-Pokhara" and a coordinator "pasni projects this month". Pure functions, no
-React and no store.
-
-### `Segment`
-
-*interface* · [src/services/segments.ts:14](../../../src/services/segments.ts#L14)
-
-A segment; unset keys match everything.
-
-| Member | Type | Notes |
-|---|---|---|
-| `occasion?` | `string` |  |
-| `trade?` | `TradeId` |  |
-| `city?` | `string` |  |
-
-### `SegmentFacts`
-
-*interface* · [src/services/segments.ts:21](../../../src/services/segments.ts#L21)
-
-What a record looks like to a segment.
-
-| Member | Type | Notes |
-|---|---|---|
-| `occasion?` | `string` |  |
-| `trades` | `TradeId[]` |  |
-| `city?` | `string` |  |
-
-### `projectFacts`
-
-*function* · [src/services/segments.ts:30](../../../src/services/segments.ts#L30)
-
-```ts
-projectFacts(p: Pick<Project, 'occasion' | 'eventType' | 'requirements' | 'city'>, occasions?: OccasionDef[]): SegmentFacts
-```
-
-A project: its occasion, the trades it needs and its city.
-
-### `providerFacts`
-
-*function* · [src/services/segments.ts:37](../../../src/services/segments.ts#L37)
-
-```ts
-providerFacts(p: { serviceId: string; city: string }): SegmentFacts
-```
-
-A provider listing: its service's trade and city.
-
-### `freelancerFacts`
-
-*function* · [src/services/segments.ts:40](../../../src/services/segments.ts#L40)
-
-```ts
-freelancerFacts(f: { skills: string[]; city: string }): SegmentFacts
-```
-
-A freelancer: the trades of their crew roles and city.
-
-### `inSegment`
-
-*function* · [src/services/segments.ts:43](../../../src/services/segments.ts#L43)
-
-```ts
-inSegment(seg: Segment, facts: SegmentFacts)
-```
-
-Does a record fall in the segment?
-
-### `segmentLabel`
-
-*function* · [src/services/segments.ts:47](../../../src/services/segments.ts#L47)
-
-```ts
-segmentLabel(seg: Segment, names: { occasion?: string; trade?: string })
-```
-
-Human label for a segment ("Decor and floral · Pokhara"), or null when it is empty.
-
-## social.ts
-
-Source: [src/services/social.ts](../../../src/services/social.ts)
-
-Social hub rules (pure): checking a post against each network's limits,
-hashtag and best-time suggestions, the networks' reply windows, reading a
-customer's message for intent and lead details, auto-replies and the away
-message, and the inbox and post numbers. No React, no store.
-
-### `captionFor`
-
-*function* · [src/services/social.ts:15](../../../src/services/social.ts#L15)
-
-```ts
-captionFor(post: Pick<SocialPost, 'caption' | 'overrides'>, network: SocialNetwork)
-```
-
-The caption a network gets: its own override, else the main caption.
-
-### `hashtagsIn`
-
-*function* · [src/services/social.ts:18](../../../src/services/social.ts#L18)
-
-```ts
-hashtagsIn(text: string)
-```
-
-`#tags` in a caption (letters in any script, digits, underscores).
-
-### `PostCheck`
-
-*interface* · [src/services/social.ts:21](../../../src/services/social.ts#L21)
-
-What one network says about a post before it goes out.
-
-| Member | Type | Notes |
-|---|---|---|
-| `network` | `SocialNetwork` |  |
-| `errors` | `string[]` | Stop the post going out to this network. |
-| `warnings` | `string[]` | Worth knowing; the post can still go. |
-
-### `checkPost`
-
-*function* · [src/services/social.ts:30](../../../src/services/social.ts#L30)
-
-```ts
-checkPost(post: Pick<SocialPost, 'caption' | 'overrides' | 'media' | 'networks' | 'scheduledAt'>, accounts: SocialAccount[], nowIso: string): PostCheck[]
-```
-
-Checks a post against every chosen network before it is published or scheduled.
-
-### `postReady`
-
-*function* · [src/services/social.ts:56](../../../src/services/social.ts#L56)
-
-```ts
-postReady(checks: PostCheck[])
-```
-
-True when every chosen network accepts the post.
-
-### `suggestHashtags`
-
-*function* · [src/services/social.ts:93](../../../src/services/social.ts#L93)
-
-```ts
-suggestHashtags(input: { services: string[]; city: string; caption: string; date: string }): string[]
-```
-
-Hashtags for a post: the business's services, its city, the coming wedding season and general wedding tags, minus those already used.
-
-### `bestHourFromHistory`
-
-*function* · [src/services/social.ts:136](../../../src/services/social.ts#L136)
-
-```ts
-bestHourFromHistory(posts: SocialPost[]): number | null
-```
-
-Hour of day (0–23) at which this business's published posts earned the most engagement per reach; null with fewer than three posts.
-
-### `nextBestSlots`
-
-*function* · [src/services/social.ts:163](../../../src/services/social.ts#L163)
-
-```ts
-nextBestSlots(networks: SocialNetwork[], from: Date, count = 3, learnedHour: number | null = null): { at: string; why: string }[]
-```
-
-The next good times to post to these networks, soonest first, at least an hour from `from`.
-
-### `ReplyWindow`
-
-*interface* · [src/services/social.ts:194](../../../src/services/social.ts#L194)
-
-Whether a conversation can still be answered, and how.
-
-| Member | Type | Notes |
-|---|---|---|
-| `state` | `'open' \| 'human_agent' \| 'template' \| 'closed'` | `human_agent`: Meta allows a person's reply (not automation) for 7 days. `template`: WhatsApp needs an approved template. |
-| `hoursLeft?` | `number` |  |
-| `message` | `string` |  |
-
-### `replyWindow`
-
-*function* · [src/services/social.ts:202](../../../src/services/social.ts#L202)
-
-```ts
-replyWindow(thread: Pick<SocialThread, 'network' | 'kind' | 'lastInboundAt'>, nowMs: number): ReplyWindow
-```
-
-Whether the network still lets the business reply to this conversation, and how.
-
-### `SocialIntent`
-
-*type* · [src/services/social.ts:216](../../../src/services/social.ts#L216)
-
-```ts
-type SocialIntent = 'price' | 'availability' | 'location' | 'visit' | 'booking' | 'complaint' | 'thanks'
-```
-
-What a customer message is about.
-
-### `detectIntents`
-
-*function* · [src/services/social.ts:229](../../../src/services/social.ts#L229)
-
-```ts
-detectIntents(text: string): SocialIntent[]
-```
-
-What a customer's message is about (several can apply).
-
-### `ReplyContext`
-
-*interface* · [src/services/social.ts:235](../../../src/services/social.ts#L235)
-
-The business details filled into replies.
-
-| Member | Type | Notes |
-|---|---|---|
-| `business` | `string` |  |
-| `city` | `string` |  |
-| `price?` | `string` | Starting price, already formatted ("NPR 180,000 per event"). |
-| `contact` | `string` | Customer's name; the first word is used. |
-
-### `fillReply`
-
-*function* · [src/services/social.ts:245](../../../src/services/social.ts#L245)
-
-```ts
-fillReply(text: string, ctx: ReplyContext): string
-```
-
-Fills `{price}`, `{city}`, `{business}` and `{1}`/`{name}` (the customer's first name) in a saved reply or template.
-
-### `suggestReplies`
-
-*function* · [src/services/social.ts:265](../../../src/services/social.ts#L265)
-
-```ts
-suggestReplies(text: string, ctx: ReplyContext): string[]
-```
-
-Up to three ready replies for what the customer asked, filled in for this business.
-
-### `LeadHints`
-
-*interface* · [src/services/social.ts:272](../../../src/services/social.ts#L272)
-
-Lead details read from a conversation.
-
-| Member | Type | Notes |
-|---|---|---|
-| `eventDate?` | `string` |  |
-| `guests?` | `number` |  |
-| `phone?` | `string` |  |
-| `budget?` | `number` |  |
-| `functions` | `string[]` |  |
-
-### `leadHints`
-
-*function* · [src/services/social.ts:303](../../../src/services/social.ts#L303)
-
-```ts
-leadHints(texts: string[], todayIso: string): LeadHints
-```
-
-Event date, guests, phone, budget and functions mentioned in a conversation (latest mention wins).
-
-### `isAway`
-
-*function* · [src/services/social.ts:350](../../../src/services/social.ts#L350)
-
-```ts
-isAway(away: SocialSettings['away'], at: Date): boolean
-```
-
-Is the business away (outside its hours) at this local time? Hours may span midnight.
-
-### `matchRule`
-
-*function* · [src/services/social.ts:360](../../../src/services/social.ts#L360)
-
-```ts
-matchRule(rules: SocialAutoRule[], text: string, network: SocialNetwork): SocialAutoRule | undefined
-```
-
-The first active auto-reply rule whose keyword the message contains, for this network.
-
-### `engagementOf`
-
-*function* · [src/services/social.ts:366](../../../src/services/social.ts#L366)
-
-```ts
-engagementOf(r: SocialPostResult)
-```
-
-Likes + comments + shares + saves.
-
-### `projectedMetrics`
-
-*function* · [src/services/social.ts:380](../../../src/services/social.ts#L380)
-
-```ts
-projectedMetrics(seed: string, network: SocialNetwork, followers: number, mediaCount: number): Required<Pick<SocialPostResult, 'reach' | 'likes' | 'comments' | 'shares' | 'saves'>>
-```
-
-Reach and engagement a network reports for a post, worked out from the
-account's followers (the demo stands in for the networks' insights APIs).
-WhatsApp reach is the customers the broadcast was read by.
-
-### `postUrl`
-
-*function* · [src/services/social.ts:395](../../../src/services/social.ts#L395)
-
-```ts
-postUrl(network: SocialNetwork, handle: string, id: string): string | undefined
-```
-
-Public link of a published post (the networks return the real one; the demo builds a believable one).
-
-### `formatCount`
-
-*function* · [src/services/social.ts:405](../../../src/services/social.ts#L405)
-
-```ts
-formatCount(n: number): string
-```
-
-950 → "950", 12,400 → "12.4K", 1,250,000 → "1.3M".
-
-### `InboxStats`
-
-*interface* · [src/services/social.ts:412](../../../src/services/social.ts#L412)
-
-Inbox numbers: open, unread, unanswered, reply time, unread by network.
-
-| Member | Type | Notes |
-|---|---|---|
-| `open` | `number` |  |
-| `unread` | `number` |  |
-| `unanswered` | `number` | Open conversations whose last message is from the customer. |
-| `avgResponseMins` | `number \| null` |  |
-| `byNetwork` | `Record<SocialNetwork, number>` |  |
-
-### `inboxStats`
-
-*function* · [src/services/social.ts:422](../../../src/services/social.ts#L422)
-
-```ts
-inboxStats(threads: SocialThread[], messages: SocialMessage[]): InboxStats
-```
-
-Numbers for the inbox header and the insights tab.
-
-### `PostStats`
-
-*interface* · [src/services/social.ts:439](../../../src/services/social.ts#L439)
-
-Post numbers: published, scheduled, reach, engagement, by network, best post.
-
-| Member | Type | Notes |
-|---|---|---|
-| `published` | `number` |  |
-| `scheduled` | `number` |  |
-| `reach` | `number` |  |
-| `engagement` | `number` |  |
-| `rate` | `number` | Engagement per reach, 0–1. |
-| `byNetwork` | `Record<SocialNetwork, { posts: number; reach: number; engagement: number }>` |  |
-| `top?` | `SocialPost` |  |
-
-### `postStats`
-
-*function* · [src/services/social.ts:451](../../../src/services/social.ts#L451)
-
-```ts
-postStats(posts: SocialPost[]): PostStats
-```
-
-Totals across published posts, per network, and the best post by engagement.
-
-### `optInKeyword`
-
-*function* · [src/services/social.ts:483](../../../src/services/social.ts#L483)
-
-```ts
-optInKeyword(text: string): 'in' | 'out' | null
-```
-
-WhatsApp broadcast consent by keyword: "START"/"SUBSCRIBE" opts in, "STOP"/"UNSUBSCRIBE" opts out (also in Nepali). Same words as the SQL trigger in 0020.
 
 ## toolkit.ts
 

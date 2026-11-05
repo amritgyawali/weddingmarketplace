@@ -335,8 +335,8 @@ function Services({ project }: { project: Project }) {
               const reviewed = reviews.some((x) => x.bookingId === b.id && x.authorId === account.id);
               return (
                 <View key={b.id} style={{ gap: 8 }}>
-                  <BookingCard project={project} booking={b} mode="customer" onPress={() => setOpen(open === b.id ? null : b.id)} />
-                  {(open === b.id || b.deliverables.some((d) => d.status === 'READY_FOR_REVIEW')) && <DeliverablesPanel project={project} booking={b} mode="customer" />}
+                  <BookingCard project={project} booking={b} onPress={() => setOpen(open === b.id ? null : b.id)} />
+                  {(open === b.id || b.deliverables.some((d) => d.status === 'READY_FOR_REVIEW')) && <DeliverablesPanel project={project} booking={b} />}
                   {b.status === 'COMPLETED' && !reviewed && (
                     <KButton label={`Review ${b.providerName}`} icon="star-outline" size="sm" variant="secondary" onPress={() => router.push({ pathname: '/write-review', params: { bookingId: b.id, projectId: project.id } })} />
                   )}

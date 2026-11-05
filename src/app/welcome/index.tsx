@@ -1,7 +1,7 @@
 import type { ImageContentPosition } from 'expo-image';
 import { Photo } from '@/components/ui/Photo';
 import { LinearGradient } from 'expo-linear-gradient';
-import { Redirect, router } from 'expo-router';
+import { router } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect, useRef, useState } from 'react';
 import {
@@ -21,11 +21,14 @@ import { LanguageSwitch } from '@/components/ui/LanguageSwitch';
 import { Ornament } from '@/components/ui/Ornament';
 import { PressableScale } from '@/components/ui/PressableScale';
 import { Text } from '@/components/ui/Text';
+import { toastError } from '@/components/ui/Toast';
 import { BRAND } from '@/constants/brand';
 import { usesDirectRoleEntry } from '@/constants/env';
 import { photo, type PhotoKey } from '@/constants/images';
 import { colors, gradients, themed } from '@/constants/theme';
 import { useT } from '@/i18n';
+import { enterDemoRole } from '@/services/auth';
+import { useSession } from '@/store/useSession';
 
 const SLIDES: { image: PhotoKey; credit: string; headline: string; focus: ImageContentPosition }[] = [
   {
@@ -86,8 +89,17 @@ export default function WelcomeCarousel() {
   };
 
   const slide = SLIDES[index];
-
-  if (usesDirectRoleEntry()) return <Redirect href="/welcome/role" />;
+  // The local demo opens the couple's seeded workspace in one tap; live builds sign in first.
+  const direct = usesDirectRoleEntry();
+  const start = () => {
+    if (direct) {
+      const error = enterDemoRole('customer');
+      if (error) toastError(error);
+      return;
+    }
+    useSession.getState().selectRole('customer');
+    router.push('/welcome/login');
+  };
 
   return (
     <View style={styles.root}>
@@ -147,7 +159,7 @@ export default function WelcomeCarousel() {
         <Animated.View entering={FadeInUp.duration(500).delay(150)} style={styles.actions}>
           <PressableScale
             haptic
-            onPress={() => router.push('/welcome/role')}
+            onPress={start}
             style={styles.primary}
             accessibilityLabel="Get started">
             <Text size={16} weight="semibold" color={colors.white}>
@@ -156,12 +168,16 @@ export default function WelcomeCarousel() {
           </PressableScale>
 
           <View style={styles.links}>
-            <Pressable onPress={() => router.push('/welcome/role')} hitSlop={12} accessibilityRole="button">
-              <Text size={15} weight="medium" color={colors.onDark}>
-                Log in
-              </Text>
-            </Pressable>
-            <View style={styles.sep} />
+            {!direct && (
+              <>
+                <Pressable onPress={start} hitSlop={12} accessibilityRole="button">
+                  <Text size={15} weight="medium" color={colors.onDark}>
+                    Log in
+                  </Text>
+                </Pressable>
+                <View style={styles.sep} />
+              </>
+            )}
             <Pressable onPress={() => router.push('/join-wedding')} hitSlop={12} accessibilityRole="button">
               <Text size={15} weight="medium" color={colors.onDark}>
                 I have an invite code

@@ -4,12 +4,9 @@ import { StyleSheet, View } from 'react-native';
 
 import { Card, EmptyBlock, KField, ListRow, SectionTitle, type IconName } from '@/components/kit';
 import { Text } from '@/components/ui/Text';
-import { toolRole, toolRule, type ToolId } from '@/data/access';
+import { toolRule, type ToolId } from '@/data/access';
 import { featureOn, toolFeature } from '@/data/features';
 import { BUILT_IN_OCCASIONS, type OccasionDef } from '@/data/occasions';
-import { PERMISSION_LABELS } from '@/data/permissions';
-import { SERVICE_BY_ID } from '@/data/services';
-import { SERVICE_CAPABILITIES, SERVICES_BY_CREW_ROLE } from '@/data/trades';
 import { useExperience } from '@/hooks/useExperience';
 import { toolTitle, visibleTools } from '@/services/experience';
 import { useDb } from '@/store/useDb';
@@ -28,18 +25,9 @@ export interface ToolDef {
   Component: ComponentType;
 }
 
-/** Route to a tool inside the signed-in role's app. */
-export function toolHref(role: UserRole, id: string): Href {
-  switch (role) {
-    case 'vendor':
-      return { pathname: '/business/tool/[id]', params: { id } };
-    case 'freelancer':
-      return { pathname: '/freelancer/tool/[id]', params: { id } };
-    case 'platform':
-      return { pathname: '/platform/tool/[id]', params: { id } };
-    default:
-      return { pathname: '/tool/[id]', params: { id } };
-  }
+/** Route to a planning tool (the customer edition has only the couple's toolkit). */
+export function toolHref(_role: UserRole, id: string): Href {
+  return { pathname: '/tool/[id]', params: { id } };
 }
 
 /**
@@ -59,29 +47,10 @@ export function useVisibleTools(tools: ToolDef[]): ToolDef[] {
     .map((t) => ({ ...t, title: toolTitle(exp, t) }));
 }
 
-/** Services that would unlock a tool, for the "why can't I see this" message. */
-const unlockingServices = (id: string) => {
-  const caps = toolRule(id).capsAny ?? toolRule(id).capsAll ?? [];
-  return Object.entries(SERVICE_CAPABILITIES)
-    .filter(([, granted]) => caps.some((c) => (granted as string[]).includes(c)))
-    .map(([sid]) => SERVICE_BY_ID[sid]?.name.toLowerCase())
-    .filter(Boolean)
-    .slice(0, 4);
-};
-
 /** Occasions whose plans include a couple tool. */
 const unlockingOccasions = (id: string, occasions: OccasionDef[]) => {
   const caps = toolRule(id).capsAny ?? toolRule(id).capsAll ?? [];
   return occasions.filter((o) => o.active && caps.some((c) => o.modules.some((m) => `plan.${m}` === c))).map((o) => o.label.toLowerCase());
-};
-
-/** Crew roles that would unlock a freelancer tool. */
-const unlockingSkills = (id: string) => {
-  const caps = toolRule(id).capsAny ?? toolRule(id).capsAll ?? [];
-  return Object.entries(SERVICES_BY_CREW_ROLE)
-    .filter(([, services]) => services.some((sid) => caps.some((c) => ((SERVICE_CAPABILITIES[sid] ?? []) as string[]).includes(c))))
-    .map(([role]) => role.toLowerCase())
-    .slice(0, 4);
 };
 
 /** Searchable, grouped index of a role's toolkit. */
@@ -131,22 +100,7 @@ export function ToolRoute({ tools, visible, settingsHref }: { tools: ToolDef[]; 
       </ToolPage>
     );
   }
-  if (def && visible && !visible.some((x) => x.id === def.id) && toolRole(def.id) === 'platform') {
-    const rule = toolRule(def.id);
-    const needs = [...(rule.perms ?? []), ...(rule.permsAny ?? [])].map((p) => PERMISSION_LABELS[p].toLowerCase());
-    return (
-      <ToolPage title={def.title}>
-        <EmptyBlock
-          icon="lock-closed-outline"
-          title={`${def.title} isn’t part of your role`}
-          message={needs.length ? `It is for staff who can ${needs.join(' or ')}. Ask an admin if you need it.` : 'Ask an admin if you need it.'}
-          action="All tools"
-          onAction={() => (router.canGoBack() ? router.back() : undefined)}
-        />
-      </ToolPage>
-    );
-  }
-  if (def && visible && !visible.some((x) => x.id === def.id) && toolRole(def.id) === 'customer') {
+  if (def && visible && !visible.some((x) => x.id === def.id)) {
     const plans = unlockingOccasions(def.id, catalogue.length ? catalogue : BUILT_IN_OCCASIONS);
     return (
       <ToolPage title={def.title}>
@@ -155,30 +109,6 @@ export function ToolRoute({ tools, visible, settingsHref }: { tools: ToolDef[]; 
           title={`${def.title} isn’t part of this plan`}
           message={`${plans.length ? `It is for ${plans.join(', ')} plans. ` : ''}Switch to another celebration, or plan a new one, from your plan page.`}
           action={settingsHref ? 'Open my plan' : 'All tools'}
-          onAction={() => (settingsHref ? router.push(settingsHref) : router.canGoBack() ? router.back() : undefined)}
-        />
-      </ToolPage>
-    );
-  }
-  if (def && visible && !visible.some((x) => x.id === def.id)) {
-    const crew = toolRole(def.id) === 'freelancer';
-    const unlock = crew ? unlockingSkills(def.id) : unlockingServices(def.id);
-    const settings = crew ? 'Your craft' : 'Your services';
-    return (
-      <ToolPage title={def.title}>
-        <EmptyBlock
-          icon="lock-closed-outline"
-          title={crew ? `${def.title} isn’t part of your craft yet` : `${def.title} isn’t part of your business yet`}
-          message={
-            unlock.length
-              ? crew
-                ? `It is for crew who work as ${unlock.join(', ')}. Add one of those skills in Your craft to use it.`
-                : `It is for businesses that offer ${unlock.join(', ')}. Add one of those in Your services to use it.`
-              : crew
-                ? 'It isn’t available for the skills on your profile.'
-                : 'It isn’t available for the services you offer.'
-          }
-          action={settingsHref ? settings : 'All tools'}
           onAction={() => (settingsHref ? router.push(settingsHref) : router.canGoBack() ? router.back() : undefined)}
         />
       </ToolPage>

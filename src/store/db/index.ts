@@ -15,9 +15,7 @@ import { generateTasks, taskTitleKey, WEDDING_ONLY_TASKS } from '@/services/plan
 import { lazyStorage } from '@/store/lazyStorage';
 import type { Account } from '@/types/platform';
 
-import { adminActions, type AdminActions } from './admin';
 import { chatActions, type ChatActions, clearReplyTimers } from './chat';
-import { contentActions, type ContentActions } from './content';
 import { coreActions, type CoreActions } from './core';
 import { financeActions, type FinanceActions } from './finance';
 import { gigActions, type GigActions } from './gigs';
@@ -25,14 +23,13 @@ import { personaActions, type PersonaActions, staffDenied } from './personas';
 import { plannerActions, type PlannerActions } from './planner';
 import { projectActions, type ProjectActions } from './projects';
 import { quoteActions, type QuoteActions } from './quotes';
-import { clearSocialTimers, socialActions, type SocialActions } from './social';
 import { supportActions, type SupportActions } from './support';
 import { toolkitActions, type ToolkitActions } from './toolkit';
 import { trustActions, type TrustActions } from './trust';
 import type { DbData } from './types';
 
 export type { DbData } from './types';
-export type Db = DbData & CoreActions & QuoteActions & ProjectActions & FinanceActions & GigActions & ChatActions & TrustActions & PlannerActions & ToolkitActions & PersonaActions & AdminActions & SocialActions & SupportActions & ContentActions;
+export type Db = DbData & CoreActions & QuoteActions & ProjectActions & FinanceActions & GigActions & ChatActions & TrustActions & PlannerActions & ToolkitActions & PersonaActions & SupportActions;
 
 // Built once at start-up: the first install's data, and the list of persisted keys.
 // (A returning install's saved data replaces it as soon as the store is restored.)
@@ -85,19 +82,6 @@ function addSeedRecords(data: DbData): DbData {
   };
 }
 
-/** v6: the social hub collections, with the demo businesses' accounts, inbox and posts. Nothing existing is changed. */
-function addSocial(data: DbData): DbData {
-  const seed = buildSeedData();
-  return {
-    ...data,
-    socialAccounts: data.socialAccounts ?? seed.socialAccounts,
-    socialThreads: data.socialThreads ?? seed.socialThreads,
-    socialMessages: data.socialMessages ?? seed.socialMessages,
-    socialPosts: data.socialPosts ?? seed.socialPosts,
-    socialSettings: data.socialSettings ?? seed.socialSettings,
-  };
-}
-
 /** The demo texts that said "Dhanyabad" before v7, and what they say now. */
 const OLD_THANKS: Record<string, string> = {
   'Dhanyabad! It was lovely to be part of your celebration. A review on Vivah would mean a lot to us.': 'Thank you! It was lovely to be part of your celebration. A review on Vivah would mean a lot to us.',
@@ -129,15 +113,11 @@ export const useDb = create<Db>()(
       ...plannerActions(set, get),
       ...toolkitActions(set, get),
       ...personaActions(set, get),
-      ...adminActions(set, get),
-      ...socialActions(set, get),
       ...supportActions(set, get),
-      ...contentActions(set, get),
       resetDemo: () => {
         const denied = staffDenied('demo.reset', get);
         if (denied) return denied;
         clearReplyTimers();
-        clearSocialTimers();
         // Bug reports are real feedback, not demo data: they survive a reset.
         set({ ...buildSeedData(), bugReports: get().bugReports });
         return null;
@@ -148,7 +128,7 @@ export const useDb = create<Db>()(
       // v3: Nepal orchestration model (projects → requirements → bookings → crew).
       // v4: adds the newborn demo project, the new demo tool records and the nwaran function (additive).
       // v5: vehicle services on the built-in occasions; feature flags, text overrides, announcements (additive).
-      // v6: the social hub (connected networks, unified inbox, posts), seeded for the demo businesses (additive).
+      // v6: the social hub (business app; not part of the customer edition, so nothing to add).
       // v7: content edited in the super admin console (photos, listings, home sections, banners, brand); starts empty (additive).
       // v8: the seeded "Dhanyabad" texts now say "Thank you" (only exact seed texts change).
       // v9: help requests (Help and support), with the demo requests (additive).
@@ -160,7 +140,6 @@ export const useDb = create<Db>()(
         let data = persisted as DbData;
         if (version < 4) data = addSeedRecords(data);
         if (version < 5) data = addVehicles(data);
-        if (version < 6) data = addSocial(data);
         if (version < 7) data = { ...data, content: normalizeContent(data.content) };
         if (version < 8) data = sayThankYou(data);
         if (version < 9) data = { ...data, supportTickets: data.supportTickets ?? buildSeedData().supportTickets };

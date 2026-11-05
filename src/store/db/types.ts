@@ -34,12 +34,7 @@ import type {
   ReviewRecord,
   SeatingLayout,
   ShortlistEntry,
-  SocialAccount,
-  SocialMessage,
-  SocialPost,
-  SocialSettings,
   SupportTicket,
-  SocialThread,
   StaffMember,
   Thread,
   ToolEntry,
@@ -106,16 +101,6 @@ export interface DbData {
   announcements: Announcement[];
   /** Replacement photos, listing edits, home sections, banners and brand details (Content studio). */
   content: AppContent;
-  // social hub (business app)
-  /** Facebook pages, Instagram profiles, WhatsApp numbers and TikTok accounts a business connected. */
-  socialAccounts: SocialAccount[];
-  /** The unified inbox: direct messages and comments from every connected network. */
-  socialThreads: SocialThread[];
-  socialMessages: SocialMessage[];
-  /** Posts sent (or scheduled) to several networks at once. */
-  socialPosts: SocialPost[];
-  /** Saved replies, auto-replies and away message, keyed by the business account id. */
-  socialSettings: Record<string, SocialSettings>;
   // support
   /** Bug reports sent with shake to report, newest first (super admin console → Bug reports). */
   bugReports: BugReportRecord[];

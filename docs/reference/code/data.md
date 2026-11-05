@@ -11,10 +11,9 @@ Every exported symbol in `src/data/`, file by file. The guide that explains how 
 - [`categories.ts`](#categoriests) (9 exports)
 - [`checklist.ts`](#checklistts) (7 exports)
 - [`cities.ts`](#citiests) (8 exports)
-- [`contentCatalogue.ts`](#contentcataloguets) (7 exports) · The catalogue lists a super admin can edit from Content studio → Listings, with what the console needs to show and check each one. The list…
 - [`crafts.ts`](#craftsts) (7 exports) · Freelancer crafts. The crew roles in `services.ts` stay the source of truth (a freelancer's skills are crew roles, and their trade and capa…
 - [`events.ts`](#eventsts) (11 exports)
-- [`features.ts`](#featurests) (19 exports) · Feature switches a super admin flips from the console (Platform → More → Super admin → Features), with no code change. Each switch hides a …
+- [`features.ts`](#featurests) (17 exports) · Feature switches a super admin flips from the console (Platform → More → Super admin → Features), with no code change. Each switch hides a …
 - [`freelancers.ts`](#freelancersts) (3 exports)
 - [`genie.ts`](#geniets) (4 exports)
 - [`homeSections.ts`](#homesectionsts) (5 exports)
@@ -26,9 +25,6 @@ Every exported symbol in `src/data/`, file by file. The guide that explains how 
 - [`providers.ts`](#providersts) (4 exports)
 - [`seed.ts`](#seedts) (12 exports) · Demo dataset for the shared on-device backend (Nepal). Dates are relative to today so the demo always has: a new lead, projects in matching…
 - [`services.ts`](#servicests) (15 exports)
-- [`skills.ts`](#skillsts) (3 exports)
-- [`social.ts`](#socialts) (9 exports) · The four networks of the social hub and what each one allows, as the networks' own APIs define it (Meta Graph API for Facebook, Instagram a…
-- [`socialSeed.ts`](#socialseedts) (1 exports) · Demo records for the social hub: Everest Grand Party Palace has Facebook, Instagram and WhatsApp connected (TikTok left to connect in the d…
 - [`support.ts`](#supportts) (11 exports) · Help and support: request topics, limits, where each role reads its requests, and the answers to common questions (per role). Pure data, us…
 - [`supportSeed.ts`](#supportseedts) (1 exports) · Demo help requests, one story per role: the couple asked about changing the reception menu (the team asked a question back) and had a recei…
 - [`toolkitSeed.ts`](#toolkitseedts) (1 exports) · Demo records for the role toolkits, so the main tools open with a believable story.
@@ -533,92 +529,6 @@ sameServiceArea(a: string, b: string)
 
 _No JSDoc yet._
 
-## contentCatalogue.ts
-
-Source: [src/data/contentCatalogue.ts](../../../src/data/contentCatalogue.ts)
-
-The catalogue lists a super admin can edit from Content studio → Listings,
-with what the console needs to show and check each one. The lists
-themselves stay as bundled; edits are laid over them by `services/content`.
-
-### `CatalogueRecord`
-
-*type* · [src/data/contentCatalogue.ts:15](../../../src/data/contentCatalogue.ts#L15)
-
-```ts
-type CatalogueRecord = { id: string } & Record<string, unknown>
-```
-
-_No JSDoc yet._
-
-### `ContentKindDef`
-
-*interface* · [src/data/contentCatalogue.ts:17](../../../src/data/contentCatalogue.ts#L17)
-
-_No JSDoc yet._
-
-| Member | Type | Notes |
-|---|---|---|
-| `id` | `ContentKind` |  |
-| `label` | `string` |  |
-| `one` | `string` | "venue", for messages. |
-| `hint` | `string` |  |
-| `items` | `readonly CatalogueRecord[]` | The bundled records, unedited. |
-| `title` | `string` | Field that names a record. |
-| `detail` | `string[]` | Fields shown under the name in lists. |
-| `imageFields` | `string[]` | Fields holding one photo or a list of photos. |
-| `hideable` | `boolean` | Can a record be taken out of lists and search? |
-
-### `CONTENT_CATALOGUE`
-
-*const* · [src/data/contentCatalogue.ts:37](../../../src/data/contentCatalogue.ts#L37)
-
-```ts
-CONTENT_CATALOGUE: ContentKindDef[]
-```
-
-_No JSDoc yet._
-
-### `CONTENT_KIND_BY_ID`
-
-*const* · [src/data/contentCatalogue.ts:48](../../../src/data/contentCatalogue.ts#L48)
-
-```ts
-CONTENT_KIND_BY_ID= Object.fromEntries(CONTENT_CATALOGUE.map((k) => [k.id, k])) as Record<ContentKind, Conten…
-```
-
-_No JSDoc yet._
-
-### `isImageRef`
-
-*function* · [src/data/contentCatalogue.ts:51](../../../src/data/contentCatalogue.ts#L51)
-
-```ts
-isImageRef(ref: string)
-```
-
-A bundled photo key or an address the app can load.
-
-### `recordCover`
-
-*function* · [src/data/contentCatalogue.ts:54](../../../src/data/contentCatalogue.ts#L54)
-
-```ts
-recordCover(def: ContentKindDef, record: CatalogueRecord): PhotoRef | undefined
-```
-
-The first photo of a record, for list rows.
-
-### `fieldLabel`
-
-*function* · [src/data/contentCatalogue.ts:64](../../../src/data/contentCatalogue.ts#L64)
-
-```ts
-fieldLabel(key: string)
-```
-
-`startingPrice` → "Starting price".
-
 ## crafts.ts
 
 Source: [src/data/crafts.ts](../../../src/data/crafts.ts)
@@ -876,7 +786,7 @@ _No JSDoc yet._
 
 ### `FEATURE_BY_ID`
 
-*const* · [src/data/features.ts:101](../../../src/data/features.ts#L101)
+*const* · [src/data/features.ts:71](../../../src/data/features.ts#L71)
 
 ```ts
 FEATURE_BY_ID: Record<string, FeatureDef>
@@ -886,7 +796,7 @@ _No JSDoc yet._
 
 ### `toolFeature`
 
-*function* · [src/data/features.ts:103](../../../src/data/features.ts#L103)
+*function* · [src/data/features.ts:73](../../../src/data/features.ts#L73)
 
 ```ts
 toolFeature(toolId: string)
@@ -896,7 +806,7 @@ _No JSDoc yet._
 
 ### `serviceFeature`
 
-*function* · [src/data/features.ts:104](../../../src/data/features.ts#L104)
+*function* · [src/data/features.ts:74](../../../src/data/features.ts#L74)
 
 ```ts
 serviceFeature(serviceId: string)
@@ -906,7 +816,7 @@ _No JSDoc yet._
 
 ### `tabFeature`
 
-*function* · [src/data/features.ts:105](../../../src/data/features.ts#L105)
+*function* · [src/data/features.ts:75](../../../src/data/features.ts#L75)
 
 ```ts
 tabFeature(role: UserRole, tab: string)
@@ -916,7 +826,7 @@ _No JSDoc yet._
 
 ### `TopFeature`
 
-*interface* · [src/data/features.ts:107](../../../src/data/features.ts#L107)
+*interface* · [src/data/features.ts:77](../../../src/data/features.ts#L77)
 
 _No JSDoc yet._
 
@@ -927,10 +837,10 @@ _No JSDoc yet._
 
 ### `TOP_FEATURES`
 
-*const* · [src/data/features.ts:123](../../../src/data/features.ts#L123)
+*const* · [src/data/features.ts:93](../../../src/data/features.ts#L93)
 
 ```ts
-TOP_FEATURES: Record<UserRole, TopFeature[]>
+TOP_FEATURES: Partial<Record<UserRole, TopFeature[]>>
 ```
 
 The 20 features each app shows out of the box, in the order people meet
@@ -938,29 +848,9 @@ them. Account basics (home, notifications, settings, profile, language,
 support, log out) come with every app and aren't counted. Tools listed here
 are on by default; every other tool is an extra.
 
-### `TRADE_TOOLS`
-
-*const* · [src/data/features.ts:215](../../../src/data/features.ts#L215)
-
-```ts
-TRADE_TOOLS= [ … 9 items ]
-```
-
-The one trade tool each business gets by default ("core.vendor.trade"); a business sees only its own trade's.
-
-### `CRAFT_TOOLS`
-
-*const* · [src/data/features.ts:217](../../../src/data/features.ts#L217)
-
-```ts
-CRAFT_TOOLS= ['freelancer.backup', 'freelancer.kit', 'freelancer.setlist', 'freelancer.vehicle']
-```
-
-The kit tool each craft gets by default ("core.freelancer.craftkit"); crew see only their craft's.
-
 ### `BASIC_FEATURES`
 
-*const* · [src/data/features.ts:223](../../../src/data/features.ts#L223)
+*const* · [src/data/features.ts:122](../../../src/data/features.ts#L122)
 
 ```ts
 BASIC_FEATURES= new Set(['couple.tour'])
@@ -971,7 +861,7 @@ not counted in the top 20. The first-run tour only explains the app.
 
 ### `EXTRA_FEATURES`
 
-*const* · [src/data/features.ts:226](../../../src/data/features.ts#L226)
+*const* · [src/data/features.ts:125](../../../src/data/features.ts#L125)
 
 ```ts
 EXTRA_FEATURES= new Set([ 'home.collections', 'home.makeup', 'home.real_weddings', 'couple.celebrate', 'c…
@@ -981,7 +871,7 @@ Fixed surfaces that start hidden: extras a super admin can switch on.
 
 ### `featureDefault`
 
-*function* · [src/data/features.ts:256](../../../src/data/features.ts#L256)
+*function* · [src/data/features.ts:148](../../../src/data/features.ts#L148)
 
 ```ts
 featureDefault(id: string)
@@ -991,7 +881,7 @@ On or off before a super admin touches it: tools only if they are top features, 
 
 ### `featureOn`
 
-*function* · [src/data/features.ts:259](../../../src/data/features.ts#L259)
+*function* · [src/data/features.ts:151](../../../src/data/features.ts#L151)
 
 ```ts
 featureOn(flags: Record<string, boolean> | undefined, id: string)
@@ -1001,7 +891,7 @@ Is the feature on? A missing id takes its default.
 
 ### `FEATURE_ROUTES`
 
-*const* · [src/data/features.ts:266](../../../src/data/features.ts#L266)
+*const* · [src/data/features.ts:158](../../../src/data/features.ts#L158)
 
 ```ts
 FEATURE_ROUTES: Record<string, string[]>
@@ -1013,7 +903,7 @@ old link or notification can't open them. `*` matches one path segment.
 
 ### `featureForPath`
 
-*function* · [src/data/features.ts:307](../../../src/data/features.ts#L307)
+*function* · [src/data/features.ts:186](../../../src/data/features.ts#L186)
 
 ```ts
 featureForPath(path: string): string | undefined
@@ -1023,7 +913,7 @@ The feature a path belongs to (`/contract/c1` → `couple.contracts`), if any.
 
 ### `FeatureLink`
 
-*type* · [src/data/features.ts:313](../../../src/data/features.ts#L313)
+*type* · [src/data/features.ts:192](../../../src/data/features.ts#L192)
 
 ```ts
 type FeatureLink = string | { pathname: string; params?: Record<string, unknown> }
@@ -1033,7 +923,7 @@ A link as expo-router takes it: a path, or a pathname with params.
 
 ### `linkPath`
 
-*function* · [src/data/features.ts:316](../../../src/data/features.ts#L316)
+*function* · [src/data/features.ts:195](../../../src/data/features.ts#L195)
 
 ```ts
 linkPath(href: FeatureLink)
@@ -1043,7 +933,7 @@ The path a link opens, with `[param]` segments filled in.
 
 ### `linkOn`
 
-*function* · [src/data/features.ts:320](../../../src/data/features.ts#L320)
+*function* · [src/data/features.ts:199](../../../src/data/features.ts#L199)
 
 ```ts
 linkOn(flags: Record<string, boolean> | undefined, href: FeatureLink)
@@ -1689,7 +1579,7 @@ to today so the demo always has: a new lead, projects in matching / quoting
 
 ### `day`
 
-*function* · [src/data/seed.ts:54](../../../src/data/seed.ts#L54)
+*function* · [src/data/seed.ts:53](../../../src/data/seed.ts#L53)
 
 ```ts
 day(offset: number)
@@ -1699,7 +1589,7 @@ _No JSDoc yet._
 
 ### `at`
 
-*function* · [src/data/seed.ts:59](../../../src/data/seed.ts#L59)
+*function* · [src/data/seed.ts:58](../../../src/data/seed.ts#L58)
 
 ```ts
 at(offset: number, hour = 10, minute = 0)
@@ -1709,7 +1599,7 @@ _No JSDoc yet._
 
 ### `DEMO_VENUE`
 
-*const* · [src/data/seed.ts:72](../../../src/data/seed.ts#L72)
+*const* · [src/data/seed.ts:71](../../../src/data/seed.ts#L71)
 
 ```ts
 DEMO_VENUE= VENUES[0]
@@ -1719,7 +1609,7 @@ _No JSDoc yet._
 
 ### `DEMO_STUDIO`
 
-*const* · [src/data/seed.ts:73](../../../src/data/seed.ts#L73)
+*const* · [src/data/seed.ts:72](../../../src/data/seed.ts#L72)
 
 ```ts
 DEMO_STUDIO= VENDORS.find((v) => v.id === 'wedding-story-nepal-kathmandu')!
@@ -1729,7 +1619,7 @@ _No JSDoc yet._
 
 ### `DEMO_DECOR`
 
-*const* · [src/data/seed.ts:74](../../../src/data/seed.ts#L74)
+*const* · [src/data/seed.ts:73](../../../src/data/seed.ts#L73)
 
 ```ts
 DEMO_DECOR= VENDORS.find((v) => v.id === 'phoolbari-decor-lalitpur')!
@@ -1739,7 +1629,7 @@ _No JSDoc yet._
 
 ### `DEMO_ACCOUNTS`
 
-*const* · [src/data/seed.ts:78](../../../src/data/seed.ts#L78)
+*const* · [src/data/seed.ts:77](../../../src/data/seed.ts#L77)
 
 ```ts
 DEMO_ACCOUNTS: Account[]
@@ -1749,7 +1639,7 @@ _No JSDoc yet._
 
 ### `DEMO_PERSONA_KEYS`
 
-*const* · [src/data/seed.ts:272](../../../src/data/seed.ts#L272)
+*const* · [src/data/seed.ts:271](../../../src/data/seed.ts#L271)
 
 ```ts
 DEMO_PERSONA_KEYS= ['services', 'primaryService', 'businessForm', 'teamSize', 'tradeProfile', 'primarySkill'…
@@ -1759,7 +1649,7 @@ Persona fields that demo accounts on older installs are missing (filled in by th
 
 ### `DEMO_OTP`
 
-*const* · [src/data/seed.ts:275](../../../src/data/seed.ts#L275)
+*const* · [src/data/seed.ts:274](../../../src/data/seed.ts#L274)
 
 ```ts
 DEMO_OTP= '1234'
@@ -1769,7 +1659,7 @@ Demo OTP for every phone number (no SMS gateway in the prototype).
 
 ### `PLATFORM_ACCESS_CODE`
 
-*const* · [src/data/seed.ts:277](../../../src/data/seed.ts#L277)
+*const* · [src/data/seed.ts:276](../../../src/data/seed.ts#L276)
 
 ```ts
 PLATFORM_ACCESS_CODE= 'VIVAH2026'
@@ -1779,7 +1669,7 @@ Access code required to register a platform-team account.
 
 ### `buildSeedData`
 
-*function* · [src/data/seed.ts:1482](../../../src/data/seed.ts#L1482)
+*function* · [src/data/seed.ts:1481](../../../src/data/seed.ts#L1481)
 
 ```ts
 buildSeedData(): DbData
@@ -1789,7 +1679,7 @@ _No JSDoc yet._
 
 ### `contractSections`
 
-*function* · [src/data/seed.ts:1845](../../../src/data/seed.ts#L1845)
+*function* · [src/data/seed.ts:1843](../../../src/data/seed.ts#L1843)
 
 ```ts
 contractSections(provider: string, scope: string, amount: number): { heading: string; body: string }[]
@@ -1799,7 +1689,7 @@ _No JSDoc yet._
 
 ### `DEMO_IMAGES`
 
-*const* · [src/data/seed.ts:1858](../../../src/data/seed.ts#L1858)
+*const* · [src/data/seed.ts:1856](../../../src/data/seed.ts#L1856)
 
 ```ts
 DEMO_IMAGES: PhotoKey[]
@@ -1979,173 +1869,6 @@ defaultDetails(serviceId: string): Record<string, string | number | boolean>
 
 Default requirement details for a service.
 
-## skills.ts
-
-Source: [src/data/skills.ts](../../../src/data/skills.ts)
-
-### `FREELANCE_SKILLS`
-
-*const* · [src/data/skills.ts:4](../../../src/data/skills.ts#L4)
-
-```ts
-FREELANCE_SKILLS= CREW_ROLES
-```
-
-Every crew role a freelancer can offer (derived from the service catalogue).
-
-### `skillIcon`
-
-*function* · [src/data/skills.ts:23](../../../src/data/skills.ts#L23)
-
-```ts
-skillIcon(skill: string)
-```
-
-_No JSDoc yet._
-
-### `SKILL_ICONS`
-
-*const* · [src/data/skills.ts:26](../../../src/data/skills.ts#L26)
-
-```ts
-SKILL_ICONS: Record<string, string>
-```
-
-@deprecated use skillIcon
-
-## social.ts
-
-Source: [src/data/social.ts](../../../src/data/social.ts)
-
-The four networks of the social hub and what each one allows, as the
-networks' own APIs define it (Meta Graph API for Facebook, Instagram and
-the WhatsApp Cloud API; TikTok's Content Posting API). The publisher checks
-posts against these limits before anything is sent, and the inbox uses the
-reply windows. Also the WhatsApp templates and a business's starter saved
-replies and auto-replies.
-
-### `NetworkDef`
-
-*interface* · [src/data/social.ts:12](../../../src/data/social.ts#L12)
-
-What one network allows: limits, inbox kinds, reply window, permissions.
-
-| Member | Type | Notes |
-|---|---|---|
-| `id` | `SocialNetwork` |  |
-| `label` | `string` |  |
-| `icon` | `'logo-facebook' \| 'logo-instagram' \| 'logo-whatsapp' \| 'logo-tiktok'` | Ionicons name. |
-| `postAs` | `string` | What a post becomes on this network. |
-| `captionLimit` | `number` | Longest caption the network takes. |
-| `hashtagLimit?` | `number` |  |
-| `needsMedia` | `boolean` | The network refuses a post without a photo or video. |
-| `maxMedia` | `number` |  |
-| `inbox` | `('message' \| 'comment')[]` | What lands in the inbox from this network. |
-| `replyWindowHours?` | `number` | Hours after the customer's last message during which any reply may be sent. After it: Facebook and Instagram allow a human reply for 7 days (the HUMAN_AGENT tag); WhatsApp needs an approved template. |
-| `humanAgentDays?` | `number` |  |
-| `scopes` | `string[]` | Permissions asked for when connecting. |
-| `requirement` | `string` | What connecting needs on the network's side. |
-| `handleHint` | `string` | Typical audience of a Nepali wedding business, for the connect sheet. |
-
-### `NETWORKS`
-
-*const* · [src/data/social.ts:43](../../../src/data/social.ts#L43)
-
-```ts
-NETWORKS: NetworkDef[]
-```
-
-Facebook, Instagram, WhatsApp and TikTok, in display order.
-
-### `SCOPE_TEXT`
-
-*const* · [src/data/social.ts:105](../../../src/data/social.ts#L105)
-
-```ts
-SCOPE_TEXT: Record<string, string>
-```
-
-Each permission in plain words, for the connect sheet and the accounts tab.
-
-### `NETWORK_BY_ID`
-
-*const* · [src/data/social.ts:124](../../../src/data/social.ts#L124)
-
-```ts
-NETWORK_BY_ID= Object.fromEntries(NETWORKS.map((n) => [n.id, n])) as Record<SocialNetwork, NetworkDef>
-```
-
-Network definitions by id.
-
-### `NETWORK_IDS`
-
-*function* · [src/data/social.ts:127](../../../src/data/social.ts#L127)
-
-```ts
-NETWORK_IDSNETWORKS.map((n))
-```
-
-The network ids in display order.
-
-### `WHATSAPP_TEMPLATES`
-
-*const* · [src/data/social.ts:130](../../../src/data/social.ts#L130)
-
-```ts
-WHATSAPP_TEMPLATES: { id: string; title: string; body: string }[]
-```
-
-WhatsApp message templates (approved in WhatsApp Manager) for replies after the 24-hour window. `{1}` is the customer's first name.
-
-### `SOCIAL_LABELS`
-
-*const* · [src/data/social.ts:137](../../../src/data/social.ts#L137)
-
-```ts
-SOCIAL_LABELS= ['Hot lead', 'Price asked', 'Date check', 'Booked', 'Follow up', 'Complaint']
-```
-
-Labels offered in the inbox; businesses can type their own too.
-
-### `DEFAULT_SOCIAL_SETTINGS`
-
-*const* · [src/data/social.ts:140](../../../src/data/social.ts#L140)
-
-```ts
-DEFAULT_SOCIAL_SETTINGS: SocialSettings
-```
-
-Starter saved replies, auto-replies and away message for a new business. `{price}`, `{city}` and `{business}` are filled in when sent.
-
-### `SAMPLE_INBOUND`
-
-*const* · [src/data/social.ts:155](../../../src/data/social.ts#L155)
-
-```ts
-SAMPLE_INBOUND: { network: SocialNetwork; kind: 'message' | 'comment'; name: string; handle: string; text: string; phone?: string }[]
-```
-
-Messages the simulated networks deliver in the demo (`receiveSocialMessage` is what a real webhook calls).
-
-## socialSeed.ts
-
-Source: [src/data/socialSeed.ts](../../../src/data/socialSeed.ts)
-
-Demo records for the social hub: Everest Grand Party Palace has Facebook,
-Instagram and WhatsApp connected (TikTok left to connect in the demo), a
-busy inbox and posts in every state; Wedding Story Nepal has Instagram,
-Facebook and TikTok; Phoolbari Decor's Facebook access has expired.
-
-### `buildSocialSeed`
-
-*function* · [src/data/socialSeed.ts:72](../../../src/data/socialSeed.ts#L72)
-
-```ts
-buildSocialSeed(): { socialAccounts: SocialAccount[]; socialThreads: SocialThread[]; socialMessages: SocialMessage[]; socialPosts: SocialP…
-```
-
-Social accounts, threads, messages, posts and settings for the demo businesses.
-
 ## support.ts
 
 Source: [src/data/support.ts](../../../src/data/support.ts)
@@ -2229,24 +1952,24 @@ Still needs someone: not solved or closed.
 *function* · [src/data/support.ts:61](../../../src/data/support.ts#L61)
 
 ```ts
-supportHref(role: UserRole, id?: string): string
+supportHref(_role: UserRole, id?: string): string
 ```
 
-Where a role reads its help centre, or one request in it.
+Where the couple reads the help centre, or one request in it (the customer edition has no other role apps).
 
 ### `editProfileHref`
 
-*function* · [src/data/support.ts:67](../../../src/data/support.ts#L67)
+*function* · [src/data/support.ts:66](../../../src/data/support.ts#L66)
 
 ```ts
-editProfileHref(role: UserRole): string
+editProfileHref(_role: UserRole): string
 ```
 
-Where a role edits its profile.
+Where the couple edits their profile.
 
 ### `FaqItem`
 
-*interface* · [src/data/support.ts:72](../../../src/data/support.ts#L72)
+*interface* · [src/data/support.ts:71](../../../src/data/support.ts#L71)
 
 One common question and its answer.
 
@@ -2259,7 +1982,7 @@ One common question and its answer.
 
 ### `faqFor`
 
-*function* · [src/data/support.ts:120](../../../src/data/support.ts#L120)
+*function* · [src/data/support.ts:119](../../../src/data/support.ts#L119)
 
 ```ts
 faqFor(role: UserRole): FaqItem[]

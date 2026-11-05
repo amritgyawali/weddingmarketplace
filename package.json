@@ -67,7 +67,6 @@
     "test:functions": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/test-functions.mjs",
     "env:functions": "node scripts/env-functions.mjs",
     "test:telemetry": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/test-telemetry.mjs",
-    "test:social": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/test-social.mjs",
     "test:customer-planning": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/test-customer-planning.mjs",
     "test:content": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/test-content.mjs",
     "test:features": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/test-features.mjs",

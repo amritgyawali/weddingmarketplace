@@ -223,7 +223,7 @@ Source: [src/components/toolkit/hub.tsx](../../../src/components/toolkit/hub.tsx
 
 ### `ToolDef`
 
-*interface* · [src/components/toolkit/hub.tsx:21](../../../src/components/toolkit/hub.tsx#L21)
+*interface* · [src/components/toolkit/hub.tsx:18](../../../src/components/toolkit/hub.tsx#L18)
 
 _No JSDoc yet._
 
@@ -238,17 +238,17 @@ _No JSDoc yet._
 
 ### `toolHref`
 
-*function* · [src/components/toolkit/hub.tsx:32](../../../src/components/toolkit/hub.tsx#L32)
+*function* · [src/components/toolkit/hub.tsx:29](../../../src/components/toolkit/hub.tsx#L29)
 
 ```ts
-toolHref(role: UserRole, id: string): Href
+toolHref(_role: UserRole, id: string): Href
 ```
 
-Route to a tool inside the signed-in role's app.
+Route to a planning tool (the customer edition has only the couple's toolkit).
 
 ### `useVisibleTools`
 
-*hook* · [src/components/toolkit/hub.tsx:49](../../../src/components/toolkit/hub.tsx#L49)
+*hook* · [src/components/toolkit/hub.tsx:37](../../../src/components/toolkit/hub.tsx#L37)
 
 ```ts
 useVisibleTools(tools: ToolDef[]): ToolDef[]
@@ -259,7 +259,7 @@ has records in stay visible even if their services changed.
 
 ### `ToolHub`
 
-*component* · [src/components/toolkit/hub.tsx:88](../../../src/components/toolkit/hub.tsx#L88)
+*component* · [src/components/toolkit/hub.tsx:57](../../../src/components/toolkit/hub.tsx#L57)
 
 ```ts
 ToolHub({ role, tools, title, subtitle }: { role: UserRole; tools: ToolDef[]; title: string; subtitle: string })
@@ -269,7 +269,7 @@ Searchable, grouped index of a role's toolkit.
 
 ### `ToolRoute`
 
-*component* · [src/components/toolkit/hub.tsx:122](../../../src/components/toolkit/hub.tsx#L122)
+*component* · [src/components/toolkit/hub.tsx:91](../../../src/components/toolkit/hub.tsx#L91)
 
 ```ts
 ToolRoute({ tools, visible, settingsHref }: { tools: ToolDef[]; visible?: ToolDef[]; settingsHref?: Href })

@@ -1,15 +1,11 @@
-import { router, usePathname, type Href } from 'expo-router';
+import { router, usePathname } from 'expo-router';
 import { StyleSheet, View } from 'react-native';
 
 import { colors, themed } from '@/constants/theme';
 import { featureForPath } from '@/data/features';
 import { useFeatures } from '@/hooks/useFeatures';
-import { useSession } from '@/store/useSession';
-import type { UserRole } from '@/types/platform';
 
 import { EmptyState } from './EmptyState';
-
-const HOME: Record<UserRole, Href> = { customer: '/', vendor: '/business', freelancer: '/freelancer', platform: '/platform' };
 
 /**
  * Covers a screen whose feature a super admin switched off (or that is an
@@ -19,10 +15,9 @@ const HOME: Record<UserRole, Href> = { customer: '/', vendor: '/business', freel
 export function FeatureRouteGuard() {
   const path = usePathname();
   const on = useFeatures();
-  const role = useSession((s) => s.session?.role ?? null);
   const id = featureForPath(path);
   if (!id || on(id)) return null;
-  const leave = () => (router.canGoBack() ? router.back() : router.replace(role ? HOME[role] : '/'));
+  const leave = () => (router.canGoBack() ? router.back() : router.replace('/'));
   return (
     <View style={styles.cover} accessibilityViewIsModal>
       <EmptyState icon="eye-off-outline" title="This isn’t available right now" message="Vivah has switched this part of the app off. Anything you saved here is kept." actionLabel="Go back" onAction={leave} />

@@ -6,53 +6,8 @@ Every exported symbol in `src/components/navigation/`, file by file. The guide t
 
 ## Files
 
-- [`RoleTabBar.tsx`](#roletabbartsx) (3 exports)
 - [`TabBar.tsx`](#tabbartsx) (1 exports)
 - [`TabMark.tsx`](#tabmarktsx) (1 exports)
-
-## RoleTabBar.tsx
-
-Source: [src/components/navigation/RoleTabBar.tsx](../../../src/components/navigation/RoleTabBar.tsx)
-
-### `RoleTab`
-
-*interface* · [src/components/navigation/RoleTabBar.tsx:22](../../../src/components/navigation/RoleTabBar.tsx#L22)
-
-_No JSDoc yet._
-
-| Member | Type | Notes |
-|---|---|---|
-| `name` | `string` |  |
-| `label` | `string` |  |
-| `icon` | `IconName` |  |
-| `activeIcon` | `IconName` |  |
-| `badge?` | `number` |  |
-
-### `SidebarLink`
-
-*interface* · [src/components/navigation/RoleTabBar.tsx:30](../../../src/components/navigation/RoleTabBar.tsx#L30)
-
-_No JSDoc yet._
-
-| Member | Type | Notes |
-|---|---|---|
-| `label` | `string` |  |
-| `icon` | `IconName` |  |
-| `href` | `Href` |  |
-| `badge?` | `number` |  |
-| `section?` | `string` | Links with a section are listed under that heading, after the others. |
-
-### `RoleTabBar`
-
-*component* · [src/components/navigation/RoleTabBar.tsx:44](../../../src/components/navigation/RoleTabBar.tsx#L44)
-
-```ts
-RoleTabBar({ state, navigation, tabs, links: allLinks = [] }: BottomTabBarProps & { tabs: RoleTab[]; links?: SidebarLink[] })
-```
-
-Shared tab bar for the vendor, freelancer and staff apps. On phones it is a
-plain bottom bar; at desktop widths it becomes a sidebar that also lists
-the deep links. The same component in every role, only the accent differs.
 
 ## TabBar.tsx
 

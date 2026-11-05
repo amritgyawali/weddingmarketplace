@@ -22,7 +22,6 @@ npm scripts and the Node scripts behind them. All run locally with no network un
 | `npm run test:functions` | `node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/test-functions.mjs` |
 | `npm run env:functions` | `node scripts/env-functions.mjs` |
 | `npm run test:telemetry` | `node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/test-telemetry.mjs` |
-| `npm run test:social` | `node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/test-social.mjs` |
 | `npm run test:customer-planning` | `node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/test-customer-planning.mjs` |
 | `npm run test:content` | `node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/test-content.mjs` |
 | `npm run test:features` | `node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/test-features.mjs` |
@@ -407,19 +406,6 @@ so `javascript:`, `data:` and app-launching links never run. Node 24+
 strips the TypeScript (22.18+ works too).
 
   npm run test:security
-
-### scripts/test-social.mjs
-
-Source: [scripts/test-social.mjs](../../scripts/test-social.mjs)
-
-Checks the social hub's rules (src/services/social.ts) and its demo seed:
-each network's posting limits, the reply windows (24 hours, Meta's 7-day
-human agent tag, WhatsApp templates), reading dates, guests, budget and
-phone from a message (BS and AD dates), auto-replies and the away message,
-best times, hashtags, and the inbox and post numbers. Node 24+ strips the
-TypeScript.
-
-  npm run test:social
 
 ### scripts/test-telemetry.mjs
 
