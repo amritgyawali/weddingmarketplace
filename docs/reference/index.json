@@ -9963,112 +9963,112 @@
     {
      "name": "gradients",
      "kind": "const",
-     "line": 290,
+     "line": 291,
      "signature": "= buildGradients()",
-     "doc": ""
+     "doc": "Gradient stops for scrims over photos; rebuilt in place when the colour scheme changes."
     },
     {
      "name": "fonts",
      "kind": "const",
-     "line": 300,
+     "line": 301,
      "signature": "= { regular: 'Mukta_400Regular', medium: 'Mukta_500Medium', semibold: 'Mukta_600SemiBold', …",
      "doc": "Mukta (Ek Type) for everything you read and tap: it was drawn for\nDevanagari and Latin together, so Nepali names and \"शुभ विवाह\" set in the\nsame voice as the English UI. Martel, its serif sibling from the same\nfoundry, is kept for a handful of display lines (couple names, screen\ntitles on the couple app)."
     },
     {
      "name": "serif",
      "kind": "const",
-     "line": 308,
+     "line": 310,
      "signature": "= { regular: 'Martel_400Regular', medium: 'Martel_600SemiBold', semibold: 'Martel_600SemiBo…",
-     "doc": ""
+     "doc": "Martel font names by weight, for display lines only (titles, couple names, headline numbers)."
     },
     {
      "name": "FontWeight",
      "kind": "type",
-     "line": 316,
+     "line": 319,
      "signature": "= keyof typeof fonts",
-     "doc": ""
+     "doc": "A weight name that exists in both the Mukta (`fonts`) and Martel (`serif`) tables."
     },
     {
      "name": "spacing",
      "kind": "const",
-     "line": 318,
+     "line": 322,
      "signature": "= { xxs: 2, xs: 4, sm: 8, md: 12, lg: 16, xl: 20, xxl: 24, xxxl: 32, } as const",
-     "doc": ""
+     "doc": "Spacing scale in pixels; use these instead of numbers in styles."
     },
     {
      "name": "radius",
      "kind": "const",
-     "line": 329,
+     "line": 334,
      "signature": "= { xs: 3, sm: 6, md: 8, lg: 10, xl: 12, pill: 999, } as const",
-     "doc": ""
+     "doc": "Corner radii in pixels (cards 10, buttons 8, chips 4 to 6, `pill` for fully round)."
     },
     {
      "name": "GUTTER",
      "kind": "const",
-     "line": 339,
+     "line": 344,
      "signature": "= 16",
      "doc": "Page gutter."
     },
     {
      "name": "shadow",
      "kind": "function",
-     "line": 347,
+     "line": 352,
      "signature": "(elevation: number, opacity: number, radiusPx: number, offsetY: number, color = '#251B18'): ViewStyle",
      "doc": "Drop shadow for something that floats: elevation on Android, `boxShadow` on the web (shadow* props are deprecated there), shadow* on iOS."
     },
     {
      "name": "shadows",
      "kind": "const",
-     "line": 366,
+     "line": 371,
      "signature": "= { … }",
      "doc": "Shadows are reserved for things that genuinely float (sheets, toasts)."
     },
     {
      "name": "type",
      "kind": "const",
-     "line": 376,
+     "line": 382,
      "signature": "= { display: { fontFamily: serif.bold, fontSize: 30, lineHeight: 40 }, title: { fontFamily:…",
-     "doc": ""
+     "doc": "Text styles (font, size, line height) for display, title, section, heading, body and small text."
     },
     {
      "name": "tabular",
      "kind": "const",
-     "line": 388,
+     "line": 394,
      "signature": ": TextStyle",
      "doc": "Figures that line up in columns (money, counts, countdowns)."
     },
     {
      "name": "iconSize",
      "kind": "const",
-     "line": 391,
+     "line": 397,
      "signature": "= { xs: 14, sm: 16, md: 20, lg: 24, xl: 28 } as const",
      "doc": "Icon sizes: snap every Ionicon to one of these."
     },
     {
      "name": "motion",
      "kind": "const",
-     "line": 398,
+     "line": 404,
      "signature": "= { fast: 150, base: 240, slow: 360, stagger: 45 } as const",
      "doc": "Motion timing (ms). One or two things move per screen, always with the\nease-out curve in `hooks/useMotion`, and nothing moves when the device asks\nfor reduced motion."
     },
     {
      "name": "hitSlop",
      "kind": "const",
-     "line": 400,
+     "line": 407,
      "signature": "= { top: 10, bottom: 10, left: 10, right: 10 }",
-     "doc": ""
+     "doc": "Extra 10 px of touch area around small tap targets."
     },
     {
      "name": "inputFont",
      "kind": "function",
-     "line": 409,
+     "line": 416,
      "signature": "(weight: '400' | '500' | '600' | '700' = '400'): TextStyle",
      "doc": "The font typed text uses inside inputs on phones: the system font at the\ngiven weight. Mukta's line box is 1.66 em tall (room for Devanagari marks),\nand iOS and Android size the text caret from it, so the cursor looked half\nagain taller than the text. Web keeps Mukta; the browser caret follows the\ntext. Put it after any `fontFamily` in an input's style array."
     },
     {
      "name": "inputReset",
      "kind": "const",
-     "line": 416,
+     "line": 423,
      "signature": ": TextStyle",
      "doc": "Base style for every text input: removes the browser focus ring on web and\nsets the normal-height caret font on phones (see `inputFont`)."
     }
@@ -10704,9 +10704,9 @@
     {
      "name": "EventTypeDef",
      "kind": "interface",
-     "line": 4,
+     "line": 5,
      "signature": "",
-     "doc": "",
+     "doc": "One function (event type) a celebration can include: label, icon, start time, guest share, suggested services and run sheet.",
      "members": [
       {
        "name": "id",
@@ -10761,70 +10761,70 @@
     {
      "name": "EVENT_TYPES",
      "kind": "const",
-     "line": 20,
+     "line": 22,
      "signature": ": EventTypeDef[]",
-     "doc": ""
+     "doc": "Every function the planner offers (Wedding, Reception, Mehendi, Haldi, Pasni and so on)."
     },
     {
      "name": "EVENT_TYPE_BY_ID",
      "kind": "const",
-     "line": 243,
+     "line": 246,
      "signature": "= Object.fromEntries(EVENT_TYPES.map((e) => [e.id, e])) as Record<EventType, EventTypeDef>",
-     "doc": ""
+     "doc": "`EVENT_TYPES` keyed by event type id."
     },
     {
      "name": "eventLabel",
      "kind": "function",
-     "line": 244,
+     "line": 248,
      "signature": "(t: EventType)",
-     "doc": ""
+     "doc": "Display label for an event type; falls back to the raw id."
     },
     {
      "name": "PLAN_STARTERS",
      "kind": "const",
-     "line": 247,
+     "line": 251,
      "signature": ": EventType[]",
      "doc": "What couples usually pick in step 1 of \"Plan my wedding\"."
     },
     {
      "name": "GUEST_BANDS",
      "kind": "const",
-     "line": 249,
+     "line": 254,
      "signature": "= [ { id: '<100', label: 'Under 100', value: 80 }, { id: '100-300', label: '100 – 300', val…",
-     "doc": ""
+     "doc": "Guest-count ranges offered in the plan wizard, each with a representative head count."
     },
     {
      "name": "GuestBand",
      "kind": "type",
-     "line": 257,
+     "line": 263,
      "signature": "= (typeof GUEST_BANDS)[number]['id']",
-     "doc": ""
+     "doc": "Id of one `GUEST_BANDS` range."
     },
     {
      "name": "bandFor",
      "kind": "function",
-     "line": 258,
+     "line": 265,
      "signature": "(guests: number): GuestBand",
-     "doc": ""
+     "doc": "Maps a guest count to its `GUEST_BANDS` range id."
     },
     {
      "name": "BS_MONTHS",
      "kind": "const",
-     "line": 262,
+     "line": 269,
      "signature": "= [ … 12 items ]",
      "doc": "Nepali (Bikram Sambat) month names, for display alongside AD dates."
     },
     {
      "name": "bsMonthLabel",
      "kind": "function",
-     "line": 265,
+     "line": 272,
      "signature": "(iso: string): string",
      "doc": "BS month and year for an AD date, from the official calendar table (\"Mangsir 2083\")."
     },
     {
      "name": "isPeakSeason",
      "kind": "function",
-     "line": 276,
+     "line": 283,
      "signature": "(iso: string)",
      "doc": "Nepal's peak wedding seasons (Mangsir, Magh, Falgun, Baisakh)."
     }
@@ -10837,9 +10837,9 @@
     {
      "name": "FeatureDef",
      "kind": "interface",
-     "line": 17,
+     "line": 18,
      "signature": "",
-     "doc": "",
+     "doc": "One super-admin feature switch: id, label, app (role), group and optional hint.",
      "members": [
       {
        "name": "id",
@@ -10876,44 +10876,44 @@
     {
      "name": "FEATURES",
      "kind": "const",
-     "line": 26,
+     "line": 28,
      "signature": ": FeatureDef[]",
-     "doc": ""
+     "doc": "Catalogue of fixed screens and surfaces a super admin can switch on or off."
     },
     {
      "name": "FEATURE_BY_ID",
      "kind": "const",
-     "line": 101,
+     "line": 104,
      "signature": ": Record<string, FeatureDef>",
-     "doc": ""
+     "doc": "`FEATURES` keyed by feature id."
     },
     {
      "name": "toolFeature",
      "kind": "function",
-     "line": 103,
+     "line": 107,
      "signature": "(toolId: string)",
-     "doc": ""
+     "doc": "Feature id of a toolkit tool (`tool:<ToolId>`)."
     },
     {
      "name": "serviceFeature",
      "kind": "function",
-     "line": 104,
+     "line": 109,
      "signature": "(serviceId: string)",
-     "doc": ""
+     "doc": "Feature id of a marketplace service (`service:<serviceId>`)."
     },
     {
      "name": "tabFeature",
      "kind": "function",
-     "line": 105,
+     "line": 111,
      "signature": "(role: UserRole, tab: string)",
-     "doc": ""
+     "doc": "Feature id of a role app tab (`tab.<role>.<tab>`)."
     },
     {
      "name": "TopFeature",
      "kind": "interface",
-     "line": 107,
+     "line": 114,
      "signature": "",
-     "doc": "",
+     "doc": "One of the top features shown by default in a role app.",
      "members": [
       {
        "name": "id",
@@ -10932,84 +10932,84 @@
     {
      "name": "TOP_FEATURES",
      "kind": "const",
-     "line": 123,
+     "line": 130,
      "signature": ": Record<UserRole, TopFeature[]>",
      "doc": "The 20 features each app shows out of the box, in the order people meet\nthem. Account basics (home, notifications, settings, profile, language,\nsupport, log out) come with every app and aren't counted. Tools listed here\nare on by default; every other tool is an extra."
     },
     {
      "name": "TRADE_TOOLS",
      "kind": "const",
-     "line": 215,
+     "line": 222,
      "signature": "= [ … 9 items ]",
      "doc": "The one trade tool each business gets by default (\"core.vendor.trade\"); a business sees only its own trade's."
     },
     {
      "name": "CRAFT_TOOLS",
      "kind": "const",
-     "line": 217,
+     "line": 224,
      "signature": "= ['freelancer.backup', 'freelancer.kit', 'freelancer.setlist', 'freelancer.vehicle']",
      "doc": "The kit tool each craft gets by default (\"core.freelancer.craftkit\"); crew see only their craft's."
     },
     {
      "name": "BASIC_FEATURES",
      "kind": "const",
-     "line": 223,
+     "line": 230,
      "signature": "= new Set(['couple.tour'])",
      "doc": "Switches that come with the app like the account basics: on by default and\nnot counted in the top 20. The first-run tour only explains the app."
     },
     {
      "name": "EXTRA_FEATURES",
      "kind": "const",
-     "line": 226,
+     "line": 233,
      "signature": "= new Set([ 'home.collections', 'home.makeup', 'home.real_weddings', 'couple.celebrate', 'c…",
      "doc": "Fixed surfaces that start hidden: extras a super admin can switch on."
     },
     {
      "name": "featureDefault",
      "kind": "function",
-     "line": 256,
+     "line": 263,
      "signature": "(id: string)",
      "doc": "On or off before a super admin touches it: tools only if they are top features, fixed surfaces unless they are extras."
     },
     {
      "name": "featureOn",
      "kind": "function",
-     "line": 259,
+     "line": 266,
      "signature": "(flags: Record<string, boolean> | undefined, id: string)",
      "doc": "Is the feature on? A missing id takes its default."
     },
     {
      "name": "FEATURE_ROUTES",
      "kind": "const",
-     "line": 266,
+     "line": 273,
      "signature": ": Record<string, string[]>",
      "doc": "The screens behind a feature. When a feature is off its links disappear\nand these screens show a \"switched off\" page (`FeatureRouteGuard`), so an\nold link or notification can't open them. `*` matches one path segment."
     },
     {
      "name": "featureForPath",
      "kind": "function",
-     "line": 307,
+     "line": 314,
      "signature": "(path: string): string | undefined",
      "doc": "The feature a path belongs to (`/contract/c1` → `couple.contracts`), if any."
     },
     {
      "name": "FeatureLink",
      "kind": "type",
-     "line": 313,
+     "line": 320,
      "signature": "= string | { pathname: string; params?: Record<string, unknown> }",
      "doc": "A link as expo-router takes it: a path, or a pathname with params."
     },
     {
      "name": "linkPath",
      "kind": "function",
-     "line": 316,
+     "line": 323,
      "signature": "(href: FeatureLink)",
      "doc": "The path a link opens, with `[param]` segments filled in."
     },
     {
      "name": "linkOn",
      "kind": "function",
-     "line": 320,
+     "line": 327,
      "signature": "(flags: Record<string, boolean> | undefined, href: FeatureLink)",
      "doc": "Can this link open? False when the screen it leads to belongs to a switched-off feature."
     }
@@ -13551,147 +13551,147 @@
     {
      "name": "CONTENT_KINDS",
      "kind": "const",
-     "line": 11,
+     "line": 12,
      "signature": ": ContentKind[]",
-     "doc": ""
+     "doc": "Kinds of catalogue record the content studio can edit."
     },
     {
      "name": "emptyContent",
      "kind": "function",
-     "line": 14,
+     "line": 15,
      "signature": "(): AppContent",
      "doc": "Content with nothing changed."
     },
     {
      "name": "EMPTY_CONTENT",
      "kind": "const",
-     "line": 17,
+     "line": 18,
      "signature": ": AppContent",
      "doc": "Shared, never mutated: the content of an install nobody has edited."
     },
     {
      "name": "contentRuntime",
      "kind": "const",
-     "line": 20,
+     "line": 21,
      "signature": ": { content: AppContent }",
      "doc": "Current content, kept in sync with the store for callers outside React."
     },
     {
      "name": "entryKey",
      "kind": "function",
-     "line": 22,
+     "line": 24,
      "signature": "(kind: ContentKind, id: string)",
-     "doc": ""
+     "doc": "Key of a record edit in `AppContent.entries` (`<kind>:<id>`)."
     },
     {
      "name": "bannerSectionId",
      "kind": "function",
-     "line": 23,
+     "line": 26,
      "signature": "(id: string)",
-     "doc": ""
+     "doc": "Home section id of a banner (`banner:<id>`)."
     },
     {
      "name": "LOCAL_IMAGE_SCHEME",
      "kind": "const",
-     "line": 26,
+     "line": 29,
      "signature": "= 'vivah-file://'",
      "doc": "Addresses of photos kept on this device (`backend/contentMedia.ts`)."
     },
     {
      "name": "MAX_TEXT",
      "kind": "const",
-     "line": 28,
+     "line": 32,
      "signature": "= 4000",
-     "doc": ""
+     "doc": "Longest text value, in characters, the content studio accepts."
     },
     {
      "name": "MAX_LIST",
      "kind": "const",
-     "line": 29,
+     "line": 34,
      "signature": "= 60",
-     "doc": ""
+     "doc": "Most items allowed in a list field of an edited record."
     },
     {
      "name": "MAX_BANNERS",
      "kind": "const",
-     "line": 30,
+     "line": 36,
      "signature": "= 12",
-     "doc": ""
+     "doc": "Most home banners the content studio keeps."
     },
     {
      "name": "MAX_INLINE_IMAGE",
      "kind": "const",
-     "line": 32,
+     "line": 38,
      "signature": "= 400_000",
      "doc": "Small images picked in a browser are kept inline; larger ones need a link."
     },
     {
      "name": "imageAddress",
      "kind": "function",
-     "line": 41,
+     "line": 47,
      "signature": "(input: unknown): string | null",
      "doc": "A photo address the app can show: a web link, a photo kept on this device,\nor a small inline image. Returns it trimmed, or null when it is none of these."
     },
     {
      "name": "patchList",
      "kind": "function",
-     "line": 83,
+     "line": 89,
      "signature": "<T extends { id: string }>(kind: ContentKind, list: readonly T[], content: AppContent = contentRuntime.content): T[]",
      "doc": "A catalogue list with the super admin's edits applied. Untouched records\nkeep their identity, and the list itself comes back when nothing of this\nkind was edited. Hidden records stay in, so links to them still open."
     },
     {
      "name": "visibleList",
      "kind": "function",
-     "line": 88,
+     "line": 94,
      "signature": "<T extends { id: string }>(kind: ContentKind, list: readonly T[], content: AppContent = contentRuntime.content): T[]",
      "doc": "The edited list without the records a super admin hid: what lists and search show."
     },
     {
      "name": "isHidden",
      "kind": "function",
-     "line": 92,
+     "line": 99,
      "signature": "(kind: ContentKind, id: string, content: AppContent = contentRuntime.content)",
-     "doc": ""
+     "doc": "True when the content studio hides this record from the app."
     },
     {
      "name": "checkFields",
      "kind": "function",
-     "line": 100,
+     "line": 107,
      "signature": "(original: Record<string, unknown>, fields: Record<string, unknown>, imageFields: readonly string[] = [], okImage: (ref: string) => boolean = (ref) => !!imageAddress(ref)): { fields?: Record<string, unknown>; error?: string }",
      "doc": "Checks edited fields against the original record and returns only those\nthat differ from it. A field must exist on the original and keep its type;\nwhole-number fields (prices, counts) are rounded and never negative, and\nphoto fields must pass `okImage`."
     },
     {
      "name": "orderSections",
      "kind": "function",
-     "line": 152,
+     "line": 159,
      "signature": "(defaults: readonly string[], saved: readonly string[], banners: readonly ContentBanner[]): string[]",
      "doc": "Section ids top to bottom. The saved order comes first; a built-in section\nit doesn't mention (added in a later version) goes back after the section\nit follows by default, and a new banner goes to the top."
     },
     {
      "name": "sectionTitle",
      "kind": "function",
-     "line": 166,
+     "line": 173,
      "signature": "(id: string, fallback: string, city: string, content: AppContent = contentRuntime.content): string",
      "doc": "A section heading: the super admin's wording (with `{city}` filled in), else the built-in one."
     },
     {
      "name": "normalizeContent",
      "kind": "function",
-     "line": 206,
+     "line": 213,
      "signature": "(raw: unknown): AppContent",
      "doc": "Content from storage or the server, with anything malformed dropped, so a\nbad value can never break the screens that read it. Content that is\nalready clean comes back as the same object."
     },
     {
      "name": "contentStats",
      "kind": "function",
-     "line": 238,
+     "line": 245,
      "signature": "(content: AppContent)",
      "doc": "How much has been changed, for the console."
     },
     {
      "name": "contentChangeCount",
      "kind": "function",
-     "line": 252,
+     "line": 259,
      "signature": "(content: AppContent)",
      "doc": "Total number of changes; zero means the app shows exactly what it shipped with."
     }

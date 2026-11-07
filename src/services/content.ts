@@ -8,6 +8,7 @@
  */
 import type { AppContent, ContentBanner, ContentEntry, ContentKind } from '@/types/content';
 
+/** Kinds of catalogue record the content studio can edit. */
 export const CONTENT_KINDS: ContentKind[] = ['venue', 'vendor', 'category', 'shortcut', 'collection', 'idea', 'story', 'realWedding'];
 
 /** Content with nothing changed. */
@@ -19,14 +20,19 @@ export const EMPTY_CONTENT: AppContent = emptyContent();
 /** Current content, kept in sync with the store for callers outside React. */
 export const contentRuntime: { content: AppContent } = { content: EMPTY_CONTENT };
 
+/** Key of a record edit in `AppContent.entries` (`<kind>:<id>`). */
 export const entryKey = (kind: ContentKind, id: string) => `${kind}:${id}`;
+/** Home section id of a banner (`banner:<id>`). */
 export const bannerSectionId = (id: string) => `banner:${id}`;
 
 /** Addresses of photos kept on this device (`backend/contentMedia.ts`). */
 export const LOCAL_IMAGE_SCHEME = 'vivah-file://';
 
+/** Longest text value, in characters, the content studio accepts. */
 export const MAX_TEXT = 4000;
+/** Most items allowed in a list field of an edited record. */
 export const MAX_LIST = 60;
+/** Most home banners the content studio keeps. */
 export const MAX_BANNERS = 12;
 /** Small images picked in a browser are kept inline; larger ones need a link. */
 export const MAX_INLINE_IMAGE = 400_000;
@@ -89,6 +95,7 @@ export function visibleList<T extends { id: string }>(kind: ContentKind, list: r
   return patchedFor(kind, list, content).visible as T[];
 }
 
+/** True when the content studio hides this record from the app. */
 export const isHidden = (kind: ContentKind, id: string, content: AppContent = contentRuntime.content) => !!content.entries[entryKey(kind, id)]?.hidden;
 
 /**

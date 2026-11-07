@@ -1,6 +1,7 @@
 import type { EventType } from '@/types/platform';
 import { adToBs } from '@/utils/bs';
 
+/** One function (event type) a celebration can include: label, icon, start time, guest share, suggested services and run sheet. */
 export interface EventTypeDef {
   id: EventType;
   label: string;
@@ -17,6 +18,7 @@ export interface EventTypeDef {
   wedding: boolean;
 }
 
+/** Every function the planner offers (Wedding, Reception, Mehendi, Haldi, Pasni and so on). */
 export const EVENT_TYPES: EventTypeDef[] = [
   {
     id: 'WEDDING',
@@ -240,12 +242,15 @@ export const EVENT_TYPES: EventTypeDef[] = [
   { id: 'OTHER', label: 'Other / Custom', icon: 'calendar', start: '11:00', guestShare: 1, wedding: false, suggestedServices: ['venue', 'catering', 'photography'], runSheet: [] },
 ];
 
+/** `EVENT_TYPES` keyed by event type id. */
 export const EVENT_TYPE_BY_ID = Object.fromEntries(EVENT_TYPES.map((e) => [e.id, e])) as Record<EventType, EventTypeDef>;
+/** Display label for an event type; falls back to the raw id. */
 export const eventLabel = (t: EventType) => EVENT_TYPE_BY_ID[t]?.label ?? t;
 
 /** What couples usually pick in step 1 of "Plan my wedding". */
 export const PLAN_STARTERS: EventType[] = ['WEDDING', 'ENGAGEMENT', 'PASNI', 'PRE_WEDDING', 'RECEPTION', 'BRATABANDHA', 'OTHER'];
 
+/** Guest-count ranges offered in the plan wizard, each with a representative head count. */
 export const GUEST_BANDS = [
   { id: '<100', label: 'Under 100', value: 80 },
   { id: '100-300', label: '100 – 300', value: 200 },
@@ -254,7 +259,9 @@ export const GUEST_BANDS = [
   { id: '1000+', label: '1,000+', value: 1200 },
 ] as const;
 
+/** Id of one `GUEST_BANDS` range. */
 export type GuestBand = (typeof GUEST_BANDS)[number]['id'];
+/** Maps a guest count to its `GUEST_BANDS` range id. */
 export const bandFor = (guests: number): GuestBand =>
   guests < 100 ? '<100' : guests < 300 ? '100-300' : guests < 500 ? '300-500' : guests < 1000 ? '500-1000' : '1000+';
 
