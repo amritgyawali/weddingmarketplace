@@ -1,4 +1,3 @@
-import * as Linking from 'expo-linking';
 import { router, type Href } from 'expo-router';
 import { StyleSheet, View } from 'react-native';
 
@@ -8,11 +7,12 @@ import { Text } from '@/components/ui/Text';
 import { photo } from '@/constants/images';
 import { colors, GUTTER, radius, themed } from '@/constants/theme';
 import type { ContentBanner as Banner } from '@/types/content';
+import { openSafeLink } from '@/utils/links';
 
 /** Opens a banner's link: a screen of the app, or a web address in the browser. */
 export function openBannerLink(href: string) {
   if (href.startsWith('/')) router.push(href as Href);
-  else Linking.openURL(href).catch(() => {});
+  else openSafeLink(href);
 }
 
 /**

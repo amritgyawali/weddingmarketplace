@@ -3,7 +3,7 @@ import * as DocumentPicker from 'expo-document-picker';
 import * as ImagePicker from 'expo-image-picker';
 import { router, type Href } from 'expo-router';
 import { useState } from 'react';
-import { Linking, Pressable, StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 
 import { Avatar, Card, ChoiceChips, EmptyBlock, KButton, KField, StatusPill } from '@/components/kit';
 import { Text } from '@/components/ui/Text';
@@ -14,6 +14,7 @@ import { useAccount } from '@/store/useSession';
 import { useRoleTheme } from '@/theme/RoleTheme';
 import type { FileRef, Project } from '@/types/platform';
 import { formatShortDate, timeAgo } from '@/utils/format';
+import { openSafeLink } from '@/utils/links';
 
 // Internal notes (staff only)
 export function NotesPanel({ project }: { project: Project }) {
@@ -134,7 +135,7 @@ export function FilesPanel({ project, mode }: { project: Project; mode: 'custome
       </View>
       {!list.length && <EmptyBlock icon="folder-open-outline" title="No files here yet" message="Contracts, quotations, receipts and deliveries are filed automatically." />}
       {list.map((f) => (
-        <Pressable key={f.id} onPress={() => f.uri && Linking.openURL(f.uri)} style={({ pressed }) => [styles.file, { borderColor: t.c.border, backgroundColor: t.c.surface, opacity: pressed ? 0.8 : 1 }]}>
+        <Pressable key={f.id} onPress={() => f.uri && openSafeLink(f.uri, { files: true })} style={({ pressed }) => [styles.file, { borderColor: t.c.border, backgroundColor: t.c.surface, opacity: pressed ? 0.8 : 1 }]}>
           <View style={[styles.fileIcon, { borderWidth: 1, borderColor: t.c.border }]}>
             <Ionicons name={FILE_ICON[f.kind] as never} size={18} color={t.c.primary} />
           </View>

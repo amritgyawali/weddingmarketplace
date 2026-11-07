@@ -89,7 +89,7 @@ Source: [src/components/work/Bookings.tsx](../../../src/components/work/Bookings
 
 ### `WorkMode`
 
-*type* · [src/components/work/Bookings.tsx:21](../../../src/components/work/Bookings.tsx#L21)
+*type* · [src/components/work/Bookings.tsx:22](../../../src/components/work/Bookings.tsx#L22)
 
 ```ts
 type WorkMode = 'customer' | 'vendor' | 'platform' | 'freelancer'
@@ -99,7 +99,7 @@ _No JSDoc yet._
 
 ### `crewFill`
 
-*function* · [src/components/work/Bookings.tsx:25](../../../src/components/work/Bookings.tsx#L25)
+*function* · [src/components/work/Bookings.tsx:26](../../../src/components/work/Bookings.tsx#L26)
 
 ```ts
 crewFill(b: ServiceBooking)
@@ -109,7 +109,7 @@ _No JSDoc yet._
 
 ### `BookingCard`
 
-*component* · [src/components/work/Bookings.tsx:32](../../../src/components/work/Bookings.tsx#L32)
+*component* · [src/components/work/Bookings.tsx:33](../../../src/components/work/Bookings.tsx#L33)
 
 ```ts
 BookingCard({ project, booking, mode, onPress }: { project: Project; booking: ServiceBooking; mode: WorkMode; onPress?: () => void })
@@ -119,7 +119,7 @@ One provider booking. Money shown depends on who is looking.
 
 ### `WorkerPicker`
 
-*component* · [src/components/work/Bookings.tsx:212](../../../src/components/work/Bookings.tsx#L212)
+*component* · [src/components/work/Bookings.tsx:213](../../../src/components/work/Bookings.tsx#L213)
 
 ```ts
 WorkerPicker({ project, booking, crew, visible, onClose }: { project: Project; booking: ServiceBooking; crew: CrewRequirement | null; visible: boolean; onClose: () => void })
@@ -129,7 +129,7 @@ Pick a freelancer (ranked by fit) or in-house staff for a crew slot.
 
 ### `CrewPanel`
 
-*component* · [src/components/work/Bookings.tsx:327](../../../src/components/work/Bookings.tsx#L327)
+*component* · [src/components/work/Bookings.tsx:328](../../../src/components/work/Bookings.tsx#L328)
 
 ```ts
 CrewPanel({ project, booking, mode }: { project: Project; booking: ServiceBooking; mode: WorkMode })
@@ -139,7 +139,7 @@ _No JSDoc yet._
 
 ### `DeliverablesPanel`
 
-*component* · [src/components/work/Bookings.tsx:483](../../../src/components/work/Bookings.tsx#L483)
+*component* · [src/components/work/Bookings.tsx:484](../../../src/components/work/Bookings.tsx#L484)
 
 ```ts
 DeliverablesPanel({ project, booking, mode }: { project: Project; booking: ServiceBooking; mode: WorkMode })
@@ -153,7 +153,7 @@ Source: [src/components/work/Collab.tsx](../../../src/components/work/Collab.tsx
 
 ### `NotesPanel`
 
-*component* · [src/components/work/Collab.tsx:19](../../../src/components/work/Collab.tsx#L19)
+*component* · [src/components/work/Collab.tsx:20](../../../src/components/work/Collab.tsx#L20)
 
 ```ts
 NotesPanel({ project }: { project: Project })
@@ -163,7 +163,7 @@ _No JSDoc yet._
 
 ### `PROJECT_FOLDERS`
 
-*const* · [src/components/work/Collab.tsx:74](../../../src/components/work/Collab.tsx#L74)
+*const* · [src/components/work/Collab.tsx:75](../../../src/components/work/Collab.tsx#L75)
 
 ```ts
 PROJECT_FOLDERS= [ … 7 items ]
@@ -173,7 +173,7 @@ _No JSDoc yet._
 
 ### `FilesPanel`
 
-*component* · [src/components/work/Collab.tsx:78](../../../src/components/work/Collab.tsx#L78)
+*component* · [src/components/work/Collab.tsx:79](../../../src/components/work/Collab.tsx#L79)
 
 ```ts
 FilesPanel({ project, mode }: { project: Project; mode: 'customer' | 'platform' | 'vendor' })
@@ -183,7 +183,7 @@ _No JSDoc yet._
 
 ### `RiskList`
 
-*component* · [src/components/work/Collab.tsx:163](../../../src/components/work/Collab.tsx#L163)
+*component* · [src/components/work/Collab.tsx:164](../../../src/components/work/Collab.tsx#L164)
 
 ```ts
 RiskList({ risks, onPress, limit }: { risks: RiskFlag[]; onPress?: (r: RiskFlag) => void; limit?: number })
@@ -193,7 +193,7 @@ _No JSDoc yet._
 
 ### `InboxList`
 
-*component* · [src/components/work/Collab.tsx:204](../../../src/components/work/Collab.tsx#L204)
+*component* · [src/components/work/Collab.tsx:205](../../../src/components/work/Collab.tsx#L205)
 
 ```ts
 InboxList({ basePath }: { basePath: '/inbox' | '/business/inbox' | '/freelancer/inbox' | '/platform/inbox' })

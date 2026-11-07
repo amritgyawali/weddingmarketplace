@@ -1,6 +1,5 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { Photo } from '@/components/ui/Photo';
-import * as Linking from 'expo-linking';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
@@ -21,6 +20,7 @@ import { useRoleTheme } from '@/theme/RoleTheme';
 import type { SocialAccount, SocialNetwork, SocialPost } from '@/types/platform';
 import { confirm } from '@/utils/confirm';
 import { formatLongDate, timeAgo, toISODate } from '@/utils/format';
+import { openSafeLink } from '@/utils/links';
 
 import { socialAct } from './live';
 import { mediaSource, NetworkIcon, PostThumb, useSocialWorkspace, whenLabel } from './parts';
@@ -129,7 +129,7 @@ export function PostCard({ post }: { post: SocialPost }) {
               </Text>
               {r?.status === 'failed' && <KButton label="Retry" size="sm" variant="secondary" onPress={() => socialAct(account.id, () => retry(post.id, n), () => publishSocialPostLive(post.id))} />}
               {r?.status === 'published' && r.url && (
-                <Pressable onPress={() => Linking.openURL(r.url!)} hitSlop={8} accessibilityRole="link" accessibilityLabel={`Open on ${NETWORK_BY_ID[n].label}`}>
+                <Pressable onPress={() => openSafeLink(r.url)} hitSlop={8} accessibilityRole="link" accessibilityLabel={`Open on ${NETWORK_BY_ID[n].label}`}>
                   <Ionicons name="open-outline" size={16} color={t.c.primary} />
                 </Pressable>
               )}

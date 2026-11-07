@@ -4,7 +4,7 @@
 
 Exported symbols that have no JSDoc yet. The weekly documentation pass (see [the maintenance guide](../handbook/17-documentation-maintenance.md)) works through this list; whoever touches a file should document its exports too.
 
-**993 of 1644 exports documented (60%).** Files without a header comment: 370 of 482.
+**999 of 1651 exports documented (61%).** Files without a header comment: 369 of 483.
 
 | File | Undocumented exports |
 |---|---|
@@ -13,8 +13,8 @@ Exported symbols that have no JSDoc yet. The weekly documentation pass (see [the
 | [src/services/insights.ts](../../src/services/insights.ts) | `HealthInput`, `HealthPart`, `HealthPace`, `TurnoutRates`, `DEFAULT_TURNOUT`, `HeadcountRow`, `PriceVerdict`, `LeadLike`, `LeadScoreContext`, `LeadBand`, `ConversionRow`, `DateDemand`, `GigFitInput`, `GigFitProfile`, `WorkDay`, `ReconIssue`, `Rates`, `ListingSignals` |
 | [src/hooks/queries.ts](../../src/hooks/queries.ts) | `queryKeys`, `useVenues`, `useVenue`, `useSimilarVenues`, `useCollections`, `useVendors`, `useVendor`, `useFeaturedVendors`, `useIdeas`, `useIdea`, `useStories`, `useStory`, `useRealWeddings`, `useRealWedding`, `useSearch`, `useShortlistedVenues`, `useShortlistedVendors` |
 | [src/services/planner.ts](../../src/services/planner.ts) | `PlanInput`, `estimateTotal`, `runSheetFor`, `buildEvents`, `buildRequirements`, `NextAction`, `nextBestAction`, `planningProgress`, `savingTips`, `invitationText`, `enquiryText`, `QUESTIONS_TO_ASK`, `questionsToAsk`, `negotiationPoints`, `summarizeReviews`, `guestBandLabel` |
+| [supabase/functions/_shared/payments.ts](../../supabase/functions/_shared/payments.ts) | `Gateway`, `Outcome`, `isGateway`, `KhaltiConfig`, `EsewaConfig`, `KHALTI_SANDBOX`, `ESEWA_SANDBOX`, `ESEWA_LIVE`, `khaltiInitiateBody`, `Lookup`, `khaltiLookup`, `esewaForm`, `EsewaCallback`, `esewaLookup` |
 | [src/components/toolkit/vendor/trades.tsx](../../src/components/toolkit/vendor/trades.tsx) | `MenuBuilder`, `Tastings`, `Themes`, `Rentals`, `SetupSheets`, `GalleryDelivery`, `CoupleShotLists`, `SongRequests`, `TrialsAndLooks`, `PowerPlanner`, `Fleet`, `Fittings`, `MuhurtaPlanner` |
-| [supabase/functions/_shared/payments.ts](../../supabase/functions/_shared/payments.ts) | `Outcome`, `isGateway`, `KhaltiConfig`, `EsewaConfig`, `KHALTI_SANDBOX`, `ESEWA_SANDBOX`, `ESEWA_LIVE`, `khaltiInitiateBody`, `Lookup`, `khaltiLookup`, `esewaForm`, `EsewaCallback`, `esewaLookup` |
 | [src/components/toolkit/platform/ops.tsx](../../src/components/toolkit/platform/ops.tsx) | `Broadcasts`, `PromoCampaigns`, `Helpdesk`, `Macros`, `Recruitment`, `PayoutBatches`, `Holidays`, `OnCall`, `QualityAudits`, `WinBack`, `ExportCentre` |
 | [src/components/toolkit/couple/ceremony.tsx](../../src/components/toolkit/couple/ceremony.tsx) | `SaitFinder`, `FamilyDuties`, `JantiPlanner`, `Samagri`, `EmergencyKit`, `Outfits`, `MusicPlan`, `ShotList`, `MyDay`, `WeatherGuide` |
 | [src/components/toolkit/freelancer/work.tsx](../../src/components/toolkit/freelancer/work.tsx) | `GearChecklist`, `GearCare`, `TravelPlanner`, `Deliveries`, `BackupLog`, `WorkDiary`, `SafetyChecklist`, `WeekPlanner`, `OpenDates` |

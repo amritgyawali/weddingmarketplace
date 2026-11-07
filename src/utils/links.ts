@@ -1,6 +1,9 @@
 import * as Linking from 'expo-linking';
 import { Share } from 'react-native';
 
+import { toastError } from '@/components/ui/Toast';
+import { isSafeLink } from '@/utils/safeUrl';
+
 /** Public web origin for couple websites and RSVP pages (served by the web build). */
 export const WEB_ORIGIN = 'https://vivah.app';
 
@@ -32,4 +35,24 @@ export function openWhatsApp(message: string, phone?: string) {
 export function openSms(message: string, phone?: string) {
   const to = phone ? phone.replace(/\D/g, '').slice(-10) : '';
   return Linking.openURL(`sms:${to}?body=${encodeURIComponent(message)}`).catch(() => shareMessage(message));
+}
+
+/**
+ * Opens a link that came from someone's data (a delivery link, a registry
+ * wishlist, a shared file, a banner) only when its scheme is safe
+ * (`isSafeLink`); anything else, such as `javascript:`, is refused with a
+ * toast. Resolves to whether the link was opened.
+ */
+export async function openSafeLink(url: string | undefined | null, opts: { files?: boolean } = {}): Promise<boolean> {
+  if (!isSafeLink(url, opts)) {
+    toastError('This link can’t be opened safely');
+    return false;
+  }
+  try {
+    await Linking.openURL(url.trim());
+    return true;
+  } catch {
+    toastError('This link can’t be opened safely');
+    return false;
+  }
 }

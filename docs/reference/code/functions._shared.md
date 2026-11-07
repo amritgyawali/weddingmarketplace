@@ -9,8 +9,8 @@ Every exported symbol in `supabase/functions/_shared/`, file by file. The guide 
 - [`cloudinary.ts`](#cloudinaryts) (8 exports)
 - [`env.ts`](#envts) (12 exports) · Edge Function configuration from Supabase secrets (`supabase secrets set`).
 - [`fanout.ts`](#fanoutts) (7 exports)
-- [`http.ts`](#httpts) (6 exports)
-- [`payments.ts`](#paymentsts) (27 exports)
+- [`http.ts`](#httpts) (7 exports)
+- [`payments.ts`](#paymentsts) (27 exports) · Khalti ePayment and eSewa ePay v2 (master plan §7.5), as pure functions the payment-initiate and payment-verify Edge Functions call. Amount…
 - [`ratelimit.ts`](#ratelimitts) (5 exports)
 - [`social.ts`](#socialts) (39 exports) · Social hub logic shared by social-oauth, social-webhook, social-send and social-publish (no dependencies, tested in Node by npm run test:fu…
 - [`supabase.ts`](#supabasets) (6 exports) · Calls into Supabase from an Edge Function over REST (no SDK).
@@ -354,9 +354,19 @@ CORS: Record<string, string>
 
 Small HTTP helpers shared by the Edge Functions (no dependencies).
 
+### `SECURITY_HEADERS`
+
+*const* · [supabase/functions/_shared/http.ts:10](../../../supabase/functions/_shared/http.ts#L10)
+
+```ts
+SECURITY_HEADERS: Record<string, string>
+```
+
+Sent with every answer: answers can carry personal data, so no cache keeps them and no browser guesses their type.
+
 ### `json`
 
-*function* · [supabase/functions/_shared/http.ts:9](../../../supabase/functions/_shared/http.ts#L9)
+*function* · [supabase/functions/_shared/http.ts:16](../../../supabase/functions/_shared/http.ts#L16)
 
 ```ts
 json(body: unknown, status = 200, headers: Record<string, string> = {})
@@ -366,7 +376,7 @@ _No JSDoc yet._
 
 ### `fail`
 
-*function* · [supabase/functions/_shared/http.ts:13](../../../supabase/functions/_shared/http.ts#L13)
+*function* · [supabase/functions/_shared/http.ts:20](../../../supabase/functions/_shared/http.ts#L20)
 
 ```ts
 fail(message: string, status = 400)
@@ -376,7 +386,7 @@ A refusal the app shows as-is (`message`, like PostgREST errors).
 
 ### `preflight`
 
-*function* · [supabase/functions/_shared/http.ts:15](../../../supabase/functions/_shared/http.ts#L15)
+*function* · [supabase/functions/_shared/http.ts:22](../../../supabase/functions/_shared/http.ts#L22)
 
 ```ts
 preflight(req: Request)
@@ -386,7 +396,7 @@ _No JSDoc yet._
 
 ### `clientIp`
 
-*function* · [supabase/functions/_shared/http.ts:18](../../../supabase/functions/_shared/http.ts#L18)
+*function* · [supabase/functions/_shared/http.ts:25](../../../supabase/functions/_shared/http.ts#L25)
 
 ```ts
 clientIp(req: Request)
@@ -396,25 +406,19 @@ The caller's IP as seen by Supabase's edge (for rate limits only).
 
 ### `safeEqual`
 
-*function* · [supabase/functions/_shared/http.ts:21](../../../supabase/functions/_shared/http.ts#L21)
+*function* · [supabase/functions/_shared/http.ts:32](../../../supabase/functions/_shared/http.ts#L32)
 
 ```ts
 safeEqual(a: string, b: string)
 ```
 
-Constant-time comparison for shared secrets.
+Constant-time comparison for shared secrets and signatures. It always walks
+the longer string, so the time taken says nothing about where the strings
+differ or how long the secret is.
 
 ## payments.ts
 
 Source: [supabase/functions/_shared/payments.ts](../../../supabase/functions/_shared/payments.ts)
-
-### `Gateway`
-
-*type* · [supabase/functions/_shared/payments.ts:16](../../../supabase/functions/_shared/payments.ts#L16)
-
-```ts
-type Gateway = 'khalti' | 'esewa'
-```
 
 Khalti ePayment and eSewa ePay v2 (master plan §7.5), as pure functions the
 payment-initiate and payment-verify Edge Functions call. Amounts inside Vivah
@@ -429,9 +433,19 @@ Sandbox (checked against the live sandboxes on 30 Sep 2026):
   eSewa   https://rc-epay.esewa.com.np    product EPAYTEST, secret 8gBm/:&EnhH.1/q,
           IDs 9711111111–9711111114, password Nepal@123, token 123456
 
+### `Gateway`
+
+*type* · [supabase/functions/_shared/payments.ts:18](../../../supabase/functions/_shared/payments.ts#L18)
+
+```ts
+type Gateway = 'khalti' | 'esewa'
+```
+
+_No JSDoc yet._
+
 ### `Outcome`
 
-*type* · [supabase/functions/_shared/payments.ts:17](../../../supabase/functions/_shared/payments.ts#L17)
+*type* · [supabase/functions/_shared/payments.ts:19](../../../supabase/functions/_shared/payments.ts#L19)
 
 ```ts
 type Outcome = 'COMPLETED' | 'PENDING' | 'FAILED' | 'CANCELLED' | 'EXPIRED'
@@ -441,7 +455,7 @@ _No JSDoc yet._
 
 ### `isGateway`
 
-*function* · [supabase/functions/_shared/payments.ts:19](../../../supabase/functions/_shared/payments.ts#L19)
+*function* · [supabase/functions/_shared/payments.ts:21](../../../supabase/functions/_shared/payments.ts#L21)
 
 ```ts
 isGateway(x: unknown): x is Gateway
@@ -451,7 +465,7 @@ _No JSDoc yet._
 
 ### `SQL_METHOD`
 
-*const* · [supabase/functions/_shared/payments.ts:22](../../../supabase/functions/_shared/payments.ts#L22)
+*const* · [supabase/functions/_shared/payments.ts:24](../../../supabase/functions/_shared/payments.ts#L24)
 
 ```ts
 SQL_METHOD: Record<Gateway, 'KHALTI' | 'ESEWA'>
@@ -461,7 +475,7 @@ The SQL payment_method for each gateway.
 
 ### `Intent`
 
-*interface* · [supabase/functions/_shared/payments.ts:25](../../../supabase/functions/_shared/payments.ts#L25)
+*interface* · [supabase/functions/_shared/payments.ts:27](../../../supabase/functions/_shared/payments.ts#L27)
 
 What rpc_begin_payment returns.
 
@@ -475,7 +489,7 @@ What rpc_begin_payment returns.
 
 ### `KhaltiConfig`
 
-*interface* · [supabase/functions/_shared/payments.ts:33](../../../supabase/functions/_shared/payments.ts#L33)
+*interface* · [supabase/functions/_shared/payments.ts:35](../../../supabase/functions/_shared/payments.ts#L35)
 
 _No JSDoc yet._
 
@@ -486,7 +500,7 @@ _No JSDoc yet._
 
 ### `EsewaConfig`
 
-*interface* · [supabase/functions/_shared/payments.ts:38](../../../supabase/functions/_shared/payments.ts#L38)
+*interface* · [supabase/functions/_shared/payments.ts:40](../../../supabase/functions/_shared/payments.ts#L40)
 
 _No JSDoc yet._
 
@@ -499,7 +513,7 @@ _No JSDoc yet._
 
 ### `KHALTI_SANDBOX`
 
-*const* · [supabase/functions/_shared/payments.ts:45](../../../supabase/functions/_shared/payments.ts#L45)
+*const* · [supabase/functions/_shared/payments.ts:47](../../../supabase/functions/_shared/payments.ts#L47)
 
 ```ts
 KHALTI_SANDBOX= 'https://dev.khalti.com/api/v2'
@@ -509,7 +523,7 @@ _No JSDoc yet._
 
 ### `ESEWA_SANDBOX`
 
-*const* · [supabase/functions/_shared/payments.ts:46](../../../supabase/functions/_shared/payments.ts#L46)
+*const* · [supabase/functions/_shared/payments.ts:48](../../../supabase/functions/_shared/payments.ts#L48)
 
 ```ts
 ESEWA_SANDBOX= { … }
@@ -519,7 +533,7 @@ _No JSDoc yet._
 
 ### `ESEWA_LIVE`
 
-*const* · [supabase/functions/_shared/payments.ts:47](../../../supabase/functions/_shared/payments.ts#L47)
+*const* · [supabase/functions/_shared/payments.ts:49](../../../supabase/functions/_shared/payments.ts#L49)
 
 ```ts
 ESEWA_LIVE= { … }
@@ -529,7 +543,7 @@ _No JSDoc yet._
 
 ### `rupeesString`
 
-*function* · [supabase/functions/_shared/payments.ts:52](../../../supabase/functions/_shared/payments.ts#L52)
+*function* · [supabase/functions/_shared/payments.ts:54](../../../supabase/functions/_shared/payments.ts#L54)
 
 ```ts
 rupeesString(paisa: number)
@@ -539,7 +553,7 @@ eSewa's rupee amount: "42375" or "42375.5" — the exact string that is signed.
 
 ### `toPaisa`
 
-*function* · [supabase/functions/_shared/payments.ts:58](../../../supabase/functions/_shared/payments.ts#L58)
+*function* · [supabase/functions/_shared/payments.ts:60](../../../supabase/functions/_shared/payments.ts#L60)
 
 ```ts
 toPaisa(rupees: unknown)
@@ -549,7 +563,7 @@ A gateway's rupee amount (number or string) back to paisa.
 
 ### `khaltiInitiateBody`
 
-*function* · [supabase/functions/_shared/payments.ts:68](../../../supabase/functions/_shared/payments.ts#L68)
+*function* · [supabase/functions/_shared/payments.ts:70](../../../supabase/functions/_shared/payments.ts#L70)
 
 ```ts
 khaltiInitiateBody(intent: Intent, returnUrl: string, websiteUrl: string)
@@ -559,7 +573,7 @@ _No JSDoc yet._
 
 ### `khaltiOutcome`
 
-*function* · [supabase/functions/_shared/payments.ts:82](../../../supabase/functions/_shared/payments.ts#L82)
+*function* · [supabase/functions/_shared/payments.ts:84](../../../supabase/functions/_shared/payments.ts#L84)
 
 ```ts
 khaltiOutcome(status: unknown): Outcome
@@ -569,7 +583,7 @@ Khalti lookup status → our outcome. Only "Completed" is money.
 
 ### `Lookup`
 
-*interface* · [supabase/functions/_shared/payments.ts:98](../../../supabase/functions/_shared/payments.ts#L98)
+*interface* · [supabase/functions/_shared/payments.ts:100](../../../supabase/functions/_shared/payments.ts#L100)
 
 _No JSDoc yet._
 
@@ -583,7 +597,7 @@ _No JSDoc yet._
 
 ### `khaltiLookup`
 
-*function* · [supabase/functions/_shared/payments.ts:107](../../../supabase/functions/_shared/payments.ts#L107)
+*function* · [supabase/functions/_shared/payments.ts:109](../../../supabase/functions/_shared/payments.ts#L109)
 
 ```ts
 khaltiLookup(cfg: KhaltiConfig, pidx: string, fetchImpl: typeof fetch = fetch): Promise<Lookup>
@@ -593,7 +607,7 @@ _No JSDoc yet._
 
 ### `hmacBase64`
 
-*function* · [supabase/functions/_shared/payments.ts:128](../../../supabase/functions/_shared/payments.ts#L128)
+*function* · [supabase/functions/_shared/payments.ts:130](../../../supabase/functions/_shared/payments.ts#L130)
 
 ```ts
 hmacBase64(message: string, secret: string): Promise<string>
@@ -603,7 +617,7 @@ HMAC-SHA256, base64 (Web Crypto: Deno and Node).
 
 ### `esewaMessage`
 
-*function* · [supabase/functions/_shared/payments.ts:135](../../../supabase/functions/_shared/payments.ts#L135)
+*function* · [supabase/functions/_shared/payments.ts:137](../../../supabase/functions/_shared/payments.ts#L137)
 
 ```ts
 esewaMessage(fields: Record<string, unknown>, names: string)
@@ -613,7 +627,7 @@ eSewa signs `name=value` pairs of the signed fields, in order, joined by commas.
 
 ### `esewaForm`
 
-*function* · [supabase/functions/_shared/payments.ts:141](../../../supabase/functions/_shared/payments.ts#L141)
+*function* · [supabase/functions/_shared/payments.ts:143](../../../supabase/functions/_shared/payments.ts#L143)
 
 ```ts
 esewaForm(cfg: EsewaConfig, intent: Intent, successUrl: string, failureUrl: string)
@@ -623,7 +637,7 @@ _No JSDoc yet._
 
 ### `EsewaCallback`
 
-*interface* · [supabase/functions/_shared/payments.ts:159](../../../supabase/functions/_shared/payments.ts#L159)
+*interface* · [supabase/functions/_shared/payments.ts:161](../../../supabase/functions/_shared/payments.ts#L161)
 
 _No JSDoc yet._
 
@@ -639,7 +653,7 @@ _No JSDoc yet._
 
 ### `esewaDecode`
 
-*function* · [supabase/functions/_shared/payments.ts:170](../../../supabase/functions/_shared/payments.ts#L170)
+*function* · [supabase/functions/_shared/payments.ts:172](../../../supabase/functions/_shared/payments.ts#L172)
 
 ```ts
 esewaDecode(data: string, secretKey: string): Promise<{ body: EsewaCallback; valid: boolean } | null>
@@ -649,7 +663,7 @@ Decodes the `data` eSewa appends to the success URL; `valid` says whether its si
 
 ### `esewaOutcome`
 
-*function* · [supabase/functions/_shared/payments.ts:182](../../../supabase/functions/_shared/payments.ts#L182)
+*function* · [supabase/functions/_shared/payments.ts:184](../../../supabase/functions/_shared/payments.ts#L184)
 
 ```ts
 esewaOutcome(status: unknown, expired: boolean): Outcome
@@ -659,7 +673,7 @@ eSewa status → our outcome. NOT_FOUND means the couple never finished (or eSew
 
 ### `esewaLookup`
 
-*function* · [supabase/functions/_shared/payments.ts:198](../../../supabase/functions/_shared/payments.ts#L198)
+*function* · [supabase/functions/_shared/payments.ts:200](../../../supabase/functions/_shared/payments.ts#L200)
 
 ```ts
 esewaLookup(cfg: EsewaConfig, orderRef: string, paisa: number, expired: boolean, fetchImpl: typeof fetch = fetch): Promise<Lookup>
@@ -669,7 +683,7 @@ _No JSDoc yet._
 
 ### `safeReturnTo`
 
-*function* · [supabase/functions/_shared/payments.ts:214](../../../supabase/functions/_shared/payments.ts#L214)
+*function* · [supabase/functions/_shared/payments.ts:216](../../../supabase/functions/_shared/payments.ts#L216)
 
 ```ts
 safeReturnTo(url: unknown, appUrl: string, extraHosts: string[] = []): string | null
@@ -681,7 +695,7 @@ PAYMENT_RETURN_HOSTS. Anything else would make payment-verify an open redirect.
 
 ### `withResult`
 
-*function* · [supabase/functions/_shared/payments.ts:230](../../../supabase/functions/_shared/payments.ts#L230)
+*function* · [supabase/functions/_shared/payments.ts:232](../../../supabase/functions/_shared/payments.ts#L232)
 
 ```ts
 withResult(returnTo: string, params: Record<string, string | undefined>)
@@ -691,7 +705,7 @@ The return address with the result added to its query.
 
 ### `parseVerifyPath`
 
-*function* · [supabase/functions/_shared/payments.ts:241](../../../supabase/functions/_shared/payments.ts#L241)
+*function* · [supabase/functions/_shared/payments.ts:243](../../../supabase/functions/_shared/payments.ts#L243)
 
 ```ts
 parseVerifyPath(pathname: string): { gateway: Gateway; intent: string; failure: boolean } | null
@@ -701,7 +715,7 @@ payment-verify/<gateway>/<intent>[/failure] from the request path.
 
 ### `esewaDataParam`
 
-*function* · [supabase/functions/_shared/payments.ts:250](../../../supabase/functions/_shared/payments.ts#L250)
+*function* · [supabase/functions/_shared/payments.ts:252](../../../supabase/functions/_shared/payments.ts#L252)
 
 ```ts
 esewaDataParam(rawUrl: string)
@@ -882,7 +896,7 @@ HMAC-SHA256 of a message, as hex.
 
 ### `OAuthState`
 
-*interface* · [supabase/functions/_shared/social.ts:70](../../../supabase/functions/_shared/social.ts#L70)
+*interface* · [supabase/functions/_shared/social.ts:71](../../../supabase/functions/_shared/social.ts#L71)
 
 What the signed OAuth state carries.
 
@@ -895,7 +909,7 @@ What the signed OAuth state carries.
 
 ### `signState`
 
-*function* · [supabase/functions/_shared/social.ts:81](../../../supabase/functions/_shared/social.ts#L81)
+*function* · [supabase/functions/_shared/social.ts:82](../../../supabase/functions/_shared/social.ts#L82)
 
 ```ts
 signState(state: OAuthState, secret: string): Promise<string>
@@ -905,7 +919,7 @@ A tamper-proof state for the consent round trip: base64url(JSON).base64url(HMAC)
 
 ### `readState`
 
-*function* · [supabase/functions/_shared/social.ts:87](../../../supabase/functions/_shared/social.ts#L87)
+*function* · [supabase/functions/_shared/social.ts:88](../../../supabase/functions/_shared/social.ts#L88)
 
 ```ts
 readState(token: string | null, secret: string, nowMs = Date.now()): Promise<OAuthState | null>
@@ -915,7 +929,7 @@ The state if the signature matches and it hasn't expired, else null.
 
 ### `authorizeUrl`
 
-*function* · [supabase/functions/_shared/social.ts:100](../../../supabase/functions/_shared/social.ts#L100)
+*function* · [supabase/functions/_shared/social.ts:101](../../../supabase/functions/_shared/social.ts#L101)
 
 ```ts
 authorizeUrl(network: Network, cfg: { metaAppId?: string; metaConfigId?: string; tiktokClientKey?: string; graphVersion?: string }, redirectUri: string, state: string): string | null
@@ -925,7 +939,7 @@ The network's consent page. Facebook Login covers Facebook, Instagram and WhatsA
 
 ### `allowedReturn`
 
-*function* · [supabase/functions/_shared/social.ts:114](../../../supabase/functions/_shared/social.ts#L114)
+*function* · [supabase/functions/_shared/social.ts:115](../../../supabase/functions/_shared/social.ts#L115)
 
 ```ts
 allowedReturn(url: unknown, appUrl: string, extraHosts: string[] = []): url is string
@@ -935,7 +949,7 @@ Return addresses the consent round trip may send the browser back to.
 
 ### `withQuery`
 
-*function* · [supabase/functions/_shared/social.ts:127](../../../supabase/functions/_shared/social.ts#L127)
+*function* · [supabase/functions/_shared/social.ts:128](../../../supabase/functions/_shared/social.ts#L128)
 
 ```ts
 withQuery(url: string, values: Record<string, string>): string
@@ -945,7 +959,7 @@ Adds query values to a return address (custom schemes included).
 
 ### `verifyMetaSignature`
 
-*function* · [supabase/functions/_shared/social.ts:135](../../../supabase/functions/_shared/social.ts#L135)
+*function* · [supabase/functions/_shared/social.ts:136](../../../supabase/functions/_shared/social.ts#L136)
 
 ```ts
 verifyMetaSignature(raw: string, header: string | null, appSecret: string): Promise<boolean>
@@ -955,7 +969,7 @@ Meta signs the raw body with the app secret: `X-Hub-Signature-256: sha256=<hex>`
 
 ### `verifyTikTokSignature`
 
-*function* · [supabase/functions/_shared/social.ts:141](../../../supabase/functions/_shared/social.ts#L141)
+*function* · [supabase/functions/_shared/social.ts:142](../../../supabase/functions/_shared/social.ts#L142)
 
 ```ts
 verifyTikTokSignature(raw: string, header: string | null, clientSecret: string, nowSec = Math.floor(Date.now() / 1000), toleranceSec = 300): Promise<boolean>
@@ -965,7 +979,7 @@ TikTok signs `<timestamp>.<raw body>` with the client secret: `TikTok-Signature:
 
 ### `InboundEvent`
 
-*interface* · [supabase/functions/_shared/social.ts:150](../../../supabase/functions/_shared/social.ts#L150)
+*interface* · [supabase/functions/_shared/social.ts:151](../../../supabase/functions/_shared/social.ts#L151)
 
 One inbound happening, in the shape vivah_social_ingest takes.
 
@@ -989,7 +1003,7 @@ One inbound happening, in the shape vivah_social_ingest takes.
 
 ### `MetaWebhook`
 
-*interface* · [supabase/functions/_shared/social.ts:209](../../../supabase/functions/_shared/social.ts#L209)
+*interface* · [supabase/functions/_shared/social.ts:210](../../../supabase/functions/_shared/social.ts#L210)
 
 Meta webhook payload (the parts read).
 
@@ -1000,7 +1014,7 @@ Meta webhook payload (the parts read).
 
 ### `TikTokWebhook`
 
-*interface* · [supabase/functions/_shared/social.ts:214](../../../supabase/functions/_shared/social.ts#L214)
+*interface* · [supabase/functions/_shared/social.ts:215](../../../supabase/functions/_shared/social.ts#L215)
 
 TikTok webhook payload (the parts read).
 
@@ -1011,7 +1025,7 @@ TikTok webhook payload (the parts read).
 
 ### `parseMetaWebhook`
 
-*function* · [supabase/functions/_shared/social.ts:243](../../../supabase/functions/_shared/social.ts#L243)
+*function* · [supabase/functions/_shared/social.ts:244](../../../supabase/functions/_shared/social.ts#L244)
 
 ```ts
 parseMetaWebhook(body: MetaWebhook | null | undefined): InboundEvent[]
@@ -1021,7 +1035,7 @@ Messenger, Instagram and WhatsApp Cloud API webhook payloads → events. Our own
 
 ### `parseTikTokWebhook`
 
-*function* · [supabase/functions/_shared/social.ts:286](../../../supabase/functions/_shared/social.ts#L286)
+*function* · [supabase/functions/_shared/social.ts:287](../../../supabase/functions/_shared/social.ts#L287)
 
 ```ts
 parseTikTokWebhook(body: TikTokWebhook | null | undefined): { publishId: string; status: 'published' | 'failed'; error?: string }[]
@@ -1031,7 +1045,7 @@ TikTok webhook → how a post TikTok was pulling went.
 
 ### `replyWindowState`
 
-*function* · [supabase/functions/_shared/social.ts:305](../../../supabase/functions/_shared/social.ts#L305)
+*function* · [supabase/functions/_shared/social.ts:306](../../../supabase/functions/_shared/social.ts#L306)
 
 ```ts
 replyWindowState(network: Network, kind: 'message' | 'comment', lastInboundAt: string | null, nowMs = Date.now()): 'open' | 'human_agent' | 'template' | 'closed'
@@ -1041,7 +1055,7 @@ Same rule as the app (src/services/social.ts replyWindow).
 
 ### `ReplyInput`
 
-*interface* · [supabase/functions/_shared/social.ts:314](../../../supabase/functions/_shared/social.ts#L314)
+*interface* · [supabase/functions/_shared/social.ts:315](../../../supabase/functions/_shared/social.ts#L315)
 
 Everything needed to send one reply on its network.
 
@@ -1061,7 +1075,7 @@ Everything needed to send one reply on its network.
 
 ### `HttpRequest`
 
-*interface* · [supabase/functions/_shared/social.ts:329](../../../supabase/functions/_shared/social.ts#L329)
+*interface* · [supabase/functions/_shared/social.ts:330](../../../supabase/functions/_shared/social.ts#L330)
 
 A request to a network, built without sending it (testable).
 
@@ -1074,7 +1088,7 @@ A request to a network, built without sending it (testable).
 
 ### `replyRequest`
 
-*function* · [supabase/functions/_shared/social.ts:344](../../../supabase/functions/_shared/social.ts#L344)
+*function* · [supabase/functions/_shared/social.ts:345](../../../supabase/functions/_shared/social.ts#L345)
 
 ```ts
 replyRequest(input: ReplyInput, graphVersion = 'v21.0'): HttpRequest
@@ -1084,7 +1098,7 @@ The one HTTP request that sends a reply on its network.
 
 ### `replyId`
 
-*function* · [supabase/functions/_shared/social.ts:369](../../../supabase/functions/_shared/social.ts#L369)
+*function* · [supabase/functions/_shared/social.ts:370](../../../supabase/functions/_shared/social.ts#L370)
 
 ```ts
 replyId(network: Network, json: NetJson | null | undefined): string | undefined
@@ -1094,7 +1108,7 @@ The id the network gave the reply.
 
 ### `networkError`
 
-*function* · [supabase/functions/_shared/social.ts:376](../../../supabase/functions/_shared/social.ts#L376)
+*function* · [supabase/functions/_shared/social.ts:377](../../../supabase/functions/_shared/social.ts#L377)
 
 ```ts
 networkError(json: NetJson | null | undefined, status: number): string
@@ -1104,7 +1118,7 @@ The network's own words when it refuses.
 
 ### `refusedBy`
 
-*function* · [supabase/functions/_shared/social.ts:381](../../../supabase/functions/_shared/social.ts#L381)
+*function* · [supabase/functions/_shared/social.ts:382](../../../supabase/functions/_shared/social.ts#L382)
 
 ```ts
 refusedBy(res: { ok: boolean }, json: NetJson)
@@ -1114,7 +1128,7 @@ True when the answer is a refusal. TikTok answers every call with an `error` obj
 
 ### `PublishMedia`
 
-*interface* · [supabase/functions/_shared/social.ts:386](../../../supabase/functions/_shared/social.ts#L386)
+*interface* · [supabase/functions/_shared/social.ts:387](../../../supabase/functions/_shared/social.ts#L387)
 
 A public photo or video URL the network can fetch.
 
@@ -1125,7 +1139,7 @@ A public photo or video URL the network can fetch.
 
 ### `PublishPost`
 
-*interface* · [supabase/functions/_shared/social.ts:392](../../../supabase/functions/_shared/social.ts#L392)
+*interface* · [supabase/functions/_shared/social.ts:393](../../../supabase/functions/_shared/social.ts#L393)
 
 The post as one network receives it.
 
@@ -1139,7 +1153,7 @@ The post as one network receives it.
 
 ### `PublishTarget`
 
-*interface* · [supabase/functions/_shared/social.ts:401](../../../supabase/functions/_shared/social.ts#L401)
+*interface* · [supabase/functions/_shared/social.ts:402](../../../supabase/functions/_shared/social.ts#L402)
 
 The connected account a post goes to, with its token.
 
@@ -1153,7 +1167,7 @@ The connected account a post goes to, with its token.
 
 ### `PublishOptions`
 
-*interface* · [supabase/functions/_shared/social.ts:410](../../../supabase/functions/_shared/social.ts#L410)
+*interface* · [supabase/functions/_shared/social.ts:411](../../../supabase/functions/_shared/social.ts#L411)
 
 Per-deployment publishing settings (Graph version, TikTok privacy, WhatsApp template and contacts).
 
@@ -1168,7 +1182,7 @@ Per-deployment publishing settings (Graph version, TikTok privacy, WhatsApp temp
 
 ### `PublishResult`
 
-*interface* · [supabase/functions/_shared/social.ts:424](../../../supabase/functions/_shared/social.ts#L424)
+*interface* · [supabase/functions/_shared/social.ts:425](../../../supabase/functions/_shared/social.ts#L425)
 
 How one network took a post.
 
@@ -1181,7 +1195,7 @@ How one network took a post.
 
 ### `publishTo`
 
-*function* · [supabase/functions/_shared/social.ts:453](../../../supabase/functions/_shared/social.ts#L453)
+*function* · [supabase/functions/_shared/social.ts:454](../../../supabase/functions/_shared/social.ts#L454)
 
 ```ts
 publishTo(target: PublishTarget, post: PublishPost, http: Http, opts: PublishOptions = {}): Promise<PublishResult>
@@ -1191,7 +1205,7 @@ Publishes one post to one network, following that network's own steps. Never thr
 
 ### `mediaUrls`
 
-*function* · [supabase/functions/_shared/social.ts:542](../../../supabase/functions/_shared/social.ts#L542)
+*function* · [supabase/functions/_shared/social.ts:543](../../../supabase/functions/_shared/social.ts#L543)
 
 ```ts
 mediaUrls(media: { kind?: string; publicId?: string; uri?: string }[], cloudName?: string): PublishMedia[]
@@ -1201,7 +1215,7 @@ A post's media as public URLs: uploaded files are Cloudinary public ids, others 
 
 ### `MetricTarget`
 
-*interface* · [supabase/functions/_shared/social.ts:555](../../../supabase/functions/_shared/social.ts#L555)
+*interface* · [supabase/functions/_shared/social.ts:556](../../../supabase/functions/_shared/social.ts#L556)
 
 A published post on one network whose numbers are read back.
 
@@ -1213,7 +1227,7 @@ A published post on one network whose numbers are read back.
 
 ### `Metrics`
 
-*interface* · [supabase/functions/_shared/social.ts:563](../../../supabase/functions/_shared/social.ts#L563)
+*interface* · [supabase/functions/_shared/social.ts:564](../../../supabase/functions/_shared/social.ts#L564)
 
 Numbers a network reports for a post; missing ones are left as they were.
 
@@ -1227,7 +1241,7 @@ Numbers a network reports for a post; missing ones are left as they were.
 
 ### `fetchMetrics`
 
-*function* · [supabase/functions/_shared/social.ts:588](../../../supabase/functions/_shared/social.ts#L588)
+*function* · [supabase/functions/_shared/social.ts:589](../../../supabase/functions/_shared/social.ts#L589)
 
 ```ts
 fetchMetrics(t: MetricTarget, http: Http, graphVersion = 'v21.0'): Promise<Metrics | null>

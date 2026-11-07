@@ -136,6 +136,8 @@ These are the binding rules of the Vivah codebase. Each has an id, the rule, and
 | R-SEC-4 | Legal page text MUST describe what the app really does; when data collection, processors, retention, deletion or refunds change, update `src/data/legal.ts` and bump `LEGAL_VERSION`. | Store listings and gateways link to these pages. |
 | R-SEC-5 | Private files (KYC, contracts, invoices) go to the private `documents` bucket and are read through short signed links. Images go through `media-sign` and named Cloudinary transformations only. | Public CDNs are public forever. |
 | R-SEC-6 | MUST NOT print, log or commit the GitHub token or any API key, including in scripts and CI logs. | Leaked tokens are used within minutes. |
+| R-SEC-7 | A column that decides trust, money or permissions (verification, ratings, reliability, featured/sponsored, review stars, staff team, capabilities, payout details, chat membership) MUST NOT be writable by a direct client update. Guard it with `vivah_guard_columns` (0023) or change it only in a `security definer` RPC, and add an attack check to `scripts/db/security.mjs`. | RLS decides which *rows* a user may update, not which *columns*: without a guard, "my own row" means "every field of my own row". |
+| R-SEC-8 | Links that come from someone's data (delivery links, registry links, shared files, banners) open through `openSafeLink()` (`utils/links.ts`), never `Linking.openURL` directly. | A typed `javascript:` link runs code in the web app; `intent:` launches other apps. |
 
 ## R-OPS: devops and dependencies
 

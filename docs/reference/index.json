@@ -6185,28 +6185,28 @@
     {
      "name": "REGISTRY_KINDS",
      "kind": "const",
-     "line": 12,
+     "line": 13,
      "signature": ": { id: RegistryItem['kind']; label: string; icon: keyof typeof Ionicons.glyphMap }[]",
      "doc": ""
     },
     {
      "name": "registryGoal",
      "kind": "function",
-     "line": 21,
+     "line": 22,
      "signature": "(r: RegistryItem)",
      "doc": ""
     },
     {
      "name": "registryRaised",
      "kind": "function",
-     "line": 22,
+     "line": 23,
      "signature": "(r: RegistryItem)",
      "doc": ""
     },
     {
      "name": "RegistryCard",
      "kind": "component",
-     "line": 25,
+     "line": 26,
      "signature": "({ item, accent = colors.primary, onContribute, onPress }: { item: RegistryItem; accent?: string; onContribute?: () => void; onPress?: () => void })",
      "doc": "One registry item with funding progress; used by the couple's manager and the public website."
     }
@@ -8127,7 +8127,7 @@
      "kind": "function",
      "line": 127,
      "signature": "()",
-     "doc": "Phone screenshots can be noticed on iOS and Android, not in a browser."
+     "doc": "Detect screenshots on iOS or Android 14+, without broad photo-library access."
     },
     {
      "name": "bugButtonOn",
@@ -9263,42 +9263,42 @@
     {
      "name": "WorkMode",
      "kind": "type",
-     "line": 21,
+     "line": 22,
      "signature": "= 'customer' | 'vendor' | 'platform' | 'freelancer'",
      "doc": ""
     },
     {
      "name": "crewFill",
      "kind": "function",
-     "line": 25,
+     "line": 26,
      "signature": "(b: ServiceBooking)",
      "doc": ""
     },
     {
      "name": "BookingCard",
      "kind": "component",
-     "line": 32,
+     "line": 33,
      "signature": "({ project, booking, mode, onPress }: { project: Project; booking: ServiceBooking; mode: WorkMode; onPress?: () => void })",
      "doc": "One provider booking. Money shown depends on who is looking."
     },
     {
      "name": "WorkerPicker",
      "kind": "component",
-     "line": 212,
+     "line": 213,
      "signature": "({ project, booking, crew, visible, onClose }: { project: Project; booking: ServiceBooking; crew: CrewRequirement | null; visible: boolean; onClose: () => void })",
      "doc": "Pick a freelancer (ranked by fit) or in-house staff for a crew slot."
     },
     {
      "name": "CrewPanel",
      "kind": "component",
-     "line": 327,
+     "line": 328,
      "signature": "({ project, booking, mode }: { project: Project; booking: ServiceBooking; mode: WorkMode })",
      "doc": ""
     },
     {
      "name": "DeliverablesPanel",
      "kind": "component",
-     "line": 483,
+     "line": 484,
      "signature": "({ project, booking, mode }: { project: Project; booking: ServiceBooking; mode: WorkMode })",
      "doc": ""
     }
@@ -9311,35 +9311,35 @@
     {
      "name": "NotesPanel",
      "kind": "component",
-     "line": 19,
+     "line": 20,
      "signature": "({ project }: { project: Project })",
      "doc": ""
     },
     {
      "name": "PROJECT_FOLDERS",
      "kind": "const",
-     "line": 74,
+     "line": 75,
      "signature": "= [ … 7 items ]",
      "doc": ""
     },
     {
      "name": "FilesPanel",
      "kind": "component",
-     "line": 78,
+     "line": 79,
      "signature": "({ project, mode }: { project: Project; mode: 'customer' | 'platform' | 'vendor' })",
      "doc": ""
     },
     {
      "name": "RiskList",
      "kind": "component",
-     "line": 163,
+     "line": 164,
      "signature": "({ risks, onPress, limit }: { risks: RiskFlag[]; onPress?: (r: RiskFlag) => void; limit?: number })",
      "doc": ""
     },
     {
      "name": "InboxList",
      "kind": "component",
-     "line": 204,
+     "line": 205,
      "signature": "({ basePath }: { basePath: '/inbox' | '/business/inbox' | '/freelancer/inbox' | '/platform/inbox' })",
      "doc": ""
     }
@@ -28465,58 +28465,65 @@
     {
      "name": "WEB_ORIGIN",
      "kind": "const",
-     "line": 5,
+     "line": 8,
      "signature": "= 'https://vivah.app'",
      "doc": "Public web origin for couple websites and RSVP pages (served by the web build)."
     },
     {
      "name": "webUrl",
      "kind": "function",
-     "line": 7,
+     "line": 10,
      "signature": "(path: string)",
      "doc": ""
     },
     {
      "name": "appUrl",
      "kind": "function",
-     "line": 10,
+     "line": 13,
      "signature": "(path: string)",
      "doc": "Deep link into the app (exp:// in Expo Go, vivah:// in builds)."
     },
     {
      "name": "rsvpPath",
      "kind": "function",
-     "line": 12,
+     "line": 15,
      "signature": "(code: string)",
      "doc": ""
     },
     {
      "name": "sitePath",
      "kind": "function",
-     "line": 13,
+     "line": 16,
      "signature": "(slug: string)",
      "doc": ""
     },
     {
      "name": "shareMessage",
      "kind": "function",
-     "line": 16,
+     "line": 19,
      "signature": "(message: string, url?: string)",
      "doc": "Native share sheet with a WhatsApp-friendly message."
     },
     {
      "name": "openWhatsApp",
      "kind": "function",
-     "line": 25,
+     "line": 28,
      "signature": "(message: string, phone?: string)",
      "doc": "Opens WhatsApp with a prefilled message (optionally to one Nepali number)."
     },
     {
      "name": "openSms",
      "kind": "function",
-     "line": 32,
+     "line": 35,
      "signature": "(message: string, phone?: string)",
      "doc": "Opens the SMS composer with a prefilled body."
+    },
+    {
+     "name": "openSafeLink",
+     "kind": "function",
+     "line": 46,
+     "signature": "(url: string | undefined | null, opts: { files?: boolean } = {}): Promise<boolean>",
+     "doc": "Opens a link that came from someone's data (a delivery link, a registry\nwishlist, a shared file, a banner) only when its scheme is safe\n(`isSafeLink`); anything else, such as `javascript:`, is refused with a\ntoast. Resolves to whether the link was opened."
     }
    ]
   },
@@ -28557,6 +28564,47 @@
      "line": 11,
      "signature": "(seed: string)",
      "doc": ""
+    }
+   ]
+  },
+  {
+   "file": "src/utils/safeUrl.ts",
+   "doc": "Which links typed by other people are safe to open. A vendor's delivery link, a registry wishlist, a shared file or an admin banner comes from data someone else wrote, so it could be `javascript:` (runs code in the web app), `data:` (a fake page) or an `intent:` that launches another app. Only the schemes below are opened. Pure, so Node tests can load it.",
+   "exports": [
+    {
+     "name": "SAFE_LINK_SCHEMES",
+     "kind": "const",
+     "line": 10,
+     "signature": "= ['https:', 'http:', 'mailto:', 'tel:', 'sms:', 'whatsapp:'] as const",
+     "doc": "Schemes any link may use: the web, email, phone, SMS and WhatsApp."
+    },
+    {
+     "name": "DEVICE_FILE_SCHEMES",
+     "kind": "const",
+     "line": 13,
+     "signature": "= ['file:', 'content:', 'ph:', 'assets-library:'] as const",
+     "doc": "Extra schemes for files picked on this device (document picker, camera roll)."
+    },
+    {
+     "name": "MAX_LINK_LENGTH",
+     "kind": "const",
+     "line": 16,
+     "signature": "= 2048",
+     "doc": "The longest link we open; anything longer is refused rather than parsed."
+    },
+    {
+     "name": "linkScheme",
+     "kind": "function",
+     "line": 19,
+     "signature": "(url: string): string | null",
+     "doc": "The scheme of a link, lower-cased with its colon, or null when it has none."
+    },
+    {
+     "name": "isSafeLink",
+     "kind": "function",
+     "line": 31,
+     "signature": "(url: unknown, opts: { files?: boolean } = {}): url is string",
+     "doc": "Whether a link that came from user data may be opened. Web links need a\nhost; `files` also allows on-device file links (for files the user picked)."
     }
    ]
   },
@@ -28951,78 +28999,85 @@
      "doc": "Small HTTP helpers shared by the Edge Functions (no dependencies)."
     },
     {
+     "name": "SECURITY_HEADERS",
+     "kind": "const",
+     "line": 10,
+     "signature": ": Record<string, string>",
+     "doc": "Sent with every answer: answers can carry personal data, so no cache keeps them and no browser guesses their type."
+    },
+    {
      "name": "json",
      "kind": "function",
-     "line": 9,
+     "line": 16,
      "signature": "(body: unknown, status = 200, headers: Record<string, string> = {})",
      "doc": ""
     },
     {
      "name": "fail",
      "kind": "function",
-     "line": 13,
+     "line": 20,
      "signature": "(message: string, status = 400)",
      "doc": "A refusal the app shows as-is (`message`, like PostgREST errors)."
     },
     {
      "name": "preflight",
      "kind": "function",
-     "line": 15,
+     "line": 22,
      "signature": "(req: Request)",
      "doc": ""
     },
     {
      "name": "clientIp",
      "kind": "function",
-     "line": 18,
+     "line": 25,
      "signature": "(req: Request)",
      "doc": "The caller's IP as seen by Supabase's edge (for rate limits only)."
     },
     {
      "name": "safeEqual",
      "kind": "function",
-     "line": 21,
+     "line": 32,
      "signature": "(a: string, b: string)",
-     "doc": "Constant-time comparison for shared secrets."
+     "doc": "Constant-time comparison for shared secrets and signatures. It always walks\nthe longer string, so the time taken says nothing about where the strings\ndiffer or how long the secret is."
     }
    ]
   },
   {
    "file": "supabase/functions/_shared/payments.ts",
-   "doc": "",
+   "doc": "Khalti ePayment and eSewa ePay v2 (master plan §7.5), as pure functions the payment-initiate and payment-verify Edge Functions call. Amounts inside Vivah are paisa (bigint in SQL); Khalti also takes paisa, eSewa takes rupees. The rule both gateways share: a redirect back from the gateway proves nothing. Only the gateway's own lookup (Khalti /epayment/lookup, eSewa transaction status), made with our keys, decides whether money is recorded. Sandbox (checked against the live sandboxes on 30 Sep 2026): Khalti https://dev.khalti.com/api/v2 test IDs 9800000000–9800000005, MPIN 1111, OTP 987654 eSew…",
    "exports": [
     {
      "name": "Gateway",
      "kind": "type",
-     "line": 16,
+     "line": 18,
      "signature": "= 'khalti' | 'esewa'",
-     "doc": "Khalti ePayment and eSewa ePay v2 (master plan §7.5), as pure functions the\npayment-initiate and payment-verify Edge Functions call. Amounts inside Vivah\nare paisa (bigint in SQL); Khalti also takes paisa, eSewa takes rupees.\n\nThe rule both gateways share: a redirect back from the gateway proves\nnothing. Only the gateway's own lookup (Khalti /epayment/lookup, eSewa\ntransaction status), made with our keys, decides whether money is recorded.\n\nSandbox (checked against the live sandboxes on 30 Sep 2026):\n  Khalti  https://dev.khalti.com/api/v2   test IDs 9800000000–9800000005, MPIN 1111, OTP 987654\n  eSewa   https://rc-epay.esewa.com.np    product EPAYTEST, secret 8gBm/:&EnhH.1/q,\n          IDs 9711111111–9711111114, password Nepal@123, token 123456"
+     "doc": ""
     },
     {
      "name": "Outcome",
      "kind": "type",
-     "line": 17,
+     "line": 19,
      "signature": "= 'COMPLETED' | 'PENDING' | 'FAILED' | 'CANCELLED' | 'EXPIRED'",
      "doc": ""
     },
     {
      "name": "isGateway",
      "kind": "function",
-     "line": 19,
+     "line": 21,
      "signature": "(x: unknown): x is Gateway",
      "doc": ""
     },
     {
      "name": "SQL_METHOD",
      "kind": "const",
-     "line": 22,
+     "line": 24,
      "signature": ": Record<Gateway, 'KHALTI' | 'ESEWA'>",
      "doc": "The SQL payment_method for each gateway."
     },
     {
      "name": "Intent",
      "kind": "interface",
-     "line": 25,
+     "line": 27,
      "signature": "",
      "doc": "What rpc_begin_payment returns.",
      "members": [
@@ -29061,7 +29116,7 @@
     {
      "name": "KhaltiConfig",
      "kind": "interface",
-     "line": 33,
+     "line": 35,
      "signature": "",
      "doc": "",
      "members": [
@@ -29082,7 +29137,7 @@
     {
      "name": "EsewaConfig",
      "kind": "interface",
-     "line": 38,
+     "line": 40,
      "signature": "",
      "doc": "",
      "members": [
@@ -29115,56 +29170,56 @@
     {
      "name": "KHALTI_SANDBOX",
      "kind": "const",
-     "line": 45,
+     "line": 47,
      "signature": "= 'https://dev.khalti.com/api/v2'",
      "doc": ""
     },
     {
      "name": "ESEWA_SANDBOX",
      "kind": "const",
-     "line": 46,
+     "line": 48,
      "signature": "= { … }",
      "doc": ""
     },
     {
      "name": "ESEWA_LIVE",
      "kind": "const",
-     "line": 47,
+     "line": 49,
      "signature": "= { … }",
      "doc": ""
     },
     {
      "name": "rupeesString",
      "kind": "function",
-     "line": 52,
+     "line": 54,
      "signature": "(paisa: number)",
      "doc": "eSewa's rupee amount: \"42375\" or \"42375.5\" — the exact string that is signed."
     },
     {
      "name": "toPaisa",
      "kind": "function",
-     "line": 58,
+     "line": 60,
      "signature": "(rupees: unknown)",
      "doc": "A gateway's rupee amount (number or string) back to paisa."
     },
     {
      "name": "khaltiInitiateBody",
      "kind": "function",
-     "line": 68,
+     "line": 70,
      "signature": "(intent: Intent, returnUrl: string, websiteUrl: string)",
      "doc": ""
     },
     {
      "name": "khaltiOutcome",
      "kind": "function",
-     "line": 82,
+     "line": 84,
      "signature": "(status: unknown): Outcome",
      "doc": "Khalti lookup status → our outcome. Only \"Completed\" is money."
     },
     {
      "name": "Lookup",
      "kind": "interface",
-     "line": 98,
+     "line": 100,
      "signature": "",
      "doc": "",
      "members": [
@@ -29203,35 +29258,35 @@
     {
      "name": "khaltiLookup",
      "kind": "function",
-     "line": 107,
+     "line": 109,
      "signature": "(cfg: KhaltiConfig, pidx: string, fetchImpl: typeof fetch = fetch): Promise<Lookup>",
      "doc": ""
     },
     {
      "name": "hmacBase64",
      "kind": "function",
-     "line": 128,
+     "line": 130,
      "signature": "(message: string, secret: string): Promise<string>",
      "doc": "HMAC-SHA256, base64 (Web Crypto: Deno and Node)."
     },
     {
      "name": "esewaMessage",
      "kind": "function",
-     "line": 135,
+     "line": 137,
      "signature": "(fields: Record<string, unknown>, names: string)",
      "doc": "eSewa signs `name=value` pairs of the signed fields, in order, joined by commas."
     },
     {
      "name": "esewaForm",
      "kind": "function",
-     "line": 141,
+     "line": 143,
      "signature": "(cfg: EsewaConfig, intent: Intent, successUrl: string, failureUrl: string)",
      "doc": ""
     },
     {
      "name": "EsewaCallback",
      "kind": "interface",
-     "line": 159,
+     "line": 161,
      "signature": "",
      "doc": "",
      "members": [
@@ -29282,49 +29337,49 @@
     {
      "name": "esewaDecode",
      "kind": "function",
-     "line": 170,
+     "line": 172,
      "signature": "(data: string, secretKey: string): Promise<{ body: EsewaCallback; valid: boolean } | null>",
      "doc": "Decodes the `data` eSewa appends to the success URL; `valid` says whether its signature is ours."
     },
     {
      "name": "esewaOutcome",
      "kind": "function",
-     "line": 182,
+     "line": 184,
      "signature": "(status: unknown, expired: boolean): Outcome",
      "doc": "eSewa status → our outcome. NOT_FOUND means the couple never finished (or eSewa hasn't caught up yet)."
     },
     {
      "name": "esewaLookup",
      "kind": "function",
-     "line": 198,
+     "line": 200,
      "signature": "(cfg: EsewaConfig, orderRef: string, paisa: number, expired: boolean, fetchImpl: typeof fetch = fetch): Promise<Lookup>",
      "doc": ""
     },
     {
      "name": "safeReturnTo",
      "kind": "function",
-     "line": 214,
+     "line": 216,
      "signature": "(url: unknown, appUrl: string, extraHosts: string[] = []): string | null",
      "doc": "Only our own app and web addresses: the app's scheme, Expo Go during\ndevelopment, the web app, localhost, and hosts listed in\nPAYMENT_RETURN_HOSTS. Anything else would make payment-verify an open redirect."
     },
     {
      "name": "withResult",
      "kind": "function",
-     "line": 230,
+     "line": 232,
      "signature": "(returnTo: string, params: Record<string, string | undefined>)",
      "doc": "The return address with the result added to its query."
     },
     {
      "name": "parseVerifyPath",
      "kind": "function",
-     "line": 241,
+     "line": 243,
      "signature": "(pathname: string): { gateway: Gateway; intent: string; failure: boolean } | null",
      "doc": "payment-verify/<gateway>/<intent>[/failure] from the request path."
     },
     {
      "name": "esewaDataParam",
      "kind": "function",
-     "line": 250,
+     "line": 252,
      "signature": "(rawUrl: string)",
      "doc": "eSewa appends `?data=…` to the success URL even when it already has a query,\nso the value is found wherever it is."
     }
@@ -29501,7 +29556,7 @@
     {
      "name": "OAuthState",
      "kind": "interface",
-     "line": 70,
+     "line": 71,
      "signature": "",
      "doc": "What the signed OAuth state carries.",
      "members": [
@@ -29534,56 +29589,56 @@
     {
      "name": "signState",
      "kind": "function",
-     "line": 81,
+     "line": 82,
      "signature": "(state: OAuthState, secret: string): Promise<string>",
      "doc": "A tamper-proof state for the consent round trip: base64url(JSON).base64url(HMAC)."
     },
     {
      "name": "readState",
      "kind": "function",
-     "line": 87,
+     "line": 88,
      "signature": "(token: string | null, secret: string, nowMs = Date.now()): Promise<OAuthState | null>",
      "doc": "The state if the signature matches and it hasn't expired, else null."
     },
     {
      "name": "authorizeUrl",
      "kind": "function",
-     "line": 100,
+     "line": 101,
      "signature": "(network: Network, cfg: { metaAppId?: string; metaConfigId?: string; tiktokClientKey?: string; graphVersion?: string }, redirectUri: string, state: string): string | null",
      "doc": "The network's consent page. Facebook Login covers Facebook, Instagram and WhatsApp; TikTok has its own."
     },
     {
      "name": "allowedReturn",
      "kind": "function",
-     "line": 114,
+     "line": 115,
      "signature": "(url: unknown, appUrl: string, extraHosts: string[] = []): url is string",
      "doc": "Return addresses the consent round trip may send the browser back to."
     },
     {
      "name": "withQuery",
      "kind": "function",
-     "line": 127,
+     "line": 128,
      "signature": "(url: string, values: Record<string, string>): string",
      "doc": "Adds query values to a return address (custom schemes included)."
     },
     {
      "name": "verifyMetaSignature",
      "kind": "function",
-     "line": 135,
+     "line": 136,
      "signature": "(raw: string, header: string | null, appSecret: string): Promise<boolean>",
      "doc": "Meta signs the raw body with the app secret: `X-Hub-Signature-256: sha256=<hex>`."
     },
     {
      "name": "verifyTikTokSignature",
      "kind": "function",
-     "line": 141,
+     "line": 142,
      "signature": "(raw: string, header: string | null, clientSecret: string, nowSec = Math.floor(Date.now() / 1000), toleranceSec = 300): Promise<boolean>",
      "doc": "TikTok signs `<timestamp>.<raw body>` with the client secret: `TikTok-Signature: t=<ts>,s=<hex>`."
     },
     {
      "name": "InboundEvent",
      "kind": "interface",
-     "line": 150,
+     "line": 151,
      "signature": "",
      "doc": "One inbound happening, in the shape vivah_social_ingest takes.",
      "members": [
@@ -29682,7 +29737,7 @@
     {
      "name": "MetaWebhook",
      "kind": "interface",
-     "line": 209,
+     "line": 210,
      "signature": "",
      "doc": "Meta webhook payload (the parts read).",
      "members": [
@@ -29703,7 +29758,7 @@
     {
      "name": "TikTokWebhook",
      "kind": "interface",
-     "line": 214,
+     "line": 215,
      "signature": "",
      "doc": "TikTok webhook payload (the parts read).",
      "members": [
@@ -29724,28 +29779,28 @@
     {
      "name": "parseMetaWebhook",
      "kind": "function",
-     "line": 243,
+     "line": 244,
      "signature": "(body: MetaWebhook | null | undefined): InboundEvent[]",
      "doc": "Messenger, Instagram and WhatsApp Cloud API webhook payloads → events. Our own echoes and comments are dropped."
     },
     {
      "name": "parseTikTokWebhook",
      "kind": "function",
-     "line": 286,
+     "line": 287,
      "signature": "(body: TikTokWebhook | null | undefined): { publishId: string; status: 'published' | 'failed'; error?: string }[]",
      "doc": "TikTok webhook → how a post TikTok was pulling went."
     },
     {
      "name": "replyWindowState",
      "kind": "function",
-     "line": 305,
+     "line": 306,
      "signature": "(network: Network, kind: 'message' | 'comment', lastInboundAt: string | null, nowMs = Date.now()): 'open' | 'human_agent' | 'template' | 'closed'",
      "doc": "Same rule as the app (src/services/social.ts replyWindow)."
     },
     {
      "name": "ReplyInput",
      "kind": "interface",
-     "line": 314,
+     "line": 315,
      "signature": "",
      "doc": "Everything needed to send one reply on its network.",
      "members": [
@@ -29820,7 +29875,7 @@
     {
      "name": "HttpRequest",
      "kind": "interface",
-     "line": 329,
+     "line": 330,
      "signature": "",
      "doc": "A request to a network, built without sending it (testable).",
      "members": [
@@ -29853,35 +29908,35 @@
     {
      "name": "replyRequest",
      "kind": "function",
-     "line": 344,
+     "line": 345,
      "signature": "(input: ReplyInput, graphVersion = 'v21.0'): HttpRequest",
      "doc": "The one HTTP request that sends a reply on its network."
     },
     {
      "name": "replyId",
      "kind": "function",
-     "line": 369,
+     "line": 370,
      "signature": "(network: Network, json: NetJson | null | undefined): string | undefined",
      "doc": "The id the network gave the reply."
     },
     {
      "name": "networkError",
      "kind": "function",
-     "line": 376,
+     "line": 377,
      "signature": "(json: NetJson | null | undefined, status: number): string",
      "doc": "The network's own words when it refuses."
     },
     {
      "name": "refusedBy",
      "kind": "function",
-     "line": 381,
+     "line": 382,
      "signature": "(res: { ok: boolean }, json: NetJson)",
      "doc": "True when the answer is a refusal. TikTok answers every call with an `error` object whose code is \"ok\" on success."
     },
     {
      "name": "PublishMedia",
      "kind": "interface",
-     "line": 386,
+     "line": 387,
      "signature": "",
      "doc": "A public photo or video URL the network can fetch.",
      "members": [
@@ -29902,7 +29957,7 @@
     {
      "name": "PublishPost",
      "kind": "interface",
-     "line": 392,
+     "line": 393,
      "signature": "",
      "doc": "The post as one network receives it.",
      "members": [
@@ -29941,7 +29996,7 @@
     {
      "name": "PublishTarget",
      "kind": "interface",
-     "line": 401,
+     "line": 402,
      "signature": "",
      "doc": "The connected account a post goes to, with its token.",
      "members": [
@@ -29980,7 +30035,7 @@
     {
      "name": "PublishOptions",
      "kind": "interface",
-     "line": 410,
+     "line": 411,
      "signature": "",
      "doc": "Per-deployment publishing settings (Graph version, TikTok privacy, WhatsApp template and contacts).",
      "members": [
@@ -30025,7 +30080,7 @@
     {
      "name": "PublishResult",
      "kind": "interface",
-     "line": 424,
+     "line": 425,
      "signature": "",
      "doc": "How one network took a post.",
      "members": [
@@ -30058,21 +30113,21 @@
     {
      "name": "publishTo",
      "kind": "function",
-     "line": 453,
+     "line": 454,
      "signature": "(target: PublishTarget, post: PublishPost, http: Http, opts: PublishOptions = {}): Promise<PublishResult>",
      "doc": "Publishes one post to one network, following that network's own steps. Never throws."
     },
     {
      "name": "mediaUrls",
      "kind": "function",
-     "line": 542,
+     "line": 543,
      "signature": "(media: { kind?: string; publicId?: string; uri?: string }[], cloudName?: string): PublishMedia[]",
      "doc": "A post's media as public URLs: uploaded files are Cloudinary public ids, others already URLs."
     },
     {
      "name": "MetricTarget",
      "kind": "interface",
-     "line": 555,
+     "line": 556,
      "signature": "",
      "doc": "A published post on one network whose numbers are read back.",
      "members": [
@@ -30099,7 +30154,7 @@
     {
      "name": "Metrics",
      "kind": "interface",
-     "line": 563,
+     "line": 564,
      "signature": "",
      "doc": "Numbers a network reports for a post; missing ones are left as they were.",
      "members": [
@@ -30138,7 +30193,7 @@
     {
      "name": "fetchMetrics",
      "kind": "function",
-     "line": 588,
+     "line": 589,
      "signature": "(t: MetricTarget, http: Http, graphVersion = 'v21.0'): Promise<Metrics | null>",
      "doc": "Reads a post's numbers back from its network: Facebook post fields and\ninsights, Instagram media insights, TikTok's video query (after finding the\npublic post id from the publish id). Never throws; null when unavailable."
     }

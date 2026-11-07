@@ -10,9 +10,10 @@ Every exported symbol in `src/utils/`, file by file. The guide that explains how
 - [`confirm.ts`](#confirmts) (1 exports)
 - [`currency.ts`](#currencyts) (5 exports)
 - [`format.ts`](#formatts) (34 exports)
-- [`links.ts`](#linksts) (8 exports)
+- [`links.ts`](#linksts) (9 exports)
 - [`localImage.ts`](#localimagets) (2 exports)
 - [`random.ts`](#randomts) (2 exports)
+- [`safeUrl.ts`](#safeurlts) (5 exports) · Which links typed by other people are safe to open. A vendor's delivery link, a registry wishlist, a shared file or an admin banner comes f…
 
 ## bs.ts
 
@@ -619,7 +620,7 @@ Source: [src/utils/links.ts](../../../src/utils/links.ts)
 
 ### `WEB_ORIGIN`
 
-*const* · [src/utils/links.ts:5](../../../src/utils/links.ts#L5)
+*const* · [src/utils/links.ts:8](../../../src/utils/links.ts#L8)
 
 ```ts
 WEB_ORIGIN= 'https://vivah.app'
@@ -629,7 +630,7 @@ Public web origin for couple websites and RSVP pages (served by the web build).
 
 ### `webUrl`
 
-*function* · [src/utils/links.ts:7](../../../src/utils/links.ts#L7)
+*function* · [src/utils/links.ts:10](../../../src/utils/links.ts#L10)
 
 ```ts
 webUrl(path: string)
@@ -639,7 +640,7 @@ _No JSDoc yet._
 
 ### `appUrl`
 
-*function* · [src/utils/links.ts:10](../../../src/utils/links.ts#L10)
+*function* · [src/utils/links.ts:13](../../../src/utils/links.ts#L13)
 
 ```ts
 appUrl(path: string)
@@ -649,7 +650,7 @@ Deep link into the app (exp:// in Expo Go, vivah:// in builds).
 
 ### `rsvpPath`
 
-*function* · [src/utils/links.ts:12](../../../src/utils/links.ts#L12)
+*function* · [src/utils/links.ts:15](../../../src/utils/links.ts#L15)
 
 ```ts
 rsvpPath(code: string)
@@ -659,7 +660,7 @@ _No JSDoc yet._
 
 ### `sitePath`
 
-*function* · [src/utils/links.ts:13](../../../src/utils/links.ts#L13)
+*function* · [src/utils/links.ts:16](../../../src/utils/links.ts#L16)
 
 ```ts
 sitePath(slug: string)
@@ -669,7 +670,7 @@ _No JSDoc yet._
 
 ### `shareMessage`
 
-*function* · [src/utils/links.ts:16](../../../src/utils/links.ts#L16)
+*function* · [src/utils/links.ts:19](../../../src/utils/links.ts#L19)
 
 ```ts
 shareMessage(message: string, url?: string)
@@ -679,7 +680,7 @@ Native share sheet with a WhatsApp-friendly message.
 
 ### `openWhatsApp`
 
-*function* · [src/utils/links.ts:25](../../../src/utils/links.ts#L25)
+*function* · [src/utils/links.ts:28](../../../src/utils/links.ts#L28)
 
 ```ts
 openWhatsApp(message: string, phone?: string)
@@ -689,13 +690,26 @@ Opens WhatsApp with a prefilled message (optionally to one Nepali number).
 
 ### `openSms`
 
-*function* · [src/utils/links.ts:32](../../../src/utils/links.ts#L32)
+*function* · [src/utils/links.ts:35](../../../src/utils/links.ts#L35)
 
 ```ts
 openSms(message: string, phone?: string)
 ```
 
 Opens the SMS composer with a prefilled body.
+
+### `openSafeLink`
+
+*function* · [src/utils/links.ts:46](../../../src/utils/links.ts#L46)
+
+```ts
+openSafeLink(url: string | undefined | null, opts: { files?: boolean } = {}): Promise<boolean>
+```
+
+Opens a link that came from someone's data (a delivery link, a registry
+wishlist, a shared file, a banner) only when its scheme is safe
+(`isSafeLink`); anything else, such as `javascript:`, is refused with a
+toast. Resolves to whether the link was opened.
 
 ## localImage.ts
 
@@ -746,3 +760,64 @@ seeded(seed: string)
 ```
 
 _No JSDoc yet._
+
+## safeUrl.ts
+
+Source: [src/utils/safeUrl.ts](../../../src/utils/safeUrl.ts)
+
+Which links typed by other people are safe to open. A vendor's delivery
+link, a registry wishlist, a shared file or an admin banner comes from data
+someone else wrote, so it could be `javascript:` (runs code in the web app),
+`data:` (a fake page) or an `intent:` that launches another app. Only the
+schemes below are opened. Pure, so Node tests can load it.
+
+### `SAFE_LINK_SCHEMES`
+
+*const* · [src/utils/safeUrl.ts:10](../../../src/utils/safeUrl.ts#L10)
+
+```ts
+SAFE_LINK_SCHEMES= ['https:', 'http:', 'mailto:', 'tel:', 'sms:', 'whatsapp:'] as const
+```
+
+Schemes any link may use: the web, email, phone, SMS and WhatsApp.
+
+### `DEVICE_FILE_SCHEMES`
+
+*const* · [src/utils/safeUrl.ts:13](../../../src/utils/safeUrl.ts#L13)
+
+```ts
+DEVICE_FILE_SCHEMES= ['file:', 'content:', 'ph:', 'assets-library:'] as const
+```
+
+Extra schemes for files picked on this device (document picker, camera roll).
+
+### `MAX_LINK_LENGTH`
+
+*const* · [src/utils/safeUrl.ts:16](../../../src/utils/safeUrl.ts#L16)
+
+```ts
+MAX_LINK_LENGTH= 2048
+```
+
+The longest link we open; anything longer is refused rather than parsed.
+
+### `linkScheme`
+
+*function* · [src/utils/safeUrl.ts:19](../../../src/utils/safeUrl.ts#L19)
+
+```ts
+linkScheme(url: string): string | null
+```
+
+The scheme of a link, lower-cased with its colon, or null when it has none.
+
+### `isSafeLink`
+
+*function* · [src/utils/safeUrl.ts:31](../../../src/utils/safeUrl.ts#L31)
+
+```ts
+isSafeLink(url: unknown, opts: { files?: boolean } = {}): url is string
+```
+
+Whether a link that came from user data may be opened. Web links need a
+host; `files` also allows on-device file links (for files the user picked).

@@ -70,6 +70,8 @@ The October 2026 direct-role AAB is a local demo edition: Super admin controls o
 
 JavaScript-only changes can later ship through EAS Update; native changes need a new store build. Don't create or edit `ios/`/`android/` (R-OPS-3).
 
+Android media uploads use the system image/video picker. `app.json` blocks `READ_MEDIA_IMAGES`, `READ_MEDIA_VIDEO` and `READ_EXTERNAL_STORAGE`, including permissions inherited from dependencies. The screenshot reporter's automatic detection is available on iOS and Android 14+ only; Android 13 and earlier can still use the other report entry points when reporting is enabled. Legacy camera capture retains `WRITE_EXTERNAL_STORAGE` (Android 9 and earlier). Verify the final AAB's merged manifest before upload: it must contain none of the three blocked permissions. Upload the new, higher version-code bundle to replace any earlier bundle requesting broad photo access; do not submit a broad-access justification for selected-photo uploads.
+
 ## 5. Web hosting
 
 `npx expo export -p web` produces `dist/` (single-page app, `web.output: "single"`). Cloudflare Pages serves it in production with `public/_headers`; Vercel previews use `vercel.json` (same headers, SPA rewrite). Deep links like `/w/…`, `/rsvp/…`, `/pay/…`, `/legal/…` work when opened directly.
