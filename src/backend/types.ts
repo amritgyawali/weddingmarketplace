@@ -13,11 +13,15 @@
 import type { PlanInput } from '@/services/planner';
 import type { PaymentMethod, ProjectStatus } from '@/types/platform';
 
+/** The outcome of a backend call: a value, or an error message ready to show. */
 export type Result<T> = { ok: true; value: T } | { ok: false; error: string };
 
+/** Wraps a value as a successful Result. */
 export const okResult = <T>(value: T): Result<T> => ({ ok: true, value });
+/** Wraps a message as a failed Result. */
 export const failResult = <T = never>(error: string): Result<T> => ({ ok: false, error });
 
+/** Which backend is in use: the on-device mock or Supabase. */
 export type BackendKind = 'mock' | 'supabase';
 
 export interface Backend {

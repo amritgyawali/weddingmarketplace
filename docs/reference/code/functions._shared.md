@@ -435,37 +435,37 @@ Sandbox (checked against the live sandboxes on 30 Sep 2026):
 
 ### `Gateway`
 
-*type* · [supabase/functions/_shared/payments.ts:18](../../../supabase/functions/_shared/payments.ts#L18)
+*type* · [supabase/functions/_shared/payments.ts:19](../../../supabase/functions/_shared/payments.ts#L19)
 
 ```ts
 type Gateway = 'khalti' | 'esewa'
 ```
 
-_No JSDoc yet._
+The online payment gateways the server supports.
 
 ### `Outcome`
 
-*type* · [supabase/functions/_shared/payments.ts:19](../../../supabase/functions/_shared/payments.ts#L19)
+*type* · [supabase/functions/_shared/payments.ts:21](../../../supabase/functions/_shared/payments.ts#L21)
 
 ```ts
 type Outcome = 'COMPLETED' | 'PENDING' | 'FAILED' | 'CANCELLED' | 'EXPIRED'
 ```
 
-_No JSDoc yet._
+How a gateway's own answer maps onto a payment attempt.
 
 ### `isGateway`
 
-*function* · [supabase/functions/_shared/payments.ts:21](../../../supabase/functions/_shared/payments.ts#L21)
+*function* · [supabase/functions/_shared/payments.ts:24](../../../supabase/functions/_shared/payments.ts#L24)
 
 ```ts
 isGateway(x: unknown): x is Gateway
 ```
 
-_No JSDoc yet._
+Type guard for the supported gateway names.
 
 ### `SQL_METHOD`
 
-*const* · [supabase/functions/_shared/payments.ts:24](../../../supabase/functions/_shared/payments.ts#L24)
+*const* · [supabase/functions/_shared/payments.ts:27](../../../supabase/functions/_shared/payments.ts#L27)
 
 ```ts
 SQL_METHOD: Record<Gateway, 'KHALTI' | 'ESEWA'>
@@ -475,7 +475,7 @@ The SQL payment_method for each gateway.
 
 ### `Intent`
 
-*interface* · [supabase/functions/_shared/payments.ts:27](../../../supabase/functions/_shared/payments.ts#L27)
+*interface* · [supabase/functions/_shared/payments.ts:30](../../../supabase/functions/_shared/payments.ts#L30)
 
 What rpc_begin_payment returns.
 
@@ -489,9 +489,9 @@ What rpc_begin_payment returns.
 
 ### `KhaltiConfig`
 
-*interface* · [supabase/functions/_shared/payments.ts:35](../../../supabase/functions/_shared/payments.ts#L35)
+*interface* · [supabase/functions/_shared/payments.ts:39](../../../supabase/functions/_shared/payments.ts#L39)
 
-_No JSDoc yet._
+Khalti secret key and API base address.
 
 | Member | Type | Notes |
 |---|---|---|
@@ -500,9 +500,9 @@ _No JSDoc yet._
 
 ### `EsewaConfig`
 
-*interface* · [supabase/functions/_shared/payments.ts:40](../../../supabase/functions/_shared/payments.ts#L40)
+*interface* · [supabase/functions/_shared/payments.ts:45](../../../supabase/functions/_shared/payments.ts#L45)
 
-_No JSDoc yet._
+eSewa product code, signing secret and form and status addresses.
 
 | Member | Type | Notes |
 |---|---|---|
@@ -513,37 +513,37 @@ _No JSDoc yet._
 
 ### `KHALTI_SANDBOX`
 
-*const* · [supabase/functions/_shared/payments.ts:47](../../../supabase/functions/_shared/payments.ts#L47)
+*const* · [supabase/functions/_shared/payments.ts:53](../../../supabase/functions/_shared/payments.ts#L53)
 
 ```ts
 KHALTI_SANDBOX= 'https://dev.khalti.com/api/v2'
 ```
 
-_No JSDoc yet._
+Khalti's sandbox API address, used when no live address is configured.
 
 ### `ESEWA_SANDBOX`
 
-*const* · [supabase/functions/_shared/payments.ts:48](../../../supabase/functions/_shared/payments.ts#L48)
+*const* · [supabase/functions/_shared/payments.ts:55](../../../supabase/functions/_shared/payments.ts#L55)
 
 ```ts
 ESEWA_SANDBOX= { … }
 ```
 
-_No JSDoc yet._
+eSewa's public sandbox test credentials and addresses.
 
 ### `ESEWA_LIVE`
 
-*const* · [supabase/functions/_shared/payments.ts:49](../../../supabase/functions/_shared/payments.ts#L49)
+*const* · [supabase/functions/_shared/payments.ts:57](../../../supabase/functions/_shared/payments.ts#L57)
 
 ```ts
 ESEWA_LIVE= { … }
 ```
 
-_No JSDoc yet._
+eSewa's live form and status addresses.
 
 ### `rupeesString`
 
-*function* · [supabase/functions/_shared/payments.ts:54](../../../supabase/functions/_shared/payments.ts#L54)
+*function* · [supabase/functions/_shared/payments.ts:62](../../../supabase/functions/_shared/payments.ts#L62)
 
 ```ts
 rupeesString(paisa: number)
@@ -553,7 +553,7 @@ eSewa's rupee amount: "42375" or "42375.5" — the exact string that is signed.
 
 ### `toPaisa`
 
-*function* · [supabase/functions/_shared/payments.ts:60](../../../supabase/functions/_shared/payments.ts#L60)
+*function* · [supabase/functions/_shared/payments.ts:68](../../../supabase/functions/_shared/payments.ts#L68)
 
 ```ts
 toPaisa(rupees: unknown)
@@ -563,17 +563,17 @@ A gateway's rupee amount (number or string) back to paisa.
 
 ### `khaltiInitiateBody`
 
-*function* · [supabase/functions/_shared/payments.ts:70](../../../supabase/functions/_shared/payments.ts#L70)
+*function* · [supabase/functions/_shared/payments.ts:79](../../../supabase/functions/_shared/payments.ts#L79)
 
 ```ts
 khaltiInitiateBody(intent: Intent, returnUrl: string, websiteUrl: string)
 ```
 
-_No JSDoc yet._
+The body for Khalti's initiate call, with the amount in paisa.
 
 ### `khaltiOutcome`
 
-*function* · [supabase/functions/_shared/payments.ts:84](../../../supabase/functions/_shared/payments.ts#L84)
+*function* · [supabase/functions/_shared/payments.ts:93](../../../supabase/functions/_shared/payments.ts#L93)
 
 ```ts
 khaltiOutcome(status: unknown): Outcome
@@ -583,9 +583,9 @@ Khalti lookup status → our outcome. Only "Completed" is money.
 
 ### `Lookup`
 
-*interface* · [supabase/functions/_shared/payments.ts:100](../../../supabase/functions/_shared/payments.ts#L100)
+*interface* · [supabase/functions/_shared/payments.ts:110](../../../supabase/functions/_shared/payments.ts#L110)
 
-_No JSDoc yet._
+A gateway's verified answer about one attempt.
 
 | Member | Type | Notes |
 |---|---|---|
@@ -597,17 +597,17 @@ _No JSDoc yet._
 
 ### `khaltiLookup`
 
-*function* · [supabase/functions/_shared/payments.ts:109](../../../supabase/functions/_shared/payments.ts#L109)
+*function* · [supabase/functions/_shared/payments.ts:120](../../../supabase/functions/_shared/payments.ts#L120)
 
 ```ts
 khaltiLookup(cfg: KhaltiConfig, pidx: string, fetchImpl: typeof fetch = fetch): Promise<Lookup>
 ```
 
-_No JSDoc yet._
+Asks Khalti directly for the status and amount of an attempt (the only source of truth for money).
 
 ### `hmacBase64`
 
-*function* · [supabase/functions/_shared/payments.ts:130](../../../supabase/functions/_shared/payments.ts#L130)
+*function* · [supabase/functions/_shared/payments.ts:141](../../../supabase/functions/_shared/payments.ts#L141)
 
 ```ts
 hmacBase64(message: string, secret: string): Promise<string>
@@ -617,7 +617,7 @@ HMAC-SHA256, base64 (Web Crypto: Deno and Node).
 
 ### `esewaMessage`
 
-*function* · [supabase/functions/_shared/payments.ts:137](../../../supabase/functions/_shared/payments.ts#L137)
+*function* · [supabase/functions/_shared/payments.ts:148](../../../supabase/functions/_shared/payments.ts#L148)
 
 ```ts
 esewaMessage(fields: Record<string, unknown>, names: string)
@@ -627,19 +627,19 @@ eSewa signs `name=value` pairs of the signed fields, in order, joined by commas.
 
 ### `esewaForm`
 
-*function* · [supabase/functions/_shared/payments.ts:143](../../../supabase/functions/_shared/payments.ts#L143)
+*function* · [supabase/functions/_shared/payments.ts:155](../../../supabase/functions/_shared/payments.ts#L155)
 
 ```ts
 esewaForm(cfg: EsewaConfig, intent: Intent, successUrl: string, failureUrl: string)
 ```
 
-_No JSDoc yet._
+The signed form fields the app posts to eSewa to start a payment.
 
 ### `EsewaCallback`
 
-*interface* · [supabase/functions/_shared/payments.ts:161](../../../supabase/functions/_shared/payments.ts#L161)
+*interface* · [supabase/functions/_shared/payments.ts:174](../../../supabase/functions/_shared/payments.ts#L174)
 
-_No JSDoc yet._
+The decoded data eSewa appends to the success address.
 
 | Member | Type | Notes |
 |---|---|---|
@@ -653,7 +653,7 @@ _No JSDoc yet._
 
 ### `esewaDecode`
 
-*function* · [supabase/functions/_shared/payments.ts:172](../../../supabase/functions/_shared/payments.ts#L172)
+*function* · [supabase/functions/_shared/payments.ts:185](../../../supabase/functions/_shared/payments.ts#L185)
 
 ```ts
 esewaDecode(data: string, secretKey: string): Promise<{ body: EsewaCallback; valid: boolean } | null>
@@ -663,7 +663,7 @@ Decodes the `data` eSewa appends to the success URL; `valid` says whether its si
 
 ### `esewaOutcome`
 
-*function* · [supabase/functions/_shared/payments.ts:184](../../../supabase/functions/_shared/payments.ts#L184)
+*function* · [supabase/functions/_shared/payments.ts:197](../../../supabase/functions/_shared/payments.ts#L197)
 
 ```ts
 esewaOutcome(status: unknown, expired: boolean): Outcome
@@ -673,17 +673,17 @@ eSewa status → our outcome. NOT_FOUND means the couple never finished (or eSew
 
 ### `esewaLookup`
 
-*function* · [supabase/functions/_shared/payments.ts:200](../../../supabase/functions/_shared/payments.ts#L200)
+*function* · [supabase/functions/_shared/payments.ts:214](../../../supabase/functions/_shared/payments.ts#L214)
 
 ```ts
 esewaLookup(cfg: EsewaConfig, orderRef: string, paisa: number, expired: boolean, fetchImpl: typeof fetch = fetch): Promise<Lookup>
 ```
 
-_No JSDoc yet._
+Asks eSewa's status API for an attempt and checks it answered for the same transaction.
 
 ### `safeReturnTo`
 
-*function* · [supabase/functions/_shared/payments.ts:216](../../../supabase/functions/_shared/payments.ts#L216)
+*function* · [supabase/functions/_shared/payments.ts:230](../../../supabase/functions/_shared/payments.ts#L230)
 
 ```ts
 safeReturnTo(url: unknown, appUrl: string, extraHosts: string[] = []): string | null
@@ -695,7 +695,7 @@ PAYMENT_RETURN_HOSTS. Anything else would make payment-verify an open redirect.
 
 ### `withResult`
 
-*function* · [supabase/functions/_shared/payments.ts:232](../../../supabase/functions/_shared/payments.ts#L232)
+*function* · [supabase/functions/_shared/payments.ts:246](../../../supabase/functions/_shared/payments.ts#L246)
 
 ```ts
 withResult(returnTo: string, params: Record<string, string | undefined>)
@@ -705,7 +705,7 @@ The return address with the result added to its query.
 
 ### `parseVerifyPath`
 
-*function* · [supabase/functions/_shared/payments.ts:243](../../../supabase/functions/_shared/payments.ts#L243)
+*function* · [supabase/functions/_shared/payments.ts:257](../../../supabase/functions/_shared/payments.ts#L257)
 
 ```ts
 parseVerifyPath(pathname: string): { gateway: Gateway; intent: string; failure: boolean } | null
@@ -715,7 +715,7 @@ payment-verify/<gateway>/<intent>[/failure] from the request path.
 
 ### `esewaDataParam`
 
-*function* · [supabase/functions/_shared/payments.ts:252](../../../supabase/functions/_shared/payments.ts#L252)
+*function* · [supabase/functions/_shared/payments.ts:266](../../../supabase/functions/_shared/payments.ts#L266)
 
 ```ts
 esewaDataParam(rawUrl: string)

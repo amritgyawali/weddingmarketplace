@@ -773,17 +773,17 @@ PDFs (via expo-print). Works on iOS/Android (share sheet) and web (download).
 
 ### `shareText`
 
-*function* · [src/services/exporters.ts:24](../../../src/services/exporters.ts#L24)
+*function* · [src/services/exporters.ts:25](../../../src/services/exporters.ts#L25)
 
 ```ts
 shareText(content: string, fileName: string, mime: string)
 ```
 
-_No JSDoc yet._
+Writes text to a file and opens the share sheet (a download on web).
 
 ### `sharePdf`
 
-*function* · [src/services/exporters.ts:38](../../../src/services/exporters.ts#L38)
+*function* · [src/services/exporters.ts:39](../../../src/services/exporters.ts#L39)
 
 ```ts
 sharePdf(html: string, fileName: string)
@@ -793,9 +793,9 @@ Render HTML to a PDF and open the share sheet (print dialog on web).
 
 ### `CalendarItem`
 
-*interface* · [src/services/exporters.ts:52](../../../src/services/exporters.ts#L52)
+*interface* · [src/services/exporters.ts:54](../../../src/services/exporters.ts#L54)
 
-_No JSDoc yet._
+One calendar entry: a date, with an optional start time, length, place and notes.
 
 | Member | Type | Notes |
 |---|---|---|
@@ -808,17 +808,17 @@ _No JSDoc yet._
 
 ### `buildIcs`
 
-*function* · [src/services/exporters.ts:74](../../../src/services/exporters.ts#L74)
+*function* · [src/services/exporters.ts:77](../../../src/services/exporters.ts#L77)
 
 ```ts
 buildIcs(items: CalendarItem[], calName = 'Vivah wedding'): string
 ```
 
-_No JSDoc yet._
+Builds an iCalendar (.ics) file for the items, with a one-day-before reminder on each.
 
 ### `exportCalendar`
 
-*function* · [src/services/exporters.ts:91](../../../src/services/exporters.ts#L91)
+*function* · [src/services/exporters.ts:94](../../../src/services/exporters.ts#L94)
 
 ```ts
 exportCalendar(items: CalendarItem[], name = 'vivah-wedding')
@@ -828,47 +828,47 @@ Opens an import in Apple/Google Calendar via the system share sheet.
 
 ### `googleCalendarUrl`
 
-*function* · [src/services/exporters.ts:93](../../../src/services/exporters.ts#L93)
+*function* · [src/services/exporters.ts:97](../../../src/services/exporters.ts#L97)
 
 ```ts
 googleCalendarUrl(item: CalendarItem): string
 ```
 
-_No JSDoc yet._
+The Google Calendar link that pre-fills a new event for one item.
 
 ### `addToGoogleCalendar`
 
-*function* · [src/services/exporters.ts:100](../../../src/services/exporters.ts#L100)
+*function* · [src/services/exporters.ts:105](../../../src/services/exporters.ts#L105)
 
 ```ts
 addToGoogleCalendar(item: CalendarItem)
 ```
 
-_No JSDoc yet._
+Opens Google Calendar's new-event page for one item.
 
 ### `toCsv`
 
-*function* · [src/services/exporters.ts:108](../../../src/services/exporters.ts#L108)
+*function* · [src/services/exporters.ts:114](../../../src/services/exporters.ts#L114)
 
 ```ts
 toCsv(rows: Record<string, unknown>[])
 ```
 
-_No JSDoc yet._
+Turns rows into CSV text, using the first row's keys as headers; empty input gives an empty string.
 
 ### `exportCsv`
 
-*function* · [src/services/exporters.ts:114](../../../src/services/exporters.ts#L114)
+*function* · [src/services/exporters.ts:121](../../../src/services/exporters.ts#L121)
 
 ```ts
 exportCsv(rows: Record<string, unknown>[], name: string)
 ```
 
-_No JSDoc yet._
+Shares rows as a named .csv file.
 
 ### `parseCsv`
 
-*function* · [src/services/exporters.ts:117](../../../src/services/exporters.ts#L117)
+*function* · [src/services/exporters.ts:124](../../../src/services/exporters.ts#L124)
 
 ```ts
 parseCsv(text: string): Record<string, string>[]
@@ -878,7 +878,7 @@ Minimal RFC-4180 parser (quoted cells, escaped quotes, CRLF).
 
 ### `pickCsv`
 
-*function* · [src/services/exporters.ts:153](../../../src/services/exporters.ts#L153)
+*function* · [src/services/exporters.ts:160](../../../src/services/exporters.ts#L160)
 
 ```ts
 pickCsv(): Promise<Record<string, string>[] | null>

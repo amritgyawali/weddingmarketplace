@@ -4,7 +4,7 @@
 
 Exported symbols that have no JSDoc yet. The weekly documentation pass (see [the maintenance guide](../handbook/17-documentation-maintenance.md)) works through this list; whoever touches a file should document its exports too.
 
-**999 of 1651 exports documented (61%).** Files without a header comment: 369 of 483.
+**1034 of 1651 exports documented (63%).** Files without a header comment: 368 of 483.
 
 | File | Undocumented exports |
 |---|---|
@@ -13,7 +13,6 @@ Exported symbols that have no JSDoc yet. The weekly documentation pass (see [the
 | [src/services/insights.ts](../../src/services/insights.ts) | `HealthInput`, `HealthPart`, `HealthPace`, `TurnoutRates`, `DEFAULT_TURNOUT`, `HeadcountRow`, `PriceVerdict`, `LeadLike`, `LeadScoreContext`, `LeadBand`, `ConversionRow`, `DateDemand`, `GigFitInput`, `GigFitProfile`, `WorkDay`, `ReconIssue`, `Rates`, `ListingSignals` |
 | [src/hooks/queries.ts](../../src/hooks/queries.ts) | `queryKeys`, `useVenues`, `useVenue`, `useSimilarVenues`, `useCollections`, `useVendors`, `useVendor`, `useFeaturedVendors`, `useIdeas`, `useIdea`, `useStories`, `useStory`, `useRealWeddings`, `useRealWedding`, `useSearch`, `useShortlistedVenues`, `useShortlistedVendors` |
 | [src/services/planner.ts](../../src/services/planner.ts) | `PlanInput`, `estimateTotal`, `runSheetFor`, `buildEvents`, `buildRequirements`, `NextAction`, `nextBestAction`, `planningProgress`, `savingTips`, `invitationText`, `enquiryText`, `QUESTIONS_TO_ASK`, `questionsToAsk`, `negotiationPoints`, `summarizeReviews`, `guestBandLabel` |
-| [supabase/functions/_shared/payments.ts](../../supabase/functions/_shared/payments.ts) | `Gateway`, `Outcome`, `isGateway`, `KhaltiConfig`, `EsewaConfig`, `KHALTI_SANDBOX`, `ESEWA_SANDBOX`, `ESEWA_LIVE`, `khaltiInitiateBody`, `Lookup`, `khaltiLookup`, `esewaForm`, `EsewaCallback`, `esewaLookup` |
 | [src/components/toolkit/vendor/trades.tsx](../../src/components/toolkit/vendor/trades.tsx) | `MenuBuilder`, `Tastings`, `Themes`, `Rentals`, `SetupSheets`, `GalleryDelivery`, `CoupleShotLists`, `SongRequests`, `TrialsAndLooks`, `PowerPlanner`, `Fleet`, `Fittings`, `MuhurtaPlanner` |
 | [src/components/toolkit/platform/ops.tsx](../../src/components/toolkit/platform/ops.tsx) | `Broadcasts`, `PromoCampaigns`, `Helpdesk`, `Macros`, `Recruitment`, `PayoutBatches`, `Holidays`, `OnCall`, `QualityAudits`, `WinBack`, `ExportCentre` |
 | [src/components/toolkit/couple/ceremony.tsx](../../src/components/toolkit/couple/ceremony.tsx) | `SaitFinder`, `FamilyDuties`, `JantiPlanner`, `Samagri`, `EmergencyKit`, `Outfits`, `MusicPlan`, `ShotList`, `MyDay`, `WeatherGuide` |
@@ -22,8 +21,6 @@ Exported symbols that have no JSDoc yet. The weekly documentation pass (see [the
 | [src/components/toolkit/vendor/money.tsx](../../src/components/toolkit/vendor/money.tsx) | `EXPENSE_CATEGORIES`, `Expenses`, `ProfitLoss`, `TaxSummary`, `PriceCalculator`, `Vouchers`, `Referrals`, `Goals`, `Benchmark` |
 | [src/data/seed.ts](../../src/data/seed.ts) | `day`, `at`, `DEMO_VENUE`, `DEMO_STUDIO`, `DEMO_DECOR`, `DEMO_ACCOUNTS`, `buildSeedData`, `contractSections`, `DEMO_IMAGES` |
 | [src/data/occasions.ts](../../src/data/occasions.ts) | `BuiltInOccasionId`, `HonoureeKind`, `VocabKey`, `OccasionDef`, `BUILT_IN_OCCASIONS`, `DEFAULT_OCCASION_ID`, `builtInOccasions` |
-| [src/services/exporters.ts](../../src/services/exporters.ts) | `shareText`, `CalendarItem`, `buildIcs`, `googleCalendarUrl`, `addToGoogleCalendar`, `toCsv`, `exportCsv` |
-| [src/backend/telemetryPayloads.ts](../../src/backend/telemetryPayloads.ts) | `Props`, `PosthogEvent`, `ErrorInfo`, `posthogEvent`, `Dsn`, `SentryContext` |
 | [src/components/kit/primitives.tsx](../../src/components/kit/primitives.tsx) | `IconName`, `KButton`, `StatusPill`, `ProgressBar`, `SectionTitle`, `Divider` |
 | [src/components/toolkit/couple/money.tsx](../../src/components/toolkit/couple/money.tsx) | `GiftLedger`, `TipsPlanner`, `WhatIfBudget`, `SavingsGoal`, `HoneymoonPlanner`, `MenuPlanner` |
 | [src/components/toolkit/freelancer/money.tsx](../../src/components/toolkit/freelancer/money.tsx) | `TaxEstimate`, `ExpensesMileage`, `PrivateInvoices`, `EarningsGoal`, `SavingsPots`, `RateCalculator` |
@@ -33,8 +30,6 @@ Exported symbols that have no JSDoc yet. The weekly documentation pass (see [the
 | [src/data/capabilities.ts](../../src/data/capabilities.ts) | `ProviderCapability`, `PlannerModule`, `PlanCapability`, `Capability`, `planCap`, `isCapability` |
 | [src/data/trades.ts](../../src/data/trades.ts) | `TradeId`, `EssentialField`, `TradeDef`, `TRADES`, `TRADE_BY_ID`, `BUSINESS_FORMS` |
 | [src/services/api.ts](../../src/services/api.ts) | `NotFoundError`, `DEFAULT_VENUE_FILTERS`, `countActiveFilters`, `VenueQuery`, `filterVenues`, `api` |
-| [src/backend/payments.ts](../../src/backend/payments.ts) | `Gateway`, `isOnlineGateway`, `PaymentState`, `Started`, `Checked` |
-| [src/backend/types.ts](../../src/backend/types.ts) | `Result`, `okResult`, `failResult`, `BackendKind`, `Backend` |
 | [src/components/detail/DetailParts.tsx](../../src/components/detail/DetailParts.tsx) | `Section`, `ExpandableText`, `ReviewList`, `StickyCta`, `InfoTile` |
 | [src/components/toolkit/core.tsx](../../src/components/toolkit/core.tsx) | `Col`, `FieldKey`, `FieldKind`, `FieldDef`, `EntryListProps` |
 | [src/components/toolkit/couple/smart.tsx](../../src/components/toolkit/couple/smart.tsx) | `HealthCheck`, `HeadcountForecast`, `PriceCheck`, `FamilyVote`, `MarriageRegistration` |
@@ -149,7 +144,9 @@ Exported symbols that have no JSDoc yet. The weekly documentation pass (see [the
 | [src/app/seating.tsx](../../src/app/seating.tsx) | `default` |
 | [src/backend/files.ts](../../src/backend/files.ts) | `privateFilesReady` |
 | [src/backend/mock.ts](../../src/backend/mock.ts) | `mockBackend` |
+| [src/backend/payments.ts](../../src/backend/payments.ts) | `Gateway` |
 | [src/backend/supabase.ts](../../src/backend/supabase.ts) | `supabaseBackend` |
+| [src/backend/types.ts](../../src/backend/types.ts) | `Backend` |
 | [src/components/listing/MiniCards.tsx](../../src/components/listing/MiniCards.tsx) | `VendorMiniCard` |
 | [src/components/listing/VendorCard.tsx](../../src/components/listing/VendorCard.tsx) | `VendorCard` |
 | [src/components/listing/VenueFilterSheet.tsx](../../src/components/listing/VenueFilterSheet.tsx) | `VenueFilterSheet` |

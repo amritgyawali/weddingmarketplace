@@ -4159,37 +4159,37 @@
     {
      "name": "isOnlineGateway",
      "kind": "function",
-     "line": 26,
+     "line": 27,
      "signature": "(m: PaymentMethod): m is Gateway",
-     "doc": ""
+     "doc": "True when a payment method is one of the online gateways (Khalti or eSewa)."
     },
     {
      "name": "onlinePaymentsReady",
      "kind": "function",
-     "line": 29,
+     "line": 30,
      "signature": "()",
      "doc": "True when payments go through the real gateways instead of the demo."
     },
     {
      "name": "paymentReturnUrl",
      "kind": "function",
-     "line": 32,
+     "line": 33,
      "signature": "()",
      "doc": "Where the gateway sends the couple back to (checked against an allow-list on the server)."
     },
     {
      "name": "PaymentState",
      "kind": "type",
-     "line": 35,
+     "line": 37,
      "signature": "= 'completed' | 'pending' | 'initiated' | 'failed' | 'cancelled' | 'expired' | 'refund_due' | 'checking' | 'unknown'",
-     "doc": ""
+     "doc": "Where a payment attempt stands, as reported by the server."
     },
     {
      "name": "Started",
      "kind": "interface",
-     "line": 37,
+     "line": 40,
      "signature": "",
-     "doc": "",
+     "doc": "What the server returns when a gateway payment begins: the attempt, amount and where to send the couple.",
      "members": [
       {
        "name": "intent",
@@ -4226,9 +4226,9 @@
     {
      "name": "Checked",
      "kind": "interface",
-     "line": 46,
+     "line": 50,
      "signature": "",
-     "doc": "",
+     "doc": "What the server returns when an attempt is checked again with the gateway.",
      "members": [
       {
        "name": "status",
@@ -4259,28 +4259,28 @@
     {
      "name": "startOnlinePayment",
      "kind": "function",
-     "line": 91,
+     "line": 95,
      "signature": "(milestoneId: string, gateway: Gateway, amount?: number): Promise<Result<Started>>",
      "doc": "Starts paying a milestone and opens the gateway. `amount` (rupees) is only a\nrequest for a part payment; the server caps it at what is owed."
     },
     {
      "name": "checkOnlinePayment",
      "kind": "function",
-     "line": 105,
+     "line": 109,
      "signature": "(intent: string): Promise<Result<Checked>>",
      "doc": "Asks the server to check an attempt with the gateway again (after a return, or \"check again\")."
     },
     {
      "name": "PAYMENT_STATE_TEXT",
      "kind": "const",
-     "line": 111,
+     "line": 115,
      "signature": ": Record<PaymentState, { title: string; body: string }>",
      "doc": "Words for a result, shared by the sheet and the result screen."
     },
     {
      "name": "SANDBOX_HINT",
      "kind": "const",
-     "line": 124,
+     "line": 128,
      "signature": ": Record<Gateway, string>",
      "doc": "Sandbox test accounts, shown in test builds only."
     }
@@ -4577,14 +4577,14 @@
   },
   {
    "file": "src/backend/telemetryPayloads.ts",
-   "doc": "",
+   "doc": "What the app sends to PostHog and Sentry, built as plain data (master plan §14). No SDKs: both accept events over HTTP, which keeps the app in Expo Go (AGENTS.md: no native libraries without the owner's approval) and costs no bundle size. Pure functions, so `npm run test:telemetry` checks them in Node. Nothing personal goes out: the account id and persona fields only, never a name, email or phone number, and routes are sent as patterns (/rsvp/[code]), never with the ids or codes filled in.",
    "exports": [
     {
      "name": "StackFrame",
      "kind": "interface",
-     "line": 12,
+     "line": 13,
      "signature": "",
-     "doc": "What the app sends to PostHog and Sentry, built as plain data (master plan\n§14). No SDKs: both accept events over HTTP, which keeps the app in Expo Go\n(AGENTS.md: no native libraries without the owner's approval) and costs no\nbundle size. Pure functions, so `npm run test:telemetry` checks them in Node.\n\nNothing personal goes out: the account id and persona fields only, never a\nname, email or phone number, and routes are sent as patterns (/rsvp/[code]),\nnever with the ids or codes filled in.",
+     "doc": "One stack frame in the shape Sentry and PostHog expect.",
      "members": [
       {
        "name": "function",
@@ -4621,16 +4621,16 @@
     {
      "name": "Props",
      "kind": "type",
-     "line": 20,
+     "line": 22,
      "signature": "= Record<string, string | number | boolean | null | undefined>",
-     "doc": ""
+     "doc": "Event properties; only plain values, never names, emails or phone numbers."
     },
     {
      "name": "PosthogEvent",
      "kind": "interface",
-     "line": 22,
+     "line": 25,
      "signature": "",
-     "doc": "",
+     "doc": "One PostHog event as sent to the batch endpoint.",
      "members": [
       {
        "name": "event",
@@ -4655,9 +4655,9 @@
     {
      "name": "ErrorInfo",
      "kind": "interface",
-     "line": 28,
+     "line": 32,
      "signature": "",
-     "doc": "",
+     "doc": "A thrown value reduced to a type, message and stack frames.",
      "members": [
       {
        "name": "type",
@@ -4682,51 +4682,51 @@
     {
      "name": "parseStack",
      "kind": "function",
-     "line": 39,
+     "line": 43,
      "signature": "(stack: string | undefined): StackFrame[]",
      "doc": "Stack frames, oldest call first (Sentry's order), at most 50."
     },
     {
      "name": "describeError",
      "kind": "function",
-     "line": 58,
+     "line": 62,
      "signature": "(error: unknown): ErrorInfo",
      "doc": "Any thrown value as a type, message and frames."
     },
     {
      "name": "routeName",
      "kind": "function",
-     "line": 75,
+     "line": 79,
      "signature": "(segments: readonly string[]): string",
      "doc": "A screen's name from Expo Router's segments: the file pattern, so dynamic\nvalues (quote ids, RSVP codes, website slugs) never leave the device.\nGroups like (tabs) are dropped."
     },
     {
      "name": "posthogEvent",
      "kind": "function",
-     "line": 83,
+     "line": 88,
      "signature": "(event: string, distinctId: string, props: Props = {}, at = new Date()): PosthogEvent",
-     "doc": ""
+     "doc": "Builds a PostHog event for a person id, dropping empty properties."
     },
     {
      "name": "posthogException",
      "kind": "function",
-     "line": 88,
+     "line": 93,
      "signature": "(error: unknown, distinctId: string, props: Props = {}, handled = false, at = new Date()): PosthogEvent",
      "doc": "PostHog's own shape for errors ($exception), so they show in Error tracking."
     },
     {
      "name": "posthogBatch",
      "kind": "function",
-     "line": 102,
+     "line": 107,
      "signature": "(apiKey: string, events: PosthogEvent[])",
      "doc": "The body for POST {host}/batch/."
     },
     {
      "name": "Dsn",
      "kind": "interface",
-     "line": 104,
+     "line": 110,
      "signature": "",
-     "doc": "",
+     "doc": "The parts of a Sentry DSN needed to send an envelope.",
      "members": [
       {
        "name": "key",
@@ -4757,16 +4757,16 @@
     {
      "name": "parseDsn",
      "kind": "function",
-     "line": 112,
+     "line": 118,
      "signature": "(dsn: string | undefined): Dsn | null",
      "doc": "https://<key>@<host>/<project id>, or null when it isn't a DSN."
     },
     {
      "name": "SentryContext",
      "kind": "interface",
-     "line": 117,
+     "line": 124,
      "signature": "",
-     "doc": "",
+     "doc": "Release, environment and person details attached to a Sentry error.",
      "members": [
       {
        "name": "release",
@@ -4815,7 +4815,7 @@
     {
      "name": "sentryEnvelope",
      "kind": "function",
-     "line": 130,
+     "line": 137,
      "signature": "(dsnText: string, error: unknown, ctx: SentryContext, at = new Date(), random = Math.random): { url: string; body: string } | null",
      "doc": "One error as a Sentry envelope: where to POST it and the body."
     }
@@ -4828,35 +4828,35 @@
     {
      "name": "Result",
      "kind": "type",
-     "line": 16,
+     "line": 17,
      "signature": "= { ok: true; value: T } | { ok: false; error: string }",
-     "doc": ""
+     "doc": "The outcome of a backend call: a value, or an error message ready to show."
     },
     {
      "name": "okResult",
      "kind": "function",
-     "line": 18,
+     "line": 20,
      "signature": "<T>(value: T): Result<T>",
-     "doc": ""
+     "doc": "Wraps a value as a successful Result."
     },
     {
      "name": "failResult",
      "kind": "function",
-     "line": 19,
+     "line": 22,
      "signature": "<T = never>(error: string): Result<T>",
-     "doc": ""
+     "doc": "Wraps a message as a failed Result."
     },
     {
      "name": "BackendKind",
      "kind": "type",
-     "line": 21,
+     "line": 25,
      "signature": "= 'mock' | 'supabase'",
-     "doc": ""
+     "doc": "Which backend is in use: the on-device mock or Supabase."
     },
     {
      "name": "Backend",
      "kind": "interface",
-     "line": 23,
+     "line": 27,
      "signature": "",
      "doc": "",
      "members": [
@@ -13957,23 +13957,23 @@
     {
      "name": "shareText",
      "kind": "function",
-     "line": 24,
+     "line": 25,
      "signature": "(content: string, fileName: string, mime: string)",
-     "doc": ""
+     "doc": "Writes text to a file and opens the share sheet (a download on web)."
     },
     {
      "name": "sharePdf",
      "kind": "function",
-     "line": 38,
+     "line": 39,
      "signature": "(html: string, fileName: string)",
      "doc": "Render HTML to a PDF and open the share sheet (print dialog on web)."
     },
     {
      "name": "CalendarItem",
      "kind": "interface",
-     "line": 52,
+     "line": 54,
      "signature": "",
-     "doc": "",
+     "doc": "One calendar entry: a date, with an optional start time, length, place and notes.",
      "members": [
       {
        "name": "title",
@@ -14016,56 +14016,56 @@
     {
      "name": "buildIcs",
      "kind": "function",
-     "line": 74,
+     "line": 77,
      "signature": "(items: CalendarItem[], calName = 'Vivah wedding'): string",
-     "doc": ""
+     "doc": "Builds an iCalendar (.ics) file for the items, with a one-day-before reminder on each."
     },
     {
      "name": "exportCalendar",
      "kind": "function",
-     "line": 91,
+     "line": 94,
      "signature": "(items: CalendarItem[], name = 'vivah-wedding')",
      "doc": "Opens an import in Apple/Google Calendar via the system share sheet."
     },
     {
      "name": "googleCalendarUrl",
      "kind": "function",
-     "line": 93,
+     "line": 97,
      "signature": "(item: CalendarItem): string",
-     "doc": ""
+     "doc": "The Google Calendar link that pre-fills a new event for one item."
     },
     {
      "name": "addToGoogleCalendar",
      "kind": "function",
-     "line": 100,
+     "line": 105,
      "signature": "(item: CalendarItem)",
-     "doc": ""
+     "doc": "Opens Google Calendar's new-event page for one item."
     },
     {
      "name": "toCsv",
      "kind": "function",
-     "line": 108,
+     "line": 114,
      "signature": "(rows: Record<string, unknown>[])",
-     "doc": ""
+     "doc": "Turns rows into CSV text, using the first row's keys as headers; empty input gives an empty string."
     },
     {
      "name": "exportCsv",
      "kind": "function",
-     "line": 114,
+     "line": 121,
      "signature": "(rows: Record<string, unknown>[], name: string)",
-     "doc": ""
+     "doc": "Shares rows as a named .csv file."
     },
     {
      "name": "parseCsv",
      "kind": "function",
-     "line": 117,
+     "line": 124,
      "signature": "(text: string): Record<string, string>[]",
      "doc": "Minimal RFC-4180 parser (quoted cells, escaped quotes, CRLF)."
     },
     {
      "name": "pickCsv",
      "kind": "function",
-     "line": 153,
+     "line": 160,
      "signature": "(): Promise<Record<string, string>[] | null>",
      "doc": "Let the user pick a .csv file and parse it. Returns null when cancelled."
     }
@@ -29049,35 +29049,35 @@
     {
      "name": "Gateway",
      "kind": "type",
-     "line": 18,
+     "line": 19,
      "signature": "= 'khalti' | 'esewa'",
-     "doc": ""
+     "doc": "The online payment gateways the server supports."
     },
     {
      "name": "Outcome",
      "kind": "type",
-     "line": 19,
+     "line": 21,
      "signature": "= 'COMPLETED' | 'PENDING' | 'FAILED' | 'CANCELLED' | 'EXPIRED'",
-     "doc": ""
+     "doc": "How a gateway's own answer maps onto a payment attempt."
     },
     {
      "name": "isGateway",
      "kind": "function",
-     "line": 21,
+     "line": 24,
      "signature": "(x: unknown): x is Gateway",
-     "doc": ""
+     "doc": "Type guard for the supported gateway names."
     },
     {
      "name": "SQL_METHOD",
      "kind": "const",
-     "line": 24,
+     "line": 27,
      "signature": ": Record<Gateway, 'KHALTI' | 'ESEWA'>",
      "doc": "The SQL payment_method for each gateway."
     },
     {
      "name": "Intent",
      "kind": "interface",
-     "line": 27,
+     "line": 30,
      "signature": "",
      "doc": "What rpc_begin_payment returns.",
      "members": [
@@ -29116,9 +29116,9 @@
     {
      "name": "KhaltiConfig",
      "kind": "interface",
-     "line": 35,
+     "line": 39,
      "signature": "",
-     "doc": "",
+     "doc": "Khalti secret key and API base address.",
      "members": [
       {
        "name": "secretKey",
@@ -29137,9 +29137,9 @@
     {
      "name": "EsewaConfig",
      "kind": "interface",
-     "line": 40,
+     "line": 45,
      "signature": "",
-     "doc": "",
+     "doc": "eSewa product code, signing secret and form and status addresses.",
      "members": [
       {
        "name": "productCode",
@@ -29170,58 +29170,58 @@
     {
      "name": "KHALTI_SANDBOX",
      "kind": "const",
-     "line": 47,
+     "line": 53,
      "signature": "= 'https://dev.khalti.com/api/v2'",
-     "doc": ""
+     "doc": "Khalti's sandbox API address, used when no live address is configured."
     },
     {
      "name": "ESEWA_SANDBOX",
      "kind": "const",
-     "line": 48,
+     "line": 55,
      "signature": "= { … }",
-     "doc": ""
+     "doc": "eSewa's public sandbox test credentials and addresses."
     },
     {
      "name": "ESEWA_LIVE",
      "kind": "const",
-     "line": 49,
+     "line": 57,
      "signature": "= { … }",
-     "doc": ""
+     "doc": "eSewa's live form and status addresses."
     },
     {
      "name": "rupeesString",
      "kind": "function",
-     "line": 54,
+     "line": 62,
      "signature": "(paisa: number)",
      "doc": "eSewa's rupee amount: \"42375\" or \"42375.5\" — the exact string that is signed."
     },
     {
      "name": "toPaisa",
      "kind": "function",
-     "line": 60,
+     "line": 68,
      "signature": "(rupees: unknown)",
      "doc": "A gateway's rupee amount (number or string) back to paisa."
     },
     {
      "name": "khaltiInitiateBody",
      "kind": "function",
-     "line": 70,
+     "line": 79,
      "signature": "(intent: Intent, returnUrl: string, websiteUrl: string)",
-     "doc": ""
+     "doc": "The body for Khalti's initiate call, with the amount in paisa."
     },
     {
      "name": "khaltiOutcome",
      "kind": "function",
-     "line": 84,
+     "line": 93,
      "signature": "(status: unknown): Outcome",
      "doc": "Khalti lookup status → our outcome. Only \"Completed\" is money."
     },
     {
      "name": "Lookup",
      "kind": "interface",
-     "line": 100,
+     "line": 110,
      "signature": "",
-     "doc": "",
+     "doc": "A gateway's verified answer about one attempt.",
      "members": [
       {
        "name": "outcome",
@@ -29258,37 +29258,37 @@
     {
      "name": "khaltiLookup",
      "kind": "function",
-     "line": 109,
+     "line": 120,
      "signature": "(cfg: KhaltiConfig, pidx: string, fetchImpl: typeof fetch = fetch): Promise<Lookup>",
-     "doc": ""
+     "doc": "Asks Khalti directly for the status and amount of an attempt (the only source of truth for money)."
     },
     {
      "name": "hmacBase64",
      "kind": "function",
-     "line": 130,
+     "line": 141,
      "signature": "(message: string, secret: string): Promise<string>",
      "doc": "HMAC-SHA256, base64 (Web Crypto: Deno and Node)."
     },
     {
      "name": "esewaMessage",
      "kind": "function",
-     "line": 137,
+     "line": 148,
      "signature": "(fields: Record<string, unknown>, names: string)",
      "doc": "eSewa signs `name=value` pairs of the signed fields, in order, joined by commas."
     },
     {
      "name": "esewaForm",
      "kind": "function",
-     "line": 143,
+     "line": 155,
      "signature": "(cfg: EsewaConfig, intent: Intent, successUrl: string, failureUrl: string)",
-     "doc": ""
+     "doc": "The signed form fields the app posts to eSewa to start a payment."
     },
     {
      "name": "EsewaCallback",
      "kind": "interface",
-     "line": 161,
+     "line": 174,
      "signature": "",
-     "doc": "",
+     "doc": "The decoded data eSewa appends to the success address.",
      "members": [
       {
        "name": "transaction_code",
@@ -29337,49 +29337,49 @@
     {
      "name": "esewaDecode",
      "kind": "function",
-     "line": 172,
+     "line": 185,
      "signature": "(data: string, secretKey: string): Promise<{ body: EsewaCallback; valid: boolean } | null>",
      "doc": "Decodes the `data` eSewa appends to the success URL; `valid` says whether its signature is ours."
     },
     {
      "name": "esewaOutcome",
      "kind": "function",
-     "line": 184,
+     "line": 197,
      "signature": "(status: unknown, expired: boolean): Outcome",
      "doc": "eSewa status → our outcome. NOT_FOUND means the couple never finished (or eSewa hasn't caught up yet)."
     },
     {
      "name": "esewaLookup",
      "kind": "function",
-     "line": 200,
+     "line": 214,
      "signature": "(cfg: EsewaConfig, orderRef: string, paisa: number, expired: boolean, fetchImpl: typeof fetch = fetch): Promise<Lookup>",
-     "doc": ""
+     "doc": "Asks eSewa's status API for an attempt and checks it answered for the same transaction."
     },
     {
      "name": "safeReturnTo",
      "kind": "function",
-     "line": 216,
+     "line": 230,
      "signature": "(url: unknown, appUrl: string, extraHosts: string[] = []): string | null",
      "doc": "Only our own app and web addresses: the app's scheme, Expo Go during\ndevelopment, the web app, localhost, and hosts listed in\nPAYMENT_RETURN_HOSTS. Anything else would make payment-verify an open redirect."
     },
     {
      "name": "withResult",
      "kind": "function",
-     "line": 232,
+     "line": 246,
      "signature": "(returnTo: string, params: Record<string, string | undefined>)",
      "doc": "The return address with the result added to its query."
     },
     {
      "name": "parseVerifyPath",
      "kind": "function",
-     "line": 243,
+     "line": 257,
      "signature": "(pathname: string): { gateway: Gateway; intent: string; failure: boolean } | null",
      "doc": "payment-verify/<gateway>/<intent>[/failure] from the request path."
     },
     {
      "name": "esewaDataParam",
      "kind": "function",
-     "line": 252,
+     "line": 266,
      "signature": "(rawUrl: string)",
      "doc": "eSewa appends `?data=…` to the success URL even when it already has a query,\nso the value is found wherever it is."
     }

@@ -21,6 +21,7 @@ function downloadOnWeb(content: string, fileName: string, mime: string) {
   setTimeout(() => URL.revokeObjectURL(url), 2000);
 }
 
+/** Writes text to a file and opens the share sheet (a download on web). */
 export async function shareText(content: string, fileName: string, mime: string) {
   try {
     if (Platform.OS === 'web') return downloadOnWeb(content, fileName, mime);
@@ -49,6 +50,7 @@ export async function sharePdf(html: string, fileName: string) {
 }
 
 // Calendar
+/** One calendar entry: a date, with an optional start time, length, place and notes. */
 export interface CalendarItem {
   title: string;
   date: string;
@@ -71,6 +73,7 @@ function range(item: CalendarItem): { start: Date; end: Date; allDay: boolean } 
 
 const escapeIcs = (s: string) => s.replace(/\\/g, '\\\\').replace(/;/g, '\\;').replace(/,/g, '\\,').replace(/\n/g, '\\n');
 
+/** Builds an iCalendar (.ics) file for the items, with a one-day-before reminder on each. */
 export function buildIcs(items: CalendarItem[], calName = 'Vivah wedding'): string {
   const lines = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Vivah//Wedding Planner//EN', `X-WR-CALNAME:${escapeIcs(calName)}`, 'X-WR-TIMEZONE:Asia/Kathmandu'];
   items.forEach((item, i) => {
@@ -90,6 +93,7 @@ export function buildIcs(items: CalendarItem[], calName = 'Vivah wedding'): stri
 /** Opens an import in Apple/Google Calendar via the system share sheet. */
 export const exportCalendar = (items: CalendarItem[], name = 'vivah-wedding') => shareText(buildIcs(items), `${name}.ics`, 'text/calendar');
 
+/** The Google Calendar link that pre-fills a new event for one item. */
 export function googleCalendarUrl(item: CalendarItem): string {
   const { start, end, allDay } = range(item);
   const fmt = (d: Date) => (allDay ? `${d.getFullYear()}${pad(d.getMonth() + 1)}${pad(d.getDate())}` : stamp(d));
@@ -97,6 +101,7 @@ export function googleCalendarUrl(item: CalendarItem): string {
   return `https://calendar.google.com/calendar/render?${params.toString()}`;
 }
 
+/** Opens Google Calendar's new-event page for one item. */
 export const addToGoogleCalendar = (item: CalendarItem) => Linking.openURL(googleCalendarUrl(item));
 
 // CSV
@@ -105,12 +110,14 @@ const csvCell = (v: unknown) => {
   return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
 };
 
+/** Turns rows into CSV text, using the first row's keys as headers; empty input gives an empty string. */
 export const toCsv = (rows: Record<string, unknown>[]) => {
   if (!rows.length) return '';
   const headers = Object.keys(rows[0]);
   return [headers.join(','), ...rows.map((r) => headers.map((h) => csvCell(r[h])).join(','))].join('\n');
 };
 
+/** Shares rows as a named .csv file. */
 export const exportCsv = (rows: Record<string, unknown>[], name: string) => shareText(toCsv(rows), `${name}.csv`, 'text/csv');
 
 /** Minimal RFC-4180 parser (quoted cells, escaped quotes, CRLF). */
