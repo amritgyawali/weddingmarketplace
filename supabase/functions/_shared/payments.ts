@@ -15,9 +15,12 @@
 
 import { safeEqual } from './http.ts';
 
+/** The online payment gateways the server supports. */
 export type Gateway = 'khalti' | 'esewa';
+/** How a gateway's own answer maps onto a payment attempt. */
 export type Outcome = 'COMPLETED' | 'PENDING' | 'FAILED' | 'CANCELLED' | 'EXPIRED';
 
+/** Type guard for the supported gateway names. */
 export const isGateway = (x: unknown): x is Gateway => x === 'khalti' || x === 'esewa';
 
 /** The SQL payment_method for each gateway. */
@@ -32,11 +35,13 @@ export interface Intent {
   customer?: { name?: string | null; email?: string | null; phone?: string | null };
 }
 
+/** Khalti secret key and API base address. */
 export interface KhaltiConfig {
   secretKey: string;
   baseUrl: string;
 }
 
+/** eSewa product code, signing secret and form and status addresses. */
 export interface EsewaConfig {
   productCode: string;
   secretKey: string;
@@ -44,8 +49,11 @@ export interface EsewaConfig {
   statusUrl: string;
 }
 
+/** Khalti's sandbox API address, used when no live address is configured. */
 export const KHALTI_SANDBOX = 'https://dev.khalti.com/api/v2';
+/** eSewa's public sandbox test credentials and addresses. */
 export const ESEWA_SANDBOX = { productCode: 'EPAYTEST', secretKey: '8gBm/:&EnhH.1/q', formUrl: 'https://rc-epay.esewa.com.np/api/epay/main/v2/form', statusUrl: 'https://rc.esewa.com.np/api/epay/transaction/status/' };
+/** eSewa's live form and status addresses. */
 export const ESEWA_LIVE = { formUrl: 'https://epay.esewa.com.np/api/epay/main/v2/form', statusUrl: 'https://esewa.com.np/api/epay/transaction/status/' };
 
 // ─── Money ──────────────────────────────────────────────────────────────────
@@ -67,6 +75,7 @@ const nepaliMobile = (phone?: string | null) => {
   return /^9[78]\d{8}$/.test(digits) ? digits : undefined;
 };
 
+/** The body for Khalti's initiate call, with the amount in paisa. */
 export function khaltiInitiateBody(intent: Intent, returnUrl: string, websiteUrl: string) {
   const c = intent.customer ?? {};
   const info = { name: c.name || undefined, email: c.email || undefined, phone: nepaliMobile(c.phone) };
@@ -97,6 +106,7 @@ export function khaltiOutcome(status: unknown): Outcome {
   }
 }
 
+/** A gateway's verified answer about one attempt. */
 export interface Lookup {
   outcome: Outcome;
   /** Paisa, as the gateway reports it. */
@@ -106,6 +116,7 @@ export interface Lookup {
   raw: unknown;
 }
 
+/** Asks Khalti directly for the status and amount of an attempt (the only source of truth for money). */
 export async function khaltiLookup(cfg: KhaltiConfig, pidx: string, fetchImpl: typeof fetch = fetch): Promise<Lookup> {
   const res = await fetchImpl(`${cfg.baseUrl.replace(/\/$/, '')}/epayment/lookup/`, {
     method: 'POST',
@@ -140,6 +151,7 @@ export const esewaMessage = (fields: Record<string, unknown>, names: string) =>
     .map((n) => `${n}=${fields[n] ?? ''}`)
     .join(',');
 
+/** The signed form fields the app posts to eSewa to start a payment. */
 export async function esewaForm(cfg: EsewaConfig, intent: Intent, successUrl: string, failureUrl: string) {
   const total = rupeesString(intent.amount);
   const fields: Record<string, string> = {
@@ -158,6 +170,7 @@ export async function esewaForm(cfg: EsewaConfig, intent: Intent, successUrl: st
   return { action: cfg.formUrl, fields };
 }
 
+/** The decoded data eSewa appends to the success address. */
 export interface EsewaCallback {
   transaction_code?: string;
   status?: string;
@@ -197,6 +210,7 @@ export function esewaOutcome(status: unknown, expired: boolean): Outcome {
   }
 }
 
+/** Asks eSewa's status API for an attempt and checks it answered for the same transaction. */
 export async function esewaLookup(cfg: EsewaConfig, orderRef: string, paisa: number, expired: boolean, fetchImpl: typeof fetch = fetch): Promise<Lookup> {
   const q = new URLSearchParams({ product_code: cfg.productCode, total_amount: rupeesString(paisa), transaction_uuid: orderRef });
   const res = await fetchImpl(`${cfg.statusUrl}?${q}`);

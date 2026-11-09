@@ -23,6 +23,7 @@ export type Gateway = Extract<PaymentMethod, 'khalti' | 'esewa'>;
 /** Gateways this build can take real (sandbox or live) payments with. */
 export const ONLINE_GATEWAYS: Gateway[] = ['khalti', 'esewa'];
 
+/** True when a payment method is one of the online gateways (Khalti or eSewa). */
 export const isOnlineGateway = (m: PaymentMethod): m is Gateway => (ONLINE_GATEWAYS as PaymentMethod[]).includes(m);
 
 /** True when payments go through the real gateways instead of the demo. */
@@ -32,8 +33,10 @@ export const onlinePaymentsReady = () => usesSupabase();
 export const paymentReturnUrl = () =>
   Platform.OS === 'web' && typeof window !== 'undefined' ? `${window.location.origin}/pay/result` : Linking.createURL('pay/result');
 
+/** Where a payment attempt stands, as reported by the server. */
 export type PaymentState = 'completed' | 'pending' | 'initiated' | 'failed' | 'cancelled' | 'expired' | 'refund_due' | 'checking' | 'unknown';
 
+/** What the server returns when a gateway payment begins: the attempt, amount and where to send the couple. */
 export interface Started {
   intent: string;
   gateway: Gateway;
@@ -43,6 +46,7 @@ export interface Started {
   form?: { action: string; fields: Record<string, string> };
 }
 
+/** What the server returns when an attempt is checked again with the gateway. */
 export interface Checked {
   status: PaymentState;
   receiptNo: string | null;

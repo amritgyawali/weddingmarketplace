@@ -9,6 +9,7 @@
  * never with the ids or codes filled in.
  */
 
+/** One stack frame in the shape Sentry and PostHog expect. */
 export interface StackFrame {
   function?: string;
   filename?: string;
@@ -17,14 +18,17 @@ export interface StackFrame {
   in_app: boolean;
 }
 
+/** Event properties; only plain values, never names, emails or phone numbers. */
 export type Props = Record<string, string | number | boolean | null | undefined>;
 
+/** One PostHog event as sent to the batch endpoint. */
 export interface PosthogEvent {
   event: string;
   properties: Record<string, unknown> & { distinct_id: string };
   timestamp: string;
 }
 
+/** A thrown value reduced to a type, message and stack frames. */
 export interface ErrorInfo {
   type: string;
   message: string;
@@ -80,6 +84,7 @@ export function routeName(segments: readonly string[]): string {
 /** Drops empty values so events stay small. */
 const clean = (props: Props): Props => Object.fromEntries(Object.entries(props).filter(([, v]) => v !== undefined && v !== null && v !== ''));
 
+/** Builds a PostHog event for a person id, dropping empty properties. */
 export function posthogEvent(event: string, distinctId: string, props: Props = {}, at = new Date()): PosthogEvent {
   return { event, properties: { ...clean(props), distinct_id: distinctId }, timestamp: at.toISOString() };
 }
@@ -101,6 +106,7 @@ export function posthogException(error: unknown, distinctId: string, props: Prop
 /** The body for POST {host}/batch/. */
 export const posthogBatch = (apiKey: string, events: PosthogEvent[]) => ({ api_key: apiKey, batch: events });
 
+/** The parts of a Sentry DSN needed to send an envelope. */
 export interface Dsn {
   key: string;
   host: string;
@@ -114,6 +120,7 @@ export function parseDsn(dsn: string | undefined): Dsn | null {
   return m ? { protocol: m[1], key: m[2], host: m[3], projectId: m[4] } : null;
 }
 
+/** Release, environment and person details attached to a Sentry error. */
 export interface SentryContext {
   release: string;
   environment: string;

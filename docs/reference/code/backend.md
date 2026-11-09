@@ -21,7 +21,7 @@ Every exported symbol in `src/backend/`, file by file. The guide that explains h
 - [`supabase.ts`](#supabasets) (3 exports) · The Supabase backend: each core-loop step is one RPC from supabase/migrations/0011_core_rpc.sql, called over PostgREST with plain fetch (no…
 - [`support.ts`](#supportts) (7 exports) · Help requests, in the demo or for real. The demo runs the store actions in `store/db/support.ts`; Supabase builds call the RPCs in supabase…
 - [`telemetry.ts`](#telemetryts) (9 exports) · Product analytics and error reports (master plan §14), without SDKs:
-- [`telemetryPayloads.ts`](#telemetrypayloadsts) (14 exports)
+- [`telemetryPayloads.ts`](#telemetrypayloadsts) (14 exports) · What the app sends to PostHog and Sentry, built as plain data (master plan §14). No SDKs: both accept events over HTTP, which keeps the app…
 - [`types.ts`](#typests) (5 exports) · The core loop as one interface, so the same screens can run on the on-device demo backend or on Supabase (master plan §7.2):
 
 ## account.ts
@@ -746,17 +746,17 @@ Gateways this build can take real (sandbox or live) payments with.
 
 ### `isOnlineGateway`
 
-*function* · [src/backend/payments.ts:26](../../../src/backend/payments.ts#L26)
+*function* · [src/backend/payments.ts:27](../../../src/backend/payments.ts#L27)
 
 ```ts
 isOnlineGateway(m: PaymentMethod): m is Gateway
 ```
 
-_No JSDoc yet._
+True when a payment method is one of the online gateways (Khalti or eSewa).
 
 ### `onlinePaymentsReady`
 
-*function* · [src/backend/payments.ts:29](../../../src/backend/payments.ts#L29)
+*function* · [src/backend/payments.ts:30](../../../src/backend/payments.ts#L30)
 
 ```ts
 onlinePaymentsReady()
@@ -766,7 +766,7 @@ True when payments go through the real gateways instead of the demo.
 
 ### `paymentReturnUrl`
 
-*function* · [src/backend/payments.ts:32](../../../src/backend/payments.ts#L32)
+*function* · [src/backend/payments.ts:33](../../../src/backend/payments.ts#L33)
 
 ```ts
 paymentReturnUrl()
@@ -776,19 +776,19 @@ Where the gateway sends the couple back to (checked against an allow-list on the
 
 ### `PaymentState`
 
-*type* · [src/backend/payments.ts:35](../../../src/backend/payments.ts#L35)
+*type* · [src/backend/payments.ts:37](../../../src/backend/payments.ts#L37)
 
 ```ts
 type PaymentState = 'completed' | 'pending' | 'initiated' | 'failed' | 'cancelled' | 'expired' | 'refund_due' | 'checking' | 'unknown'
 ```
 
-_No JSDoc yet._
+Where a payment attempt stands, as reported by the server.
 
 ### `Started`
 
-*interface* · [src/backend/payments.ts:37](../../../src/backend/payments.ts#L37)
+*interface* · [src/backend/payments.ts:40](../../../src/backend/payments.ts#L40)
 
-_No JSDoc yet._
+What the server returns when a gateway payment begins: the attempt, amount and where to send the couple.
 
 | Member | Type | Notes |
 |---|---|---|
@@ -800,9 +800,9 @@ _No JSDoc yet._
 
 ### `Checked`
 
-*interface* · [src/backend/payments.ts:46](../../../src/backend/payments.ts#L46)
+*interface* · [src/backend/payments.ts:50](../../../src/backend/payments.ts#L50)
 
-_No JSDoc yet._
+What the server returns when an attempt is checked again with the gateway.
 
 | Member | Type | Notes |
 |---|---|---|
@@ -813,7 +813,7 @@ _No JSDoc yet._
 
 ### `startOnlinePayment`
 
-*function* · [src/backend/payments.ts:91](../../../src/backend/payments.ts#L91)
+*function* · [src/backend/payments.ts:95](../../../src/backend/payments.ts#L95)
 
 ```ts
 startOnlinePayment(milestoneId: string, gateway: Gateway, amount?: number): Promise<Result<Started>>
@@ -824,7 +824,7 @@ request for a part payment; the server caps it at what is owed.
 
 ### `checkOnlinePayment`
 
-*function* · [src/backend/payments.ts:105](../../../src/backend/payments.ts#L105)
+*function* · [src/backend/payments.ts:109](../../../src/backend/payments.ts#L109)
 
 ```ts
 checkOnlinePayment(intent: string): Promise<Result<Checked>>
@@ -834,7 +834,7 @@ Asks the server to check an attempt with the gateway again (after a return, or "
 
 ### `PAYMENT_STATE_TEXT`
 
-*const* · [src/backend/payments.ts:111](../../../src/backend/payments.ts#L111)
+*const* · [src/backend/payments.ts:115](../../../src/backend/payments.ts#L115)
 
 ```ts
 PAYMENT_STATE_TEXT: Record<PaymentState, { title: string; body: string }>
@@ -844,7 +844,7 @@ Words for a result, shared by the sheet and the result screen.
 
 ### `SANDBOX_HINT`
 
-*const* · [src/backend/payments.ts:124](../../../src/backend/payments.ts#L124)
+*const* · [src/backend/payments.ts:128](../../../src/backend/payments.ts#L128)
 
 ```ts
 SANDBOX_HINT: Record<Gateway, string>
@@ -1292,10 +1292,6 @@ An error, to PostHog (all builds) and Sentry (store and preview builds).
 
 Source: [src/backend/telemetryPayloads.ts](../../../src/backend/telemetryPayloads.ts)
 
-### `StackFrame`
-
-*interface* · [src/backend/telemetryPayloads.ts:12](../../../src/backend/telemetryPayloads.ts#L12)
-
 What the app sends to PostHog and Sentry, built as plain data (master plan
 §14). No SDKs: both accept events over HTTP, which keeps the app in Expo Go
 (AGENTS.md: no native libraries without the owner's approval) and costs no
@@ -1304,6 +1300,12 @@ bundle size. Pure functions, so `npm run test:telemetry` checks them in Node.
 Nothing personal goes out: the account id and persona fields only, never a
 name, email or phone number, and routes are sent as patterns (/rsvp/[code]),
 never with the ids or codes filled in.
+
+### `StackFrame`
+
+*interface* · [src/backend/telemetryPayloads.ts:13](../../../src/backend/telemetryPayloads.ts#L13)
+
+One stack frame in the shape Sentry and PostHog expect.
 
 | Member | Type | Notes |
 |---|---|---|
@@ -1315,19 +1317,19 @@ never with the ids or codes filled in.
 
 ### `Props`
 
-*type* · [src/backend/telemetryPayloads.ts:20](../../../src/backend/telemetryPayloads.ts#L20)
+*type* · [src/backend/telemetryPayloads.ts:22](../../../src/backend/telemetryPayloads.ts#L22)
 
 ```ts
 type Props = Record<string, string | number | boolean | null | undefined>
 ```
 
-_No JSDoc yet._
+Event properties; only plain values, never names, emails or phone numbers.
 
 ### `PosthogEvent`
 
-*interface* · [src/backend/telemetryPayloads.ts:22](../../../src/backend/telemetryPayloads.ts#L22)
+*interface* · [src/backend/telemetryPayloads.ts:25](../../../src/backend/telemetryPayloads.ts#L25)
 
-_No JSDoc yet._
+One PostHog event as sent to the batch endpoint.
 
 | Member | Type | Notes |
 |---|---|---|
@@ -1337,9 +1339,9 @@ _No JSDoc yet._
 
 ### `ErrorInfo`
 
-*interface* · [src/backend/telemetryPayloads.ts:28](../../../src/backend/telemetryPayloads.ts#L28)
+*interface* · [src/backend/telemetryPayloads.ts:32](../../../src/backend/telemetryPayloads.ts#L32)
 
-_No JSDoc yet._
+A thrown value reduced to a type, message and stack frames.
 
 | Member | Type | Notes |
 |---|---|---|
@@ -1349,7 +1351,7 @@ _No JSDoc yet._
 
 ### `parseStack`
 
-*function* · [src/backend/telemetryPayloads.ts:39](../../../src/backend/telemetryPayloads.ts#L39)
+*function* · [src/backend/telemetryPayloads.ts:43](../../../src/backend/telemetryPayloads.ts#L43)
 
 ```ts
 parseStack(stack: string | undefined): StackFrame[]
@@ -1359,7 +1361,7 @@ Stack frames, oldest call first (Sentry's order), at most 50.
 
 ### `describeError`
 
-*function* · [src/backend/telemetryPayloads.ts:58](../../../src/backend/telemetryPayloads.ts#L58)
+*function* · [src/backend/telemetryPayloads.ts:62](../../../src/backend/telemetryPayloads.ts#L62)
 
 ```ts
 describeError(error: unknown): ErrorInfo
@@ -1369,7 +1371,7 @@ Any thrown value as a type, message and frames.
 
 ### `routeName`
 
-*function* · [src/backend/telemetryPayloads.ts:75](../../../src/backend/telemetryPayloads.ts#L75)
+*function* · [src/backend/telemetryPayloads.ts:79](../../../src/backend/telemetryPayloads.ts#L79)
 
 ```ts
 routeName(segments: readonly string[]): string
@@ -1381,17 +1383,17 @@ Groups like (tabs) are dropped.
 
 ### `posthogEvent`
 
-*function* · [src/backend/telemetryPayloads.ts:83](../../../src/backend/telemetryPayloads.ts#L83)
+*function* · [src/backend/telemetryPayloads.ts:88](../../../src/backend/telemetryPayloads.ts#L88)
 
 ```ts
 posthogEvent(event: string, distinctId: string, props: Props = {}, at = new Date()): PosthogEvent
 ```
 
-_No JSDoc yet._
+Builds a PostHog event for a person id, dropping empty properties.
 
 ### `posthogException`
 
-*function* · [src/backend/telemetryPayloads.ts:88](../../../src/backend/telemetryPayloads.ts#L88)
+*function* · [src/backend/telemetryPayloads.ts:93](../../../src/backend/telemetryPayloads.ts#L93)
 
 ```ts
 posthogException(error: unknown, distinctId: string, props: Props = {}, handled = false, at = new Date()): PosthogEvent
@@ -1401,7 +1403,7 @@ PostHog's own shape for errors ($exception), so they show in Error tracking.
 
 ### `posthogBatch`
 
-*function* · [src/backend/telemetryPayloads.ts:102](../../../src/backend/telemetryPayloads.ts#L102)
+*function* · [src/backend/telemetryPayloads.ts:107](../../../src/backend/telemetryPayloads.ts#L107)
 
 ```ts
 posthogBatch(apiKey: string, events: PosthogEvent[])
@@ -1411,9 +1413,9 @@ The body for POST {host}/batch/.
 
 ### `Dsn`
 
-*interface* · [src/backend/telemetryPayloads.ts:104](../../../src/backend/telemetryPayloads.ts#L104)
+*interface* · [src/backend/telemetryPayloads.ts:110](../../../src/backend/telemetryPayloads.ts#L110)
 
-_No JSDoc yet._
+The parts of a Sentry DSN needed to send an envelope.
 
 | Member | Type | Notes |
 |---|---|---|
@@ -1424,7 +1426,7 @@ _No JSDoc yet._
 
 ### `parseDsn`
 
-*function* · [src/backend/telemetryPayloads.ts:112](../../../src/backend/telemetryPayloads.ts#L112)
+*function* · [src/backend/telemetryPayloads.ts:118](../../../src/backend/telemetryPayloads.ts#L118)
 
 ```ts
 parseDsn(dsn: string | undefined): Dsn | null
@@ -1434,9 +1436,9 @@ https://<key>@<host>/<project id>, or null when it isn't a DSN.
 
 ### `SentryContext`
 
-*interface* · [src/backend/telemetryPayloads.ts:117](../../../src/backend/telemetryPayloads.ts#L117)
+*interface* · [src/backend/telemetryPayloads.ts:124](../../../src/backend/telemetryPayloads.ts#L124)
 
-_No JSDoc yet._
+Release, environment and person details attached to a Sentry error.
 
 | Member | Type | Notes |
 |---|---|---|
@@ -1450,7 +1452,7 @@ _No JSDoc yet._
 
 ### `sentryEnvelope`
 
-*function* · [src/backend/telemetryPayloads.ts:130](../../../src/backend/telemetryPayloads.ts#L130)
+*function* · [src/backend/telemetryPayloads.ts:137](../../../src/backend/telemetryPayloads.ts#L137)
 
 ```ts
 sentryEnvelope(dsnText: string, error: unknown, ctx: SentryContext, at = new Date(), random = Math.random): { url: string; body: string } | null
@@ -1475,47 +1477,47 @@ the Supabase adapter converts to paisa.
 
 ### `Result`
 
-*type* · [src/backend/types.ts:16](../../../src/backend/types.ts#L16)
+*type* · [src/backend/types.ts:17](../../../src/backend/types.ts#L17)
 
 ```ts
 type Result = { ok: true; value: T } | { ok: false; error: string }
 ```
 
-_No JSDoc yet._
+The outcome of a backend call: a value, or an error message ready to show.
 
 ### `okResult`
 
-*function* · [src/backend/types.ts:18](../../../src/backend/types.ts#L18)
+*function* · [src/backend/types.ts:20](../../../src/backend/types.ts#L20)
 
 ```ts
 okResult<T>(value: T): Result<T>
 ```
 
-_No JSDoc yet._
+Wraps a value as a successful Result.
 
 ### `failResult`
 
-*function* · [src/backend/types.ts:19](../../../src/backend/types.ts#L19)
+*function* · [src/backend/types.ts:22](../../../src/backend/types.ts#L22)
 
 ```ts
 failResult<T = never>(error: string): Result<T>
 ```
 
-_No JSDoc yet._
+Wraps a message as a failed Result.
 
 ### `BackendKind`
 
-*type* · [src/backend/types.ts:21](../../../src/backend/types.ts#L21)
+*type* · [src/backend/types.ts:25](../../../src/backend/types.ts#L25)
 
 ```ts
 type BackendKind = 'mock' | 'supabase'
 ```
 
-_No JSDoc yet._
+Which backend is in use: the on-device mock or Supabase.
 
 ### `Backend`
 
-*interface* · [src/backend/types.ts:23](../../../src/backend/types.ts#L23)
+*interface* · [src/backend/types.ts:27](../../../src/backend/types.ts#L27)
 
 _No JSDoc yet._
 
