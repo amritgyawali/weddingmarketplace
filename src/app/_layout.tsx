@@ -132,6 +132,8 @@ export default function RootLayout() {
           <Stack.Protected guard={!role}>
             <Stack.Screen name="welcome" options={{ animation: 'fade' }} />
           </Stack.Protected>
+          {/* Single-role apps: `/` sends the user to their app or the welcome (the couple's home is not in them). */}
+          {!hasCouple && <Stack.Screen name="(edition)/index" options={{ animation: 'none' }} />}
 
           {/* Couples: questionnaire first, then the marketplace app. */}
           {hasCouple && <Stack.Protected guard={isCustomer && !hasOnboarded}>

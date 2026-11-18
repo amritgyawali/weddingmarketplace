@@ -18,6 +18,13 @@
   {
    "path": "/",
    "kind": "screen",
+   "file": "src/app/(edition)/index.tsx",
+   "component": "EditionIndex",
+   "doc": "The start URL (`/`) of a single-role app (constants/edition.ts). In the all-roles app `/` is the couple's home tab, which these apps don't contain, so this route sends the user to their app or to the welcome. metro.config.js keeps this file out of the all-roles app, where it would clash with `(tabs)`."
+  },
+  {
+   "path": "/",
+   "kind": "screen",
    "file": "src/app/(tabs)/index.tsx",
    "component": "ForYouScreen",
    "doc": "The couple's home. It follows the active celebration: a pasni or a birthday shows its own services and checklist, and the wedding-only sections (collections, bridal makeup, real weddings, planner packages) stay with weddings. A super admin can switch any section off, reorder them, rename their headings and add banners (Content studio → Home)."
@@ -1228,6 +1235,19 @@
   }
  ],
  "files": [
+  {
+   "file": "src/app/(edition)/index.tsx",
+   "doc": "",
+   "exports": [
+    {
+     "name": "EditionIndex",
+     "kind": "component",
+     "line": 14,
+     "signature": "()",
+     "doc": "The start URL (`/`) of a single-role app (constants/edition.ts). In the\nall-roles app `/` is the couple's home tab, which these apps don't contain,\nso this route sends the user to their app or to the welcome. metro.config.js\nkeeps this file out of the all-roles app, where it would clash with `(tabs)`."
+    }
+   ]
+  },
   {
    "file": "src/app/(tabs)/_layout.tsx",
    "doc": "",

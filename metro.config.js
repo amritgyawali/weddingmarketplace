@@ -24,21 +24,23 @@ config.resolver.blockList = [...(Array.isArray(blockList) ? blockList : blockLis
  * Single-role apps (EXPO_PUBLIC_APP_EDITION, see src/constants/edition.ts):
  * leave every other role's route files out of the file map, so expo-router
  * never sees them and the bundle drops the screens only they import. Shared
- * routes (welcome, notifications, legal pages, report a bug, payment return)
+ * routes (start URL, welcome, notifications, legal pages, report a bug, payment return)
  * stay in every edition. Metro tests folders too, so a kept folder's own path
  * (no trailing slash) must not match.
  */
 function editionBlockList() {
   const edition = (process.env.EXPO_PUBLIC_APP_EDITION || '').trim().toLowerCase();
   const own = { vendor: 'business', freelancer: 'freelancer', staff: 'platform', admin: 'platform' }[edition];
-  if (!own) return [];
   const sep = String.raw`[\\/]`;
   const app = path
     .join(__dirname, 'src', 'app')
     .split(/[\\/]/)
     .map((part) => part.replace(/[\\^$.*+?()[\]{}|]/g, '\\$&'))
     .join(sep);
-  const shared = [String.raw`_layout\.tsx$`, String.raw`\+not-found\.tsx$`, String.raw`notifications\.tsx$`, String.raw`report-bug\.tsx$`, `(?:welcome|legal|pay|${own})(?:${sep}|$)`];
+  const startUrl = String.raw`\(edition\)`;
+  // `(edition)/index` is the single-role apps' start URL; in the all-roles app `/` is the couple's home tab.
+  if (!own) return [new RegExp(`^${app}${sep}${startUrl}(?:${sep}|$)`)];
+  const shared = [String.raw`_layout\.tsx$`, String.raw`\+not-found\.tsx$`, String.raw`notifications\.tsx$`, String.raw`report-bug\.tsx$`, `(?:${startUrl}|welcome|legal|pay|${own})(?:${sep}|$)`];
   const blocked = [new RegExp(`^${app}${sep}(?!(?:${shared.join('|')}))`)];
   // The Staff app has no super admin console; the Admin app keeps it.
   if (edition === 'staff') blocked.push(new RegExp(`^${app}${sep}platform${sep}admin(?:${sep}|$)`));
