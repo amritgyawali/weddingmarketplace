@@ -1,11 +1,28 @@
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 
+import { EDITION } from '@/constants/edition';
 import { statusBarStyle } from '@/constants/theme';
 import { useRoleFonts } from '@/theme/fonts';
 import { ROLE_THEMES } from '@/theme/roles';
 import { RoleThemeProvider } from '@/theme/RoleTheme';
 import { keyboardScreenLayout } from '@/components/ui/Keyboard';
+
+const SUPER_ADMIN_SCREENS = [
+  'admin/index',
+  'admin/users',
+  'admin/user/[id]',
+  'admin/data',
+  'admin/collection/[name]',
+  'admin/record/[name]/[id]',
+  'admin/features',
+  'admin/texts',
+  'admin/content/index',
+  'admin/content/[kind]/[id]',
+  'admin/announcements',
+  'admin/bugs',
+  'admin/bug/[id]',
+];
 
 /** Vivah operations console — coordinators, matching, quotes, crew, finance and trust. */
 export default function PlatformLayout() {
@@ -41,19 +58,8 @@ export default function PlatformLayout() {
         <Stack.Screen name="tool/[id]" />
         <Stack.Screen name="occasions" />
         <Stack.Screen name="occasion/[id]" />
-        <Stack.Screen name="admin/index" />
-        <Stack.Screen name="admin/users" />
-        <Stack.Screen name="admin/user/[id]" />
-        <Stack.Screen name="admin/data" />
-        <Stack.Screen name="admin/collection/[name]" />
-        <Stack.Screen name="admin/record/[name]/[id]" />
-        <Stack.Screen name="admin/features" />
-        <Stack.Screen name="admin/texts" />
-        <Stack.Screen name="admin/content/index" />
-        <Stack.Screen name="admin/content/[kind]/[id]" />
-        <Stack.Screen name="admin/announcements" />
-        <Stack.Screen name="admin/bugs" />
-        <Stack.Screen name="admin/bug/[id]" />
+        {/* The Staff app is built without the super admin console (metro.config.js). */}
+        {EDITION !== 'staff' && SUPER_ADMIN_SCREENS.map((name) => <Stack.Screen key={name} name={name} />)}
         <Stack.Screen name="edit-profile" />
         <Stack.Screen name="support/index" />
         <Stack.Screen name="support/[id]" />

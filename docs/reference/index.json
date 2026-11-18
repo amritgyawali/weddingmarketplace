@@ -1202,8 +1202,8 @@
    "path": "/welcome/role",
    "kind": "screen",
    "file": "src/app/welcome/role.tsx",
-   "component": "RolePicker",
-   "doc": ""
+   "component": "RoleScreen",
+   "doc": "A single-role app (constants/edition.ts) has no picker: its own welcome opens its one user type."
   },
   {
    "path": "/welcome/setup",
@@ -1339,14 +1339,14 @@
     {
      "name": "ErrorBoundary",
      "kind": "re-export",
-     "line": 37,
+     "line": 38,
      "signature": "from '@/components/AppErrorBoundary'",
      "doc": ""
     },
     {
      "name": "RootLayout",
      "kind": "component",
-     "line": 53,
+     "line": 54,
      "signature": "()",
      "doc": ""
     }
@@ -2633,7 +2633,7 @@
     {
      "name": "PlatformLayout",
      "kind": "component",
-     "line": 11,
+     "line": 28,
      "signature": "()",
      "doc": "Vivah operations console — coordinators, matching, quotes, crew, finance and trust."
     }
@@ -2659,7 +2659,7 @@
     {
      "name": "default",
      "kind": "default",
-     "line": 166,
+     "line": 167,
      "signature": "staffScreen('/platform/admin/bug', BugReportDetail)",
      "doc": ""
     }
@@ -2789,7 +2789,7 @@
     {
      "name": "default",
      "kind": "default",
-     "line": 187,
+     "line": 189,
      "signature": "staffScreen('/platform/admin/user', AccountEditor)",
      "doc": ""
     }
@@ -3452,7 +3452,7 @@
     {
      "name": "WelcomeCarousel",
      "kind": "component",
-     "line": 61,
+     "line": 62,
      "signature": "()",
      "doc": ""
     }
@@ -3465,7 +3465,7 @@
     {
      "name": "LoginScreen",
      "kind": "component",
-     "line": 296,
+     "line": 308,
      "signature": "()",
      "doc": ""
     }
@@ -3476,11 +3476,11 @@
    "doc": "",
    "exports": [
     {
-     "name": "RolePicker",
+     "name": "RoleScreen",
      "kind": "component",
-     "line": 28,
+     "line": 31,
      "signature": "()",
-     "doc": ""
+     "doc": "A single-role app (constants/edition.ts) has no picker: its own welcome opens its one user type."
     }
    ]
   },
@@ -3491,7 +3491,7 @@
     {
      "name": "SetupScreen",
      "kind": "component",
-     "line": 372,
+     "line": 373,
      "signature": "()",
      "doc": ""
     }
@@ -4965,6 +4965,19 @@
      "line": 13,
      "signature": "()",
      "doc": "Sits at the root and makes a super admin's content edits show at once:\ncatalogue queries are refetched whenever the content changes, and Supabase\nbuilds keep the content in step with the server (`backend/content.ts`)."
+    }
+   ]
+  },
+  {
+   "file": "src/components/EditionWelcome.tsx",
+   "doc": "",
+   "exports": [
+    {
+     "name": "EditionWelcome",
+     "kind": "component",
+     "line": 35,
+     "signature": "()",
+     "doc": "The signed-out screen of a single-role app (constants/edition.ts): what the\napp is for and one button in. The local demo opens the edition's seeded\naccount; live builds go to the usual login for that one role."
     }
    ]
   },
@@ -9798,6 +9811,75 @@
    ]
   },
   {
+   "file": "src/constants/edition.ts",
+   "doc": "App editions: one codebase, one Play Store app per user type. `EXPO_PUBLIC_APP_EDITION` picks the edition at build time (the EAS profiles `production-vendor`, `production-freelancer`, `production-staff` and `production-admin` set it; `app.config.js` reads the same variable for the package name, app name, icon and permissions, and `metro.config.js` leaves the other apps' routes out of the bundle). Unset, the app is `all`: every role app in one binary, as before (development, web console, the original `com.vivah.marketplace` listing).",
+   "exports": [
+    {
+     "name": "AppEdition",
+     "kind": "type",
+     "line": 14,
+     "signature": "= 'all' | 'vendor' | 'freelancer' | 'staff' | 'admin'",
+     "doc": ""
+    },
+    {
+     "name": "EDITION",
+     "kind": "const",
+     "line": 21,
+     "signature": ": AppEdition",
+     "doc": "The edition this binary was built as."
+    },
+    {
+     "name": "isSingleRoleEdition",
+     "kind": "const",
+     "line": 24,
+     "signature": "= EDITION !== 'all'",
+     "doc": "True for a single-user-type app (anything but `all`)."
+    },
+    {
+     "name": "EDITION_ROLE",
+     "kind": "const",
+     "line": 27,
+     "signature": ": UserRole | null",
+     "doc": "The one role a single-role edition signs in; null for `all`."
+    },
+    {
+     "name": "EDITION_INFO",
+     "kind": "const",
+     "line": 31,
+     "signature": ": Record<Exclude<AppEdition, 'all'>, { appName: string; title: string; who: string; points: string[] }>",
+     "doc": "Store name and landing copy for each single-role edition."
+    },
+    {
+     "name": "editionInfo",
+     "kind": "const",
+     "line": 59,
+     "signature": "= EDITION === 'all' ? null : EDITION_INFO[EDITION]",
+     "doc": "The landing copy for this binary; null for `all`."
+    },
+    {
+     "name": "editionAllows",
+     "kind": "function",
+     "line": 62,
+     "signature": "(account: Pick<Account, 'role' | 'staffRole'> | null | undefined): boolean",
+     "doc": "Whether this binary may open the given account's app."
+    },
+    {
+     "name": "editionRefusal",
+     "kind": "function",
+     "line": 77,
+     "signature": "(account: Pick<Account, 'role' | 'staffRole'>): string",
+     "doc": "The refusal shown when an account belongs to another edition's app."
+    },
+    {
+     "name": "canImpersonate",
+     "kind": "function",
+     "line": 90,
+     "signature": "()",
+     "doc": "\"Sign in as\" another user needs every role app in the binary."
+    }
+   ]
+  },
+  {
    "file": "src/constants/env.ts",
    "doc": "Public configuration from `EXPO_PUBLIC_*` variables (`.env.local`, EAS and Vercel environment variables; see `.env.example`). Expo inlines these at build time, so each one must be read as `process.env.EXPO_PUBLIC_NAME` literally. Server secrets never appear here.",
    "exports": [
@@ -13503,42 +13585,42 @@
     {
      "name": "enterDemoRole",
      "kind": "function",
-     "line": 9,
+     "line": 10,
      "signature": "(role: UserRole | 'super_admin'): string | null",
      "doc": "Opens a fixed local demo account from the role picker; never bypasses live authentication. Returns an error on refusal."
     },
     {
      "name": "completeLogin",
      "kind": "function",
-     "line": 34,
+     "line": 36,
      "signature": "(account: Account)",
      "doc": "Finishes sign-in for any role. Setting the session flips the protected\nroute guards in the root layout, which moves the user into their role's app."
     },
     {
      "name": "onAccountCreated",
      "kind": "function",
-     "line": 52,
+     "line": 54,
      "signature": "(account: Account)",
      "doc": "Side effects for a brand-new account before it signs in."
     },
     {
      "name": "impersonate",
      "kind": "function",
-     "line": 61,
+     "line": 63,
      "signature": "(account: Account)",
      "doc": "Super admin: opens the app as another user, with a bar to come back."
     },
     {
      "name": "endImpersonation",
      "kind": "function",
-     "line": 71,
+     "line": 73,
      "signature": "()",
      "doc": "Ends \"Sign in as\" and returns to the super admin's own account."
     },
     {
      "name": "logout",
      "kind": "function",
-     "line": 79,
+     "line": 81,
      "signature": "()",
      "doc": ""
     }

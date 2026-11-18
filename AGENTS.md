@@ -50,6 +50,17 @@ These product decisions are fixed. Do not reverse them without the owner's say-s
 
 Public pages need no sign-in: `/w/[slug]` (the couple's wedding website and registry) and `/rsvp/[code]` (the guest RSVP).
 
+**Single-role Play Store apps (editions).** The same code also builds four separate apps, each for one user type (owner request, November 2026). `EXPO_PUBLIC_APP_EDITION` (`vendor`, `freelancer`, `staff`, `admin`; unset = `all`, every role in one binary as above) is read by `src/constants/edition.ts` (`EDITION`, `EDITION_ROLE`, `editionAllows`, `canImpersonate`), by `app.config.js` (app name, package, URL scheme, icons in `assets/images/editions/`, permissions) and by `metro.config.js` (other roles' route files are left out of the file map, so they are not in the bundle). Build with the EAS profiles `production-<edition>` / `preview-<edition>`.
+
+| Edition | App | Package / scheme | Who can sign in | Routes kept |
+|---|---|---|---|---|
+| `vendor` | Vivah for Business | `com.vivah.business` / `vivah-business` | `vendor` | `business/` |
+| `freelancer` | Vivah Freelancer | `com.vivah.freelancer` / `vivah-freelancer` | `freelancer` | `freelancer/` |
+| `staff` | Vivah Staff | `com.vivah.staff` / `vivah-staff` | `platform`, not super admins | `platform/` without `platform/admin/` |
+| `admin` | Vivah Admin | `com.vivah.admin` / `vivah-admin` | `platform` super admins only | `platform/` |
+
+Every edition keeps the shared routes (`welcome/`, `notifications`, `legal/`, `report-bug`, `pay/`, `+not-found`). Signed out, an edition opens `components/EditionWelcome.tsx` (no role picker, no couple slideshow); the demo button opens that role's seeded account. The root layout treats a saved session of another user type as signed out and logs it out; login, setup and `enterDemoRole` refuse other user types (`editionRefusal`). "Sign in as" (impersonation) is hidden in editions, because the other role apps are not in the binary. Editions block camera, microphone, contacts, storage and overlay permissions and drop the `expo-contacts` plugin. Add a new shared root route to the allowlist in `metro.config.js` or the editions will not contain it. The couple-only app stays on the `customer` branch (`com.vivah.marketplace`).
+
 **Every role** also has **Edit profile** (`/edit-profile`, `/business/edit-profile`, `/freelancer/edit-profile`, `/platform/edit-profile`), **Help and support** (`/support`, `/business/support`, `/freelancer/support`; staff answer at `/platform/support`, the Help desk) and **Settings → Appearance** (light, dark, same as phone). See §6b items 10–11.
 
 **Role toolkits.** Each role also has 20 smaller tools on top of the core loop, plus five smart tools (scores, forecasts and checks from live data; rules in `services/insights.ts`), listed by a searchable hub and opened through one dynamic route per role:

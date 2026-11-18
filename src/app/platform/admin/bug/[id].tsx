@@ -10,6 +10,7 @@ import { ToolPage } from '@/components/toolkit/core';
 import { Text } from '@/components/ui/Text';
 import { toastError } from '@/components/ui/Toast';
 import { useBugReport, useBugReportActions } from '@/hooks/useBugReports';
+import { canImpersonate } from '@/constants/edition';
 import { impersonate } from '@/services/auth';
 import { useSession } from '@/store/useSession';
 import { useRoleTheme } from '@/theme/RoleTheme';
@@ -95,7 +96,7 @@ function BugReportDetail() {
         <KeyValue label="App" value={`${app.name} ${app.version} · ${app.backend} · ${app.language.toUpperCase()} · ${app.calendar}`} />
         {!!device.userAgent && <KeyValue label="Browser" value={device.userAgent} />}
       </Card>
-      {!!reporter && reporter.id !== me && (
+      {!!reporter && reporter.id !== me && canImpersonate() && (
         <KButton label={`Sign in as ${reporter.name.split(' ')[0]} to try it`} icon="eye-outline" variant="secondary" onPress={() => impersonate(reporter)} />
       )}
 

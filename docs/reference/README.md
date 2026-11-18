@@ -19,7 +19,7 @@ Generated from the source. For the *why*, read [the handbook](../handbook/README
 | Folder | Files | Exports | Page |
 |---|---|---|---|
 | `src/backend/` | 17 | 122 | [backend.md](code/backend.md) |
-| `src/components/` | 2 | 2 | [components.md](code/components.md) |
+| `src/components/` | 3 | 3 | [components.md](code/components.md) |
 | `src/components/admin/` | 3 | 15 | [components.admin.md](code/components.admin.md) |
 | `src/components/admin/content/` | 5 | 5 | [components.admin.content.md](code/components.admin.content.md) |
 | `src/components/detail/` | 3 | 8 | [components.detail.md](code/components.detail.md) |
@@ -43,7 +43,7 @@ Generated from the source. For the *why*, read [the handbook](../handbook/README
 | `src/components/ui/` | 33 | 79 | [components.ui.md](code/components.ui.md) |
 | `src/components/wedding/` | 3 | 12 | [components.wedding.md](code/components.wedding.md) |
 | `src/components/work/` | 27 | 55 | [components.work.md](code/components.work.md) |
-| `src/constants/` | 4 | 41 | [constants.md](code/constants.md) |
+| `src/constants/` | 5 | 50 | [constants.md](code/constants.md) |
 | `src/data/` | 30 | 213 | [data.md](code/data.md) |
 | `src/hooks/` | 17 | 47 | [hooks.md](code/hooks.md) |
 | `src/i18n/` | 2 | 15 | [i18n.md](code/i18n.md) |

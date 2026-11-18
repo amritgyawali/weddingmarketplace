@@ -4,11 +4,13 @@ import type { ComponentProps } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { EditionWelcome } from '@/components/EditionWelcome';
 import { BackButton } from '@/components/ui/IconButton';
 import { triggerHaptic } from '@/components/ui/PressableScale';
 import { Text } from '@/components/ui/Text';
 import { toastError } from '@/components/ui/Toast';
 import { BRAND } from '@/constants/brand';
+import { isSingleRoleEdition } from '@/constants/edition';
 import { usesDirectRoleEntry } from '@/constants/env';
 import { colors, themed } from '@/constants/theme';
 import { useFeatures } from '@/hooks/useFeatures';
@@ -25,7 +27,12 @@ const ROLES: { role: UserRole; icon: ComponentProps<typeof Ionicons>['name']; wh
   { role: 'platform', icon: 'id-card-outline', who: 'I work at Vivah' },
 ];
 
-export default function RolePicker() {
+/** A single-role app (constants/edition.ts) has no picker: its own welcome opens its one user type. */
+export default function RoleScreen() {
+  return isSingleRoleEdition ? <EditionWelcome /> : <RolePicker />;
+}
+
+function RolePicker() {
   const insets = useSafeAreaInsets();
   const selectRole = useSession((s) => s.selectRole);
   const on = useFeatures();

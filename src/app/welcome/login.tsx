@@ -7,11 +7,12 @@ import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { acceptLegal, accountFromMe, fetchMe, roleOf } from '@/backend/account';
-import { emailOtp, usesEmailSignIn } from '@/backend/auth';
+import { emailOtp, signOut, usesEmailSignIn } from '@/backend/auth';
 import { registerForPush } from '@/backend/push';
 import { KButton } from '@/components/kit';
 import { triggerHaptic } from '@/components/ui/PressableScale';
 import { Text } from '@/components/ui/Text';
+import { EDITION, EDITION_ROLE, editionAllows, editionRefusal } from '@/constants/edition';
 import { inputFont, inputReset, statusBarStyle } from '@/constants/theme';
 import { LEGAL_VERSION } from '@/data/legal';
 import { DEMO_ACCOUNTS, DEMO_OTP } from '@/data/seed';
@@ -42,13 +43,20 @@ function LoginForm() {
   const [busy, setBusy] = useState(false);
   const otpRef = useRef<TextInput>(null);
   // "Super admin" on the role picker: a staff login that only lets super admins in and never signs anyone up.
-  const superAdmin = useLocalSearchParams<{ as?: string }>().as === 'super_admin';
+  // The Admin app (constants/edition.ts) is always that login.
+  const superAdmin = useLocalSearchParams<{ as?: string }>().as === 'super_admin' || EDITION === 'admin';
   // Super admins land straight in their console once the role guard has switched to the staff app.
   const signIn = (account: Account) => {
+    // A single-role app opens only its own user type.
+    if (!editionAllows(account)) {
+      setError(editionRefusal(account));
+      triggerHaptic('medium');
+      return;
+    }
     completeLogin(account);
     if (superAdmin) setTimeout(() => router.push('/platform/admin'), 0);
   };
-  const demos = DEMO_ACCOUNTS.filter((a) => a.role === t.role && (!superAdmin || a.staffRole === 'super_admin'));
+  const demos = DEMO_ACCOUNTS.filter((a) => a.role === t.role && (!superAdmin || a.staffRole === 'super_admin') && editionAllows(a));
   const demoOn = useFeatures()('login.demo');
 
   const sendOtp = async () => {
@@ -112,6 +120,10 @@ function LoginForm() {
     if (me.value.legal !== LEGAL_VERSION) void acceptLegal(LEGAL_VERSION);
     const account = accountFromMe(me.value, role);
     if (superAdmin && account.staffRole !== 'super_admin') return setError(NOT_SUPER_ADMIN);
+    if (!editionAllows(account)) {
+      void signOut();
+      return setError(editionRefusal(account));
+    }
     upsertAccount(account);
     signIn(account);
     void registerForPush();
@@ -294,7 +306,8 @@ function LegalNotice() {
 }
 
 export default function LoginScreen() {
-  const role = useSession((s) => s.selectedRole) ?? 'customer';
+  const selected = useSession((s) => s.selectedRole);
+  const role = EDITION_ROLE ?? selected ?? 'customer';
   const fontsReady = useRoleFonts('all');
   if (!fontsReady) return null;
   return (

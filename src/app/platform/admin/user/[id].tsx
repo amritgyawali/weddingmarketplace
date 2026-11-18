@@ -9,6 +9,7 @@ import { Hint, ToolPage } from '@/components/toolkit/core';
 import { Text } from '@/components/ui/Text';
 import { Toggle } from '@/components/ui/Toggle';
 import { toast, toastError } from '@/components/ui/Toast';
+import { canImpersonate } from '@/constants/edition';
 import { impersonate } from '@/services/auth';
 import { useDb } from '@/store/useDb';
 import { useSession } from '@/store/useSession';
@@ -81,7 +82,8 @@ function AccountEditor() {
 
   return (
     <ToolPage title={isNew ? 'New account' : (account?.businessName ?? account?.name ?? 'Account')} subtitle={isNew ? 'Any role' : `${ROLE_NAMES[draft.role]} · joined ${formatLongDate(account!.createdAt)}`}>
-      {!isNew && account!.id !== me && (
+      {/* Sign in as needs every role app, so the single-role Admin app leaves it out. */}
+      {!isNew && account!.id !== me && canImpersonate() && (
         <Card style={{ gap: 10 }}>
           <Text size={14} color={t.c.text}>
             See exactly what {account!.name.split(' ')[0]} sees. A bar at the top brings you back here.

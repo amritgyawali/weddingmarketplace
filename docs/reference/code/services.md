@@ -156,7 +156,7 @@ Source: [src/services/auth.ts](../../../src/services/auth.ts)
 
 ### `enterDemoRole`
 
-*function* · [src/services/auth.ts:9](../../../src/services/auth.ts#L9)
+*function* · [src/services/auth.ts:10](../../../src/services/auth.ts#L10)
 
 ```ts
 enterDemoRole(role: UserRole | 'super_admin'): string | null
@@ -166,7 +166,7 @@ Opens a fixed local demo account from the role picker; never bypasses live authe
 
 ### `completeLogin`
 
-*function* · [src/services/auth.ts:34](../../../src/services/auth.ts#L34)
+*function* · [src/services/auth.ts:36](../../../src/services/auth.ts#L36)
 
 ```ts
 completeLogin(account: Account)
@@ -177,7 +177,7 @@ route guards in the root layout, which moves the user into their role's app.
 
 ### `onAccountCreated`
 
-*function* · [src/services/auth.ts:52](../../../src/services/auth.ts#L52)
+*function* · [src/services/auth.ts:54](../../../src/services/auth.ts#L54)
 
 ```ts
 onAccountCreated(account: Account)
@@ -187,7 +187,7 @@ Side effects for a brand-new account before it signs in.
 
 ### `impersonate`
 
-*function* · [src/services/auth.ts:61](../../../src/services/auth.ts#L61)
+*function* · [src/services/auth.ts:63](../../../src/services/auth.ts#L63)
 
 ```ts
 impersonate(account: Account)
@@ -197,7 +197,7 @@ Super admin: opens the app as another user, with a bar to come back.
 
 ### `endImpersonation`
 
-*function* · [src/services/auth.ts:71](../../../src/services/auth.ts#L71)
+*function* · [src/services/auth.ts:73](../../../src/services/auth.ts#L73)
 
 ```ts
 endImpersonation()
@@ -207,7 +207,7 @@ Ends "Sign in as" and returns to the super admin's own account.
 
 ### `logout`
 
-*function* · [src/services/auth.ts:79](../../../src/services/auth.ts#L79)
+*function* · [src/services/auth.ts:81](../../../src/services/auth.ts#L81)
 
 ```ts
 logout()

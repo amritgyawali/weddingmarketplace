@@ -165,7 +165,7 @@ Every file in `src/app/` is a route (Expo Router). Layouts (`_layout.tsx`) defin
 | `/welcome` | layout | `WelcomeLayout` | [welcome/_layout.tsx](../../src/app/welcome/_layout.tsx) |  |
 | `/welcome` | screen | `WelcomeCarousel` | [welcome/index.tsx](../../src/app/welcome/index.tsx) |  |
 | `/welcome/login` | screen | `LoginScreen` | [welcome/login.tsx](../../src/app/welcome/login.tsx) |  |
-| `/welcome/role` | screen | `RolePicker` | [welcome/role.tsx](../../src/app/welcome/role.tsx) |  |
+| `/welcome/role` | screen | `RoleScreen` | [welcome/role.tsx](../../src/app/welcome/role.tsx) | A single-role app (constants/edition.ts) has no picker: its own welcome opens its one user type. |
 | `/welcome/setup` | screen | `SetupScreen` | [welcome/setup.tsx](../../src/app/welcome/setup.tsx) |  |
 
 ## Vendor (business)
