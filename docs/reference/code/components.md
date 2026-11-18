@@ -8,6 +8,7 @@ Every exported symbol in `src/components/`, file by file. The guide that explain
 
 - [`AppErrorBoundary.tsx`](#apperrorboundarytsx) (1 exports)
 - [`ContentSync.tsx`](#contentsynctsx) (1 exports)
+- [`EditionWelcome.tsx`](#editionwelcometsx) (1 exports)
 
 ## AppErrorBoundary.tsx
 
@@ -40,3 +41,19 @@ ContentSync()
 Sits at the root and makes a super admin's content edits show at once:
 catalogue queries are refetched whenever the content changes, and Supabase
 builds keep the content in step with the server (`backend/content.ts`).
+
+## EditionWelcome.tsx
+
+Source: [src/components/EditionWelcome.tsx](../../../src/components/EditionWelcome.tsx)
+
+### `EditionWelcome`
+
+*component* · [src/components/EditionWelcome.tsx:35](../../../src/components/EditionWelcome.tsx#L35)
+
+```ts
+EditionWelcome()
+```
+
+The signed-out screen of a single-role app (constants/edition.ts): what the
+app is for and one button in. The local demo opens the edition's seeded
+account; live builds go to the usual login for that one role.

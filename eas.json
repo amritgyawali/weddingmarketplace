@@ -42,6 +42,54 @@
       "android": {
         "buildType": "app-bundle"
       }
+    },
+    "production-vendor": {
+      "extends": "production",
+      "env": {
+        "EXPO_PUBLIC_APP_EDITION": "vendor"
+      }
+    },
+    "preview-vendor": {
+      "extends": "preview",
+      "env": {
+        "EXPO_PUBLIC_APP_EDITION": "vendor"
+      }
+    },
+    "production-freelancer": {
+      "extends": "production",
+      "env": {
+        "EXPO_PUBLIC_APP_EDITION": "freelancer"
+      }
+    },
+    "preview-freelancer": {
+      "extends": "preview",
+      "env": {
+        "EXPO_PUBLIC_APP_EDITION": "freelancer"
+      }
+    },
+    "production-staff": {
+      "extends": "production",
+      "env": {
+        "EXPO_PUBLIC_APP_EDITION": "staff"
+      }
+    },
+    "preview-staff": {
+      "extends": "preview",
+      "env": {
+        "EXPO_PUBLIC_APP_EDITION": "staff"
+      }
+    },
+    "production-admin": {
+      "extends": "production",
+      "env": {
+        "EXPO_PUBLIC_APP_EDITION": "admin"
+      }
+    },
+    "preview-admin": {
+      "extends": "preview",
+      "env": {
+        "EXPO_PUBLIC_APP_EDITION": "admin"
+      }
     }
   },
   "submit": {
@@ -50,6 +98,18 @@
         "track": "internal",
         "releaseStatus": "draft"
       }
+    },
+    "production-vendor": {
+      "extends": "production"
+    },
+    "production-freelancer": {
+      "extends": "production"
+    },
+    "production-staff": {
+      "extends": "production"
+    },
+    "production-admin": {
+      "extends": "production"
     }
   }
 }

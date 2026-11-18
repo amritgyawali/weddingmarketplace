@@ -10,6 +10,7 @@ Every file in `src/app/` is a route (Expo Router). Layouts (`_layout.tsx`) defin
 |---|---|---|---|---|
 | `/` (tabs) | layout | `TabsLayout` | [(tabs)/_layout.tsx](../../src/app/%28tabs%29/_layout.tsx) |  |
 | `/` | layout | `RootLayout` | [_layout.tsx](../../src/app/_layout.tsx) |  |
+| `/` (edition) | screen | `EditionIndex` | [(edition)/index.tsx](../../src/app/%28edition%29/index.tsx) | The start URL (`/`) of a single-role app (constants/edition.ts). In the all-roles app `/` is the couple's home tab, which these apps don't contain, so this route sends the user to their app or to the… |
 | `/` (tabs) | screen | `ForYouScreen` | [(tabs)/index.tsx](../../src/app/%28tabs%29/index.tsx) | The couple's home. It follows the active celebration: a pasni or a birthday shows its own services and checklist, and the wedding-only sections (collections, bridal makeup, real weddings, planner pac… |
 | `/assistant` | screen | `AssistantScreen` | [assistant.tsx](../../src/app/assistant.tsx) |  |
 | `/boards` | screen | `BoardsScreen` | [boards.tsx](../../src/app/boards.tsx) | Mood boards: collect ideas by theme and share them with vendors. |
@@ -165,7 +166,7 @@ Every file in `src/app/` is a route (Expo Router). Layouts (`_layout.tsx`) defin
 | `/welcome` | layout | `WelcomeLayout` | [welcome/_layout.tsx](../../src/app/welcome/_layout.tsx) |  |
 | `/welcome` | screen | `WelcomeCarousel` | [welcome/index.tsx](../../src/app/welcome/index.tsx) |  |
 | `/welcome/login` | screen | `LoginScreen` | [welcome/login.tsx](../../src/app/welcome/login.tsx) |  |
-| `/welcome/role` | screen | `RolePicker` | [welcome/role.tsx](../../src/app/welcome/role.tsx) |  |
+| `/welcome/role` | screen | `RoleScreen` | [welcome/role.tsx](../../src/app/welcome/role.tsx) | A single-role app (constants/edition.ts) has no picker: its own welcome opens its one user type. |
 | `/welcome/setup` | screen | `SetupScreen` | [welcome/setup.tsx](../../src/app/welcome/setup.tsx) |  |
 
 ## Vendor (business)

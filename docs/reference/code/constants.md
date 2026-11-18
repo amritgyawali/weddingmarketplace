@@ -7,6 +7,7 @@ Every exported symbol in `src/constants/`, file by file. The guide that explains
 ## Files
 
 - [`brand.ts`](#brandts) (4 exports) · Single source of truth for every brand-specific string. Rename the product here and the whole app follows. A super admin can replace any of…
+- [`edition.ts`](#editionts) (9 exports) · App editions: one codebase, one Play Store app per user type.
 - [`env.ts`](#envts) (3 exports) · Public configuration from `EXPO_PUBLIC_*` variables (`.env.local`, EAS and Vercel environment variables; see `.env.example`). Expo inlines …
 - [`images.ts`](#imagests) (7 exports)
 - [`theme.ts`](#themets) (27 exports)
@@ -59,6 +60,110 @@ BRAND= Object.defineProperties( {}, Object.fromEntries(BRAND_FIELDS.map((field) 
 ```
 
 _No JSDoc yet._
+
+## edition.ts
+
+Source: [src/constants/edition.ts](../../../src/constants/edition.ts)
+
+App editions: one codebase, one Play Store app per user type.
+
+`EXPO_PUBLIC_APP_EDITION` picks the edition at build time (the EAS profiles
+`production-vendor`, `production-freelancer`, `production-staff` and
+`production-admin` set it; `app.config.js` reads the same variable for the
+package name, app name, icon and permissions, and `metro.config.js` leaves
+the other apps' routes out of the bundle). Unset, the app is `all`: every
+role app in one binary, as before (development, web console, the original
+`com.vivah.marketplace` listing).
+
+### `AppEdition`
+
+*type* · [src/constants/edition.ts:14](../../../src/constants/edition.ts#L14)
+
+```ts
+type AppEdition = 'all' | 'vendor' | 'freelancer' | 'staff' | 'admin'
+```
+
+_No JSDoc yet._
+
+### `EDITION`
+
+*const* · [src/constants/edition.ts:21](../../../src/constants/edition.ts#L21)
+
+```ts
+EDITION: AppEdition
+```
+
+The edition this binary was built as.
+
+### `isSingleRoleEdition`
+
+*const* · [src/constants/edition.ts:24](../../../src/constants/edition.ts#L24)
+
+```ts
+isSingleRoleEdition= EDITION !== 'all'
+```
+
+True for a single-user-type app (anything but `all`).
+
+### `EDITION_ROLE`
+
+*const* · [src/constants/edition.ts:27](../../../src/constants/edition.ts#L27)
+
+```ts
+EDITION_ROLE: UserRole | null
+```
+
+The one role a single-role edition signs in; null for `all`.
+
+### `EDITION_INFO`
+
+*const* · [src/constants/edition.ts:31](../../../src/constants/edition.ts#L31)
+
+```ts
+EDITION_INFO: Record<Exclude<AppEdition, 'all'>, { appName: string; title: string; who: string; points: string[] }>
+```
+
+Store name and landing copy for each single-role edition.
+
+### `editionInfo`
+
+*const* · [src/constants/edition.ts:59](../../../src/constants/edition.ts#L59)
+
+```ts
+editionInfo= EDITION === 'all' ? null : EDITION_INFO[EDITION]
+```
+
+The landing copy for this binary; null for `all`.
+
+### `editionAllows`
+
+*function* · [src/constants/edition.ts:62](../../../src/constants/edition.ts#L62)
+
+```ts
+editionAllows(account: Pick<Account, 'role' | 'staffRole'> | null | undefined): boolean
+```
+
+Whether this binary may open the given account's app.
+
+### `editionRefusal`
+
+*function* · [src/constants/edition.ts:77](../../../src/constants/edition.ts#L77)
+
+```ts
+editionRefusal(account: Pick<Account, 'role' | 'staffRole'>): string
+```
+
+The refusal shown when an account belongs to another edition's app.
+
+### `canImpersonate`
+
+*function* · [src/constants/edition.ts:90](../../../src/constants/edition.ts#L90)
+
+```ts
+canImpersonate()
+```
+
+"Sign in as" another user needs every role app in the binary.
 
 ## env.ts
 

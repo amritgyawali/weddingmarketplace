@@ -1,4 +1,5 @@
 import { signOut, usesEmailSignIn } from '@/backend/auth';
+import { canImpersonate, editionAllows, editionRefusal } from '@/constants/edition';
 import { usesDirectRoleEntry } from '@/constants/env';
 import { useAppStore } from '@/store/useAppStore';
 import { useDb } from '@/store/useDb';
@@ -21,6 +22,7 @@ export function enterDemoRole(role: UserRole | 'super_admin'): string | null {
   if (!account || account.suspended || account.role !== expectedRole || (role === 'super_admin' && account.staffRole !== 'super_admin')) {
     return 'This demo account is unavailable. Ask an administrator to restore access.';
   }
+  if (!editionAllows(account)) return editionRefusal(account);
   session.selectRole(expectedRole);
   session.setImpersonator(null);
   completeLogin(account);
@@ -61,7 +63,7 @@ export function onAccountCreated(account: Account) {
 export function impersonate(account: Account) {
   const s = useSession.getState();
   const admin = s.accounts.find((a) => a.id === s.session?.accountId);
-  if (!admin || admin.staffRole !== 'super_admin' || admin.id === account.id) return;
+  if (!canImpersonate() || !admin || admin.staffRole !== 'super_admin' || admin.id === account.id) return;
   useDb.getState().log({ id: admin.id, name: admin.name }, 'account.impersonate', 'account', account.id, `${account.role} · ${account.name}`);
   s.setImpersonator(s.impersonatorId ?? admin.id);
   completeLogin(account);

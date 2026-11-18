@@ -4,7 +4,7 @@
 
 Exported symbols that have no JSDoc yet. The weekly documentation pass (see [the maintenance guide](../handbook/17-documentation-maintenance.md)) works through this list; whoever touches a file should document its exports too.
 
-**999 of 1651 exports documented (61%).** Files without a header comment: 369 of 483.
+**1008 of 1661 exports documented (61%).** Files without a header comment: 371 of 486.
 
 | File | Undocumented exports |
 |---|---|
@@ -175,6 +175,7 @@ Exported symbols that have no JSDoc yet. The weekly documentation pass (see [the
 | [src/components/work/RunSheet.tsx](../../src/components/work/RunSheet.tsx) | `SeverityPicker` |
 | [src/components/work/SettingsScreen.tsx](../../src/components/work/SettingsScreen.tsx) | `DEFAULT_PREFS` |
 | [src/components/work/TodayFocus.tsx](../../src/components/work/TodayFocus.tsx) | `TodayFocus` |
+| [src/constants/edition.ts](../../src/constants/edition.ts) | `AppEdition` |
 | [src/constants/env.ts](../../src/constants/env.ts) | `ENV` |
 | [src/data/skills.ts](../../src/data/skills.ts) | `skillIcon` |
 | [src/data/toolkitSeed.ts](../../src/data/toolkitSeed.ts) | `buildToolkitSeed` |

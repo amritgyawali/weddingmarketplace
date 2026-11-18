@@ -16,6 +16,7 @@ import { bugTouchHandlers, BugReporterHost, installBugReporter } from '@/compone
 import { DialogHost } from '@/components/ui/Dialog';
 import { FeatureRouteGuard } from '@/components/ui/FeatureRouteGuard';
 import { ToastHost } from '@/components/ui/Toast';
+import { EDITION_ROLE, editionAllows } from '@/constants/edition';
 import { applyColorScheme, colors, statusBarStyle } from '@/constants/theme';
 import { useResolvedScheme } from '@/hooks/useColorMode';
 import { useHydrated } from '@/hooks/useHydrated';
@@ -66,7 +67,10 @@ export default function RootLayout() {
   const dbHydrated = useHydrated(useDb);
   const prefsHydrated = useHydrated(usePrefs);
   const hydrated = appHydrated && sessionHydrated && dbHydrated && prefsHydrated;
-  const role = useSession((s) => s.session?.role ?? null);
+  const sessionRole = useSession((s) => s.session?.role ?? null);
+  // A single-role edition (constants/edition.ts) opens only its own user type; any other saved session signs out below.
+  const allowed = useSession((s) => editionAllows(s.accounts.find((a) => a.id === s.session?.accountId)));
+  const role = allowed ? sessionRole : null;
   const hasOnboarded = useAppStore((s) => s.hasOnboarded);
   const ready = (fontsLoaded || !!fontError) && hydrated;
   useTelemetry();
@@ -99,9 +103,16 @@ export default function RootLayout() {
     });
   }, [ready, role]);
 
+  useEffect(() => {
+    if (ready && sessionRole && !allowed) logout();
+  }, [ready, sessionRole, allowed]);
+
   if (!ready) return <BootScreen onReady={hideSplash} />;
 
   const isCustomer = role === 'customer';
+  // Which role apps this binary contains; metro.config.js leaves the others' route files out.
+  const hasApp = (r: typeof EDITION_ROLE) => EDITION_ROLE === null || EDITION_ROLE === r;
+  const hasCouple = EDITION_ROLE === null;
 
   return (
     // Holding three fingers on any screen reports a bug (the handlers only watch touches).
@@ -121,12 +132,14 @@ export default function RootLayout() {
           <Stack.Protected guard={!role}>
             <Stack.Screen name="welcome" options={{ animation: 'fade' }} />
           </Stack.Protected>
+          {/* Single-role apps: `/` sends the user to their app or the welcome (the couple's home is not in them). */}
+          {!hasCouple && <Stack.Screen name="(edition)/index" options={{ animation: 'none' }} />}
 
           {/* Couples: questionnaire first, then the marketplace app. */}
-          <Stack.Protected guard={isCustomer && !hasOnboarded}>
+          {hasCouple && <Stack.Protected guard={isCustomer && !hasOnboarded}>
             <Stack.Screen name="onboarding" options={{ animation: 'fade' }} />
-          </Stack.Protected>
-          <Stack.Protected guard={isCustomer && hasOnboarded}>
+          </Stack.Protected>}
+          {hasCouple && <Stack.Protected guard={isCustomer && hasOnboarded}>
             <Stack.Screen name="(tabs)" options={{ animation: 'fade' }} />
             <Stack.Screen name="assistant" options={{ animation: 'slide_from_bottom' }} />
             <Stack.Screen name="search" options={{ animation: 'fade', presentation: 'transparentModal' }} />
@@ -171,30 +184,30 @@ export default function RootLayout() {
             <Stack.Screen name="tools" />
             <Stack.Screen name="tool/[id]" />
             <Stack.Screen name="celebrate" options={{ animation: 'slide_from_bottom' }} />
-          </Stack.Protected>
+          </Stack.Protected>}
 
           {/* Each business role gets a completely separate app. */}
-          <Stack.Protected guard={role === 'vendor'}>
+          {hasApp('vendor') && <Stack.Protected guard={role === 'vendor'}>
             <Stack.Screen name="business" options={{ animation: 'fade' }} />
-          </Stack.Protected>
-          <Stack.Protected guard={role === 'freelancer'}>
+          </Stack.Protected>}
+          {hasApp('freelancer') && <Stack.Protected guard={role === 'freelancer'}>
             <Stack.Screen name="freelancer" options={{ animation: 'fade' }} />
-          </Stack.Protected>
-          <Stack.Protected guard={role === 'platform'}>
+          </Stack.Protected>}
+          {hasApp('platform') && <Stack.Protected guard={role === 'platform'}>
             <Stack.Screen name="platform" options={{ animation: 'fade' }} />
-          </Stack.Protected>
+          </Stack.Protected>}
 
           {/* Shared by every signed-in role. */}
           <Stack.Protected guard={!!role}>
             <Stack.Screen name="notifications" />
           </Stack.Protected>
-          <Stack.Protected guard={!role || isCustomer}>
+          {hasCouple && <Stack.Protected guard={!role || isCustomer}>
             <Stack.Screen name="select-city" options={{ animation: 'slide_from_bottom' }} />
             <Stack.Screen name="join-wedding" options={{ presentation: 'modal', animation: 'slide_from_bottom' }} />
-          </Stack.Protected>
+          </Stack.Protected>}
           {/* Public pages opened from invitation links and QR codes — no sign-in needed. */}
-          <Stack.Screen name="w/[slug]" options={{ animation: 'fade' }} />
-          <Stack.Screen name="rsvp/[code]" options={{ animation: 'fade' }} />
+          {hasCouple && <Stack.Screen name="w/[slug]" options={{ animation: 'fade' }} />}
+          {hasCouple && <Stack.Screen name="rsvp/[code]" options={{ animation: 'fade' }} />}
           {/* Terms, privacy, refunds and account deletion: store listings and gateways link here. */}
           <Stack.Screen name="legal/[doc]" />
           {/* Report a bug, for every role and signed-out visitors (components/ui/BugReporter.tsx). */}

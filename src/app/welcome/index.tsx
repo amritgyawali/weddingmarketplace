@@ -22,6 +22,7 @@ import { Ornament } from '@/components/ui/Ornament';
 import { PressableScale } from '@/components/ui/PressableScale';
 import { Text } from '@/components/ui/Text';
 import { BRAND } from '@/constants/brand';
+import { isSingleRoleEdition } from '@/constants/edition';
 import { usesDirectRoleEntry } from '@/constants/env';
 import { photo, type PhotoKey } from '@/constants/images';
 import { colors, gradients, themed } from '@/constants/theme';
@@ -87,7 +88,8 @@ export default function WelcomeCarousel() {
 
   const slide = SLIDES[index];
 
-  if (usesDirectRoleEntry()) return <Redirect href="/welcome/role" />;
+  // The slideshow is the couple's; the demo and the single-role apps start on their own entry screen.
+  if (usesDirectRoleEntry() || isSingleRoleEdition) return <Redirect href="/welcome/role" />;
 
   return (
     <View style={styles.root}>

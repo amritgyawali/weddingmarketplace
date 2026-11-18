@@ -11,6 +11,7 @@ import { Card, ChoiceChips, KButton, KField, showMissing, StackHeader } from '@/
 import { CraftProfileForm, CraftTiles, draftForCraft, SkillPicker, type FreelancerPersonaDraft } from '@/components/persona/FreelancerPersona';
 import { draftForTrade, EssentialsForm, FormPicker, ServicePicker, TradeTiles, type VendorPersonaDraft } from '@/components/persona/VendorPersona';
 import { Text } from '@/components/ui/Text';
+import { EDITION_ROLE } from '@/constants/edition';
 import { categoryForService } from '@/data/categories';
 import { ONBOARDING_CITIES } from '@/data/cities';
 import { PLATFORM_ACCESS_CODE } from '@/data/seed';
@@ -371,7 +372,9 @@ function SetupForm({ phone, signInEmail }: { phone: string; signInEmail?: string
 
 export default function SetupScreen() {
   const { phone, email } = useLocalSearchParams<{ phone?: string; email?: string }>();
-  const role = useSession((s) => s.selectedRole) ?? 'customer';
+  const selected = useSession((s) => s.selectedRole);
+  // A single-role app (constants/edition.ts) only creates its own user type.
+  const role = EDITION_ROLE ?? selected ?? 'customer';
   const fontsReady = useRoleFonts('all');
   if (!fontsReady) return null;
   return (
