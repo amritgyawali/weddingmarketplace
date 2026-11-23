@@ -909,9 +909,9 @@ Value at quantile `q` (0–1) of an ascending list, linearly interpolated.
 
 ### `HealthInput`
 
-*interface* · [src/services/insights.ts:27](../../../src/services/insights.ts#L27)
+*interface* · [src/services/insights.ts:28](../../../src/services/insights.ts#L28)
 
-_No JSDoc yet._
+Counts the wedding health check reads from a project.
 
 | Member | Type | Notes |
 |---|---|---|
@@ -927,9 +927,9 @@ _No JSDoc yet._
 
 ### `HealthPart`
 
-*interface* · [src/services/insights.ts:41](../../../src/services/insights.ts#L41)
+*interface* · [src/services/insights.ts:43](../../../src/services/insights.ts#L43)
 
-_No JSDoc yet._
+One scored part of the wedding health check, with its weight and plain-language detail.
 
 | Member | Type | Notes |
 |---|---|---|
@@ -941,17 +941,17 @@ _No JSDoc yet._
 
 ### `HealthPace`
 
-*type* · [src/services/insights.ts:50](../../../src/services/insights.ts#L50)
+*type* · [src/services/insights.ts:53](../../../src/services/insights.ts#L53)
 
 ```ts
 type HealthPace = 'ahead' | 'on_track' | 'behind' | 'done'
 ```
 
-_No JSDoc yet._
+Whether readiness is ahead of, on track with or behind the usual pace for the days left.
 
 ### `weddingHealth`
 
-*function* · [src/services/insights.ts:57](../../../src/services/insights.ts#L57)
+*function* · [src/services/insights.ts:60](../../../src/services/insights.ts#L60)
 
 ```ts
 weddingHealth(i: HealthInput)
@@ -963,9 +963,9 @@ is ahead of or behind where couples usually are with this many days to go
 
 ### `TurnoutRates`
 
-*interface* · [src/services/insights.ts:92](../../../src/services/insights.ts#L92)
+*interface* · [src/services/insights.ts:96](../../../src/services/insights.ts#L96)
 
-_No JSDoc yet._
+How many "maybe" and unanswered guests usually come, plus a plate buffer.
 
 | Member | Type | Notes |
 |---|---|---|
@@ -975,17 +975,17 @@ _No JSDoc yet._
 
 ### `DEFAULT_TURNOUT`
 
-*const* · [src/services/insights.ts:101](../../../src/services/insights.ts#L101)
+*const* · [src/services/insights.ts:106](../../../src/services/insights.ts#L106)
 
 ```ts
 DEFAULT_TURNOUT: TurnoutRates
 ```
 
-_No JSDoc yet._
+Default turnout assumptions: half the maybes, 70% of no replies, 5% buffer.
 
 ### `guestHeads`
 
-*function* · [src/services/insights.ts:104](../../../src/services/insights.ts#L104)
+*function* · [src/services/insights.ts:109](../../../src/services/insights.ts#L109)
 
 ```ts
 guestHeads(g: Pick<Guest, 'plusOnes' | 'children'>)
@@ -995,9 +995,9 @@ Heads a guest brings: the RSVP count when given, else the guest, plus-ones and c
 
 ### `HeadcountRow`
 
-*interface* · [src/services/insights.ts:106](../../../src/services/insights.ts#L106)
+*interface* · [src/services/insights.ts:112](../../../src/services/insights.ts#L112)
 
-_No JSDoc yet._
+Forecast attendance for one function: RSVP counts, floor, expected, ceiling and plates.
 
 | Member | Type | Notes |
 |---|---|---|
@@ -1017,7 +1017,7 @@ _No JSDoc yet._
 
 ### `headcountForecast`
 
-*function* · [src/services/insights.ts:129](../../../src/services/insights.ts#L129)
+*function* · [src/services/insights.ts:135](../../../src/services/insights.ts#L135)
 
 ```ts
 headcountForecast(guests: Guest[], events: Pick<ProjectEvent, 'id' | 'name' | 'date' | 'guests'>[], rates: TurnoutRates = DEFAULT_TURNOUT): HeadcountRow[]
@@ -1028,17 +1028,17 @@ maybe and no reply at the usual turnout, declines not at all.
 
 ### `PriceVerdict`
 
-*type* · [src/services/insights.ts:167](../../../src/services/insights.ts#L167)
+*type* · [src/services/insights.ts:174](../../../src/services/insights.ts#L174)
 
 ```ts
 type PriceVerdict = 'good' | 'fair' | 'high' | 'very_high'
 ```
 
-_No JSDoc yet._
+How a quoted price compares with the market, from good to very high.
 
 ### `priceCheck`
 
-*function* · [src/services/insights.ts:174](../../../src/services/insights.ts#L174)
+*function* · [src/services/insights.ts:181](../../../src/services/insights.ts#L181)
 
 ```ts
 priceCheck(price: number, market: number[], range: [number, number])
@@ -1050,7 +1050,7 @@ there are too few of them.
 
 ### `REGISTRATION_DAYS`
 
-*const* · [src/services/insights.ts:189](../../../src/services/insights.ts#L189)
+*const* · [src/services/insights.ts:196](../../../src/services/insights.ts#L196)
 
 ```ts
 REGISTRATION_DAYS= 35
@@ -1060,7 +1060,7 @@ Days after the wedding within which a marriage is registered without a late fee.
 
 ### `registrationDeadline`
 
-*function* · [src/services/insights.ts:192](../../../src/services/insights.ts#L192)
+*function* · [src/services/insights.ts:199](../../../src/services/insights.ts#L199)
 
 ```ts
 registrationDeadline(weddingIso: string)
@@ -1070,7 +1070,7 @@ The last day to register without a late fee, and how many days are left.
 
 ### `tallyVotes`
 
-*function* · [src/services/insights.ts:200](../../../src/services/insights.ts#L200)
+*function* · [src/services/insights.ts:207](../../../src/services/insights.ts#L207)
 
 ```ts
 tallyVotes(options: string[], fields: Record<string, string | number | boolean> | undefined)
@@ -1080,7 +1080,7 @@ Votes per option and the leader(s), from `vote:<voterId>` → option index field
 
 ### `parseOptions`
 
-*function* · [src/services/insights.ts:213](../../../src/services/insights.ts#L213)
+*function* · [src/services/insights.ts:220](../../../src/services/insights.ts#L220)
 
 ```ts
 parseOptions(text: string)
@@ -1090,9 +1090,9 @@ Options typed one per line (or separated by commas), trimmed, de-duplicated, at 
 
 ### `LeadLike`
 
-*interface* · [src/services/insights.ts:217](../../../src/services/insights.ts#L217)
+*interface* · [src/services/insights.ts:225](../../../src/services/insights.ts#L225)
 
-_No JSDoc yet._
+The lead fields lead scoring reads.
 
 | Member | Type | Notes |
 |---|---|---|
@@ -1108,9 +1108,9 @@ _No JSDoc yet._
 
 ### `LeadScoreContext`
 
-*interface* · [src/services/insights.ts:229](../../../src/services/insights.ts#L229)
+*interface* · [src/services/insights.ts:238](../../../src/services/insights.ts#L238)
 
-_No JSDoc yet._
+The vendor's price, capacity, availability and the current time, used to score a lead.
 
 | Member | Type | Notes |
 |---|---|---|
@@ -1121,17 +1121,17 @@ _No JSDoc yet._
 
 ### `LeadBand`
 
-*type* · [src/services/insights.ts:239](../../../src/services/insights.ts#L239)
+*type* · [src/services/insights.ts:249](../../../src/services/insights.ts#L249)
 
 ```ts
 type LeadBand = 'hot' | 'warm' | 'cold'
 ```
 
-_No JSDoc yet._
+Hot, warm or cold label for a lead score.
 
 ### `leadScore`
 
-*function* · [src/services/insights.ts:246](../../../src/services/insights.ts#L246)
+*function* · [src/services/insights.ts:256](../../../src/services/insights.ts#L256)
 
 ```ts
 leadScore(l: LeadLike, ctx: LeadScoreContext)
@@ -1143,7 +1143,7 @@ is, and where it came from.
 
 ### `STAGE_ODDS`
 
-*const* · [src/services/insights.ts:313](../../../src/services/insights.ts#L313)
+*const* · [src/services/insights.ts:323](../../../src/services/insights.ts#L323)
 
 ```ts
 STAGE_ODDS: Record<LeadStatus, number>
@@ -1153,7 +1153,7 @@ Typical chance an enquiry at each stage ends in a booking (editable per vendor).
 
 ### `revenueForecast`
 
-*function* · [src/services/insights.ts:319](../../../src/services/insights.ts#L319)
+*function* · [src/services/insights.ts:329](../../../src/services/insights.ts#L329)
 
 ```ts
 revenueForecast(fromIso: string, months: number, certain: { date: string; amount: number }[], pipeline: { date: string; value: number; status: LeadStatus }[], odds: Partial<Record<LeadStatus, number>> = {})
@@ -1164,9 +1164,9 @@ weighted by their stage odds (likely), from the month of `fromIso`.
 
 ### `ConversionRow`
 
-*interface* · [src/services/insights.ts:349](../../../src/services/insights.ts#L349)
+*interface* · [src/services/insights.ts:360](../../../src/services/insights.ts#L360)
 
-_No JSDoc yet._
+Won, lost and open enquiries for one segment, with the win rate of decided ones.
 
 | Member | Type | Notes |
 |---|---|---|
@@ -1179,7 +1179,7 @@ _No JSDoc yet._
 
 ### `conversionBy`
 
-*function* · [src/services/insights.ts:360](../../../src/services/insights.ts#L360)
+*function* · [src/services/insights.ts:371](../../../src/services/insights.ts#L371)
 
 ```ts
 conversionBy<T extends { status: LeadStatus }>(items: T[], keyOf: (x: T) => string): ConversionRow[]
@@ -1189,7 +1189,7 @@ Won, lost and open enquiries grouped by any key, best converting first.
 
 ### `budgetBand`
 
-*function* · [src/services/insights.ts:375](../../../src/services/insights.ts#L375)
+*function* · [src/services/insights.ts:386](../../../src/services/insights.ts#L386)
 
 ```ts
 budgetBand(budget: number | undefined, startingPrice: number)
@@ -1199,7 +1199,7 @@ Budget band for an enquiry, relative to the vendor's starting price.
 
 ### `replyBand`
 
-*function* · [src/services/insights.ts:383](../../../src/services/insights.ts#L383)
+*function* · [src/services/insights.ts:394](../../../src/services/insights.ts#L394)
 
 ```ts
 replyBand(l: Pick<LeadLike, 'createdAt' | 'history'>)
@@ -1209,9 +1209,9 @@ First-reply speed band from the enquiry's history.
 
 ### `DateDemand`
 
-*interface* · [src/services/insights.ts:392](../../../src/services/insights.ts#L392)
+*interface* · [src/services/insights.ts:404](../../../src/services/insights.ts#L404)
 
-_No JSDoc yet._
+How sought-after a date is, with the suggested price uplift.
 
 | Member | Type | Notes |
 |---|---|---|
@@ -1225,7 +1225,7 @@ _No JSDoc yet._
 
 ### `dateDemand`
 
-*function* · [src/services/insights.ts:406](../../../src/services/insights.ts#L406)
+*function* · [src/services/insights.ts:418](../../../src/services/insights.ts#L418)
 
 ```ts
 dateDemand(date: string, ctx: { sait: boolean; requests: number }): DateDemand
@@ -1235,9 +1235,9 @@ How sought-after a date is: sait, Saturday, peak month and real requests for it.
 
 ### `GigFitInput`
 
-*interface* · [src/services/insights.ts:416](../../../src/services/insights.ts#L416)
+*interface* · [src/services/insights.ts:429](../../../src/services/insights.ts#L429)
 
-_No JSDoc yet._
+The gig details gig fit scores: pay, hours, skill, date, emergency and distance.
 
 | Member | Type | Notes |
 |---|---|---|
@@ -1250,9 +1250,9 @@ _No JSDoc yet._
 
 ### `GigFitProfile`
 
-*interface* · [src/services/insights.ts:426](../../../src/services/insights.ts#L426)
+*interface* · [src/services/insights.ts:440](../../../src/services/insights.ts#L440)
 
-_No JSDoc yet._
+The freelancer's skills, rates, travel radius, per-km cost and calendar state used for gig fit.
 
 | Member | Type | Notes |
 |---|---|---|
@@ -1265,7 +1265,7 @@ _No JSDoc yet._
 
 ### `gigFit`
 
-*function* · [src/services/insights.ts:440](../../../src/services/insights.ts#L440)
+*function* · [src/services/insights.ts:454](../../../src/services/insights.ts#L454)
 
 ```ts
 gigFit(g: GigFitInput, p: GigFitProfile)
@@ -1276,9 +1276,9 @@ including travel time, against their own rates and calendar. Score 0–100.
 
 ### `WorkDay`
 
-*interface* · [src/services/insights.ts:481](../../../src/services/insights.ts#L481)
+*interface* · [src/services/insights.ts:496](../../../src/services/insights.ts#L496)
 
-_No JSDoc yet._
+One working day with start and end times, for workload and rest checks.
 
 | Member | Type | Notes |
 |---|---|---|
@@ -1288,7 +1288,7 @@ _No JSDoc yet._
 
 ### `shiftHours`
 
-*function* · [src/services/insights.ts:493](../../../src/services/insights.ts#L493)
+*function* · [src/services/insights.ts:508](../../../src/services/insights.ts#L508)
 
 ```ts
 shiftHours(start: string, end: string)
@@ -1298,7 +1298,7 @@ Hours on a job; an end before the start runs past midnight.
 
 ### `workloadSummary`
 
-*function* · [src/services/insights.ts:503](../../../src/services/insights.ts#L503)
+*function* · [src/services/insights.ts:518](../../../src/services/insights.ts#L518)
 
 ```ts
 workloadSummary(days: WorkDay[])
@@ -1309,9 +1309,9 @@ plan rest before the long peak-season runs.
 
 ### `ReconIssue`
 
-*interface* · [src/services/insights.ts:530](../../../src/services/insights.ts#L530)
+*interface* · [src/services/insights.ts:546](../../../src/services/insights.ts#L546)
 
-_No JSDoc yet._
+One money mismatch found by project reconciliation, with its severity and size.
 
 | Member | Type | Notes |
 |---|---|---|
@@ -1325,7 +1325,7 @@ _No JSDoc yet._
 
 ### `reconcileProject`
 
-*function* · [src/services/insights.ts:551](../../../src/services/insights.ts#L551)
+*function* · [src/services/insights.ts:567](../../../src/services/insights.ts#L567)
 
 ```ts
 reconcileProject(p: Project, ctx: { quotes: Quotation[]; payments: Payment[]; payables: Payable[]; refunds: Refund[] }): ReconIssue[]
@@ -1337,9 +1337,9 @@ no milestone or payment over-collected, refunds within the payment.
 
 ### `Rates`
 
-*interface* · [src/services/insights.ts:591](../../../src/services/insights.ts#L591)
+*interface* · [src/services/insights.ts:608](../../../src/services/insights.ts#L608)
 
-_No JSDoc yet._
+Platform fee rates compared by the commission simulator.
 
 | Member | Type | Notes |
 |---|---|---|
@@ -1349,7 +1349,7 @@ _No JSDoc yet._
 
 ### `simulateRates`
 
-*function* · [src/services/insights.ts:602](../../../src/services/insights.ts#L602)
+*function* · [src/services/insights.ts:619](../../../src/services/insights.ts#L619)
 
 ```ts
 simulateRates(bookings: { pricingModel: PricingModel; agreedPrice: number; providerCost: number; platformFee: number }[], next: Rates)
@@ -1361,7 +1361,7 @@ price and a commission change moves the provider's payout.
 
 ### `satisfaction`
 
-*function* · [src/services/insights.ts:628](../../../src/services/insights.ts#L628)
+*function* · [src/services/insights.ts:645](../../../src/services/insights.ts#L645)
 
 ```ts
 satisfaction(reviews: Pick<ReviewRecord, 'overall'>[])
@@ -1372,9 +1372,9 @@ Net promoter style score from star reviews: 5★ promoters, 4★ passive,
 
 ### `ListingSignals`
 
-*interface* · [src/services/insights.ts:638](../../../src/services/insights.ts#L638)
+*interface* · [src/services/insights.ts:656](../../../src/services/insights.ts#L656)
 
-_No JSDoc yet._
+The profile facts listing quality scores.
 
 | Member | Type | Notes |
 |---|---|---|
@@ -1391,7 +1391,7 @@ _No JSDoc yet._
 
 ### `listingQuality`
 
-*function* · [src/services/insights.ts:652](../../../src/services/insights.ts#L652)
+*function* · [src/services/insights.ts:670](../../../src/services/insights.ts#L670)
 
 ```ts
 listingQuality(s: ListingSignals)
@@ -1401,7 +1401,7 @@ Profile completeness and trust, 0–100, with what to fix first.
 
 ### `busyDates`
 
-*function* · [src/services/insights.ts:670](../../../src/services/insights.ts#L670)
+*function* · [src/services/insights.ts:688](../../../src/services/insights.ts#L688)
 
 ```ts
 busyDates(projects: Project[], fromIso: string, days: number)
@@ -1411,7 +1411,7 @@ Functions per date (live projects only) and how many need each service.
 
 ### `openMilestones`
 
-*function* · [src/services/insights.ts:688](../../../src/services/insights.ts#L688)
+*function* · [src/services/insights.ts:706](../../../src/services/insights.ts#L706)
 
 ```ts
 openMilestones(p: Project)

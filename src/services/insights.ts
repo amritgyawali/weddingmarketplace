@@ -24,6 +24,7 @@ export function quantile(sorted: number[], q: number): number {
 
 // ─── Couple: wedding health check ───────────────────────────────────────────
 
+/** Counts the wedding health check reads from a project. */
 export interface HealthInput {
   daysToGo: number;
   services: { confirmed: number; total: number };
@@ -38,6 +39,7 @@ export interface HealthInput {
   committed: number;
 }
 
+/** One scored part of the wedding health check, with its weight and plain-language detail. */
 export interface HealthPart {
   id: 'vendors' | 'payments' | 'tasks' | 'guests' | 'contracts' | 'budget';
   label: string;
@@ -47,6 +49,7 @@ export interface HealthPart {
   detail: string;
 }
 
+/** Whether readiness is ahead of, on track with or behind the usual pace for the days left. */
 export type HealthPace = 'ahead' | 'on_track' | 'behind' | 'done';
 
 /**
@@ -89,6 +92,7 @@ export function weddingHealth(i: HealthInput) {
 
 // ─── Couple: headcount forecast ─────────────────────────────────────────────
 
+/** How many "maybe" and unanswered guests usually come, plus a plate buffer. */
 export interface TurnoutRates {
   /** Share of "maybe" heads who usually come (0–1). */
   maybe: number;
@@ -98,11 +102,13 @@ export interface TurnoutRates {
   buffer: number;
 }
 
+/** Default turnout assumptions: half the maybes, 70% of no replies, 5% buffer. */
 export const DEFAULT_TURNOUT: TurnoutRates = { maybe: 0.5, pending: 0.7, buffer: 0.05 };
 
 /** Heads a guest brings: the RSVP count when given, else the guest, plus-ones and children. */
 export const guestHeads = (g: Pick<Guest, 'plusOnes' | 'children'>) => 1 + Math.max(0, g.plusOnes) + Math.max(0, g.children);
 
+/** Forecast attendance for one function: RSVP counts, floor, expected, ceiling and plates. */
 export interface HeadcountRow {
   eventId: string;
   name: string;
@@ -164,6 +170,7 @@ export function headcountForecast(guests: Guest[], events: Pick<ProjectEvent, 'i
 
 // ─── Couple: fair price check ───────────────────────────────────────────────
 
+/** How a quoted price compares with the market, from good to very high. */
 export type PriceVerdict = 'good' | 'fair' | 'high' | 'very_high';
 
 /**
@@ -214,6 +221,7 @@ export const parseOptions = (text: string) => [...new Set(text.split(/[\n,|]/).m
 
 // ─── Vendor: lead scoring ───────────────────────────────────────────────────
 
+/** The lead fields lead scoring reads. */
 export interface LeadLike {
   status: LeadStatus;
   eventDate: string;
@@ -226,6 +234,7 @@ export interface LeadLike {
   history?: { status: LeadStatus; at: string }[];
 }
 
+/** The vendor's price, capacity, availability and the current time, used to score a lead. */
 export interface LeadScoreContext {
   /** The vendor's listed starting price (one unit). */
   startingPrice: number;
@@ -236,6 +245,7 @@ export interface LeadScoreContext {
   nowIso: string;
 }
 
+/** Hot, warm or cold label for a lead score. */
 export type LeadBand = 'hot' | 'warm' | 'cold';
 
 /**
@@ -346,6 +356,7 @@ export function revenueForecast(
 
 // ─── Vendor: conversion by segment ──────────────────────────────────────────
 
+/** Won, lost and open enquiries for one segment, with the win rate of decided ones. */
 export interface ConversionRow {
   key: string;
   total: number;
@@ -389,6 +400,7 @@ export function replyBand(l: Pick<LeadLike, 'createdAt' | 'history'>) {
 
 // ─── Demand by date (vendors and freelancers) ───────────────────────────────
 
+/** How sought-after a date is, with the suggested price uplift. */
 export interface DateDemand {
   date: string;
   sait: boolean;
@@ -413,6 +425,7 @@ export function dateDemand(date: string, ctx: { sait: boolean; requests: number 
 
 // ─── Freelancer: gig fit ────────────────────────────────────────────────────
 
+/** The gig details gig fit scores: pay, hours, skill, date, emergency and distance. */
 export interface GigFitInput {
   pay: number;
   hours: number;
@@ -423,6 +436,7 @@ export interface GigFitInput {
   km: number | null;
 }
 
+/** The freelancer's skills, rates, travel radius, per-km cost and calendar state used for gig fit. */
 export interface GigFitProfile {
   skills: string[];
   hourlyRate: number;
@@ -478,6 +492,7 @@ export function gigFit(g: GigFitInput, p: GigFitProfile) {
 
 // ─── Freelancer: workload and rest ──────────────────────────────────────────
 
+/** One working day with start and end times, for workload and rest checks. */
 export interface WorkDay {
   date: string;
   start: string;
@@ -527,6 +542,7 @@ export function workloadSummary(days: WorkDay[]) {
 
 // ─── Platform: money reconciliation ─────────────────────────────────────────
 
+/** One money mismatch found by project reconciliation, with its severity and size. */
 export interface ReconIssue {
   id: string;
   projectId: string;
@@ -588,6 +604,7 @@ export function reconcileProject(p: Project, ctx: { quotes: Quotation[]; payment
 
 // ─── Platform: commission simulator ─────────────────────────────────────────
 
+/** Platform fee rates compared by the commission simulator. */
 export interface Rates {
   commissionRate: number;
   markupRate: number;
@@ -635,6 +652,7 @@ export function satisfaction(reviews: Pick<ReviewRecord, 'overall'>[]) {
 
 // ─── Platform: listing quality ──────────────────────────────────────────────
 
+/** The profile facts listing quality scores. */
 export interface ListingSignals {
   verified: boolean;
   hasPhoto: boolean;

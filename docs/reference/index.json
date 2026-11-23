@@ -14085,9 +14085,9 @@
     {
      "name": "HealthInput",
      "kind": "interface",
-     "line": 27,
+     "line": 28,
      "signature": "",
-     "doc": "",
+     "doc": "Counts the wedding health check reads from a project.",
      "members": [
       {
        "name": "daysToGo",
@@ -14148,9 +14148,9 @@
     {
      "name": "HealthPart",
      "kind": "interface",
-     "line": 41,
+     "line": 43,
      "signature": "",
-     "doc": "",
+     "doc": "One scored part of the wedding health check, with its weight and plain-language detail.",
      "members": [
       {
        "name": "id",
@@ -14187,23 +14187,23 @@
     {
      "name": "HealthPace",
      "kind": "type",
-     "line": 50,
+     "line": 53,
      "signature": "= 'ahead' | 'on_track' | 'behind' | 'done'",
-     "doc": ""
+     "doc": "Whether readiness is ahead of, on track with or behind the usual pace for the days left."
     },
     {
      "name": "weddingHealth",
      "kind": "function",
-     "line": 57,
+     "line": 60,
      "signature": "(i: HealthInput)",
      "doc": "How ready a celebration is, 0–100, from six weighted parts, and whether that\nis ahead of or behind where couples usually are with this many days to go\n(about a year of planning, most of it in the last six months)."
     },
     {
      "name": "TurnoutRates",
      "kind": "interface",
-     "line": 92,
+     "line": 96,
      "signature": "",
-     "doc": "",
+     "doc": "How many \"maybe\" and unanswered guests usually come, plus a plate buffer.",
      "members": [
       {
        "name": "maybe",
@@ -14228,23 +14228,23 @@
     {
      "name": "DEFAULT_TURNOUT",
      "kind": "const",
-     "line": 101,
+     "line": 106,
      "signature": ": TurnoutRates",
-     "doc": ""
+     "doc": "Default turnout assumptions: half the maybes, 70% of no replies, 5% buffer."
     },
     {
      "name": "guestHeads",
      "kind": "function",
-     "line": 104,
+     "line": 109,
      "signature": "(g: Pick<Guest, 'plusOnes' | 'children'>)",
      "doc": "Heads a guest brings: the RSVP count when given, else the guest, plus-ones and children."
     },
     {
      "name": "HeadcountRow",
      "kind": "interface",
-     "line": 106,
+     "line": 112,
      "signature": "",
-     "doc": "",
+     "doc": "Forecast attendance for one function: RSVP counts, floor, expected, ceiling and plates.",
      "members": [
       {
        "name": "eventId",
@@ -14329,58 +14329,58 @@
     {
      "name": "headcountForecast",
      "kind": "function",
-     "line": 129,
+     "line": 135,
      "signature": "(guests: Guest[], events: Pick<ProjectEvent, 'id' | 'name' | 'date' | 'guests'>[], rates: TurnoutRates = DEFAULT_TURNOUT): HeadcountRow[]",
      "doc": "Expected attendance per function from the RSVPs so far: yes counts in full,\nmaybe and no reply at the usual turnout, declines not at all."
     },
     {
      "name": "PriceVerdict",
      "kind": "type",
-     "line": 167,
+     "line": 174,
      "signature": "= 'good' | 'fair' | 'high' | 'very_high'",
-     "doc": ""
+     "doc": "How a quoted price compares with the market, from good to very high."
     },
     {
      "name": "priceCheck",
      "kind": "function",
-     "line": 174,
+     "line": 181,
      "signature": "(price: number, market: number[], range: [number, number])",
      "doc": "Where a quoted unit price sits against the market: the listed starting\nprices of similar providers nearby, or the service's typical range when\nthere are too few of them."
     },
     {
      "name": "REGISTRATION_DAYS",
      "kind": "const",
-     "line": 189,
+     "line": 196,
      "signature": "= 35",
      "doc": "Days after the wedding within which a marriage is registered without a late fee."
     },
     {
      "name": "registrationDeadline",
      "kind": "function",
-     "line": 192,
+     "line": 199,
      "signature": "(weddingIso: string)",
      "doc": "The last day to register without a late fee, and how many days are left."
     },
     {
      "name": "tallyVotes",
      "kind": "function",
-     "line": 200,
+     "line": 207,
      "signature": "(options: string[], fields: Record<string, string | number | boolean> | undefined)",
      "doc": "Votes per option and the leader(s), from `vote:<voterId>` → option index fields."
     },
     {
      "name": "parseOptions",
      "kind": "function",
-     "line": 213,
+     "line": 220,
      "signature": "(text: string)",
      "doc": "Options typed one per line (or separated by commas), trimmed, de-duplicated, at most six."
     },
     {
      "name": "LeadLike",
      "kind": "interface",
-     "line": 217,
+     "line": 225,
      "signature": "",
-     "doc": "",
+     "doc": "The lead fields lead scoring reads.",
      "members": [
       {
        "name": "status",
@@ -14441,9 +14441,9 @@
     {
      "name": "LeadScoreContext",
      "kind": "interface",
-     "line": 229,
+     "line": 238,
      "signature": "",
-     "doc": "",
+     "doc": "The vendor's price, capacity, availability and the current time, used to score a lead.",
      "members": [
       {
        "name": "startingPrice",
@@ -14474,37 +14474,37 @@
     {
      "name": "LeadBand",
      "kind": "type",
-     "line": 239,
+     "line": 249,
      "signature": "= 'hot' | 'warm' | 'cold'",
-     "doc": ""
+     "doc": "Hot, warm or cold label for a lead score."
     },
     {
      "name": "leadScore",
      "kind": "function",
-     "line": 246,
+     "line": 256,
      "signature": "(l: LeadLike, ctx: LeadScoreContext)",
      "doc": "How likely an open enquiry is to book, 0–100, with the reasons. Budget fit,\ndate (soon, peak, free), guest fit, how complete and how fresh the enquiry\nis, and where it came from."
     },
     {
      "name": "STAGE_ODDS",
      "kind": "const",
-     "line": 313,
+     "line": 323,
      "signature": ": Record<LeadStatus, number>",
      "doc": "Typical chance an enquiry at each stage ends in a booking (editable per vendor)."
     },
     {
      "name": "revenueForecast",
      "kind": "function",
-     "line": 319,
+     "line": 329,
      "signature": "(fromIso: string, months: number, certain: { date: string; amount: number }[], pipeline: { date: string; value: number; status: LeadStatus }[], odds: Partial<Record<LeadStatus, number>> = {})",
      "doc": "Income by month: payouts already scheduled (certain) plus open enquiries\nweighted by their stage odds (likely), from the month of `fromIso`."
     },
     {
      "name": "ConversionRow",
      "kind": "interface",
-     "line": 349,
+     "line": 360,
      "signature": "",
-     "doc": "",
+     "doc": "Won, lost and open enquiries for one segment, with the win rate of decided ones.",
      "members": [
       {
        "name": "key",
@@ -14547,30 +14547,30 @@
     {
      "name": "conversionBy",
      "kind": "function",
-     "line": 360,
+     "line": 371,
      "signature": "<T extends { status: LeadStatus }>(items: T[], keyOf: (x: T) => string): ConversionRow[]",
      "doc": "Won, lost and open enquiries grouped by any key, best converting first."
     },
     {
      "name": "budgetBand",
      "kind": "function",
-     "line": 375,
+     "line": 386,
      "signature": "(budget: number | undefined, startingPrice: number)",
      "doc": "Budget band for an enquiry, relative to the vendor's starting price."
     },
     {
      "name": "replyBand",
      "kind": "function",
-     "line": 383,
+     "line": 394,
      "signature": "(l: Pick<LeadLike, 'createdAt' | 'history'>)",
      "doc": "First-reply speed band from the enquiry's history."
     },
     {
      "name": "DateDemand",
      "kind": "interface",
-     "line": 392,
+     "line": 404,
      "signature": "",
-     "doc": "",
+     "doc": "How sought-after a date is, with the suggested price uplift.",
      "members": [
       {
        "name": "date",
@@ -14619,16 +14619,16 @@
     {
      "name": "dateDemand",
      "kind": "function",
-     "line": 406,
+     "line": 418,
      "signature": "(date: string, ctx: { sait: boolean; requests: number }): DateDemand",
      "doc": "How sought-after a date is: sait, Saturday, peak month and real requests for it."
     },
     {
      "name": "GigFitInput",
      "kind": "interface",
-     "line": 416,
+     "line": 429,
      "signature": "",
-     "doc": "",
+     "doc": "The gig details gig fit scores: pay, hours, skill, date, emergency and distance.",
      "members": [
       {
        "name": "pay",
@@ -14671,9 +14671,9 @@
     {
      "name": "GigFitProfile",
      "kind": "interface",
-     "line": 426,
+     "line": 440,
      "signature": "",
-     "doc": "",
+     "doc": "The freelancer's skills, rates, travel radius, per-km cost and calendar state used for gig fit.",
      "members": [
       {
        "name": "skills",
@@ -14716,16 +14716,16 @@
     {
      "name": "gigFit",
      "kind": "function",
-     "line": 440,
+     "line": 454,
      "signature": "(g: GigFitInput, p: GigFitProfile)",
      "doc": "What a gig is really worth to this freelancer: pay after travel, per hour\nincluding travel time, against their own rates and calendar. Score 0–100."
     },
     {
      "name": "WorkDay",
      "kind": "interface",
-     "line": 481,
+     "line": 496,
      "signature": "",
-     "doc": "",
+     "doc": "One working day with start and end times, for workload and rest checks.",
      "members": [
       {
        "name": "date",
@@ -14750,23 +14750,23 @@
     {
      "name": "shiftHours",
      "kind": "function",
-     "line": 493,
+     "line": 508,
      "signature": "(start: string, end: string)",
      "doc": "Hours on a job; an end before the start runs past midnight."
     },
     {
      "name": "workloadSummary",
      "kind": "function",
-     "line": 503,
+     "line": 518,
      "signature": "(days: WorkDay[])",
      "doc": "Streaks of back-to-back work days, late finishes and the busiest weeks, to\nplan rest before the long peak-season runs."
     },
     {
      "name": "ReconIssue",
      "kind": "interface",
-     "line": 530,
+     "line": 546,
      "signature": "",
-     "doc": "",
+     "doc": "One money mismatch found by project reconciliation, with its severity and size.",
      "members": [
       {
        "name": "id",
@@ -14815,16 +14815,16 @@
     {
      "name": "reconcileProject",
      "kind": "function",
-     "line": 551,
+     "line": 567,
      "signature": "(p: Project, ctx: { quotes: Quotation[]; payments: Payment[]; payables: Payable[]; refunds: Refund[] }): ReconIssue[]",
      "doc": "Checks the money invariants of one project (AGENTS.md §5): accepted quote =\nΣ milestones, booking price = payable + fee, payables = provider payable,\nno milestone or payment over-collected, refunds within the payment."
     },
     {
      "name": "Rates",
      "kind": "interface",
-     "line": 591,
+     "line": 608,
      "signature": "",
-     "doc": "",
+     "doc": "Platform fee rates compared by the commission simulator.",
      "members": [
       {
        "name": "commissionRate",
@@ -14849,23 +14849,23 @@
     {
      "name": "simulateRates",
      "kind": "function",
-     "line": 602,
+     "line": 619,
      "signature": "(bookings: { pricingModel: PricingModel; agreedPrice: number; providerCost: number; platformFee: number }[], next: Rates)",
      "doc": "Platform fee on the same bookings under the current and proposed rates.\nThe provider's price is held fixed, so a markup change moves the couple's\nprice and a commission change moves the provider's payout."
     },
     {
      "name": "satisfaction",
      "kind": "function",
-     "line": 628,
+     "line": 645,
      "signature": "(reviews: Pick<ReviewRecord, 'overall'>[])",
      "doc": "Net promoter style score from star reviews: 5★ promoters, 4★ passive,\n3★ and below detractors. Also the average and star distribution."
     },
     {
      "name": "ListingSignals",
      "kind": "interface",
-     "line": 638,
+     "line": 656,
      "signature": "",
-     "doc": "",
+     "doc": "The profile facts listing quality scores.",
      "members": [
       {
        "name": "verified",
@@ -14932,21 +14932,21 @@
     {
      "name": "listingQuality",
      "kind": "function",
-     "line": 652,
+     "line": 670,
      "signature": "(s: ListingSignals)",
      "doc": "Profile completeness and trust, 0–100, with what to fix first."
     },
     {
      "name": "busyDates",
      "kind": "function",
-     "line": 670,
+     "line": 688,
      "signature": "(projects: Project[], fromIso: string, days: number)",
      "doc": "Functions per date (live projects only) and how many need each service."
     },
     {
      "name": "openMilestones",
      "kind": "function",
-     "line": 688,
+     "line": 706,
      "signature": "(p: Project)",
      "doc": "Milestones still to collect for a project (not paid or waived)."
     }
@@ -29049,35 +29049,35 @@
     {
      "name": "Gateway",
      "kind": "type",
-     "line": 18,
+     "line": 19,
      "signature": "= 'khalti' | 'esewa'",
-     "doc": ""
+     "doc": "The online payment gateways the Edge Functions can settle through."
     },
     {
      "name": "Outcome",
      "kind": "type",
-     "line": 19,
+     "line": 21,
      "signature": "= 'COMPLETED' | 'PENDING' | 'FAILED' | 'CANCELLED' | 'EXPIRED'",
-     "doc": ""
+     "doc": "What a gateway lookup says happened to a payment, normalised across gateways."
     },
     {
      "name": "isGateway",
      "kind": "function",
-     "line": 21,
+     "line": 24,
      "signature": "(x: unknown): x is Gateway",
-     "doc": ""
+     "doc": "Type guard: is this value one of the supported gateway names?"
     },
     {
      "name": "SQL_METHOD",
      "kind": "const",
-     "line": 24,
+     "line": 27,
      "signature": ": Record<Gateway, 'KHALTI' | 'ESEWA'>",
      "doc": "The SQL payment_method for each gateway."
     },
     {
      "name": "Intent",
      "kind": "interface",
-     "line": 27,
+     "line": 30,
      "signature": "",
      "doc": "What rpc_begin_payment returns.",
      "members": [
@@ -29116,9 +29116,9 @@
     {
      "name": "KhaltiConfig",
      "kind": "interface",
-     "line": 35,
+     "line": 39,
      "signature": "",
-     "doc": "",
+     "doc": "Khalti credentials and API base URL (sandbox or live).",
      "members": [
       {
        "name": "secretKey",
@@ -29137,9 +29137,9 @@
     {
      "name": "EsewaConfig",
      "kind": "interface",
-     "line": 40,
+     "line": 45,
      "signature": "",
-     "doc": "",
+     "doc": "eSewa product code, secret key and the form and status URLs (sandbox or live).",
      "members": [
       {
        "name": "productCode",
@@ -29170,58 +29170,58 @@
     {
      "name": "KHALTI_SANDBOX",
      "kind": "const",
-     "line": 47,
+     "line": 53,
      "signature": "= 'https://dev.khalti.com/api/v2'",
-     "doc": ""
+     "doc": "Khalti sandbox API base URL, used until live keys are set."
     },
     {
      "name": "ESEWA_SANDBOX",
      "kind": "const",
-     "line": 48,
+     "line": 55,
      "signature": "= { … }",
-     "doc": ""
+     "doc": "eSewa sandbox (EPAYTEST) product code, public test secret and URLs."
     },
     {
      "name": "ESEWA_LIVE",
      "kind": "const",
-     "line": 49,
+     "line": 57,
      "signature": "= { … }",
-     "doc": ""
+     "doc": "eSewa live form and status URLs; the live product code and secret come from secrets."
     },
     {
      "name": "rupeesString",
      "kind": "function",
-     "line": 54,
+     "line": 62,
      "signature": "(paisa: number)",
      "doc": "eSewa's rupee amount: \"42375\" or \"42375.5\" — the exact string that is signed."
     },
     {
      "name": "toPaisa",
      "kind": "function",
-     "line": 60,
+     "line": 68,
      "signature": "(rupees: unknown)",
      "doc": "A gateway's rupee amount (number or string) back to paisa."
     },
     {
      "name": "khaltiInitiateBody",
      "kind": "function",
-     "line": 70,
+     "line": 78,
      "signature": "(intent: Intent, returnUrl: string, websiteUrl: string)",
      "doc": ""
     },
     {
      "name": "khaltiOutcome",
      "kind": "function",
-     "line": 84,
+     "line": 92,
      "signature": "(status: unknown): Outcome",
      "doc": "Khalti lookup status → our outcome. Only \"Completed\" is money."
     },
     {
      "name": "Lookup",
      "kind": "interface",
-     "line": 100,
+     "line": 109,
      "signature": "",
-     "doc": "",
+     "doc": "A gateway lookup result: the outcome, the amount the gateway reports and its references.",
      "members": [
       {
        "name": "outcome",
@@ -29258,37 +29258,37 @@
     {
      "name": "khaltiLookup",
      "kind": "function",
-     "line": 109,
+     "line": 119,
      "signature": "(cfg: KhaltiConfig, pidx: string, fetchImpl: typeof fetch = fetch): Promise<Lookup>",
-     "doc": ""
+     "doc": "Asks Khalti's own lookup API what happened to a payment (the only source of truth; never a redirect)."
     },
     {
      "name": "hmacBase64",
      "kind": "function",
-     "line": 130,
+     "line": 140,
      "signature": "(message: string, secret: string): Promise<string>",
      "doc": "HMAC-SHA256, base64 (Web Crypto: Deno and Node)."
     },
     {
      "name": "esewaMessage",
      "kind": "function",
-     "line": 137,
+     "line": 147,
      "signature": "(fields: Record<string, unknown>, names: string)",
      "doc": "eSewa signs `name=value` pairs of the signed fields, in order, joined by commas."
     },
     {
      "name": "esewaForm",
      "kind": "function",
-     "line": 143,
+     "line": 153,
      "signature": "(cfg: EsewaConfig, intent: Intent, successUrl: string, failureUrl: string)",
      "doc": ""
     },
     {
      "name": "EsewaCallback",
      "kind": "interface",
-     "line": 161,
+     "line": 172,
      "signature": "",
-     "doc": "",
+     "doc": "The signed fields eSewa returns in the success redirect `data` parameter.",
      "members": [
       {
        "name": "transaction_code",
@@ -29337,49 +29337,49 @@
     {
      "name": "esewaDecode",
      "kind": "function",
-     "line": 172,
+     "line": 183,
      "signature": "(data: string, secretKey: string): Promise<{ body: EsewaCallback; valid: boolean } | null>",
      "doc": "Decodes the `data` eSewa appends to the success URL; `valid` says whether its signature is ours."
     },
     {
      "name": "esewaOutcome",
      "kind": "function",
-     "line": 184,
+     "line": 195,
      "signature": "(status: unknown, expired: boolean): Outcome",
      "doc": "eSewa status → our outcome. NOT_FOUND means the couple never finished (or eSewa hasn't caught up yet)."
     },
     {
      "name": "esewaLookup",
      "kind": "function",
-     "line": 200,
+     "line": 211,
      "signature": "(cfg: EsewaConfig, orderRef: string, paisa: number, expired: boolean, fetchImpl: typeof fetch = fetch): Promise<Lookup>",
      "doc": ""
     },
     {
      "name": "safeReturnTo",
      "kind": "function",
-     "line": 216,
+     "line": 227,
      "signature": "(url: unknown, appUrl: string, extraHosts: string[] = []): string | null",
      "doc": "Only our own app and web addresses: the app's scheme, Expo Go during\ndevelopment, the web app, localhost, and hosts listed in\nPAYMENT_RETURN_HOSTS. Anything else would make payment-verify an open redirect."
     },
     {
      "name": "withResult",
      "kind": "function",
-     "line": 232,
+     "line": 243,
      "signature": "(returnTo: string, params: Record<string, string | undefined>)",
      "doc": "The return address with the result added to its query."
     },
     {
      "name": "parseVerifyPath",
      "kind": "function",
-     "line": 243,
+     "line": 254,
      "signature": "(pathname: string): { gateway: Gateway; intent: string; failure: boolean } | null",
      "doc": "payment-verify/<gateway>/<intent>[/failure] from the request path."
     },
     {
      "name": "esewaDataParam",
      "kind": "function",
-     "line": 252,
+     "line": 263,
      "signature": "(rawUrl: string)",
      "doc": "eSewa appends `?data=…` to the success URL even when it already has a query,\nso the value is found wherever it is."
     }
