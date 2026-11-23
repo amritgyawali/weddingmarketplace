@@ -15,9 +15,12 @@
 
 import { safeEqual } from './http.ts';
 
+/** The online payment gateways the Edge Functions can settle through. */
 export type Gateway = 'khalti' | 'esewa';
+/** What a gateway lookup says happened to a payment, normalised across gateways. */
 export type Outcome = 'COMPLETED' | 'PENDING' | 'FAILED' | 'CANCELLED' | 'EXPIRED';
 
+/** Type guard: is this value one of the supported gateway names? */
 export const isGateway = (x: unknown): x is Gateway => x === 'khalti' || x === 'esewa';
 
 /** The SQL payment_method for each gateway. */
@@ -32,11 +35,13 @@ export interface Intent {
   customer?: { name?: string | null; email?: string | null; phone?: string | null };
 }
 
+/** Khalti credentials and API base URL (sandbox or live). */
 export interface KhaltiConfig {
   secretKey: string;
   baseUrl: string;
 }
 
+/** eSewa product code, secret key and the form and status URLs (sandbox or live). */
 export interface EsewaConfig {
   productCode: string;
   secretKey: string;
@@ -44,8 +49,11 @@ export interface EsewaConfig {
   statusUrl: string;
 }
 
+/** Khalti sandbox API base URL, used until live keys are set. */
 export const KHALTI_SANDBOX = 'https://dev.khalti.com/api/v2';
+/** eSewa sandbox (EPAYTEST) product code, public test secret and URLs. */
 export const ESEWA_SANDBOX = { productCode: 'EPAYTEST', secretKey: '8gBm/:&EnhH.1/q', formUrl: 'https://rc-epay.esewa.com.np/api/epay/main/v2/form', statusUrl: 'https://rc.esewa.com.np/api/epay/transaction/status/' };
+/** eSewa live form and status URLs; the live product code and secret come from secrets. */
 export const ESEWA_LIVE = { formUrl: 'https://epay.esewa.com.np/api/epay/main/v2/form', statusUrl: 'https://esewa.com.np/api/epay/transaction/status/' };
 
 // ─── Money ──────────────────────────────────────────────────────────────────
@@ -97,6 +105,7 @@ export function khaltiOutcome(status: unknown): Outcome {
   }
 }
 
+/** A gateway lookup result: the outcome, the amount the gateway reports and its references. */
 export interface Lookup {
   outcome: Outcome;
   /** Paisa, as the gateway reports it. */
@@ -106,6 +115,7 @@ export interface Lookup {
   raw: unknown;
 }
 
+/** Asks Khalti's own lookup API what happened to a payment (the only source of truth; never a redirect). */
 export async function khaltiLookup(cfg: KhaltiConfig, pidx: string, fetchImpl: typeof fetch = fetch): Promise<Lookup> {
   const res = await fetchImpl(`${cfg.baseUrl.replace(/\/$/, '')}/epayment/lookup/`, {
     method: 'POST',
@@ -158,6 +168,7 @@ export async function esewaForm(cfg: EsewaConfig, intent: Intent, successUrl: st
   return { action: cfg.formUrl, fields };
 }
 
+/** The signed fields eSewa returns in the success redirect `data` parameter. */
 export interface EsewaCallback {
   transaction_code?: string;
   status?: string;
